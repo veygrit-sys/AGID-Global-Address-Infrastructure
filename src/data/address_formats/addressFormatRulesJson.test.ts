@@ -621,6 +621,10 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
   assert.equal(loadFormat('DK').postalCode?.api, 'https://api.dataforsyningen.dk/postnumre');
   assert.equal(loadFormat('DK').postalCode?.source, 'Dataforsyningen DAWA postnumre API / Danish Address Register');
   assert.equal(loadFormat('FI').postalCode?.api, 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services');
+  assert.equal(loadFormat('LV').postalCode?.api, 'https://pasts.lv/en/check-address');
+  assert.equal(loadFormat('LV').postalCode?.source, 'Latvijas Pasts check address');
+  assert.equal(loadFormat('LT').postalCode?.api, 'https://www.post.lt/pasto-kodu-ir-adresu-paieska');
+  assert.equal(loadFormat('LT').postalCode?.source, 'Lietuvos paštas postal code and address search');
 });
 
 test('Nordic and Baltic metadata exposes national geospatial and open-data sources', () => {

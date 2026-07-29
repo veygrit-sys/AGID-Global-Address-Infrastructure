@@ -81,6 +81,7 @@ export type EuropeOpenGeoSourceId =
   | 'nls-finland'
   | 'maanmittauslaitos-open-data'
   | 'dvv-finland-address-data'
+  | 'latvijas-pasts-check-address'
   | 'kartes-lv-postal-codes'
   | 'lgia-latvia'
   | 'vzd-latvia-address-register'
@@ -88,6 +89,7 @@ export type EuropeOpenGeoSourceId =
   | 'maaamet-estonia'
   | 'estonia-address-data-system'
   | 'xgis-estonia'
+  | 'lietuvos-pastas-postcode-search'
   | 'geoportal-lt'
   | 'registru-centras-address-register'
   | 'open-data-lithuania'
@@ -931,6 +933,15 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'Finnish registry/open-data reference for municipality and address-related validation.',
   },
+  'latvijas-pasts-check-address': {
+    id: 'latvijas-pasts-check-address',
+    name: 'Latvijas Pasts Check Address',
+    url: 'https://pasts.lv/en/check-address',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Latvijas Pasts address and postcode lookup for current Latvian address formatting and postal-index validation.',
+  },
   'kartes-lv-postal-codes': {
     id: 'kartes-lv-postal-codes',
     name: 'Baltic Postal Codes API',
@@ -993,6 +1004,15 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Estonian national map service for cadastral, address, and place-name reference layers.',
+  },
+  'lietuvos-pastas-postcode-search': {
+    id: 'lietuvos-pastas-postcode-search',
+    name: 'Lietuvos pastas Postal Code and Address Search',
+    url: 'https://www.post.lt/pasto-kodu-ir-adresu-paieska',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Lithuania Post search for postcode-by-address and address-by-postcode validation.',
   },
   'geoportal-lt': {
     id: 'geoportal-lt',
@@ -2092,9 +2112,9 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   NO: ['data-norge', 'kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
   DK: ['postcode-eu', 'dataforsyningen-denmark', 'danish-address-register-dar', 'geodanmark'],
   FI: ['posti-finland-postal-code-services', 'avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
-  LV: ['kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
+  LV: ['latvijas-pasts-check-address', 'kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
   EE: ['kartes-lv-postal-codes', 'maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
-  LT: ['kartes-lv-postal-codes', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
+  LT: ['lietuvos-pastas-postcode-search', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
   IS: ['okfn-index-postcodes', 'lmmi-iceland', 'iceland-national-registry-addresses', 'island-is-open-data'],
   IT: ['datahub-postal', 'istat-italy-geodata', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],
