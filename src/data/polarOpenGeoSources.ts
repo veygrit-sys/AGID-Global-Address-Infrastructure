@@ -1,4 +1,5 @@
 export type PolarOpenGeoSourceId =
+  | 'australian-antarctic-program-himi'
   | 'nsidc-polar-data'
   | 'gebco-bathymetry'
   | 'gmrt-topography'
@@ -44,6 +45,15 @@ export interface PolarOpenGeoSource {
 }
 
 export const POLAR_OPEN_GEO_SOURCES: Record<PolarOpenGeoSourceId, PolarOpenGeoSource> = {
+  'australian-antarctic-program-himi': {
+    id: 'australian-antarctic-program-himi',
+    name: 'Australian Antarctic Program HIMI',
+    url: 'https://www.antarctica.gov.au/about-antarctica/australia-in-antarctica/the-territory-of-heard-island-and-mcdonald-islands/',
+    kind: 'data-catalog',
+    coverage: 'antarctic',
+    usage: 'reference',
+    notes: 'Official Australian Antarctic Program territory and governance reference for Heard Island and McDonald Islands context, protection status, and current administration.',
+  },
   'nsidc-polar-data': {
     id: 'nsidc-polar-data',
     name: 'National Snow and Ice Data Center',
@@ -296,12 +306,12 @@ export const POLAR_NATURAL_OPEN_SOURCE_IDS = [
 ] as const satisfies readonly PolarOpenGeoSourceId[];
 
 export const POLAR_REGION_CODES = [
-  'AQ', 'TF', 'BV', 'GS', 'GL', 'SJ', 'SJ_SVA', 'SJ_JAN',
+  'AQ', 'TF', 'BV', 'GS', 'HM', 'GL', 'SJ', 'SJ_SVA', 'SJ_JAN',
 ] as const;
 
 export type PolarRegionCode = (typeof POLAR_REGION_CODES)[number];
 
-const ANTARCTIC_AND_SUBANTARCTIC_CODES = new Set<PolarRegionCode>(['AQ', 'TF', 'BV', 'GS']);
+const ANTARCTIC_AND_SUBANTARCTIC_CODES = new Set<PolarRegionCode>(['AQ', 'TF', 'BV', 'GS', 'HM']);
 const ARCTIC_CODES = new Set<PolarRegionCode>(['GL', 'SJ', 'SJ_SVA', 'SJ_JAN']);
 
 const COUNTRY_SOURCE_IDS: Record<PolarRegionCode, readonly PolarOpenGeoSourceId[]> = {
@@ -309,6 +319,7 @@ const COUNTRY_SOURCE_IDS: Record<PolarRegionCode, readonly PolarOpenGeoSourceId[
   TF: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
   BV: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
   GS: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
+  HM: ['australian-antarctic-program-himi', ...ANTARCTIC_NATURAL_OPEN_SOURCE_IDS],
   GL: [...ARCTIC_NATURAL_OPEN_SOURCE_IDS, ...GREENLAND_NATURAL_OPEN_SOURCE_IDS],
   SJ: ARCTIC_NATURAL_OPEN_SOURCE_IDS,
   SJ_SVA: ARCTIC_NATURAL_OPEN_SOURCE_IDS,

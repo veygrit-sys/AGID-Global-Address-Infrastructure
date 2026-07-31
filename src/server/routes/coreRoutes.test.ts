@@ -315,6 +315,43 @@ test('address verification API uses bundled global country formats without paid 
   assert.ok(verification.body.data.sources.includes('server-address-format-pack'));
 });
 
+test('address parser only enables an explicit loopback libpostal sidecar', async () => {
+  const keys = ['AGID_LIBPOSTAL_LOCAL_URL', 'AGID_LIBPOSTAL_LOCAL_ENABLED', 'LIBPOSTAL_PARSE_URL'];
+  const previous = new Map(keys.map(key => [key, process.env[key]]));
+
+  try {
+    process.env.AGID_LIBPOSTAL_LOCAL_URL = 'https://parser.example.invalid/parse';
+    process.env.AGID_LIBPOSTAL_LOCAL_ENABLED = 'true';
+    delete process.env.LIBPOSTAL_PARSE_URL;
+
+    const blocked = await postJson('/api/address/parse', {
+      text: '42 Example Road, Sample City',
+      countryCode: 'US',
+    });
+
+    assert.equal(blocked.status, 200);
+    assert.equal(blocked.body.source, 'local-parser');
+    assert.equal(blocked.body.available, false);
+    assert.match(blocked.body.warnings[0], /loopback HTTP URL/);
+
+    process.env.AGID_LIBPOSTAL_LOCAL_URL = 'http://127.0.0.1:8765/parse';
+    const local = await postJson('/api/address/parse', {
+      text: '42 Example Road, Sample City',
+      countryCode: 'US',
+    });
+
+    assert.equal(local.status, 200);
+    assert.equal(local.body.source, 'libpostal');
+    assert.equal(local.body.available, true);
+  } finally {
+    for (const key of keys) {
+      const value = previous.get(key);
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+});
+
 test('external address validator routes import metadata safely and merge server-allowlisted evidence', async () => {
   const unsafeImport = await postJson('/api/address/external-validators/import', {
     id: 'unsafe-validator',

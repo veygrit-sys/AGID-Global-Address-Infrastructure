@@ -27,3 +27,9 @@ test('saved identifier panel can save the current AGID and start another AOID re
   assert.match(source, /title: 'Saved AGIDs'/);
   assert.match(source, /title: 'Saved AOIDs'/);
 });
+
+test('saved AOID cards render a structured location-only preview', () => {
+  assert.match(source, /formatRegisteredAddressLocationDisplay/);
+  assert.match(source, /const locationDisplay = formatRegisteredAddressLocationDisplay\(aoid\)/);
+  assert.match(source, /\{locationDisplay \|\| aoid\.address\}/);
+});

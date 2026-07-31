@@ -257,8 +257,8 @@ function libpostalEntry(configured: boolean): AddressStandardLibraryEntry {
     depth: 'parse',
     source: 'standard-library',
     reason: configured
-      ? 'A configured libpostal-compatible endpoint can improve multilingual free-form parsing.'
-      : 'No libpostal endpoint is configured; the built-in parser remains the default.',
+      ? 'A configured local libpostal sidecar can improve multilingual free-form parsing.'
+      : 'No local libpostal sidecar is configured; the built-in parser remains the default.',
   };
 }
 
@@ -275,7 +275,7 @@ function warningMessages(input: AddressStandardLibraryResolutionInput, dataLoad:
   return unique([
     ...dataLoad.warnings,
     normalizeCountryCode(input.countryCode) ? null : 'Country code was not supplied; standard-library resolution will stay generic.',
-    input.libpostalEndpointConfigured ? null : 'Optional libpostal-compatible parser endpoint is not configured.',
+    input.libpostalEndpointConfigured ? null : 'Optional local libpostal sidecar is not configured.',
     dataLoad.lookupRequired && !dataLoad.onDemand.length && !dataLoad.background.length
       ? 'Strong postal verification needs an official/open lookup source for this country.'
       : null,
@@ -286,7 +286,7 @@ function warningMessages(input: AddressStandardLibraryResolutionInput, dataLoad:
 function nextActions(input: AddressStandardLibraryResolutionInput, dataLoad: AddressDataLoadPlan) {
   return unique([
     ...dataLoad.nextActions,
-    input.libpostalEndpointConfigured ? null : 'Configure LIBPOSTAL_PARSE_URL only when multilingual free-text parsing needs higher recall.',
+    input.libpostalEndpointConfigured ? null : 'Configure AGID_LIBPOSTAL_LOCAL_URL and AGID_LIBPOSTAL_LOCAL_ENABLED only when multilingual free-text parsing needs higher recall.',
     dataLoad.lookupRequired ? 'Attach official postal evidence, OpenAddresses records, or geodata evidence before claiming strong verification.' : null,
     input.needsNaturalGeographyContext || input.sparseOrRemoteArea
       ? 'Prefer open geodata and Earth-observation context for sparse, desert, ice, wetland, island, mountain, and water-feature addresses.'

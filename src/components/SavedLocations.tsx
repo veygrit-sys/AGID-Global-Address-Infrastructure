@@ -17,6 +17,7 @@ import { AnimatePresence,motion } from 'motion/react';
 import { QRCodeCanvas } from 'qrcode.react';
 import React from 'react';
 import { TranslationKey } from '../constants/translations';
+import { formatRegisteredAddressLocationDisplay } from '../lib/registeredAddressQr';
 import { cn } from '../lib/utils';
 
 interface SavedLocationsProps {
@@ -398,8 +399,10 @@ export const SavedLocations: React.FC<SavedLocationsProps> = ({
                         (aoid.name || '').toLowerCase().includes(savedSearch.toLowerCase()) ||
                         (aoid.address || '').toLowerCase().includes(savedSearch.toLowerCase())
                       )
-                      .map((aoid) => (
-                        <div
+                      .map((aoid) => {
+                        const locationDisplay = formatRegisteredAddressLocationDisplay(aoid);
+
+                        return <div
                           key={aoid.id}
                           className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm hover:shadow-md transition-all relative overflow-hidden group"
                         >
@@ -428,7 +431,7 @@ export const SavedLocations: React.FC<SavedLocationsProps> = ({
                               <div className="flex items-start gap-2">
                                 <HomeIcon className="w-3 h-3 text-emerald-400 mt-0.5" />
                                 <p className="text-[10px] text-slate-400 leading-relaxed italic">
-                                  {aoid.address} {aoid.building} {aoid.room}
+                                  {locationDisplay || aoid.address}
                                 </p>
                               </div>
                             </div>
@@ -446,8 +449,8 @@ export const SavedLocations: React.FC<SavedLocationsProps> = ({
                           >
                             View on Map
                           </button>
-                        </div>
-                      ))
+                        </div>;
+                      })
                   )}
                 </>
               )}

@@ -2,6 +2,9 @@ import {
   sanitizeRegisteredAddressForPublicQr,
   type RegisteredAddressQrPrivacy,
 } from './privacyPolicy';
+import { formatAddressDisplayText } from './addressDisplay';
+import { AddressRenderer, createCanonicalAddress } from './addressRendering';
+import type { AddressFormat } from '../data/address_formats';
 import { normalizeAOIDRecord, redactAOIDForPublicUse } from './aoid';
 import {
   AGID_SECURITY_POLICY,
@@ -130,6 +133,31 @@ export function formatRegisteredAddress(formData: RegisteredAddressFormData) {
 
   if (country) parts.push(country);
   return compact(parts).join(', ');
+}
+
+/**
+ * Renders only the location portion of a saved record. Recipient and phone
+ * fields are deliberately outside this presentation path.
+ */
+export function formatRegisteredAddressLocationDisplay(
+  formData: RegisteredAddressFormData,
+  options: { tab?: string; format?: AddressFormat | null } = {},
+) {
+  const countryCode = clean(formData.country).toUpperCase();
+  const tab = options.tab || 'local';
+  const canonical = createCanonicalAddress({
+    ...formData,
+    country_code: countryCode,
+    building: clean(formData.building) || clean(formData.organization),
+    unit: clean(formData.room),
+  });
+  const rendered = AddressRenderer.render(tab, canonical, options.format);
+  const fallback = formatRegisteredAddress(formData);
+
+  return formatAddressDisplayText(rendered || fallback, {
+    tab,
+    countryCode,
+  });
 }
 
 export function buildRegisteredAddressRecord(

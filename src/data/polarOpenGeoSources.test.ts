@@ -102,10 +102,13 @@ test('polar open geodata registry exists and registers natural geography sources
   }
 
   assert.ok(polarSources.POLAR_REGION_CODES.includes('AQ'), 'AQ should be covered by polar source metadata');
+  assert.ok(polarSources.POLAR_REGION_CODES.includes('HM'), 'HM should be covered by polar source metadata');
   assert.ok(polarSources.POLAR_REGION_CODES.includes('GL'), 'GL should be covered by polar source metadata');
   assert.deepEqual(polarSources.ANTARCTIC_FACILITY_OPEN_SOURCE_IDS, ANTARCTIC_FACILITY_SOURCE_IDS);
   assert.ok(polarSources.getPolarOpenSourceIds('AQ').includes('rema-antarctica'));
   assert.ok(polarSources.getPolarOpenSourceIds('AQ').includes('comnap-antarctic-facilities'));
+  assert.ok(polarSources.getPolarOpenSourceIds('HM').includes('australian-antarctic-program-himi'));
+  assert.ok(polarSources.getPolarOpenSourceIds('HM').includes('scar-cga'));
   assert.ok(polarSources.getPolarOpenSourceIds('GL').includes('greenland-gimp'));
 });
 
@@ -115,6 +118,7 @@ test('polar and subpolar address JSON files expose mountain sea and nature sourc
     TF: [...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ANTARCTIC_NATURAL_SOURCE_IDS],
     BV: [...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ANTARCTIC_NATURAL_SOURCE_IDS],
     GS: [...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ANTARCTIC_NATURAL_SOURCE_IDS],
+    HM: ['australian-antarctic-program-himi', ...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ANTARCTIC_NATURAL_SOURCE_IDS],
     GL: [...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ARCTIC_NATURAL_SOURCE_IDS, ...GREENLAND_NATURAL_SOURCE_IDS],
     SJ: [...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ARCTIC_NATURAL_SOURCE_IDS],
     SJ_SVA: [...POLAR_COMMON_NATURAL_SOURCE_IDS, ...ARCTIC_NATURAL_SOURCE_IDS],

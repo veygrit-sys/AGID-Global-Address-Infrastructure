@@ -66,6 +66,9 @@ export type AsiaOpenGeoSourceId =
   | 'survey-department-nepal'
   | 'osm-nepal'
   | 'hot-osm-nepal'
+  | 'cambodia-post'
+  | 'odc-cambodia-postal-codes'
+  | 'osm-cambodia'
   | 'slpost'
   | 'survey-department-sri-lanka'
   | 'data-gov-lk'
@@ -801,6 +804,35 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'primary',
     notes: 'Nepal official survey department reference for topographic and administrative geography.',
+  },
+  'cambodia-post': {
+    id: 'cambodia-post',
+    name: 'Cambodia Post',
+    url: 'https://cambodiapost.com.kh/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Cambodia Post official site for national postal-service and postcode reference under the live 2026 domain.',
+  },
+  'odc-cambodia-postal-codes': {
+    id: 'odc-cambodia-postal-codes',
+    name: 'Open Development Cambodia Postal Codes',
+    url: 'https://data.opendevelopmentcambodia.net/en/dataset/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Open Development Cambodia terms; verify source-file redistribution before bundling',
+    notes: '2026 postal-code dataset referencing Cambodia Ministry of Posts and Telecommunications Prakas No. 77 dated 2025-12-30.',
+  },
+  'osm-cambodia': {
+    id: 'osm-cambodia',
+    name: 'OpenStreetMap Cambodia',
+    url: 'https://wiki.openstreetmap.org/wiki/WikiProject_Cambodia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Cambodia OSM roads, settlements, Khmer names, and fallback address-tag reference.',
   },
   'osm-nepal': {
     id: 'osm-nepal',
@@ -1784,6 +1816,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   ],
   KR: ['epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
   KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
+  KH: ['cambodia-post', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
   LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
   MV: ['maldives-post', 'mlsa-maldives', 'onemap-maldives', 'osm-maldives'],

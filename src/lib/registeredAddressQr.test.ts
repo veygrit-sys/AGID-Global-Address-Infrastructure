@@ -2,10 +2,11 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
-buildRegisteredAddressQrPayload,
-buildRegisteredAddressRecord,
-buildSavedQrFromRegisteredAddress,
-parseRegisteredAddressQrPayload,
+  buildRegisteredAddressQrPayload,
+  buildRegisteredAddressRecord,
+  buildSavedQrFromRegisteredAddress,
+  formatRegisteredAddressLocationDisplay,
+  parseRegisteredAddressQrPayload,
 } from './registeredAddressQr';
 import { buildRegisteredAddressQualitySnapshot } from './registeredAddressQuality';
 
@@ -80,6 +81,25 @@ test('registered address records keep address data and round-trip through QR pay
   assert.equal(decoded.audit.outcome, 'allowed');
   assert.deepEqual(parseRegisteredAddressQrPayload(payload), record);
   assert.equal(parseRegisteredAddressQrPayload('JP05AV8TJGH8'), null);
+});
+
+test('saved location display uses structured fields without recipient or phone metadata', () => {
+  const display = formatRegisteredAddressLocationDisplay({
+    country: 'US',
+    recipient: 'Private Person',
+    phone: '+1 555 0100',
+    organization: 'Example Building',
+    street: '42 Example Road',
+    city: 'Sample City',
+    state: 'Test State',
+    postcode: '00000',
+    room: 'Unit 9',
+  });
+
+  assert.match(display, /Example Building/);
+  assert.match(display, /Example Road/);
+  assert.doesNotMatch(display, /Private Person/);
+  assert.doesNotMatch(display, /555 0100/);
 });
 
 test('AOID records use an AOID id while preserving the linked AGID and map position', () => {

@@ -9,12 +9,19 @@ import {
   type ExternalVerifierReceiptExpectation,
   type ExternalVerifierReceiptV1,
 } from './addressQlExternalVerifierReceipt';
+import {
+  verifyVerifierLifecycle,
+  type ChallengeConsumptionEvidence,
+  type VerifierKeyLifecycleEvidence,
+  type VerifierLifecycleDecision,
+} from './addressQlVerifierLifecycle';
 
 export type AddressQlExternalVerifierAdapterDecision = {
   status: 'accept' | 'block';
   verified: boolean;
   schemaDecision: AddressQlProofHookDecision;
   receiptDecision: ExternalVerifierReceiptDecision;
+  lifecycleDecision: VerifierLifecycleDecision;
   errors: string[];
   nonClaims: string[];
 };
@@ -26,6 +33,8 @@ export type AddressQlExternalVerifierAdapterDecision = {
 export function runAddressQlExternalVerifierAdapter(
   receipt: ExternalVerifierReceiptV1,
   expected: ExternalVerifierReceiptExpectation,
+  keyLifecycle: VerifierKeyLifecycleEvidence,
+  challengeConsumption: ChallengeConsumptionEvidence,
 ): AddressQlExternalVerifierAdapterDecision {
   const hook = ADDRESSQL_VERIFIER_HOOKS.find(
     candidate => candidate.id === 'addressql-external-verifier-hook',
@@ -34,14 +43,22 @@ export function runAddressQlExternalVerifierAdapter(
 
   const schemaDecision = runAddressQlVerifierHook(expected.proofInput, hook);
   const receiptDecision = verifyExternalVerifierReceipt(receipt, expected);
+  const lifecycleDecision = verifyVerifierLifecycle(
+    receipt,
+    expected,
+    keyLifecycle,
+    challengeConsumption,
+  );
   const errors = [
     ...schemaDecision.errors.map(error => `schema:${error}`),
     ...receiptDecision.errors.map(error => `receipt:${error}`),
+    ...lifecycleDecision.errors.map(error => `lifecycle:${error}`),
   ];
   const verified =
     schemaDecision.schemaAccepted
     && schemaDecision.hookReady
     && receiptDecision.verified
+    && lifecycleDecision.verified
     && errors.length === 0;
 
   return {
@@ -49,11 +66,13 @@ export function runAddressQlExternalVerifierAdapter(
     verified,
     schemaDecision,
     receiptDecision,
+    lifecycleDecision,
     errors,
     nonClaims: [...new Set([
       ...schemaDecision.nonClaims,
       ...receiptDecision.nonClaims,
-      'Adapter acceptance is conditional on trusted authenticity and cryptographic-verification evidence.',
+      ...lifecycleDecision.nonClaims,
+      'Adapter acceptance is conditional on trusted authenticity, cryptographic-verification, key-status, and atomic challenge-consumption evidence.',
     ])],
   };
 }

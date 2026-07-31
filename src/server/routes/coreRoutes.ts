@@ -1,5 +1,6 @@
 import type { Express } from 'express';
 import { parseAddressText } from '../../lib/addressIntelligence';
+import { assessLocalLibpostalEndpoint } from '../../lib/libpostalGateway';
 import { verifyAddressCandidate } from '../../lib/addressVerificationEngine';
 import {
   ADDRESS_STANDARD_LIBRARY_RESOLUTION_VERSION,
@@ -160,6 +161,22 @@ function booleanFromUnknown(value: unknown) {
   return /^(1|true|yes|y|on)$/i.test(value.trim());
 }
 
+function getLocalLibpostalSidecarConfig() {
+  const endpoint = process.env.AGID_LIBPOSTAL_LOCAL_URL?.trim()
+    || process.env.LIBPOSTAL_PARSE_URL?.trim()
+    || '';
+  const endpointPolicy = assessLocalLibpostalEndpoint(endpoint || undefined);
+  const enabled = serverPolicyEnabled(process.env.AGID_LIBPOSTAL_LOCAL_ENABLED, false)
+    || serverPolicyEnabled(process.env.AGID_LIBPOSTAL_ALLOW_PLAINTEXT, false);
+
+  return {
+    endpoint,
+    endpointPolicy,
+    enabled,
+    configured: enabled && endpointPolicy.status === 'ready',
+  };
+}
+
 function standardLibraryResolutionInputFromBody(body: JsonRecord) {
   const address = objectOrUndefined(body.address) as JsonRecord | undefined;
   const standardLibrary = objectOrUndefined(body.standardLibrary) as JsonRecord | undefined;
@@ -187,7 +204,7 @@ function standardLibraryResolutionInputFromBody(body: JsonRecord) {
     sparseOrRemoteArea: Boolean(body.sparseOrRemoteArea),
     allowCredentialedSources: Boolean(body.allowCredentialedSources),
     includeGlobalFallbacks: Boolean(body.includeGlobalFallbacks),
-    libpostalEndpointConfigured: Boolean(process.env.LIBPOSTAL_PARSE_URL),
+    libpostalEndpointConfigured: getLocalLibpostalSidecarConfig().configured,
   };
 }
 
@@ -207,7 +224,7 @@ function standardLibraryResolutionInputFromQuery(query: Record<string, unknown>)
     sparseOrRemoteArea: booleanFromUnknown(query.sparseOrRemoteArea) || booleanFromUnknown(query.remote),
     allowCredentialedSources: booleanFromUnknown(query.allowCredentialedSources),
     includeGlobalFallbacks: booleanFromUnknown(query.includeGlobalFallbacks),
-    libpostalEndpointConfigured: Boolean(process.env.LIBPOSTAL_PARSE_URL),
+    libpostalEndpointConfigured: getLocalLibpostalSidecarConfig().configured,
   };
 }
 
@@ -579,9 +596,7 @@ export function registerCoreApiRoutes(
   });
 
   app.post('/api/address/parse', async (req, res) => {
-    const endpoint = process.env.LIBPOSTAL_PARSE_URL;
-    const connectorToken = process.env.AGID_LIBPOSTAL_CONNECTOR_TOKEN?.trim() ?? process.env.LIBPOSTAL_CONNECTOR_TOKEN?.trim() ?? '';
-    const plaintextAllowed = serverPolicyEnabled(process.env.AGID_LIBPOSTAL_ALLOW_PLAINTEXT, false);
+    const localSidecar = getLocalLibpostalSidecarConfig();
     const text = typeof req.body?.text === 'string' ? req.body.text : '';
     const countryCode = typeof req.body?.countryCode === 'string' ? req.body.countryCode : '';
 
@@ -589,7 +604,7 @@ export function registerCoreApiRoutes(
       return res.status(400).json({ error: 'Missing address text' });
     }
 
-    if (!endpoint || !plaintextAllowed) {
+    if (!localSidecar.configured) {
       const canonical = parseAddressText(text);
       if (countryCode && !canonical.country_code) canonical.country_code = countryCode.toLowerCase();
       return res.json({
@@ -597,23 +612,32 @@ export function registerCoreApiRoutes(
         available: false,
         canonical,
         components: Object.entries(canonical).map(([label, value]) => ({ label, value: String(value) })),
-        warnings: endpoint && !plaintextAllowed
-          ? ['libpostal external parsing is disabled by server policy; set AGID_LIBPOSTAL_ALLOW_PLAINTEXT=true only for an approved connector']
-          : [],
+        warnings: localSidecar.endpointPolicy.status === 'blocked'
+          ? ['libpostal parsing is blocked unless the endpoint is an absolute loopback HTTP URL without credentials.']
+          : localSidecar.endpoint && !localSidecar.enabled
+            ? ['local libpostal parsing is disabled; set AGID_LIBPOSTAL_LOCAL_ENABLED=true for an approved loopback sidecar.']
+            : [],
       });
     }
 
     try {
-      const response = await connectorFetchNoCache(endpoint, {
+      const response = await connectorFetchNoCache(localSidecar.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(connectorToken ? { Authorization: `Bearer ${connectorToken}` } : {}),
         },
         body: JSON.stringify({ text, countryCode }),
       }, 15000, 0);
       if (!response.ok) {
-        return res.status(response.status).json({ error: 'Libpostal service failed' });
+        const canonical = parseAddressText(text);
+        if (countryCode && !canonical.country_code) canonical.country_code = countryCode.toLowerCase();
+        return res.json({
+          source: 'local-parser',
+          available: false,
+          canonical,
+          components: Object.entries(canonical).map(([label, value]) => ({ label, value: String(value) })),
+          warnings: ['local libpostal sidecar is unavailable; the built-in parser was used.'],
+        });
       }
       const data = await response.json();
       res.json({
@@ -621,9 +645,16 @@ export function registerCoreApiRoutes(
         available: true,
         components: Array.isArray(data.components) ? data.components : data,
       });
-    } catch (error) {
-      console.error('[API] Libpostal Parse Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } catch {
+      const canonical = parseAddressText(text);
+      if (countryCode && !canonical.country_code) canonical.country_code = countryCode.toLowerCase();
+      res.json({
+        source: 'local-parser',
+        available: false,
+        canonical,
+        components: Object.entries(canonical).map(([label, value]) => ({ label, value: String(value) })),
+        warnings: ['local libpostal sidecar is unavailable; the built-in parser was used.'],
+      });
     }
   });
 
@@ -805,7 +836,7 @@ export function registerCoreApiRoutes(
       dataLoad: objectOrUndefined(body.dataLoad) as any,
       standardLibrary: {
         ...standardLibraryResolutionInputFromBody(body),
-        libpostalEndpointConfigured: Boolean(process.env.LIBPOSTAL_PARSE_URL),
+        libpostalEndpointConfigured: getLocalLibpostalSidecarConfig().configured,
       } as any,
     });
 
@@ -867,7 +898,7 @@ export function registerCoreApiRoutes(
       dataLoad: objectOrUndefined(body.dataLoad) as any,
       standardLibrary: {
         ...standardLibraryResolutionInputFromBody(body),
-        libpostalEndpointConfigured: Boolean(process.env.LIBPOSTAL_PARSE_URL),
+        libpostalEndpointConfigured: getLocalLibpostalSidecarConfig().configured,
       } as any,
     });
 
