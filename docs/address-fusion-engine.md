@@ -46,7 +46,7 @@ An inferred house number is never promoted to an address fact. AGID may show tha
 building lies on a road or inside a postal zone, but an unverified number remains
 unknown.
 
-## First 25 country adapters
+## First 61 country adapters
 
 | Region | Countries |
 | --- | --- |
@@ -55,8 +55,14 @@ unknown.
 | Gulf | Saudi Arabia, Qatar, Bahrain, Oman |
 | Asia | Malaysia, Thailand, China, India |
 | Africa / Indian Ocean | South Africa, Mauritius |
+| Southeast Asia expansion | Indonesia, Philippines, Vietnam, Brunei |
+| South Asia / Himalaya | Bangladesh, Pakistan, Sri Lanka, Nepal, Bhutan |
+| Central Asia / Caucasus | Mongolia, Kazakhstan, Uzbekistan, Armenia, Azerbaijan |
+| Middle East expansion | Jordan, Kuwait |
+| North / East / West / Southern Africa | Morocco, Tunisia, Egypt, Kenya, Ghana, Rwanda, Namibia, Botswana, Zambia, Zimbabwe, Tanzania, Uganda, Senegal, Cabo Verde |
+| Latin America / Caribbean expansion | Peru, Ecuador, Paraguay, Dominican Republic, Jamaica, Trinidad and Tobago |
 
-Every adapter declares all nine required layers: official address, postal, building,
+All 61 adapters declare all nine required layers: official address, postal, building,
 road, cadastre, administrative boundaries, coordinates, statistics and OSM. A layer
 marked `research-required` is a discovery target, not a claim that AGID may download
 or redistribute it. `restricted` layers may enrich an authorised internal response
