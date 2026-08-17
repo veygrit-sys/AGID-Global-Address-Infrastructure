@@ -123,7 +123,12 @@ for (const countryCode of EXPANSION_COUNTRY_CODES) {
   assert.ok(getAddressFusionCountry(countryCode), `missing adapter: ${countryCode}`);
 }
 
-assert.equal(ADDRESS_FUSION_COUNTRIES.length, 61);
+const SECOND_EXPANSION_COUNTRY_CODES = ["DZ","LY","ET","MZ","MG","MW","AO","CM","CI","BJ","TG","GA","CG","CD","LS","SZ","DJ","MR","GM","GN","SL","LR","SD","KG","TJ","LA","KH","TL","IQ","LB","IR","PS","BO","GT","SV","HN","NI","GY","SR","FJ","PG"] as const;
+for (const countryCode of SECOND_EXPANSION_COUNTRY_CODES) {
+  assert.ok(getAddressFusionCountry(countryCode), `missing adapter: ${countryCode}`);
+}
+
+assert.equal(ADDRESS_FUSION_COUNTRIES.length, 102);
 assertCompleteCountrySourcePlans();
 for (const country of ADDRESS_FUSION_COUNTRIES) {
   assert.equal(new Set(country.sourcePlan.map((source) => source.kind)).size, 9);
@@ -143,6 +148,13 @@ assert.ok(getAddressFusionCountry("TT")?.postcodePattern?.test("120110"));
 assert.equal(getAddressFusionCountry("RW")?.postcodePattern, undefined);
 assert.equal(getAddressFusionCountry("BW")?.postcodePattern, undefined);
 assert.equal(getAddressFusionCountry("ZW")?.postcodePattern, undefined);
+assert.ok(getAddressFusionCountry("DZ")?.postcodePattern?.test("16000"));
+assert.ok(getAddressFusionCountry("KH")?.postcodePattern?.test("12000"));
+assert.ok(getAddressFusionCountry("IR")?.postcodePattern?.test("12345-67890"));
+assert.ok(getAddressFusionCountry("PG")?.postcodePattern?.test("111"));
+assert.equal(getAddressFusionCountry("AO")?.postcodePattern, undefined);
+assert.equal(getAddressFusionCountry("PS")?.postcodePattern, undefined);
+assert.equal(getAddressFusionCountry("FJ")?.postcodePattern, undefined);
 
 assert.ok(ADDRESS_FIELDS.includes("buildingName"));
 assert.ok(ADDRESS_FIELDS.includes("postcode"));
