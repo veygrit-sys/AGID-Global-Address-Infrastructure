@@ -418,7 +418,7 @@ function fuseCluster(
     ...Object.values(fields),
     latitude,
     longitude,
-  ].filter((value): value is FusedField<string | number> => Boolean(value));
+  ].filter(Boolean) as Array<FusedField<string> | FusedField<number>>;
   const completeness =
     ADDRESS_FIELDS.filter((field) => fields[field]).length / ADDRESS_FIELDS.length;
   const averageConfidence =
