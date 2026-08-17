@@ -35,6 +35,20 @@ official address + postal + building + road + cadastre
   internal licensed view     open/public export gate
 ```
 
+## Sequential confidence gates
+
+Validation is intentionally ordered:
+
+1. administrative hierarchy;
+2. locality;
+3. road;
+4. building position;
+5. postal zone.
+
+A later stage cannot erase a failed earlier stage. Postal agreement therefore cannot make a geographically inconsistent building appear verified. Geography and statistics may strongly validate the administrative and locality stages, while road/building/postal confidence remains partial until matching evidence exists. Roadless rural buildings are allowed only when authoritative building or cadastral geometry and coordinates provide strong independent support. Countries without a nationwide postcode system receive an `unavailable` postal stage rather than a fabricated failure or code.
+
+The final decision is capped when prerequisite stages fail and reports stage-level confidence, coverage, evidence IDs, blockers and review reasons.
+
 The engine deliberately separates four evidence classes:
 
 - **Verified** — confirmed by an authoritative address, postal or cadastral source.
@@ -46,7 +60,7 @@ An inferred house number is never promoted to an address fact. AGID may show tha
 building lies on a road or inside a postal zone, but an unverified number remains
 unknown.
 
-## First 61 country adapters
+## First 102 country adapters
 
 | Region | Countries |
 | --- | --- |
@@ -61,8 +75,13 @@ unknown.
 | Middle East expansion | Jordan, Kuwait |
 | North / East / West / Southern Africa | Morocco, Tunisia, Egypt, Kenya, Ghana, Rwanda, Namibia, Botswana, Zambia, Zimbabwe, Tanzania, Uganda, Senegal, Cabo Verde |
 | Latin America / Caribbean expansion | Peru, Ecuador, Paraguay, Dominican Republic, Jamaica, Trinidad and Tobago |
+| Africa expansion II | Algeria, Libya, Ethiopia, Mozambique, Madagascar, Malawi, Angola, Cameroon, Côte d’Ivoire, Benin, Togo, Gabon, Republic of the Congo, DR Congo, Lesotho, Eswatini, Djibouti, Mauritania, The Gambia, Guinea, Sierra Leone, Liberia, Sudan |
+| Central / Southeast Asia expansion II | Kyrgyzstan, Tajikistan, Laos, Cambodia, Timor-Leste |
+| Middle East expansion II | Iraq, Lebanon, Iran, Palestine |
+| Central America / northern South America | Bolivia, Guatemala, El Salvador, Honduras, Nicaragua, Guyana, Suriname |
+| Pacific | Fiji, Papua New Guinea |
 
-All 61 adapters declare all nine required layers: official address, postal, building,
+All 102 adapters declare all nine required layers: official address, postal, building,
 road, cadastre, administrative boundaries, coordinates, statistics and OSM. A layer
 marked `research-required` is a discovery target, not a claim that AGID may download
 or redistribute it. `restricted` layers may enrich an authorised internal response
