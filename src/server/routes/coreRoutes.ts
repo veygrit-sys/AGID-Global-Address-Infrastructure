@@ -72,6 +72,7 @@ import { registerAddressElementRadarRoutes } from './addressElementRadarRoutes';
 import { registerAddressIntentRoutes } from './addressIntentRoutes';
 import { registerAddressQualityFeedbackRoutes } from './addressQualityFeedbackRoutes';
 import { registerAddressResolutionSystemRoutes } from './addressResolutionSystemRoutes';
+import { registerPostalContextRoutes } from './postalContextRoutes';
 import { createConfiguredAddressResolutionLedgerStore } from '../addressResolutionLedgerStore';
 import { registerDroneDeliveryEvidenceRoutes } from './droneDeliveryEvidenceRoutes';
 import { registerExternalDeliveryApiRoutes } from './externalDeliveryApiRoutes';
@@ -1046,6 +1047,7 @@ export function registerCoreApiRoutes(
     registryStore: hostedAgidRegistryStore,
     ledgerStore: addressResolutionLedgerStore,
   });
+  registerPostalContextRoutes(app);
   registerCrossBorderAuxiliaryRoutes(app);
   registerTaxOpenSourceRoutes(app);
   registerExternalDeliveryApiRoutes(app, { connectorFetch: connectorFetchNoCache });

@@ -15,6 +15,7 @@ import {
   type PostalContextResolutionLevel,
   type PostalContextResolutionStatus,
 } from './postalContextGraph';
+import { postalContextAssertionAllowedForUse } from './postalContextAssertionPolicy';
 
 export const POSTAL_CONTEXT_RESOLVER_VERSION = 'postal-context-resolver/v0.1' as const;
 
@@ -111,21 +112,6 @@ const EVIDENCE_TIER_RANK: Record<PostalContextEvidenceTier, number> = {
   E4: 4,
   E5: 5,
 };
-
-const SAFE_CONTEXT_RELATIONS = new Set<PostalContextAssertion['relation']>([
-  'admin_within',
-  'part_of',
-  'stands_on',
-  'delivery_served_by',
-  'covered_by_agid',
-]);
-
-const DIRECT_IDENTITY_METHODS = new Set<PostalContextAssertionMethod>([
-  'explicit_assignment',
-  'direct_source_link',
-  'official_crosswalk',
-  'source_relation',
-]);
 
 function unique<T>(values: readonly T[]) {
   return [...new Set(values)];
@@ -233,20 +219,25 @@ function buildCandidate(args: {
 
   if (root) {
     includedNodeIds.add(root.id);
-    const link = assertions.find(assertion =>
-      assertion.fromNodeId === start.id
-      && assertion.toNodeId === root.id
-      && assertion.relation === 'locates');
+    const link = assertions.find(assertion => postalContextAssertionAllowedForUse({
+      assertion,
+      fromNode: start,
+      toNode: root,
+      use: 'address_record_root',
+    }));
     if (link) includedAssertions.push(link);
   }
 
   const anchor = root ?? start;
-  const directPostal = assertions.filter(assertion =>
-    assertion.fromNodeId === anchor.id
-    && assertion.relation === 'postal_assigned'
-    && DIRECT_IDENTITY_METHODS.has(assertion.method)
-    && nodeById.get(assertion.toNodeId)?.kind === 'postal_feature'
-    && assertion.source.assignmentAuthority !== 'none');
+  const directPostal = assertions.filter(assertion => {
+    const target = nodeById.get(assertion.toNodeId);
+    return Boolean(target && postalContextAssertionAllowedForUse({
+      assertion,
+      fromNode: anchor,
+      toNode: target,
+      use: 'postal_assignment',
+    }));
+  });
   const postalKey = (assertion: PostalContextAssertion) =>
     nodeById.get(assertion.toNodeId)?.postalCode ?? assertion.toNodeId;
   const directPostalKeys = new Set(directPostal.map(postalKey));
@@ -272,10 +263,14 @@ function buildCandidate(args: {
 
   const buildingAssertionByNodeId = new Map<string, PostalContextAssertion>();
   for (const assertion of assertions) {
-    if (assertion.fromNodeId === anchor.id
-      && assertion.relation === 'addresses'
-      && DIRECT_IDENTITY_METHODS.has(assertion.method)
-      && nodeById.get(assertion.toNodeId)?.kind === 'building'
+    const target = nodeById.get(assertion.toNodeId);
+    if (target
+      && postalContextAssertionAllowedForUse({
+        assertion,
+        fromNode: anchor,
+        toNode: target,
+        use: 'building_identity',
+      })
       && !buildingAssertionByNodeId.has(assertion.toNodeId)) {
       buildingAssertionByNodeId.set(assertion.toNodeId, assertion);
     }
@@ -294,9 +289,15 @@ function buildCandidate(args: {
     const fromNodeId = queue.shift()!;
     for (const assertion of assertions) {
       if (assertion.fromNodeId !== fromNodeId) continue;
-      if (!SAFE_CONTEXT_RELATIONS.has(assertion.relation)) continue;
+      const from = nodeById.get(fromNodeId);
       const target = nodeById.get(assertion.toNodeId);
-      if (!target || target.kind === 'address_record' || includedNodeIds.has(target.id)) continue;
+      if (!from || !target || includedNodeIds.has(target.id)
+        || !postalContextAssertionAllowedForUse({
+          assertion,
+          fromNode: from,
+          toNode: target,
+          use: 'resolution_context',
+        })) continue;
       includedAssertions.push(assertion);
       includedNodeIds.add(target.id);
       queue.push(target.id);
@@ -310,7 +311,13 @@ function buildCandidate(args: {
     for (const assertion of assertions) {
       if (assertion.relation !== 'accesses' || !buildingIds.has(assertion.toNodeId)) continue;
       const entrance = nodeById.get(assertion.fromNodeId);
-      if (!entrance || entrance.kind !== 'entrance') continue;
+      const building = nodeById.get(assertion.toNodeId);
+      if (!entrance || !building || !postalContextAssertionAllowedForUse({
+        assertion,
+        fromNode: entrance,
+        toNode: building,
+        use: 'navigation_entrance',
+      })) continue;
       includedAssertions.push(assertion);
       includedNodeIds.add(entrance.id);
     }
@@ -396,16 +403,24 @@ export function resolvePostalContext(
     && isPurposeEligible(assertion, request.purpose));
   const assertions = eligibleAssertions.filter(assertion =>
     isPostalContextAssertionEffectiveAt(assertion, request.validAt, knownAt));
-  const spatialPostalAssertions = assertions.filter(assertion =>
-    assertion.fromNodeId === start.id
-    && assertion.relation === 'postal_contains'
-    && request.graph.nodes.find(node => node.id === assertion.toNodeId)?.kind === 'postal_feature'
-    && assertion.source.geometryAuthority !== 'none');
-  const addressRecordLinks = assertions.filter(assertion =>
-    assertion.fromNodeId === start.id
-    && assertion.relation === 'locates'
-    && DIRECT_IDENTITY_METHODS.has(assertion.method)
-    && request.graph.nodes.find(node => node.id === assertion.toNodeId)?.kind === 'address_record');
+  const spatialPostalAssertions = assertions.filter(assertion => {
+    const target = request.graph.nodes.find(node => node.id === assertion.toNodeId);
+    return Boolean(target && postalContextAssertionAllowedForUse({
+      assertion,
+      fromNode: start,
+      toNode: target,
+      use: 'spatial_postal',
+    }));
+  });
+  const addressRecordLinks = assertions.filter(assertion => {
+    const target = request.graph.nodes.find(node => node.id === assertion.toNodeId);
+    return Boolean(target && postalContextAssertionAllowedForUse({
+      assertion,
+      fromNode: start,
+      toNode: target,
+      use: 'address_record_root',
+    }));
+  });
   const visibleAddressRecordLinks = addressRecordLinks.filter(assertion => {
     const target = request.graph.nodes.find(node => node.id === assertion.toNodeId);
     return target ? isVisible(target, visibility) : false;

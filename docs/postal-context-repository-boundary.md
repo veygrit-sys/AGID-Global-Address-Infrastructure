@@ -148,16 +148,34 @@ boundary-cell handlingを記録し、最終判定は元geometryで行う。
 Public contractはAGID側が所有し、country releaseはデータを供給する。
 
 ```text
-POST /v1/postal/resolve
-GET  /v1/postal/{country}/{postalCode}
-GET  /v1/postal/releases/{country}
-GET  /v1/postal/intersects?country=JP&bbox=...
+GET  /api/v1/postal/capabilities
+POST /api/v1/postal/resolve
+GET  /api/v1/postal/{country}/{postalCode}
+GET  /api/v1/postal/releases/{country}
+GET  /api/v1/postal/intersects?country=JP&bbox=...
 ```
 
-精密な座標や住所文字列を受けるresolveは`POST`、`Cache-Control: no-store`、
-raw query logging無効を原則とする。公開Polygon/tile/manifestはimmutable URLとdigestで
-長期cacheできる。API responseはrelease ID、manifest digest、policy version、status、
-resolved level、component assertion IDsを返す。
+Hosted APIのstable base pathは`/api/v1`とする。`/api`はserver内部のlegacy aliasであり、
+`/v1`単独のaliasは提供しない。
+
+精密な座標を受けるresolveは`POST`、`Cache-Control: private, no-store`、raw query logging無効を
+原則とする。M2の公開resolveは住所文字列、Unit、受取人、電話番号、配送指示を受け取らない。
+`validAt`は現実世界の評価時刻、`knownAt`はシステムの知識時刻であり、resolveでは`validAt`を
+必須とする。公開Polygon/tile/manifestはimmutable URLとdigestで長期cacheできる。
+
+API responseはrelease ID、manifest digest、policy version、status、resolved levelを返す。
+componentの`assertionId`やlookupの`assertionIds`を返す場合は、country releaseに含まれるstableな
+source/release IDだけを公開する。`runtime:*`の一時Assertion ID、query node ID、address-point ID、
+path IDはredactする。
+
+郵便番号lookupのgeometryは`geometry=geojson`を明示した場合だけ返し、省略時と`geometry=none`は
+住所contextだけを返す。M2ではlookup geometryを最大16 feature/20,000 position、bbox intersectsを
+`limit=1..16`（default 16）に制限し、未返却のmatchがある場合は`truncated`を明示する。
+
+同一郵便番号に複数の住所階層branchがある場合、lookupは最大32件の`alternatives`へbranch別の
+`postalFeature + contexts + assertionIds`を分離し、top-levelの`contexts`と`assertionIds`には全branchの
+共通部分だけを返す。上限超過時は`ambiguous`とwarningを返し、top-level共通部分を空にして誤結合を
+避ける。
 
 Hosted APIは利便性のためのsurfaceであり、public contractやpin済みpackのlocal resolutionを
 独占してはならない。
@@ -169,8 +187,12 @@ Hosted APIは利便性のためのsurfaceであり、public contractやpin済み
 - Source refreshごとにfeature count、covered area、exception class、link rate、holdoutをdiffする。
 - material driftは自動昇格せずreviewを要求する。
 - active pointerとlast-known-good pointerを分ける。
-- APIは過去releaseをpinでき、`asOf`と`knownAt`を受けられる。
-- 廃止releaseを削除する前に、監査・再現に必要なmanifestとlicense lineageを保持する。
+- M2 runtimeはactive release、またはactiveが無効な場合の検証済みLKGだけをserveする。
+- M2のrelease selectorは`active`、または現在serve中の`releaseId + manifestDigest + policyVersion`の
+  完全一致を受ける。不一致pinはHTTP 409とし、任意の過去releaseへ暗黙fallbackしない。
+- APIの時間入力は`validAt`と`knownAt`とする。
+- M3以降でimmutable historical catalogを導入した場合だけ、過去release pinをpublic capabilityとして
+  宣言できる。廃止releaseのmanifestとlicense lineageは、その監査・再現要件に従って保持する。
 
 ## 7. Privacy and licensing boundary
 

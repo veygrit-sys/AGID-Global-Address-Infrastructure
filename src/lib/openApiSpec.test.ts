@@ -101,6 +101,11 @@ test('OpenAPI paths stay relative to /api/v1 and cover core integration surfaces
     '/amn/registry/{envelopeId}/verify',
     '/amn/registry/stats',
     '/postal-code/nearest',
+    '/postal/capabilities',
+    '/postal/releases/{country}',
+    '/postal/resolve',
+    '/postal/intersects',
+    '/postal/{country}/{postalCode}',
     '/nominatim/reverse',
     '/overpass',
     '/osrm/route',
@@ -121,6 +126,12 @@ test('OpenAPI components include shared AGID result and error schemas', () => {
   assert.ok('AgidResultOracleOperaIntegrationHealth' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('AgidResultOracleOperaAddressSyncResult' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('CloudDbConnectorProfile' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('PostalContextReleaseSelector' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('PostalContextResolveRequest' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('PostalContextRuntimeRelease' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('PostalContextPublicResolution' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('AgidResultPostalContextResolution' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('AgidResultPostalContextCapabilities' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('DatabaseAdapterCompatibilityRecord' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('CloudDbConnectorPlanRequest' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('CloudDbConnectorPlan' in AGID_OPENAPI_SPEC.components.schemas);
@@ -250,6 +261,24 @@ test('OpenAPI components include shared AGID result and error schemas', () => {
   assert.ok('AgidResultAmnResolution' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('AgidResultAmnEnvelopeVerification' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('AgidResultAmnRegistryStats' in AGID_OPENAPI_SPEC.components.schemas);
+});
+
+test('Postal Context OpenAPI responses do not advertise uncalibrated confidence', () => {
+  for (const schemaName of [
+    'AgidResultPostalContextResolution',
+    'AgidResultPostalContextCapabilities',
+    'AgidResultPostalContextCountryStatus',
+    'AgidResultPostalContextLookup',
+    'AgidResultPostalContextIntersection',
+  ] as const) {
+    const schema = AGID_OPENAPI_SPEC.components.schemas[schemaName];
+    assert.equal('confidence' in schema.properties, false, `${schemaName} has no confidence field`);
+    assert.equal(
+      (schema.required as readonly string[]).includes('confidence'),
+      false,
+      `${schemaName} does not require confidence`,
+    );
+  }
 });
 
 test('OpenAPI documents credential issuer trust endpoints without private issuer or address secrets', () => {
@@ -819,4 +848,160 @@ test('OpenAPI exposes place search language as separate from app and address lan
   const osmSearch = AGID_OPENAPI_SPEC.paths['/osm-search'].get;
   const acceptLanguage = osmSearch.parameters.find((parameter: any) => parameter.name === 'accept_language') as any;
   assert.match(acceptLanguage.description, /Search-only/);
+});
+
+test('OpenAPI pins strict Postal Context DTOs to the public runtime and service contract', () => {
+  const schemas = AGID_OPENAPI_SPEC.components.schemas as Record<string, any>;
+  const paths = AGID_OPENAPI_SPEC.paths as Record<string, any>;
+  const expectedResponseRefs = {
+    '/postal/capabilities': '#/components/schemas/AgidResultPostalContextCapabilities',
+    '/postal/releases/{country}': '#/components/schemas/AgidResultPostalContextCountryStatus',
+    '/postal/resolve': '#/components/schemas/AgidResultPostalContextResolution',
+    '/postal/intersects': '#/components/schemas/AgidResultPostalContextIntersection',
+    '/postal/{country}/{postalCode}': '#/components/schemas/AgidResultPostalContextLookup',
+  } as const;
+  for (const [path, expectedRef] of Object.entries(expectedResponseRefs)) {
+    const operation = paths[path].get ?? paths[path].post;
+    assert.equal(operation.responses['200'].content['application/json'].schema.$ref, expectedRef);
+  }
+
+  const requiredSchemas = [
+    'PostalContextTimeRange',
+    'PostalContextPublicAssertionId',
+    'PostalContextAmbiguity',
+    'PostalContextCapabilities',
+    'PostalContextPublicComponent',
+    'PostalContextPublicResolutionComponent',
+    'PostalContextPublicResolutionCandidate',
+    'PostalContextPostalEvidence',
+    'PostalContextAddressPointEvidence',
+    'PostalContextAgidReference',
+    'PostalContextPosition',
+    'PostalContextLinearRing',
+    'PostalContextPolygonCoordinates',
+    'PostalContextPointGeometry',
+    'PostalContextPolygonGeometry',
+    'PostalContextMultiPolygonGeometry',
+    'PostalContextGeoJsonGeometry',
+    'PostalContextPostalGeometrySource',
+    'PostalContextPostalGeometryResult',
+    'PostalContextPostalLookupAlternative',
+    'PostalContextPostalLookup',
+    'PostalContextBbox',
+    'PostalContextIntersection',
+    'PostalContextRuntimeAttestation',
+    'PostalContextRuntimeStatus',
+    'PostalContextCountryStatus',
+    'PostalContextCapabilitiesResponse',
+    'PostalContextRuntimeRelease',
+    'PostalContextPublicResolution',
+    'AgidResultPostalContextCapabilities',
+    'AgidResultPostalContextCountryStatus',
+    'AgidResultPostalContextResolution',
+    'AgidResultPostalContextIntersection',
+    'AgidResultPostalContextLookup',
+  ];
+  requiredSchemas.forEach(name => assert.ok(name in schemas, `${name} is documented`));
+
+  const strictObjectSchemas = [
+    'PostalContextTimeRange',
+    'PostalContextCapabilities',
+    'PostalContextPublicComponent',
+    'PostalContextPublicResolutionComponent',
+    'PostalContextPublicResolutionCandidate',
+    'PostalContextPostalEvidence',
+    'PostalContextAddressPointEvidence',
+    'PostalContextAgidReference',
+    'PostalContextPointGeometry',
+    'PostalContextPolygonGeometry',
+    'PostalContextMultiPolygonGeometry',
+    'PostalContextPostalGeometrySource',
+    'PostalContextPostalGeometryResult',
+    'PostalContextPostalLookupAlternative',
+    'PostalContextPostalLookup',
+    'PostalContextIntersection',
+    'PostalContextRuntimeAttestation',
+    'PostalContextRuntimeStatus',
+    'PostalContextCountryStatus',
+    'PostalContextCapabilitiesResponse',
+    'PostalContextRuntimeRelease',
+    'PostalContextPublicResolution',
+    'AgidResultPostalContextCapabilities',
+    'AgidResultPostalContextCountryStatus',
+    'AgidResultPostalContextResolution',
+    'AgidResultPostalContextIntersection',
+    'AgidResultPostalContextLookup',
+  ];
+  strictObjectSchemas.forEach(name => assert.equal(
+    schemas[name].additionalProperties,
+    false,
+    `${name} rejects undeclared fields`,
+  ));
+
+  assert.equal(
+    schemas.PostalContextPublicResolution.properties.selected.$ref,
+    '#/components/schemas/PostalContextPublicResolutionCandidate',
+  );
+  assert.equal(
+    schemas.PostalContextPublicResolutionCandidate.properties.components.items.$ref,
+    '#/components/schemas/PostalContextPublicResolutionComponent',
+  );
+  assert.equal(
+    schemas.PostalContextPostalLookup.properties.alternatives.items.$ref,
+    '#/components/schemas/PostalContextPostalLookupAlternative',
+  );
+  assert.equal(schemas.PostalContextPublicAssertionId.pattern, '^(?!runtime:).+');
+  assert.equal('nodeId' in schemas.PostalContextPublicResolutionComponent.properties, false);
+  assert.equal('pathId' in schemas.PostalContextPublicResolutionCandidate.properties, false);
+  assert.ok(schemas.PostalContextPostalLookup.required.includes('normalizedPostalCode'));
+  assert.ok(
+    schemas.PostalContextPublicResolutionComponent.properties.featureKind.enum.includes('query_point'),
+  );
+  assert.equal(schemas.PostalContextPostalLookup.properties.postalFeatures.maxItems, 64);
+  assert.equal(schemas.PostalContextPostalLookup.properties.contexts.maxItems, 256);
+  assert.equal(schemas.PostalContextPostalLookup.properties.assertionIds.maxItems, 2048);
+  assert.equal(schemas.PostalContextPostalLookup.properties.alternatives.maxItems, 32);
+  assert.equal(schemas.PostalContextPostalLookupAlternative.properties.contexts.maxItems, 256);
+  assert.equal(schemas.PostalContextPostalLookupAlternative.properties.assertionIds.maxItems, 2048);
+  assert.equal(schemas.PostalContextPostalLookup.properties.geometries.maxItems, 16);
+  assert.equal(schemas.PostalContextIntersection.properties.matches.maxItems, 16);
+
+  const intersectionLimit = paths['/postal/intersects'].get.parameters.find(
+    (parameter: any) => parameter.name === 'limit',
+  );
+  assert.equal(intersectionLimit.schema.maximum, 16);
+  assert.equal(intersectionLimit.schema.default, 16);
+  const lookupGeometry = paths['/postal/{country}/{postalCode}'].get.parameters.find(
+    (parameter: any) => parameter.name === 'geometry',
+  );
+  assert.deepEqual(lookupGeometry.schema.enum, ['geojson', 'none']);
+  assert.equal(lookupGeometry.schema.default, 'none');
+  assert.match(
+    lookupGeometry.description,
+    /only when explicitly set to geojson/i,
+  );
+
+  const resolvePublicContract = JSON.stringify([
+    schemas.PostalContextPublicResolution,
+    schemas.PostalContextPublicResolutionCandidate,
+    schemas.PostalContextPublicResolutionComponent,
+    schemas.PostalContextPostalEvidence,
+    schemas.PostalContextAddressPointEvidence,
+  ]);
+  assert.doesNotMatch(
+    resolvePublicContract,
+    /nodeId|pathId|rootAddressRecordId|geometryFeatureId|distanceMeters|matchRadiusMeters|latitude|longitude|coordinates|recipient|phone|unitNumber/i,
+  );
+
+  const lookupPublicContract = JSON.stringify([
+    schemas.PostalContextPublicComponent,
+    schemas.PostalContextPostalGeometryResult,
+    schemas.PostalContextPostalLookupAlternative,
+    schemas.PostalContextPostalLookup,
+    schemas.PostalContextIntersection,
+  ]);
+  assert.doesNotMatch(
+    lookupPublicContract,
+    /nodeId|pathId|rootAddressRecordId|geometryFeatureId|distanceMeters|matchRadiusMeters|recipient|phone|unitNumber/i,
+  );
 });

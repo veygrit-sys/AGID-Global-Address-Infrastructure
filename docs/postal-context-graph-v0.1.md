@@ -118,7 +118,7 @@ G_{v,k}=(V,A_{v,k})
 ```
 
 Assertion は `validTime` と `knownTime` を混同してはならない。訂正は過去のAssertionを
-消去せず、`knownTime.to` を閉じた新しいAssertionとして表現する。API は `asOf` と
+消去せず、`knownTime.to` を閉じた新しいAssertionとして表現する。API は `validAt` と
 `knownAt` を受け取れるようにし、応答に採用 release と policy version を含める。
 
 ### 3.1 Geometry revision
@@ -199,7 +199,7 @@ Country renderer は選択済みpathを表示するだけであり、候補選�
 
 ### 6.1 Resolution algorithm
 
-1. `purpose`、`asOf`、`knownAt`、pack releaseを固定する。
+1. `purpose`、`validAt`、`knownAt`、pack releaseを固定する。
 2. AGID cell、bbox、Postal polygon等で候補を抽出する。
 3. 元geometryで包含・交差・境界を厳密に判定する。
 4. 候補ごとに、時間整合したEntityとAssertionからAddress Pathを生成する。

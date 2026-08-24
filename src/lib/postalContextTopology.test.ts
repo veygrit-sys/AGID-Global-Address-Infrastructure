@@ -1,0 +1,100 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+
+import {
+  POSTAL_CONTEXT_GEOMETRY_SCHEMA_VERSION,
+  type PostalContextGeometryCollection,
+  type PostalContextLinearRing,
+} from './postalContextSpatial';
+import {
+  POSTAL_CONTEXT_PACK_LIMITS,
+  validatePostalContextGeometryTopology,
+} from './postalContextTopology';
+
+const RANGE = { from: '2026-01-01T00:00:00.000Z', to: null } as const;
+const DIGEST = `sha256:${'a'.repeat(64)}` as const;
+
+function ring(
+  minimumLongitude: number,
+  minimumLatitude: number,
+  size: number,
+): PostalContextLinearRing {
+  return [
+    [minimumLongitude, minimumLatitude],
+    [minimumLongitude + size, minimumLatitude],
+    [minimumLongitude + size, minimumLatitude + size],
+    [minimumLongitude, minimumLatitude + size],
+    [minimumLongitude, minimumLatitude],
+  ];
+}
+
+function collectionWithPolygon(
+  coordinates: PostalContextGeometryCollection['features'][number]['geometry'] extends infer _Geometry
+    ? readonly PostalContextLinearRing[]
+    : never,
+): PostalContextGeometryCollection {
+  return {
+    schemaVersion: POSTAL_CONTEXT_GEOMETRY_SCHEMA_VERSION,
+    countryCode: 'JP',
+    releaseId: 'jp-topology-load-test',
+    features: [{
+      id: 'topology-load-feature',
+      nodeId: 'topology-load-node',
+      role: 'postal_area',
+      publicationClass: 'public_context',
+      geometry: { type: 'Polygon', coordinates },
+      source: {
+        sourceId: 'topology-load-source',
+        sourceType: 'synthetic',
+        assignmentAuthority: 'none',
+        geometryAuthority: 'synthetic_fixture_geometry',
+        licenseId: 'AGID-SYNTHETIC-ONLY',
+        digest: DIGEST,
+      },
+      validTime: RANGE,
+      knownTime: RANGE,
+      quality: { status: 'verified' },
+    }],
+  };
+}
+
+test('topology validation aborts a large hole-pair scan as soon as its comparison budget is exhausted', () => {
+  const holes = Array.from({ length: 5_000 }, (_, index) => {
+    const column = index % 100;
+    const row = Math.floor(index / 100);
+    return ring(-75 + column * 1.5, -75 + row * 3, 0.2);
+  });
+  const collection = collectionWithPolygon([
+    ring(-80, -80, 160),
+    ...holes,
+  ]);
+
+  const result = validatePostalContextGeometryTopology(collection);
+
+  assert.equal(result.valid, false);
+  assert.equal(result.positionCount, 5 + holes.length * 5);
+  assert.equal(result.errors.length, 1);
+  assert.match(result.errors[0], /^geometry-topology-budget-exceeded:/u);
+});
+
+test('topology validation hard-caps negative errors and stops scanning the remaining features', () => {
+  const invalidRing = [[0, 0], [0, 0], [0, 0], [0, 0]] as const;
+  const prototype = collectionWithPolygon([invalidRing]).features[0];
+  const collection: PostalContextGeometryCollection = {
+    schemaVersion: POSTAL_CONTEXT_GEOMETRY_SCHEMA_VERSION,
+    countryCode: 'JP',
+    releaseId: 'jp-topology-error-cap-test',
+    features: Array.from({ length: 1_000 }, (_, index) => ({
+      ...prototype,
+      id: `invalid-topology-${index}`,
+      nodeId: `invalid-topology-node-${index}`,
+    })),
+  };
+
+  const result = validatePostalContextGeometryTopology(collection);
+
+  assert.equal(result.valid, false);
+  assert.equal(result.errors.length, POSTAL_CONTEXT_PACK_LIMITS.topologyErrors);
+  assert.equal(result.errors.at(-1), 'geometry-topology-error-limit-exceeded');
+  assert.ok(result.positionCount < collection.features.length * invalidRing.length);
+});

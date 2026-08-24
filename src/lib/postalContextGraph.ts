@@ -46,6 +46,24 @@ export type PostalContextGeometryType =
   | 'geometrycollection'
   | 'none';
 
+export const POSTAL_CONTEXT_PURPOSES = [
+  'postal_lookup',
+  'display',
+  'delivery',
+  'navigation',
+  'cadastral',
+  'validation',
+] as const satisfies readonly PostalContextPurpose[];
+
+export const POSTAL_CONTEXT_RESOLUTION_STATUSES = [
+  'unique',
+  'partial',
+  'ambiguous',
+  'conflict',
+  'no_match',
+  'invalid',
+] as const satisfies readonly PostalContextResolutionStatus[];
+
 export type PostalContextPurpose =
   | 'postal_lookup'
   | 'display'
