@@ -161,6 +161,10 @@ export type EuropeOpenGeoSourceId =
   | 'identity-malta-addressing'
   | 'san-marino-geoportal'
   | 'san-marino-statistics'
+  | 'la-poste-official-postal-codes-monaco'
+  | 'la-poste-monaco-addressing'
+  | 'monaco-dpum-address-base'
+  | 'monaco-dpum-building-topography'
   | 'monaco-gouv-cartography'
   | 'monaco-imsee-geodata'
   | 'vatican-city-state'
@@ -1742,23 +1746,60 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'San Marino official statistical geography for castelli and settlement validation.',
   },
+  'la-poste-official-postal-codes-monaco': {
+    id: 'la-poste-official-postal-codes-monaco',
+    name: 'La Poste Official Postal Codes - Monaco Scope',
+    url: 'https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Licence Ouverte / Open Licence 2.0',
+    notes: 'Official La Poste code-to-routing-label data includes Monaco; the catalogue explicitly says postcode contours are not provided as open data.',
+  },
+  'la-poste-monaco-addressing': {
+    id: 'la-poste-monaco-addressing',
+    name: 'La Poste Monaco Addressing Publications',
+    url: 'https://www.lapostemonaco.mc/2025_tarif_entreprises.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official addressing and CEDEX presentation evidence; published examples are not a complete allocation table or geometry source.',
+  },
+  'monaco-dpum-address-base': {
+    id: 'monaco-dpum-address-base',
+    name: 'Monaco DPUM Address Base',
+    url: 'https://www.gouv.mc/content/download/526542/6039959/file/Rapport%20Recensement%202023.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Government material confirms an internal DPUM address base covering Monaco buildings; production use requires a licensed extract, field allow-list and privacy review.',
+  },
+  'monaco-dpum-building-topography': {
+    id: 'monaco-dpum-building-topography',
+    name: 'Monaco DPUM Building and Topography SIG',
+    url: 'https://journaldemonaco.gouv.mc/Journaux/2023/Journal-8666/Avis-de-recrutement-n-2023-209-d-un-Chef-de-Division-Responsable-du-Pole-Informations-Geographiques-Topographie-3D-S.I.G.-foncier-a-la-Direction-de-la-Prospective-de-l-Urbanisme-et-de-la-Mobilite',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The official notice confirms an internal SIG for streets, addresses, buildings and parcels; it is system metadata, not a public building dataset or redistribution grant.',
+  },
   'monaco-gouv-cartography': {
     id: 'monaco-gouv-cartography',
-    name: 'Government of Monaco Cartography',
-    url: 'https://en.gouv.mc/',
+    name: 'Government of Monaco DPUM Urban Plans',
+    url: 'https://urbamonaco.gouv.mc/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Monaco government cartographic and administrative reference for quartiers, streets, and delivery geography.',
+    notes: 'Dated official regulatory-zone and planning context; plan linework is not automatically current postal or building geometry.',
   },
   'monaco-imsee-geodata': {
     id: 'monaco-imsee-geodata',
-    name: 'IMSEE Monaco Geodata',
-    url: 'https://www.imsee.mc/',
-    kind: 'gazetteer',
+    name: 'IMSEE Monaco Territorial Statistics',
+    url: 'https://www.imsee.mc/Publications/Monaco-en-chiffres-edition-2025',
+    kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Monaco statistical and territorial reference for districts and address-adjacent geography.',
+    usage: 'reference',
+    notes: 'Official statistical district and territorial context; it is not postal assignment, address identity or building-link evidence.',
   },
   'vatican-city-state': {
     id: 'vatican-city-state',
@@ -2686,7 +2727,14 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
     'nso-malta-geodata',
   ],
   SM: ['zauberware-postal-codes', 'san-marino-geoportal', 'san-marino-statistics'],
-  MC: ['eu-postal-code-package', 'monaco-gouv-cartography', 'monaco-imsee-geodata'],
+  MC: [
+    'la-poste-official-postal-codes-monaco',
+    'la-poste-monaco-addressing',
+    'monaco-dpum-address-base',
+    'monaco-dpum-building-topography',
+    'monaco-gouv-cartography',
+    'monaco-imsee-geodata',
+  ],
   VA: ['zauberware-postal-codes', 'vatican-city-state', 'openstreetmap-vatican'],
   AD: ['postalcodes-info', 'andorra-cartografia', 'andorra-open-data'],
   CY: ['postalcodes-info', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],

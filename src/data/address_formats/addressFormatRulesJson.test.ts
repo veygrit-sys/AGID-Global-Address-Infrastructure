@@ -706,7 +706,7 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
     { code: 'mt', name: 'Maltese' },
     { code: 'en', name: 'English' },
   ]);
-  assert.equal(loadRules('MC').postalCode?.label, '98000-98099 Monaco postcode');
+  assert.match(loadRules('MC').postalCode?.label ?? '', /98000.*CEDEX.*allocation/i);
   assert.equal(loadRules('VA').postalCode?.label, '00120 Vatican City postcode');
   assert.deepEqual(loadRules('CY').languages, [
     { code: 'el', name: 'Greek' },
@@ -717,6 +717,8 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
   assert.equal(loadFormat('CY').postalCode?.api, 'https://postalcodes.info/');
   assert.equal(loadFormat('MT').postalCode?.api, 'https://www.maltapost.com/postcode/?l=1');
   assert.match(loadFormat('MT').postalCode?.source ?? '', /MaltaPost.*Address Registrar.*Planning Authority/i);
+  assert.equal(loadFormat('MC').postalCode?.api, 'https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux');
+  assert.match(loadFormat('MC').postalCode?.source ?? '', /La Poste.*DPUM.*IMSEE/i);
   assert.equal(loadFormat('CY').postalCode?.source, 'postalcodes.info / Cyprus open data');
 });
 
@@ -743,7 +745,14 @@ test('Southern Europe metadata exposes national geospatial and cadastre sources'
       'nso-malta-geodata',
     ],
     SM: ['san-marino-geoportal', 'san-marino-statistics'],
-    MC: ['monaco-gouv-cartography', 'monaco-imsee-geodata'],
+    MC: [
+      'la-poste-official-postal-codes-monaco',
+      'la-poste-monaco-addressing',
+      'monaco-dpum-address-base',
+      'monaco-dpum-building-topography',
+      'monaco-gouv-cartography',
+      'monaco-imsee-geodata',
+    ],
     VA: ['vatican-city-state', 'openstreetmap-vatican'],
     AD: ['andorra-cartografia', 'andorra-open-data'],
     CY: ['cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],

@@ -419,6 +419,7 @@ export {
   normalizeCzechiaPostalCode,
   normalizeDenmarkPostalCode,
   normalizeMaltaPostalCode,
+  normalizeMonacoPostalCode,
   normalizeItalyPostalCode,
   normalizeFrancePostalCode,
   normalizeJapanPostalCode,

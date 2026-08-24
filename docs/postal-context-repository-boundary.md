@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-malta`
+Status: `accepted-for-country-pack-reference-implementations-through-monaco`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -91,6 +91,11 @@ Malta-specific MaltaPost assignment, Office of the Address Registrar confirmed
 address and location-register lineage, Planning Authority building geometry,
 NSO statistical context, register-transition and work-in-progress confirmation
 rules belong to `agid-postal-mt`.
+
+Monaco-specific La Poste ordinary and CEDEX routing assignment, DPUM address
+and building identity, government urban-plan context, IMSEE districts,
+cross-border separation, non-public source rights and derived-surface rules
+belong to `agid-postal-mc`.
 
 
 
@@ -274,6 +279,23 @@ owner, identity-card, recipient and other private data stay outside public
 artifacts. The Address Management Unit to OAR transition, Gazette lineage and
 valid/known time remain reproducible, and Malta, Gozo and Comino remain inside
 the single `MT` country pack without merging nearby foreign territory.
+
+### `agid-postal-mc`
+
+The Monaco repository owns pinned La Poste Monaco rows, addressing and CEDEX
+receipts, licensed DPUM address and building extracts, dated government urban
+plans, IMSEE territorial context, derived routing surfaces, synthetic fixtures
+and release validation. Five digits beginning with `980` are structurally
+valid, but structure alone does not prove current allocation. `98000` ordinary
+routing and CEDEX, organisation, service or BP designators retain their source
+classification. La Poste's official open-data catalogue explicitly omits
+postcode contours, so any surface is derived and noncanonical. The existence
+of the internal DPUM address/building/parcel SIG is not a public bulk-data or
+redistribution grant. Exact building output requires a shared DPUM identifier
+or reviewed explicit crosswalk; containment, nearest, OSM and plan overlays
+remain candidates. Public artifacts exclude resident, occupant, apartment,
+owner, cadastral-party, recipient and delivery-customer data. Monaco remains a
+separate `MC` pack and never absorbs neighbouring French addresses or geometry.
 
 
 
