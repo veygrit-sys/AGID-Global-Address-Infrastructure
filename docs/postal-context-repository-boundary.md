@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -701,6 +701,40 @@ candidate evidence only. Cadastral parcels validate location relationships but
 do not infer the building, postal perimeter, owner, rightsholder, occupant or
 title. Administrative boundaries supply context and clipping only; they do not
 prove PSČ assignment or sovereignty.
+### `agid-postal-si`
+
+The Slovenia repository owns pinned Pošta Slovenije normal-postcode CSV
+receipts, separately classified special-code references, reviewed mappings to
+GURS spatial-unit identifiers, GURS address identifiers and centroids,
+individually licensed building relationships, synthetic fixtures and release
+validation. `NNNN` is a normalization rule, not proof that a code is current,
+deliverable, spatially exhaustive or an area.
+
+GURS classifies `poštni okoliš` (postal district) as an official spatial unit,
+but that does not by itself prove that every district is the current
+operator-authored boundary of the same-named Pošta Slovenije code. Production
+geometry requires an explicit, versioned code/post-office-to-spatial-unit
+crosswalk. Name matching, nearest-code assignment, buffers and Voronoi cells
+are prohibited substitutes; unmatched codes remain honest coverage gaps.
+
+Pošta Slovenije special postcodes may identify organizations, institutions or
+postal centres and are non-area by default. Its direct-mail WebGIS A/B/C
+delivery-price areas are product-specific operational geometry. They never
+become normal postcode polygons or evidence of general deliverability.
+
+GURS Register naslovov supplies the registered address number, hierarchy and
+address centroid. Exact building display requires a source-defined
+address-building relationship, a common authoritative identifier or a reviewed
+crosswalk. Centroid containment, footprint proximity and parcel overlap are
+candidate or validation evidence only; they do not infer apartments, business
+premises, addressees, owners, rightsholders, residents or title.
+
+Every GURS artifact pins its dataset/date attribution under the applicable
+CC BY 4.0 terms, source CRS (`EPSG:3794` where published), reviewed WGS84
+transform, schema and digest. The AGID repository keeps only contracts and
+small synthetic fixtures; production records and heavy geometry belong in the
+country release store.
+
 
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

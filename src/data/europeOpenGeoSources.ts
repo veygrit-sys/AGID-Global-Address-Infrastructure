@@ -235,6 +235,15 @@ export type EuropeOpenGeoSourceId =
   | 'posta-si'
   | 'eprostor-slovenia'
   | 'gurs-slovenia'
+  | 'posta-slovenije-postcode-csv'
+  | 'posta-slovenije-special-postcodes'
+  | 'posta-slovenije-delivery-area-webgis'
+  | 'gurs-slovenia-postal-districts'
+  | 'gurs-slovenia-address-register'
+  | 'gurs-slovenia-public-features-api'
+  | 'gurs-slovenia-real-estate-cadastre-buildings'
+  | 'gurs-slovenia-spatial-unit-register'
+  | 'gurs-slovenia-cadastral-parcels'
   | 'slovenska-posta-psc'
   | 'zbgis-slovakia'
   | 'slovakia-address-register'
@@ -2432,6 +2441,93 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Slovenian surveying authority reference for address register, settlement, and boundary data.',
   },
+  'posta-slovenije-postcode-csv': {
+    id: 'posta-slovenije-postcode-csv',
+    name: 'Pošta Slovenije Postal Code and Post Office CSV',
+    url: 'https://www.posta.si/naslavljanje',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit postal-code CSV with post-office names; a row or office is not a polygon, and public download still requires exact terms and redistribution review.',
+  },
+  'posta-slovenije-special-postcodes': {
+    id: 'posta-slovenije-special-postcodes',
+    name: 'Pošta Slovenije Special Postal Codes',
+    url: 'https://www.posta.si/zasebno-site/Documents/Seznami/Seznam%20posebnih%20po%C5%A1tnih%20%C5%A1tevilk.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official organization, institution, postal-centre, and other special-code assignments are non-area by default and never become residential postal polygons.',
+  },
+  'posta-slovenije-delivery-area-webgis': {
+    id: 'posta-slovenije-delivery-area-webgis',
+    name: 'Pošta Slovenije Unaddressed Mail Delivery WebGIS',
+    url: 'https://webgis2.posta.si/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official unaddressed direct-mail delivery-office and A/B/C pricing areas are operational service geometry, not a normal postcode perimeter, addressed-delivery guarantee, or automatic redistribution grant.',
+  },
+  'gurs-slovenia-postal-districts': {
+    id: 'gurs-slovenia-postal-districts',
+    name: 'GURS Register prostorskih enot Postal Districts',
+    url: 'https://www.e-prostor.gov.si/podrocja/prostorske-enote-in-naslovi/register-prostorskih-enot/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official poštni okoliš geometry is available under GURS CC BY 4.0, but requires an explicit versioned Pošta Slovenije crosswalk and is not automatically an operator-authored current postcode perimeter.',
+  },
+  'gurs-slovenia-address-register': {
+    id: 'gurs-slovenia-address-register',
+    name: 'GURS Register naslovov',
+    url: 'https://www.e-prostor.gov.si/podrocja/prostorske-enote-in-naslovi/register-naslovov/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official unique address number, components, and centroid support address identity; the centroid is not a building footprint, and postal assignment remains separate.',
+  },
+  'gurs-slovenia-public-features-api': {
+    id: 'gurs-slovenia-public-features-api',
+    name: 'GURS Public WFS and OGC API Features',
+    url: 'https://www.e-prostor.gov.si/dostopi/javni-dostop/',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Public WFS and OGC API Features expose GURS collections in EPSG:3794 under CC BY 4.0; every release pins its collection, attribution, schema, date, digest, and reviewed WGS84 transform.',
+  },
+  'gurs-slovenia-real-estate-cadastre-buildings': {
+    id: 'gurs-slovenia-real-estate-cadastre-buildings',
+    name: 'GURS Kataster nepremičnin Buildings',
+    url: 'https://www.e-prostor.gov.si/podrocja/parcele-in-stavbe/kataster-nepremicnin/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official cadastral building geometry needs a source-defined address-building relation or reviewed identifier crosswalk; centroid containment, footprint overlap, and proximity are candidate evidence only.',
+  },
+  'gurs-slovenia-spatial-unit-register': {
+    id: 'gurs-slovenia-spatial-unit-register',
+    name: 'GURS Register prostorskih enot Administration',
+    url: 'https://www.e-prostor.gov.si/podrocja/prostorske-enote-in-naslovi/register-prostorskih-enot/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0',
+    notes: 'Official municipality, settlement, administrative-unit, street, and statistical-region context does not create postcode membership, address existence, or delivery coverage.',
+  },
+  'gurs-slovenia-cadastral-parcels': {
+    id: 'gurs-slovenia-cadastral-parcels',
+    name: 'GURS Kataster nepremičnin Cadastral Parcels',
+    url: 'https://www.e-prostor.gov.si/podrocja/parcele-in-stavbe/kataster-nepremicnin/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0',
+    notes: 'A cadastral parcel is not a building, address link, or postal district and never authorizes publication of an owner, rightsholder, resident, occupant, title, value, encumbrance, or restriction record.',
+  },
   'slovenska-posta-psc': {
     id: 'slovenska-posta-psc',
     name: 'Slovenska posta PSC Search',
@@ -3283,7 +3379,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   HR: ['croatian-post-postcode-downloads', 'dgu-croatia-spatial-unit-register', 'dgu-croatia-inspire-addresses', 'dgu-croatia-inspire-buildings', 'dgu-croatia-inspire-administrative-units', 'dgu-croatia-cadastral-parcels', 'gisco-croatia-postcode-points', 'posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
   HU: ['posta-hu', 'lechner-hungary-geodata', 'hungary-public-road-data'],
   PL: ['poczta-polska', 'geoportal-gov-pl', 'gus-teryt-poland'],
-  SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia'],
+  SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia', 'posta-slovenije-postcode-csv', 'posta-slovenije-special-postcodes', 'posta-slovenije-delivery-area-webgis', 'gurs-slovenia-postal-districts', 'gurs-slovenia-address-register', 'gurs-slovenia-public-features-api', 'gurs-slovenia-real-estate-cadastre-buildings', 'gurs-slovenia-spatial-unit-register', 'gurs-slovenia-cadastral-parcels'],
   SK: ['slovenska-posta-psc', 'zbgis-slovakia', 'slovakia-address-register', 'slovak-post-postcode-search', 'slovak-post-access-point-xml', 'slovakia-register-addresses-portal', 'slovakia-register-addresses-openapi', 'zbgis-slovakia-inspire-buildings', 'zbgis-slovakia-administrative-units', 'zbgis-slovakia-cadastral-parcels'],
   BQ: ['zippopotam'],
   AW: ['zippopotam'],

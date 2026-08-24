@@ -938,6 +938,28 @@ test('Slovakia address metadata separates postal, address, building, and parcel 
   ]);
 });
 
+test('Slovenia address metadata separates postal districts, address centroids, buildings, and special codes', () => {
+  const format = loadFormat('SI');
+  const rules = loadRules('SI');
+
+  assert.equal(format.postalCode?.api, 'https://www.posta.si/naslavljanje');
+  assert.match(format.postalCode?.source ?? '', /Pošta Slovenije.*Register naslovov.*Kataster nepremičnin/i);
+  assert.match(
+    rules.postalCode?.label ?? '',
+    /4 digits.*normal.*special.*postal district.*crosswalk.*address centroid.*building.*separate/i,
+  );
+  assert.deepEqual(rules.regionalHierarchy, [
+    'statisticalRegion',
+    'municipality',
+    'settlement',
+    'street',
+    'houseNumberAndSuffix',
+    'registeredAddressNumber',
+    'addressCentroid',
+    'explicitCadastralBuilding',
+  ]);
+});
+
 test('Central, Eastern, and Balkan Europe metadata exposes national geospatial sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     PL: ['geoportal-gov-pl', 'gus-teryt-poland'],
@@ -950,7 +972,16 @@ test('Central, Eastern, and Balkan Europe metadata exposes national geospatial s
       'zbgis-slovakia-cadastral-parcels',
     ],
     HU: ['lechner-hungary-geodata', 'hungary-public-road-data'],
-    SI: ['eprostor-slovenia', 'gurs-slovenia'],
+    SI: [
+      'eprostor-slovenia', 'gurs-slovenia',
+      'posta-slovenije-postcode-csv', 'posta-slovenije-special-postcodes',
+      'posta-slovenije-delivery-area-webgis',
+      'gurs-slovenia-postal-districts', 'gurs-slovenia-address-register',
+      'gurs-slovenia-public-features-api',
+      'gurs-slovenia-real-estate-cadastre-buildings',
+      'gurs-slovenia-spatial-unit-register',
+      'gurs-slovenia-cadastral-parcels',
+    ],
     HR: ['dgu-croatia-geoportal', 'croatia-cadastre'],
     RO: ['ancpi-romania-geoportal', 'romania-open-data'],
     BG: ['cadastre-bulgaria', 'bulgaria-inspire-geoportal'],

@@ -1,0 +1,87 @@
+{
+  "schema_version": "agid-postal-si-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-si",
+    "country_code": "SI",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Poštna številka",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "official_government_postal_district_via_explicit_crosswalk_or_derived_address_membership_surface_or_non_area",
+    "assignment_rule": "A pinned Pošta Slovenije CSV row or separately permitted operator receipt establishes a four-digit postal code and post-office assignment at capture time. Syntax, an office location, place name, address point, or web search result does not establish current allocation, perimeter, or deliverability.",
+    "special_code_rule": "Pošta Slovenije special postal codes assigned to organizations, institutions, postal centres, or other named users are non-area by default and never receive invented residential polygons.",
+    "postal_district_rule": "The GURS Register prostorskih enot contains an official poštni okoliš spatial-unit class. It is government register geometry, not automatically a Pošta Slovenije-authored current postcode perimeter. Postal area output requires a versioned explicit operator code/post-office to GURS postal-district identifier crosswalk; names, centroids, containment, buffers, and Voronoi cells never substitute.",
+    "delivery_area_rule": "Pošta Slovenije WebGIS areas for unaddressed direct mail and A/B/C pricing are operational delivery-service geometry. They remain separate from normal postcode assignment, GURS postal districts, addressed-mail deliverability, and redistribution rights.",
+    "address_rule": "The GURS Register naslovov is the address-identity authority. Its unique address number, municipality, settlement, street, house number and suffix, optional apartment or business-premise number, centroid, validity, source date, CC BY 4.0 attribution, schema, EPSG:3794 CRS and digest remain separate from Pošta Slovenije assignment evidence.",
+    "building_rule": "Exact building display requires the source-defined Register naslovov or Kataster nepremičnin address-building relationship, a common authoritative identifier, or a reviewed explicit crosswalk. An address centroid inside a footprint, parcel overlap, containment, or nearest building is candidate evidence only.",
+    "parcel_rule": "Cadastral parcel geometry and identifiers are validation context only. A parcel is not a building, address link, postal district, delivery guarantee, or permission to publish owners, rightsholders, occupants, title, value, encumbrance, or restriction records.",
+    "administrative_rule": "Municipalities, settlements, administrative units, statistical regions, streets and community units remain separately sourced context. They do not create postcode membership or delivery coverage.",
+    "crs_rule": "Every GURS geometry retains source CRS EPSG:3794 and the exact reviewed transform/version used for WGS84 API output.",
+    "service_status_rule": "Post-office operation, unaddressed-mail coverage, special-code use, route availability, postcode-list availability, and delivery eligibility are time-stamped operational assertions separate from assignment, geometry, address identity, and administration."
+  },
+  "integration": {
+    "agid_country_code": "SI",
+    "coordinate_flow": "coordinate -> crosswalk-qualified postal district or rights-cleared address point -> address graph -> explicit cadastral building relation -> AGID cell",
+    "postcode_flow": "canonical four digits -> operator assignment -> optional crosswalk-qualified postal district or derived surface -> address hierarchy -> explicit building relation -> AGID cells",
+    "building_output_gate": "source-defined relation, common authoritative identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Postal codes remain four-character text without losing leading zeroes; optional SI- input is normalized but is not stored as part of the code." },
+    { "id": "operator-district-crosswalk", "pass": "Every official government postal surface retains the Pošta Slovenije assignment, GURS postal-district identifier, explicit crosswalk version, validity, CRS, attribution and digests." },
+    { "id": "special-code-non-area", "pass": "Organization, institution, postal-centre and other special codes are non-area unless separately proven otherwise." },
+    { "id": "delivery-service-separation", "pass": "WebGIS unaddressed-mail delivery areas never silently become normal postcode polygons or deliverability claims." },
+    { "id": "official-address", "pass": "Each exact address retains a GURS address number, components, centroid, validity, release, attribution, CRS, digest and separate postal assignment evidence." },
+    { "id": "explicit-building-link", "pass": "Building output has a source-defined or reviewed identifier relation; address-centroid containment and proximity alone never pass." },
+    { "id": "privacy", "pass": "No addressee, resident, owner, rightsholder, occupant, title/value record, phone, credential, or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "Pinned Pošta Slovenije normal and special-code releases pass terms, freshness, correction and non-area classification gates." },
+      { "id": "M3_address", "definition": "GURS address, postal-district and cadastral resources pass licence, attribution, schema, CRS, coverage, validity, privacy and correction gates." },
+      { "id": "M4_geometry", "definition": "Explicit postal-district crosswalks, derived surfaces and building joins pass topology, ambiguity, identifier, licence and quality gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "posta-csv-presented-as-unrestricted-redistribution-without-terms-review",
+      "special-postcode-presented-as-residential-area",
+      "gurs-postal-district-used-without-explicit-operator-crosswalk",
+      "unaddressed-mail-webgis-area-presented-as-normal-postcode-perimeter",
+      "derived-surface-presented-as-posta-slovenije-or-gurs-official-boundary",
+      "address-centroid-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-register-link",
+      "cadastral-parcel-presented-as-address-building-or-postcode-area",
+      "owner-resident-rightsholder-occupant-title-or-protected-property-data-published",
+      "epsg-3794-geometry-published-as-wgs84-without-reviewed-transform",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_SI_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SI_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_SI_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SI_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-or-address-rows",
+    "every-postcode-is-a-polygon",
+    "special-code-is-a-residential-area",
+    "unaddressed-mail-delivery-area-equals-postcode",
+    "administrative-boundary-equals-postcode",
+    "address-centroid-is-building-footprint",
+    "nearest-building-is-exact-address-link",
+    "parcel-is-building-or-address"
+  ]
+}

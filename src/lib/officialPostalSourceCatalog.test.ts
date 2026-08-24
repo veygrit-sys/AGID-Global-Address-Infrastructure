@@ -385,6 +385,43 @@ test('separates Slovakia operator, access-point, address, building, parcel, and 
   assert.equal(accessPointOnly.tier, 'weak');
 });
 
+test('separates Slovenia normal, special, service-area, postal-district, address, building, parcel, and administrative authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('SI');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('posta-slovenije-postcode-csv')?.authority, 'postal-operator');
+  assert.equal(byId.get('posta-slovenije-postcode-csv')?.trustTier, 'authoritative');
+  assert.match(byId.get('posta-slovenije-postcode-csv')?.notes.join(' ') ?? '', /four-digit.*post-office.*not.*redistribution.*not.*polygon.*delivery/i);
+  assert.equal(byId.get('posta-slovenije-special-postcodes')?.depth, 'delivery-point');
+  assert.equal(byId.get('posta-slovenije-special-postcodes')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('posta-slovenije-special-postcodes')?.notes.join(' ') ?? '', /organization.*institution.*non-area.*residential/i);
+  assert.equal(byId.get('posta-slovenije-delivery-area-webgis')?.depth, 'geo-only');
+  assert.match(byId.get('posta-slovenije-delivery-area-webgis')?.notes.join(' ') ?? '', /A\/B\/C.*unaddressed.*not normal postcode.*GURS postal district/i);
+  assert.equal(byId.get('gurs-slovenia-postal-districts')?.depth, 'geo-only');
+  assert.match(byId.get('gurs-slovenia-postal-districts')?.notes.join(' ') ?? '', /poštni okoliš.*CC BY 4\.0.*explicit.*crosswalk.*not automatically.*operator-authored/i);
+  assert.equal(byId.get('gurs-slovenia-address-register')?.depth, 'address');
+  assert.match(byId.get('gurs-slovenia-address-register')?.notes.join(' ') ?? '', /unique address number.*centroid.*not.*footprint.*postal assignment/i);
+  assert.equal(byId.get('gurs-slovenia-public-features-api')?.availability, 'public-api');
+  assert.match(byId.get('gurs-slovenia-public-features-api')?.notes.join(' ') ?? '', /WFS.*OGC API.*CC BY 4\.0.*EPSG:3794.*WGS84 transform/i);
+  assert.equal(byId.get('gurs-slovenia-real-estate-cadastre-buildings')?.depth, 'building');
+  assert.match(byId.get('gurs-slovenia-real-estate-cadastre-buildings')?.notes.join(' ') ?? '', /address-building relation.*centroid containment.*candidate-only.*protected/i);
+  assert.equal(byId.get('gurs-slovenia-spatial-unit-register')?.depth, 'geo-only');
+  assert.match(byId.get('gurs-slovenia-spatial-unit-register')?.notes.join(' ') ?? '', /CC BY 4\.0.*municipality.*settlement.*do not create postcode.*service coverage/i);
+  assert.equal(byId.get('gurs-slovenia-cadastral-parcels')?.depth, 'geo-only');
+  assert.match(byId.get('gurs-slovenia-cadastral-parcels')?.notes.join(' ') ?? '', /parcel is not a building.*address link.*postal district.*owners.*title.*value/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'SI',
+    source: 'Pošta Slovenije Postal Code and Post Office CSV',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const specialOnly = classifyPostalSourceTrust({
+    countryCode: 'SI',
+    source: 'Pošta Slovenije Special Postal Codes',
+  });
+  assert.equal(specialOnly.strength, 'weak');
+  assert.equal(specialOnly.tier, 'weak');
+});
+
 test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
   const sources = getOfficialPostalSourcesForCountry('CY');
   const byId = new Map(sources.map(source => [source.id, source]));
