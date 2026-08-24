@@ -487,6 +487,33 @@ pinned authority, policy and vintage. Public artifacts exclude addressees,
 residents, owners, tenants, occupants, cadastral rights, tax data, credentials
 and protected register fields.
 
+### `agid-postal-ua`
+
+The Ukraine repository owns pinned Ukrposhta postcode, address and post-office
+assignment evidence, separately time-stamped service status, provider-approved
+Unified State Address Register and Register of Buildings releases, permitted
+NSDI/KATOTTG layers, derived postal surfaces, synthetic fixtures and release
+validation. UPU syntax proves the five-digit form and address placement, not
+current allocation, service availability or a perimeter.
+
+Ukrposhta open-data resources are pinned at dataset level with their license,
+schema, scope, update time and digest. Search/API access has separate automation,
+credential, rate-limit, retention and redistribution review. `AVAILBLE`,
+`LOCK_CODE`, closures and replacement-office routes are operational assertions;
+they do not erase assignment, create permanent geometry or guarantee delivery.
+Derived surfaces retain address members, algorithm, clips, exclusions, outage
+context, uncertainty, temporal lineage and rights and are never official.
+
+Exact building display requires a common authoritative address/building
+identifier or reviewed crosswalk; points, parcels, footprints, containment and
+proximity remain candidates. NSDI public access is restricted during martial
+law, and site-level terms never override layer-specific holder, security or
+license restrictions. Postal or foreign-operator evidence, service gaps,
+routing, language, current control, occupation and proximity never decide
+sovereignty, country identity or legal boundaries. Public artifacts exclude
+personal, cadastral-right, protected-register, military and security-sensitive
+data.
+
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

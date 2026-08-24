@@ -10,6 +10,7 @@ import {
   normalizeLatviaPostalCode,
   normalizeLithuaniaPostalCode,
   normalizeLiechtensteinPostalCode,
+  normalizeUkrainePostalCode,
   POSTAL_CONTEXT_COUNTRY_POLICIES,
   isPostalContextCountryCode,
   normalizeIcelandPostalCode,
@@ -155,6 +156,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeAndorraPostalCode('AD-500'), null);
   assert.equal(normalizeAndorraPostalCode('ES500'), null);
   assert.equal(normalizePostalContextPostalCode('ad', '000'), 'AD000');
+  assert.equal(normalizeUkrainePostalCode('０１００１'), '01001');
+  assert.equal(normalizeUkrainePostalCode('01 001'), '01001');
+  assert.equal(normalizeUkrainePostalCode('01-001'), null);
+  assert.equal(normalizeUkrainePostalCode('UA01001'), null);
+  assert.equal(normalizePostalContextPostalCode('ua', '00 001'), '00001');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -292,4 +298,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AD.postalCodeFormat, 'ADNNN');
+  assert.equal(isPostalContextCountryCode('UA'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.UA.fullCodeGeometrySemantics,
+    'routing-locality-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.UA.postalCodeFormat, 'NNNNN');
 });

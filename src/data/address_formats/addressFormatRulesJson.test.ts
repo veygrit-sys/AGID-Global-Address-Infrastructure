@@ -838,6 +838,20 @@ test('Eastern Europe address JSON files expose addressRules metadata and postal 
 
   assert.deepEqual(loadRules('RO').englishOrder, ['name', 'street', 'houseNumber', 'postcode', 'city', 'country']);
   assert.equal(loadRules('RO').postalCode?.label, '6 digits required');
+  assert.match(loadRules('UA').postalCode?.label ?? '', /5 digits.*routing.*service status.*area requires source evidence/i);
+  assert.equal(loadFormat('UA').postalCode?.api, 'https://index.ukrposhta.ua/');
+  assert.match(loadFormat('UA').postalCode?.source ?? '', /Ukrposhta.*UPU.*Unified State Address Register.*NSDI/i);
+  assert.deepEqual(loadRules('UA').regionalHierarchy, [
+    'oblastOrSpecialStatusCity',
+    'raion',
+    'territorialCommunity',
+    'settlement',
+    'street',
+    'addressNumber',
+    'buildingOrStructure',
+    'entrance',
+    'unit',
+  ]);
   assert.match(loadRules('AL').postalCode?.label ?? '', /delivery office.*area requires source evidence/i);
   assert.equal(loadFormat('AL').postalCode?.api, 'https://www.postashqiptare.al/c/45/kodi-postar');
   assert.match(loadFormat('AL').postalCode?.source ?? '', /Posta Shqiptare.*National Address System.*ASIG-ASHK/i);
@@ -879,7 +893,14 @@ test('Central, Eastern, and Balkan Europe metadata exposes national geospatial s
     HR: ['dgu-croatia-geoportal', 'croatia-cadastre'],
     RO: ['ancpi-romania-geoportal', 'romania-open-data'],
     BG: ['cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
-    UA: ['data-gov-ua-geodata', 'ukraine-cadastre-map'],
+    UA: [
+      'ukrposhta-postcodes-open-data',
+      'ukrposhta-index-and-address-api',
+      'ukraine-unified-address-register',
+      'ukraine-building-register',
+      'ukraine-nsdi',
+      'data-gov-ua-geodata', 'ukraine-cadastre-map',
+    ],
     MD: ['geoportal-moldova', 'moldova-open-data'],
     BY: ['belarus-nca-geoportal'],
     RU: ['rosreestr-nspd', 'russia-open-data-geo'],

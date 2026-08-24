@@ -256,6 +256,33 @@ test('separates Andorra postal, government-address, topographic-building, and pa
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Ukraine postal, operational, address-register, building, and NSDI authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('UA');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('ukrposhta-postcodes-open-data')?.authority, 'postal-operator');
+  assert.equal(byId.get('ukrposhta-postcodes-open-data')?.trustTier, 'authoritative');
+  assert.equal(byId.get('ukrposhta-postcodes-open-data')?.availability, 'bulk-open-data');
+  assert.match(byId.get('ukrposhta-postcodes-open-data')?.notes.join(' ') ?? '', /five-digit.*text.*not an official polygon.*sovereignty/i);
+  assert.equal(byId.get('ukrposhta-index-and-address-api')?.depth, 'address');
+  assert.equal(byId.get('ukrposhta-index-and-address-api')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('ukrposhta-index-and-address-api')?.notes.join(' ') ?? '', /LOCK_CODE.*time-specific service evidence.*territorial identity/i);
+  assert.equal(byId.get('ukraine-unified-address-register')?.depth, 'address');
+  assert.equal(byId.get('ukraine-unified-address-register')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('ukraine-unified-address-register')?.notes.join(' ') ?? '', /not a bulk release.*not a building footprint/i);
+  assert.equal(byId.get('ukraine-building-register')?.depth, 'building');
+  assert.equal(byId.get('ukraine-building-register')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('ukraine-building-register')?.notes.join(' ') ?? '', /common authoritative identifier.*proximity/i);
+  assert.equal(byId.get('ukraine-nsdi')?.depth, 'geo-only');
+  assert.equal(byId.get('ukraine-nsdi')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('ukraine-nsdi')?.notes.join(' ') ?? '', /restricted during martial law.*not postal assignment authority/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'UA',
+    source: 'Ukrposhta postcodes open data',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',

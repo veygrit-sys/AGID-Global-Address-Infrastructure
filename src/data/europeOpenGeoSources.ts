@@ -219,6 +219,11 @@ export type EuropeOpenGeoSourceId =
   | 'romania-open-data'
   | 'cadastre-bulgaria'
   | 'bulgaria-inspire-geoportal'
+  | 'ukrposhta-postcodes-open-data'
+  | 'ukrposhta-index-and-address-api'
+  | 'ukraine-unified-address-register'
+  | 'ukraine-building-register'
+  | 'ukraine-nsdi'
   | 'data-gov-ua-geodata'
   | 'ukraine-cadastre-map'
   | 'geoportal-moldova'
@@ -2296,6 +2301,51 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Bulgarian INSPIRE spatial data infrastructure for national geospatial validation layers.',
   },
+  'ukrposhta-postcodes-open-data': {
+    id: 'ukrposhta-postcodes-open-data',
+    name: 'Ukrposhta Postcodes and Post Offices Open Data',
+    url: 'https://www.ukrposhta.ua/ua/publichna-informatsiia',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Ukrposhta open-data register for postcode and post-office resources. Five-digit codes stay text; an assignment, office point, route, or range is not a postal polygon or sovereignty evidence.',
+  },
+  'ukrposhta-index-and-address-api': {
+    id: 'ukrposhta-index-and-address-api',
+    name: 'Ukrposhta Index, Address, and Office Services',
+    url: 'https://index.ukrposhta.ua/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official postcode/address lookup and service APIs. AVAILBLE, LOCK_CODE, replacement-office, and closure fields are time-specific operational evidence, not postal geometry, territorial identity, or a delivery guarantee.',
+  },
+  'ukraine-unified-address-register': {
+    id: 'ukraine-unified-address-register',
+    name: 'Ukraine Unified State Address Register',
+    url: 'https://e-construction.gov.ua/ua/edini-derjavni-reestr-adres-dva-roki-vprovadjennja-ta-rezultati-cifrovoii-transformaciii-adresnoii-sistemi-ukraiini',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official government address identity and hierarchy. Exact records require authoritative identifiers and provider-approved public fields; the public portal or announcement is not automatically a bulk redistribution release.',
+  },
+  'ukraine-building-register': {
+    id: 'ukraine-building-register',
+    name: 'Ukraine Register of Buildings and Structures',
+    url: 'https://mtu.gov.ua/news/35373.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official building-register authority. Exact address-to-building display requires a shared identifier or reviewed explicit crosswalk; an address point, parcel, containment result, or proximity match is candidate evidence only.',
+  },
+  'ukraine-nsdi': {
+    id: 'ukraine-nsdi',
+    name: 'Ukraine National Spatial Data Infrastructure',
+    url: 'https://nsdi.gov.ua/docs/portal/1start/componentsnsdi.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official NSDI catalog for boundaries, settlements, streets, addresses, buildings, and structures. Wartime public access is restricted; every permitted artifact needs layer-by-layer holder, security, license, coverage, territorial policy, vintage, CRS, and digest review.',
+  },
   'data-gov-ua-geodata': {
     id: 'data-gov-ua-geodata',
     name: 'Ukraine Open Data Portal Geodata',
@@ -2907,7 +2957,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   CY: ['postalcodes-info', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],
   RO: ['okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
   BG: ['scrape4u-postal-codes', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
-  UA: ['eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
+  UA: ['ukrposhta-postcodes-open-data', 'ukrposhta-index-and-address-api', 'ukraine-unified-address-register', 'ukraine-building-register', 'ukraine-nsdi', 'eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
   MD: ['scrape4u-postal-codes', 'geoportal-moldova', 'moldova-open-data'],
   BY: ['scrape4u-postal-codes', 'belarus-nca-geoportal'],
   RU: ['datahub-postal', 'rosreestr-nspd', 'russia-open-data-geo'],
