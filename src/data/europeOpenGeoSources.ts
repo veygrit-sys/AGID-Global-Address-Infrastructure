@@ -168,7 +168,12 @@ export type EuropeOpenGeoSourceId =
   | 'scrape4u-postal-codes'
   | 'spotzi-postal-codes'
   | 'ceska-posta-psc'
+  | 'ceska-posta-customer-outputs'
   | 'cuzk-ruian'
+  | 'cuzk-ruian-addresses'
+  | 'cuzk-ruian-vfr'
+  | 'cuzk-inspire-buildings'
+  | 'cuzk-ruian-boundaries'
   | 'cuzk-geoportal'
   | 'posta-hr'
   | 'dgu-croatia-geoportal'
@@ -1786,30 +1791,77 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'ceska-posta-psc': {
     id: 'ceska-posta-psc',
-    name: 'Ceska posta PSC Search',
-    url: 'https://www.postaonline.cz/vyhledani-psc',
+    name: 'Česká pošta PSČ Search',
+    url: 'https://www.postaonline.cz/vyhledat-psc',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Czech postal-code lookup.',
+    notes: 'Official current PSČ, municipality, street and house-number routing lookup; a search result is assignment evidence, not a postal polygon.',
+  },
+  'ceska-posta-customer-outputs': {
+    id: 'ceska-posta-customer-outputs',
+    name: 'Česká pošta Certified Customer Outputs',
+    url: 'https://www.ceskaposta.cz/ke-stazeni/zakaznicke-vystupy',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official downloadable PSČ, address-PSČ, municipality and no-delivery-service lists. They are routing assignment evidence, not polygon authority; pin each certified release and rights receipt.',
   },
   'cuzk-ruian': {
     id: 'cuzk-ruian',
-    name: 'CUZK RUIAN',
-    url: 'https://www.cuzk.cz/',
+    name: 'ČÚZK VDP RÚIAN',
+    url: 'https://vdprefb.cuzk.gov.cz/vdp/ruian',
     kind: 'address',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Czech national register of territorial identification, addresses, and real estate for address validation.',
+    notes: 'Free public RÚIAN view and VFR download entry. VDP evidence is informational; legally referenceable basic-register evidence must preserve its separate source status.',
+  },
+  'cuzk-ruian-addresses': {
+    id: 'cuzk-ruian-addresses',
+    name: 'ČÚZK RÚIAN Address Places CSV',
+    url: 'https://geoportal.cuzk.cz/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official municipality-partitioned address places with stable codes, address components, PSČ, validity and S-JTSK definition points; points are not building footprints.',
+  },
+  'cuzk-ruian-vfr': {
+    id: 'cuzk-ruian-vfr',
+    name: 'ČÚZK RÚIAN Exchange Format (VFR)',
+    url: 'https://www.cuzk.gov.cz/Uvod/Produkty-a-sluzby/RUIAN/2-Poskytovani-udaju-RUIAN-ISUI-VDP/Vymenny-format-RUIAN-%28VFR%29.aspx',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official RÚIAN identifiers, relationships, definition points, street lines and polygons. Exact address-to-building display requires an explicit parent building or ISKN identifier.',
+  },
+  'cuzk-inspire-buildings': {
+    id: 'cuzk-inspire-buildings',
+    name: 'ČÚZK INSPIRE Buildings',
+    url: 'https://geoportal.cuzk.cz/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Public nationwide WFS and municipality ATOM/GML building geometry. Identifier linkage can be exact; footprint containment or proximity remains a candidate only.',
+  },
+  'cuzk-ruian-boundaries': {
+    id: 'cuzk-ruian-boundaries',
+    name: 'ČÚZK RÚIAN Territorial Boundaries',
+    url: 'https://geoportal.cuzk.cz/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official country, region, district, ORP, municipality and cadastral context. Administrative boundaries provide clipping and never postal geometry.',
   },
   'cuzk-geoportal': {
     id: 'cuzk-geoportal',
-    name: 'CUZK Geoportal',
+    name: 'ČÚZK Geoportal',
     url: 'https://geoportal.cuzk.cz/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Czech cadastral and mapping geoportal for administrative and parcel-adjacent geography.',
+    notes: 'Generic discovery portal retained for compatibility; production lineage uses the explicit RÚIAN address, VFR, INSPIRE Buildings and boundary source IDs.',
   },
   'posta-hr': {
     id: 'posta-hr',
@@ -2544,7 +2596,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   XK: ['spotzi-postal-codes', 'kosovo-geoportal', 'kosovo-cadastre'],
   AL: ['spotzi-postal-codes', 'asig-albania', 'albania-geoportal'],
   MK: ['datahub-postal', 'katastar-north-macedonia', 'makstat-geodata'],
-  CZ: ['ceska-posta-psc', 'cuzk-ruian', 'cuzk-geoportal'],
+  CZ: ['ceska-posta-psc', 'ceska-posta-customer-outputs', 'cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
   HR: ['posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
   HU: ['posta-hu', 'lechner-hungary-geodata', 'hungary-public-road-data'],
   PL: ['poczta-polska', 'geoportal-gov-pl', 'gus-teryt-poland'],

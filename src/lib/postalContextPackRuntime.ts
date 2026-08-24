@@ -416,6 +416,7 @@ export {
   normalizeEstoniaPostalCode,
   normalizeSwitzerlandPostalCode,
   normalizeGermanyPostalCode,
+  normalizeCzechiaPostalCode,
   normalizeItalyPostalCode,
   normalizeFrancePostalCode,
   normalizeJapanPostalCode,

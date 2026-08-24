@@ -780,7 +780,7 @@ test('Eastern Europe address JSON files expose addressRules metadata and postal 
 test('Central, Eastern, and Balkan Europe metadata exposes national geospatial sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     PL: ['geoportal-gov-pl', 'gus-teryt-poland'],
-    CZ: ['cuzk-ruian', 'cuzk-geoportal'],
+    CZ: ['cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
     SK: ['zbgis-slovakia', 'slovakia-address-register'],
     HU: ['lechner-hungary-geodata', 'hungary-public-road-data'],
     SI: ['eprostor-slovenia', 'gurs-slovenia'],
@@ -856,6 +856,11 @@ test('All European country, overseas territory, and autonomous-region JSON files
   assert.equal(loadFormat('DE').openSourceIds?.includes('openplzapi'), false);
   assert.ok(loadFormat('GB').openSourceIds?.includes('postcodes-io'));
   assert.ok(loadFormat('CZ').openSourceIds?.includes('ceska-posta-psc'));
+  assert.ok(loadFormat('CZ').openSourceIds?.includes('ceska-posta-customer-outputs'));
+  assert.ok(loadFormat('CZ').openSourceIds?.includes('cuzk-ruian-addresses'));
+  assert.ok(loadFormat('CZ').openSourceIds?.includes('cuzk-ruian-vfr'));
+  assert.ok(loadFormat('CZ').openSourceIds?.includes('cuzk-inspire-buildings'));
+  assert.ok(loadFormat('CZ').openSourceIds?.includes('cuzk-ruian-boundaries'));
   assert.ok(loadFormat('GG').openSourceIds?.includes('guernsey-post'));
   assert.ok(loadFormat('GL').openSourceIds?.includes('postnord-greenland'));
 });

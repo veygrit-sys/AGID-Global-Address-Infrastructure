@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-singapore-netherlands-united-kingdom-france-new-zealand-and-iceland-reference-implementations`
+Status: `accepted-for-country-pack-reference-implementations-through-czechia`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -77,6 +77,10 @@ swissBOUNDARIES3D context, and routing-exception rules belong to `agid-postal-ch
 Germany-specific Deutsche Post assignment, licensed PLZ geometry, GA/HK-DE
 address coordinates, HU-DE/LoD2-DE building linkage, VG25 administration,
 state rights and cross-border routing rules belong to `agid-postal-de`.
+Czechia-specific Česká pošta PSČ assignment and class lineage, RÚIAN
+address-place and building identity, VFR/INSPIRE building geometry, territorial
+context, informational-versus-reference status and derived-surface rules belong
+to `agid-postal-cz`.
 
 
 
@@ -211,6 +215,20 @@ a source identifier or reviewed explicit crosswalk; AGS, containment and
 proximity remain candidates. Restricted artifacts stay in product- and state-
 specific rights partitions, and foreign German-routing exceptions remain in
 their sovereign country packs.
+
+### `agid-postal-cz`
+
+The Czechia repository owns Česká pošta PSČ search and certified-output
+lineage, RÚIAN address-place identity and definition points, explicitly linked
+VFR or INSPIRE building geometry, RÚIAN territorial context, synthetic fixtures
+and release validation. Operator assignments do not become nationwide official
+PSČ polygons. Surfaces generated from RÚIAN points or administrative clips are
+always derived and opt-in. Exact building output follows a source-defined
+parent building code, ISKN identifier or reviewed explicit crosswalk;
+containment and proximity remain candidates. Informational VDP evidence is not
+presented as legally referenceable basic-register evidence. CC BY 4.0 artifacts
+retain attribution, and recipient, resident, owner, forwarding, customer and
+other non-public data remain outside public artifacts.
 
 
 
