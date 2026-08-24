@@ -591,6 +591,18 @@ test('Western Europe address JSON files expose addressRules metadata and open po
   assert.equal(loadFormat('FR').postalCode?.api, 'https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/');
   assert.equal(loadFormat('DE').postalCode?.api, 'https://www.postdirekt.de/plzserver/');
   assert.equal(loadFormat('GB').postalCode?.api, 'https://postcodes.io/');
+  assert.equal(
+    loadFormat('CH').postalCode?.api,
+    'https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities',
+  );
+  assert.equal(
+    loadFormat('CH').postalCode?.source,
+    'Swiss Post / swisstopo PLZO_CH / Official Building Addresses',
+  );
+  assert.ok(loadFormat('CH').openSourceIds?.includes('swisstopo-plzo-postal-localities'));
+  assert.ok(loadFormat('CH').openSourceIds?.includes('swisstopo-building-address-directory'));
+  assert.ok(loadFormat('CH').openSourceIds?.includes('swisstopo-swissbuildings3d'));
+  assert.equal(loadFormat('CH').openSourceIds?.includes('openplzapi'), false);
 });
 
 test('French overseas address JSON files expose addressRules metadata', () => {

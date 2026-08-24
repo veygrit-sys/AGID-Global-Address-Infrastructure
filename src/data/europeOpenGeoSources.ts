@@ -102,6 +102,12 @@ export type EuropeOpenGeoSourceId =
   | 'estonia-aks-address-objects'
   | 'estonia-aks-building-shapes'
   | 'estonia-ehak-admin-boundaries'
+  | 'swiss-post-postcodes'
+  | 'swisstopo-plzo-postal-localities'
+  | 'swisstopo-building-address-directory'
+  | 'swiss-federal-gwr'
+  | 'swisstopo-swissbuildings3d'
+  | 'swisstopo-swissboundaries3d'
   | 'lietuvos-pastas-postcode-search'
   | 'geoportal-lt'
   | 'registru-centras-address-register'
@@ -769,6 +775,66 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'europe',
     usage: 'primary',
     notes: 'Open postal-code API for Germany, Austria, Switzerland, and Liechtenstein.',
+  },
+  'swiss-post-postcodes': {
+    id: 'swiss-post-postcodes',
+    name: 'Swiss Post Postcodes and Address Geodata',
+    url: 'https://www.post.ch/en/business-solutions/address-management/address-and-geodata',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public search and account download; contract review required for GeoPost, coordinates and redistribution',
+    notes: 'Official four-digit postcode, locality, street and sorting evidence; NPA6, GeoPost polygons and delivery data remain contract-partitioned from public swisstopo geometry.',
+  },
+  'swisstopo-plzo-postal-localities': {
+    id: 'swisstopo-plzo-postal-localities',
+    name: 'swisstopo Official Directory of Towns and Cities (PLZO_CH)',
+    url: 'https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official monthly locality, four-digit postcode and NPA6 perimeter data for domicile-address postcode types; special, company and administrative codes may be non-areal.',
+  },
+  'swisstopo-building-address-directory': {
+    id: 'swisstopo-building-address-directory',
+    name: 'swisstopo Official Directory of Building Addresses',
+    url: 'https://www.swisstopo.admin.ch/en/official-directory-of-building-addresses',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official daily building-entrance addresses with EGAID, EGID plus EDID, house number, street, postcode/locality, municipality, LV95 point and status.',
+  },
+  'swiss-federal-gwr': {
+    id: 'swiss-federal-gwr',
+    name: 'Swiss Federal Register of Buildings and Dwellings (GWR)',
+    url: 'https://www.housing-stat.ch/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Official public register/API; pin access class and terms per artifact',
+    notes: 'Federal building and entrance identity/status evidence; EGID plus EDID is nationwide unique for an entrance, while dwelling and occupant data remain outside public AGID output.',
+  },
+  'swisstopo-swissbuildings3d': {
+    id: 'swisstopo-swissbuildings3d',
+    name: 'swisstopo swissBUILDINGS3D 3.0 Beta',
+    url: 'https://www.swisstopo.admin.ch/en/landscape-model-swissbuildings3d-3-0-beta',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official 3D building geometry with phased EGID integration; a footprint is definitive only where the pinned canton/tile edition carries the same EGID as the address.',
+  },
+  'swisstopo-swissboundaries3d': {
+    id: 'swisstopo-swissboundaries3d',
+    name: 'swisstopo swissBOUNDARIES3D',
+    url: 'https://www.swisstopo.admin.ch/en/landscape-model-swissboundaries3d',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official national, canton, district and municipality geometry; administrative context never replaces a PLZO postcode/locality perimeter.',
   },
   'opendatasoft-nl-postcodes': {
     id: 'opendatasoft-nl-postcodes',
@@ -2359,7 +2425,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   DE: ['deutsche-post-plz-server', 'openplzapi'],
   NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
   BE: ['odwb-be-postcodes'],
-  CH: ['openplzapi'],
+  CH: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'swisstopo-building-address-directory', 'swiss-federal-gwr', 'swisstopo-swissbuildings3d', 'swisstopo-swissboundaries3d'],
   AT: ['openplzapi'],
   GB: [
     'postcodes-io',

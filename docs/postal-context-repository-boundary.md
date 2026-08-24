@@ -71,6 +71,10 @@ to `agid-postal-it`.
 Estonia-specific Omniva postcode assignment, AKS postal-area geometry, ADS
 address/building identity, EHAK administrative context, facility routing, and
 AKS service-migration rules belong to `agid-postal-ee`.
+Switzerland-specific Swiss Post assignment and rights, swisstopo PLZO geometry,
+official building-address and GWR identity, swissBUILDINGS3D linkage,
+swissBOUNDARIES3D context, and routing-exception rules belong to `agid-postal-ch`.
+
 
 
 ### `agid-postal-jp`
@@ -173,6 +177,22 @@ footprint proximity. Parcel machines, post offices, and Poste Restante routes
 remain facility points and never become surrounding residential polygons. The
 source interface must support the In-AKS transition from 27 April 2026 and the
 retirement of legacy ADS services at the end of 2026 without rewriting lineage.
+
+### `agid-postal-ch`
+
+The Switzerland repository owns Swiss Post postcode search and contract
+receipts, swisstopo official locality/postcode perimeters, official building
+addresses, GWR building and entrance identity, swissBUILDINGS3D geometry,
+swissBOUNDARIES3D context, synthetic fixtures, and release validation. A PLZO
+polygon is official locality/postcode geometry for domicile-address codes; it
+does not prove a particular street, entrance, building, recipient, or
+deliverability. Exact public address resolution follows `EGAID` and the
+nationwide-unique `EGID + EDID` entrance identity. A 3D building becomes exact
+only where the pinned swissBUILDINGS3D edition supplies the same `EGID`;
+proximity remains candidate evidence elsewhere. Swiss Post NPA6, sorting,
+GeoPost and delivery datasets remain contract-partitioned. Special-purpose and
+P.O. Box codes without a domicile perimeter remain non-areal. Liechtenstein is
+published as a separately governed `LI` country pack.
 
 
 

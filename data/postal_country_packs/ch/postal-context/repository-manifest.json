@@ -1,0 +1,209 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-ch",
+    "country_code": "CH",
+    "country_name": "Switzerland",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/ch/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "NPA4",
+    "full_code_format": "NNNN",
+    "full_code_regex": "^\\d{4}$",
+    "full_code_default_geometry": "official_domicile_postcode_perimeter_or_non_area",
+    "full_code_rule": "Preserve exactly four digits including leading zeroes. Swiss Post routing assignment and swisstopo public geometry remain independent evidence; a code alone does not identify an entrance, building, recipient or deliverability.",
+    "npa6_rule": "Preserve the additional two-digit Swiss Post code separately as NPA6. Never accept a six-digit routing value as the public NPA4 field or silently truncate it without source-backed semantics.",
+    "postcode_area_rule": "Use a pinned swisstopo PLZO_CH edition as official Polygon or MultiPolygon evidence for domicile-address postcode types 10 and 20. Professional, company, internal and administrative types greater than 20 may have no public perimeter and remain non-areal unless separately licensed evidence proves otherwise.",
+    "address_rule": "Use the official building-address directory for street, house number, locality, NPA4, municipality, status and LV95 entrance point. Preserve EGAID and the nationwide-unique EGID plus EDID entrance identity, edition and cadastral coordinate provenance.",
+    "building_rule": "EGID is the definitive building identity. A building shape is exact only where the pinned swissBUILDINGS3D canton or tile edition carries the same EGID; entrance containment or footprint proximity alone remains candidate evidence.",
+    "privacy_rule": "Public AGID resolution can display official building-address and public entrance context but excludes EWID dwelling identity, occupant, owner, recipient, forwarding, shipment and non-public GWR attributes.",
+    "rights_rule": "Swiss Post search, street/sorting directories, NPA6, GeoPost postcode maps, coordinates and delivery products remain contract-partitioned. Public swisstopo OGD artifacts require source attribution and pinned fair-use-aware acquisition.",
+    "territory_rule": "Swiss sources can contain Principality of Liechtenstein records. The CH runtime filters them out and publishes Liechtenstein only through a separately governed LI country pack."
+  },
+  "address_graph": {
+    "node_types": [
+      "npa4",
+      "npa6",
+      "postal_locality_area",
+      "non_area_routing_code",
+      "country",
+      "canton",
+      "district",
+      "municipality",
+      "locality",
+      "street",
+      "building_address",
+      "building_entrance",
+      "gwr_building",
+      "building_geometry",
+      "post_office_or_po_box",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "npa6_refines",
+      "located_at",
+      "addresses",
+      "entrance_of",
+      "same_egid",
+      "part_of",
+      "postal_contains",
+      "covered_by_agid",
+      "succeeds",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "npa4-to-locality-area-is-many-to-many",
+      "npa4-area-may-be-multipart",
+      "npa4-may-have-many-npa6-values",
+      "special-postcode-may-have-no-area",
+      "building-may-have-many-entrances",
+      "egaid-identifies-one-building-address",
+      "egid-plus-edid-identifies-one-entrance",
+      "exact-building-geometry-requires-same-egid",
+      "agid-containment-is-not-source-identity",
+      "liechtenstein-records-never-enter-ch-runtime"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "domicile_postcode_locality",
+      "rule": "Return the pinned PLZO_CH NPA4/NPA6 locality perimeter while preserving Swiss Post assignment and swisstopo geometry authority separately."
+    },
+    {
+      "id": "npa6_refinement",
+      "rule": "Store NPA4 and the additional two-digit NPA6 component separately with postcode type and locality identity; never coerce between four and six digits without an explicit source relationship."
+    },
+    {
+      "id": "special_professional_company_or_internal_code",
+      "rule": "Codes excluded from the domicile-address directory remain routing or organization records and do not receive an invented residential polygon."
+    },
+    {
+      "id": "official_building_entrance",
+      "rule": "Resolve the official address through EGAID and EGID plus EDID, preserving address status, source edition and cadastral entrance coordinate."
+    },
+    {
+      "id": "building_geometry_with_egid",
+      "rule": "Promote swissBUILDINGS3D geometry only when the pinned feature carries the identical EGID. In phased or missing-EGID areas, stop at entrance/building identity or return candidate geometry."
+    },
+    {
+      "id": "multiple_entrances_or_addresses",
+      "rule": "Keep every EDID and EGAID branch separate; do not merge entrances, languages or house numbers into a Franken-address."
+    },
+    {
+      "id": "po_box_or_post_office",
+      "rule": "Represent a P.O. Box, post office or special delivery destination as a facility or routing record, not a surrounding residential polygon or proof of residence."
+    },
+    {
+      "id": "liechtenstein_partition",
+      "rule": "Source rows identified as Liechtenstein are rejected by CH release validation and routed only to the LI country pack."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-rights-lineage",
+      "scope": "all",
+      "pass": "Every source has a pinned release or receipt, digest, source attribution, access/contract class, schema, CRS, geographic partition and transformation method."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "npa4",
+      "metric": "normalized_exact_four_digit_string_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Swiss Post assignment, PLZO geometry, building-address identity, GWR building identity, swissBUILDINGS3D geometry, administration and AGID indexes remain separate."
+    },
+    {
+      "id": "plzo-topology",
+      "scope": "domicile-postcode-perimeters",
+      "pass": "Polygon and multipolygon geometry is valid, monthly-versioned and checked for unexplained overlaps, gaps, islands, invalid NPA4/NPA6 pairs and territory leakage."
+    },
+    {
+      "id": "postcode-type-coverage",
+      "scope": "all-known-postcodes",
+      "pass": "Every code is classified as domicile-area, special non-area, organization/facility, unknown or contract-only; absence from PLZO never creates derived official geometry."
+    },
+    {
+      "id": "building-address-identity",
+      "scope": "official-building-addresses",
+      "pass": "Every promoted address preserves EGAID, EGID, EDID, status, NPA4, locality, municipality, LV95 coordinate provenance and release time."
+    },
+    {
+      "id": "building-geometry-link",
+      "scope": "promoted-building-geometries",
+      "pass": "Every exact geometry has an identical EGID in the pinned swissBUILDINGS3D feature; proximity-only features remain candidates."
+    },
+    {
+      "id": "public-privacy",
+      "scope": "public-resolution",
+      "pass": "Public results contain no EWID dwelling record, occupant, owner, recipient, forwarding, shipment, telephone or non-public register attributes."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "plzo_building_address_containment_minimum": 0.999,
+        "egaid_uniqueness_ratio_minimum": 1.0,
+        "egid_edid_uniqueness_ratio_minimum": 1.0,
+        "same_egid_building_geometry_ratio_minimum": 1.0,
+        "ch_li_partition_accuracy_minimum": 1.0
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, postcode types and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-reviewed snapshots reproduce experimental packs with full lineage." },
+      { "id": "M3_candidate", "definition": "Topology, identity, privacy, territory, freshness and holdout gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "unpinned-plzo-release",
+      "special-postcode-given-invented-polygon",
+      "npa6-silently-truncated-to-npa4",
+      "swiss-post-contract-data-redistributed-without-review",
+      "missing-swisstopo-attribution",
+      "building-address-missing-egaid-egid-or-edid",
+      "entrance-point-presented-as-building-footprint",
+      "building-proximity-presented-as-same-egid-link",
+      "swissbuildings3d-beta-coverage-presented-as-national-egid-coverage",
+      "private-ewid-or-occupant-data-exposed",
+      "liechtenstein-record-presented-as-switzerland",
+      "postcode-stored-as-number",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy_or_ownership",
+    "private_dwelling_or_ewid_context",
+    "building_geometry_from_proximity",
+    "legal_property_or_cadastral_survey_certification",
+    "special_postcode_has_residential_area",
+    "municipality_equals_postcode_locality"
+  ]
+}
