@@ -1,0 +1,184 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-gb",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/gb/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "unit_postcode",
+    "full_code_format": "OUTWARD INWARD",
+    "full_code_regex": "^(?:GIR 0AA|[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][A-Z]{2})$",
+    "full_code_default_geometry": "delivery_point_group_with_optional_derived_area",
+    "full_code_rule": "Treat a unit postcode as a Royal Mail allocation to a large user or a group of usually adjacent delivery addresses. It is not an official boundary.",
+    "outward_code_rule": "Area and district prefixes are coarse routing geography and cannot select a premise or building.",
+    "ons_coordinate_rule": "ONSPD coordinates and best-fit administrative links are statistical reference evidence, not exact delivery points or postal boundaries.",
+    "model_geometry_rule": "Voronoi, buffers, alpha shapes, learned boundaries, and AGID cell unions are derived candidate geometry only.",
+    "northern_ireland_rule": "BT records and artifacts use a separate Land and Property Services rights gate, especially for commercial reuse."
+  },
+  "address_graph": {
+    "node_types": [
+      "unit_postcode",
+      "postcode_sector",
+      "postcode_district",
+      "postcode_area",
+      "country",
+      "nation",
+      "local_authority",
+      "post_town",
+      "dependent_locality",
+      "street",
+      "delivery_point",
+      "uprn",
+      "premise",
+      "building",
+      "po_box",
+      "large_user",
+      "bfpo",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "part_of",
+      "postal_contains",
+      "covered_by_agid",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "unit-postcode-to-delivery-point-is-one-to-many",
+      "building-to-uprn-may-be-one-to-many",
+      "uprn-to-building-needs-explicit-or-reviewed-spatial-link",
+      "postcode-centroid-to-administration-is-best-fit",
+      "derived-area-containment-is-not-deliverability"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "small_user_group",
+      "rule": "Preserve all source-backed delivery points; never infer house numbers or buildings from the postcode centroid."
+    },
+    {
+      "id": "large_user_or_organisation",
+      "rule": "A postcode can belong to one high-volume recipient. Keep it non-areal unless independent geometry exists."
+    },
+    {
+      "id": "po_box_or_bfpo",
+      "rule": "Keep PO Box and BFPO records non-spatial unless a separately licensed public facility relation exists."
+    },
+    {
+      "id": "derived_unit_postcode_area",
+      "rule": "Pin source points, clipping boundary, algorithm, parameters, digest, and time. Never label the result as a Royal Mail boundary."
+    },
+    {
+      "id": "bt_licensing_partition",
+      "rule": "Northern Ireland BT data stays in a separately reviewable license partition and cannot inherit Great Britain reuse rights."
+    },
+    {
+      "id": "historical_reassignment",
+      "rule": "Retain termination and reuse history with separate valid and known times; never overwrite an old location."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source has a pinned release, digest, terms reference, attribution, geographic scope, and transformation method."
+    },
+    {
+      "id": "unit-postcode-normalization",
+      "scope": "unit-postcode",
+      "metric": "normalized_uppercase_outward_single-space_inward_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Royal Mail assignment, ONS statistics, UPRN point, building geometry, derived postcode surface, and AGID index remain separate."
+    },
+    {
+      "id": "live-and-terminated-status",
+      "scope": "postcode-records",
+      "pass": "Live, terminated, reused, and no-grid-reference records are explicit and time-versioned."
+    },
+    {
+      "id": "exact-address-building-path",
+      "scope": "promoted-building-links",
+      "pass": "Postcode, address fields, delivery-point identifier, UPRN, and building relation agree on one source-backed path; conflicts remain alternatives."
+    },
+    {
+      "id": "derived-area-topology",
+      "scope": "derived-postcode-areas",
+      "pass": "Geometry is valid, bounded, clipped, versioned, and evaluated against independent holdout addresses."
+    },
+    {
+      "id": "bt-rights",
+      "scope": "BT",
+      "pass": "The intended internal, public, or commercial artifact is allowed by recorded LPS terms."
+    },
+    {
+      "id": "privacy",
+      "scope": "public-artifacts",
+      "pass": "No recipient, occupant, customer record, phone, delivery instruction, credential, or private unit assertion is published."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "exact_postcode_address_match_ratio_minimum": 0.995,
+        "coordinate_top_1_match_ratio_minimum": 0.98,
+        "coordinate_top_k_match_ratio_minimum": 0.995
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Rights-cleared snapshots reproduce experimental packs with full lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "royal-mail-paf-redistributed-without-rights",
+      "ons-centroid-presented-as-delivery-point",
+      "derived-area-presented-as-royal-mail-boundary",
+      "open-uprn-presented-as-full-address",
+      "generalised-building-presented-as-exact-premise-link",
+      "bt-data-served-without-lps-rights-review",
+      "terminated-postcode-presented-as-live",
+      "occupant-or-customer-data-published",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy",
+    "official-royal-mail-polygon",
+    "ons-centroid-is-delivery-point",
+    "postcode-has-one-building",
+    "legal-boundary-or-survey-certification"
+  ]
+}

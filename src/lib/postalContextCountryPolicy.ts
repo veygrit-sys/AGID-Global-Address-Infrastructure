@@ -1,11 +1,11 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
 export type PostalContextCountryPolicy = {
   countryCode: PostalContextCountryCode;
   postalCodeFormat: string;
-  fullCodeGeometrySemantics: 'area-or-non-area' | 'delivery-point-first' | 'address-range-first';
+  fullCodeGeometrySemantics: 'area-or-non-area' | 'delivery-point-first' | 'address-range-first' | 'delivery-unit-first';
 };
 
 export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
@@ -26,6 +26,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'NL',
     postalCodeFormat: 'NNNN AA',
     fullCodeGeometrySemantics: 'address-range-first',
+  },
+  GB: {
+    countryCode: 'GB',
+    postalCodeFormat: 'OUTWARD INWARD',
+    fullCodeGeometrySemantics: 'delivery-unit-first',
   },
 };
 
@@ -57,10 +62,20 @@ export function normalizeNetherlandsPostalCode(value: unknown) {
   return `${normalized.slice(0, 4)} ${normalized.slice(4)}`;
 }
 
+export function normalizeUnitedKingdomPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .toUpperCase()
+    .replace(/\s+/g, '');
+  if (!/^(?:GIR0AA|[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2})$/.test(normalized)) return null;
+  return `${normalized.slice(0, -3)} ${normalized.slice(-3)}`;
+}
+
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
   if (normalizedCountry === 'SG') return normalizeSingaporePostalCode(value);
   if (normalizedCountry === 'NL') return normalizeNetherlandsPostalCode(value);
+  if (normalizedCountry === 'GB') return normalizeUnitedKingdomPostalCode(value);
   return null;
 }

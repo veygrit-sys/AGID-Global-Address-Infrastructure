@@ -415,6 +415,7 @@ export {
   normalizeJapanPostalCode,
   normalizeNetherlandsPostalCode,
   normalizeSingaporePostalCode,
+  normalizeUnitedKingdomPostalCode,
 } from './postalContextCountryPolicy';
 
 export function validatePostalContextRuntimePack(

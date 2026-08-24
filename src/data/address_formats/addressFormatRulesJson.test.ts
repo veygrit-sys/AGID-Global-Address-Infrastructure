@@ -1287,7 +1287,14 @@ test('All Americas country and territory JSON files expose registered postal API
 
 test('British, Crown Dependency, and British Overseas Territory metadata exposes UK postal, mapping, and territory sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
-    GB: ['postcodes-io', 'ons-postcode-directory', 'ordnance-survey-open-names', 'ordnance-survey-boundary-line'],
+    GB: [
+      'postcodes-io',
+      'ons-postcode-directory',
+      'ordnance-survey-open-names',
+      'ordnance-survey-boundary-line',
+      'ordnance-survey-open-uprn',
+      'ordnance-survey-openmap-local',
+    ],
     GG: ['guernsey-post', 'digimap-guernsey'],
     JE: ['jersey-post', 'jersey-gov-open-data'],
     IM: ['isle-of-man-post', 'isle-of-man-gov-data'],

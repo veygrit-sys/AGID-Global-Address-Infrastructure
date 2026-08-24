@@ -286,11 +286,14 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     trustTier: 'official',
     availability: 'bulk-open-data',
     depth: 'postcode',
-    url: 'https://geoportal.statistics.gov.uk/',
+    url: 'https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts',
     sourceNames: ['ons postcode directory', 'ons-pd', 'onspd'],
     openSourceIds: ['ons-postcode-directory'],
     requiresCredential: false,
-    notes: ['Official UK statistical postcode reference; not Royal Mail delivery-point proof.'],
+    notes: [
+      'Official UK statistical postcode reference for live and terminated codes; not Royal Mail delivery-point proof or an official postcode boundary.',
+      'Northern Ireland BT reuse is subject to separate Land and Property Services terms, including commercial-use restrictions.',
+    ],
   },
   {
     id: 'royal-mail-paf',
@@ -304,7 +307,10 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     sourceNames: ['royal mail', 'paf', 'postcode address file'],
     openSourceIds: ['royal-mail-paf'],
     requiresCredential: true,
-    notes: ['Official UK delivery-point reference, licensed rather than open.'],
+    notes: [
+      'Official UK delivery-point address and postcode-assignment reference, licensed rather than open.',
+      'PAF assignment does not by itself define an official postcode polygon.',
+    ],
   },
   {
     id: 'postcodes-io',

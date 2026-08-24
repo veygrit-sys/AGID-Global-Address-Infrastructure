@@ -8,9 +8,10 @@ import {
   normalizeNetherlandsPostalCode,
   normalizePostalContextPostalCode,
   normalizeSingaporePostalCode,
+  normalizeUnitedKingdomPostalCode,
 } from './postalContextCountryPolicy';
 
-test('normalizes Japan, Singapore, and Netherlands postal codes without cross-country guessing', () => {
+test('normalizes supported country postal codes without cross-country guessing', () => {
   assert.equal(
     normalizeJapanPostalCode('\uFF10\uFF10\uFF10\uFF0D\uFF10\uFF10\uFF10\uFF11'),
     '000-0001',
@@ -29,6 +30,11 @@ test('normalizes Japan, Singapore, and Netherlands postal codes without cross-co
   assert.equal(normalizeNetherlandsPostalCode('1234ab'), '1234 AB');
   assert.equal(normalizeNetherlandsPostalCode('1234-AB'), null);
   assert.equal(normalizePostalContextPostalCode('NL', '1234AB'), '1234 AB');
+  assert.equal(normalizeUnitedKingdomPostalCode('sw1a1aa'), 'SW1A 1AA');
+  assert.equal(normalizeUnitedKingdomPostalCode('GIR0AA'), 'GIR 0AA');
+  assert.equal(normalizeUnitedKingdomPostalCode('SW1A-1AA'), null);
+  assert.equal(normalizePostalContextPostalCode('GB', 'sw1a 1aa'), 'SW1A 1AA');
+  assert.equal(normalizePostalContextPostalCode('gb', 'w1a0ax'), 'W1A 0AX');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -36,6 +42,7 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('JP'), true);
   assert.equal(isPostalContextCountryCode('SG'), true);
   assert.equal(isPostalContextCountryCode('NL'), true);
+  assert.equal(isPostalContextCountryCode('GB'), true);
   assert.equal(isPostalContextCountryCode('US'), false);
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.SG.fullCodeGeometrySemantics,
@@ -47,4 +54,9 @@ test('declares country-specific full-code geometry semantics', () => {
     'address-range-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NL.postalCodeFormat, 'NNNN AA');
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.GB.fullCodeGeometrySemantics,
+    'delivery-unit-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GB.postalCodeFormat, 'OUTWARD INWARD');
 });

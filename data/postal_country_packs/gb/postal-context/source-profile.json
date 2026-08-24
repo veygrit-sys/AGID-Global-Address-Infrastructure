@@ -1,0 +1,199 @@
+{
+  "schema_version": "agid-postal-gb-source-profile-v0.1",
+  "country_code": "GB",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata and non-geographic fixtures only."
+    },
+    {
+      "id": "R1_open_attribution",
+      "meaning": "OGL material with all provider-specific attribution and third-party notices."
+    },
+    {
+      "id": "R2_open_bt_restricted",
+      "meaning": "Open postcode product whose BT subset requires separate LPS terms and commercial-use review."
+    },
+    {
+      "id": "R3_licensed_product",
+      "meaning": "Provider contract controls storage, use, serving, derivation, and redistribution."
+    },
+    {
+      "id": "R4_validation_only",
+      "meaning": "A source may validate a release but contributes no redistributable row or geometry."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "royal-mail-paf",
+      "provider": "Royal Mail Group Limited",
+      "source_url": "https://www.royalmail.com/business/data-quality/address-data",
+      "role": [
+        "official-unit-postcode-assignment",
+        "delivery-point-address",
+        "large-user-and-po-box-reference"
+      ],
+      "production_scope": "Only uses and artifacts granted by a reviewed PAF licence or licensed solution agreement.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_licensed_product",
+      "terms_note": "PAF is the authoritative delivery-point address source but it is licensed data and does not define official postcode polygons.",
+      "expected_update_cadence": "provider-product-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-contract-id-rights-expiry-and-serving-scope",
+        "pin-release-and-checksum",
+        "isolate-licensed-rows-from-open-artifacts"
+      ],
+      "prohibited_claims": [
+        "public-redistribution-right",
+        "official-royal-mail-polygon",
+        "building-footprint",
+        "occupant-or-recipient"
+      ]
+    },
+    {
+      "source_id": "ons-postcode-directory",
+      "provider": "Office for National Statistics and Gridlink consortium",
+      "source_url": "https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts",
+      "role": [
+        "current-and-terminated-postcode-reference",
+        "postcode-grid-reference",
+        "administrative-and-statistical-geography-crosswalk"
+      ],
+      "production_scope": "Pinned quarterly ONSPD release under OGL and required Royal Mail, OS, ONS, and applicable LPS notices.",
+      "assignment_authority": "official_postal_operator_derived_reference",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R2_open_bt_restricted",
+      "terms_note": "ONSPD assigns a postcode by its address-mean grid reference and point-in-polygon or best-fit methods. BT commercial reuse requires separate LPS licensing.",
+      "expected_update_cadence": "quarterly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-quarter-release-digest-and-user-guide",
+        "filter-live-status-by-termination-field-when-required",
+        "emit-all-required-attributions",
+        "partition-and-review-bt-records"
+      ],
+      "prohibited_claims": [
+        "exact-delivery-point",
+        "official-royal-mail-polygon",
+        "exact-building-from-centroid",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "ordnance-survey-open-uprn",
+      "provider": "Ordnance Survey",
+      "source_url": "https://www.ordnancesurvey.co.uk/products/os-open-uprn",
+      "role": [
+        "authoritative-uprn",
+        "addressable-location-point",
+        "cross-dataset-identifier"
+      ],
+      "production_scope": "Pinned OS Open UPRN snapshot under OGL v3 with OS attribution.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "OS Open UPRN supplies UPRNs and coordinate references for addressable locations, not full address strings, postal assignment, or building footprints.",
+      "expected_update_cadence": "six-weekly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-snapshot-digest-and-schema",
+        "emit-os-attribution",
+        "preserve-uprn-as-string",
+        "do-not-invent-address-fields"
+      ],
+      "prohibited_claims": [
+        "full-address-record",
+        "official-royal-mail-assignment",
+        "building-footprint",
+        "occupant-or-owner"
+      ]
+    },
+    {
+      "source_id": "ordnance-survey-openmap-local",
+      "provider": "Ordnance Survey",
+      "source_url": "https://www.ordnancesurvey.co.uk/products/os-open-map-local",
+      "role": [
+        "generalised-building-geometry",
+        "street-level-context",
+        "candidate-spatial-link"
+      ],
+      "production_scope": "Pinned OS OpenMap Local release under OGL with OS attribution.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "The open product contains generalised building geometry suitable for context. Proximity to a UPRN is a derived candidate link, not an exact premise relation.",
+      "expected_update_cadence": "six-monthly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-digest-and-schema",
+        "emit-os-attribution",
+        "label-generalised-geometry",
+        "keep-spatial-link-derived-until-confirmed"
+      ],
+      "prohibited_claims": [
+        "exact-uprn-building-link",
+        "official-royal-mail-polygon",
+        "legal-building-boundary",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "os-addressbase-and-building-features",
+      "provider": "Ordnance Survey and GeoPlace",
+      "source_url": "https://www.ordnancesurvey.co.uk/products/addressbase-premium",
+      "role": [
+        "licensed-address-uprn-record",
+        "delivery-point-uprn-cross-reference",
+        "building-relation-and-detailed-footprint"
+      ],
+      "production_scope": "Only licensed AddressBase and OS NGD fields allowed by the applicable contract and Open Identifiers Policy.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R3_licensed_product",
+      "terms_note": "This licensed path can support exact address-to-UPRN-to-building evidence. Open UPRN identifiers do not make all premium address or building fields open.",
+      "expected_update_cadence": "provider-product-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-contract-and-field-level-publication-rights",
+        "pin-release-and-checksum",
+        "preserve-uprn-toid-and-lifecycle-relations",
+        "separate-open-identifiers-from-premium-fields"
+      ],
+      "prohibited_claims": [
+        "all-addressbase-fields-are-open",
+        "official-royal-mail-polygon",
+        "occupant-or-owner",
+        "unlicensed-public-redistribution"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "onspd-open-non-bt",
+      "rule": "Great Britain ONSPD rows retain release, notices, and attribution and remain separate from BT."
+    },
+    {
+      "id": "onspd-bt-rights-gated",
+      "rule": "BT rows remain unavailable for commercial or public artifacts until the exact LPS licence permits that use."
+    },
+    {
+      "id": "os-open-identifiers-and-context",
+      "rule": "Open UPRN and OpenMap Local retain OS release lineage, attribution, and product limitations."
+    },
+    {
+      "id": "royal-mail-and-os-licensed",
+      "rule": "PAF, AddressBase, and premium building rows remain isolated according to reviewed agreements."
+    },
+    {
+      "id": "derived-postcode-geometry",
+      "rule": "Generated surfaces pin their input digests and method and never inherit Royal Mail assignment authority."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

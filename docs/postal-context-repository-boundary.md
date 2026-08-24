@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-singapore-and-netherlands-reference-implementations`
+Status: `accepted-for-japan-singapore-netherlands-and-united-kingdom-reference-implementations`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -54,6 +54,8 @@ quality gate、manifest生成を持つ。国別ruleをcoreへhard-codeせず、v
 Singapore-specific delivery-point and sector rules belong to `agid-postal-sg`.
 Netherlands-specific PC6 range, BAG address/building, and attributed CBS/Esri
 derived-area rules belong to `agid-postal-nl`.
+United Kingdom unit-postcode, PAF, ONSPD, UPRN, building, derived-area, and BT
+rights-partition rules belong to `agid-postal-gb`.
 
 ### `agid-postal-jp`
 
@@ -79,6 +81,17 @@ PC6 address-range rules, PO-box exceptions, synthetic fixtures, and release
 validation. PostNL licensed rows and API keys remain outside Git. BAG geometry
 does not become postal-operator geometry, and CBS/Esri derived areas never
 become official PostNL boundaries.
+
+### `agid-postal-gb`
+
+The United Kingdom repository owns Royal Mail PAF rights metadata, ONSPD
+release and attribution lineage, OS UPRN/address/building lineage, derived
+unit-postcode surfaces, large-user, PO Box, BFPO, historical-reuse, and
+Northern Ireland licensing exceptions. PAF and premium OS rows remain outside
+Git unless reviewed rights permit an artifact. ONS address-mean coordinates are
+not delivery points or postcode boundaries, open UPRNs are not complete
+addresses, generalized buildings are not exact premise links, and generated
+surfaces never become official Royal Mail boundaries.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

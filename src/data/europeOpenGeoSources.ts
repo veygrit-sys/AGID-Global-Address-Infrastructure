@@ -65,6 +65,8 @@ export type EuropeOpenGeoSourceId =
   | 'ons-postcode-directory'
   | 'ordnance-survey-open-names'
   | 'ordnance-survey-boundary-line'
+  | 'ordnance-survey-open-uprn'
+  | 'ordnance-survey-openmap-local'
   | 'ideal-postcodes-reference'
   | 'civictechsweden-posmkod'
   | 'lantmateriet-sweden'
@@ -215,6 +217,7 @@ export interface EuropeOpenGeoSource {
   url: string;
   kind:
     | 'postal-code'
+    | 'building'
     | 'address'
     | 'geocoding'
     | 'admin-boundary'
@@ -767,11 +770,12 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'ons-postcode-directory': {
     id: 'ons-postcode-directory',
     name: 'ONS Postcode Directory',
-    url: 'https://geoportal.statistics.gov.uk/',
+    url: 'https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'validation',
-    notes: 'UK postcode to administrative geography reference for post town, local authority, county, and statistical area checks.',
+    license: 'Open Government Licence v3.0; BT subject to separate LPS terms',
+    notes: 'Quarterly live and terminated UK postcode coordinates and administrative crosswalks; the address-mean point is not a delivery point or postal boundary.',
   },
   'ordnance-survey-open-names': {
     id: 'ordnance-survey-open-names',
@@ -792,6 +796,26 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     license: 'Open Government Licence',
     notes: 'Official GB administrative boundary data for counties, districts, wards, and parishes.',
+  },
+  'ordnance-survey-open-uprn': {
+    id: 'ordnance-survey-open-uprn',
+    name: 'OS Open UPRN',
+    url: 'https://www.ordnancesurvey.co.uk/products/os-open-uprn',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open Government Licence v3.0',
+    notes: 'Authoritative GB UPRN identifiers and coordinate references for addressable locations; not full addresses or building footprints.',
+  },
+  'ordnance-survey-openmap-local': {
+    id: 'ordnance-survey-openmap-local',
+    name: 'OS OpenMap Local',
+    url: 'https://www.ordnancesurvey.co.uk/products/os-open-map-local',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Open Government Licence v3.0',
+    notes: 'Generalised GB building geometry and street-level context; proximity to a UPRN is not an exact premise relationship.',
   },
   'ideal-postcodes-reference': {
     id: 'ideal-postcodes-reference',
@@ -2127,7 +2151,14 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   BE: ['odwb-be-postcodes'],
   CH: ['openplzapi'],
   AT: ['openplzapi'],
-  GB: ['postcodes-io', 'ons-postcode-directory', 'ordnance-survey-open-names', 'ordnance-survey-boundary-line'],
+  GB: [
+    'postcodes-io',
+    'ons-postcode-directory',
+    'ordnance-survey-open-names',
+    'ordnance-survey-boundary-line',
+    'ordnance-survey-open-uprn',
+    'ordnance-survey-openmap-local',
+  ],
   IE: ['ideal-postcodes-reference'],
   LI: ['openplzapi'],
   SE: ['civictechsweden-posmkod', 'lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
