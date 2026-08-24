@@ -558,6 +558,10 @@ test('All Oceania country and territory JSON files expose postal API or open-sou
 
   assert.ok(loadFormat('AU').openSourceIds?.includes('auspost-postcode'));
   assert.ok(loadFormat('NZ').openSourceIds?.includes('linz-nz-addresses'));
+  assert.ok(loadFormat('NZ').openSourceIds?.includes('nz-post-postcode-network'));
+  assert.ok(loadFormat('NZ').openSourceIds?.includes('linz-nz-building-outlines'));
+  assert.ok(loadFormat('NZ').openSourceIds?.includes('stats-nz-geographic-boundaries'));
+  assert.match(loadFormat('NZ').postalCode?.api ?? '', /^https:\/\/www\.nzpost\.co\.nz\//);
   assert.ok(loadFormat('AU').openSourceIds?.includes('digital-earth-australia-coastlines'));
   assert.ok(loadFormat('AU').openSourceIds?.includes('geoscience-australia-elvis'));
   assert.ok(loadFormat('NZ').openSourceIds?.includes('linz-elevation'));

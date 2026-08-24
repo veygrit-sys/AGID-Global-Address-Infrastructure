@@ -44,6 +44,9 @@ export type OceaniaOpenGeoSourceId =
   | 'auspost-postcode'
   | 'auspost-territories'
   | 'linz-nz-addresses'
+  | 'nz-post-postcode-network'
+  | 'linz-nz-building-outlines'
+  | 'stats-nz-geographic-boundaries'
   | 'nz-post-territories'
   | 'post-fiji'
   | 'post-png'
@@ -67,6 +70,7 @@ export interface OceaniaOpenGeoSource {
   url: string;
   kind:
     | 'postal-code'
+    | 'building'
     | 'address'
     | 'geocoding'
     | 'admin-boundary'
@@ -442,15 +446,45 @@ export const OCEANIA_OPEN_GEO_SOURCES: Record<OceaniaOpenGeoSourceId, OceaniaOpe
     usage: 'primary',
     notes: 'Australian external territory postcode reference for Norfolk Island, Christmas Island, Cocos Islands, and Antarctic routing.',
   },
+  'nz-post-postcode-network': {
+    id: 'nz-post-postcode-network',
+    name: 'NZ Post Postcode Network File',
+    url: 'https://www.nzpost.co.nz/business/sending-within-nz/quality-addressing/postcode-network-file',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'NZ Post licensed PNF; redistribution rights vary by licence',
+    notes: 'Authoritative NZ Post postcode network with licensed urban and rural areas plus box-lobby references; not open bulk data.',
+  },
   'linz-nz-addresses': {
     id: 'linz-nz-addresses',
-    name: 'LINZ New Zealand Address Data',
-    url: 'https://data.linz.govt.nz/',
+    name: 'LINZ NZ Addresses',
+    url: 'https://data.linz.govt.nz/layer/123113-nz-addresses/',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
+    usage: 'primary',
     license: 'CC BY 4.0',
-    notes: 'New Zealand official address and geospatial data from LINZ.',
+    notes: 'Official weekly New Zealand address and road data; point-position method must be retained and does not by itself prove NZ Post assignment or a building link.',
+  },
+  'linz-nz-building-outlines': {
+    id: 'linz-nz-building-outlines',
+    name: 'LINZ NZ Building Outlines',
+    url: 'https://data.linz.govt.nz/layer/101290-nz-building-outlines/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official mapping roof outlines extracted from imagery; the dataset is not an exact address-to-building link or legal parcel boundary.',
+  },
+  'stats-nz-geographic-boundaries': {
+    id: 'stats-nz-geographic-boundaries',
+    name: 'Stats NZ Geographic Boundaries',
+    url: 'https://www.stats.govt.nz/methods/geographic-hierarchy/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0',
+    notes: 'Official statistical and administrative geography context; these areas are not NZ Post postcode boundaries.',
   },
   'nz-post-territories': {
     id: 'nz-post-territories',
@@ -637,7 +671,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<OceaniaCountryOrTerritoryCode, OceaniaO
     'digital-earth-australia-fractional-cover',
     'geoscience-australia-elvis',
   ],
-  NZ: ['linz-nz-addresses', 'linz-data-service', 'linz-elevation'],
+  NZ: ['nz-post-postcode-network', 'linz-nz-addresses', 'linz-nz-building-outlines', 'stats-nz-geographic-boundaries', 'linz-data-service', 'linz-elevation'],
   FJ: ['post-fiji'],
   PG: ['post-png'],
   WS: ['samoa-post'],

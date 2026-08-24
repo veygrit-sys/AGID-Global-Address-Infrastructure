@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-singapore-netherlands-united-kingdom-and-france-reference-implementations`
+Status: `accepted-for-japan-singapore-netherlands-united-kingdom-france-and-new-zealand-reference-implementations`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -58,6 +58,9 @@ United Kingdom unit-postcode, PAF, ONSPD, UPRN, building, derived-area, and BT
 rights-partition rules belong to `agid-postal-gb`.
 France-specific La Poste assignment, BAN address, BD TOPO building-link, COG,
 derived-area, CEDEX, and overseas-partition rules belong to `agid-postal-fr`.
+New Zealand-specific PNF/PAF rights, urban/RD/box/bag delivery semantics, LINZ
+address and building lineage, Stats NZ context, and Pacific territory rules
+belong to `agid-postal-nz`.
 
 ### `agid-postal-jp`
 
@@ -106,6 +109,19 @@ Poste boundaries. CEDEX and other special routing codes are non-areal unless
 independent evidence proves otherwise. Overseas territories and Monaco are
 published as separately governed ISO country packs rather than silently mixed
 into the France runtime.
+
+### `agid-postal-nz`
+
+The New Zealand repository owns NZ Post PNF and PAF rights metadata,
+Address Checker receipt policy, four-digit and leading-zero rules, urban and
+Rural Delivery network geometry, box and bag exceptions, LINZ address and roof
+outline lineage, Stats NZ context, synthetic fixtures, and release validation.
+Licensed NZ Post rows and geometry remain outside Git unless publication rights
+permit an artifact. RD number and mailtown remain routing fields, box and bag
+postcodes do not become surrounding residential areas, LINZ roof proximity does
+not become an exact address-to-building link, and Cook Islands, Niue, Tokelau,
+and other independent ISO territories remain separate country packs.
+
 
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。

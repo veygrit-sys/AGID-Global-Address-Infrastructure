@@ -7,6 +7,7 @@ import {
   normalizeFrancePostalCode,
   normalizeJapanPostalCode,
   normalizeNetherlandsPostalCode,
+  normalizeNewZealandPostalCode,
   normalizePostalContextPostalCode,
   normalizeSingaporePostalCode,
   normalizeUnitedKingdomPostalCode,
@@ -41,6 +42,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeFrancePostalCode('75001'), '75001');
   assert.equal(normalizeFrancePostalCode('75-001'), null);
   assert.equal(normalizePostalContextPostalCode('fr', '75 001'), '75001');
+  assert.equal(normalizeNewZealandPostalCode('\uFF10\uFF11\uFF12\uFF13'), '0123');
+  assert.equal(normalizeNewZealandPostalCode('01 23'), '0123');
+  assert.equal(normalizeNewZealandPostalCode('0123'), '0123');
+  assert.equal(normalizeNewZealandPostalCode('01-23'), null);
+  assert.equal(normalizePostalContextPostalCode('nz', '01 23'), '0123');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -51,6 +57,7 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('GB'), true);
   assert.equal(isPostalContextCountryCode('US'), false);
   assert.equal(isPostalContextCountryCode('FR'), true);
+  assert.equal(isPostalContextCountryCode('NZ'), true);
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.SG.fullCodeGeometrySemantics,
     'delivery-point-first',
@@ -66,9 +73,14 @@ test('declares country-specific full-code geometry semantics', () => {
     'delivery-unit-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GB.postalCodeFormat, 'OUTWARD INWARD');
-});
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.FR.fullCodeGeometrySemantics,
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.FR.postalCodeFormat, 'NNNNN');
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.NZ.fullCodeGeometrySemantics,
+    'delivery-network-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NZ.postalCodeFormat, 'NNNN');
+});

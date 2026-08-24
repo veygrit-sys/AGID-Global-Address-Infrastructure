@@ -1,0 +1,200 @@
+{
+  "schema_version": "agid-postal-nz-source-profile-v0.1",
+  "country_code": "NZ",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata and non-geographic fixtures only."
+    },
+    {
+      "id": "R1_open_attribution",
+      "meaning": "CC BY 4.0 material with source, release, transformations, and attribution."
+    },
+    {
+      "id": "R2_nz_post_licensed",
+      "meaning": "NZ Post PNF or PAF material available only under the applicable paid licence; no row or geometry is public by default."
+    },
+    {
+      "id": "R3_api_restricted_validation",
+      "meaning": "Credentialed API receipts may validate an address but Restricted Data is not scraped, bulk-cached, or redistributed."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "nz-post-pnf",
+      "provider": "New Zealand Post",
+      "source_url": "https://www.nzpost.co.nz/business/sending-within-nz/quality-addressing/postcode-network-file",
+      "role": [
+        "official-postcode-network-assignment",
+        "urban-and-rural-postcode-geometry",
+        "box-lobby-and-private-bag-reference"
+      ],
+      "production_scope": "Pinned licensed Postcode Network File release, segregated by licence and publication rights.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "official_postal_network_geometry",
+      "redistribution_class": "R2_nz_post_licensed",
+      "terms_note": "PNF is NZ Post's authoritative postcode network definition, updated six-monthly. Base and commercial licences govern use and redistribution.",
+      "expected_update_cadence": "six-monthly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-licence-class-and-publication-rights",
+        "pin-release-schema-projection-byte-length-and-digest",
+        "preserve-urban-rural-box-bag-and-multipart-types",
+        "keep-restricted-artifacts-outside-public-storage"
+      ],
+      "prohibited_claims": [
+        "open-data",
+        "every-postcode-is-residential-polygon",
+        "box-lobby-is-surrounding-area",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "nz-post-paf-address-checker",
+      "provider": "New Zealand Post",
+      "source_url": "https://www.nzpost.co.nz/business/terms-and-conditions/addressing-api",
+      "role": [
+        "official-postal-address-validation",
+        "delivery-address-and-postcode",
+        "optional-building-name-from-address-record"
+      ],
+      "production_scope": "Licensed PAF snapshot or credentialed Address Checker validation receipts within approved purpose and retention terms.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_api_restricted_validation",
+      "terms_note": "The API requires an approved key and restricts scraping, storage, redistribution, Box/Bag/CMB/Counter Delivery fields, and rural RD Number/Mailtown fields.",
+      "expected_update_cadence": "PAF-quarterly-or-live-api",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-product-version-purpose-and-receipt-time",
+        "never-persist-api-restricted-fields-outside-approved-scope",
+        "separate-third-party-cc-data-from-nz-post-restricted-data",
+        "honour-branding-rate-and-termination-requirements"
+      ],
+      "prohibited_claims": [
+        "public-bulk-address-file",
+        "unrestricted-api-cache",
+        "building-footprint-authority",
+        "recipient-or-occupant"
+      ]
+    },
+    {
+      "source_id": "linz-nz-addresses",
+      "provider": "Toitū Te Whenua Land Information New Zealand",
+      "source_url": "https://data.linz.govt.nz/layer/123113-nz-addresses/",
+      "role": [
+        "official-public-address-point",
+        "property-number-and-road-name",
+        "suburb-locality-and-address-lifecycle"
+      ],
+      "production_scope": "Pinned NZ Addresses layer snapshot under CC BY 4.0 with LINZ attribution.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "LINZ maintains official address and road data. Address points may use dwelling, access, frontage, property, letterbox, or other position methods and do not prove an NZ Post assignment or building relationship.",
+      "expected_update_cadence": "weekly-provider-publication",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-layer-id-release-time-schema-and-digest",
+        "preserve-address-id-position-method-and-lifecycle",
+        "emit-linz-cc-by-4-attribution",
+        "do-not-invent-postcode-when-absent"
+      ],
+      "prohibited_claims": [
+        "nz-post-postcode-assignment",
+        "exact-building-from-nearest-point",
+        "recipient-or-occupant",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "linz-nz-building-outlines",
+      "provider": "Toitū Te Whenua Land Information New Zealand",
+      "source_url": "https://data.linz.govt.nz/layer/101290-nz-building-outlines/",
+      "role": [
+        "building-roof-outline",
+        "building-lifecycle",
+        "candidate-address-building-geometry"
+      ],
+      "production_scope": "Pinned NZ Building Outlines snapshot under CC BY 4.0 with LINZ attribution.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "The dataset represents roof outlines extracted from imagery. It is not a cadastral boundary and does not supply a definitive address-to-building relationship.",
+      "expected_update_cadence": "provider-updated-daily-when-available",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-layer-version-imagery-source-schema-and-digest",
+        "emit-linz-cc-by-4-attribution",
+        "preserve-building-lifecycle-identifiers",
+        "record-link-method-and-ambiguity-separately"
+      ],
+      "prohibited_claims": [
+        "postal-assignment-authority",
+        "exact-address-link-from-proximity",
+        "legal-parcel-boundary",
+        "building-name-from-footprint"
+      ]
+    },
+    {
+      "source_id": "stats-nz-geographic-boundaries",
+      "provider": "Stats NZ Tatauranga Aotearoa",
+      "source_url": "https://www.stats.govt.nz/methods/geographic-hierarchy/",
+      "role": [
+        "statistical-geography",
+        "territorial-authority-and-regional-council-context",
+        "versioned-geographic-crosswalk"
+      ],
+      "production_scope": "Pinned SSGA boundary release under CC BY 4.0 with Stats NZ attribution.",
+      "assignment_authority": "official_statistical_registry",
+      "geometry_authority": "official_statistical_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "Stats NZ geographies provide statistical and administrative context, not NZ Post postcode assignment or delivery-network geometry.",
+      "expected_update_cadence": "annual-and-standard-revision",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-ssga-edition-boundary-date-schema-and-digest",
+        "emit-stats-nz-cc-by-4-attribution",
+        "preserve-geography-level-and-version",
+        "keep-statistical-and-postal-boundaries-distinct"
+      ],
+      "prohibited_claims": [
+        "nz-post-assignment-authority",
+        "postcode-boundary",
+        "address-or-building-geometry",
+        "deliverability-guarantee"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "nz-post-pnf-licensed",
+      "rule": "PNF rows and geometry stay in licence-controlled artifacts; public releases contain metadata and permitted aggregate evidence only."
+    },
+    {
+      "id": "nz-post-address-restricted",
+      "rule": "PAF and API Restricted Data remain outside Git and public caches and retain product-specific rights."
+    },
+    {
+      "id": "linz-open-address",
+      "rule": "NZ Addresses retains address IDs, position methods, lifecycle, layer version, and LINZ CC BY 4.0 attribution."
+    },
+    {
+      "id": "linz-open-building",
+      "rule": "Building outlines retain identifiers, imagery lineage, lifecycle, and derived-link status."
+    },
+    {
+      "id": "stats-nz-context",
+      "rule": "Statistical and administrative boundaries retain SSGA version and never inherit postal authority."
+    },
+    {
+      "id": "separate-pacific-territories",
+      "rule": "CK, NU, TK, and other independent ISO territories are never published inside the NZ pack."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}
