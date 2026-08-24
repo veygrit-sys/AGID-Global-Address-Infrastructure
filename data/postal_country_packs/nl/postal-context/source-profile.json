@@ -1,0 +1,167 @@
+{
+  "schema_version": "agid-postal-nl-source-profile-v0.1",
+  "country_code": "NL",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata and non-geographic fixtures only."
+    },
+    {
+      "id": "R1_public_domain",
+      "meaning": "BAG data exposed under Creative Commons Public Domain Mark 1.0 with source and snapshot lineage."
+    },
+    {
+      "id": "R2_open_attribution",
+      "meaning": "CBS postcode products with required CBS and Esri Nederland attribution and a pinned corrected release."
+    },
+    {
+      "id": "R3_api_agreement_required",
+      "meaning": "PostNL API use requires an API key and provider terms; caching and redistribution need review."
+    },
+    {
+      "id": "R4_contract_or_validation_only",
+      "meaning": "PostNL licensed bulk tables remain isolated unless contract rights permit an artifact."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "postnl-postcode-table",
+      "provider": "Koninklijke PostNL B.V.",
+      "source_url": "https://www.postnl.nl/api/assets/blt43aa441bfc1e29f2/bltfcd225acf8c54b1e/69aad68afa2e53eeaaf76e79/postcode-table-file-structure.pdf",
+      "role": [
+        "official-pc6-assignment",
+        "house-number-and-po-box-range-reference",
+        "address-level-validation"
+      ],
+      "production_scope": "Only rights granted by a reviewed PostNL Postcode Table agreement.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R4_contract_or-validation-only",
+      "terms_note": "PCT-R covers current house-number and PO-box ranges and PCT-H address-level rows. Documentation is not a public redistribution licence.",
+      "expected_update_cadence": "provider-contract-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-contract-id-rights-expiry-and-serving-scope",
+        "pin-delivery-release-and-checksum",
+        "separate-validation-from-publication-rights"
+      ],
+      "prohibited_claims": [
+        "public-redistribution-right",
+        "official-postnl-polygon",
+        "bag-building-footprint",
+        "occupant-or-recipient"
+      ]
+    },
+    {
+      "source_id": "postnl-address-check-v4",
+      "provider": "Koninklijke PostNL B.V.",
+      "source_url": "https://developer.postnl.nl/integration-with-postnl/api-overview/addresses/adrescheck-nederland/documentation-v4/",
+      "role": [
+        "credentialed-address-validation",
+        "pc6-house-number-lookup",
+        "mailability-evidence"
+      ],
+      "production_scope": "Bounded credentialed calls under PostNL API terms; no automatic public cache.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_api_agreement_required",
+      "terms_note": "The endpoint requires an apikey. Mailability and match scores are provider evidence, not AGID confidence or a redistribution right.",
+      "expected_update_cadence": "live-api-provider-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "keep-api-key-outside-git",
+        "pin-api-doc-and-terms-version",
+        "record-request-time-and-normalized-fields",
+        "review-cache-and-derivative-rights"
+      ],
+      "prohibited_claims": [
+        "bulk-redistribution-right",
+        "official-postnl-polygon",
+        "mailability-score-is-geometric-confidence",
+        "unlimited-api-availability"
+      ]
+    },
+    {
+      "source_id": "kadaster-pdok-bag-ogc-v2",
+      "provider": "Kadaster LV-BAG via PDOK",
+      "source_url": "https://api.pdok.nl/kadaster/bag/ogc/v2?f=html&lang=nl",
+      "role": [
+        "public-registered-address-point",
+        "verblijfsobject-ligplaats-standplaats",
+        "pand-footprint-and-relationship"
+      ],
+      "production_scope": "Public BAG address and building objects under Public Domain Mark 1.0 with snapshot lineage.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R1_public_domain",
+      "terms_note": "The OGC API is unauthenticated, free, and updated daily. BAG authority does not turn a postcode field into official PostNL geometry or prove deliverability.",
+      "expected_update_cadence": "daily",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-api-schema-snapshot-time-and-query",
+        "record-public-domain-mark-reference",
+        "preserve-bag-identifiers-status-and-relations",
+        "retain-many-to-many-building-links"
+      ],
+      "prohibited_claims": [
+        "official-postnl-assignment",
+        "official-postnl-polygon",
+        "deliverability-guarantee",
+        "occupant-or-owner"
+      ]
+    },
+    {
+      "source_id": "cbs-esri-postcode-statistics-areas",
+      "provider": "Statistics Netherlands (CBS), geometry derived by Esri Nederland",
+      "source_url": "https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/gegevens-per-postcode",
+      "role": [
+        "pc4-pc5-pc6-derived-polygon",
+        "postal-area-intersection",
+        "spatial-quality-and-holdout"
+      ],
+      "production_scope": "Pinned corrected postcode GeoPackages with CBS and Esri Nederland attribution; geometry only is separable from confidential statistics.",
+      "assignment_authority": "none",
+      "geometry_authority": "derived_geometry",
+      "redistribution_class": "R2_open_attribution",
+      "terms_note": "CBS states that postcode-map geometry is derived by Esri Nederland from BAG addresses and distributed under CC BY 3.0 NL. The 2025 PC5/PC6 publication had a corrected release on 18 August 2026; never use an unpinned or superseded file.",
+      "expected_update_cadence": "annual-with-corrections",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-reporting-year-version-download-digest-and-access-date",
+        "verify-correction-or-erratum-status",
+        "emit-cbs-and-esri-nederland-attribution",
+        "label-all-surfaces-derived-geometry",
+        "validate-topology-and-year-over-year-diff"
+      ],
+      "prohibited_claims": [
+        "official-postnl-polygon",
+        "postal-operator-assignment",
+        "exact-building-from-polygon-alone",
+        "deliverability-guarantee"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "bag-public-domain",
+      "rule": "Public BAG snapshots and derived links retain source time, identifiers, status, and Public Domain Mark reference."
+    },
+    {
+      "id": "cbs-attributed-geometry",
+      "rule": "Corrected CBS/Esri surfaces stay separate from PostNL assignment data and include both attributions."
+    },
+    {
+      "id": "postnl-api-receipts",
+      "rule": "Credentialed observations remain outside public packs until cache and redistribution rights are approved."
+    },
+    {
+      "id": "postnl-contract",
+      "rule": "Licensed postcode-table rows remain isolated according to the reviewed agreement."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "schema_version": "agid-postal-nl-synthetic-fixtures-v0.1",
+  "fixture_set_id": "netherlands-like-contract-cases-v0.1",
+  "country_code": "NL",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "0000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthetic",
+    "rule": "No value is a real Dutch address, PostNL assignment, BAG object, CBS polygon, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-postal-operator",
+      "models_source_role": "postnl-postcode-table",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-address-registry",
+      "models_source_role": "kadaster-pdok-bag-ogc-v2",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-postcode-area",
+      "models_source_role": "cbs-esri-postcode-statistics-areas",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "nl-syn-pc6-range-building",
+      "exception_class": "pc6_address_range",
+      "synthetic_address": {
+        "street": "Syntheticstraat",
+        "house_number": "1",
+        "postal_code": "0000 AA",
+        "locality": "Synthetic Stad"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "pc6-assigned-to-number-range",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-address-registry",
+          "assertion": "address-point-linked-to-building",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "building",
+        "postal_assignment_geometry": "none",
+        "address_geometry": "point",
+        "building_geometry": "polygon",
+        "must_not_assert": [
+          "official-postnl-polygon",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nl-syn-cbs-derived-pc6",
+      "exception_class": "cbs_derived_postcode_area",
+      "synthetic_address": {
+        "postal_code": "0000 AB"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postcode-area",
+          "assertion": "derived-surface-from-address-points",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_quality": "derived",
+        "geometry_type": "polygon",
+        "must_not_assert": [
+          "cbs-derived-is-postnl-official",
+          "exact-building-from-polygon-alone",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nl-syn-bag-many-to-many",
+      "exception_class": "bag_many_to_many_building",
+      "synthetic_address": {
+        "postal_code": "0000 AC",
+        "house_number": "3"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-address-registry",
+          "assertion": "one-address-object-linked-to-two-building-candidates",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "status": "ambiguous",
+        "alternatives": 2,
+        "must_not_assert": [
+          "single-building-without-resolution",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nl-syn-pc4-coarse",
+      "exception_class": "cbs_derived_postcode_area",
+      "synthetic_address": {
+        "postal_code": "0000 AD",
+        "pc4": "0000"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postcode-area",
+          "assertion": "pc4-coarse-area",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "postal_area",
+        "must_not_assert": [
+          "pc4-is-exact-pc6",
+          "premise-or-building",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nl-syn-postbus",
+      "exception_class": "po_box_or_answer_number",
+      "synthetic_address": {
+        "postal_code": "0000 AE",
+        "po_box": "Synthetic Postbus 7"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "non-spatial-po-box-assignment",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": [
+          "building-or-entrance",
+          "official-postnl-polygon",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

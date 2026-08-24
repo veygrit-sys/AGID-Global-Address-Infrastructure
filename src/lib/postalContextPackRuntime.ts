@@ -411,7 +411,11 @@ function geometryPositionCount(geometry: PostalContextGeometryFeature['geometry'
     + polygon.reduce((ringTotal, ring) => ringTotal + ring.length, 0), 0);
 }
 
-export { normalizeJapanPostalCode, normalizeSingaporePostalCode } from './postalContextCountryPolicy';
+export {
+  normalizeJapanPostalCode,
+  normalizeNetherlandsPostalCode,
+  normalizeSingaporePostalCode,
+} from './postalContextCountryPolicy';
 
 export function validatePostalContextRuntimePack(
   pack: PostalContextRuntimePack,

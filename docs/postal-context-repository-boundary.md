@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-and-singapore-reference-implementations`
+Status: `accepted-for-japan-singapore-and-netherlands-reference-implementations`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -52,6 +52,8 @@ AGID本体に置かないもの:
 quality gate、manifest生成を持つ。国別ruleをcoreへhard-codeせず、versioned profileとして
 注入する。日本固有の住居表示・地番・大口事業所ruleは`agid-postal-jp`が所有する。
 Singapore-specific delivery-point and sector rules belong to `agid-postal-sg`.
+Netherlands-specific PC6 range, BAG address/building, and attributed CBS/Esri
+derived-area rules belong to `agid-postal-nl`.
 
 ### `agid-postal-jp`
 
@@ -67,6 +69,16 @@ OneMap receipt policy, named data.gov.sg source lineage, six-digit point-first
 rules, postal-sector exceptions, synthetic fixtures, and release validation.
 Subscription rows, API tokens, and unreviewed API caches remain outside Git and
 public artifacts.
+
+
+### `agid-postal-nl`
+
+The Netherlands repository owns PostNL contract and API receipt policy, BAG
+address/building lineage, attributed CBS/Esri PC4/PC5/PC6 derived geometry,
+PC6 address-range rules, PO-box exceptions, synthetic fixtures, and release
+validation. PostNL licensed rows and API keys remain outside Git. BAG geometry
+does not become postal-operator geometry, and CBS/Esri derived areas never
+become official PostNL boundaries.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

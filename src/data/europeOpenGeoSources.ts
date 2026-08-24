@@ -58,6 +58,8 @@ export type EuropeOpenGeoSourceId =
   | 'deutsche-post-plz-server'
   | 'openplzapi'
   | 'opendatasoft-nl-postcodes'
+  | 'pdok-bag'
+  | 'cbs-nl-postcode-areas'
   | 'odwb-be-postcodes'
   | 'postcodes-io'
   | 'ons-postcode-directory'
@@ -723,6 +725,26 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'validation',
     notes: 'OpenDataSoft Netherlands postcode reference dataset.',
+  },
+  'pdok-bag': {
+    id: 'pdok-bag',
+    name: 'PDOK BAG OGC API',
+    url: 'https://api.pdok.nl/kadaster/bag/ogc/v2?f=html&lang=nl',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public Domain Mark 1.0',
+    notes: 'Official daily Dutch address points, addressable objects, and building geometry from Kadaster LV-BAG.',
+  },
+  'cbs-nl-postcode-areas': {
+    id: 'cbs-nl-postcode-areas',
+    name: 'CBS PC4, PC5, and PC6 Postcode Areas',
+    url: 'https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/gegevens-per-postcode',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 3.0 NL',
+    notes: 'Annual CBS postcode GeoPackages with Esri Nederland derived geometry and required attribution.',
   },
   'odwb-be-postcodes': {
     id: 'odwb-be-postcodes',
@@ -2101,7 +2123,7 @@ const BASE_OPEN_SOURCE_IDS: EuropeOpenGeoSourceId[] = [
 const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpenGeoSourceId[]>> = {
   FR: ['data-gouv-fr-postcodes'],
   DE: ['deutsche-post-plz-server', 'openplzapi'],
-  NL: ['opendatasoft-nl-postcodes'],
+  NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
   BE: ['odwb-be-postcodes'],
   CH: ['openplzapi'],
   AT: ['openplzapi'],
