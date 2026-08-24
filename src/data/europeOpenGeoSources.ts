@@ -96,6 +96,12 @@ export type EuropeOpenGeoSourceId =
   | 'maaamet-estonia'
   | 'estonia-address-data-system'
   | 'xgis-estonia'
+  | 'omniva-estonia-postcodes'
+  | 'estonia-aks-postal-codes'
+  | 'estonia-aks-postal-areas'
+  | 'estonia-aks-address-objects'
+  | 'estonia-aks-building-shapes'
+  | 'estonia-ehak-admin-boundaries'
   | 'lietuvos-pastas-postcode-search'
   | 'geoportal-lt'
   | 'registru-centras-address-register'
@@ -1094,6 +1100,66 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Estonian national map service for cadastral, address, and place-name reference layers.',
+  },
+  'omniva-estonia-postcodes': {
+    id: 'omniva-estonia-postcodes',
+    name: 'Omniva Estonia ZIP Codes',
+    url: 'https://www.omniva.ee/en/zip-codes/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public operator search and download; review Omniva terms for redistribution',
+    notes: 'Official address-to-postcode search and download from Estonia postal operator; postal routing evidence is distinct from ADS geometry and delivery guarantees.',
+  },
+  'estonia-aks-postal-codes': {
+    id: 'estonia-aks-postal-codes',
+    name: 'Estonia AKS Postal Codes',
+    url: 'https://geoportaal.maaamet.ee/eng/spatial-data/address-data/postal-codes-p661.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open address data; attribute Estonian Land and Spatial Development Board and extraction date',
+    notes: 'Monthly current-address extract and AKS/ADS query evidence with ADR_ID, five-digit postcode and reference coordinates, based on Omniva postal zones.',
+  },
+  'estonia-aks-postal-areas': {
+    id: 'estonia-aks-postal-areas',
+    name: 'Estonia AKS Postal Code Areas',
+    url: 'https://geoportaal.maaamet.ee/eng/services/public-wms-wfs-p346.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open spatial data; attribute Estonian Land and Spatial Development Board and extraction date',
+    notes: 'Official public AKS OGC postal-code-area layer derived from Omniva-managed zones; pin service schema, CRS, retrieval time and digest.',
+  },
+  'estonia-aks-address-objects': {
+    id: 'estonia-aks-address-objects',
+    name: 'Estonia AKS/ADS Address Objects',
+    url: 'https://geoportaal.maaamet.ee/eng/spatial-data/address-data-p313.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open data; attribute Estonian Land and Spatial Development Board',
+    notes: 'Official addresses for parcels, buildings and building parts with stable ADS_OID, version ADOB_ID, object type, history and geometry.',
+  },
+  'estonia-aks-building-shapes': {
+    id: 'estonia-aks-building-shapes',
+    name: 'Estonia AKS/ADS Building Shapes',
+    url: 'https://geoportaal.maaamet.ee/eng/services/public-wms-wfs-p346.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open spatial data; attribute Estonian Land and Spatial Development Board and extraction date',
+    notes: 'Official ADS building point and polygon layers; a definitive address-to-building display requires the shared ADS object path, not proximity.',
+  },
+  'estonia-ehak-admin-boundaries': {
+    id: 'estonia-ehak-admin-boundaries',
+    name: 'Estonia EHAK Administrative and Settlement Division',
+    url: 'https://geoportaal.maaamet.ee/eng/Spatial-Data/Administrative-and-Settlement-Division-p312.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Unrestricted use with provider and validity-date attribution',
+    notes: 'Official county, municipality and settlement geometry with EHAK codes; administrative context is not a postal-code boundary.',
   },
   'lietuvos-pastas-postcode-search': {
     id: 'lietuvos-pastas-postcode-search',
@@ -2310,7 +2376,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   DK: ['postcode-eu', 'dataforsyningen-denmark', 'danish-address-register-dar', 'geodanmark'],
   FI: ['posti-finland-postal-code-services', 'avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
   LV: ['latvijas-pasts-check-address', 'kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
-  EE: ['kartes-lv-postal-codes', 'maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
+  EE: ['omniva-estonia-postcodes', 'estonia-aks-postal-codes', 'estonia-aks-postal-areas', 'estonia-aks-address-objects', 'estonia-aks-building-shapes', 'estonia-ehak-admin-boundaries'],
   LT: ['lietuvos-pastas-postcode-search', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
   IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   IT: ['poste-italiane-cap-search', 'poste-italiane-cap-professional', 'anncsu-italy-addresses', 'istat-italy-admin-boundaries', 'italy-regional-dbgt-buildings', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],

@@ -68,6 +68,10 @@ Italy-specific Poste Italiane CAP assignment and restricted CAP Professional
 rights, ANNCSU civic lineage, ISTAT administrative context, federated DBGT
 building evidence, derived-surface rules, and historical CAP transitions belong
 to `agid-postal-it`.
+Estonia-specific Omniva postcode assignment, AKS postal-area geometry, ADS
+address/building identity, EHAK administrative context, facility routing, and
+AKS service-migration rules belong to `agid-postal-ee`.
+
 
 ### `agid-postal-jp`
 
@@ -154,6 +158,22 @@ always derived and never becomes an official Poste Italiane boundary. ANNCSU
 civic points, DBGT footprint proximity, cadastral parcels, and AGID cells do not
 create an exact address-to-building link. San Marino and Vatican City remain
 separate `SM` and `VA` country packs.
+
+### `agid-postal-ee`
+
+The Estonia repository owns Omniva postcode-assignment lineage, AKS official
+postal-area geometry, ADS address-object and addressed-building relationships,
+EHAK administrative context, postal-facility exceptions, synthetic fixtures,
+and release validation. Five-digit postcodes remain strings so leading zeroes
+survive normalization. A postal-area polygon proves containment only; it does
+not identify a street address, building, private building part, recipient, or
+deliverability. Exact building display requires a source-backed ADS object path,
+preserving stable `ADS_OID` identity and version-specific `ADOB_ID`, rather than
+footprint proximity. Parcel machines, post offices, and Poste Restante routes
+remain facility points and never become surrounding residential polygons. The
+source interface must support the In-AKS transition from 27 April 2026 and the
+retirement of legacy ADS services at the end of 2026 without rewriting lineage.
+
 
 
 

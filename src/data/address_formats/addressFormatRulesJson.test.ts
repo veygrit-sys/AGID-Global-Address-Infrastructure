@@ -623,6 +623,11 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
   assert.equal(loadRules('IS').postalCode?.label, '3 digits required');
   assert.equal(loadFormat('NO').postalCode?.api, 'https://data.norge.no/nb');
   assert.equal(loadFormat('DK').postalCode?.api, 'https://api.dataforsyningen.dk/postnumre');
+  assert.equal(
+    loadFormat('EE').postalCode?.api,
+    'https://geoportaal.maaamet.ee/eng/spatial-data/address-data/postal-codes-p661.html',
+  );
+  assert.equal(loadFormat('EE').postalCode?.source, 'Omniva / AKS Postal Codes / ADS');
   assert.equal(loadFormat('DK').postalCode?.source, 'Dataforsyningen DAWA postnumre API / Danish Address Register');
   assert.equal(loadFormat('FI').postalCode?.api, 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services');
   assert.equal(loadFormat('LV').postalCode?.api, 'https://pasts.lv/en/check-address');
@@ -638,7 +643,14 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
     DK: ['dataforsyningen-denmark', 'danish-address-register-dar', 'geodanmark'],
     FI: ['posti-finland-postal-code-services', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
     LV: ['lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
-    EE: ['maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
+    EE: [
+      'omniva-estonia-postcodes',
+      'estonia-aks-postal-codes',
+      'estonia-aks-postal-areas',
+      'estonia-aks-address-objects',
+      'estonia-aks-building-shapes',
+      'estonia-ehak-admin-boundaries',
+    ],
     LT: ['geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
     IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   };
