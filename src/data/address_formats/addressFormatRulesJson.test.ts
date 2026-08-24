@@ -767,7 +767,9 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
     { code: 'tr', name: 'Turkish' },
   ]);
   assert.equal(loadFormat('IT').postalCode?.api, 'https://www.poste.it/cap');
-  assert.equal(loadFormat('GR').postalCode?.api, 'https://itemsearch.elta.gr/en-GB/');
+  assert.equal(loadFormat('GR').postalCode?.api, 'https://postalcodes.elta.gr/en/');
+  assert.match(loadFormat('GR').postalCode?.source ?? '', /ELTA.*GISCO.*Cadastre.*ELSTAT/i);
+  assert.match(loadRules('GR').postalCode?.label ?? '', /5 digits.*NNN NN.*assignment.*point.*area.*building.*separate/i);
   assert.equal(loadFormat('CY').postalCode?.api, 'https://www.cypruspost.post/en/api-postal-codes');
   assert.equal(loadFormat('MT').postalCode?.api, 'https://www.maltapost.com/postcode/?l=1');
   assert.match(loadFormat('MT').postalCode?.source ?? '', /MaltaPost.*Address Registrar.*Planning Authority/i);
@@ -790,7 +792,14 @@ test('Southern Europe metadata exposes national geospatial and cadastre sources'
     ],
     ES: ['ign-spain-cnig', 'catastro-spain', 'idee-spain'],
     PT: ['dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
-    GR: ['ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
+    GR: [
+      'gisco-greece-postcode-points',
+      'elstat-greece-digital-cartography',
+      'greece-national-streets-numbers-plan',
+      'ktimatologio-greece',
+      'geodata-gov-gr',
+      'okxe-greece',
+    ],
     MT: [
       'maltapost-postcode-finder',
       'malta-office-address-registrar',

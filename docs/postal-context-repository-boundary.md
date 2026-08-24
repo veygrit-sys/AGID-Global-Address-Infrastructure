@@ -578,6 +578,37 @@ control and never silently merge those classes. Public artifacts exclude
 addressees, residents, owners, rightsholders, occupants, title records,
 delivery instructions, credentials and protected cadastral fields.
 
+### `agid-postal-gr`
+
+The Greece repository owns pinned ELTA postcode/address lookup receipts,
+permitted assignment snapshots, GISCO postcode points, rights-reviewed Greek
+address and building layers, derived surfaces, synthetic fixtures and release
+validation. Five-digit syntax and `NNN NN` display are formatting rules, not
+allocation, delivery, geographic coverage or polygon authority.
+
+Geometry authority remains typed. GISCO provides official-derived postcode
+points for statistical correspondence and explicitly allows omissions,
+mislocation and exclusion of non-geographic codes. A point, buffer, Voronoi
+cell, NUTS/LAU region, municipality, island, settlement, delivery office or
+street match is never an ELTA perimeter. Any rights-cleared address-membership
+surface remains `derived` with members, method, exclusions, uncertainty,
+validity and lineage; PO-box, organization and route codes may remain non-areal.
+
+Hellenic Cadastre layers, ELSTAT census cartography, municipal street naming
+and a future national streets/numbers register retain separate identifiers,
+coverage, dates and rights. Exact building display requires an explicit
+address-building identifier or reviewed crosswalk from a distributable source.
+A cadastral parcel, title/right record, census block, building outline,
+containment or proximity is not a public address-building relationship.
+
+Mainland, island and remote delivery service, Mount Athos administrative
+autonomy, municipality changes and operator routing remain separate assertions.
+Postal evidence never changes country identity or administrative/legal status.
+Every artifact pins product-specific terms, attribution, schema, coverage,
+vintage, CRS and digest. Public artifacts exclude addressees, residents,
+owners, rightsholders, occupants, cadastral/title records, delivery
+instructions, credentials and protected attributes.
+
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 
 ### Heavy artifact store

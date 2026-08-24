@@ -256,6 +256,36 @@ test('separates Andorra postal, government-address, topographic-building, and pa
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Greece postal, point, cadastral, building, and planned-register authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('GR');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('elta-gr')?.authority, 'postal-operator');
+  assert.equal(byId.get('elta-gr')?.trustTier, 'authoritative');
+  assert.equal(byId.get('elta-gr')?.availability, 'web-search');
+  assert.match(byId.get('elta-gr')?.notes.join(' ') ?? '', /five-digit.*NNN NN.*not a bulk.*polygon.*deliverability/i);
+  assert.equal(byId.get('gisco-greece-postcode-points')?.trustTier, 'official-derived');
+  assert.match(byId.get('gisco-greece-postcode-points')?.notes.join(' ') ?? '', /point.*omissions.*incorrect locations.*not an ELTA perimeter/i);
+  assert.equal(byId.get('ktimatologio-greece')?.depth, 'geo-only');
+  assert.equal(byId.get('ktimatologio-greece')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('ktimatologio-greece')?.notes.join(' ') ?? '', /not a blanket bulk licence.*parcel.*owner.*exact building linkage/i);
+  assert.equal(byId.get('elstat-greece-digital-cartography')?.depth, 'building');
+  assert.equal(byId.get('elstat-greece-digital-cartography')?.availability, 'commercial-or-restricted');
+  assert.match(byId.get('elstat-greece-digital-cartography')?.notes.join(' ') ?? '', /census-vintage.*reuse terms.*statistical boundaries.*address-to-building/i);
+  assert.equal(byId.get('greece-national-streets-numbers-plan')?.sourceRole, 'legal-framework-only');
+  assert.equal(byId.get('greece-national-streets-numbers-plan')?.validationReadiness, 'metadata-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'GR',
+    source: 'ELTA Postal Code and Address Finder',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const planOnly = classifyPostalSourceTrust({
+    countryCode: 'GR',
+    source: 'Greece National Streets and Numbers Register plan',
+  });
+  assert.equal(planOnly.strength, 'weak');
+});
+
 test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
   const sources = getOfficialPostalSourcesForCountry('CY');
   const byId = new Map(sources.map(source => [source.id, source]));

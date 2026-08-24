@@ -329,4 +329,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'address-range-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CY.postalCodeFormat, 'NNNN');
+  assert.equal(isPostalContextCountryCode('GR'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.GR.fullCodeGeometrySemantics,
+    'routing-locality-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GR.postalCodeFormat, 'NNN NN');
 });

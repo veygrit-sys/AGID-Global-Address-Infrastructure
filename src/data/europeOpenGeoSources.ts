@@ -155,6 +155,9 @@ export type EuropeOpenGeoSourceId =
   | 'italy-regional-dbgt-buildings'
   | 'eurostat-gisco-postcodes'
   | 'elta-gr'
+  | 'gisco-greece-postcode-points'
+  | 'elstat-greece-digital-cartography'
+  | 'greece-national-streets-numbers-plan'
   | 'istat-italy-geodata'
   | 'agenzia-entrate-catasto'
   | 'geoportale-nazionale-italy'
@@ -1622,12 +1625,42 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'elta-gr': {
     id: 'elta-gr',
-    name: 'ELTA Postal Code Search',
-    url: 'https://itemsearch.elta.gr/en-GB/',
+    name: 'ELTA Postal Code and Address Finder',
+    url: 'https://postalcodes.elta.gr/en/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Greek postal-code search.',
+    license: 'Public web reference; ELTA terms apply',
+    notes: 'Official five-digit postcode and address finder. A web result, code pattern, post office, locality, street, or island route is assignment evidence only and does not publish a reusable postcode polygon or guarantee delivery.',
+  },
+  'gisco-greece-postcode-points': {
+    id: 'gisco-greece-postcode-points',
+    name: 'Eurostat GISCO Greece Postal Code Points',
+    url: 'https://ec.europa.eu/eurostat/web/gisco/geodata/administrative-units/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY-SA 4.0',
+    notes: 'Official-derived point geography for NUTS correspondence. It may omit or mislocate codes and excludes many non-geographic codes; a point, Voronoi cell, buffer, or NUTS match is never an ELTA perimeter.',
+  },
+  'elstat-greece-digital-cartography': {
+    id: 'elstat-greece-digital-cartography',
+    name: 'ELSTAT Digital Cartographic Data',
+    url: 'https://www.statistics.gr/en/digital-cartographical-data',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Controlled/requested cartographic material; exact product and request terms apply',
+    notes: 'Official census-vintage street axes, blocks, building outlines and statistical/administrative context with locality and year-specific coverage. Request and third-party rights must be pinned; the layers are not current nationwide address identity, postal assignment, or legal-boundary proof.',
+  },
+  'greece-national-streets-numbers-plan': {
+    id: 'greece-national-streets-numbers-plan',
+    name: 'Greece National Streets and Numbers Register Plan',
+    url: 'https://digitalstrategy.gov.gr/project/mitroo_odon_kai_arithmon',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official digital-transformation project for municipality-maintained street and number updates. A project description is not a live national address dataset, API, building register, or redistribution grant.',
   },
   'poste-italiane-cap-search': {
     id: 'poste-italiane-cap-search',
@@ -1762,12 +1795,13 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'ktimatologio-greece': {
     id: 'ktimatologio-greece',
-    name: 'Hellenic Cadastre',
-    url: 'https://www.ktimatologio.gr/',
+    name: 'Hellenic Cadastre Geoportal and INSPIRE Data',
+    url: 'https://maps.ktimatologio.gr/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Greek cadastre and mapping reference for municipalities, parcels, and address-adjacent geography.',
+    license: 'Geoportal general terms plus dataset-specific open-data/INSPIRE terms',
+    notes: 'Official cadastral and geospatial reference. Each layer retains its own licence, attribution, coverage and restrictions; parcels, rights, owners and proximity do not prove an addressed building or postcode membership.',
   },
   'geodata-gov-gr': {
     id: 'geodata-gov-gr',
@@ -3064,7 +3098,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   IT: ['poste-italiane-cap-search', 'poste-italiane-cap-professional', 'anncsu-italy-addresses', 'istat-italy-admin-boundaries', 'italy-regional-dbgt-buildings', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],
   PT: ['eurostat-gisco-postcodes', 'ctt-portugal', 'dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
-  GR: ['elta-gr', 'ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
+  GR: ['elta-gr', 'gisco-greece-postcode-points', 'elstat-greece-digital-cartography', 'greece-national-streets-numbers-plan', 'ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
   MT: [
     'maltapost-postcode-finder',
     'malta-office-address-registrar',

@@ -1,0 +1,74 @@
+{
+  "schema_version": "agid-postal-gr-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-gr",
+    "country_code": "GR",
+    "country_name": "Greece",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postal code",
+    "full_code_format": "NNN NN",
+    "full_code_default_geometry": "operator_assignment_with_optional_official_derived_point_or_rights_cleared_derived_surface",
+    "assignment_rule": "A pinned ELTA lookup receipt or permitted operator snapshot establishes a five-digit assignment at its capture time. NNN NN syntax, a locality, street, serving office, island route, GISCO point, or structurally valid digits do not establish current allocation or deliverability.",
+    "perimeter_rule": "No reviewed public source currently establishes reusable ELTA postcode perimeters. GISCO postal-code points, NUTS or LAU units, ELSTAT census geography, municipalities, settlements, islands, buffers and Voronoi cells are not ELTA polygons. Rights-cleared address-membership surfaces are explicitly derived and uncertainty-bearing.",
+    "address_rule": "Exact address display requires a permitted ELTA assertion or a pinned official municipal or national street-number identifier with hierarchy, locator, postcode, validity, capture time, product-specific rights and digest. A project page, search availability, road axis, parcel or census feature is not a live nationwide address record.",
+    "building_rule": "Exact building display requires an explicit distributable address-to-building relationship, common authoritative identifier, or reviewed crosswalk. ELSTAT outlines, cadastral parcels, census blocks, containment and proximity remain distinct and candidate-only.",
+    "service_status_rule": "ELTA office operation, island or remote routing, delivery status and API/search availability are time-stamped operational evidence separate from assignment, geometry, country identity and historical validity.",
+    "administrative_rule": "Regions, regional units, municipalities, municipal units, communities, settlements, islands, Mount Athos status and census geography remain separately sourced context. They do not create postcode membership, delivery eligibility or an ELTA perimeter."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment, street or locality match, address, building, point, derived surface, administrative context and operational service validity when supplied.",
+    "known_time": "Publication, lookup capture, ingest, correction, terms review, coverage review and release timestamps retained independently.",
+    "history_rule": "New ELTA, GISCO, Cadastre, ELSTAT or municipal snapshots append versioned assertions; no refresh rewrites older evidence, promotes a census layer to a current postal perimeter or converts a planned register into live address data."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each full code references a pinned ELTA receipt or permitted snapshot with five-digit text, query/result scope, capture time, terms and digest." },
+    { "id": "postal-geometry", "pass": "Every geometry declares operator-official, official-derived point or derived authority; point-derived surfaces retain algorithm, uncertainty, exclusions, validity and lineage." },
+    { "id": "official-address", "pass": "Each exact address retains a source identifier, hierarchy, permitted fields, coverage, validity, capture time, rights and ELTA cross-check." },
+    { "id": "building-link", "pass": "An exact building has an explicit distributable relationship, common identifier or reviewed crosswalk; parcel, block, outline, containment and proximity are never silently substituted." },
+    { "id": "dataset-specific-rights", "pass": "Every ELTA, GISCO, Cadastre, ELSTAT, municipality, portal or register artifact pins exact terms, attribution, schema, coverage, vintage, CRS and digest." },
+    { "id": "island-and-special-area-policy", "pass": "Mainland, islands, remote routes, Mount Athos and administrative boundaries are separately sourced and never inferred from a postal code or delivery route." },
+    { "id": "privacy", "pass": "No addressee, resident, owner, rightsholder, occupant, title or cadastral record, phone, credential or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, address/building identifiers, geometry semantics, coverage and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, license, freshness, coverage and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "elta-web-search-presented-as-bulk-license",
+      "gisco-point-or-nuts-match-presented-as-elta-perimeter",
+      "buffer-or-voronoi-surface-presented-as-official",
+      "planned-register-presented-as-live-address-data",
+      "portal-terms-generalized-to-another-dataset",
+      "census-or-statistical-boundary-presented-as-legal-or-postal-boundary",
+      "parcel-or-building-outline-presented-as-exact-address-link",
+      "building-proximity-presented-as-exact-identifier-link",
+      "island-route-or-service-state-presented-as-country-or-administrative-status",
+      "postcode-stored-as-number",
+      "addressee-owner-rightsholder-occupant-or-protected-cadastral-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "addressee_identity", "occupancy", "ownership", "building_identity_from_proximity", "gisco_point_equals_postal_operator_perimeter", "administrative_or_census_boundary_equals_postcode", "every_postcode_is_a_polygon", "po_box_is_a_residential_area", "route_or_service_state_determines_country_or_autonomy", "survey_or_cadastral_certification"
+  ]
+}
