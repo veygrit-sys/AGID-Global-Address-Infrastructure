@@ -109,6 +109,11 @@ export type EuropeOpenGeoSourceId =
   | 'hms-iceland-address-register'
   | 'natt-is50v-buildings'
   | 'statistics-iceland-geography'
+  | 'poste-italiane-cap-search'
+  | 'poste-italiane-cap-professional'
+  | 'anncsu-italy-addresses'
+  | 'istat-italy-admin-boundaries'
+  | 'italy-regional-dbgt-buildings'
   | 'eurostat-gisco-postcodes'
   | 'elta-gr'
   | 'istat-italy-geodata'
@@ -1230,6 +1235,56 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'primary',
     notes: 'Greek postal-code search.',
   },
+  'poste-italiane-cap-search': {
+    id: 'poste-italiane-cap-search',
+    name: 'Poste Italiane CAP Search',
+    url: 'https://www.poste.it/cap',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public web reference; Poste Italiane terms apply',
+    notes: 'Official five-digit CAP search and change reference; not a reusable bulk dataset, official polygon source, or deliverability guarantee.',
+  },
+  'poste-italiane-cap-professional': {
+    id: 'poste-italiane-cap-professional',
+    name: 'Poste Italiane CAP Professional',
+    url: 'https://business.poste.it/professionisti-imprese/prodotti/cap-professional.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Commercial licensed data; contract-specific redistribution',
+    notes: 'Official locality, multiCAP city-zone, street-arc, and house-number range assignment; no open redistribution or official polygon claim.',
+  },
+  'anncsu-italy-addresses': {
+    id: 'anncsu-italy-addresses',
+    name: 'ANNCSU Italian Streets and Civic Numbers',
+    url: 'https://www.anncsu.gov.it/it/consultazione-dellarchivio/open-data/index.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official national street and civic-number register with monthly bulk and daily API updates; coordinates when present are not exact building links.',
+  },
+  'istat-italy-admin-boundaries': {
+    id: 'istat-italy-admin-boundaries',
+    name: 'ISTAT Administrative Boundaries',
+    url: 'https://www.istat.it/notizia/confini-delle-unita-amministrative-a-fini-statistici-al-1-gennaio-2018-2/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 3.0 Italy unless otherwise indicated',
+    notes: 'Official regions, provinces, metropolitan cities, and municipalities in WGS84; administrative context and derivation clip, never a CAP boundary.',
+  },
+  'italy-regional-dbgt-buildings': {
+    id: 'italy-regional-dbgt-buildings',
+    name: 'Italian Regional and Municipal DBGT Buildings',
+    url: 'https://geodati.gov.it/geoportale/datiterritoriali/regole-tecniche',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Federated per-dataset terms; review every provider and release',
+    notes: 'DBGT provides a national content specification, while actual building geometry is federated; proximity alone is not an exact civic-to-building link.',
+  },
   'istat-italy-geodata': {
     id: 'istat-italy-geodata',
     name: 'ISTAT Italy Geographic Data',
@@ -2258,7 +2313,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   EE: ['kartes-lv-postal-codes', 'maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
   LT: ['lietuvos-pastas-postcode-search', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
   IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
-  IT: ['datahub-postal', 'istat-italy-geodata', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
+  IT: ['poste-italiane-cap-search', 'poste-italiane-cap-professional', 'anncsu-italy-addresses', 'istat-italy-admin-boundaries', 'italy-regional-dbgt-buildings', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],
   PT: ['eurostat-gisco-postcodes', 'ctt-portugal', 'dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
   GR: ['elta-gr', 'ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],

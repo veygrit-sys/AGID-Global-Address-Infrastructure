@@ -5,6 +5,7 @@ import {
   POSTAL_CONTEXT_COUNTRY_POLICIES,
   isPostalContextCountryCode,
   normalizeIcelandPostalCode,
+  normalizeItalyPostalCode,
   normalizeFrancePostalCode,
   normalizeJapanPostalCode,
   normalizeNetherlandsPostalCode,
@@ -53,6 +54,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeIcelandPostalCode('001'), '001');
   assert.equal(normalizeIcelandPostalCode('0-01'), null);
   assert.equal(normalizePostalContextPostalCode('is', '0 01'), '001');
+  assert.equal(normalizeItalyPostalCode('\uFF10\uFF10\uFF11\uFF12\uFF13'), '00123');
+  assert.equal(normalizeItalyPostalCode('00 123'), '00123');
+  assert.equal(normalizeItalyPostalCode('00123'), '00123');
+  assert.equal(normalizeItalyPostalCode('00-123'), null);
+  assert.equal(normalizePostalContextPostalCode('it', '00 123'), '00123');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -95,4 +101,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'postal-area-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IS.postalCodeFormat, 'NNN');
+  assert.equal(isPostalContextCountryCode('IT'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.IT.fullCodeGeometrySemantics,
+    'routing-locality-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IT.postalCodeFormat, 'NNNNN');
 });

@@ -1,0 +1,186 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-it",
+    "country_code": "IT",
+    "country_name": "Italy",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/it/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "CAP",
+    "full_code_format": "NNNNN",
+    "full_code_regex": "^\\d{5}$",
+    "full_code_default_geometry": "routing_assignment_or_derived_area",
+    "full_code_rule": "Preserve exactly five digits including leading zeroes. A CAP is routing evidence and can represent a locality, a group of municipalities, or a city zone; it does not identify a recipient, civic number, building, or deliverability.",
+    "postcode_area_rule": "Poste Italiane does not establish a reusable nationwide official boundary merely through CAP search or CAP Professional assignments. Any surface generated from licensed assignments, ANNCSU addresses, and rights-cleared clip geometry is derived_geometry with reproducible lineage.",
+    "address_rule": "Use ANNCSU for official streets and civic numbers. Where a multiCAP street is divided by house-number range or parity, require pinned Poste Italiane assignment evidence and preserve arc, range, parity, ambiguity, and date.",
+    "building_rule": "A regional or municipal DBGT building is topographic geometry. Display a definitive building only through a stable source-backed address-to-building relation; proximity, containment, cadastral parcel, or CAP membership alone remains candidate evidence.",
+    "change_rule": "Version CAP assignments by valid and known time. Poste Italiane states that a replaced CAP remains valid for at least twelve months, so overlapping historical validity must not be collapsed.",
+    "territory_rule": "San Marino and Vatican City are separate SM and VA country packs even when their postal addressing interacts with the Italian network. Never silently publish them inside IT.",
+    "special_routing_rule": "Casella postale, Fermoposta, large-organization, and other special routing records are point, organization, or non-areal evidence unless an independent area source proves otherwise."
+  },
+  "address_graph": {
+    "node_types": [
+      "cap",
+      "country",
+      "region",
+      "province_or_metropolitan_city",
+      "comune",
+      "locality_or_frazione",
+      "road",
+      "road_arc",
+      "anncsu_civic",
+      "entrance",
+      "premise",
+      "building",
+      "land_parcel",
+      "post_office",
+      "po_box",
+      "organization",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "part_of",
+      "postal_contains",
+      "covered_by_agid",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "cap-to-comune-may-be-many-to-many",
+      "cap-to-derived-area-may-be-multipart",
+      "road-to-cap-may-vary-by-arc-range-and-parity",
+      "civic-to-building-may-be-zero-one-or-many",
+      "building-containment-is-not-exact-address-link",
+      "historical-cap-validity-may-overlap"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "single_or_grouped_locality_cap",
+      "rule": "Preserve every official CAP-to-locality or CAP-to-comune assignment; do not force one CAP to one municipality or reuse a municipality polygon as a postal boundary."
+    },
+    {
+      "id": "multicap_city_street_arc",
+      "rule": "Resolve CAP using official city-zone and street-arc evidence, including house-number bounds and parity where supplied; an unresolved civic returns ambiguity rather than a guessed CAP."
+    },
+    {
+      "id": "derived_cap_surface",
+      "rule": "Generate a Polygon or MultiPolygon only from pinned evidence and rights-cleared clip geometry; label it derived and retain inputs, projection, method, parameters, topology, and holdout report."
+    },
+    {
+      "id": "municipal_merger_homonym",
+      "rule": "Preserve former-municipality and locality qualifiers needed to distinguish homonymous roads after municipal merger."
+    },
+    {
+      "id": "address_without_building_link",
+      "rule": "An ANNCSU civic and nearby DBGT footprint remain separate evidence until a stable source relation resolves the building."
+    },
+    {
+      "id": "historical_cap_change",
+      "rule": "Keep old and new CAP assignments concurrently queryable during the operator transition window with separate valid and known times."
+    },
+    {
+      "id": "special_or_non_geographic_routing",
+      "rule": "Represent PO boxes, hold-for-collection, organizations, and other special routing records without inventing a surrounding premise polygon."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source has a pinned release or receipt, digest, rights class, attribution, geographic scope, and transformation method."
+    },
+    {
+      "id": "cap-normalization",
+      "scope": "cap",
+      "metric": "normalized_exact_five_digit_string_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Poste Italiane assignment, ANNCSU civic evidence, ISTAT administration, DBGT building geometry, cadastral reference, derived surfaces, and AGID indexes remain separate."
+    },
+    {
+      "id": "street-range-resolution",
+      "scope": "multicap-streets",
+      "pass": "Arc, lower and upper civic bounds, suffix, parity, unmatched values, ambiguity, source edition, and validity are retained and independently tested."
+    },
+    {
+      "id": "address-building-path",
+      "scope": "promoted-building-links",
+      "pass": "A displayed building has one coherent source-backed civic-to-building path; nearest or containing geometry remains a candidate."
+    },
+    {
+      "id": "derived-surface-topology",
+      "scope": "cap-derived-areas",
+      "pass": "Geometry is valid, bounded, versioned, clipped to rights-cleared geography, and checked for unexplained gaps, overlaps, islands, and address outliers."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "official_cap_assignment_match_ratio_minimum": 0.995,
+        "address_top_1_match_ratio_minimum": 0.98,
+        "address_top_k_match_ratio_minimum": 0.995,
+        "derived_surface_holdout_containment_minimum": 0.99
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-reviewed snapshots reproduce experimental packs with full lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "cap-professional-rows-without-publication-rights",
+      "poste-search-scraped-as-bulk-dataset",
+      "derived-surface-presented-as-official-poste-boundary",
+      "istat-comune-presented-as-cap-boundary",
+      "anncsu-civic-presented-as-deliverability-guarantee",
+      "multicap-range-or-parity-dropped",
+      "dbgt-building-proximity-presented-as-exact-link",
+      "cadastral-parcel-presented-as-building-or-address",
+      "historical-transition-window-collapsed",
+      "san-marino-or-vatican-mixed-into-it",
+      "cap-stored-as-number",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy",
+    "official_poste_polygon",
+    "building_identity_from_proximity",
+    "legal_boundary_or_survey_certification",
+    "cadastral_parcel_equals_building",
+    "administrative_area_equals_cap_area"
+  ]
+}

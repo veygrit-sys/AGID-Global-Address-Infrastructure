@@ -64,6 +64,10 @@ belong to `agid-postal-nz`.
 Iceland-specific Pósturinn routing classification, IS 50V postcode/building
 geometry, HMS address lineage, Statistics Iceland context, and Póstbox rules
 belong to `agid-postal-is`.
+Italy-specific Poste Italiane CAP assignment and restricted CAP Professional
+rights, ANNCSU civic lineage, ISTAT administrative context, federated DBGT
+building evidence, derived-surface rules, and historical CAP transitions belong
+to `agid-postal-it`.
 
 ### `agid-postal-jp`
 
@@ -136,6 +140,20 @@ accuracy, and `HEINUM`/`MATSNR` identifiers. IS 50V building proximity does not
 become an exact address-to-building link without a source-backed relationship.
 A user-selected Póstbox is a delivery preference and does not change the
 premise's postcode polygon or imply residence at the locker.
+
+### `agid-postal-it`
+
+The Italy repository owns Poste Italiane CAP search receipts and licensed CAP
+Professional assignment lineage, ANNCSU streets and civic numbers, ISTAT
+administrative context, per-provider regional/municipal DBGT building lineage,
+derived CAP surfaces, multiCAP street-range rules, historical transitions,
+synthetic fixtures, and release validation. CAP Professional rows remain outside
+public Git artifacts unless contract rights explicitly allow publication. A CAP
+surface generated from assignment/address evidence and administrative clips is
+always derived and never becomes an official Poste Italiane boundary. ANNCSU
+civic points, DBGT footprint proximity, cadastral parcels, and AGID cells do not
+create an exact address-to-building link. San Marino and Vatican City remain
+separate `SM` and `VA` country packs.
 
 
 

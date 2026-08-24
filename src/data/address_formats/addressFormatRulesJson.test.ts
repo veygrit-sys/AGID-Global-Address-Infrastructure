@@ -679,7 +679,7 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
     { code: 'el', name: 'Greek' },
     { code: 'tr', name: 'Turkish' },
   ]);
-  assert.equal(loadFormat('IT').postalCode?.api, 'https://datahub.io/logistics/postal-codes-it');
+  assert.equal(loadFormat('IT').postalCode?.api, 'https://www.poste.it/cap');
   assert.equal(loadFormat('GR').postalCode?.api, 'https://itemsearch.elta.gr/en-GB/');
   assert.equal(loadFormat('CY').postalCode?.api, 'https://postalcodes.info/');
   assert.equal(loadFormat('CY').postalCode?.source, 'postalcodes.info / Cyprus open data');
@@ -687,7 +687,15 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
 
 test('Southern Europe metadata exposes national geospatial and cadastre sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
-    IT: ['istat-italy-geodata', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
+    IT: [
+      'poste-italiane-cap-search',
+      'poste-italiane-cap-professional',
+      'anncsu-italy-addresses',
+      'istat-italy-admin-boundaries',
+      'italy-regional-dbgt-buildings',
+      'agenzia-entrate-catasto',
+      'geoportale-nazionale-italy',
+    ],
     ES: ['ign-spain-cnig', 'catastro-spain', 'idee-spain'],
     PT: ['dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
     GR: ['ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],

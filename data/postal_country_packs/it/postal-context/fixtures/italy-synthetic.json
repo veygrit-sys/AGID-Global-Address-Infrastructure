@@ -1,0 +1,195 @@
+{
+  "schema_version": "agid-postal-it-synthetic-fixtures-v0.1",
+  "fixture_set_id": "italy-like-contract-cases-v0.1",
+  "country_code": "IT",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "0000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthetic",
+    "rule": "No value is a Poste Italiane assignment, CAP Professional row, ANNCSU civic, ISTAT area, DBGT building, cadastral record, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-poste-cap",
+      "models_source_role": "poste-italiane-cap-professional",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-anncsu-civic",
+      "models_source_role": "anncsu-italy-addresses",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-istat-clip",
+      "models_source_role": "istat-italy-admin-boundaries",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-derived-cap-area",
+      "models_source_role": "derived-cap-geometry",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-dbgt-building",
+      "models_source_role": "italy-regional-dbgt-buildings",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "it-syn-address-building",
+      "exception_class": "derived_cap_surface",
+      "synthetic_address": {
+        "house_number": "1",
+        "street": "Synthetic Via",
+        "municipality": "Synthetic Comune",
+        "postcode": "00000",
+        "building_name": "Synthetic Edificio"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-derived-cap-area",
+          "assertion": "derived-cap-area",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        },
+        {
+          "source_id": "synthetic-anncsu-civic",
+          "assertion": "civic-point-and-explicit-building-link",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "building",
+        "postal_geometry": "derived_polygon",
+        "address_geometry": "point",
+        "must_not_assert": [
+          "official-poste-polygon",
+          "recipient-or-occupant",
+          "legal-building-boundary",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "it-syn-grouped-municipalities",
+      "exception_class": "single_or_grouped_locality_cap",
+      "synthetic_address": {
+        "postcode": "00001",
+        "municipality": "Synthetic Comune A or Synthetic Comune B"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-poste-cap",
+          "assertion": "cap-assigned-to-multiple-localities",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "status": "ambiguous-without-locality",
+        "must_not_assert": [
+          "one-cap-one-comune",
+          "comune-boundary-is-cap-boundary",
+          "building-from-cap",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "it-syn-multicap-street-range",
+      "exception_class": "multicap_city_street_arc",
+      "synthetic_address": {
+        "street": "Synthetic Corso",
+        "house_number": "12",
+        "house_number_parity": "even",
+        "postcode": "00002"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-poste-cap",
+          "assertion": "street-arc-even-house-number-range",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-anncsu-civic",
+          "assertion": "matching-civic",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "address",
+        "must_not_assert": [
+          "cap-from-street-name-alone",
+          "ignore-range-or-parity",
+          "building-from-address-point",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "it-syn-historical-transition",
+      "exception_class": "historical_cap_change",
+      "synthetic_address": {
+        "street": "Synthetic Piazza",
+        "postcode": "00003"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-poste-cap",
+          "assertion": "old-and-new-cap-transition-window",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "status": "time-dependent",
+        "must_not_assert": [
+          "old-cap-immediately-invalid",
+          "collapse-valid-and-known-time",
+          "historical-cap-is-current-without-date",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "it-syn-building-candidate",
+      "exception_class": "address_without_building_link",
+      "synthetic_address": {
+        "postcode": "00004"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-dbgt-building",
+          "assertion": "nearby-building-candidate",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_type": "polygon",
+        "must_not_assert": [
+          "exact-address-link-from-proximity",
+          "building-name-from-footprint",
+          "postal-assignment-authority",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}
