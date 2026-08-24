@@ -87,8 +87,13 @@ export type EuropeOpenGeoSourceId =
   | 'geonorge-norway'
   | 'brreg-address-register'
   | 'postcode-eu'
+  | 'postnord-dk-postcode-finder'
+  | 'dagi-denmark-postcode-areas'
   | 'dataforsyningen-denmark'
   | 'danish-address-register-dar'
+  | 'bbr-denmark-buildings'
+  | 'geodanmark-buildings'
+  | 'dagi-denmark-boundaries'
   | 'geodanmark'
   | 'posti-finland-postal-code-services'
   | 'avoindata-fi-postcodes'
@@ -1105,6 +1110,24 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'European address and postal-code API reference; use where open alternatives are limited.',
   },
+  'postnord-dk-postcode-finder': {
+    id: 'postnord-dk-postcode-finder',
+    name: 'PostNord Denmark Postcode Finder',
+    url: 'https://www.postnord.dk/varktojer/find-postnummer/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'PostNord maintains Danish postcode assignment; the finder validates assignment and names, not polygon geometry.',
+  },
+  'dagi-denmark-postcode-areas': {
+    id: 'dagi-denmark-postcode-areas',
+    name: 'DAGI Postnummerinddeling',
+    url: 'https://confluence.sdfi.dk/display/DAGI/Postnummerinddeling',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official DAGI GM_MultiSurface postcode geometry; preserve ErGadepostnummer street-postcode status and bitemporal validity and registration intervals.',
+  },
   'dataforsyningen-denmark': {
     id: 'dataforsyningen-denmark',
     name: 'Dataforsyningen Denmark',
@@ -1112,16 +1135,43 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'geocoding',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Danish national geodata service for address, cadastral, map, and geocoding reference.',
+    notes: 'Dataforsyningen and DAWA expose convenient DAGI and DAR views; they are delivery interfaces, not independent authority for postal assignment or address identity.',
   },
   'danish-address-register-dar': {
     id: 'danish-address-register-dar',
     name: 'Danish Address Register DAR',
-    url: 'https://danmarksadresser.dk/',
+    url: 'https://danmarksadresser.dk/om-adresser/danmarks-adresseregister-dar',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Official Danish address register for road names, house numbers, postal towns, and municipalities.',
+    usage: 'primary',
+    notes: 'Official DAR address UUID and access-point evidence includes source-backed building references; an access point is not footprint geometry.',
+  },
+  'bbr-denmark-buildings': {
+    id: 'bbr-denmark-buildings',
+    name: 'Danish Building and Dwelling Register (BBR)',
+    url: 'https://bbr.dk/bbr',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Statutory BBR register provides public building identity and attributes subject to field-specific distribution and privacy rules; identity is not a footprint by itself.',
+  },
+  'geodanmark-buildings': {
+    id: 'geodanmark-buildings',
+    name: 'GeoDanmark Buildings',
+    url: 'https://www.geodanmark.dk/home/vejledninger/geokoderen_vejledning/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Building geometry becomes exact only through an explicit DAR or BBR relation; containment and proximity remain candidate evidence under GeoDanmark-specific terms.',
+  },
+  'dagi-denmark-boundaries': {
+    id: 'dagi-denmark-boundaries',
+    name: 'DAGI Administrative Boundaries',
+    url: 'https://confluence.sdfi.dk/display/DAGI/DAGI',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official region and municipality context is administrative evidence and never postal geometry.',
   },
   geodanmark: {
     id: 'geodanmark',
@@ -1130,7 +1180,7 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Danish topographic and geospatial reference data for map and administrative validation.',
+    notes: 'Compatibility catalog entry for Danish topographic data; prefer the explicit GeoDanmark building and DAGI boundary source identities for Postal Context lineage.',
   },
   'posti-finland-postal-code-services': {
     id: 'posti-finland-postal-code-services',
@@ -2568,7 +2618,16 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   LI: ['openplzapi'],
   SE: ['civictechsweden-posmkod', 'lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
   NO: ['data-norge', 'kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
-  DK: ['postcode-eu', 'dataforsyningen-denmark', 'danish-address-register-dar', 'geodanmark'],
+  DK: [
+    'postnord-dk-postcode-finder',
+    'dagi-denmark-postcode-areas',
+    'dataforsyningen-denmark',
+    'danish-address-register-dar',
+    'bbr-denmark-buildings',
+    'geodanmark-buildings',
+    'dagi-denmark-boundaries',
+    'geodanmark',
+  ],
   FI: ['posti-finland-postal-code-services', 'avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
   LV: ['latvijas-pasts-check-address', 'kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
   EE: ['omniva-estonia-postcodes', 'estonia-aks-postal-codes', 'estonia-aks-postal-areas', 'estonia-aks-address-objects', 'estonia-aks-building-shapes', 'estonia-ehak-admin-boundaries'],

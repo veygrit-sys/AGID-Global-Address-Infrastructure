@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-czechia`
+Status: `accepted-for-country-pack-reference-implementations-through-denmark`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -81,6 +81,11 @@ Czechia-specific Česká pošta PSČ assignment and class lineage, RÚIAN
 address-place and building identity, VFR/INSPIRE building geometry, territorial
 context, informational-versus-reference status and derived-surface rules belong
 to `agid-postal-cz`.
+
+Denmark-specific PostNord assignment, DAGI Postnummerinddeling and
+administrative history, DAR address and access-point identity, BBR building
+records, GeoDanmark footprint linkage, street-postcode exceptions and service-
+migration rules belong to `agid-postal-dk`.
 
 
 
@@ -229,6 +234,23 @@ containment and proximity remain candidates. Informational VDP evidence is not
 presented as legally referenceable basic-register evidence. CC BY 4.0 artifacts
 retain attribution, and recipient, resident, owner, forwarding, customer and
 other non-public data remain outside public artifacts.
+
+### `agid-postal-dk`
+
+The Denmark repository owns PostNord postcode-assignment receipts, official
+DAGI Postnummerinddeling MultiSurface geometry, `ErGadepostnummer` street-area
+classification, DAR address and Husnummer UUIDs, BBR building identity,
+explicitly linked GeoDanmark footprints, DAGI administrative context,
+synthetic fixtures and release validation. A DAGI postcode polygon proves
+postal containment only; it does not identify an address, building, recipient
+or deliverability. DAR's needle principle assigns an access point to a postcode,
+but the point is not a footprint. Exact building output requires a source-backed
+DAR/BBR/GeoDanmark relation or reviewed crosswalk; containment and proximity
+remain candidates. Valid time and registration time stay separate across DAGI
+and DAR. GeoDanmark keeps its product-specific terms, BBR fields remain rights-
+reviewed, and the transition from retiring Datafordeler services must preserve
+identity and history. Greenland and the Faroe Islands remain separately governed
+`GL` and `FO` packs.
 
 
 

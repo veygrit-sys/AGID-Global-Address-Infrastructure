@@ -640,7 +640,7 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
     'https://geoportaal.maaamet.ee/eng/spatial-data/address-data/postal-codes-p661.html',
   );
   assert.equal(loadFormat('EE').postalCode?.source, 'Omniva / AKS Postal Codes / ADS');
-  assert.equal(loadFormat('DK').postalCode?.source, 'Dataforsyningen DAWA postnumre API / Danish Address Register');
+  assert.equal(loadFormat('DK').postalCode?.source, 'PostNord assignment with DAGI postcode geometry, DAR address identity, and GeoDanmark building linkage');
   assert.equal(loadFormat('FI').postalCode?.api, 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services');
   assert.equal(loadFormat('LV').postalCode?.api, 'https://pasts.lv/en/check-address');
   assert.equal(loadFormat('LV').postalCode?.source, 'Latvijas Pasts check address');
@@ -652,7 +652,16 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     SE: ['lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
     NO: ['kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
-    DK: ['dataforsyningen-denmark', 'danish-address-register-dar', 'geodanmark'],
+    DK: [
+      'postnord-dk-postcode-finder',
+      'dagi-denmark-postcode-areas',
+      'dataforsyningen-denmark',
+      'danish-address-register-dar',
+      'bbr-denmark-buildings',
+      'geodanmark-buildings',
+      'dagi-denmark-boundaries',
+      'geodanmark',
+    ],
     FI: ['posti-finland-postal-code-services', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
     LV: ['lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
     EE: [

@@ -1,0 +1,212 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-dk",
+    "country_code": "DK",
+    "country_name": "Denmark",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/dk/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postnummer",
+    "full_code_format": "NNNN",
+    "full_code_regex": "^\\d{4}$",
+    "full_code_default_geometry": "official_dagi_multisurface_or_non_area",
+    "full_code_rule": "Preserve exactly four digits including leading zeroes. PostNord assignment, DAGI Postnummerinddeling geometry, DAR address identity, building relationships and AGID coverage remain independent evidence.",
+    "postcode_area_rule": "Use a pinned DAGI Postnummerinddeling object as official Polygon or MultiPolygon evidence. Preserve PostNord-defined name, the ErGadepostnummer flag, local identifier, scale, geometry status, valid time and registration time. Codes absent from the area product remain non-areal until authoritative geometry proves otherwise.",
+    "address_rule": "Use the DAR address or Husnummer UUID as civic identity and preserve road, house number, floor, door, supplementary town, postcode, municipality, status, validity and Adgangspunkt technical standard. The access point assigns postcode by the DAGI needle principle but is not a building footprint.",
+    "building_rule": "Promote BBR or GeoDanmark building identity and GeoDanmark footprint only through DAR's explicit adgangTilBygning or geoDanmarkBygning reference, or a reviewed identifier crosswalk. Point containment and proximity are candidate evidence only.",
+    "admin_rule": "Use pinned DAGI identifiers and boundaries for country, region, municipality and other public geographic context. Administrative geometry never replaces Postnummerinddeling geometry.",
+    "change_rule": "Preserve DAGI and DAR valid-time and registration-time intervals. Intake must migrate from legacy Datafordeler services before their stated 15 January 2027 retirement without rewriting source identity or history.",
+    "privacy_rule": "Public AGID resolution may display public civic-address and building context but excludes resident, owner, CPR/CVR linkage, recipient, customer, forwarding, shipment and non-public unit data.",
+    "rights_rule": "Pin provider-specific terms and attribution for each artifact. Klimadatastyrelsen free-geodata and optional CC BY 4.0 terms do not automatically replace the separate GeoDanmark terms, and BBR distribution fields remain independently reviewed.",
+    "territory_rule": "The DK pack covers Denmark proper. Greenland and the Faroe Islands remain separately governed GL and FO country packs even where PostNord routing or numeric ranges appear related."
+  },
+  "address_graph": {
+    "node_types": [
+      "postnummer",
+      "postnummerinddeling",
+      "gadepostnummer",
+      "non_area_routing_code",
+      "country",
+      "region",
+      "municipality",
+      "supplementary_town",
+      "named_road",
+      "dar_house_number",
+      "dar_address",
+      "access_point",
+      "bbr_building",
+      "geodanmark_building",
+      "building_footprint",
+      "postal_facility_or_special_code",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "same_source_object",
+      "explicit_building_reference",
+      "candidate_building",
+      "part_of",
+      "postal_contains",
+      "covered_by_agid",
+      "succeeds",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "postnummerinddeling-may-be-multipart",
+      "gadepostnummer-is-road-based-small-area",
+      "postcode-area-is-not-administrative-boundary",
+      "special-code-may-have-no-area",
+      "one-husnummer-has-one-access-point",
+      "building-may-have-many-house-numbers-and-addresses",
+      "access-point-is-not-building-footprint",
+      "exact-building-link-requires-dar-reference-or-explicit-crosswalk",
+      "containment-or-proximity-is-candidate-only",
+      "agid-containment-is-not-source-identity",
+      "greenland-and-faroe-routing-is-not-dk-territory"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "official_postnummerinddeling",
+      "rule": "Return pinned DAGI Polygon or MultiPolygon geometry while preserving PostNord assignment, DAGI object identity, scale, status and bitemporal lineage."
+    },
+    {
+      "id": "gadepostnummer",
+      "rule": "Preserve ErGadepostnummer for the small road-based Copenhagen and Frederiksberg areas; never generalize them into municipality-sized polygons."
+    },
+    {
+      "id": "special_or_facility_code",
+      "rule": "Represent postal centres, P.O. Box or other special routing codes as non-area or facility records unless the pinned DAGI release supplies authoritative area geometry."
+    },
+    {
+      "id": "dar_access_point",
+      "rule": "Preserve the Husnummer UUID, point, technical standard, status and explicit BBR or GeoDanmark relationship. A point is not a building outline."
+    },
+    {
+      "id": "temporary_or_nonbuilding_access",
+      "rule": "Preserve UF and TA semantics. An unspecified, preliminary, houseboat, technical-installation or open-area access point must not be forced into a building footprint."
+    },
+    {
+      "id": "linked_building_geometry",
+      "rule": "Promote a GeoDanmark footprint only through the DAR GeoDanmark building reference, BBR-to-GeoDanmark identifier relation or reviewed crosswalk. Nearby geometry remains candidate-only."
+    },
+    {
+      "id": "derived_postcode_surface",
+      "rule": "Any surface generated from DAR points, roads or administrative boundaries is derived_geometry, opt-in and never presented as DAGI or PostNord official geometry."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-rights-and-attribution-lineage",
+      "scope": "all",
+      "pass": "Every artifact has a pinned release or retrieval receipt, digest, provider, product-specific terms, required attribution, schema, CRS and transformation method."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "postnummer",
+      "metric": "normalized_exact_four_digit_string_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "PostNord assignment, DAGI postal geometry, DAR address identity, BBR building records, GeoDanmark footprints, administration and AGID indexes remain separate evidence."
+    },
+    {
+      "id": "postcode-topology",
+      "scope": "dagi-postnummerinddeling",
+      "pass": "Polygon and multipolygon geometry is valid and checked for unexplained overlaps, gaps, islands, invalid codes, multipart loss, gadepostnummer distortion and territory leakage."
+    },
+    {
+      "id": "postcode-class-coverage",
+      "scope": "all-known-postcodes",
+      "pass": "Every code is classified as official area, gadepostnummer, postal facility, P.O. Box, special routing, historical, foreign-territory or unknown; absence from DAGI never creates invented geometry."
+    },
+    {
+      "id": "address-point-quality",
+      "scope": "dar-house-numbers",
+      "pass": "Every promoted address preserves UUID, components, point, technical standard, status, postcode/municipality relation, building references and bitemporal lineage."
+    },
+    {
+      "id": "building-geometry-link",
+      "scope": "promoted-building-geometries",
+      "pass": "Every exact address-to-building edge has a DAR, BBR or GeoDanmark source identifier or reviewed explicit crosswalk; containment and proximity remain candidates."
+    },
+    {
+      "id": "service-transition",
+      "scope": "source-intake",
+      "pass": "Modern Datafordeler fildownload and authentication replace retiring endpoints without losing identifiers, deltas, valid time, registration time or rollback."
+    },
+    {
+      "id": "public-privacy",
+      "scope": "public-resolution",
+      "pass": "Public results contain no resident, owner, CPR/CVR, recipient, customer, forwarding, shipment or non-public unit attributes."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "dar_access_point_postcode_containment_minimum": 0.9999,
+        "postcode_classification_ratio_minimum": 1.0,
+        "explicit_building_link_precision_minimum": 1.0,
+        "dk_territory_partition_accuracy_minimum": 1.0
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, postcode classes and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-reviewed snapshots reproduce experimental packs with full lineage." },
+      { "id": "M3_candidate", "definition": "Topology, identity, privacy, transition, freshness and holdout gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "unpinned-postnord-dagi-dar-bbr-or-geodanmark-release",
+      "derived-surface-presented-as-official-dagi-or-postnord-boundary",
+      "special-postcode-given-invented-polygon",
+      "gadepostnummer-generalized-as-municipality-area",
+      "access-point-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-dar-link",
+      "administrative-boundary-presented-as-postal-geometry",
+      "geodanmark-terms-replaced-by-inapplicable-cc-by-election",
+      "missing-required-source-attribution",
+      "resident-owner-cpr-cvr-or-recipient-data-exposed",
+      "greenland-or-faroe-record-published-as-dk-territory",
+      "postcode-stored-as-number",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "residency_occupancy_or_ownership",
+    "building_geometry_from_access_point",
+    "building_identity_from_containment_or_proximity",
+    "legal-property-or-cadastral-survey-certification",
+    "special-postcode-has-area",
+    "municipality-equals-postcode-area"
+  ]
+}
