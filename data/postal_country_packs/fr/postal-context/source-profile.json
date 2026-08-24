@@ -1,0 +1,171 @@
+{
+  "schema_version": "agid-postal-fr-source-profile-v0.1",
+  "country_code": "FR",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata and non-geographic fixtures only."
+    },
+    {
+      "id": "R1_open_attribution",
+      "meaning": "Licence Ouverte 2.0 material with source, release, transformations, and attribution."
+    },
+    {
+      "id": "R2_api_rate_limited",
+      "meaning": "Public API receipts and caches follow current service limits and terms; bulk snapshots are preferred for releases."
+    },
+    {
+      "id": "R3_validation_only",
+      "meaning": "A source may validate a release but contributes no published row or geometry."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "la-poste-base-officielle-codes-postaux",
+      "provider": "La Poste",
+      "source_url": "https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux",
+      "role": [
+        "official-postal-code-to-insee-commune",
+        "delivery-locality-label",
+        "line-five-locality-reference"
+      ],
+      "production_scope": "Pinned official CSV or API export under Licence Ouverte 2.0, partitioned by target ISO country.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "The official dataset maps postal codes to INSEE communes and may expose commune contours or centroids. It explicitly does not provide postal-code boundaries.",
+      "expected_update_cadence": "provider-defined-current-export",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-export-time-schema-byte-length-and-digest",
+        "emit-la-poste-and-licence-ouverte-attribution",
+        "retain-all-code-commune-relations",
+        "partition-fr-overseas-and-monaco"
+      ],
+      "prohibited_claims": [
+        "official-la-poste-polygon",
+        "commune-centroid-is-address",
+        "one-code-one-commune",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "ban-fr",
+      "provider": "Base Adresse Nationale, operated by IGN",
+      "source_url": "https://adresse.data.gouv.fr/contenu-de-la-ban",
+      "role": [
+        "official-public-address-point",
+        "house-number-suffix-street-commune",
+        "address-identifier-and-position-type"
+      ],
+      "production_scope": "Pinned BAN bulk snapshot under Licence Ouverte 2.0 with daily-release lineage.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "BAN is the nationally recognized public address reference and stores address localizers as georeferenced points. It does not make a postal polygon or prove a building relationship by proximity.",
+      "expected_update_cadence": "daily",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-snapshot-time-schema-digest-and-geographic-scope",
+        "preserve-ban-identifiers-position-types-and-certification",
+        "emit-licence-ouverte-attribution",
+        "record-source-address-update-time"
+      ],
+      "prohibited_claims": [
+        "official-la-poste-polygon",
+        "exact-building-from-nearest-point",
+        "recipient-or-occupant",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "ign-bd-topo-ban-links",
+      "provider": "Institut national de l'information géographique et forestière",
+      "source_url": "https://geoservices.ign.fr/documentation/donnees/vecteur/bdtopo",
+      "role": [
+        "building-footprint",
+        "ban-address-to-bd-topo-link",
+        "street-parcel-and-topographic-context"
+      ],
+      "production_scope": "Pinned BD TOPO release under Licence Ouverte with its address and building-link model preserved.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "BD TOPO includes BAN address and link classes plus building geometry. Explicit links can support building display; proximity alone remains derived.",
+      "expected_update_cadence": "provider-release-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-version-edition-projection-schema-and-digest",
+        "emit-ign-attribution",
+        "preserve-address-link-method-and-identifiers",
+        "retain-one-to-many-building-links"
+      ],
+      "prohibited_claims": [
+        "official-la-poste-polygon",
+        "postal-assignment-from-building",
+        "exact-link-from-proximity-only",
+        "legal-property-boundary"
+      ]
+    },
+    {
+      "source_id": "insee-cog",
+      "provider": "Institut national de la statistique et des études économiques",
+      "source_url": "https://www.insee.fr/fr/information/2560452",
+      "role": [
+        "official-commune-department-region-identity",
+        "administrative-history",
+        "commune-change-crosswalk"
+      ],
+      "production_scope": "Pinned annual COG tables with edition and historical crosswalk lineage.",
+      "assignment_authority": "official_administrative_registry",
+      "geometry_authority": "none",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "COG supplies administrative identities and history, not postal assignment, address points, or polygons.",
+      "expected_update_cadence": "annual-with-updates",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-cog-edition-file-digest-and-schema",
+        "preserve-commune-type-parent-and-history",
+        "do-not-derive-postal-code-from-department",
+        "validate-la-poste-insee-crosswalk"
+      ],
+      "prohibited_claims": [
+        "postal-assignment-authority",
+        "official-la-poste-polygon",
+        "address-or-building-geometry",
+        "deliverability-guarantee"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "la-poste-open-crosswalk",
+      "rule": "Postal code, INSEE commune, delivery label, and line-five records retain La Poste release and attribution."
+    },
+    {
+      "id": "ban-open-address",
+      "rule": "BAN address points retain identifiers, position types, certification, source time, and Licence Ouverte attribution."
+    },
+    {
+      "id": "ign-building-links",
+      "rule": "BD TOPO address-building links and geometry retain product version, link method, identifiers, and IGN attribution."
+    },
+    {
+      "id": "cog-administrative-history",
+      "rule": "COG identities and crosswalks remain separate from postal assignment and geometry."
+    },
+    {
+      "id": "derived-postcode-geometry",
+      "rule": "Generated surfaces pin input digests and method and never inherit La Poste assignment authority."
+    },
+    {
+      "id": "overseas-and-monaco",
+      "rule": "Rows not belonging to FR are routed to their own ISO packs and never published in the FR release."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

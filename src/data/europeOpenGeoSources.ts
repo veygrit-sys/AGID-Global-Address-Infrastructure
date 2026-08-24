@@ -55,6 +55,9 @@ export type EuropeOpenGeoSourceId =
   | 'jrc-esdac-soils'
   | 'zippopotam'
   | 'data-gouv-fr-postcodes'
+  | 'ban-fr'
+  | 'ign-bd-topo'
+  | 'insee-cog'
   | 'deutsche-post-plz-server'
   | 'openplzapi'
   | 'opendatasoft-nl-postcodes'
@@ -695,12 +698,43 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'data-gouv-fr-postcodes': {
     id: 'data-gouv-fr-postcodes',
-    name: 'France API Codes Postaux',
-    url: 'https://www.data.gouv.fr/datasets/api-codes-postaux',
+    name: 'La Poste Base officielle des codes postaux',
+    url: 'https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'French official open-data postal-code API and dataset.',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official La Poste code-to-INSEE-commune assignment table; commune contours are administrative context, not official postal-code boundaries.',
+  },
+  'ban-fr': {
+    id: 'ban-fr',
+    name: 'Base Adresse Nationale',
+    url: 'https://adresse.data.gouv.fr/contenu-de-la-ban',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official French georeferenced address reference for house-number and street evidence; an address point does not by itself prove a building link.',
+  },
+  'ign-bd-topo': {
+    id: 'ign-bd-topo',
+    name: 'IGN BD TOPO',
+    url: 'https://geoservices.ign.fr/documentation/donnees/vecteur/bdtopo',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official IGN topographic building geometry and explicit BAN address-to-building link evidence; proximity alone remains derived.',
+  },
+  'insee-cog': {
+    id: 'insee-cog',
+    name: 'INSEE Code officiel géographique',
+    url: 'https://www.insee.fr/fr/information/2560452',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official administrative identities and histories; COG codes and boundaries are not La Poste postal assignments.',
   },
   'deutsche-post-plz-server': {
     id: 'deutsche-post-plz-server',
@@ -2145,7 +2179,7 @@ const BASE_OPEN_SOURCE_IDS: EuropeOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpenGeoSourceId[]>> = {
-  FR: ['data-gouv-fr-postcodes'],
+  FR: ['data-gouv-fr-postcodes', 'ban-fr', 'ign-bd-topo', 'insee-cog'],
   DE: ['deutsche-post-plz-server', 'openplzapi'],
   NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
   BE: ['odwb-be-postcodes'],

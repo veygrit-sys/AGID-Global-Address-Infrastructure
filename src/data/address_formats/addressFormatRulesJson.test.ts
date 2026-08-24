@@ -584,7 +584,7 @@ test('Western Europe address JSON files expose addressRules metadata and open po
   ]);
   assert.equal(loadRules('NL').postalCode?.label, '4 digits plus 2 letters required');
   assert.equal(loadRules('GB').postalCode?.label, 'UK outward/inward postcode required');
-  assert.equal(loadFormat('FR').postalCode?.api, 'https://www.data.gouv.fr/datasets/api-codes-postaux');
+  assert.equal(loadFormat('FR').postalCode?.api, 'https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/');
   assert.equal(loadFormat('DE').postalCode?.api, 'https://www.postdirekt.de/plzserver/');
   assert.equal(loadFormat('GB').postalCode?.api, 'https://postcodes.io/');
 });
@@ -808,6 +808,9 @@ test('All European country, overseas territory, and autonomous-region JSON files
   }
 
   assert.ok(loadFormat('FR').openSourceIds?.includes('data-gouv-fr-postcodes'));
+  assert.ok(loadFormat('FR').openSourceIds?.includes('ban-fr'));
+  assert.ok(loadFormat('FR').openSourceIds?.includes('ign-bd-topo'));
+  assert.ok(loadFormat('FR').openSourceIds?.includes('insee-cog'));
   assert.ok(loadFormat('DE').openSourceIds?.includes('deutsche-post-plz-server'));
   assert.ok(loadFormat('DE').openSourceIds?.includes('openplzapi'));
   assert.ok(loadFormat('GB').openSourceIds?.includes('postcodes-io'));

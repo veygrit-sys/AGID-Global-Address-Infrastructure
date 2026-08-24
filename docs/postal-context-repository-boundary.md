@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-singapore-netherlands-and-united-kingdom-reference-implementations`
+Status: `accepted-for-japan-singapore-netherlands-united-kingdom-and-france-reference-implementations`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -56,6 +56,8 @@ Netherlands-specific PC6 range, BAG address/building, and attributed CBS/Esri
 derived-area rules belong to `agid-postal-nl`.
 United Kingdom unit-postcode, PAF, ONSPD, UPRN, building, derived-area, and BT
 rights-partition rules belong to `agid-postal-gb`.
+France-specific La Poste assignment, BAN address, BD TOPO building-link, COG,
+derived-area, CEDEX, and overseas-partition rules belong to `agid-postal-fr`.
 
 ### `agid-postal-jp`
 
@@ -92,6 +94,19 @@ Git unless reviewed rights permit an artifact. ONS address-mean coordinates are
 not delivery points or postcode boundaries, open UPRNs are not complete
 addresses, generalized buildings are not exact premise links, and generated
 surfaces never become official Royal Mail boundaries.
+
+### `agid-postal-fr`
+
+The France repository owns La Poste postal-code-to-INSEE assignment lineage,
+BAN address-point evidence, IGN BD TOPO address-to-building links, COG
+administrative history, derived postal surfaces, CEDEX/BP/CS/TSA exceptions,
+synthetic fixtures, and release validation. Postal-code areas generated from
+BAN points or commune geometry remain derived and never become official La
+Poste boundaries. CEDEX and other special routing codes are non-areal unless
+independent evidence proves otherwise. Overseas territories and Monaco are
+published as separately governed ISO country packs rather than silently mixed
+into the France runtime.
+
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
