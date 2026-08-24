@@ -16,6 +16,7 @@ import {
   hasDefinitivePostalContextAssertionQuality,
   postalContextAssertionAllowedForUse,
 } from './postalContextAssertionPolicy';
+import { normalizePostalContextPostalCode } from './postalContextCountryPolicy';
 import {
   resolvePostalContext,
   type PostalContextResolutionCandidate,
@@ -410,13 +411,7 @@ function geometryPositionCount(geometry: PostalContextGeometryFeature['geometry'
     + polygon.reduce((ringTotal, ring) => ringTotal + ring.length, 0), 0);
 }
 
-export function normalizeJapanPostalCode(value: unknown) {
-  const normalized = String(value ?? '')
-    .normalize('NFKC')
-    .replace(/[\s-]+/g, '');
-  if (!/^\d{7}$/.test(normalized)) return null;
-  return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
-}
+export { normalizeJapanPostalCode, normalizeSingaporePostalCode } from './postalContextCountryPolicy';
 
 export function validatePostalContextRuntimePack(
   pack: PostalContextRuntimePack,
@@ -743,7 +738,7 @@ export class PostalContextPackRuntime {
   }
 
   normalizePostalCode(value: unknown) {
-    return this.countryCode === 'JP' ? normalizeJapanPostalCode(value) : null;
+    return normalizePostalContextPostalCode(this.countryCode, value);
   }
 
   private releaseEffective(validAt: string) {

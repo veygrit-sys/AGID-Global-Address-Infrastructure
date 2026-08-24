@@ -996,11 +996,11 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'onemap-sg': {
     id: 'onemap-sg',
     name: 'Singapore OneMap Search API',
-    url: 'https://www.onemap.gov.sg/docs/',
+    url: 'https://www.onemap.gov.sg/apidocs/',
     kind: 'geocoding',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Singapore public search API with postal-code and address details.',
+    notes: 'Authoritative Singapore address and postal search; current API access requires a registered bearer token.',
   },
   'pos-indonesia': {
     id: 'pos-indonesia',

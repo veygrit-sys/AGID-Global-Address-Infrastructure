@@ -1,0 +1,223 @@
+{
+  "schema_version": "agid-postal-sg-synthetic-fixtures-v0.1",
+  "fixture_set_id": "singapore-like-contract-cases-v0.1",
+  "country_code": "SG",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthetic",
+    "rule": "No value in this fixture may be interpreted as a real Singapore address, official assignment, OneMap response, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-postal-operator",
+      "models_source_role": "singpost-six-digit-postal-database",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-address-map",
+      "models_source_role": "sla-onemap-search-and-reverse-geocode",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-open-dwelling-point",
+      "models_source_role": "data-gov-sg-sla-dwelling-information",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "sg-syn-building-delivery-point",
+      "exception_class": "building_delivery_point",
+      "synthetic_address": {
+        "block_or_house_number": "1",
+        "road": "Synthetic Meridian Road",
+        "building": "Synthetic Meridian Centre",
+        "postal_code": "000001"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "six_digit_code_assigned_to-premise",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-address-map",
+          "assertion": "matching-address-point-and-building",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "point": {
+            "type": "Point",
+            "coordinates": [10, 10]
+          },
+          "building_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [9, 9],
+                [11, 9],
+                [11, 11],
+                [9, 11],
+                [9, 9]
+              ]
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "postal_geometry_type": "none",
+        "address_geometry_type": "point",
+        "building_geometry_type": "polygon",
+        "resolved_level": "building",
+        "must_not_assert": [
+          "official-full-code-polygon",
+          "surrounding-neighborhood",
+          "unit-or-occupant",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "sg-syn-multi-unit-block",
+      "exception_class": "hdb_or-multi-unit-block",
+      "synthetic_address": {
+        "block_or_house_number": "2",
+        "road": "Synthetic Harbour Avenue",
+        "building": "Synthetic Harbour Block",
+        "postal_code": "000002",
+        "private_unit_examples_redacted": true
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-open-dwelling-point",
+          "assertion": "block-level-address-point",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "point": {
+            "type": "Point",
+            "coordinates": [20, 20]
+          }
+        }
+      ],
+      "expected": {
+        "resolved_level": "premise",
+        "public_unit_count": 0,
+        "must_not_assert": [
+          "unit-number",
+          "resident-or-occupant",
+          "recipient",
+          "phone",
+          "delivery-instruction"
+        ]
+      }
+    },
+    {
+      "fixture_id": "sg-syn-postal-sector",
+      "exception_class": "postal_sector",
+      "synthetic_address": {
+        "postal_sector": "00",
+        "member_postal_codes": [
+          "000003",
+          "000004"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "two_digit-sorting-group",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-address-map",
+          "assertion": "derived-sector-candidate-from-points",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "sector_geometry_authority": "synthetic_fixture_geometry",
+        "full_code_geometry_type": "none",
+        "must_not_assert": [
+          "official-postal-sector-geometry",
+          "sector-geometry-is-full-code-geometry",
+          "planning-area-equals-postal-sector"
+        ]
+      }
+    },
+    {
+      "fixture_id": "sg-syn-nearest-ambiguity",
+      "exception_class": "nearest_api_candidate",
+      "synthetic_address": {
+        "postal_code_candidates": [
+          "000005",
+          "000006"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-address-map",
+          "assertion": "two-nearby-buffer-results",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "points": [
+            {
+              "type": "Point",
+              "coordinates": [30, 30]
+            },
+            {
+              "type": "Point",
+              "coordinates": [31, 30]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "status": "ambiguous",
+        "alternatives": 2,
+        "must_not_assert": [
+          "nearest-is-exact",
+          "single-selected-address",
+          "postal-polygon"
+        ]
+      }
+    },
+    {
+      "fixture_id": "sg-syn-po-box",
+      "exception_class": "po_box_or-non-spatial",
+      "synthetic_address": {
+        "po_box": "Synthetic PO Box 7",
+        "postal_code": "000007"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "non-spatial-po-box-assignment",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "feature_kind": "po_box",
+        "geometry_type": "none",
+        "must_not_assert": [
+          "building",
+          "entrance",
+          "area",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

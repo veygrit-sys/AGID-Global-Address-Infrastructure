@@ -13,6 +13,11 @@ import {
   POSTAL_CONTEXT_GRAPH_SCHEMA_VERSION,
   type PostalContextRepositoryReleaseManifest,
 } from '../lib/postalContextGraph';
+import {
+  POSTAL_CONTEXT_COUNTRY_CODES,
+  isPostalContextCountryCode,
+  type PostalContextCountryCode,
+} from '../lib/postalContextCountryPolicy';
 import { parsePostalContextRuntimePack } from '../lib/postalContextPackParser';
 import {
   POSTAL_CONTEXT_RUNTIME_PACK_SCHEMA_VERSION,
@@ -577,16 +582,61 @@ function errorCode(error: unknown) {
     : 'postal-context-pack-load-failed';
 }
 
-export function createConfiguredPostalContextPackStore(
-  environment: NodeJS.ProcessEnv = process.env,
-): PostalContextPackStore {
-  const countryCode = 'JP';
-  const descriptorPath = environment.AGID_POSTAL_CONTEXT_JP_DESCRIPTOR_PATH?.trim() ?? '';
-  const descriptorDigest = environment.AGID_POSTAL_CONTEXT_JP_DESCRIPTOR_DIGEST?.trim() ?? '';
-  const fallbackPath = environment.AGID_POSTAL_CONTEXT_JP_LKG_DESCRIPTOR_PATH?.trim() ?? '';
-  const fallbackDigest = environment.AGID_POSTAL_CONTEXT_JP_LKG_DESCRIPTOR_DIGEST?.trim() ?? '';
-  const allowExperimental = enabled(environment.AGID_POSTAL_CONTEXT_ALLOW_EXPERIMENTAL);
-  const allowSynthetic = enabled(environment.AGID_POSTAL_CONTEXT_ALLOW_SYNTHETIC);
+const POSTAL_CONTEXT_CONFIGURATION_SUFFIXES = {
+  descriptorPath: 'DESCRIPTOR_PATH',
+  descriptorDigest: 'DESCRIPTOR_DIGEST',
+  fallbackPath: 'LKG_DESCRIPTOR_PATH',
+  fallbackDigest: 'LKG_DESCRIPTOR_DIGEST',
+} as const;
+
+type ConfiguredPostalContextCountry = {
+  runtime?: PostalContextPackRuntime;
+  status(): PostalContextPackStoreCountryStatus;
+};
+
+function configuredCountryValue(
+  environment: NodeJS.ProcessEnv,
+  countryCode: PostalContextCountryCode,
+  suffix: typeof POSTAL_CONTEXT_CONFIGURATION_SUFFIXES[keyof typeof POSTAL_CONTEXT_CONFIGURATION_SUFFIXES],
+) {
+  return environment[`AGID_POSTAL_CONTEXT_${countryCode}_${suffix}`]?.trim() ?? '';
+}
+
+function unsupportedCountryStatus(countryCode: string): PostalContextPackStoreCountryStatus {
+  return {
+    countryCode: countryCode.toUpperCase(),
+    state: 'unconfigured',
+    errors: ['unsupported-country'],
+    warnings: [],
+  };
+}
+
+function configurePostalContextCountry(
+  environment: NodeJS.ProcessEnv,
+  countryCode: PostalContextCountryCode,
+  allowExperimental: boolean,
+  allowSynthetic: boolean,
+): ConfiguredPostalContextCountry {
+  const descriptorPath = configuredCountryValue(
+    environment,
+    countryCode,
+    POSTAL_CONTEXT_CONFIGURATION_SUFFIXES.descriptorPath,
+  );
+  const descriptorDigest = configuredCountryValue(
+    environment,
+    countryCode,
+    POSTAL_CONTEXT_CONFIGURATION_SUFFIXES.descriptorDigest,
+  );
+  const fallbackPath = configuredCountryValue(
+    environment,
+    countryCode,
+    POSTAL_CONTEXT_CONFIGURATION_SUFFIXES.fallbackPath,
+  );
+  const fallbackDigest = configuredCountryValue(
+    environment,
+    countryCode,
+    POSTAL_CONTEXT_CONFIGURATION_SUFFIXES.fallbackDigest,
+  );
   let runtime: PostalContextPackRuntime | undefined;
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -632,48 +682,76 @@ export function createConfiguredPostalContextPackStore(
     }
   }
 
-  const status = (): PostalContextPackStoreCountryStatus => ({
-    countryCode,
-    state,
-    runtime: runtime?.status(),
-    errors: [...errors],
-    warnings: [...new Set(warnings)],
-  });
+  return {
+    runtime,
+    status: () => ({
+      countryCode,
+      state,
+      runtime: runtime?.status(),
+      errors: [...errors],
+      warnings: [...new Set(warnings)],
+    }),
+  };
+}
+
+export function createConfiguredPostalContextPackStore(
+  environment: NodeJS.ProcessEnv = process.env,
+): PostalContextPackStore {
+  const allowExperimental = enabled(environment.AGID_POSTAL_CONTEXT_ALLOW_EXPERIMENTAL);
+  const allowSynthetic = enabled(environment.AGID_POSTAL_CONTEXT_ALLOW_SYNTHETIC);
+  const countries = new Map<PostalContextCountryCode, ConfiguredPostalContextCountry>(
+    POSTAL_CONTEXT_COUNTRY_CODES.map(countryCode => [
+      countryCode,
+      configurePostalContextCountry(
+        environment,
+        countryCode,
+        allowExperimental,
+        allowSynthetic,
+      ),
+    ]),
+  );
+
   return {
     getRuntime(requestedCountryCode) {
-      return requestedCountryCode.toUpperCase() === countryCode ? runtime : undefined;
+      const countryCode = requestedCountryCode.toUpperCase();
+      return isPostalContextCountryCode(countryCode)
+        ? countries.get(countryCode)?.runtime
+        : undefined;
     },
     countryStatus(requestedCountryCode) {
-      if (requestedCountryCode.toUpperCase() === countryCode) return status();
-      return {
-        countryCode: requestedCountryCode.toUpperCase(),
-        state: 'unconfigured',
-        errors: ['unsupported-country'],
-        warnings: [],
-      };
+      const countryCode = requestedCountryCode.toUpperCase();
+      return isPostalContextCountryCode(countryCode)
+        ? countries.get(countryCode)!.status()
+        : unsupportedCountryStatus(countryCode);
     },
     statuses() {
-      return [status()];
+      return POSTAL_CONTEXT_COUNTRY_CODES.map(countryCode => countries.get(countryCode)!.status());
     },
   };
 }
 
 export function createInMemoryPostalContextPackStore(
-  runtime: PostalContextPackRuntime,
+  runtimeOrRuntimes: PostalContextPackRuntime | readonly PostalContextPackRuntime[],
 ): PostalContextPackStore {
+  const runtimes = runtimeOrRuntimes instanceof PostalContextPackRuntime
+    ? [runtimeOrRuntimes]
+    : [...runtimeOrRuntimes];
+  const byCountry = new Map<string, PostalContextPackRuntime>();
+  for (const runtime of runtimes) {
+    if (byCountry.has(runtime.countryCode)) {
+      throw new Error(`duplicate-postal-context-runtime:${runtime.countryCode}`);
+    }
+    byCountry.set(runtime.countryCode, runtime);
+  }
+
   return {
     getRuntime(countryCode) {
-      return countryCode.toUpperCase() === runtime.countryCode ? runtime : undefined;
+      return byCountry.get(countryCode.toUpperCase());
     },
     countryStatus(countryCode) {
-      if (countryCode.toUpperCase() !== runtime.countryCode) {
-        return {
-          countryCode: countryCode.toUpperCase(),
-          state: 'unconfigured',
-          errors: ['unsupported-country'],
-          warnings: [],
-        };
-      }
+      const normalizedCountry = countryCode.toUpperCase();
+      const runtime = byCountry.get(normalizedCountry);
+      if (!runtime) return unsupportedCountryStatus(normalizedCountry);
       return {
         countryCode: runtime.countryCode,
         state: 'ready',
@@ -683,7 +761,7 @@ export function createInMemoryPostalContextPackStore(
       };
     },
     statuses() {
-      return [this.countryStatus(runtime.countryCode)];
+      return runtimes.map(runtime => this.countryStatus(runtime.countryCode));
     },
   };
 }

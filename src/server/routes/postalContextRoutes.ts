@@ -81,13 +81,13 @@ function runtimeFor(
     routeError(req, res, 400, 'Invalid country code');
     return undefined;
   }
-  if (countryCode !== 'JP') {
+  const runtime = store.getRuntime(countryCode);
+  const status = store.countryStatus(countryCode);
+  if (!runtime && status.errors.includes('unsupported-country')) {
     routeError(req, res, 404, 'Postal Context country is not supported');
     return undefined;
   }
-  const runtime = store.getRuntime(countryCode);
   if (!runtime) {
-    const status = store.countryStatus(countryCode);
     routeError(
       req,
       res,

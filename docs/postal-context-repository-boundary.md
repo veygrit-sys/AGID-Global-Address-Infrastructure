@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-reference-implementation`
+Status: `accepted-for-japan-and-singapore-reference-implementations`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -16,8 +16,9 @@ Address-Grid-ID
   |  owns: PCG contract, resolver, API adapter, SDK types, light fixtures
   |  pins: country release manifest + SHA-256
   v
-agid-postal-jp
-  |  owns: JP source profiles, transforms, validation, release metadata
+agid-postal-{country}
+  |  owns: country source profiles, transforms, validation, release metadata
+  |  examples: agid-postal-jp, agid-postal-sg
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -25,7 +26,7 @@ content-addressed object storage / CDN
 
 agid-postal-forge
   owns: reusable ETL operators, schema verifier, release builder
-  is used by agid-postal-jp, but does not own JP truth
+  is used by country repositories, but does not own country truth
 ```
 
 ### `Address-Grid-ID`
@@ -50,6 +51,7 @@ AGID本体に置かないもの:
 国に依存しないsource intake、normalization、geometry validation、lineage、diff、
 quality gate、manifest生成を持つ。国別ruleをcoreへhard-codeせず、versioned profileとして
 注入する。日本固有の住居表示・地番・大口事業所ruleは`agid-postal-jp`が所有する。
+Singapore-specific delivery-point and sector rules belong to `agid-postal-sg`.
 
 ### `agid-postal-jp`
 
@@ -57,6 +59,14 @@ quality gate、manifest生成を持つ。国別ruleをcoreへhard-codeせず、v
 source-specific importer、crosswalk、例外分類、合成fixture、検証結果、release manifestを持つ。
 再配布できないraw sourceはGitにも公開artifactにも置かず、隔離されたvalidation環境から
 集計済みquality evidenceだけを渡す。
+
+### `agid-postal-sg`
+
+Singapore's canonical country repository owns SingPost contract metadata,
+OneMap receipt policy, named data.gov.sg source lineage, six-digit point-first
+rules, postal-sector exceptions, synthetic fixtures, and release validation.
+Subscription rows, API tokens, and unreviewed API caches remain outside Git and
+public artifacts.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

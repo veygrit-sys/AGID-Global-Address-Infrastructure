@@ -410,7 +410,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     trustTier: 'authoritative',
     availability: 'auth-required-api',
     depth: 'building',
-    url: 'https://www.onemap.gov.sg/docs/',
+    url: 'https://www.onemap.gov.sg/apidocs/',
     sourceNames: ['onemap', 'one map', 'one-map', 'sla onemap'],
     openSourceIds: ['onemap-sg', 'one-map'],
     requiresCredential: true,
