@@ -122,6 +122,11 @@ export type EuropeOpenGeoSourceId =
   | 'swiss-federal-gwr'
   | 'swisstopo-swissbuildings3d'
   | 'swisstopo-swissboundaries3d'
+  | 'liechtenstein-post-access-points'
+  | 'llv-liechtenstein-building-addresses'
+  | 'llv-liechtenstein-gwr-public'
+  | 'llv-liechtenstein-official-survey'
+  | 'llv-liechtenstein-sovereign-boundaries'
   | 'lietuvos-pastas-postcode-search'
   | 'geoportal-lt'
   | 'registru-centras-address-register'
@@ -893,7 +898,7 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'primary',
     license: 'swisstopo OGD; source attribution mandatory',
-    notes: 'Official monthly locality, four-digit postcode and NPA6 perimeter data for domicile-address postcode types; special, company and administrative codes may be non-areal.',
+    notes: 'Official monthly locality, four-digit postcode and NPA6 perimeter data for Switzerland and Liechtenstein domicile-address postcode types; special, company and administrative codes may be non-areal.',
   },
   'swisstopo-building-address-directory': {
     id: 'swisstopo-building-address-directory',
@@ -934,6 +939,55 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     license: 'swisstopo OGD; source attribution mandatory',
     notes: 'Official national, canton, district and municipality geometry; administrative context never replaces a PLZO postcode/locality perimeter.',
+  },
+  'liechtenstein-post-access-points': {
+    id: 'liechtenstein-post-access-points',
+    name: 'Liechtensteinische Post Access Points',
+    url: 'https://post.li/standorte/',
+    kind: 'facility',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official post offices, PO-box facilities, parcel terminals and access points; facility evidence remains point or non-areal and cannot create a residential postcode polygon.',
+  },
+  'llv-liechtenstein-building-addresses': {
+    id: 'llv-liechtenstein-building-addresses',
+    name: 'Liechtenstein National Administration Official Building Addresses',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Liechtenstein National Administration OGD terms; attribution and license link required',
+    notes: 'Official SHP/CSV building addresses include the government building identifier and coordinates; an address point is not a building footprint or postal-operator assignment.',
+  },
+  'llv-liechtenstein-gwr-public': {
+    id: 'llv-liechtenstein-gwr-public',
+    name: 'Liechtenstein Public Building and Dwelling Register Fields',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Liechtenstein National Administration OGD terms; public fields and attribution only',
+    notes: 'Official public fields provide building identifier, municipality, address, name, category, parcel and coordinates; dwelling, occupant and non-published register data stay excluded.',
+  },
+  'llv-liechtenstein-official-survey': {
+    id: 'llv-liechtenstein-official-survey',
+    name: 'Liechtenstein Municipal Official Survey Packages',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Liechtenstein National Administration geodata terms; attribute source and retain license',
+    notes: 'Official-survey packages for all eleven municipalities provide building geometry; an exact address link requires an explicit common identifier or reviewed crosswalk, never proximity alone.',
+  },
+  'llv-liechtenstein-sovereign-boundaries': {
+    id: 'llv-liechtenstein-sovereign-boundaries',
+    name: 'Liechtenstein Official Sovereign Boundaries',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Liechtenstein National Administration geodata terms; attribution required',
+    notes: 'Official sovereign geometry partitions LI from CH and AT and supplies jurisdiction context; it is not a postcode perimeter and cannot invent postal membership.',
   },
   'opendatasoft-nl-postcodes': {
     id: 'opendatasoft-nl-postcodes',
@@ -2739,7 +2793,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
     'ordnance-survey-openmap-local',
   ],
   IE: ['ideal-postcodes-reference'],
-  LI: ['openplzapi'],
+  LI: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'liechtenstein-post-access-points', 'llv-liechtenstein-building-addresses', 'llv-liechtenstein-gwr-public', 'llv-liechtenstein-official-survey', 'llv-liechtenstein-sovereign-boundaries', 'swisstopo-swissbuildings3d'],
   SE: ['civictechsweden-posmkod', 'lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
   NO: ['data-norge', 'kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
   DK: [

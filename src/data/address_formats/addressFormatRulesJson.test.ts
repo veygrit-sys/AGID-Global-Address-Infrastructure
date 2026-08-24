@@ -609,6 +609,27 @@ test('Western Europe address JSON files expose addressRules metadata and open po
   );
   assert.ok(loadFormat('CH').openSourceIds?.includes('swisstopo-plzo-postal-localities'));
   assert.ok(loadFormat('CH').openSourceIds?.includes('swisstopo-building-address-directory'));
+  assert.equal(
+    loadFormat('LI').postalCode?.api,
+    'https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities',
+  );
+  assert.equal(
+    loadFormat('LI').postalCode?.source,
+    'Swiss Post / swisstopo PLZO / Liechtenstein National Administration Building Addresses and GWR',
+  );
+  assert.deepEqual(loadRules('LI').regionalHierarchy, ['municipality', 'locality', 'street', 'buildingEntrance']);
+  for (const sourceId of [
+    'swiss-post-postcodes',
+    'swisstopo-plzo-postal-localities',
+    'liechtenstein-post-access-points',
+    'llv-liechtenstein-building-addresses',
+    'llv-liechtenstein-gwr-public',
+    'llv-liechtenstein-official-survey',
+    'llv-liechtenstein-sovereign-boundaries',
+  ]) {
+    assert.ok(loadFormat('LI').openSourceIds?.includes(sourceId));
+  }
+  assert.equal(loadFormat('LI').openSourceIds?.includes('openplzapi'), false);
   assert.ok(loadFormat('CH').openSourceIds?.includes('swisstopo-swissbuildings3d'));
   assert.equal(loadFormat('CH').openSourceIds?.includes('openplzapi'), false);
 });

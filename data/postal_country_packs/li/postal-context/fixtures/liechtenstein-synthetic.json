@@ -1,0 +1,40 @@
+{
+  "schema_version": "agid-postal-li-synthetic-fixtures-v0.1",
+  "country_code": "LI",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "940",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "li-syn-domicile-perimeter",
+      "synthetic_address": { "street": "Teststrasse", "house_number": "1", "locality": "Testort", "postcode": "9400" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["real-plzo-perimeter", "real-address", "deliverability"] }
+    },
+    {
+      "fixture_id": "li-syn-building-link",
+      "synthetic_address": { "street": "Teststrasse", "house_number": "2", "postcode": "9401" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["real-llv-address", "real-gwr-building", "nearest-building-is-exact-link"] }
+    },
+    {
+      "fixture_id": "li-syn-delivery-endpoint",
+      "synthetic_address": { "organization": "Testorganisation", "postcode": "9402" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "must_not_assert": ["endpoint-is-residential-area", "po-box-is-domicile", "recipient-identity"] }
+    },
+    {
+      "fixture_id": "li-syn-country-partition",
+      "synthetic_address": { "postcode": "9403" },
+      "evidence": [{ "assignment_authority": "none", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["switzerland-is-liechtenstein", "austria-is-liechtenstein", "country-from-shared-source-without-evidence"] }
+    }
+  ]
+}

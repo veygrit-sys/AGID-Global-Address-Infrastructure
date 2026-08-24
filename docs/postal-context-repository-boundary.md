@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-lithuania`
+Status: `accepted-for-country-pack-reference-implementations-through-liechtenstein`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -111,6 +111,12 @@ centras Address Register point identity, NTR building boundaries, administrative
 and settlement context, non-areal delivery endpoints, derived noncanonical
 surface rules, privacy exclusions and cross-border partitioning belong to
 `agid-postal-lt`.
+Liechtenstein-specific shared Swiss Post assignment, LI-classified swisstopo
+PLZO perimeter history, Liechtensteinische Post delivery endpoints, national
+building-address and public GWR identity, municipal official-survey geometry,
+sovereign country partitioning, attribution, privacy and special-code rules
+belong to `agid-postal-li`.
+
 
 
 
@@ -373,6 +379,25 @@ tenants, private-unit occupants, telephone data, credentials and protected
 registry subjects. Lithuania remains an `LT` pack and never absorbs geometry
 from Latvia, Belarus, Poland or Russia during border partitioning.
 
+
+### `agid-postal-li`
+
+The Liechtenstein repository owns pinned Swiss Post PLZ4 assignment evidence,
+LI-classified swisstopo PLZO locality and PLZ6 perimeters, Liechtensteinische
+Post delivery endpoints, national building-address releases, public GWR fields,
+municipal official-survey geometry, sovereign boundaries, synthetic fixtures
+and release validation. Shared Swiss sources never merge the two countries: a
+blank canton value, `94xx` syntax, border proximity or clipping cannot by itself
+classify a row as LI. Swiss and Austrian features remain outside the LI pack,
+and LI features never receive CH country or AGID identity. PLZO geometry covers
+domicile-address postcode types; company, professional, administrative, PO-box,
+parcel-terminal and other special routes may remain non-areal. An address or GWR
+point is not a building footprint. Exact building output requires the same
+official building identifier or a reviewed explicit crosswalk; containment and
+proximity remain candidates. Public artifacts retain the required
+“Liechtensteinische Landesverwaltung” attribution and license link while
+excluding recipients, residents, owners, tenants, dwelling occupants,
+forwarding records, credentials and non-public register fields.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

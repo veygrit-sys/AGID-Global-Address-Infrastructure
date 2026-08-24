@@ -9,7 +9,7 @@ import {
 } from './officialPostalSourceCatalog';
 
 test('registers official and open postal sources for the priority rollout countries', () => {
-  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'LV', 'LT', 'PT', 'JE', 'IM', 'GI']) {
+  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
     assert.ok(sources.length > 0, `${countryCode} should have at least one registered source`);
     assert.ok(getPreferredPostalSourceIdsForCountry(countryCode).length > 0, `${countryCode} should expose preferred source ids`);
@@ -135,6 +135,31 @@ test('separates Lithuanian postal, civic-address, building, and administrative a
   const classification = classifyPostalSourceTrust({
     countryCode: 'LT',
     source: 'Lietuvos pastas postal code search',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
+test('separates Liechtenstein shared postal, local delivery, sovereign address, building, and boundary authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('LI');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('swiss-post-postcodes')?.authority, 'postal-operator');
+  assert.equal(byId.get('swiss-post-postcodes')?.trustTier, 'authoritative');
+  assert.match(byId.get('swiss-post-postcodes')?.notes.join(' ') ?? '', /contract-partitioned/i);
+  assert.equal(byId.get('swisstopo-plzo-postal-localities')?.depth, 'postcode');
+  assert.match(byId.get('swisstopo-plzo-postal-localities')?.notes.join(' ') ?? '', /domicile-address/i);
+  assert.equal(byId.get('liechtenstein-post-access-points')?.depth, 'delivery-point');
+  assert.match(byId.get('liechtenstein-post-access-points')?.notes.join(' ') ?? '', /non-area/i);
+  assert.equal(byId.get('llv-liechtenstein-building-addresses')?.depth, 'address');
+  assert.match(byId.get('llv-liechtenstein-building-addresses')?.notes.join(' ') ?? '', /not a footprint/i);
+  assert.equal(byId.get('llv-liechtenstein-gwr-public')?.depth, 'building');
+  assert.match(byId.get('llv-liechtenstein-gwr-public')?.notes.join(' ') ?? '', /dwelling.*excluded/i);
+  assert.equal(byId.get('llv-liechtenstein-official-survey')?.depth, 'building');
+  assert.match(byId.get('llv-liechtenstein-official-survey')?.notes.join(' ') ?? '', /explicit common identifier/i);
+  assert.equal(byId.get('llv-liechtenstein-sovereign-boundaries')?.depth, 'geo-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'LI',
+    source: 'Swiss Post postcodes and address geodata',
   });
   assert.equal(classification.strength, 'strong');
   assert.equal(classification.tier, 'authoritative');

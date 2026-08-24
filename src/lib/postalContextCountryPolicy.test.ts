@@ -5,6 +5,7 @@ import {
   normalizeAustraliaPostalCode,
   normalizeLatviaPostalCode,
   normalizeLithuaniaPostalCode,
+  normalizeLiechtensteinPostalCode,
   POSTAL_CONTEXT_COUNTRY_POLICIES,
   isPostalContextCountryCode,
   normalizeIcelandPostalCode,
@@ -122,6 +123,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeLithuaniaPostalCode('LV-00000'), null);
   assert.equal(normalizeLithuaniaPostalCode('LT-0000'), null);
   assert.equal(normalizePostalContextPostalCode('lt', 'lt 00000'), 'LT-00000');
+  assert.equal(normalizeLiechtensteinPostalCode('９４００'), '9400');
+  assert.equal(normalizeLiechtensteinPostalCode('94 00'), '9400');
+  assert.equal(normalizeLiechtensteinPostalCode('94-00'), null);
+  assert.equal(normalizeLiechtensteinPostalCode('8000'), null);
+  assert.equal(normalizePostalContextPostalCode('li', '94 00'), '9400');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -230,4 +236,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'address-range-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LT.postalCodeFormat, 'LT-NNNNN');
+  assert.equal(isPostalContextCountryCode('LI'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.LI.fullCodeGeometrySemantics,
+    'postal-area-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LI.postalCodeFormat, '94NN');
 });
