@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import {
   normalizeAlbaniaPostalCode,
+  normalizeAndorraPostalCode,
   normalizeArmeniaPostalCode,
   normalizeAzerbaijanPostalCode,
   normalizeAustraliaPostalCode,
@@ -148,6 +149,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeArmeniaPostalCode('00-02'), null);
   assert.equal(normalizeArmeniaPostalCode('AM0002'), null);
   assert.equal(normalizePostalContextPostalCode('am', '00 02'), '0002');
+  assert.equal(normalizeAndorraPostalCode('ＡＤ５００'), 'AD500');
+  assert.equal(normalizeAndorraPostalCode('ad 500'), 'AD500');
+  assert.equal(normalizeAndorraPostalCode('500'), 'AD500');
+  assert.equal(normalizeAndorraPostalCode('AD-500'), null);
+  assert.equal(normalizeAndorraPostalCode('ES500'), null);
+  assert.equal(normalizePostalContextPostalCode('ad', '000'), 'AD000');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -279,4 +286,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'delivery-network-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AM.postalCodeFormat, 'NNNN');
+  assert.equal(isPostalContextCountryCode('AD'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.AD.fullCodeGeometrySemantics,
+    'routing-locality-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AD.postalCodeFormat, 'ADNNN');
 });

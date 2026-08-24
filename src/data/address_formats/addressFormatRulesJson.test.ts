@@ -749,6 +749,19 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
   ]);
   assert.match(loadRules('MC').postalCode?.label ?? '', /98000.*CEDEX.*allocation/i);
   assert.equal(loadRules('VA').postalCode?.label, '00120 Vatican City postcode');
+  assert.match(loadRules('AD').postalCode?.label ?? '', /AD plus 3 digits.*parish-coded.*allocation.*geometry.*source evidence/i);
+  assert.equal(loadFormat('AD').postalCode?.format, 'ADNNN');
+  assert.equal(loadFormat('AD').postalCode?.regex, '^AD\\d{3}$');
+  assert.match(loadFormat('AD').postalCode?.source ?? '', /Correos.*UPU.*Urban Guide.*IDE Andorra/i);
+  assert.deepEqual(loadRules('AD').regionalHierarchy, [
+    'parish',
+    'populationCentre',
+    'street',
+    'addressNumber',
+    'building',
+    'entrance',
+    'unit',
+  ]);
   assert.deepEqual(loadRules('CY').languages, [
     { code: 'el', name: 'Greek' },
     { code: 'tr', name: 'Turkish' },
@@ -795,7 +808,7 @@ test('Southern Europe metadata exposes national geospatial and cadastre sources'
       'monaco-imsee-geodata',
     ],
     VA: ['vatican-city-state', 'openstreetmap-vatican'],
-    AD: ['andorra-cartografia', 'andorra-open-data'],
+    AD: ['correos-andorra-postcodes', 'andorra-urban-address-guide', 'andorra-topographic-buildings', 'andorra-cartografia', 'andorra-open-data'],
     CY: ['cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],
   };
 

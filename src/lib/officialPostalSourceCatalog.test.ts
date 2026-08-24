@@ -232,6 +232,30 @@ test('separates Armenia postal, address-register, building, and cadastral-map au
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Andorra postal, government-address, topographic-building, and parish authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('AD');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('correos-andorra-postcodes')?.authority, 'postal-operator');
+  assert.equal(byId.get('correos-andorra-postcodes')?.trustTier, 'authoritative');
+  assert.equal(byId.get('correos-andorra-postcodes')?.availability, 'licensed-bulk-data');
+  assert.match(byId.get('correos-andorra-postcodes')?.notes.join(' ') ?? '', /manifest.*Andorra scope.*parish coding.*not.*polygon/i);
+  assert.equal(byId.get('andorra-urban-address-guide')?.depth, 'address');
+  assert.equal(byId.get('andorra-urban-address-guide')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('andorra-urban-address-guide')?.notes.join(' ') ?? '', /interactive.*not a bulk license.*not a building footprint/i);
+  assert.equal(byId.get('andorra-topographic-buildings')?.depth, 'building');
+  assert.equal(byId.get('andorra-topographic-buildings')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('andorra-topographic-buildings')?.notes.join(' ') ?? '', /common authoritative identifier.*proximity/i);
+  assert.equal(byId.get('andorra-cartografia')?.depth, 'geo-only');
+  assert.equal(byId.get('andorra-cartografia')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('andorra-cartografia')?.notes.join(' ') ?? '', /dataset-specific.*not postal assignment authority/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'AD',
+    source: 'correos andorra',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',

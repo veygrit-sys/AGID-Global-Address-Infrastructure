@@ -1,0 +1,72 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ad",
+    "country_code": "AD",
+    "country_name": "Andorra",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postal code",
+    "full_code_format": "ADNNN",
+    "full_code_default_geometry": "parish_coded_routing_assignment_with_optional_licensed_or_derived_surface",
+    "assignment_rule": "A pinned Correos licensed row or other current operator evidence establishes a full ADNNN allocation. UPU syntax, examples, or the parish-coded structure do not establish that every structurally valid value is allocated.",
+    "perimeter_rule": "The parish component is not by itself an official full-code polygon. A licensed Correos polygon is authoritative only when its contract and product manifest expressly cover Andorra; otherwise a surface is derived from rights-cleared address membership and remains explicitly derived.",
+    "address_rule": "The Govern d'Andorra Urban Guide can locate postal addresses, but interactive search or viewing does not establish bulk extraction, retention, or redistribution rights.",
+    "building_rule": "Exact building display requires the same authoritative address/building identifier or a reviewed explicit crosswalk. Topographic building shapes, address points, POIs, containment, and proximity remain candidates.",
+    "administrative_rule": "IDE Andorra parish boundaries supply administrative context and optional clipping only; they do not create full-code postal membership without postal evidence.",
+    "territory_rule": "Postal assignment never determines sovereignty or a legal boundary. Country and border-feature classification must cite a separately pinned boundary authority, policy, and vintage; routing, language, parish names, or proximity never assign AD identity."
+  },
+  "temporal_model": {
+    "valid_time": "Postal, address, building, parish-boundary, and topographic validity when supplied by the source.",
+    "known_time": "Source publication, capture, ingest, correction, contract, and release timestamps retained independently.",
+    "history_rule": "Later postal or government evidence appends a versioned assertion and never silently rewrites an earlier release."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each full code references a pinned current operator result or licensed Correos row and retains operator scope, parish or locality, product edition, capture time, rights, and digest." },
+    { "id": "postal-perimeter", "pass": "Every official polygon proves Andorra coverage in its product contract; every derived surface retains member addresses, method, boundary clips, omissions, uncertainty, rights, and digest and is never labelled official." },
+    { "id": "official-address", "pass": "Each address assertion retains Urban Guide or other competent authority provenance, hierarchy, status, coordinate provenance, release, access terms, and permitted public fields." },
+    { "id": "building-link", "pass": "An exact building has a common authoritative address/building identifier or reviewed explicit crosswalk; topographic shape, containment, and proximity are candidate-only." },
+    { "id": "coverage-and-boundary", "pass": "Each IDE Andorra layer retains producer, coverage, vintage, CRS, conditions of use, and digest; no border gap is assigned AD identity by postal proximity." },
+    { "id": "privacy", "pass": "No addressee, resident, owner, tenant, occupant, phone, credential, cadastral-right, tax, or protected register field is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, operator scope, coverage, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, operator-scope, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "parish-code-presented-as-full-postcode-polygon",
+      "correos-spain-polygon-scope-assumed-to-cover-andorra",
+      "derived-surface-presented-as-official-postcode-boundary",
+      "interactive-address-search-presented-as-bulk-release",
+      "topographic-building-presented-as-exact-address-link",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postal-evidence-presented-as-sovereignty-or-boundary-evidence",
+      "border-feature-auto-assigned-to-ad",
+      "ad-prefix-dropped-from-canonical-code",
+      "addressee-owner-occupant-or-protected-register-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "addressee_identity", "occupancy", "ownership", "building_identity_from_proximity", "parish_boundary_equals_full_postcode", "every_postcode_is_a_polygon", "po_box_is_a_residential_area", "sovereignty_or_legal_boundary", "survey_or_cadastral_certification"
+  ]
+}

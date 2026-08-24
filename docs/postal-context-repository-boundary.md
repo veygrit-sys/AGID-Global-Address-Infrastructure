@@ -465,6 +465,28 @@ language, locality names and proximity cannot assign AM identity. Public
 artifacts exclude recipients, residents, owners, rightsholders, occupants,
 title and restriction records, credentials and protected registry fields.
 
+### `agid-postal-ad`
+
+The Andorra repository owns pinned current-operator postcode assignments,
+licensed-product scope receipts, provider-approved Govern d'Andorra address
+releases, IDE Andorra parish and topographic-building layers, derived postal
+surfaces, synthetic fixtures and release validation. UPU syntax and examples
+prove the `ADNNN` form, address placement, two-operator context and parish
+coding, not current allocation or a full-code perimeter.
+
+The Correos product page says its licensed postcode database includes Andorra,
+but an Andorra polygon is authoritative only when the contract and product
+manifest expressly include that scope. A parish boundary cannot silently stand
+in for a full-code postal polygon. Derived surfaces retain address members,
+algorithm, clips, omissions, uncertainty, temporal lineage and rights. Exact
+building display requires a common authoritative address/building identifier or
+reviewed crosswalk; Urban Guide points, POIs, topographic shapes, containment
+and proximity remain candidates. Postal evidence never decides sovereignty or
+legal boundaries. Country and border-feature classification cites a separately
+pinned authority, policy and vintage. Public artifacts exclude addressees,
+residents, owners, tenants, occupants, cadastral rights, tax data, credentials
+and protected register fields.
+
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

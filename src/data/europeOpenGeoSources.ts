@@ -178,6 +178,9 @@ export type EuropeOpenGeoSourceId =
   | 'monaco-imsee-geodata'
   | 'vatican-city-state'
   | 'openstreetmap-vatican'
+  | 'correos-andorra-postcodes'
+  | 'andorra-urban-address-guide'
+  | 'andorra-topographic-buildings'
   | 'andorra-cartografia'
   | 'andorra-open-data'
   | 'cyprus-department-lands-surveys'
@@ -1921,14 +1924,41 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     license: 'ODbL',
     notes: 'OSM relation and address-adjacent place reference for Vatican City where official open APIs are limited.',
   },
+  'correos-andorra-postcodes': {
+    id: 'correos-andorra-postcodes',
+    name: 'Correos Official Postcode Database - Andorra Scope',
+    url: 'https://www.correos.es/es/es/empresas/marketing/identifica-a-tus-clientes-potenciales/base-de-datos-de-codigos-postales',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Licensed official postcode database expressly includes Andorra rows. Any polygon authority requires the contract and product manifest to prove Andorra scope; the public product page is not a data license.',
+  },
+  'andorra-urban-address-guide': {
+    id: 'andorra-urban-address-guide',
+    name: 'Govern d’Andorra Urban Address Guide',
+    url: 'https://www.cartografia.ad/guia-urbana',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official search and location service for postal addresses, streets, and points of interest. Interactive availability is not a bulk extraction, retention, or redistribution license, and an address point is not a building footprint.',
+  },
+  'andorra-topographic-buildings': {
+    id: 'andorra-topographic-buildings',
+    name: 'Andorra 1:5,000 Topographic Buildings',
+    url: 'https://www.cartografia.ad/base-topografica-d-andorra-1-5-000',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official national topographic building geometry with stated scale and accuracy. Exact address display requires a common authoritative identifier or reviewed crosswalk; proximity and containment remain candidates, and dataset conditions of use must be pinned.',
+  },
   'andorra-cartografia': {
     id: 'andorra-cartografia',
-    name: 'Andorra Cartography and GIS',
-    url: 'https://www.cartografia.ad/',
+    name: 'IDE Andorra Cartography and Parish Boundaries',
+    url: 'https://www.cartografia.ad/geoportal',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Andorran cartographic reference for parishes, roads, buildings, and national geodata.',
+    notes: 'Official IDE and OGC catalog for parish boundaries, toponyms, and geodata. Layer-by-layer producer, conditions of use, schema, coverage, vintage, CRS, and digest review is required; a parish boundary is not automatically a full-code postal polygon.',
   },
   'andorra-open-data': {
     id: 'andorra-open-data',
@@ -2873,7 +2903,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
     'monaco-imsee-geodata',
   ],
   VA: ['zauberware-postal-codes', 'vatican-city-state', 'openstreetmap-vatican'],
-  AD: ['postalcodes-info', 'andorra-cartografia', 'andorra-open-data'],
+  AD: ['correos-andorra-postcodes', 'andorra-urban-address-guide', 'andorra-topographic-buildings', 'andorra-cartografia', 'andorra-open-data', 'postalcodes-info'],
   CY: ['postalcodes-info', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],
   RO: ['okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
   BG: ['scrape4u-postal-codes', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
