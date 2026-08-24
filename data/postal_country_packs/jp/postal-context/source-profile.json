@@ -1,0 +1,212 @@
+{
+  "schema_version": "agid-postal-jp-source-profile-v0.1",
+  "country_code": "JP",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata or synthetic fixtures only; no upstream facts or geometry."
+    },
+    {
+      "id": "R1_open_attribution",
+      "meaning": "Redistribution and derivatives are expected to be permitted with required attribution; exact terms must still be pinned per release."
+    },
+    {
+      "id": "R2_source_specific_open",
+      "meaning": "Reuse is expected to be possible under source-specific conditions that must travel with the artifact."
+    },
+    {
+      "id": "R3_review_required",
+      "meaning": "Keep metadata only until redistribution, derivative, commercial, API-serving, and caching rights are reviewed."
+    },
+    {
+      "id": "R4_validation_only",
+      "meaning": "May be used only in an isolated validation environment and must not be copied into public artifacts."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "jp-post-postal-code-data",
+      "provider": "Japan Post Co., Ltd.",
+      "source_url": "https://www.post.japanpost.jp/service/search/zipcode/download/",
+      "role": [
+        "official_postal_code_to_locality_assignment",
+        "official_large_user_postal_assignment",
+        "monthly_add_delete_change_feed"
+      ],
+      "production_scope": "postal codes, locality labels, assignment flags, and large-user records; no polygon boundary",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_source_specific_open",
+      "terms_note": "The source documentation states that Japan Post does not claim copyright in the postal code data and permits free distribution. Pin the exact documentation and limit that conclusion to the postal code data named there.",
+      "expected_update_cadence": "monthly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin_source_release_and_checksum",
+        "pin_terms_snapshot",
+        "classify_regular_partial_multi_town_large_user_and_fallback_records"
+      ],
+      "prohibited_claims": [
+        "official_postal_polygon",
+        "building_or_house_number_assignment",
+        "deliverability_guarantee"
+      ]
+    },
+    {
+      "source_id": "digital-agency-abr-town-master",
+      "provider": "Digital Agency, Government of Japan",
+      "source_url": "https://www.digital.go.jp/policies/base_registry_address",
+      "role": [
+        "canonical_municipality_and_town_aza_identifiers",
+        "canonical_names_and_alias_normalization",
+        "address_normalization_reference"
+      ],
+      "production_scope": "The current production baseline is town/aza textual data. Lower-level and geographic products require separate readiness and terms review.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "none",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "The ABR terms generally apply the Public Data License 1.0 unless otherwise stated. ABR cadastral products also inherit the registry-map terms and are not covered by this town-master profile.",
+      "expected_update_cadence": "source-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin_official_release_and_known-record-cautions",
+        "preserve_abr_town_id_across_aliases",
+        "do_not_promote_legacy_trial_lower-level-masters_without_fresh_review"
+      ],
+      "prohibited_claims": [
+        "postal_assignment_authority",
+        "production_town_polygon_without_a_geometry_source",
+        "nationally_complete_block_residence_or-cadastral-coverage"
+      ]
+    },
+    {
+      "source_id": "jp-municipal-civic-addressing",
+      "provider": "Applicable Japanese municipality or special ward",
+      "source_url": null,
+      "role": [
+        "official_residential-display-area_status",
+        "official_civic_block_symbol",
+        "official_residence_number_and_change_notice",
+        "authoritative_new-building-address-assignment"
+      ],
+      "production_scope": "municipality-specific residential-display records and notices",
+      "assignment_authority": "official_municipal_civic_address",
+      "geometry_authority": "official_municipal_civic_geometry",
+      "redistribution_class": "R3_review_required",
+      "terms_note": "Publication format, coverage, update process, and license differ by municipality. Use only a named dataset or agreement reviewed for the target release.",
+      "expected_update_cadence": "event-driven-or-municipality-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record_municipality_dataset_or-agreement",
+        "separate_block_residence_and-entrance-observations",
+        "record_effective_date_of-each-change"
+      ],
+      "prohibited_claims": [
+        "national_coverage",
+        "parcel_equivalence",
+        "resident_or-occupant-identity"
+      ]
+    },
+    {
+      "source_id": "mlit-plateau-building-models",
+      "provider": "Project PLATEAU and the publishing local government",
+      "source_url": "https://www.mlit.go.jp/plateau/open-data/",
+      "role": [
+        "building_footprint_and-3d-geometry",
+        "source-provided-building-name_or-address_when_present",
+        "building_candidate_for-large-user-and-residence-linkage"
+      ],
+      "production_scope": "city-specific 3D city model releases; attributes and freshness vary by city and release",
+      "assignment_authority": "none",
+      "geometry_authority": "official_3d_city_model_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "PLATEAU publishes open-data terms including attribution-based licenses. Pin the license and attribution for each city model release.",
+      "expected_update_cadence": "city-specific-usually-one-to-five-years",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin_city_model_release_and-license",
+        "measure_name_and-address-attribute-coverage",
+        "version_building-identifiers_by-source-release"
+      ],
+      "prohibited_claims": [
+        "official_postal_assignment",
+        "official_residence_number_assignment",
+        "building_name_when-name-attribute-is-absent",
+        "national_current-building-coverage"
+      ]
+    },
+    {
+      "source_id": "moj-registry-map",
+      "provider": "Ministry of Justice, Government of Japan",
+      "source_url": "https://www.moj.go.jp/MINJI/minji05_00494.html",
+      "role": [
+        "parcel_geometry",
+        "land_number_and-map-classification",
+        "cadastral-path-evidence"
+      ],
+      "production_scope": "registry maps and maps equivalent to registry maps; coordinate availability and map quality vary",
+      "assignment_authority": "official_land_registry",
+      "geometry_authority": "official_cadastral_geometry",
+      "redistribution_class": "R2_source_specific_open",
+      "terms_note": "The registry-map terms, source attribution, and edited-or-transformed notice must accompany public derivatives. A certificate or current registry lookup remains distinct from the open snapshot.",
+      "expected_update_cadence": "source-release-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin_registry-map-terms-and-source-release",
+        "retain_map-kind-and-coordinate-quality",
+        "keep-parcel-to-building-links-many-to-many"
+      ],
+      "prohibited_claims": [
+        "civic_residence_number",
+        "building_name_or-owner",
+        "postal_deliverability",
+        "survey_or-legal-certificate-equivalence"
+      ]
+    },
+    {
+      "source_id": "gsi-fundamental-geospatial-data",
+      "provider": "Geospatial Information Authority of Japan",
+      "source_url": "https://service.gsi.go.jp/kiban/app/",
+      "role": [
+        "town_aza_or-block-boundary-support",
+        "building-outline-support",
+        "national-map-alignment-and-quality-check"
+      ],
+      "production_scope": "fundamental geospatial features with feature-specific coverage, scale, age, and source-survey constraints",
+      "assignment_authority": "none",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R3_review_required",
+      "terms_note": "GSI content terms apply, and Survey Act approval may be required for reproduction or use. Do not assume that a downloadable feature is automatically publishable in this repository.",
+      "expected_update_cadence": "mesh-and-feature-specific",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "complete-survey-act-and-redistribution-review",
+        "record-source-scale-date-and-coverage",
+        "isolate-gsi-derived-artifacts-until-approved"
+      ],
+      "prohibited_claims": [
+        "postal_or-civic-assignment",
+        "building_identity_from-outline-only",
+        "uniform_national_freshness"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "open-core",
+      "rule": "Only mutually compatible, release-cleared inputs and complete attribution lineage."
+    },
+    {
+      "id": "moj-extra-terms",
+      "rule": "Parcel-derived artifacts carrying the registry-map source-specific terms."
+    },
+    {
+      "id": "gsi-approved",
+      "rule": "GSI-derived artifacts only after the required review or approval is recorded."
+    },
+    {
+      "id": "validation-only",
+      "rule": "Restricted evidence may score an artifact but must never be embedded in or reconstructable from it."
+    }
+  ]
+}

@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agid:schema:postal-context-graph:v0.1",
+  "title": "AGID Postal Context Graph v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "release",
+    "nodes",
+    "assertions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "postal-context-graph/v0.1"
+    },
+    "release": {
+      "$ref": "#/$defs/releaseManifest"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assertion"
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "timeRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from"
+      ],
+      "properties": {
+        "from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "releaseArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "mediaType",
+        "digest"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?![A-Za-z][A-Za-z0-9+.-]*:)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+        },
+        "downloadUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recordCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "licenseRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "releaseManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "$comment": "manifestDigest is calculated over canonical JSON with manifestDigest omitted, or supplied as a detached catalog digest.",
+      "required": [
+        "schemaVersion",
+        "repositoryId",
+        "countryCode",
+        "releaseId",
+        "policyVersion",
+        "releasedAt",
+        "validTime",
+        "manifestDigest",
+        "artifacts"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "postal-context-graph/v0.1"
+        },
+        "repositoryId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repositoryUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "countryCode": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "releaseId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "previousReleaseId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "releasedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validTime": {
+          "$ref": "#/$defs/timeRange"
+        },
+        "manifestDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/releaseArtifact"
+          }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "featureKind",
+        "geometryType"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "postal_feature",
+            "administrative_area",
+            "locality",
+            "thoroughfare",
+            "address_record",
+            "address_point",
+            "parcel",
+            "building",
+            "building_part",
+            "entrance",
+            "unit",
+            "organization",
+            "delivery_endpoint",
+            "agid_cell",
+            "query_point",
+            "recipient"
+          ]
+        },
+        "featureKind": {
+          "enum": [
+            "query_point",
+            "standard_area",
+            "large_user",
+            "po_box",
+            "organization",
+            "route",
+            "virtual_area",
+            "building",
+            "building_part",
+            "entrance",
+            "premise",
+            "locality",
+            "street",
+            "block",
+            "cadastral",
+            "administrative",
+            "country",
+            "unknown"
+          ]
+        },
+        "geometryType": {
+          "enum": [
+            "polygon",
+            "multipolygon",
+            "point",
+            "linestring",
+            "geometrycollection",
+            "none"
+          ]
+        },
+        "countryCode": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "agidCellId": {
+          "type": "string"
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "restricted",
+            "private"
+          ]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "sourceType",
+        "assignmentAuthority",
+        "geometryAuthority"
+      ],
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceType": {
+          "enum": [
+            "official",
+            "open",
+            "commercial",
+            "derived",
+            "virtual",
+            "synthetic"
+          ]
+        },
+        "assignmentAuthority": {
+          "enum": [
+            "official_postal_operator",
+            "official_address_registry",
+            "official_municipal_civic_address",
+            "official_land_registry",
+            "derived_spatial_assignment",
+            "virtual_assignment",
+            "synthetic_fixture_assignment",
+            "none"
+          ]
+        },
+        "geometryAuthority": {
+          "enum": [
+            "official_postal_geometry",
+            "official_address_registry_geometry",
+            "official_municipal_civic_geometry",
+            "official_cadastral_geometry",
+            "official_mapping_geometry",
+            "official_3d_city_model_geometry",
+            "derived_geometry",
+            "virtual_geometry",
+            "synthetic_fixture_geometry",
+            "none"
+          ]
+        },
+        "sourceVersion": {
+          "type": "string"
+        },
+        "sourceDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "licenseId": {
+          "type": "string"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "authoritative",
+            "verified",
+            "derived",
+            "candidate",
+            "disputed",
+            "unknown"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "accuracyMeters": {
+          "type": "number",
+          "minimum": 0
+        },
+        "validatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fromNodeId",
+        "toNodeId",
+        "relation",
+        "validTime",
+        "knownTime",
+        "source",
+        "method",
+        "quality"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fromNodeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "toNodeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation": {
+          "enum": [
+            "addresses",
+            "locates",
+            "stands_on",
+            "part_of",
+            "accesses",
+            "occupies",
+            "receives_mail_at",
+            "postal_assigned",
+            "postal_contains",
+            "delivery_served_by",
+            "admin_within",
+            "same_as",
+            "probable_same_as",
+            "supersedes",
+            "split_into",
+            "merged_into",
+            "covered_by_agid"
+          ]
+        },
+        "validTime": {
+          "$ref": "#/$defs/timeRange"
+        },
+        "knownTime": {
+          "$ref": "#/$defs/timeRange"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "method": {
+          "enum": [
+            "explicit_assignment",
+            "direct_source_link",
+            "official_crosswalk",
+            "source_relation",
+            "geometry_contains",
+            "geometry_intersects",
+            "nearest",
+            "derived",
+            "virtual_grid"
+          ]
+        },
+        "quality": {
+          "$ref": "#/$defs/quality"
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "postal_lookup",
+              "display",
+              "delivery",
+              "navigation",
+              "cadastral",
+              "validation"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

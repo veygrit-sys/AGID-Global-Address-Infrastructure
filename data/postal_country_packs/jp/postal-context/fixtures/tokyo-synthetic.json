@@ -1,0 +1,327 @@
+{
+  "schema_version": "agid-postal-jp-synthetic-fixtures-v0.1",
+  "fixture_set_id": "tokyo-like-contract-cases-v0.1",
+  "country_code": "JP",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "架空",
+    "rule": "No value in this fixture may be interpreted as a real Japanese address, official assignment, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-postal-operator",
+      "models_source_role": "jp-post-postal-code-data",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-address-registry",
+      "models_source_role": "digital-agency-abr-town-master",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-municipality",
+      "models_source_role": "jp-municipal-civic-addressing",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-building-model",
+      "models_source_role": "mlit-plateau-building-models",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-registry-map",
+      "models_source_role": "moj-registry-map",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "jp-syn-regular-whole-town",
+      "exception_class": "regular_whole_town",
+      "synthetic_address": {
+        "prefecture": "架空都",
+        "municipality": "架空中央区",
+        "town_aza": "架空検証町一丁目",
+        "postal_code": "000-0001"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "postal_code_serves_whole_town",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-municipality",
+          "assertion": "town_boundary",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0]
+              ]
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "relationship": "contains",
+        "geometry_type": "polygon",
+        "assignment_authority": "synthetic_fixture_assignment",
+        "geometry_authority": "synthetic_fixture_geometry",
+        "production_analogue": {
+          "assignment_authority": "official_postal_operator",
+          "geometry_authority": "derived_geometry"
+        },
+        "must_not_assert": [
+          "official_postal_geometry",
+          "building",
+          "residence_number",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "jp-syn-partial-town",
+      "exception_class": "partial_town",
+      "synthetic_address": {
+        "prefecture": "架空都",
+        "municipality": "架空中央区",
+        "town_aza": "架空範囲町二丁目",
+        "postal_code": "000-0002",
+        "assignment_note": "架空の番地範囲のみ"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "postal_code_serves_unknown_subset_of_town",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-address-registry",
+          "assertion": "canonical_town_id_only",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "relationship": "partial_unknown",
+        "geometry_type": "none",
+        "assignment_authority": "synthetic_fixture_assignment",
+        "geometry_authority": "none",
+        "promotion_blocked_until": "licensed_atomic_block_parcel_or_address_evidence",
+        "must_not_assert": [
+          "town_wide_contains",
+          "derived_voronoi_as_authoritative",
+          "residence_number",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "jp-syn-large-user-building",
+      "exception_class": "large_user",
+      "synthetic_address": {
+        "prefecture": "架空都",
+        "municipality": "架空中央区",
+        "town_aza": "架空業務町三丁目",
+        "organization": "架空大口事業所",
+        "postal_code": "000-0003"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "large_user_postal_assignment",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-building-model",
+          "assertion": "matched_named_building_geometry",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [20, 20],
+                [22, 20],
+                [22, 24],
+                [20, 24],
+                [20, 20]
+              ]
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "feature_kind": "large_user",
+        "relationship": "assigned_to",
+        "geometry_type": "polygon",
+        "assignment_authority": "synthetic_fixture_assignment",
+        "geometry_authority": "synthetic_fixture_geometry",
+        "area_claim": false,
+        "must_not_assert": [
+          "neighborhood_postal_area",
+          "all_building_occupants",
+          "surrounding_deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "jp-syn-residential-display",
+      "exception_class": "residential_display",
+      "synthetic_address": {
+        "prefecture": "架空都",
+        "municipality": "架空中央区",
+        "town_aza": "架空住居町四丁目",
+        "civic_block_symbol": "12",
+        "residence_number": "8",
+        "postal_code": "000-0004"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-municipality",
+          "assertion": "civic_block_and_residence_number_assigned_to_entrance",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "entrance": {
+            "type": "Point",
+            "coordinates": [31, 33]
+          }
+        },
+        {
+          "source_id": "synthetic-building-model",
+          "assertion": "building_contains_or_touches_entrance",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [31, 31],
+                [34, 31],
+                [34, 35],
+                [31, 35],
+                [31, 31]
+              ]
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "address_scheme": "residential_display",
+        "relationship": "addressed_by",
+        "assignment_authority": "synthetic_fixture_assignment",
+        "geometry_authority": "synthetic_fixture_geometry",
+        "building_link_method": "entrance_containment_or_within_threshold",
+        "must_not_assert": [
+          "cadastral_land_number",
+          "unit_or_occupant",
+          "building_name_when_source_name_is_absent"
+        ]
+      }
+    },
+    {
+      "fixture_id": "jp-syn-cadastral-building-span",
+      "exception_class": "cadastral",
+      "synthetic_address": {
+        "prefecture": "架空都",
+        "municipality": "架空中央区",
+        "town_aza": "架空地番町",
+        "land_numbers": [
+          "甲1",
+          "甲2"
+        ],
+        "postal_code": "000-0005"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-registry-map",
+          "assertion": "two_cadastral_parcels",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "geometries": [
+            {
+              "land_number": "甲1",
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [50, 50],
+                  [55, 50],
+                  [55, 60],
+                  [50, 60],
+                  [50, 50]
+                ]
+              ]
+            },
+            {
+              "land_number": "甲2",
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [55, 50],
+                  [60, 50],
+                  [60, 60],
+                  [55, 60],
+                  [55, 50]
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "source_id": "synthetic-building-model",
+          "assertion": "one_building_spans_two_parcels",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [53, 52],
+                [58, 52],
+                [58, 58],
+                [53, 58],
+                [53, 52]
+              ]
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "address_scheme": "cadastral",
+        "relationship": "located_on",
+        "assignment_authority": "synthetic_fixture_assignment",
+        "geometry_authority": "synthetic_fixture_geometry",
+        "building_to_parcel_cardinality": "many_to_many",
+        "must_not_assert": [
+          "residence_number_equals_land_number",
+          "single_parcel_building_identity",
+          "building_owner_or_occupant",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

@@ -3,3 +3,4 @@ export const AGID_CONTRACTS_WORKSPACE_BRIDGE_VERSION =
 
 export * from '../../../src/lib/agidContract';
 export * from '../../../src/address/postalSourcePromotionGate';
+export * from '../../../src/lib/postalContextGraph';
