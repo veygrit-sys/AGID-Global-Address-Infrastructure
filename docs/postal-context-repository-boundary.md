@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -671,6 +671,36 @@ permitted fields, endpoint, schema, coverage, validity, CRS and digest.
 Administrative/statistical boundaries and postal evidence remain separate
 from territorial policy, never determine sovereignty and never conceal an
 explicit coverage gap.
+
+### `agid-postal-sk`
+
+The Slovakia repository owns pinned Slovenská pošta PSČ search receipts and
+operator-assignment lineage, Ministry of Interior Register adries identifiers
+and address points, individually licensed ZBGIS/INSPIRE buildings,
+administrative units and cadastral parcels, derived routing-locality surfaces,
+synthetic fixtures and release validation. `NNN NN` is a display and
+normalization rule, not proof that a code is current, deliverable or spatially
+exhaustive.
+
+Slovenská pošta access-point XML describes post offices, PoštaPOINTs and
+BalíkoBOXes. Those operational/service records remain distinct from PSČ
+assignment and never become postal polygons merely because they have
+coordinates. The public PSČ search is reference-ready for exact verification;
+a production bulk artifact still requires a separately pinned, redistributable
+source receipt.
+
+No nationwide official Slovenská pošta PSČ polygon is assumed. A surface built
+from verified assignments and Register adries points is explicitly `derived`,
+records its method and coverage, and is returned only under derived-geometry
+policy. Sparse areas remain coverage gaps; nearest-code filling is prohibited.
+
+Exact building output requires a Register adries building relationship, a
+common authoritative building identifier shared with ZBGIS, or a reviewed
+explicit crosswalk. Footprint containment, parcel overlap and proximity are
+candidate evidence only. Cadastral parcels validate location relationships but
+do not infer the building, postal perimeter, owner, rightsholder, occupant or
+title. Administrative boundaries supply context and clipping only; they do not
+prove PSČ assignment or sovereignty.
 
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

@@ -238,6 +238,13 @@ export type EuropeOpenGeoSourceId =
   | 'slovenska-posta-psc'
   | 'zbgis-slovakia'
   | 'slovakia-address-register'
+  | 'slovak-post-postcode-search'
+  | 'slovak-post-access-point-xml'
+  | 'slovakia-register-addresses-portal'
+  | 'slovakia-register-addresses-openapi'
+  | 'zbgis-slovakia-inspire-buildings'
+  | 'zbgis-slovakia-administrative-units'
+  | 'zbgis-slovakia-cadastral-parcels'
   | 'ancpi-romania-geoportal'
   | 'romania-open-data'
   | 'cadastre-bulgaria'
@@ -2452,6 +2459,70 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'Slovak open-data address and register reference for municipality, street, and building validation.',
   },
+  'slovak-post-postcode-search': {
+    id: 'slovak-post-postcode-search',
+    name: 'Slovenská pošta PSČ Search',
+    url: 'https://www.posta.sk/psc',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit PSČ search by street and municipality; a result is not an official postcode polygon, and public search is not an open bulk licence.',
+  },
+  'slovak-post-access-point-xml': {
+    id: 'slovak-post-access-point-xml',
+    name: 'Slovenská pošta Access Point XML',
+    url: 'https://www.posta.sk/podpora/dokumentacia-pre-vyvojarov',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Regularly updated XML for post offices, PoštaPOINT locations, and BalíkoBOX access points is operational service context, not a postcode area, address register, or delivery guarantee.',
+  },
+  'slovakia-register-addresses-portal': {
+    id: 'slovakia-register-addresses-portal',
+    name: 'Slovakia Register adries',
+    url: 'https://pes.minv.sk/wps/wcm/connect/sk/site/main/zivotne-situacie/Register%2Badries/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The Ministry of Interior describes a central, data-consistent reference register for addresses of physical buildings; address identity is not a footprint, current PSČ assignment, or delivery guarantee.',
+  },
+  'slovakia-register-addresses-openapi': {
+    id: 'slovakia-register-addresses-openapi',
+    name: 'Register adries OpenAPI and Spatial Services',
+    url: 'https://rageo.minv.sk/openapi/docs/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address point, street, geocoding, initial-download, and building identifier services can support an explicit register relation; nearest or contained geometry is not an exact address-building link.',
+  },
+  'zbgis-slovakia-inspire-buildings': {
+    id: 'zbgis-slovakia-inspire-buildings',
+    name: 'ZBGIS Slovakia INSPIRE Buildings',
+    url: 'https://www.skgeodesy.sk/vugk/produkty-sluzby/inspire/ukladacie-sluzby/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official INSPIRE building geometry requires the exact dataset-specific licence, identifier, schema, coverage, validity, CRS, and digest. Exact linkage needs a register relation, common authoritative identifier, or reviewed crosswalk; proximity remains candidate evidence.',
+  },
+  'zbgis-slovakia-administrative-units': {
+    id: 'zbgis-slovakia-administrative-units',
+    name: 'ZBGIS Slovakia Administrative Units',
+    url: 'https://www.skgeodesy.sk/gku/produkty-sluzby/na-stiahnutie/zbgis.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0',
+    notes: 'Official CC BY 4.0 region, district, municipality, and cadastral-territory boundaries provide administrative context but not postcode membership, address identity, or delivery coverage.',
+  },
+  'zbgis-slovakia-cadastral-parcels': {
+    id: 'zbgis-slovakia-cadastral-parcels',
+    name: 'ZBGIS Slovakia INSPIRE Cadastral Parcels',
+    url: 'https://www.skgeodesy.sk/vugk/produkty-sluzby/inspire/ukladacie-sluzby/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'A cadastral parcel is not a building, address link, or postcode area and never authorizes publication of an owner, rightsholder, occupant, title, encumbrance, or restriction record.',
+  },
   'ancpi-romania-geoportal': {
     id: 'ancpi-romania-geoportal',
     name: 'ANCPI Romania Geoportal',
@@ -3213,7 +3284,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   HU: ['posta-hu', 'lechner-hungary-geodata', 'hungary-public-road-data'],
   PL: ['poczta-polska', 'geoportal-gov-pl', 'gus-teryt-poland'],
   SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia'],
-  SK: ['slovenska-posta-psc', 'zbgis-slovakia', 'slovakia-address-register'],
+  SK: ['slovenska-posta-psc', 'zbgis-slovakia', 'slovakia-address-register', 'slovak-post-postcode-search', 'slovak-post-access-point-xml', 'slovakia-register-addresses-portal', 'slovakia-register-addresses-openapi', 'zbgis-slovakia-inspire-buildings', 'zbgis-slovakia-administrative-units', 'zbgis-slovakia-cadastral-parcels'],
   BQ: ['zippopotam'],
   AW: ['zippopotam'],
   CW: ['zippopotam'],

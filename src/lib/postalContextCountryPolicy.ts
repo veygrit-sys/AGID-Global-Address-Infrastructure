@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -69,6 +69,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   },
   CZ: {
     countryCode: 'CZ',
+    postalCodeFormat: 'NNN NN',
+    fullCodeGeometrySemantics: 'routing-locality-first',
+  },
+  SK: {
+    countryCode: 'SK',
     postalCodeFormat: 'NNN NN',
     fullCodeGeometrySemantics: 'routing-locality-first',
   },
@@ -253,6 +258,14 @@ export function normalizeCzechiaPostalCode(value: unknown) {
   return `${normalized.slice(0, 3)} ${normalized.slice(3)}`;
 }
 
+export function normalizeSlovakiaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  if (!/^\d{5}$/.test(normalized)) return null;
+  return `${normalized.slice(0, 3)} ${normalized.slice(3)}`;
+}
+
 export function normalizeDenmarkPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -406,6 +419,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'CH') return normalizeSwitzerlandPostalCode(value);
   if (normalizedCountry === 'DE') return normalizeGermanyPostalCode(value);
   if (normalizedCountry === 'CZ') return normalizeCzechiaPostalCode(value);
+  if (normalizedCountry === 'SK') return normalizeSlovakiaPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);
   if (normalizedCountry === 'MT') return normalizeMaltaPostalCode(value);
   if (normalizedCountry === 'MC') return normalizeMonacoPostalCode(value);

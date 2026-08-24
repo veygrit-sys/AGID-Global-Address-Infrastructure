@@ -351,6 +351,40 @@ test('separates Georgia operator, address, building, parcel, administrative, and
   assert.equal(addressOnly.tier, 'weak');
 });
 
+test('separates Slovakia operator, access-point, address, building, parcel, and administrative authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('SK');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('slovak-post-postcode-search')?.authority, 'postal-operator');
+  assert.equal(byId.get('slovak-post-postcode-search')?.trustTier, 'authoritative');
+  assert.match(byId.get('slovak-post-postcode-search')?.notes.join(' ') ?? '', /five-digit.*street.*municipality.*not an open bulk.*not an official.*polygon.*delivery/i);
+  assert.equal(byId.get('slovak-post-access-point-xml')?.depth, 'delivery-point');
+  assert.equal(byId.get('slovak-post-access-point-xml')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('slovak-post-access-point-xml')?.notes.join(' ') ?? '', /post offices.*PoštaPOINT.*BalíkoBOX.*not a PSČ assignment.*postcode area/i);
+  assert.equal(byId.get('slovakia-register-addresses-portal')?.depth, 'address');
+  assert.equal(byId.get('slovakia-register-addresses-portal')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('slovakia-register-addresses-portal')?.notes.join(' ') ?? '', /central.*data-consistent.*physical buildings.*not.*bulk release.*footprint/i);
+  assert.equal(byId.get('slovakia-register-addresses-openapi')?.depth, 'building');
+  assert.match(byId.get('slovakia-register-addresses-openapi')?.notes.join(' ') ?? '', /address points.*building identifiers.*endpoint.*licence.*nearest.*not an exact building link/i);
+  assert.equal(byId.get('zbgis-slovakia-inspire-buildings')?.depth, 'building');
+  assert.match(byId.get('zbgis-slovakia-inspire-buildings')?.notes.join(' ') ?? '', /common authoritative identifier.*proximity.*candidate-only.*dataset-specific licence/i);
+  assert.equal(byId.get('zbgis-slovakia-administrative-units')?.depth, 'geo-only');
+  assert.match(byId.get('zbgis-slovakia-administrative-units')?.notes.join(' ') ?? '', /CC BY 4\.0.*do not create PSČ membership.*delivery coverage/i);
+  assert.equal(byId.get('zbgis-slovakia-cadastral-parcels')?.depth, 'geo-only');
+  assert.match(byId.get('zbgis-slovakia-cadastral-parcels')?.notes.join(' ') ?? '', /parcel is not a building.*address link.*postcode area.*owners.*rightsholders/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'SK',
+    source: 'Slovenská pošta PSČ Search',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const accessPointOnly = classifyPostalSourceTrust({
+    countryCode: 'SK',
+    source: 'Slovenská pošta Access Point XML',
+  });
+  assert.equal(accessPointOnly.strength, 'weak');
+  assert.equal(accessPointOnly.tier, 'weak');
+});
+
 test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
   const sources = getOfficialPostalSourcesForCountry('CY');
   const byId = new Map(sources.map(source => [source.id, source]));

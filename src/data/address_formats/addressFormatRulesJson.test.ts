@@ -916,11 +916,39 @@ test('Eastern Europe address JSON files expose addressRules metadata and postal 
   assert.equal(loadFormat('MK').postalCode?.api, 'https://datahub.io/logistics/postal-codes-mk');
 });
 
+test('Slovakia address metadata separates postal, address, building, and parcel evidence', () => {
+  const format = loadFormat('SK');
+  const rules = loadRules('SK');
+
+  assert.equal(format.postalCode?.api, 'https://www.posta.sk/psc');
+  assert.match(format.postalCode?.source ?? '', /Slovenská pošta.*Register adries.*ZBGIS/i);
+  assert.match(
+    rules.postalCode?.label ?? '',
+    /5 digits.*operator assignment.*derived.*Register adries.*building.*parcel.*separate/i,
+  );
+  assert.deepEqual(rules.regionalHierarchy, [
+    'region',
+    'district',
+    'municipality',
+    'municipalityPart',
+    'streetOrPublicSpace',
+    'descriptiveAndOrientationNumber',
+    'registeredAddressPoint',
+    'explicitRegisterBuilding',
+  ]);
+});
+
 test('Central, Eastern, and Balkan Europe metadata exposes national geospatial sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     PL: ['geoportal-gov-pl', 'gus-teryt-poland'],
     CZ: ['cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
-    SK: ['zbgis-slovakia', 'slovakia-address-register'],
+    SK: [
+      'zbgis-slovakia', 'slovakia-address-register',
+      'slovak-post-postcode-search', 'slovak-post-access-point-xml',
+      'slovakia-register-addresses-portal', 'slovakia-register-addresses-openapi',
+      'zbgis-slovakia-inspire-buildings', 'zbgis-slovakia-administrative-units',
+      'zbgis-slovakia-cadastral-parcels',
+    ],
     HU: ['lechner-hungary-geodata', 'hungary-public-road-data'],
     SI: ['eprostor-slovenia', 'gurs-slovenia'],
     HR: ['dgu-croatia-geoportal', 'croatia-cadastre'],
