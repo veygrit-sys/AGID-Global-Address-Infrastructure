@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -111,6 +111,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'AZ',
     postalCodeFormat: 'AZNNNN',
     fullCodeGeometrySemantics: 'routing-locality-first',
+  },
+  AL: {
+    countryCode: 'AL',
+    postalCodeFormat: 'NNNN',
+    fullCodeGeometrySemantics: 'delivery-network-first',
   },
 };
 
@@ -274,6 +279,13 @@ export function normalizeAzerbaijanPostalCode(value: unknown) {
   return `AZ${digits}`;
 }
 
+export function normalizeAlbaniaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{4}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
@@ -296,5 +308,6 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'LT') return normalizeLithuaniaPostalCode(value);
   if (normalizedCountry === 'LI') return normalizeLiechtensteinPostalCode(value);
   if (normalizedCountry === 'AZ') return normalizeAzerbaijanPostalCode(value);
+  if (normalizedCountry === 'AL') return normalizeAlbaniaPostalCode(value);
   return null;
 }

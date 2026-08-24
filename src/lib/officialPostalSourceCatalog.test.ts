@@ -186,6 +186,28 @@ test('separates Azerbaijan postal, address-register, cadastral, and catalog auth
   assert.equal(classification.strength, 'strong');
   assert.equal(classification.tier, 'authoritative');
 });
+test('separates Albania postal, address-system, cadastral-building, and geoportal authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('AL');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('posta-shqiptare-postcodes')?.authority, 'postal-operator');
+  assert.equal(byId.get('posta-shqiptare-postcodes')?.trustTier, 'authoritative');
+  assert.match(byId.get('posta-shqiptare-postcodes')?.notes.join(' ') ?? '', /not a canonical postcode polygon/i);
+  assert.equal(byId.get('albania-national-address-system')?.depth, 'address');
+  assert.equal(byId.get('albania-national-address-system')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('albania-national-address-system')?.notes.join(' ') ?? '', /not automatically a cadastral footprint/i);
+  assert.equal(byId.get('ashk-albania-cadastral-buildings')?.depth, 'building');
+  assert.equal(byId.get('ashk-albania-cadastral-buildings')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('ashk-albania-cadastral-buildings')?.notes.join(' ') ?? '', /explicit common identifier/i);
+  assert.equal(byId.get('asig-albania')?.depth, 'geo-only');
+  assert.equal(byId.get('asig-albania')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('asig-albania')?.notes.join(' ') ?? '', /not postal assignment authority/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'AL',
+    source: 'Posta Shqiptare postcode directory',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
 
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({

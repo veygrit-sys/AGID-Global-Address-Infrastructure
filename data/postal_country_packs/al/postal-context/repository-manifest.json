@@ -1,0 +1,71 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-al",
+    "country_code": "AL",
+    "country_name": "Albania",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Kodi postar",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "delivery_network_assignment_with_optional_derived_surface",
+    "assignment_rule": "Posta Shqiptare postcode pages establish a four-digit post-office or branch assignment. UPU format guidance and four-digit syntax do not establish a current allocation.",
+    "perimeter_rule": "No nationwide official postcode-polygon source is assumed. A surface is derived only from rights-cleared, versioned official address membership and compatible boundaries and remains explicitly derived.",
+    "address_rule": "The National Address System supplies official address and address-building context through ASIG-published services. Service visibility is not treated as a bulk redistribution license.",
+    "building_rule": "Exact building display requires the same official address or cadastral object identifier, or a reviewed explicit crosswalk. Address points, parcels, containment, and proximity remain candidates.",
+    "administrative_rule": "ASIG administrative geometry supplies jurisdiction and clipping context but never creates postal membership.",
+    "territory_rule": "Postal assignment never determines sovereignty or a legal boundary. Albania and Kosovo remain separate country packs, and no neighboring feature receives AL identity from language, proximity, or routing evidence."
+  },
+  "temporal_model": {
+    "valid_time": "Postal, address, cadastral, building, and boundary validity when supplied by the source.",
+    "known_time": "Source publication, capture, ingest, correction, and release timestamps retained independently.",
+    "history_rule": "Later postal or registry evidence appends a versioned assertion and never silently rewrites an earlier release."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each postcode assignment references a pinned Posta Shqiptare page or permitted release and retains office or branch class, locality, capture time, rights, and digest." },
+    { "id": "derived-perimeter", "pass": "Every derived surface retains member addresses, algorithm, parameters, boundary clips, validation metrics, source releases, rights, and digest and is never labelled official." },
+    { "id": "official-address", "pass": "Each address assertion retains its official object identifier, hierarchy, status, coordinate provenance, release, and permitted public fields." },
+    { "id": "building-link", "pass": "An exact building has the same official address/cadastral object identifier or a reviewed explicit crosswalk; spatial proximity is candidate-only." },
+    { "id": "coverage-and-border", "pass": "Each ASIG/ASHK layer retains coverage and vintage; no unsourced gap is filled and no neighboring-country feature receives AL identity." },
+    { "id": "privacy", "pass": "No recipient, resident, owner, tenant, occupant, phone, credential, title, civil-status, or protected cadastral field is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "post-office-or-branch-point-presented-as-postcode-area",
+      "derived-surface-presented-as-official-postcode-boundary",
+      "special-routing-record-given-invented-polygon",
+      "address-point-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postal-evidence-presented-as-sovereignty-or-boundary-evidence",
+      "kosovo-or-neighboring-feature-published-with-al-identity",
+      "postcode-stored-as-number",
+      "recipient-owner-occupant-civil-status-or-protected-cadastral-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "recipient_identity", "occupancy", "ownership", "building_identity_from_proximity", "every_postcode_is_a_polygon", "special_code_is_a_residential_area", "sovereignty_or_legal_boundary", "survey_certification"
+  ]
+}

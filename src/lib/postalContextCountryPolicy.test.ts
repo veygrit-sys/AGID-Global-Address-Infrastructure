@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeAlbaniaPostalCode,
   normalizeAzerbaijanPostalCode,
   normalizeAustraliaPostalCode,
   normalizeLatviaPostalCode,
@@ -136,6 +137,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeAzerbaijanPostalCode('AZ-1010'), null);
   assert.equal(normalizeAzerbaijanPostalCode('AZ101'), null);
   assert.equal(normalizePostalContextPostalCode('az', '1010'), 'AZ1010');
+  assert.equal(normalizeAlbaniaPostalCode('１００１'), '1001');
+  assert.equal(normalizeAlbaniaPostalCode('10 01'), '1001');
+  assert.equal(normalizeAlbaniaPostalCode('10-01'), null);
+  assert.equal(normalizeAlbaniaPostalCode('AL1001'), null);
+  assert.equal(normalizePostalContextPostalCode('al', '00 01'), '0001');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -255,4 +261,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AZ.postalCodeFormat, 'AZNNNN');
+  assert.equal(isPostalContextCountryCode('AL'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.AL.fullCodeGeometrySemantics,
+    'delivery-network-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AL.postalCodeFormat, 'NNNN');
 });

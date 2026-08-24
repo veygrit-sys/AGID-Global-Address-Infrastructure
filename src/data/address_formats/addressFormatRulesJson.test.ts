@@ -115,8 +115,8 @@ type AddressRules = {
 
 type AddressFormatFixture = {
   openSourceIds?: string[];
-  native?: { fields: { key: string; label: string; required?: boolean }[] };
-  english?: { fields: { key: string; label: string; required?: boolean }[] };
+  native?: { addressFormat: string; fields: { key: string; label: string; required?: boolean }[] };
+  english?: { addressFormat: string; fields: { key: string; label: string; required?: boolean }[] };
   domestic?: Record<string, { name?: string; addressFormat: string; fields: { key: string; label: string; placeholder?: string }[] }>;
   international?: Record<string, { name?: string; addressFormat: string; fields: { key: string; label: string; placeholder?: string }[] }>;
   postalCode?: { format?: string; regex?: string; api?: string | null; source?: string };
@@ -825,7 +825,18 @@ test('Eastern Europe address JSON files expose addressRules metadata and postal 
 
   assert.deepEqual(loadRules('RO').englishOrder, ['name', 'street', 'houseNumber', 'postcode', 'city', 'country']);
   assert.equal(loadRules('RO').postalCode?.label, '6 digits required');
-  assert.equal(loadRules('AL').postalCode?.label, '4 digits required');
+  assert.match(loadRules('AL').postalCode?.label ?? '', /delivery office.*area requires source evidence/i);
+  assert.equal(loadFormat('AL').postalCode?.api, 'https://www.postashqiptare.al/c/45/kodi-postar');
+  assert.match(loadFormat('AL').postalCode?.source ?? '', /Posta Shqiptare.*National Address System.*ASIG-ASHK/i);
+  assert.equal(loadFormat('AL').native.addressFormat, '{{organization}}\n{{street}} {{houseNumber}}\n{{postcode}}\n{{city}}');
+  assert.deepEqual(loadRules('AL').regionalHierarchy, [
+    'county',
+    'municipality',
+    'administrativeUnit',
+    'cityOrVillage',
+    'street',
+    'buildingEntrance',
+  ]);
   assert.deepEqual(loadRules('BY').languages, [
     { code: 'be', name: 'Belarusian' },
     { code: 'ru', name: 'Russian' },
@@ -863,7 +874,13 @@ test('Central, Eastern, and Balkan Europe metadata exposes national geospatial s
     BA: ['bosnia-geoportal', 'bosnia-cadastre-reference'],
     ME: ['geoportal-montenegro', 'montenegro-cadastre'],
     XK: ['kosovo-geoportal', 'kosovo-cadastre'],
-    AL: ['asig-albania', 'albania-geoportal'],
+    AL: [
+      'posta-shqiptare-postcodes',
+      'albania-national-address-system',
+      'ashk-albania-cadastral-buildings',
+      'asig-albania',
+      'albania-geoportal',
+    ],
     MK: ['katastar-north-macedonia', 'makstat-geodata'],
   };
 

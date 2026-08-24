@@ -229,6 +229,9 @@ export type EuropeOpenGeoSourceId =
   | 'bosnia-cadastre-reference'
   | 'geoportal-montenegro'
   | 'montenegro-cadastre'
+  | 'posta-shqiptare-postcodes'
+  | 'albania-national-address-system'
+  | 'ashk-albania-cadastral-buildings'
   | 'kosovo-geoportal'
   | 'kosovo-cadastre'
   | 'asig-albania'
@@ -2398,23 +2401,50 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Kosovo cadastral agency reference for parcels, municipalities, and settlement validation.',
   },
+  'posta-shqiptare-postcodes': {
+    id: 'posta-shqiptare-postcodes',
+    name: 'Posta Shqiptare Postcodes',
+    url: 'https://www.postashqiptare.al/c/45/kodi-postar',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit post-office and branch assignment reference. An office or branch point is not a canonical postcode polygon, and public pages do not imply bulk reuse rights.',
+  },
+  'albania-national-address-system': {
+    id: 'albania-national-address-system',
+    name: 'Albania National Address System',
+    url: 'https://geoportal.asig.gov.al/sq/sherbimet',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official National Address System and address-building reference published through ASIG. It retains source object identity, while service visibility is not a blanket bulk redistribution license.',
+  },
+  'ashk-albania-cadastral-buildings': {
+    id: 'ashk-albania-cadastral-buildings',
+    name: 'ASHK Albania Cadastral Buildings',
+    url: 'https://geoportal.asig.gov.al/sq/node/2843',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official ASHK cadastral-building and parcel geometry published through ASIG. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; proximity is insufficient.',
+  },
   'asig-albania': {
     id: 'asig-albania',
     name: 'ASIG Albania',
-    url: 'https://geoportal.asig.gov.al/',
+    url: 'https://geoportal.asig.gov.al/sq/sherbimet',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Albanian national geospatial information authority geoportal for spatial data and boundaries.',
+    notes: 'National geospatial service catalog for official administrative boundaries and other public-authority layers. Each layer needs a layer-by-layer owner, license, schema, coverage, vintage, CRS, and digest review.',
   },
   'albania-geoportal': {
     id: 'albania-geoportal',
-    name: 'Albania Open Geodata Reference',
-    url: 'https://geoportal.asig.gov.al/',
+    name: 'ASIG Albania Geographic Names and Transport Reference',
+    url: 'https://geoportal.asig.gov.al/sq/sherbimet',
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Albanian geodata reference for settlements, roads, and administrative geography.',
+    notes: 'Layer-specific validation reference for geographic names, settlements, and transport networks; the portal catalog alone does not establish a reusable license or postal authority.',
   },
   'katastar-north-macedonia': {
     id: 'katastar-north-macedonia',
@@ -2855,7 +2885,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   BA: ['datahub-postal', 'bosnia-geoportal', 'bosnia-cadastre-reference'],
   ME: ['eurostat-gisco-postcodes', 'geoportal-montenegro', 'montenegro-cadastre'],
   XK: ['spotzi-postal-codes', 'kosovo-geoportal', 'kosovo-cadastre'],
-  AL: ['spotzi-postal-codes', 'asig-albania', 'albania-geoportal'],
+  AL: ['posta-shqiptare-postcodes', 'albania-national-address-system', 'ashk-albania-cadastral-buildings', 'asig-albania', 'albania-geoportal'],
   MK: ['datahub-postal', 'katastar-north-macedonia', 'makstat-geodata'],
   CZ: ['ceska-posta-psc', 'ceska-posta-customer-outputs', 'cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
   HR: ['posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],

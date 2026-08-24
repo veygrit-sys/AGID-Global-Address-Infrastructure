@@ -421,6 +421,28 @@ unsourced gaps and disputed classifications. Public artifacts exclude
 recipients, residents, owners, occupants, title records, credentials and all
 protected registry fields.
 
+### `agid-postal-al`
+
+The Albania repository owns pinned Posta Shqiptare postcode-to-office or
+branch evidence, provider-approved National Address System releases,
+permitted ASHK cadastral building geometry, derived postal surfaces, synthetic
+fixtures and release validation. The four-digit UPU convention proves syntax,
+not current assignment. A post-office point is not an official postcode
+polygon, and an interactive ASIG service is not automatically a bulk reuse
+license.
+
+A postcode surface derived from rights-cleared official address membership
+retains its algorithm, members, boundary clips, omissions, uncertainty,
+temporal lineage and rights and is always labelled `derived`. Exact building
+display requires the same official address/cadastral object identifier or a
+reviewed explicit crosswalk; address points, parcels, containment and proximity
+remain candidates. Postal evidence never determines sovereignty or legal
+administrative boundaries. Albania and Kosovo remain separate country packs,
+and shared language, locality names, routing or border proximity cannot assign
+AL country or AGID identity to a neighboring feature. Public artifacts exclude
+recipients, residents, owners, occupants, title records, civil-status fields,
+credentials and protected cadastral attributes.
+
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 
