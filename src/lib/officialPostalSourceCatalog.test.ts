@@ -120,6 +120,26 @@ test('separates Latvian postal, civic-address, building, and administrative auth
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Lithuanian postal, civic-address, building, and administrative authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('LT');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('lietuvos-pastas-postcode-search')?.authority, 'postal-operator');
+  assert.equal(byId.get('lietuvos-pastas-postcode-search')?.trustTier, 'authoritative');
+  assert.match(byId.get('lietuvos-pastas-postcode-search')?.notes.join(' ') ?? '', /not a canonical postcode polygon/i);
+  assert.equal(byId.get('registru-centras-address-register')?.authority, 'government');
+  assert.equal(byId.get('registru-centras-address-register')?.depth, 'address');
+  assert.match(byId.get('registru-centras-address-register')?.notes.join(' ') ?? '', /cross-checking/i);
+  assert.equal(byId.get('registru-centras-ntr-buildings')?.depth, 'building');
+  assert.match(byId.get('registru-centras-ntr-buildings')?.notes.join(' ') ?? '', /explicit registry relation/i);
+  assert.equal(byId.get('registru-centras-address-boundaries')?.depth, 'geo-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'LT',
+    source: 'Lietuvos pastas postal code search',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',

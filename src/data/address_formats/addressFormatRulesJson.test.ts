@@ -652,8 +652,8 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
   assert.equal(loadFormat('FI').postalCode?.api, 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services');
   assert.equal(loadFormat('LV').postalCode?.api, 'https://pasts.lv/en/services/tariffs-and-information/postcode-book');
   assert.equal(loadFormat('LV').postalCode?.source, 'Latvijas Pasts assignment with VZD Address Register and Cadastre evidence');
-  assert.equal(loadFormat('LT').postalCode?.api, 'https://www.post.lt/pasto-kodu-ir-adresu-paieska');
-  assert.equal(loadFormat('LT').postalCode?.source, 'Lietuvos paštas postal code and address search');
+  assert.equal(loadFormat('LT').postalCode?.api, 'https://www.post.lt/post/codes/search');
+  assert.equal(loadFormat('LT').postalCode?.source, 'Lietuvos paštas assignment with Registrų centras Address Register and NTR building evidence');
 });
 
 test('Nordic and Baltic metadata exposes national geospatial and open-data sources', () => {
@@ -685,7 +685,14 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
       'estonia-aks-building-shapes',
       'estonia-ehak-admin-boundaries',
     ],
-    LT: ['geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
+    LT: [
+      'lietuvos-pastas-postcode-search',
+      'registru-centras-address-register',
+      'registru-centras-ntr-buildings',
+      'registru-centras-address-boundaries',
+      'geoportal-lt',
+      'open-data-lithuania',
+    ],
     IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   };
 

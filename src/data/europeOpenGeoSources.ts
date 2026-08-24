@@ -125,6 +125,8 @@ export type EuropeOpenGeoSourceId =
   | 'lietuvos-pastas-postcode-search'
   | 'geoportal-lt'
   | 'registru-centras-address-register'
+  | 'registru-centras-ntr-buildings'
+  | 'registru-centras-address-boundaries'
   | 'open-data-lithuania'
   | 'okfn-index-postcodes'
   | 'lmmi-iceland'
@@ -1390,11 +1392,11 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'lietuvos-pastas-postcode-search': {
     id: 'lietuvos-pastas-postcode-search',
     name: 'Lietuvos pastas Postal Code and Address Search',
-    url: 'https://www.post.lt/pasto-kodu-ir-adresu-paieska',
+    url: 'https://www.post.lt/post/codes/search',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Lithuania Post search for postcode-by-address and address-by-postcode validation.',
+    notes: 'Official Lietuvos paštas search returns address and municipality membership for a five-digit code; it is assignment evidence, not an official postcode boundary.',
   },
   'geoportal-lt': {
     id: 'geoportal-lt',
@@ -1407,12 +1409,33 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'registru-centras-address-register': {
     id: 'registru-centras-address-register',
-    name: 'Registru Centras Address Register Lithuania',
-    url: 'https://www.registrucentras.lt/',
+    name: 'Registrų centras Address Register Address Points',
+    url: 'https://data.gov.lt/datasets/1351/',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Lithuanian address register and cadastral reference for municipality, street, and building validation.',
+    usage: 'primary',
+    license: 'CC BY 4.0; attribute Registrų centras and indicate modifications',
+    notes: 'CC BY 4.0 official address points for parcels, buildings and premises support civic identity and postal assignment cross-checking; they are not postal-operator boundaries.',
+  },
+  'registru-centras-ntr-buildings': {
+    id: 'registru-centras-ntr-buildings',
+    name: 'Registrų centras NTR Building Boundaries',
+    url: 'https://data.gov.lt/datasets/2838/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0; attribute Registrų centras and indicate modifications',
+    notes: 'Official NTR building boundaries may be exact only through an explicit registry relation or reviewed crosswalk; proximity remains candidate evidence.',
+  },
+  'registru-centras-address-boundaries': {
+    id: 'registru-centras-address-boundaries',
+    name: 'Registrų centras Address Register Administrative Geometry',
+    url: 'https://data.gov.lt/datasets/?q=Adres%C5%B3+registro+savivaldybi%C5%B3+erdviniai+duomenys',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0; attribute Registrų centras and indicate modifications',
+    notes: 'Official municipality, eldership, settlement and street context cannot create, clip or replace a Lietuvos paštas postcode assignment.',
   },
   'open-data-lithuania': {
     id: 'open-data-lithuania',
@@ -2732,7 +2755,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   FI: ['posti-finland-postal-code-services', 'avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
   LV: ['latvijas-pasts-check-address', 'vzd-latvia-address-register', 'vzd-latvia-cadastral-buildings', 'vzd-latvia-administrative-boundaries', 'kartes-lv-postal-codes', 'lgia-latvia', 'data-gov-lv-geodata'],
   EE: ['omniva-estonia-postcodes', 'estonia-aks-postal-codes', 'estonia-aks-postal-areas', 'estonia-aks-address-objects', 'estonia-aks-building-shapes', 'estonia-ehak-admin-boundaries'],
-  LT: ['lietuvos-pastas-postcode-search', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
+  LT: ['lietuvos-pastas-postcode-search', 'registru-centras-address-register', 'registru-centras-ntr-buildings', 'registru-centras-address-boundaries', 'geoportal-lt', 'open-data-lithuania'],
   IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   IT: ['poste-italiane-cap-search', 'poste-italiane-cap-professional', 'anncsu-italy-addresses', 'istat-italy-admin-boundaries', 'italy-regional-dbgt-buildings', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],

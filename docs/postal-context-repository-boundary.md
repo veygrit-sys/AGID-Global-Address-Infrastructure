@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-latvia`
+Status: `accepted-for-country-pack-reference-implementations-through-lithuania`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -106,6 +106,11 @@ Address Register identity and lifecycle, VZD cadastral building contours,
 administrative context, special non-areal codes, generated noncanonical
 surfaces, privacy exclusions and cross-border partitioning belong to
 `agid-postal-lv`.
+Lithuania-specific Lietuvos paštas assignment and lookup receipts, Registrų
+centras Address Register point identity, NTR building boundaries, administrative
+and settlement context, non-areal delivery endpoints, derived noncanonical
+surface rules, privacy exclusions and cross-border partitioning belong to
+`agid-postal-lt`.
 
 
 
@@ -347,6 +352,27 @@ source geometry exists. Public artifacts exclude recipients, residents,
 owners, tenants, private units, cadastral subjects and restricted-security
 objects. Latvia remains an `LV` pack and never absorbs neighbouring country
 geometry during surface generation.
+
+### `agid-postal-lt`
+
+The Lithuania repository owns pinned Lietuvos paštas address/postcode lookup
+evidence, Registrų centras Address Register releases, NTR building boundaries,
+administrative context, derived postal surfaces, synthetic fixtures and release
+validation. Lietuvos paštas results prove assignment membership for the lookup
+input but do not publish an official postcode polygon. Registrų centras address
+points provide civic identity and geometry without replacing postal-operator
+authority. Exact building output requires a stable explicit registry relation or
+reviewed crosswalk; containment and nearest-footprint matching remain candidates.
+Municipality, eldership, settlement and street geometry adds context only and
+cannot create, clip or replace a postcode. P.O. boxes, parcel terminals, post
+offices, organizations and other routing endpoints remain non-areal unless an
+independent source proves area geometry. Any surface generated from complete,
+pinned and rights-cleared assignment membership plus address points is derived
+and noncanonical. Public artifacts exclude recipients, residents, owners,
+tenants, private-unit occupants, telephone data, credentials and protected
+registry subjects. Lithuania remains an `LT` pack and never absorbs geometry
+from Latvia, Belarus, Poland or Russia during border partitioning.
+
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

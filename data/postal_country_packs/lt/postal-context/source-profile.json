@@ -1,0 +1,87 @@
+{
+  "schema_version": "agid-postal-lt-source-profile-v0.1",
+  "country_code": "LT",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-geographic fixtures only." },
+    { "id": "R1_rc_cc_by_4_0", "meaning": "Pinned Registrų centras open data under CC BY 4.0 with attribution, release, CRS, identifiers, and modifications retained." },
+    { "id": "R2_lietuvos_pastas_reference", "meaning": "Lietuvos paštas public lookup or permitted validation evidence; automated extraction and redistribution rights must be qualified per artifact." },
+    { "id": "R3_validation_receipt", "meaning": "Permitted live validation evidence retained only within provider terms, purpose, and retention limits." }
+  ],
+  "sources": [
+    {
+      "source_id": "lietuvos-pastas-postcode-search",
+      "provider": "Lietuvos paštas",
+      "source_url": "https://www.post.lt/post/codes/search",
+      "role": ["official-postcode-assignment", "address-to-postcode", "postcode-to-address", "post-office-and-municipality-membership"],
+      "production_scope": "Pinned permitted lookup receipts or rights-cleared provider source with capture time and query identity recorded.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "validation_readiness": "interactive_validation_available",
+      "redistribution_class": "R2_lietuvos_pastas_reference",
+      "terms_note": "The official search returns five-digit code, post office, address, and municipality results. It does not publish a canonical postcode boundary product.",
+      "expected_update_cadence": "provider-live-service",
+      "bundled_here": false,
+      "promotion_requirements": ["record-query-capture-time-and-response-digest", "retain-address-membership-and-result-class", "qualify-automation-retention-and-redistribution-rights", "keep-endpoints-and-organizations-non-areal"],
+      "prohibited_claims": ["official-postcode-polygon", "open-bulk-redistribution", "every-postcode-is-an-area", "deliverability-guarantee"]
+    },
+    {
+      "source_id": "registru-centras-address-register",
+      "provider": "Registrų centras",
+      "source_url": "https://data.gov.lt/datasets/1351/",
+      "role": ["official-civic-address-point", "parcel-building-and-premise-address", "address-hierarchy", "address-lifecycle"],
+      "production_scope": "Pinned Address Register spatial release with schema, CRS, identifiers, lifecycle, CC BY 4.0 attribution, and digest recorded.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "validation_readiness": "open_with_postal_operator_cross_check",
+      "redistribution_class": "R1_rc_cc_by_4_0",
+      "terms_note": "The official open dataset supplies address points for parcels, buildings, and premises. Civic address identity and geometry do not independently prove current postal assignment.",
+      "expected_update_cadence": "annual-or-portal-declared-release",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-release-schema-crs-row-count-byte-length-and-digest", "retain-registry-identifier-object-class-and-lifecycle", "cross-check-postal-assignment", "exclude-personal-and-protected-fields"],
+      "prohibited_claims": ["postal-operator-validation-from-address-register-alone", "address-point-is-building-boundary", "resident-owner-or-recipient", "official-postcode-boundary"]
+    },
+    {
+      "source_id": "registru-centras-ntr-buildings",
+      "provider": "Registrų centras",
+      "source_url": "https://data.gov.lt/datasets/2838/",
+      "role": ["ntr-building-boundary", "registered-building-identity", "address-to-building-crosswalk-target"],
+      "production_scope": "Pinned municipality-partitioned NTR building spatial release with CC BY 4.0 attribution, schema, CRS, identifier coverage, modifications, and digest recorded.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_cadastral_geometry",
+      "validation_readiness": "open_with_explicit_link_required",
+      "redistribution_class": "R1_rc_cc_by_4_0",
+      "terms_note": "The nationwide monthly open dataset provides registered building boundaries and other spatial attributes. It does not itself assign postcodes or prove an address relation.",
+      "expected_update_cadence": "monthly",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-all-municipality-partitions-schema-crs-and-digests", "retain-ntr-building-identifier-and-release", "require-stable-explicit-address-relation-or-reviewed-crosswalk", "record-coverage-and-omissions"],
+      "prohibited_claims": ["nearest-building-is-exact-address-link", "postal-assignment-authority", "legal-survey-certification", "owner-occupant-or-rightsholder"]
+    },
+    {
+      "source_id": "registru-centras-address-boundaries",
+      "provider": "Registrų centras",
+      "source_url": "https://data.gov.lt/datasets/?q=Adres%C5%B3+registro+savivaldybi%C5%B3+erdviniai+duomenys",
+      "role": ["county-and-municipality-boundary", "eldership-boundary", "settlement-boundary", "street-centerline", "address-hierarchy-context"],
+      "production_scope": "Pinned Address Register administrative, settlement, and street spatial releases used only for hierarchy and context.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_administrative_geometry",
+      "validation_readiness": "reference_eligible",
+      "redistribution_class": "R1_rc_cc_by_4_0",
+      "terms_note": "Official registry administrative and settlement geometry supplies address context but cannot create, clip, or replace a Lietuvos paštas postcode assignment.",
+      "expected_update_cadence": "portal-declared-release",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-each-object-class-release-crs-and-digest", "retain-registry-level-identifier-and-lifecycle", "keep-postal-authority-none", "emit-cc-by-attribution"],
+      "prohibited_claims": ["postcode-boundary", "postal-assignment-authority", "address-or-building-identity", "deliverability-guarantee"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "lietuvos-pastas-assignment", "rule": "Lookup receipts retain query, result class, capture time, rights, and digest; they never acquire geometry authority." },
+    { "id": "rc-open-address", "rule": "Address points retain registry identifier, object class, hierarchy, lifecycle, CRS, release, CC BY attribution, and postal cross-check status." },
+    { "id": "rc-ntr-buildings", "rule": "Building boundaries retain NTR identifier, municipality partition, release, and explicit address-link evidence." },
+    { "id": "rc-context", "rule": "Administrative, settlement, and street geometry remains context-only and never becomes postal geometry." },
+    { "id": "delivery-endpoint", "rule": "Post offices, PO boxes, parcel terminals, organizations, and other endpoint codes remain non-areal unless explicit source geometry exists." },
+    { "id": "border-partition", "rule": "Features near LV, BY, PL, or RU are clipped or rejected using the LT partition without inventing postal membership." },
+    { "id": "private-and-sensitive", "rule": "Recipients, residents, owners, tenants, phone numbers, credentials, private-unit occupants, registry subjects, and protected records never enter public artifacts." },
+    { "id": "synthetic-conformance", "rule": "Non-geographic fixtures only; never promotion evidence." }
+  ]
+}
