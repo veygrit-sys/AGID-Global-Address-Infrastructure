@@ -9,6 +9,7 @@ import {
   normalizeSwitzerlandPostalCode,
   normalizeGermanyPostalCode,
   normalizeCzechiaPostalCode,
+  normalizeMaltaPostalCode,
   normalizeDenmarkPostalCode,
   normalizeItalyPostalCode,
   normalizeFrancePostalCode,
@@ -89,6 +90,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeDenmarkPostalCode('0012'), '0012');
   assert.equal(normalizeDenmarkPostalCode('00-12'), null);
   assert.equal(normalizePostalContextPostalCode('dk', '00 12'), '0012');
+  assert.equal(normalizeMaltaPostalCode('ｖｌｔ１１１７'), 'VLT 1117');
+  assert.equal(normalizeMaltaPostalCode('vlt1117'), 'VLT 1117');
+  assert.equal(normalizeMaltaPostalCode('VLT 1117'), 'VLT 1117');
+  assert.equal(normalizeMaltaPostalCode('VLT-1117'), null);
+  assert.equal(normalizePostalContextPostalCode('mt', 'vlt1117'), 'VLT 1117');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -167,4 +173,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'postal-area-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.DK.postalCodeFormat, 'NNNN');
+  assert.equal(isPostalContextCountryCode('MT'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.MT.fullCodeGeometrySemantics,
+    'address-range-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MT.postalCodeFormat, 'AAA NNNN');
 });

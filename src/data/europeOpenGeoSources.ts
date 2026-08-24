@@ -152,6 +152,10 @@ export type EuropeOpenGeoSourceId =
   | 'ktimatologio-greece'
   | 'geodata-gov-gr'
   | 'okxe-greece'
+  | 'maltapost-postcode-finder'
+  | 'malta-office-address-registrar'
+  | 'malta-oar-location-registers'
+  | 'malta-pa-large-scale-topography-buildings'
   | 'pa-malta-geoserver'
   | 'nso-malta-geodata'
   | 'identity-malta-addressing'
@@ -1657,19 +1661,55 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Greek mapping/cadastre reference for historic OKXE-aligned national geospatial layers.',
   },
+  'maltapost-postcode-finder': {
+    id: 'maltapost-postcode-finder',
+    name: 'MaltaPost Postcode Finder',
+    url: 'https://www.maltapost.com/postcode/?l=1',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official MaltaPost address-based postcode assignment and seven-character format evidence; a finder result is not polygon or building geometry.',
+  },
+  'malta-office-address-registrar': {
+    id: 'malta-office-address-registrar',
+    name: 'Malta Office of the Address Registrar',
+    url: 'https://portal.data.gov.mt/data-service/about/address-register',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The OAR Address Register is intended as the primary source of address information, but current portal contents are work in progress and require confirmation before being treated as official records.',
+  },
+  'malta-oar-location-registers': {
+    id: 'malta-oar-location-registers',
+    name: 'Malta OAR Location Registers',
+    url: 'https://address.gov.mt/locate-a-street/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official regions, localities, local councils and streets provide address context and Gazette lineage, not postal geometry.',
+  },
+  'malta-pa-large-scale-topography-buildings': {
+    id: 'malta-pa-large-scale-topography-buildings',
+    name: 'Malta Large Scale Topography Buildings',
+    url: 'https://portal.data.gov.mt/dataset/large-scale-topography-buildings',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Planning Authority Buildings 2D are available through WFS/WMS; exact address linkage requires an explicit identifier or reviewed crosswalk, while containment and proximity remain candidate evidence.',
+  },
   'pa-malta-geoserver': {
     id: 'pa-malta-geoserver',
     name: 'Planning Authority Malta GeoServer',
     url: 'https://geoserver.pa.org.mt/',
-    kind: 'admin-boundary',
+    kind: 'geocoding',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Malta Planning Authority geospatial services for local councils, streets, development zones, and map layers.',
+    notes: 'Planning Authority map search provides planning and location context, not independent address or postal authority.',
   },
   'nso-malta-geodata': {
     id: 'nso-malta-geodata',
     name: 'National Statistics Office Malta Geodata',
-    url: 'https://nso.gov.mt/',
+    url: 'https://nso.gov.mt/maps/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'validation',
@@ -1682,7 +1722,7 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'address',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Malta government identity and civil registry reference useful for locality and address naming conventions.',
+    notes: 'Compatibility-only identity/civil-registry reference; person and resident data must not be used as public Postal Context evidence.',
   },
   'san-marino-geoportal': {
     id: 'san-marino-geoportal',
@@ -2637,7 +2677,14 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],
   PT: ['eurostat-gisco-postcodes', 'ctt-portugal', 'dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
   GR: ['elta-gr', 'ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
-  MT: ['eurostat-gisco-postcodes', 'pa-malta-geoserver', 'nso-malta-geodata', 'identity-malta-addressing'],
+  MT: [
+    'maltapost-postcode-finder',
+    'malta-office-address-registrar',
+    'malta-oar-location-registers',
+    'malta-pa-large-scale-topography-buildings',
+    'pa-malta-geoserver',
+    'nso-malta-geodata',
+  ],
   SM: ['zauberware-postal-codes', 'san-marino-geoportal', 'san-marino-statistics'],
   MC: ['eu-postal-code-package', 'monaco-gouv-cartography', 'monaco-imsee-geodata'],
   VA: ['zauberware-postal-codes', 'vatican-city-state', 'openstreetmap-vatican'],

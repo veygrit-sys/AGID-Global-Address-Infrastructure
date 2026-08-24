@@ -715,6 +715,8 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
   assert.equal(loadFormat('IT').postalCode?.api, 'https://www.poste.it/cap');
   assert.equal(loadFormat('GR').postalCode?.api, 'https://itemsearch.elta.gr/en-GB/');
   assert.equal(loadFormat('CY').postalCode?.api, 'https://postalcodes.info/');
+  assert.equal(loadFormat('MT').postalCode?.api, 'https://www.maltapost.com/postcode/?l=1');
+  assert.match(loadFormat('MT').postalCode?.source ?? '', /MaltaPost.*Address Registrar.*Planning Authority/i);
   assert.equal(loadFormat('CY').postalCode?.source, 'postalcodes.info / Cyprus open data');
 });
 
@@ -732,7 +734,14 @@ test('Southern Europe metadata exposes national geospatial and cadastre sources'
     ES: ['ign-spain-cnig', 'catastro-spain', 'idee-spain'],
     PT: ['dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
     GR: ['ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
-    MT: ['pa-malta-geoserver', 'nso-malta-geodata', 'identity-malta-addressing'],
+    MT: [
+      'maltapost-postcode-finder',
+      'malta-office-address-registrar',
+      'malta-oar-location-registers',
+      'malta-pa-large-scale-topography-buildings',
+      'pa-malta-geoserver',
+      'nso-malta-geodata',
+    ],
     SM: ['san-marino-geoportal', 'san-marino-statistics'],
     MC: ['monaco-gouv-cartography', 'monaco-imsee-geodata'],
     VA: ['vatican-city-state', 'openstreetmap-vatican'],

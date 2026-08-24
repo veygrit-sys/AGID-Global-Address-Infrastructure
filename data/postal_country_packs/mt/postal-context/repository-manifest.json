@@ -1,0 +1,193 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-mt",
+    "country_code": "MT",
+    "country_name": "Malta",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/mt/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postcode",
+    "full_code_format": "AAA NNNN",
+    "full_code_regex": "^[A-Z]{3}\\s\\d{4}$",
+    "full_code_default_geometry": "operator_assignment_or_derived_noncanonical_surface",
+    "full_code_rule": "Preserve three uppercase letters, one canonical space and four digits including leading zeroes. MaltaPost assignment, address identity, geometry, building identity and AGID coverage remain independent evidence.",
+    "postcode_area_rule": "No reviewed official nationwide MaltaPost postcode polygon product is established for this seed. A surface generated from confirmed Office of the Address Registrar address points or ranges is derived_geometry, opt-in and never an official MaltaPost boundary.",
+    "address_rule": "Use only a confirmed Office of the Address Registrar release or confirmation receipt for official address identity. Preserve region, locality, local council, official street, door or entry point, building/addressable-object identity, geocode, postcode, status and time. National Data Portal records marked work-in-progress remain metadata-only without confirmation.",
+    "building_rule": "Promote a Planning Authority Large Scale Topography building only through an explicit source identifier relationship or reviewed crosswalk from a confirmed addressable object. Point containment and proximity remain candidate evidence only.",
+    "admin_rule": "Use confirmed OAR region, locality and street registers plus pinned NSO spatial divisions as contextual evidence. Locality, council and statistical geometry never replace postcode assignment.",
+    "transition_rule": "Preserve the handover from the Electoral Office Address Management Unit to the Office of the Address Registrar and the 1 January 2026 address.gov.mt service transition without rewriting identifiers, Gazette lineage, validity or history.",
+    "privacy_rule": "Public AGID resolution excludes electoral-register, person-register, resident, household, owner, identity-card, recipient, forwarding, customer, shipment and non-public unit data; such datasets remain outside the public country pack.",
+    "rights_rule": "Pin the exact MaltaPost, OAR, National Data Portal, Planning Authority and NSO terms and confirmation state per artifact. Portal visibility or metadata alone does not grant redistribution or prove an official record.",
+    "territory_rule": "The MT pack covers the Maltese archipelago, including Malta, Gozo and Comino, under one ISO country pack while preserving island, region, locality and local-council context. It does not merge nearby foreign territory."
+  },
+  "address_graph": {
+    "node_types": [
+      "postcode",
+      "postcode_prefix",
+      "derived_postcode_surface",
+      "country",
+      "island",
+      "region",
+      "local_council",
+      "locality",
+      "street",
+      "door_or_entry_point",
+      "addressable_object",
+      "building_name",
+      "pa_building",
+      "building_footprint",
+      "post_office_box_or_facility",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "explicit_building_reference",
+      "candidate_building",
+      "part_of",
+      "derived_from",
+      "covered_by_agid",
+      "succeeds"
+    ],
+    "cardinality_rules": [
+      "postcode-may-cover-address-range-or-delivery-group",
+      "postcode-prefix-does-not-prove-locality-polygon",
+      "postcode-may-have-no-area",
+      "po-box-or-facility-code-is-not-residential-area",
+      "addressable-object-may-have-many-doors",
+      "door-or-geocode-is-not-building-footprint",
+      "exact-building-link-requires-source-id-or-reviewed-crosswalk",
+      "containment-or-proximity-is-candidate-only",
+      "locality-or-statistical-boundary-is-not-postcode-boundary",
+      "agid-containment-is-not-source-identity"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "maltapost_address_range_assignment",
+      "rule": "Preserve the exact finder input and response receipt. A code returned for a street, locality and household number is assignment evidence, not polygon or building evidence."
+    },
+    {
+      "id": "derived_postcode_surface",
+      "rule": "Any surface generated from confirmed OAR points, street ranges or locality clips is derived_geometry with method, parameters, source digest and accuracy; it never becomes a MaltaPost boundary."
+    },
+    {
+      "id": "oar_work_in_progress",
+      "rule": "The National Data Portal warns that its contents are work in progress. Promote only records backed by a confirmed official release or confirmation receipt."
+    },
+    {
+      "id": "door_and_building_name",
+      "rule": "Door number, entry point and building name are address components. They do not establish the identity of a Planning Authority footprint without an explicit relationship."
+    },
+    {
+      "id": "post_office_box_or_facility",
+      "rule": "Keep P.O. Box and facility routing as non-area delivery-service records unless separate authoritative area evidence exists."
+    },
+    {
+      "id": "private_register_data",
+      "rule": "Electoral, person, household, resident, owner and identity data never enter public address or building artifacts."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-rights-confirmation-and-lineage",
+      "scope": "all",
+      "pass": "Every artifact records provider, release or receipt, confirmation state, retrieval time, terms, attribution, schema, CRS, digest and transformation method."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "postcode",
+      "metric": "canonical_three_letters_space_four_digits_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "MaltaPost assignment, OAR address identity, OAR/NSO context, PA building geometry and AGID indexes remain separate evidence."
+    },
+    {
+      "id": "postcode-classification",
+      "scope": "all-known-postcodes",
+      "pass": "Every code is classified as address range, delivery group, P.O. Box, facility, special routing, historical or unknown; missing geometry never creates an invented polygon."
+    },
+    {
+      "id": "address-confirmation",
+      "scope": "promoted-oar-addresses",
+      "pass": "Every promoted address comes from a confirmed release or confirmation receipt and preserves addressable-object, door, geocode, status, Gazette and temporal lineage."
+    },
+    {
+      "id": "building-geometry-link",
+      "scope": "promoted-building-geometries",
+      "pass": "Every exact address-to-building edge has a shared source identifier or reviewed explicit crosswalk; containment and proximity remain candidates."
+    },
+    {
+      "id": "public-privacy",
+      "scope": "public-resolution",
+      "pass": "Public results contain no electoral, person, resident, household, owner, identity-card, recipient, forwarding, customer or shipment data."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "postcode_assignment_reconciliation_minimum": 0.999,
+        "postcode_classification_ratio_minimum": 1.0,
+        "confirmed_address_identity_precision_minimum": 1.0,
+        "explicit_building_link_precision_minimum": 1.0
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, postcode classes, register status and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-reviewed and confirmed snapshots reproduce experimental packs with full lineage." },
+      { "id": "M3_candidate", "definition": "Assignment, identity, geometry, privacy, freshness and independent holdout gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "unpinned-maltapost-oar-pa-or-nso-source",
+      "derived-surface-presented-as-maltapost-boundary",
+      "postcode-or-prefix-presented-as-locality-polygon",
+      "po-box-or-facility-code-given-residential-polygon",
+      "portal-work-in-progress-record-presented-as-confirmed",
+      "address-geocode-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-link",
+      "locality-or-statistical-boundary-presented-as-postal-geometry",
+      "missing-required-source-attribution-or-confirmation",
+      "electoral-person-resident-owner-or-recipient-data-exposed",
+      "postcode-stored-without-leading-zero-preservation",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "residency_household_or_ownership",
+    "official_postcode_polygon",
+    "building_geometry_from_address_geocode",
+    "building_identity_from_containment_or_proximity",
+    "legal-property-or-cadastral-survey-certification",
+    "locality-equals-postcode-area"
+  ]
+}

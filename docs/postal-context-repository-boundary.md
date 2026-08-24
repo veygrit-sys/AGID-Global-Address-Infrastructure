@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-denmark`
+Status: `accepted-for-country-pack-reference-implementations-through-malta`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -86,6 +86,11 @@ Denmark-specific PostNord assignment, DAGI Postnummerinddeling and
 administrative history, DAR address and access-point identity, BBR building
 records, GeoDanmark footprint linkage, street-postcode exceptions and service-
 migration rules belong to `agid-postal-dk`.
+
+Malta-specific MaltaPost assignment, Office of the Address Registrar confirmed
+address and location-register lineage, Planning Authority building geometry,
+NSO statistical context, register-transition and work-in-progress confirmation
+rules belong to `agid-postal-mt`.
 
 
 
@@ -251,6 +256,24 @@ and DAR. GeoDanmark keeps its product-specific terms, BBR fields remain rights-
 reviewed, and the transition from retiring Datafordeler services must preserve
 identity and history. Greenland and the Faroe Islands remain separately governed
 `GL` and `FO` packs.
+
+### `agid-postal-mt`
+
+The Malta repository owns MaltaPost postcode-finder receipts, confirmed Office
+of the Address Registrar addressable-object and location-register lineage,
+Planning Authority Large Scale Topography building geometry, NSO spatial
+context, derived postcode surfaces, synthetic fixtures and release validation.
+A MaltaPost result proves assignment for its finder input but not an official
+postcode polygon, addressable-object geometry or building. OAR portal records
+marked work in progress remain metadata-only until a confirmed release or
+confirmation receipt exists. A public address geocode is not a building
+footprint. Exact building output requires a source identifier or reviewed
+explicit crosswalk; containment and proximity remain candidates. P.O. Box and
+facility routing remain non-areal. Electoral, person, resident, household,
+owner, identity-card, recipient and other private data stay outside public
+artifacts. The Address Management Unit to OAR transition, Gazette lineage and
+valid/known time remain reproducible, and Malta, Gozo and Comino remain inside
+the single `MT` country pack without merging nearby foreign territory.
 
 
 
