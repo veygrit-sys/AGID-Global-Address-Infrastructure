@@ -315,6 +315,42 @@ test('separates Croatia operator, delivery-area, address, building, parcel, and 
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Georgia operator, address, building, parcel, administrative, and statistical authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('GE');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('georgian-post-postcode-finder')?.authority, 'postal-operator');
+  assert.equal(byId.get('georgian-post-postcode-finder')?.trustTier, 'authoritative');
+  assert.match(byId.get('georgian-post-postcode-finder')?.notes.join(' ') ?? '', /four-digit.*not an open bulk.*not an official postcode polygon.*syntax.*allocation/i);
+  assert.equal(byId.get('georgian-post-addressing-guide')?.depth, 'address');
+  assert.equal(byId.get('georgian-post-addressing-guide')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('georgian-post-addressing-guide')?.notes.join(' ') ?? '', /postcode before the locality.*not an allocation database.*geometry/i);
+  assert.equal(byId.get('napr-georgia-address-registry')?.depth, 'address');
+  assert.equal(byId.get('napr-georgia-address-registry')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('napr-georgia-address-registry')?.notes.join(' ') ?? '', /unique text record.*not a bulk release.*not a building footprint/i);
+  assert.equal(byId.get('nsdi-georgia-address-layer')?.depth, 'address');
+  assert.match(byId.get('nsdi-georgia-address-layer')?.notes.join(' ') ?? '', /resource-specific access licence.*not a blanket open licence.*postcode/i);
+  assert.equal(byId.get('nsdi-georgia-registered-buildings')?.depth, 'building');
+  assert.match(byId.get('nsdi-georgia-registered-buildings')?.notes.join(' ') ?? '', /explicit relationship.*common authoritative identifier.*proximity.*candidate-only/i);
+  assert.equal(byId.get('nsdi-georgia-registered-parcels')?.depth, 'geo-only');
+  assert.match(byId.get('nsdi-georgia-registered-parcels')?.notes.join(' ') ?? '', /not a building.*address link.*postcode area.*owners.*rightsholders/i);
+  assert.equal(byId.get('nsdi-georgia-administrative-boundaries')?.depth, 'geo-only');
+  assert.match(byId.get('nsdi-georgia-administrative-boundaries')?.notes.join(' ') ?? '', /never create postcode membership.*sovereignty.*coverage gap/i);
+  assert.equal(byId.get('geostat-georgia-administrative-classification')?.depth, 'geo-only');
+  assert.match(byId.get('geostat-georgia-administrative-classification')?.notes.join(' ') ?? '', /statistical classification.*not postal assignment.*not geometry/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'GE',
+    source: 'Georgian Post Postcode Finder',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const addressOnly = classifyPostalSourceTrust({
+    countryCode: 'GE',
+    source: 'NAPR Georgia Address Registry',
+  });
+  assert.equal(addressOnly.strength, 'weak');
+  assert.equal(addressOnly.tier, 'weak');
+});
+
 test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
   const sources = getOfficialPostalSourcesForCountry('CY');
   const byId = new Map(sources.map(source => [source.id, source]));

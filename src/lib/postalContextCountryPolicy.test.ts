@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,
   normalizeCyprusPostalCode,
   normalizeAustriaPostalCode,
@@ -181,6 +182,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeCroatiaPostalCode('HR10000'), null);
   assert.equal(normalizeCroatiaPostalCode('100-00'), null);
   assert.equal(normalizePostalContextPostalCode('hr', 'HR-00001'), '00001');
+  assert.equal(normalizeGeorgiaPostalCode('０００２'), '0002');
+  assert.equal(normalizeGeorgiaPostalCode('00 02'), '0002');
+  assert.equal(normalizeGeorgiaPostalCode('00-02'), null);
+  assert.equal(normalizeGeorgiaPostalCode('GE0002'), null);
+  assert.equal(normalizeGeorgiaPostalCode('00020'), null);
+  assert.equal(normalizePostalContextPostalCode('ge', '00 02'), '0002');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -342,4 +349,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GR.postalCodeFormat, 'NNN NN');
+  assert.equal(isPostalContextCountryCode('GE'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.GE.fullCodeGeometrySemantics,
+    'delivery-network-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GE.postalCodeFormat, 'NNNN');
 });

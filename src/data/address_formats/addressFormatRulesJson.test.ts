@@ -1080,14 +1080,25 @@ test('Caucasus address JSON files expose addressRules metadata and postal data s
     'buildingEntrance',
   ]);
   assert.match(loadRules('AZ').postalCode?.label ?? '', /AZNNNN.*allocation requires source evidence/i);
-  assert.equal(loadRules('GE').postalCode?.label, '4 digits required');
+  assert.match(loadRules('GE').postalCode?.label ?? '', /4 digits.*operator assignment.*derived.*resource-specific.*building.*parcel.*separate/i);
   assert.equal(loadFormat('AM').postalCode?.api, 'https://www.haypost.am/en/find-index');
   assert.match(loadFormat('AZ').postalCode?.api ?? '', /azerpost\.az/);
   assert.equal(loadFormat('AZ').postalCode?.format, 'AZNNNN');
   assert.equal(loadFormat('AZ').postalCode?.regex, '^AZ\\d{4}$');
   assert.match(loadFormat('AZ').postalCode?.source ?? '', /Azərpoçt.*Address Register.*cadastre/i);
   assert.deepEqual(loadRules('AZ').regionalHierarchy, ['regionOrAutonomousRepublic', 'districtOrCity', 'locality', 'street', 'premise']);
-  assert.equal(loadFormat('GE').postalCode?.api, 'https://www.gpost.ge/');
+  assert.match(loadFormat('GE').postalCode?.api ?? '', /gpost\.ge.*zipcodes/i);
+  assert.match(loadFormat('GE').postalCode?.source ?? '', /Georgian Post.*NAPR Address Registry.*NSDI/i);
+  assert.deepEqual(loadRules('GE').regionalHierarchy, [
+    'regionOrAutonomousRepublic',
+    'municipality',
+    'cityTownVillageOrSettlement',
+    'namedGeographicObjectOrStreet',
+    'houseOrBuildingNumber',
+    'registeredAddress',
+    'buildingOrStructure',
+    'entranceFloorOrUnit',
+  ]);
 });
 
 test('Caucasus metadata exposes national geospatial, cadastre, and open-data sources', () => {
@@ -1102,7 +1113,20 @@ test('Caucasus metadata exposes national geospatial, cadastre, and open-data sou
       'geonames-armenia',
     ],
     AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan'],
-    GE: ['napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia'],
+    GE: [
+      'napr-georgia',
+      'gdi-georgia',
+      'gpost-address-reference',
+      'geonames-georgia',
+      'georgian-post-postcode-finder',
+      'georgian-post-addressing-guide',
+      'napr-georgia-address-registry',
+      'nsdi-georgia-address-layer',
+      'nsdi-georgia-registered-buildings',
+      'nsdi-georgia-registered-parcels',
+      'nsdi-georgia-administrative-boundaries',
+      'geostat-georgia-administrative-classification',
+    ],
   };
 
   for (const [countryCode, sourceIds] of Object.entries(expectedSourceIdsByCountry)) {

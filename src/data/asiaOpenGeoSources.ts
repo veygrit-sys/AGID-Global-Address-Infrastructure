@@ -149,6 +149,14 @@ export type AsiaOpenGeoSourceId =
   | 'gdi-georgia'
   | 'gpost-address-reference'
   | 'geonames-georgia'
+  | 'georgian-post-postcode-finder'
+  | 'georgian-post-addressing-guide'
+  | 'napr-georgia-address-registry'
+  | 'nsdi-georgia-address-layer'
+  | 'nsdi-georgia-registered-buildings'
+  | 'nsdi-georgia-registered-parcels'
+  | 'nsdi-georgia-administrative-boundaries'
+  | 'geostat-georgia-administrative-classification'
   | 'post-kz'
   | 'pochta-uz'
   | 'datahub-postal-kz'
@@ -1602,6 +1610,78 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'CC BY 4.0',
     notes: 'Open gazetteer fallback for Georgian alternate settlement names and coordinates.',
   },
+  'georgian-post-postcode-finder': {
+    id: 'georgian-post-postcode-finder',
+    name: 'Georgian Post Postcode Finder',
+    url: 'https://www.gpost.ge/?group=3&letter=I&site-lang=en&site-path=help%2Fzipcodes%2F',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit operator assignment lookup; returned post office or locality is not a postcode polygon, and a public finder is not an open bulk release.',
+  },
+  'georgian-post-addressing-guide': {
+    id: 'georgian-post-addressing-guide',
+    name: 'Georgian Post Addressing Guide',
+    url: 'https://www.gpost.ge/Content/ContentFiles/addressingRule24125.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official format guidance places the postcode before the locality; examples and syntax are not evidence of current allocation, address existence, geometry, or deliverability.',
+  },
+  'napr-georgia-address-registry': {
+    id: 'napr-georgia-address-registry',
+    name: 'NAPR Georgia Address Registry',
+    url: 'https://www.napr.gov.ge/en/page/frequently-asked-questions/address-registration',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address identity is a unique text record for a building, structure, parcel, apartment, or other object; the public FAQ or search is not a bulk release, and address identity is not a building footprint or postcode assignment.',
+  },
+  'nsdi-georgia-address-layer': {
+    id: 'nsdi-georgia-address-layer',
+    name: 'Georgian NSDI Address Layer and Named Streets',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official spatial address context requires the exact resource-specific access licence, metadata, endpoint, schema, coverage, validity, CRS, and digest; portal visibility is not a blanket open licence.',
+  },
+  'nsdi-georgia-registered-buildings': {
+    id: 'nsdi-georgia-registered-buildings',
+    name: 'Georgian NSDI Registered Buildings',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Exact address-to-building output needs an explicit relationship, common authoritative identifier, or reviewed crosswalk; footprint, containment, parcel overlap, and proximity remain candidate evidence only.',
+  },
+  'nsdi-georgia-registered-parcels': {
+    id: 'nsdi-georgia-registered-parcels',
+    name: 'Georgian NSDI Registered Parcels',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'A registered parcel is not a building, address link, or postcode area and never authorizes publication of an owner, rightsholder, occupant, title, or restriction record.',
+  },
+  'nsdi-georgia-administrative-boundaries': {
+    id: 'nsdi-georgia-administrative-boundaries',
+    name: 'Georgian NSDI Administrative and Settlement Boundaries',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official administrative and settlement boundaries never create postcode membership, delivery coverage, sovereignty, or permission to fill a coverage gap from the nearest feature.',
+  },
+  'geostat-georgia-administrative-classification': {
+    id: 'geostat-georgia-administrative-classification',
+    name: 'GeoStat Georgia Administrative Classification',
+    url: 'https://www.geostat.ge/index.php/en/modules/categories/738/the-geographical-distribution-of-the-population-and-internal-migration',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official statistical and administrative classification is not postal assignment evidence and is not geometry unless a separate rights-cleared spatial release is pinned.',
+  },
   'post-kz': {
     id: 'post-kz',
     name: 'Kazpost',
@@ -1817,7 +1897,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   BN: ['post-gov-bn'],
   BT: ['bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
   CN: ['china-postal-code'],
-  GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia'],
+  GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],
   HK: ['landsd-hk', 'csdi-hk', 'osm-hong-kong'],
   ID: ['pos-indonesia'],
   AE: ['makani-dubai-open-data', 'osm-uae'],

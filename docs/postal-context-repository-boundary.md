@@ -639,6 +639,39 @@ each requested Spatial Unit Register delivery are pinned separately. No public
 artifact promotes operator web content to open bulk data or general DGU portal
 access to a dataset-specific licence.
 
+### `agid-postal-ge`
+
+The Georgia repository owns pinned Georgian Post four-digit assignment
+receipts and addressing guidance; NAPR Address Registry identity; individually
+licensed NSDI address, named-street, registered-building, registered-parcel and
+administrative resources; GeoStat classifications; derived surfaces;
+synthetic fixtures and release validation. `NNNN` is a text-format rule, not
+proof of current allocation, delivery, address existence or geometry.
+
+Georgian Post operator assignment is the postal authority. Neither a returned
+post office/locality nor the addressing-guide examples are a nationwide
+official postcode polygon. A rights-cleared address membership model may emit
+a versioned uncertainty-bearing derived surface, but must retain its members,
+exclusions, method, parameters, validation and lineage and must never label
+buffers or Voronoi cells as Georgian Post or NSDI boundaries. Non-area and
+coverage-limited results stay typed instead of being filled from the nearest
+postal or geospatial feature.
+
+NAPR address identity and NSDI spatial address geometry remain separate
+assertions. Exact building display additionally requires an explicit
+distributable address-building relation, common authoritative identifier or
+reviewed crosswalk. A registered parcel, footprint, containment or proximity
+match is candidate evidence only; addressees, residents, apartments/units,
+owners, rightsholders, occupants, title and restriction records never enter
+public artifacts.
+
+NSDI portal visibility is not a blanket open licence. Every production
+resource pins its responsible subject, resource-specific access licence,
+permitted fields, endpoint, schema, coverage, validity, CRS and digest.
+Administrative/statistical boundaries and postal evidence remain separate
+from territorial policy, never determine sovereignty and never conceal an
+explicit coverage gap.
+
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 
 ### Heavy artifact store
