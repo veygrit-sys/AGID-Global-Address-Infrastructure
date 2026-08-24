@@ -91,14 +91,15 @@ test('Iceland seed remains metadata-only with postcode, address, and building ev
   assert.match(manifest.postal_system.postbox_rule, /does not change.*postcode/i);
   assert.equal(manifest.promotion.current_stage, 'M1_metadata');
   assert.ok(manifest.promotion.hard_blockers.includes('unpinned-postcode-layer'));
+  assert.ok(manifest.promotion.hard_blockers.includes('retired-is50v-postcode-layer-presented-as-current'));
   assert.ok(manifest.promotion.hard_blockers.includes('postcode-stored-as-number'));
 });
 
-test('Iceland source policy separates Pósturinn, IS 50V, HMS, and Statistics Iceland authority', () => {
+test('Iceland source policy separates Byggðastofnun, Pósturinn, HMS, IS 50V buildings, and Statistics Iceland authority', () => {
   const profile = readJson<SourceProfile>('source-profile.json');
   const sources = new Map(profile.sources.map(source => [source.source_id, source]));
   const posturinn = sources.get('posturinn-iceland-postcodes');
-  const postcodeAreas = sources.get('natt-is50v-postcode-boundaries');
+  const postcodeAreas = sources.get('byggdastofnun-iceland-postcode-register');
   const addresses = sources.get('hms-iceland-address-register');
   const buildings = sources.get('natt-is50v-buildings');
   const statistics = sources.get('statistics-iceland-geography');
@@ -108,7 +109,7 @@ test('Iceland source policy separates Pósturinn, IS 50V, HMS, and Statistics Ic
   assert.equal(posturinn?.assignment_authority, 'official_postal_operator');
   assert.equal(posturinn?.geometry_authority, 'none');
   assert.ok(posturinn?.prohibited_claims.includes('postcode-polygon-authority'));
-  assert.equal(postcodeAreas?.geometry_authority, 'official_mapping_geometry');
+  assert.equal(postcodeAreas?.geometry_authority, 'official_postcode_register_geometry');
   assert.equal(postcodeAreas?.redistribution_class, 'R1_public_sector_reuse');
   assert.equal(addresses?.assignment_authority, 'official_address_registry');
   assert.ok(addresses?.prohibited_claims.includes('exact-building-footprint-from-address-point'));
@@ -116,7 +117,7 @@ test('Iceland source policy separates Pósturinn, IS 50V, HMS, and Statistics Ic
   assert.ok(buildings?.prohibited_claims.includes('exact-address-link-from-proximity'));
   assert.equal(statistics?.geometry_authority, 'official_statistical_geometry');
   assert.ok(statistics?.prohibited_claims.includes('postcode-boundary'));
-  assert.ok(profile.artifact_partitions.some(partition => partition.id === 'is50v-postcode-geometry'));
+  assert.ok(profile.artifact_partitions.some(partition => partition.id === 'byggdastofnun-postcode-geometry'));
 });
 
 test('Iceland fixtures use test-only three-digit codes and never become production evidence', () => {

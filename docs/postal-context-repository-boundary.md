@@ -61,9 +61,9 @@ derived-area, CEDEX, and overseas-partition rules belong to `agid-postal-fr`.
 New Zealand-specific PNF/PAF rights, urban/RD/box/bag delivery semantics, LINZ
 address and building lineage, Stats NZ context, and Pacific territory rules
 belong to `agid-postal-nz`.
-Iceland-specific Pósturinn routing classification, IS 50V postcode/building
-geometry, HMS address lineage, Statistics Iceland context, and Póstbox rules
-belong to `agid-postal-is`.
+Iceland-specific Byggðastofnun postcode register/geometry, Pósturinn routing,
+IS 50V building candidates, HMS address lineage, Statistics Iceland context,
+and Póstbox rules belong to `agid-postal-is`.
 Italy-specific Poste Italiane CAP assignment and restricted CAP Professional
 rights, ANNCSU civic lineage, ISTAT administrative context, federated DBGT
 building evidence, derived-surface rules, and historical CAP transitions belong
@@ -183,10 +183,11 @@ and other independent ISO territories remain separate country packs.
 ### `agid-postal-is`
 
 The Iceland repository owns Pósturinn three-digit routing classifications,
-Náttúrufræðistofnun IS 50V postcode-boundary and building lineage, HMS
+Byggðastofnun postcode-register decisions and geographic coverage,
+Náttúrufræðistofnun IS 50V building lineage, HMS
 Staðfangaskrá address identifiers and coordinate semantics, Statistics Iceland
-context, synthetic fixtures, and release validation. An IS 50V postcode polygon
-is postal-area evidence but does not prove a street address, building, recipient,
+context, synthetic fixtures, and release validation. A Byggðastofnun postcode
+polygon is postal-area evidence but does not prove a street address, building, recipient,
 or deliverability. HMS address points preserve coordinate type, review status,
 accuracy, and `HEINUM`/`MATSNR` identifiers. IS 50V building proximity does not
 become an exact address-to-building link without a source-backed relationship.

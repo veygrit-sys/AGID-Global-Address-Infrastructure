@@ -714,7 +714,7 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
       'geoportal-lt',
       'open-data-lithuania',
     ],
-    IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
+    IS: ['byggdastofnun-iceland-postcode-register', 'posturinn-iceland-postcodes', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   };
 
   for (const [countryCode, sourceIds] of Object.entries(expectedSourceIdsByCountry)) {

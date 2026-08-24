@@ -4,8 +4,8 @@ This directory is the metadata-only seed for the planned `agid-postal-is`
 country repository. It defines Iceland-specific source roles, public-sector
 reuse boundaries, three-digit postcode semantics, exceptions, quality gates,
 and non-geographic synthetic fixtures. It contains no Pósturinn customer or
-shipment data, IS 50V rows, HMS rows, Statistics Iceland rows, real addresses,
-or production geometry.
+shipment data, Byggðastofnun rows, IS 50V rows, HMS rows, Statistics Iceland
+rows, real addresses, or production geometry.
 
 ## Authority model
 
@@ -13,8 +13,8 @@ or production geometry.
 Pósturinn
   -> official postcode routing and rural-service classification
 
-Náttúrufræðistofnun IS 50V postcode layer
-  -> official public Polygon / MultiPolygon postcode geometry
+Byggðastofnun postcode register and geographic coverage
+  -> statutory assignment and official Polygon / MultiPolygon geometry
 
 HMS Staðfangaskrá
   -> official public address point, house number, postcode and coordinate type
@@ -34,15 +34,17 @@ purpose remain independent on every assertion.
 
 ## Postal geometry
 
-The pinned IS 50V postcode layer is the canonical public geometry source for a
-postcode release. A code may have Polygon or MultiPolygon geometry, including
-disconnected islands or rural components. Pósturinn's public tables add routing
-and service classification, but they are not scraped into an unversioned bulk
-geometry set.
+The pinned Byggðastofnun postcode register and geographic coverage are the
+canonical assignment and geometry source for a release. A code may have Polygon
+or MultiPolygon geometry, including disconnected islands or rural components.
+Pósturinn's public tables add routing and service classification, but they are
+not scraped into an unversioned bulk geometry set. The postcode layer was
+removed from IS 50V after responsibility moved to Byggðastofnun, so historical
+IS 50V rows cannot be treated as the current register.
 
 An AGID cell, municipality, urban nucleus, address-point hull, buffer, or
-Voronoi surface is always `derived_geometry`. It never replaces the original
-IS 50V polygon or inherits Pósturinn authority.
+Voronoi surface is always `derived_geometry`. It never replaces the official
+Byggðastofnun polygon or inherits Pósturinn authority.
 
 ## Address and building display
 
@@ -59,7 +61,8 @@ source-backed path connects the HMS address identifier to that building.
 
 - Store the three-digit postcode as a string.
 - Preserve multipart rural and island geometry.
-- Keep Pósturinn routing, IS 50V geometry and HMS assignment evidence separate.
+- Keep Byggðastofnun register/geometry, Pósturinn routing and HMS assignment
+  evidence separate.
 - Preserve HMS coordinate type, review state, accuracy and stable identifiers.
 - Do not infer a building from IS 50V proximity or containment alone.
 - A selected Póstbox is a delivery preference, not a residence or premise
@@ -68,8 +71,9 @@ source-backed path connects the HMS address identifier to that building.
 
 ## Promotion
 
-This seed is `M1_metadata`. Promotion requires rights-reviewed and pinned IS
-50V, HMS and Statistics Iceland releases; reviewed Pósturinn evidence;
+This seed is `M1_metadata`. Promotion requires rights-reviewed and pinned
+Byggðastofnun, IS 50V building, HMS and Statistics Iceland releases; reviewed
+Pósturinn evidence;
 three-digit normalization; topology validation; coherent address/building
 links; independent holdout results; attribution; correction/rollback flows;
 and two successful source refreshes.
@@ -77,5 +81,6 @@ and two successful source refreshes.
 Files:
 
 - `repository-manifest.json`: country contract and promotion gates.
-- `source-profile.json`: Pósturinn, IS 50V, HMS and Statistics Iceland roles.
+- `source-profile.json`: Byggðastofnun, Pósturinn, IS 50V building, HMS and
+  Statistics Iceland roles.
 - `fixtures/iceland-synthetic.json`: non-geographic conformance cases.

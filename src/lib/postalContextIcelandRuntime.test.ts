@@ -26,7 +26,7 @@ test('Iceland pack models a three-digit postcode as official-area evidence', () 
   assert.equal(postalArea?.source.geometryAuthority, 'synthetic_fixture_geometry');
 });
 
-test('Iceland postcode lookup returns IS 50V-style geometry only on explicit opt-in', () => {
+test('Iceland postcode lookup returns Byggðastofnun-style geometry only on explicit opt-in', () => {
   const runtime = new PostalContextPackRuntime(createIcelandPostalContextRuntimeTestPack());
   const lookup = runtime.lookupPostalCode('000', ICELAND_POSTAL_CONTEXT_TEST_INSTANT);
   const withGeometry = runtime.lookupPostalCode(
@@ -73,5 +73,5 @@ test('Iceland bbox lookup returns the synthetic postcode polygon', () => {
   assert.equal(result.status, 'unique');
   assert.equal(result.matches.length, 1);
   assert.equal(result.matches[0]?.node.postalCode, '000');
-  assert.equal(result.matches[0]?.source.sourceId, 'is-synthetic-is50v-postcode-area');
+  assert.equal(result.matches[0]?.source.sourceId, 'is-synthetic-byggdastofnun-postcode-area');
 });

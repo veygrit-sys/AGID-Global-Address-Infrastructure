@@ -3,8 +3,8 @@
 Status: `M1 metadata and synthetic runtime conformance`
 
 AGID can load Iceland independently alongside the existing country packs. The
-shared API and resolver support three-digit normalization, IS 50V postcode
-polygons, typed HMS address points, source-linked building evidence, Póstbox
+shared API and resolver support three-digit normalization, Byggðastofnun
+postcode polygons, typed HMS address points, source-linked building evidence, Póstbox
 exceptions, and AGID candidate cell covers without copying national source
 datasets into this repository.
 
@@ -20,7 +20,7 @@ and uses `postal-area-first` semantics:
 ```text
 postcode
   -> Pósturinn routing/service classification
-  -> pinned IS 50V Polygon / MultiPolygon
+  -> pinned Byggðastofnun register Polygon / MultiPolygon
   -> HMS address point with coordinate semantics
   -> source-backed premise or building assertion
   -> AGID cell cover
@@ -35,12 +35,15 @@ These establish operator routing and service context. Public web pages are
 review receipts, not a bulk address or polygon dataset. Customer, recipient,
 shipment, forwarding and selected-delivery data are outside this pack.
 
-### IS 50V postcode geometry
+### Byggðastofnun postcode register and geometry
 
-Náttúrufræðistofnun maintains the continuously revised IS 50V national vector
-base map at 1:50,000 in ISN2004 / Lambert (EPSG:3057). Its boundary layer has a
-postcode layer and is the canonical public Polygon/MultiPolygon source when the
-exact release, layer metadata, terms, attribution, CRS and digest are pinned.
+Byggðastofnun determines Iceland's postcode boundaries and publishes the
+postcode register and geographic coverage under Article 15 of the Postal
+Services Act. Its page links a metadata-catalogue download service. The exact
+register edition, effective decisions, schema, terms, attribution, CRS and
+digest must be pinned. Náttúrufræðistofnun records that the former IS 50V
+postcode layer moved to Byggðastofnun in 2022; old IS 50V rows are historical,
+not the current source of authority.
 
 ### HMS Staðfangaskrá
 
@@ -70,6 +73,8 @@ postal boundary and does not assign an address or building.
 Official references:
 
 - [Pósturinn postcode regions](https://posturinn.is/einstaklingar/ymsar-upplysingar/verdskra/svaedaskipting-postnumera/)
+- [Byggðastofnun postcode register and coverage](https://www.byggdastofnun.is/is/postthjonusta/postnumer)
+- [IS 50V notice of postcode-layer transfer](https://www.natt.is/is/frettir/2022/12/ornefnum-hefur-fjolgad-um-13-thusund-einu-ari-i-50v)
 - [Pósturinn rural distribution](https://posturinn.is/en/individuals/information/distribution-in-rural-areas/)
 - [Pósturinn Póstbox behavior](https://posturinn.is/en/individuals/faq/postbox-pakkaport-home-delivery/)
 - [HMS Staðfangaskrá](https://hms.is/gogn-og-maelabord/grunngogntilnidurhals/stadfangaskra)
@@ -79,7 +84,8 @@ Official references:
 
 ## 3. Geometry policy
 
-For pinned IS 50V release `r`, postcode `c` has original geometry
+For pinned Byggðastofnun register edition `r`, postcode `c` has original
+geometry
 
 ```text
 G(c, r) in {Polygon, MultiPolygon}
@@ -94,7 +100,7 @@ D_c = B intersect union({Voronoi(a) | a in A_c})
 
 `D_c` remains derived. It records input digests, projection, method,
 parameters, holdout performance, topology, gaps, overlaps and date. It cannot
-be called an official IS 50V or Pósturinn boundary.
+be called an official Byggðastofnun or Pósturinn boundary.
 
 ## 4. Rural, island and Póstbox behavior
 

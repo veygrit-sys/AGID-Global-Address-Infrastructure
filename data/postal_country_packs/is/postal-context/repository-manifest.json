@@ -1,6 +1,6 @@
 {
   "schema_version": "agid-postal-country-repository-manifest-v0.1",
-  "contract_version": "0.1.0",
+  "contract_version": "0.1.1",
   "repository": {
     "name": "agid-postal-is",
     "country_code": "IS",
@@ -24,7 +24,7 @@
     "full_code_regex": "^\\d{3}$",
     "full_code_default_geometry": "official_postcode_area",
     "full_code_rule": "Preserve the postcode as exactly three digits. It identifies a postal area and routing context, not a recipient, premise, building, or delivery guarantee.",
-    "postcode_area_rule": "Use a pinned IS 50V postcode layer for official public polygon or multipolygon geometry. Preserve provider version and never silently replace it with statistical or AGID cells.",
+    "postcode_area_rule": "Use the pinned Byggðastofnun postcode register and geographic coverage for official polygon or multipolygon geometry. Preserve register edition, effective decision lineage, metadata and rights; never silently replace it with retired IS 50V postcode rows, statistical geography or AGID cells.",
     "address_rule": "Use HMS Staðfangaskrá for address identifiers, house number and suffix, postcode assignment at an address point, coordinate type, review status, and accuracy.",
     "building_rule": "IS 50V buildings are topographic geometry at 1:50,000. Proximity or containment alone does not create an exact HMS address-to-building link.",
     "rural_rule": "Rural service classification and delivery origin are operational context. A rural postcode can be multipart and does not identify a single road, farm, or building.",
@@ -70,7 +70,7 @@
   "exception_classes": [
     {
       "id": "official_postcode_area",
-      "rule": "Return pinned IS 50V postcode geometry and keep Pósturinn routing classification and HMS address assignments as separate evidence."
+      "rule": "Return pinned Byggðastofnun postcode geometry and keep Pósturinn routing classification and HMS address assignments as separate evidence."
     },
     {
       "id": "rural_or_island_area",
@@ -90,7 +90,7 @@
     },
     {
       "id": "historical_postcode_change",
-      "rule": "Version Pósturinn classifications, IS 50V areas, HMS addresses, buildings, municipalities, and statistics with separate valid and known times."
+      "rule": "Version Byggðastofnun register decisions and areas, Pósturinn classifications, HMS addresses, buildings, municipalities, and statistics with separate valid and known times."
     }
   ],
   "quality_gates": [
@@ -108,7 +108,7 @@
     {
       "id": "authority-separation",
       "scope": "all",
-      "pass": "Pósturinn routing, IS 50V postcode geometry, HMS address evidence, IS 50V building geometry, Statistics Iceland context, and AGID indexes remain separate."
+      "pass": "Byggðastofnun postcode assignment and geometry, Pósturinn routing, HMS address evidence, IS 50V building geometry, Statistics Iceland context, and AGID indexes remain separate."
     },
     {
       "id": "address-coordinate-semantics",
@@ -122,7 +122,7 @@
     },
     {
       "id": "postcode-topology",
-      "scope": "is50v-postcode-areas",
+      "scope": "byggdastofnun-postcode-areas",
       "pass": "Polygon and multipolygon geometry is valid, bounded, versioned, and checked for unexplained gaps, overlaps, and missing inhabited address points."
     },
     {
@@ -152,6 +152,7 @@
     ],
     "hard_blockers": [
       "unpinned-postcode-layer",
+      "retired-is50v-postcode-layer-presented-as-current",
       "posturinn-web-page-treated-as-bulk-dataset",
       "statistical-area-presented-as-postcode-boundary",
       "hms-postcode-presented-as-deliverability-guarantee",

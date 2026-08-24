@@ -9,10 +9,10 @@ import { getOfficialPostalSourcesForCountry } from '../lib/officialPostalSourceC
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
-test('Iceland registry separates Pósturinn, IS 50V, HMS address, building, and statistics evidence', () => {
+test('Iceland registry separates Byggðastofnun, Pósturinn, HMS address, IS 50V building, and statistics evidence', () => {
   const ids = getEuropeOpenSourceIds('IS');
   const postal = EUROPE_OPEN_GEO_SOURCES['posturinn-iceland-postcodes'];
-  const areas = EUROPE_OPEN_GEO_SOURCES['natt-is50v-postcode-boundaries'];
+  const areas = EUROPE_OPEN_GEO_SOURCES['byggdastofnun-iceland-postcode-register'];
   const addresses = EUROPE_OPEN_GEO_SOURCES['hms-iceland-address-register'];
   const buildings = EUROPE_OPEN_GEO_SOURCES['natt-is50v-buildings'];
   const statistics = EUROPE_OPEN_GEO_SOURCES['statistics-iceland-geography'];
@@ -22,7 +22,8 @@ test('Iceland registry separates Pósturinn, IS 50V, HMS address, building, and 
   }
   assert.equal(postal.kind, 'postal-code');
   assert.equal(areas.kind, 'postal-code');
-  assert.match(areas.license ?? '', /public-sector reuse/i);
+  assert.match(areas.notes, /statutory authority.*boundaries.*register/i);
+  assert.equal(ids.some(id => String(id) === 'natt-is50v-postcode-boundaries'), false);
   assert.equal(addresses.kind, 'address');
   assert.match(addresses.notes, /coordinate type/i);
   assert.equal(buildings.kind, 'building');
@@ -34,7 +35,8 @@ test('Iceland official catalog distinguishes assignment, polygon, address, and b
   const sources = new Map(getOfficialPostalSourcesForCountry('IS').map(source => [source.id, source]));
 
   assert.equal(sources.get('posturinn-is-postcodes')?.authority, 'postal-operator');
-  assert.equal(sources.get('natt-is50v-postcode-boundaries')?.depth, 'postcode');
+  assert.equal(sources.get('byggdastofnun-iceland-postcode-register')?.depth, 'postcode');
+  assert.equal(sources.get('byggdastofnun-iceland-postcode-register')?.authority, 'government');
   assert.equal(sources.get('hms-is-address-register')?.depth, 'address');
   assert.equal(sources.get('natt-is50v-buildings')?.depth, 'building');
 });
@@ -48,10 +50,11 @@ test('Iceland address metadata points to current official postal and geospatial 
     openSourceIds: string[];
   };
 
-  assert.match(profile.postalCode.api, /^https:\/\/posturinn\.is\//);
-  assert.match(profile.postalCode.source, /Pósturinn.*HMS.*IS 50V/i);
+  assert.equal(profile.postalCode.api, 'https://www.byggdastofnun.is/is/postthjonusta/postnumer');
+  assert.match(profile.postalCode.source, /Byggðastofnun.*Pósturinn.*HMS.*IS 50V/i);
+  assert.ok(profile.openSourceIds.includes('byggdastofnun-iceland-postcode-register'));
   assert.ok(profile.openSourceIds.includes('posturinn-iceland-postcodes'));
   assert.ok(profile.openSourceIds.includes('hms-iceland-address-register'));
-  assert.ok(profile.openSourceIds.includes('natt-is50v-postcode-boundaries'));
+  assert.equal(profile.openSourceIds.includes('natt-is50v-postcode-boundaries'), false);
   assert.ok(profile.openSourceIds.includes('natt-is50v-buildings'));
 });

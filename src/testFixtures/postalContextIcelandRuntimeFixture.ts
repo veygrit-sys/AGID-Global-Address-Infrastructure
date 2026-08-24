@@ -87,7 +87,7 @@ export function createIcelandPostalContextRuntimeTestPack(): PostalContextRuntim
       };
       feature.source = {
         ...feature.source,
-        sourceId: 'is-synthetic-is50v-postcode-area',
+        sourceId: 'is-synthetic-byggdastofnun-postcode-area',
         assignmentAuthority: 'synthetic_fixture_assignment',
         geometryAuthority: 'synthetic_fixture_geometry',
       };
