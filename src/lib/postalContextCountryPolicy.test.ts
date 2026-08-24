@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import {
   normalizeAustraliaPostalCode,
+  normalizeLatviaPostalCode,
   POSTAL_CONTEXT_COUNTRY_POLICIES,
   isPostalContextCountryCode,
   normalizeIcelandPostalCode,
@@ -108,6 +109,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeAustraliaPostalCode('00-00'), null);
   assert.equal(normalizeAustraliaPostalCode('AU 0000'), null);
   assert.equal(normalizePostalContextPostalCode('au', '00 00'), '0000');
+  assert.equal(normalizeLatviaPostalCode('ＬＶ－００００'), 'LV-0000');
+  assert.equal(normalizeLatviaPostalCode('lv0000'), 'LV-0000');
+  assert.equal(normalizeLatviaPostalCode('00 00'), 'LV-0000');
+  assert.equal(normalizeLatviaPostalCode('LT-0000'), null);
+  assert.equal(normalizeLatviaPostalCode('LV-000'), null);
+  assert.equal(normalizePostalContextPostalCode('lv', 'lv 0000'), 'LV-0000');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -198,10 +205,16 @@ test('declares country-specific full-code geometry semantics', () => {
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MC.postalCodeFormat, '980NN');
-});
   assert.equal(isPostalContextCountryCode('AU'), true);
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.AU.fullCodeGeometrySemantics,
     'delivery-network-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AU.postalCodeFormat, 'NNNN');
+  assert.equal(isPostalContextCountryCode('LV'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.LV.fullCodeGeometrySemantics,
+    'address-range-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LV.postalCodeFormat, 'LV-NNNN');
+});

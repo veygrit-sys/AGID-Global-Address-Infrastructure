@@ -1,0 +1,84 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-lv",
+    "country_code": "LV",
+    "country_name": "Latvia",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "pasta indekss",
+    "full_code_format": "LV-NNNN",
+    "full_code_default_geometry": "address_range_locality_or_non_area",
+    "assignment_rule": "Latvijas Pasts postcode directories are the postal assignment authority. In Rīga they can enumerate street and house-number membership; elsewhere they can assign localities, municipalities, post offices, or special organizations. A directory row is not an official polygon.",
+    "special_code_rule": "Special organization and institution postcodes are non-areal unless an independent source explicitly supplies a valid service geometry.",
+    "address_rule": "The VZD State Address Register supplies official civic-address identity, codes, lifecycle, postcode attributes, coordinates, and cadastral relations. It does not replace Latvijas Pasts as postal assignment authority.",
+    "postal_surface_rule": "A surface may be derived only from a pinned, rights-cleared, complete address-membership snapshot. It remains derived and noncanonical, with gaps and conflicts preserved rather than filled by administrative boundaries or proximity.",
+    "building_rule": "VZD cadastral building contours supply building geometry. A building is exact only through a stable explicit Address Register or cadastral identifier relation; containment and nearest-footprint results remain candidates.",
+    "administrative_rule": "VZD administrative boundaries, villages, and road centerlines add context but cannot create, clip, or replace a Latvijas Pasts postcode assignment.",
+    "territory_rule": "All published features must remain within Latvia's LV country partition; adjacent Estonia, Lithuania, Russia, and Belarus geometry must never be absorbed by border interpolation."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment and address-object lifecycle dates when published by the source.",
+    "known_time": "Ingest, correction, and source-publication timestamps retained separately.",
+    "history_rule": "Current and historical VZD records remain versioned; a later postcode assignment never rewrites an earlier release."
+  },
+  "geometry_classes": [
+    "polygon",
+    "multipolygon",
+    "point",
+    "route",
+    "po_box",
+    "organization",
+    "unknown"
+  ],
+  "quality_gates": [
+    { "id": "operator-assignment", "pass": "Each official assignment points to a pinned Latvijas Pasts directory or permitted validation receipt." },
+    { "id": "derived-surface-lineage", "pass": "Every derived surface records member addresses, method, coverage, exclusions, source digest, and noncanonical status." },
+    { "id": "vzd-address-link", "pass": "Address identity and point geometry retain VZD code, lifecycle, coordinate method, CRS, and source release." },
+    { "id": "vzd-building-link", "pass": "An exact building claim has a stable explicit source relation; nearest and containment are candidates only." },
+    { "id": "privacy", "pass": "No recipient, resident, owner, tenant, customer, private unit, phone, credential, or restricted-security record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures test behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "address-list-presented-as-official-postcode-boundary",
+      "vzd-postcode-attribute-presented-as-postal-operator-validation",
+      "administrative-boundary-presented-as-postcode-boundary",
+      "special-organization-code-presented-as-residential-area",
+      "nearest-building-presented-as-exact-link",
+      "syntactically-valid-code-presented-as-current-allocation",
+      "foreign-border-geometry-absorbed-into-lv",
+      "recipient-resident-owner-or-private-unit-data-published",
+      "restricted-security-object-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy",
+    "building_identity_from_proximity",
+    "every_postcode_is_a_polygon",
+    "derived_surface_is_an_official_boundary",
+    "legal_boundary_or_survey_certification"
+  ]
+}

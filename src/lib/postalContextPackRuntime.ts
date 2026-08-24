@@ -413,6 +413,7 @@ function geometryPositionCount(geometry: PostalContextGeometryFeature['geometry'
 
 export {
   normalizeAustraliaPostalCode,
+  normalizeLatviaPostalCode,
   normalizeIcelandPostalCode,
   normalizeEstoniaPostalCode,
   normalizeSwitzerlandPostalCode,

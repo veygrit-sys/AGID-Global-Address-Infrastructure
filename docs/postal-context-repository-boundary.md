@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-australia`
+Status: `accepted-for-country-pack-reference-implementations-through-latvia`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -101,6 +101,11 @@ address identity and secondary-mail-verification rules, ABS ASGS Postal Area
 approximation and administrative context, licensed Geoscape building linkage,
 non-area delivery classes, cross-state postcodes and external-territory
 partitioning belong to `agid-postal-au`.
+Latvia-specific Latvijas Pasts address and postcode membership, VZD State
+Address Register identity and lifecycle, VZD cadastral building contours,
+administrative context, special non-areal codes, generated noncanonical
+surfaces, privacy exclusions and cross-border partitioning belong to
+`agid-postal-lv`.
 
 
 
@@ -325,6 +330,23 @@ non-areal routing or facility records by default. Public artifacts exclude
 recipients, residents, owners, customers, change-of-address data and delivery
 instructions. Christmas Island, Cocos (Keeling) Islands and Norfolk Island are
 published as separate `CX`, `CC` and `NF` country packs.
+
+### `agid-postal-lv`
+
+The Latvia repository owns pinned Latvijas Pasts directory or permitted lookup
+evidence, VZD State Address Register releases, VZD cadastral building contours,
+derived postal surfaces, synthetic fixtures and release validation. Latvijas
+Pasts assignment is address-, range-, locality-, or organization-oriented and
+does not imply an official public polygon. VZD postcode attributes require
+operator cross-checking for postal claims. Exact building output requires a
+stable explicit address/cadastral relation; containment and proximity remain
+candidates. Municipality and village boundaries add context only and never
+become postal boundaries. Special organization codes, post offices, PO boxes,
+parcel terminals and poste-restante endpoints remain non-areal unless explicit
+source geometry exists. Public artifacts exclude recipients, residents,
+owners, tenants, private units, cadastral subjects and restricted-security
+objects. Latvia remains an `LV` pack and never absorbs neighbouring country
+geometry during surface generation.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

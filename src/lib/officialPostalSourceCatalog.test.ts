@@ -100,6 +100,26 @@ test('separates Australian postal, address, statistical-area, building, and admi
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Latvian postal, civic-address, building, and administrative authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('LV');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('latvijas-pasts-check-address')?.authority, 'postal-operator');
+  assert.equal(byId.get('latvijas-pasts-check-address')?.trustTier, 'authoritative');
+  assert.match(byId.get('latvijas-pasts-check-address')?.notes.join(' ') ?? '', /not a canonical polygon/i);
+  assert.equal(byId.get('vzd-latvia-address-register')?.authority, 'government');
+  assert.equal(byId.get('vzd-latvia-address-register')?.depth, 'address');
+  assert.match(byId.get('vzd-latvia-address-register')?.notes.join(' ') ?? '', /cross-checking/i);
+  assert.equal(byId.get('vzd-latvia-cadastral-buildings')?.depth, 'building');
+  assert.match(byId.get('vzd-latvia-cadastral-buildings')?.notes.join(' ') ?? '', /explicit VZD relation/i);
+  assert.equal(byId.get('vzd-latvia-administrative-boundaries')?.depth, 'geo-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'LV',
+    source: 'Latvijas Pasts postcode directory',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',

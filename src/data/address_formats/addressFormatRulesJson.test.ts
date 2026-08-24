@@ -650,8 +650,8 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
   assert.equal(loadFormat('EE').postalCode?.source, 'Omniva / AKS Postal Codes / ADS');
   assert.equal(loadFormat('DK').postalCode?.source, 'PostNord assignment with DAGI postcode geometry, DAR address identity, and GeoDanmark building linkage');
   assert.equal(loadFormat('FI').postalCode?.api, 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services');
-  assert.equal(loadFormat('LV').postalCode?.api, 'https://pasts.lv/en/check-address');
-  assert.equal(loadFormat('LV').postalCode?.source, 'Latvijas Pasts check address');
+  assert.equal(loadFormat('LV').postalCode?.api, 'https://pasts.lv/en/services/tariffs-and-information/postcode-book');
+  assert.equal(loadFormat('LV').postalCode?.source, 'Latvijas Pasts assignment with VZD Address Register and Cadastre evidence');
   assert.equal(loadFormat('LT').postalCode?.api, 'https://www.post.lt/pasto-kodu-ir-adresu-paieska');
   assert.equal(loadFormat('LT').postalCode?.source, 'Lietuvos paštas postal code and address search');
 });
@@ -671,7 +671,12 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
       'geodanmark',
     ],
     FI: ['posti-finland-postal-code-services', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
-    LV: ['lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
+    LV: [
+      'latvijas-pasts-check-address',
+      'vzd-latvia-address-register',
+      'vzd-latvia-cadastral-buildings',
+      'vzd-latvia-administrative-boundaries',
+    ],
     EE: [
       'omniva-estonia-postcodes',
       'estonia-aks-postal-codes',

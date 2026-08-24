@@ -104,6 +104,8 @@ export type EuropeOpenGeoSourceId =
   | 'kartes-lv-postal-codes'
   | 'lgia-latvia'
   | 'vzd-latvia-address-register'
+  | 'vzd-latvia-cadastral-buildings'
+  | 'vzd-latvia-administrative-boundaries'
   | 'data-gov-lv-geodata'
   | 'maaamet-estonia'
   | 'estonia-address-data-system'
@@ -1237,12 +1239,12 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'latvijas-pasts-check-address': {
     id: 'latvijas-pasts-check-address',
-    name: 'Latvijas Pasts Check Address',
-    url: 'https://pasts.lv/en/check-address',
+    name: 'Latvijas Pasts Postcode Directory',
+    url: 'https://pasts.lv/en/services/tariffs-and-information/postcode-book',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Latvijas Pasts address and postcode lookup for current Latvian address formatting and postal-index validation.',
+    notes: 'Official Latvijas Pasts postcode and address-membership directories, including street/house-number and special-organization assignments; directory membership is not a canonical postcode boundary.',
   },
   'kartes-lv-postal-codes': {
     id: 'kartes-lv-postal-codes',
@@ -1265,11 +1267,29 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'vzd-latvia-address-register': {
     id: 'vzd-latvia-address-register',
     name: 'Latvia State Land Service Address Register',
-    url: 'https://www.vzd.gov.lv/en',
+    url: 'https://data.gov.lv/dati/dataset/varis-atvertie-dati',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Latvian address register and cadastral reference for street, building, village, and municipality validation.',
+    usage: 'primary',
+    notes: 'Official VZD State Address Register open data under CC BY 4.0, updated weekly with address codes, lifecycle, coordinates, cadastral relations, and postcode attributes that still require Latvijas Pasts cross-checking.',
+  },
+  'vzd-latvia-cadastral-buildings': {
+    id: 'vzd-latvia-cadastral-buildings',
+    name: 'VZD Latvia Open Cadastral Buildings',
+    url: 'https://data.gov.lv/dati/dataset/kadastra-informacijas-sistemas-atverti-telpiskie-dati',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official CC BY 4.0 cadastral building external contours; exact address-to-building display requires an explicit stable VZD relation, while nearest or containment matches remain candidates.',
+  },
+  'vzd-latvia-administrative-boundaries': {
+    id: 'vzd-latvia-administrative-boundaries',
+    name: 'VZD Latvia Address Register Boundaries',
+    url: 'https://www.vzd.gov.lv/lv/pakalpojumi/valsts-adresu-registra-atvertie-dati-0',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official municipality, village, and road context from the VZD Address Register; these geometries cannot create, clip, or replace a Latvijas Pasts postcode assignment.',
   },
   'data-gov-lv-geodata': {
     id: 'data-gov-lv-geodata',
@@ -2710,7 +2730,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
     'geodanmark',
   ],
   FI: ['posti-finland-postal-code-services', 'avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
-  LV: ['latvijas-pasts-check-address', 'kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
+  LV: ['latvijas-pasts-check-address', 'vzd-latvia-address-register', 'vzd-latvia-cadastral-buildings', 'vzd-latvia-administrative-boundaries', 'kartes-lv-postal-codes', 'lgia-latvia', 'data-gov-lv-geodata'],
   EE: ['omniva-estonia-postcodes', 'estonia-aks-postal-codes', 'estonia-aks-postal-areas', 'estonia-aks-address-objects', 'estonia-aks-building-shapes', 'estonia-ehak-admin-boundaries'],
   LT: ['lietuvos-pastas-postcode-search', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
   IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
