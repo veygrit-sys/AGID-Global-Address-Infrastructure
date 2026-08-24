@@ -1,11 +1,11 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
 export type PostalContextCountryPolicy = {
   countryCode: PostalContextCountryCode;
   postalCodeFormat: string;
-  fullCodeGeometrySemantics: 'area-or-non-area' | 'delivery-point-first' | 'address-range-first' | 'delivery-unit-first' | 'routing-locality-first' | 'delivery-network-first';
+  fullCodeGeometrySemantics: 'area-or-non-area' | 'delivery-point-first' | 'address-range-first' | 'delivery-unit-first' | 'routing-locality-first' | 'delivery-network-first' | 'postal-area-first';
 };
 
 export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
@@ -41,6 +41,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'NZ',
     postalCodeFormat: 'NNNN',
     fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  IS: {
+    countryCode: 'IS',
+    postalCodeFormat: 'NNN',
+    fullCodeGeometrySemantics: 'postal-area-first',
   },
 };
 
@@ -95,6 +100,13 @@ export function normalizeNewZealandPostalCode(value: unknown) {
   return /^\d{4}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeIcelandPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{3}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
@@ -103,5 +115,6 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'GB') return normalizeUnitedKingdomPostalCode(value);
   if (normalizedCountry === 'FR') return normalizeFrancePostalCode(value);
   if (normalizedCountry === 'NZ') return normalizeNewZealandPostalCode(value);
+  if (normalizedCountry === 'IS') return normalizeIcelandPostalCode(value);
   return null;
 }

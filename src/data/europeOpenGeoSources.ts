@@ -104,6 +104,11 @@ export type EuropeOpenGeoSourceId =
   | 'lmmi-iceland'
   | 'iceland-national-registry-addresses'
   | 'island-is-open-data'
+  | 'posturinn-iceland-postcodes'
+  | 'natt-is50v-postcode-boundaries'
+  | 'hms-iceland-address-register'
+  | 'natt-is50v-buildings'
+  | 'statistics-iceland-geography'
   | 'eurostat-gisco-postcodes'
   | 'elta-gr'
   | 'istat-italy-geodata'
@@ -1129,6 +1134,56 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'europe',
     usage: 'reference',
     notes: 'Open Data Index postal-code references for countries with listed postcode data.',
+  },
+  'posturinn-iceland-postcodes': {
+    id: 'posturinn-iceland-postcodes',
+    name: 'Pósturinn Iceland Postcode Regions',
+    url: 'https://posturinn.is/einstaklingar/ymsar-upplysingar/verdskra/svaedaskipting-postnumera/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public web reference; operator terms apply',
+    notes: 'Official Pósturinn postcode groupings and rural-service context; reference evidence, not a bulk polygon or deliverability dataset.',
+  },
+  'natt-is50v-postcode-boundaries': {
+    id: 'natt-is50v-postcode-boundaries',
+    name: 'Náttúrufræðistofnun IS 50V Postcode Boundaries',
+    url: 'https://www.natt.is/en/resources/geospatial-data/base-map-data',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Icelandic public-sector reuse with attribution; verify layer metadata',
+    notes: 'Official continuously revised 1:50,000 postcode polygon layer; pin release, CRS, terms, attribution, and digest.',
+  },
+  'hms-iceland-address-register': {
+    id: 'hms-iceland-address-register',
+    name: 'HMS Staðfangaskrá',
+    url: 'https://hms.is/gogn-og-maelabord/grunngogntilnidurhals/stadfangaskra',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Icelandic public-sector reuse with attribution',
+    notes: 'Official weekly address register with postcode, stable identifiers, coordinate type, review status, and estimated accuracy.',
+  },
+  'natt-is50v-buildings': {
+    id: 'natt-is50v-buildings',
+    name: 'Náttúrufræðistofnun IS 50V Buildings',
+    url: 'https://www.natt.is/en/resources/geospatial-data/base-map-data',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Icelandic public-sector reuse with attribution; verify layer metadata',
+    notes: 'Official 1:50,000 topographic building geometry; not an exact address-to-building link from proximity or containment.',
+  },
+  'statistics-iceland-geography': {
+    id: 'statistics-iceland-geography',
+    name: 'Statistics Iceland Municipalities and Urban Nuclei',
+    url: 'https://www.statice.is/statistics/population/inhabitants/municipalities-and-urban-nuclei/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0',
+    notes: 'Official statistical and administrative context; municipalities and urban nuclei are not postcode boundaries.',
   },
   'lmmi-iceland': {
     id: 'lmmi-iceland',
@@ -2202,7 +2257,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   LV: ['latvijas-pasts-check-address', 'kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
   EE: ['kartes-lv-postal-codes', 'maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
   LT: ['lietuvos-pastas-postcode-search', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
-  IS: ['okfn-index-postcodes', 'lmmi-iceland', 'iceland-national-registry-addresses', 'island-is-open-data'],
+  IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   IT: ['datahub-postal', 'istat-italy-geodata', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],
   PT: ['eurostat-gisco-postcodes', 'ctt-portugal', 'dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],

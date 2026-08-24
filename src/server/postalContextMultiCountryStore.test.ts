@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import { PostalContextPackRuntime } from '../lib/postalContextPackRuntime';
 import { createPostalContextRuntimeTestPack } from '../testFixtures/postalContextRuntimeFixture';
 import { createFrancePostalContextRuntimeTestPack } from '../testFixtures/postalContextFranceRuntimeFixture';
+import { createIcelandPostalContextRuntimeTestPack } from '../testFixtures/postalContextIcelandRuntimeFixture';
 import { createNewZealandPostalContextRuntimeTestPack } from '../testFixtures/postalContextNewZealandRuntimeFixture';
 import { createNetherlandsPostalContextRuntimeTestPack } from '../testFixtures/postalContextNetherlandsRuntimeFixture';
 import { createSingaporePostalContextRuntimeTestPack } from '../testFixtures/postalContextSingaporeRuntimeFixture';
@@ -18,7 +19,7 @@ test('configured store advertises all supported country packs independently', ()
 
   assert.deepEqual(
     store.statuses().map(status => [status.countryCode, status.state]),
-    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured']],
+    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured']],
   );
   assert.deepEqual(store.countryStatus('US').errors, ['unsupported-country']);
 });
@@ -35,6 +36,7 @@ test('an incomplete Singapore configuration does not affect Japan status', () =>
   assert.equal(store.countryStatus('GB').state, 'unconfigured');
   assert.equal(store.countryStatus('FR').state, 'unconfigured');
   assert.equal(store.countryStatus('NZ').state, 'unconfigured');
+  assert.equal(store.countryStatus('IS').state, 'unconfigured');
 });
 
 test('in-memory store can route independent supported-country runtimes', () => {
@@ -44,7 +46,8 @@ test('in-memory store can route independent supported-country runtimes', () => {
   const unitedKingdom = new PostalContextPackRuntime(createUnitedKingdomPostalContextRuntimeTestPack());
   const france = new PostalContextPackRuntime(createFrancePostalContextRuntimeTestPack());
   const newZealand = new PostalContextPackRuntime(createNewZealandPostalContextRuntimeTestPack());
-  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand]);
+  const iceland = new PostalContextPackRuntime(createIcelandPostalContextRuntimeTestPack());
+  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland]);
 
   assert.equal(store.getRuntime('jp'), japan);
   assert.equal(store.getRuntime('sg'), singapore);
@@ -52,7 +55,8 @@ test('in-memory store can route independent supported-country runtimes', () => {
   assert.equal(store.getRuntime('gb'), unitedKingdom);
   assert.equal(store.getRuntime('fr'), france);
   assert.equal(store.getRuntime('nz'), newZealand);
-  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ']);
+  assert.equal(store.getRuntime('is'), iceland);
+  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS']);
   assert.throws(
     () => createInMemoryPostalContextPackStore([singapore, singapore]),
     /duplicate-postal-context-runtime:SG/,

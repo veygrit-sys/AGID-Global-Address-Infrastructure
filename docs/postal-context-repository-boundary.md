@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-japan-singapore-netherlands-united-kingdom-france-and-new-zealand-reference-implementations`
+Status: `accepted-for-japan-singapore-netherlands-united-kingdom-france-new-zealand-and-iceland-reference-implementations`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -61,6 +61,9 @@ derived-area, CEDEX, and overseas-partition rules belong to `agid-postal-fr`.
 New Zealand-specific PNF/PAF rights, urban/RD/box/bag delivery semantics, LINZ
 address and building lineage, Stats NZ context, and Pacific territory rules
 belong to `agid-postal-nz`.
+Iceland-specific Pósturinn routing classification, IS 50V postcode/building
+geometry, HMS address lineage, Statistics Iceland context, and Póstbox rules
+belong to `agid-postal-is`.
 
 ### `agid-postal-jp`
 
@@ -121,6 +124,19 @@ permit an artifact. RD number and mailtown remain routing fields, box and bag
 postcodes do not become surrounding residential areas, LINZ roof proximity does
 not become an exact address-to-building link, and Cook Islands, Niue, Tokelau,
 and other independent ISO territories remain separate country packs.
+### `agid-postal-is`
+
+The Iceland repository owns Pósturinn three-digit routing classifications,
+Náttúrufræðistofnun IS 50V postcode-boundary and building lineage, HMS
+Staðfangaskrá address identifiers and coordinate semantics, Statistics Iceland
+context, synthetic fixtures, and release validation. An IS 50V postcode polygon
+is postal-area evidence but does not prove a street address, building, recipient,
+or deliverability. HMS address points preserve coordinate type, review status,
+accuracy, and `HEINUM`/`MATSNR` identifiers. IS 50V building proximity does not
+become an exact address-to-building link without a source-backed relationship.
+A user-selected Póstbox is a delivery preference and does not change the
+premise's postcode polygon or imply residence at the locker.
+
 
 
 

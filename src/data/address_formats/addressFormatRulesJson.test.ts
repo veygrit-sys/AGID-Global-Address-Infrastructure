@@ -640,7 +640,7 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
     LV: ['lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
     EE: ['maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
     LT: ['geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
-    IS: ['lmmi-iceland', 'iceland-national-registry-addresses', 'island-is-open-data'],
+    IS: ['posturinn-iceland-postcodes', 'natt-is50v-postcode-boundaries', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
   };
 
   for (const [countryCode, sourceIds] of Object.entries(expectedSourceIdsByCountry)) {
