@@ -1,6 +1,6 @@
 # Postal Context repository boundary
 
-Status: `accepted-for-country-pack-reference-implementations-through-monaco`
+Status: `accepted-for-country-pack-reference-implementations-through-australia`
 
 AGIDとPostal Contextのデータ本体は、別リポジトリにする。分離の目的は、
 データ量だけではなく、更新頻度、出典、ライセンス、訂正、国別制度、release rollbackを
@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -96,6 +96,12 @@ Monaco-specific La Poste ordinary and CEDEX routing assignment, DPUM address
 and building identity, government urban-plan context, IMSEE districts,
 cross-border separation, non-public source rights and derived-surface rules
 belong to `agid-postal-mc`.
+Australia-specific Australia Post postcode/PAF assignment and rights, G-NAF
+address identity and secondary-mail-verification rules, ABS ASGS Postal Area
+approximation and administrative context, licensed Geoscape building linkage,
+non-area delivery classes, cross-state postcodes and external-territory
+partitioning belong to `agid-postal-au`.
+
 
 
 
@@ -300,6 +306,25 @@ separate `MC` pack and never absorbs neighbouring French addresses or geometry.
 
 
 
+
+### `agid-postal-au`
+
+The Australia repository owns pinned Australia Post postcode and PAF contract
+metadata, delivery-category semantics, G-NAF address identity and geocode
+lineage, ABS ASGS Postal Area and administrative editions, licensed Geoscape
+building relationships, derived surfaces, synthetic fixtures and release
+validation. Australia Post assignment does not imply a public boundary. G-NAF
+postcode values do not independently verify mail receipt, and the G-NAF EULA's
+secondary-verification rule remains attached to mailing use. ABS POAs are
+Mesh Block approximations, exclude many non-street-delivery codes and remain
+official-derived noncanonical geometry. Exact building output requires a
+pinned `building_address` relationship or reviewed explicit crosswalk;
+containment and proximity remain candidates. PO Boxes, Locked Bags, Parcel
+Lockers, Parcel Collect, large-volume receivers and specialist codes remain
+non-areal routing or facility records by default. Public artifacts exclude
+recipients, residents, owners, customers, change-of-address data and delivery
+instructions. Christmas Island, Cocos (Keeling) Islands and Norfolk Island are
+published as separate `CX`, `CC` and `NF` country packs.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。

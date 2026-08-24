@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeAustraliaPostalCode,
   POSTAL_CONTEXT_COUNTRY_POLICIES,
   isPostalContextCountryCode,
   normalizeIcelandPostalCode,
@@ -102,6 +103,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeMonacoPostalCode('98100'), null);
   assert.equal(normalizeMonacoPostalCode('MC 98000'), null);
   assert.equal(normalizePostalContextPostalCode('mc', '98 000'), '98000');
+  assert.equal(normalizeAustraliaPostalCode('００００'), '0000');
+  assert.equal(normalizeAustraliaPostalCode('00 00'), '0000');
+  assert.equal(normalizeAustraliaPostalCode('00-00'), null);
+  assert.equal(normalizeAustraliaPostalCode('AU 0000'), null);
+  assert.equal(normalizePostalContextPostalCode('au', '00 00'), '0000');
   assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
 });
 
@@ -193,3 +199,9 @@ test('declares country-specific full-code geometry semantics', () => {
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MC.postalCodeFormat, '980NN');
 });
+  assert.equal(isPostalContextCountryCode('AU'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.AU.fullCodeGeometrySemantics,
+    'delivery-network-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AU.postalCodeFormat, 'NNNN');

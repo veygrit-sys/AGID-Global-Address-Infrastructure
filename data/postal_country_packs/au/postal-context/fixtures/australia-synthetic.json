@@ -1,0 +1,40 @@
+{
+  "schema_version": "agid-postal-synthetic-fixtures-v0.1",
+  "country_code": "AU",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "coordinates_are_geographic": false,
+    "postal_codes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "au-syn-delivery-area",
+      "synthetic_address": { "postal_code": "0000", "state": "Synthetic State", "locality": "Synthetic Locality", "street": "Synthetic Street", "house_number": "1" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "polygon", "must_not_assert": ["official-australia-post-boundary", "real-postcode-allocation", "deliverability"] }
+    },
+    {
+      "fixture_id": "au-syn-gnaf-address-point",
+      "synthetic_address": { "postal_code": "0000", "state": "Synthetic State", "locality": "Synthetic Locality", "street": "Point Street", "house_number": "2" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "point", "must_not_assert": ["address-is-mail-deliverable", "address-point-is-building-footprint", "resident-or-owner"] }
+    },
+    {
+      "fixture_id": "au-syn-explicit-building-link",
+      "synthetic_address": { "postal_code": "0000", "state": "Synthetic State", "locality": "Synthetic Locality", "street": "Link Street", "house_number": "3" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "polygon", "must_not_assert": ["nearest-building-is-exact-link", "legal-parcel-boundary", "deliverability"] }
+    },
+    {
+      "fixture_id": "au-syn-non-area-delivery-endpoint",
+      "synthetic_address": { "postal_code": "0000", "state": "Synthetic State", "locality": "Synthetic Locality", "delivery_type": "PO_BOX" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "geometry_type": "none", "must_not_assert": ["surrounding-residential-polygon", "premise-address", "recipient-identity"] }
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import { createCzechiaPostalContextRuntimeTestPack } from '../testFixtures/posta
 import { createDenmarkPostalContextRuntimeTestPack } from '../testFixtures/postalContextDenmarkRuntimeFixture';
 import { createMaltaPostalContextRuntimeTestPack } from '../testFixtures/postalContextMaltaRuntimeFixture';
 import { createMonacoPostalContextRuntimeTestPack } from '../testFixtures/postalContextMonacoRuntimeFixture';
+import { createAustraliaPostalContextRuntimeTestPack } from '../testFixtures/postalContextAustraliaRuntimeFixture';
 import { createNewZealandPostalContextRuntimeTestPack } from '../testFixtures/postalContextNewZealandRuntimeFixture';
 import { createNetherlandsPostalContextRuntimeTestPack } from '../testFixtures/postalContextNetherlandsRuntimeFixture';
 import { createSingaporePostalContextRuntimeTestPack } from '../testFixtures/postalContextSingaporeRuntimeFixture';
@@ -27,7 +28,7 @@ test('configured store advertises all supported country packs independently', ()
 
   assert.deepEqual(
     store.statuses().map(status => [status.countryCode, status.state]),
-    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured'], ['IT', 'unconfigured'], ['EE', 'unconfigured'], ['CH', 'unconfigured'], ['DE', 'unconfigured'], ['CZ', 'unconfigured'], ['DK', 'unconfigured'], ['MT', 'unconfigured'], ['MC', 'unconfigured']],
+    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured'], ['IT', 'unconfigured'], ['EE', 'unconfigured'], ['CH', 'unconfigured'], ['DE', 'unconfigured'], ['CZ', 'unconfigured'], ['DK', 'unconfigured'], ['MT', 'unconfigured'], ['MC', 'unconfigured'], ['AU', 'unconfigured']],
   );
   assert.deepEqual(store.countryStatus('US').errors, ['unsupported-country']);
 });
@@ -53,6 +54,7 @@ test('an incomplete Singapore configuration does not affect Japan status', () =>
   assert.equal(store.countryStatus('DK').state, 'unconfigured');
   assert.equal(store.countryStatus('MT').state, 'unconfigured');
   assert.equal(store.countryStatus('MC').state, 'unconfigured');
+  assert.equal(store.countryStatus('AU').state, 'unconfigured');
 });
 
 test('in-memory store can route independent supported-country runtimes', () => {
@@ -71,7 +73,8 @@ test('in-memory store can route independent supported-country runtimes', () => {
   const denmark = new PostalContextPackRuntime(createDenmarkPostalContextRuntimeTestPack());
   const malta = new PostalContextPackRuntime(createMaltaPostalContextRuntimeTestPack());
   const monaco = new PostalContextPackRuntime(createMonacoPostalContextRuntimeTestPack());
-  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland, italy, estonia, switzerland, germany, czechia, denmark, malta, monaco]);
+  const australia = new PostalContextPackRuntime(createAustraliaPostalContextRuntimeTestPack());
+  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland, italy, estonia, switzerland, germany, czechia, denmark, malta, monaco, australia]);
 
   assert.equal(store.getRuntime('jp'), japan);
   assert.equal(store.getRuntime('sg'), singapore);
@@ -88,7 +91,8 @@ test('in-memory store can route independent supported-country runtimes', () => {
   assert.equal(store.getRuntime('dk'), denmark);
   assert.equal(store.getRuntime('mt'), malta);
   assert.equal(store.getRuntime('mc'), monaco);
-  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC']);
+  assert.equal(store.getRuntime('au'), australia);
+  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU']);
   assert.throws(
     () => createInMemoryPostalContextPackStore([singapore, singapore]),
     /duplicate-postal-context-runtime:SG/,

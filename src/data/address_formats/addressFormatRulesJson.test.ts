@@ -514,6 +514,9 @@ test('Oceania address JSON files expose addressRules metadata including Australi
   }
 
   assert.deepEqual(loadRules('AU').englishOrder, ['recipient', 'street', 'suburb', 'state', 'postcode', 'country']);
+  assert.deepEqual(loadRules('AU').regionalHierarchy, ['stateOrTerritory', 'localGovernmentArea', 'suburbOrLocality']);
+  assert.match(loadRules('AU').postalCode?.label ?? '', /4 digits.*leading zero.*delivery category/i);
+  assert.match(loadFormat('AU').postalCode?.source ?? '', /Australia Post.*G-NAF.*ABS.*Geoscape/i);
   assert.deepEqual(loadRules('NZ').regionalHierarchy, ['cityOrRegion']);
   assert.equal(loadRules('PG').postalCode?.label, '3 digits used');
   assert.deepEqual(loadRules('FJ').languages, [
@@ -557,6 +560,11 @@ test('All Oceania country and territory JSON files expose postal API or open-sou
   }
 
   assert.ok(loadFormat('AU').openSourceIds?.includes('auspost-postcode'));
+  assert.ok(loadFormat('AU').openSourceIds?.includes('auspost-paf'));
+  assert.ok(loadFormat('AU').openSourceIds?.includes('gnaf-au'));
+  assert.ok(loadFormat('AU').openSourceIds?.includes('abs-au-postal-areas'));
+  assert.ok(loadFormat('AU').openSourceIds?.includes('geoscape-au-buildings'));
+  assert.ok(loadFormat('AU').openSourceIds?.includes('abs-au-boundaries'));
   assert.ok(loadFormat('NZ').openSourceIds?.includes('linz-nz-addresses'));
   assert.ok(loadFormat('NZ').openSourceIds?.includes('nz-post-postcode-network'));
   assert.ok(loadFormat('NZ').openSourceIds?.includes('linz-nz-building-outlines'));

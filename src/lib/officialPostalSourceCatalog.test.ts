@@ -78,6 +78,28 @@ test('keeps the UPU source as an explicit official global fallback', () => {
   assert.equal(upu?.requiresCredential, true);
 });
 
+test('separates Australian postal, address, statistical-area, building, and administrative authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('AU');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('australia-post-postcode-data')?.authority, 'postal-operator');
+  assert.equal(byId.get('australia-post-postcode-data')?.trustTier, 'authoritative');
+  assert.equal(byId.get('australia-post-paf')?.depth, 'delivery-point');
+  assert.equal(byId.get('australia-post-paf')?.requiresCredential, true);
+  assert.equal(byId.get('gnaf-au')?.depth, 'address');
+  assert.match(byId.get('gnaf-au')?.notes.join(' ') ?? '', /secondary evidence/i);
+  assert.equal(byId.get('abs-asgs-postal-areas')?.trustTier, 'official-derived');
+  assert.match(byId.get('abs-asgs-postal-areas')?.notes.join(' ') ?? '', /not an Australia Post boundary/i);
+  assert.equal(byId.get('geoscape-au-buildings')?.depth, 'building');
+  assert.equal(byId.get('geoscape-au-buildings')?.availability, 'commercial-or-restricted');
+  assert.equal(byId.get('abs-asgs-boundaries')?.depth, 'geo-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'AU',
+    source: 'Australia Post Postcode Data',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',

@@ -42,6 +42,11 @@ export type OceaniaOpenGeoSourceId =
   | 'eea-eunis-habitats'
   | 'jrc-esdac-soils'
   | 'auspost-postcode'
+  | 'auspost-paf'
+  | 'gnaf-au'
+  | 'abs-au-postal-areas'
+  | 'geoscape-au-buildings'
+  | 'abs-au-boundaries'
   | 'auspost-territories'
   | 'linz-nz-addresses'
   | 'nz-post-postcode-network'
@@ -435,7 +440,57 @@ export const OCEANIA_OPEN_GEO_SOURCES: Record<OceaniaOpenGeoSourceId, OceaniaOpe
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Australian postcode search.',
+    notes: 'Official Australia Post allocation lookup; a postcode record does not itself provide an authoritative postcode boundary.',
+  },
+  'auspost-paf': {
+    id: 'auspost-paf',
+    name: 'Australia Post Postal Address File',
+    url: 'https://auspost.com.au/business/services/data-services/supporting-our-data-partners/resources-and-key-dates',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Australia Post licensed PAF; contract rights govern use and redistribution',
+    notes: 'Official licensed postal-address and DPID reference updated monthly; it is not a building-footprint source and no PAF row is bundled here.',
+  },
+  'gnaf-au': {
+    id: 'gnaf-au',
+    name: 'Geocoded National Address File (G-NAF)',
+    url: 'https://www.data.gov.au/data/dataset/geocoded-national-address-file-g-naf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'G-NAF EULA based on CC BY 4.0; secondary verification required for sending mail',
+    notes: 'Official public address identities and geocodes; postcode is commonly locality-derived and the EULA requires secondary verification before using an address for mail.',
+  },
+  'abs-au-postal-areas': {
+    id: 'abs-au-postal-areas',
+    name: 'ABS ASGS Postal Areas',
+    url: 'https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-3-july-2021-june-2026/non-abs-structures/postal-areas',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'ABS source-specific terms and attribution',
+    notes: 'Official-derived Mesh Block approximation for statistics, not an Australia Post boundary; non-street-delivery codes are excluded and the ASGS edition must be pinned.',
+  },
+  'geoscape-au-buildings': {
+    id: 'geoscape-au-buildings',
+    name: 'Geoscape Buildings',
+    url: 'https://docs.geoscape.com.au/projects/buildings_guide/en/stable/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Geoscape commercial product; product-specific rights apply',
+    notes: 'Licensed building geometry and building_address crosswalk; containment or nearest-footprint matching remains candidate evidence.',
+  },
+  'abs-au-boundaries': {
+    id: 'abs-au-boundaries',
+    name: 'ABS Australian Statistical Geography Standard boundaries',
+    url: 'https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'ABS source-specific terms and attribution',
+    notes: 'Official statistical and administrative context; state, LGA and locality geometry cannot create, clip or replace postcode assignment.',
   },
   'auspost-territories': {
     id: 'auspost-territories',
@@ -667,6 +722,11 @@ const COUNTRY_SOURCE_IDS: Partial<Record<OceaniaCountryOrTerritoryCode, OceaniaO
   AU: [
     'auspost-postcode',
     'digital-earth-australia-coastlines',
+    'auspost-paf',
+    'gnaf-au',
+    'abs-au-postal-areas',
+    'geoscape-au-buildings',
+    'abs-au-boundaries',
     'digital-earth-australia-wofs',
     'digital-earth-australia-fractional-cover',
     'geoscience-australia-elvis',
