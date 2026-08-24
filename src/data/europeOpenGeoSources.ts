@@ -244,6 +244,7 @@ export type EuropeOpenGeoSourceId =
   | 'haypost-address-reference'
   | 'geonames-armenia'
   | 'azerbaijan-state-committee-property'
+  | 'azerbaijan-address-register'
   | 'azerbaijan-open-data'
   | 'azerpost-address-reference'
   | 'geonames-azerbaijan'
@@ -2509,11 +2510,20 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'azerbaijan-state-committee-property': {
     id: 'azerbaijan-state-committee-property',
     name: 'Azerbaijan State Service on Property Issues',
-    url: 'https://emlak.gov.az/',
+    url: 'https://emlak.gov.az/az/news/view/5733-Da%C5%9F%C4%B1nmaz-%C9%99mlak-nec%C9%99-kadastr-u%C3%A7otuna-al%C4%B1n%C4%B1r',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Azerbaijani cadastral and property reference for administrative geography and address-adjacent validation.',
+    notes: 'Official cadastral and property authority for parcel, building-object, and jurisdiction context. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; proximity is insufficient.',
+  },
+  'azerbaijan-address-register': {
+    id: 'azerbaijan-address-register',
+    name: 'Azerbaijan Address Register Information System (ÜRIS)',
+    url: 'https://emlak.gov.az/az/news/view/9349-%C3%9Cnvan-Reyestri-%C4%B0nformasiya-Sistemi-n%C9%99dir-v%C9%99-sistemin-hans%C4%B1-%C3%BCst%C3%BCnl%C3%BCkl%C9%99ri-var',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address-register reference for settlements, postcodes, transport infrastructure, and immovable-property addresses with source object identifiers; portal visibility is not a bulk redistribution license.',
   },
   'azerbaijan-open-data': {
     id: 'azerbaijan-open-data',
@@ -2522,16 +2532,16 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Azerbaijan open-data reference for public administrative and geographic datasets where available.',
+    notes: 'Dataset-discovery and validation only until each publisher, license, schema, coverage, territorial vintage, update date, and digest passes dataset-by-dataset review.',
   },
   'azerpost-address-reference': {
     id: 'azerpost-address-reference',
     name: 'Azerpost Postal Reference',
-    url: 'https://www.azerpost.az/',
+    url: 'https://www.azerpost.az/az/tez-tez-verilen-suallar/umumi-br-suallar/yasadigim-unvanin-poct-indeksini-nece-oyrene-bilerem',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Azerbaijan postal and delivery reference for postcode and locality validation.',
+    notes: 'Official postcode, branch, and locality assignment reference. Search results and office points are not canonical postcode polygons, and public search does not imply bulk reuse rights.',
   },
   'geonames-azerbaijan': {
     id: 'geonames-azerbaijan',

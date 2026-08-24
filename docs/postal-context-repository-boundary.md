@@ -400,6 +400,27 @@ proximity remain candidates. Public artifacts retain the required
 excluding recipients, residents, owners, tenants, dwelling occupants,
 forwarding records, credentials and non-public register fields.
 
+### `agid-postal-az`
+
+The Azerbaijan repository owns pinned Azərpoçt postcode and locality evidence,
+provider-approved Ünvan Reyestri İnformasiya Sistemi address releases,
+permitted cadastral object geometry, derived postal surfaces, synthetic
+fixtures and release validation. The UPU `AZNNNN` convention proves syntax,
+not current allocation. An Azərpoçt search result or postal-office point is not
+a nationwide official postcode polygon, and interactive access is not a bulk
+reuse license.
+
+Any postcode surface built from rights-cleared address membership remains
+derived and retains its algorithm, members, boundary clips, omissions,
+uncertainty, temporal lineage and rights. Exact building display requires the
+same official address/cadastral object identifier or a reviewed crosswalk;
+address points, parcels, containment and proximity remain candidates. Postal
+evidence never determines sovereignty or legal administrative boundaries.
+Multipart components remain unbridged across the Nakhchivan exclave, borders,
+unsourced gaps and disputed classifications. Public artifacts exclude
+recipients, residents, owners, occupants, title records, credentials and all
+protected registry fields.
+
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

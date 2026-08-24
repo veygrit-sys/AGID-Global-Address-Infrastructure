@@ -119,7 +119,7 @@ type AddressFormatFixture = {
   english?: { fields: { key: string; label: string; required?: boolean }[] };
   domestic?: Record<string, { name?: string; addressFormat: string; fields: { key: string; label: string; placeholder?: string }[] }>;
   international?: Record<string, { name?: string; addressFormat: string; fields: { key: string; label: string; placeholder?: string }[] }>;
-  postalCode?: { api?: string | null; source?: string };
+  postalCode?: { format?: string; regex?: string; api?: string | null; source?: string };
   addressRules?: AddressRules;
 };
 
@@ -984,17 +984,21 @@ test('Caucasus address JSON files expose addressRules metadata and postal data s
   assert.deepEqual(loadRules('GE').languages, [{ code: 'ka', name: 'Georgian' }]);
   assert.deepEqual(loadRules('AM').englishOrder, ['name', 'street', 'houseNumber', 'postcode', 'city', 'region', 'country']);
   assert.equal(loadRules('AM').postalCode?.label, '4 digits required');
-  assert.equal(loadRules('AZ').postalCode?.label, '4 digits required');
+  assert.match(loadRules('AZ').postalCode?.label ?? '', /AZNNNN.*allocation requires source evidence/i);
   assert.equal(loadRules('GE').postalCode?.label, '4 digits required');
   assert.equal(loadFormat('AM').postalCode?.api, 'https://www.haypost.am/en/find-index');
-  assert.equal(loadFormat('AZ').postalCode?.api, 'https://www.geonames.org/countries/AZ/azerbaijan.html');
+  assert.match(loadFormat('AZ').postalCode?.api ?? '', /azerpost\.az/);
+  assert.equal(loadFormat('AZ').postalCode?.format, 'AZNNNN');
+  assert.equal(loadFormat('AZ').postalCode?.regex, '^AZ\\d{4}$');
+  assert.match(loadFormat('AZ').postalCode?.source ?? '', /Azərpoçt.*Address Register.*cadastre/i);
+  assert.deepEqual(loadRules('AZ').regionalHierarchy, ['regionOrAutonomousRepublic', 'districtOrCity', 'locality', 'street', 'premise']);
   assert.equal(loadFormat('GE').postalCode?.api, 'https://www.gpost.ge/');
 });
 
 test('Caucasus metadata exposes national geospatial, cadastre, and open-data sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     AM: ['armstat-geodata', 'cadastre-armenia', 'haypost-address-reference', 'geonames-armenia'],
-    AZ: ['azerbaijan-state-committee-property', 'azerbaijan-open-data', 'azerpost-address-reference', 'geonames-azerbaijan'],
+    AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan'],
     GE: ['napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia'],
   };
 

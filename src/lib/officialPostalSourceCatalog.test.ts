@@ -165,6 +165,28 @@ test('separates Liechtenstein shared postal, local delivery, sovereign address, 
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Azerbaijan postal, address-register, cadastral, and catalog authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('AZ');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('azerpost-address-reference')?.authority, 'postal-operator');
+  assert.equal(byId.get('azerpost-address-reference')?.trustTier, 'authoritative');
+  assert.match(byId.get('azerpost-address-reference')?.notes.join(' ') ?? '', /not a canonical postcode polygon/i);
+  assert.equal(byId.get('azerbaijan-address-register')?.depth, 'address');
+  assert.equal(byId.get('azerbaijan-address-register')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('azerbaijan-address-register')?.notes.join(' ') ?? '', /address point is not a footprint/i);
+  assert.equal(byId.get('azerbaijan-state-committee-property')?.depth, 'building');
+  assert.equal(byId.get('azerbaijan-state-committee-property')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('azerbaijan-state-committee-property')?.notes.join(' ') ?? '', /explicit common identifier/i);
+  assert.equal(byId.get('azerbaijan-open-data')?.depth, 'geo-only');
+  assert.equal(byId.get('azerbaijan-open-data')?.validationReadiness, 'metadata-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'AZ',
+    source: 'Azerpost postcode and branch search',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',
