@@ -848,7 +848,12 @@ test('All European country, overseas territory, and autonomous-region JSON files
   assert.ok(loadFormat('FR').openSourceIds?.includes('ign-bd-topo'));
   assert.ok(loadFormat('FR').openSourceIds?.includes('insee-cog'));
   assert.ok(loadFormat('DE').openSourceIds?.includes('deutsche-post-plz-server'));
-  assert.ok(loadFormat('DE').openSourceIds?.includes('openplzapi'));
+  assert.ok(loadFormat('DE').openSourceIds?.includes('deutsche-post-datafactory'));
+  assert.ok(loadFormat('DE').openSourceIds?.includes('bkg-postleitzahlgebiete'));
+  assert.ok(loadFormat('DE').openSourceIds?.includes('bkg-georeferenced-addresses'));
+  assert.ok(loadFormat('DE').openSourceIds?.includes('adv-hu-de'));
+  assert.ok(loadFormat('DE').openSourceIds?.includes('bkg-vg25'));
+  assert.equal(loadFormat('DE').openSourceIds?.includes('openplzapi'), false);
   assert.ok(loadFormat('GB').openSourceIds?.includes('postcodes-io'));
   assert.ok(loadFormat('CZ').openSourceIds?.includes('ceska-posta-psc'));
   assert.ok(loadFormat('GG').openSourceIds?.includes('guernsey-post'));

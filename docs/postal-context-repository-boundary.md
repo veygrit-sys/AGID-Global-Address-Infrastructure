@@ -74,6 +74,9 @@ AKS service-migration rules belong to `agid-postal-ee`.
 Switzerland-specific Swiss Post assignment and rights, swisstopo PLZO geometry,
 official building-address and GWR identity, swissBUILDINGS3D linkage,
 swissBOUNDARIES3D context, and routing-exception rules belong to `agid-postal-ch`.
+Germany-specific Deutsche Post assignment, licensed PLZ geometry, GA/HK-DE
+address coordinates, HU-DE/LoD2-DE building linkage, VG25 administration,
+state rights and cross-border routing rules belong to `agid-postal-de`.
 
 
 
@@ -193,6 +196,21 @@ proximity remains candidate evidence elsewhere. Swiss Post NPA6, sorting,
 GeoPost and delivery datasets remain contract-partitioned. Special-purpose and
 P.O. Box codes without a domicile perimeter remain non-areal. Liechtenstein is
 published as a separately governed `LI` country pack.
+
+### `agid-postal-de`
+
+The Germany repository owns Deutsche Post postcode assignment and class
+lineage, separately contracted DATAFACTORY and BKG delivery-postcode geometry,
+GA/HK-DE address points, explicitly linked HU-DE/LoD2-DE building geometry,
+VG25 administrative context, synthetic fixtures and release validation. A PLZ
+area can be multipart and differs from administrative boundaries. Large-
+recipient, Postfach and other non-area codes never receive invented residential
+polygons. Any address-point or boundary-generated surface remains derived and
+cannot impersonate Deutsche Post/BKG geometry. Exact building output requires
+a source identifier or reviewed explicit crosswalk; AGS, containment and
+proximity remain candidates. Restricted artifacts stay in product- and state-
+specific rights partitions, and foreign German-routing exceptions remain in
+their sovereign country packs.
 
 
 

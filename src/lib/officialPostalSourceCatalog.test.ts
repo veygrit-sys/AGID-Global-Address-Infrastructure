@@ -31,7 +31,7 @@ test('prefers country-specific official sources before the UPU global fallback',
     );
   }
 
-  assert.equal(getOfficialPostalSourcesForCountry('DE')[0]?.id, 'deutsche-post-plz-server');
+  assert.equal(getOfficialPostalSourcesForCountry('DE')[0]?.id, 'bkg-postleitzahlgebiete');
   assert.equal(getOfficialPostalSourcesForCountry('FI')[0]?.id, 'posti-finland-postal-code-services');
   assert.equal(getOfficialPostalSourcesForCountry('LV')[0]?.id, 'latvijas-pasts-check-address');
   assert.equal(getOfficialPostalSourcesForCountry('LT')[0]?.id, 'lietuvos-pastas-postcode-search');

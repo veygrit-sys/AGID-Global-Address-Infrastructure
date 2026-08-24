@@ -59,6 +59,13 @@ export type EuropeOpenGeoSourceId =
   | 'ign-bd-topo'
   | 'insee-cog'
   | 'deutsche-post-plz-server'
+  | 'deutsche-post-datafactory'
+  | 'bkg-postleitzahlgebiete'
+  | 'bkg-georeferenced-addresses'
+  | 'adv-hk-de'
+  | 'adv-hu-de'
+  | 'bkg-lod2-de'
+  | 'bkg-vg25'
   | 'openplzapi'
   | 'opendatasoft-nl-postcodes'
   | 'pdok-bag'
@@ -766,6 +773,76 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'primary',
     notes: 'Official Deutsche Post interactive postcode and locality search via Postdirekt.',
+  },
+  'deutsche-post-datafactory': {
+    id: 'deutsche-post-datafactory',
+    name: 'Deutsche Post Direkt DATAFACTORY',
+    url: 'https://www.deutschepost.de/de/d/deutsche-post-direkt/datafactory.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Commercial product; contract and redistribution review required per DATAFACTORY module',
+    notes: 'Official routing, street, addressable-building and GEOCODE evidence; postcode areas and coordinates remain contract-partitioned by product.',
+  },
+  'bkg-postleitzahlgebiete': {
+    id: 'bkg-postleitzahlgebiete',
+    name: 'BKG Postleitzahlgebiete Deutschland (PLZ)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/postleitzahlgebiete-deutschland-plz.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Restricted to eligible users after license agreement; Deutsche Post Direkt attribution required',
+    notes: 'Original Deutsche Post Direkt delivery-postcode Polygon/MultiPolygon data; multipart areas are preserved and large-recipient or other non-area codes are excluded.',
+  },
+  'bkg-georeferenced-addresses': {
+    id: 'bkg-georeferenced-addresses',
+    name: 'BKG Georeferenzierte Adressdaten (GA)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/georeferenzierte-adressdaten-ga.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Restricted authorized-user product; artifact-specific terms review required',
+    notes: 'Official nationwide addresses, coordinates and administrative keys derived from house coordinates; points are not building footprints or postcode polygons.',
+  },
+  'adv-hk-de': {
+    id: 'adv-hk-de',
+    name: 'GeoBasis-DE / ZSHH Amtliche Hauskoordinaten Deutschland (HK-DE)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/amtliche-hauskoordinaten-deutschland-hk-de.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Restricted V GeoBund or V GeoLänder authorized-user product',
+    notes: 'Official cadastral house coordinates with state-specific source and quality details; never convert the point or proximity into building identity.',
+  },
+  'adv-hu-de': {
+    id: 'adv-hu-de',
+    name: 'GeoBasis-DE / ZSHH Amtliche Hausumringe Deutschland (HU-DE)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/sonstige-geodaten/amtliche-hausumringe-deutschland-hu-de.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Restricted V GeoBund or V GeoLänder authorized-user product',
+    notes: 'Official cadastral building footprints with object identifier, AGS and function; AGS or proximity alone is not an exact address-to-building link.',
+  },
+  'bkg-lod2-de': {
+    id: 'bkg-lod2-de',
+    name: 'BKG / GeoBasis-DE 3D-Gebäudemodelle LoD2 Deutschland',
+    url: 'https://gdz.bkg.bund.de/index.php/default/3d-gebaudemodelle-lod2-deutschland-lod2-de.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Restricted authorized-user product; external use depends on agreement',
+    notes: 'Official 3D building geometry with object and optional address/2D references; exact address linkage requires an explicit identifier or crosswalk.',
+  },
+  'bkg-vg25': {
+    id: 'bkg-vg25',
+    name: 'BKG Verwaltungsgebiete 1:25 000 (VG25)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/verwaltungsgebiete/verwaltungsgebiete-1-25-000-stand-31-12-vg25.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0; attribution required',
+    notes: 'Official administrative identities and boundaries from country through municipality; administration is context and never postal geometry.',
   },
   openplzapi: {
     id: 'openplzapi',
@@ -2422,7 +2499,7 @@ const BASE_OPEN_SOURCE_IDS: EuropeOpenGeoSourceId[] = [
 
 const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpenGeoSourceId[]>> = {
   FR: ['data-gouv-fr-postcodes', 'ban-fr', 'ign-bd-topo', 'insee-cog'],
-  DE: ['deutsche-post-plz-server', 'openplzapi'],
+  DE: ['deutsche-post-plz-server', 'deutsche-post-datafactory', 'bkg-postleitzahlgebiete', 'bkg-georeferenced-addresses', 'adv-hk-de', 'adv-hu-de', 'bkg-lod2-de', 'bkg-vg25'],
   NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
   BE: ['odwb-be-postcodes'],
   CH: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'swisstopo-building-address-directory', 'swiss-federal-gwr', 'swisstopo-swissbuildings3d', 'swisstopo-swissboundaries3d'],

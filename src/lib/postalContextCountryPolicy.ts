@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -60,6 +60,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   CH: {
     countryCode: 'CH',
     postalCodeFormat: 'NNNN',
+    fullCodeGeometrySemantics: 'postal-area-first',
+  },
+  DE: {
+    countryCode: 'DE',
+    postalCodeFormat: 'NNNNN',
     fullCodeGeometrySemantics: 'postal-area-first',
   },
 };
@@ -143,6 +148,13 @@ export function normalizeSwitzerlandPostalCode(value: unknown) {
   return /^\d{4}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeGermanyPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{5}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
@@ -155,5 +167,6 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'IT') return normalizeItalyPostalCode(value);
   if (normalizedCountry === 'EE') return normalizeEstoniaPostalCode(value);
   if (normalizedCountry === 'CH') return normalizeSwitzerlandPostalCode(value);
+  if (normalizedCountry === 'DE') return normalizeGermanyPostalCode(value);
   return null;
 }
