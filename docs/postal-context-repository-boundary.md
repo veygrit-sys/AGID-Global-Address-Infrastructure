@@ -443,6 +443,28 @@ AL country or AGID identity to a neighboring feature. Public artifacts exclude
 recipients, residents, owners, occupants, title records, civil-status fields,
 credentials and protected cadastral attributes.
 
+### `agid-postal-am`
+
+The Armenia repository owns pinned HayPost postal-region and post-office
+assignment evidence, provider-approved Cadastre Committee address releases,
+permitted National Geoportal building geometry, derived postal surfaces,
+synthetic fixtures and release validation. The UPU four-digit convention
+proves syntax and code-component semantics, not current allocation. A
+post-office point is not an official postcode polygon, and interactive search
+or map access is not automatically a bulk reuse license.
+
+A postcode surface derived from rights-cleared official address membership
+retains its algorithm, members, boundary clips, omissions, uncertainty,
+temporal lineage and rights and is always labelled `derived`. Exact building
+display requires the same official address/cadastral object identifier or a
+reviewed explicit crosswalk; address points, parcels, containment and proximity
+remain candidates. Postal evidence never determines sovereignty or legal
+administrative boundaries. Country and disputed-feature classification must
+cite a separately pinned authority, policy and territorial vintage; routing,
+language, locality names and proximity cannot assign AM identity. Public
+artifacts exclude recipients, residents, owners, rightsholders, occupants,
+title and restriction records, credentials and protected registry fields.
+
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

@@ -209,6 +209,29 @@ test('separates Albania postal, address-system, cadastral-building, and geoporta
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Armenia postal, address-register, building, and cadastral-map authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('AM');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('haypost-am')?.authority, 'postal-operator');
+  assert.equal(byId.get('haypost-am')?.trustTier, 'authoritative');
+  assert.match(byId.get('haypost-am')?.notes.join(' ') ?? '', /not a canonical postcode polygon/i);
+  assert.equal(byId.get('armenia-real-estate-address-register')?.depth, 'address');
+  assert.equal(byId.get('armenia-real-estate-address-register')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('armenia-real-estate-address-register')?.notes.join(' ') ?? '', /address point is not a building footprint/i);
+  assert.equal(byId.get('armenia-national-geoportal-buildings')?.depth, 'building');
+  assert.equal(byId.get('armenia-national-geoportal-buildings')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('armenia-national-geoportal-buildings')?.notes.join(' ') ?? '', /explicit common identifier/i);
+  assert.equal(byId.get('cadastre-armenia')?.depth, 'geo-only');
+  assert.equal(byId.get('cadastre-armenia')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('cadastre-armenia')?.notes.join(' ') ?? '', /not postal assignment authority/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'AM',
+    source: 'HayPost postal index and post-office directory',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('classifies official postal APIs and government address APIs as strong evidence', () => {
   const japanPost = classifyPostalSourceTrust({
     countryCode: 'JP',

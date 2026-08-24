@@ -137,6 +137,8 @@ export type AsiaOpenGeoSourceId =
   | 'cadastre-armenia'
   | 'haypost-address-reference'
   | 'geonames-armenia'
+  | 'armenia-real-estate-address-register'
+  | 'armenia-national-geoportal-buildings'
   | 'azerbaijan-state-committee-property'
   | 'azerbaijan-address-register'
   | 'azerbaijan-open-data'
@@ -174,6 +176,7 @@ export interface AsiaOpenGeoSource {
   kind:
     | 'postal-code'
     | 'address'
+    | 'building'
     | 'geocoding'
     | 'admin-boundary'
     | 'gazetteer'
@@ -1450,7 +1453,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Armenia official postal-index search.',
+    notes: 'Official HayPost four-digit postal-region and post-office assignment search. Syntax or a post-office point is not a canonical postcode polygon, and public search does not establish bulk reuse rights.',
   },
   'armstat-geodata': {
     id: 'armstat-geodata',
@@ -1464,20 +1467,38 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'cadastre-armenia': {
     id: 'cadastre-armenia',
     name: 'Cadastre Committee of Armenia',
-    url: 'https://www.cadastre.am/',
+    url: 'https://www.cadastre.am/index.php/en/cadastre_mapping',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Armenian cadastral and map reference for parcels, communities, roads, and address-adjacent geography.',
+    notes: 'Official cadastral-map and boundary authority. Review every layer, access class, license or fee terms, schema, coverage, territorial vintage, CRS, and digest; it is not postal assignment authority.',
   },
   'haypost-address-reference': {
     id: 'haypost-address-reference',
     name: 'HayPost Address and Postal Index Reference',
-    url: 'https://www.haypost.am/en/find-index',
+    url: 'https://www.haypost.am/image/Editor/d/3/d3cded6c5e6205e50a54b3c9d7018e78.pdf',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Armenian postal-index lookup and delivery reference for settlement and postal-code validation.',
+    notes: 'Official HayPost post-office directory mapping four-digit codes to regions, offices, and office addresses; it is delivery-network evidence, not an official postcode-area dataset or bulk license.',
+  },
+  'armenia-real-estate-address-register': {
+    id: 'armenia-real-estate-address-register',
+    name: 'Armenia Real Estate Address Registration',
+    url: 'https://www.cadastre.am/index.php/en/real-estate-registration',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Cadastre Committee address registration based on authorized community decisions. Public search does not establish bulk reuse rights, and an address point is not a building footprint.',
+  },
+  'armenia-national-geoportal-buildings': {
+    id: 'armenia-national-geoportal-buildings',
+    name: 'Armenia National Geoportal Buildings',
+    url: 'https://www.cadastre.am/news/1786',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official National Geoportal building and cadastral layers. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; containment and proximity remain candidates and layer rights require review.',
   },
   'geonames-armenia': {
     id: 'geonames-armenia',
@@ -1790,7 +1811,7 @@ const BASE_OPEN_SOURCE_IDS: AsiaOpenGeoSourceId[] = [
 
 const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>> = {
   AF: ['afghan-post', 'afghan-postal-code-system', 'hot-osm-afghanistan', 'osm-afghanistan'],
-  AM: ['haypost-am', 'armstat-geodata', 'cadastre-armenia', 'haypost-address-reference', 'geonames-armenia'],
+  AM: ['haypost-am', 'haypost-address-reference', 'armenia-real-estate-address-register', 'armenia-national-geoportal-buildings', 'cadastre-armenia', 'armstat-geodata', 'geonames-armenia'],
   AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
   BD: ['bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
   BN: ['post-gov-bn'],

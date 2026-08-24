@@ -1000,7 +1000,18 @@ test('Caucasus address JSON files expose addressRules metadata and postal data s
   assert.deepEqual(loadRules('AZ').languages, [{ code: 'az', name: 'Azerbaijani' }]);
   assert.deepEqual(loadRules('GE').languages, [{ code: 'ka', name: 'Georgian' }]);
   assert.deepEqual(loadRules('AM').englishOrder, ['name', 'street', 'houseNumber', 'postcode', 'city', 'region', 'country']);
-  assert.equal(loadRules('AM').postalCode?.label, '4 digits required');
+  assert.match(loadRules('AM').postalCode?.label ?? '', /postal region.*post office.*area requires source evidence/i);
+  assert.equal(loadFormat('AM').postalCode?.format, 'NNNN');
+  assert.equal(loadFormat('AM').postalCode?.regex, '^\\d{4}$');
+  assert.match(loadFormat('AM').postalCode?.source ?? '', /HayPost.*Cadastre Committee.*National Geoportal/i);
+  assert.deepEqual(loadRules('AM').regionalHierarchy, [
+    'regionOrYerevan',
+    'community',
+    'settlement',
+    'street',
+    'realEstateAddress',
+    'buildingEntrance',
+  ]);
   assert.match(loadRules('AZ').postalCode?.label ?? '', /AZNNNN.*allocation requires source evidence/i);
   assert.equal(loadRules('GE').postalCode?.label, '4 digits required');
   assert.equal(loadFormat('AM').postalCode?.api, 'https://www.haypost.am/en/find-index');
@@ -1014,7 +1025,15 @@ test('Caucasus address JSON files expose addressRules metadata and postal data s
 
 test('Caucasus metadata exposes national geospatial, cadastre, and open-data sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
-    AM: ['armstat-geodata', 'cadastre-armenia', 'haypost-address-reference', 'geonames-armenia'],
+    AM: [
+      'haypost-am',
+      'haypost-address-reference',
+      'armenia-real-estate-address-register',
+      'armenia-national-geoportal-buildings',
+      'cadastre-armenia',
+      'armstat-geodata',
+      'geonames-armenia',
+    ],
     AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan'],
     GE: ['napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia'],
   };

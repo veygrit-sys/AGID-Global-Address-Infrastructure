@@ -19,6 +19,7 @@ import { createLithuaniaPostalContextRuntimeTestPack } from '../testFixtures/pos
 import { createLiechtensteinPostalContextRuntimeTestPack } from '../testFixtures/postalContextLiechtensteinRuntimeFixture';
 import { createAzerbaijanPostalContextRuntimeTestPack } from '../testFixtures/postalContextAzerbaijanRuntimeFixture';
 import { createAlbaniaPostalContextRuntimeTestPack } from '../testFixtures/postalContextAlbaniaRuntimeFixture';
+import { createArmeniaPostalContextRuntimeTestPack } from '../testFixtures/postalContextArmeniaRuntimeFixture';
 import { createNewZealandPostalContextRuntimeTestPack } from '../testFixtures/postalContextNewZealandRuntimeFixture';
 import { createNetherlandsPostalContextRuntimeTestPack } from '../testFixtures/postalContextNetherlandsRuntimeFixture';
 import { createSingaporePostalContextRuntimeTestPack } from '../testFixtures/postalContextSingaporeRuntimeFixture';
@@ -33,7 +34,7 @@ test('configured store advertises all supported country packs independently', ()
 
   assert.deepEqual(
     store.statuses().map(status => [status.countryCode, status.state]),
-    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured'], ['IT', 'unconfigured'], ['EE', 'unconfigured'], ['CH', 'unconfigured'], ['DE', 'unconfigured'], ['CZ', 'unconfigured'], ['DK', 'unconfigured'], ['MT', 'unconfigured'], ['MC', 'unconfigured'], ['AU', 'unconfigured'], ['LV', 'unconfigured'], ['LT', 'unconfigured'], ['LI', 'unconfigured'], ['AZ', 'unconfigured'], ['AL', 'unconfigured']],
+    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured'], ['IT', 'unconfigured'], ['EE', 'unconfigured'], ['CH', 'unconfigured'], ['DE', 'unconfigured'], ['CZ', 'unconfigured'], ['DK', 'unconfigured'], ['MT', 'unconfigured'], ['MC', 'unconfigured'], ['AU', 'unconfigured'], ['LV', 'unconfigured'], ['LT', 'unconfigured'], ['LI', 'unconfigured'], ['AZ', 'unconfigured'], ['AL', 'unconfigured'], ['AM', 'unconfigured']],
   );
   assert.deepEqual(store.countryStatus('US').errors, ['unsupported-country']);
 });
@@ -65,6 +66,7 @@ test('an incomplete Singapore configuration does not affect Japan status', () =>
   assert.equal(store.countryStatus('LV').state, 'unconfigured');
   assert.equal(store.countryStatus('AZ').state, 'unconfigured');
   assert.equal(store.countryStatus('AL').state, 'unconfigured');
+  assert.equal(store.countryStatus('AM').state, 'unconfigured');
 });
 
 test('in-memory store can route independent supported-country runtimes', () => {
@@ -89,7 +91,8 @@ test('in-memory store can route independent supported-country runtimes', () => {
   const liechtenstein = new PostalContextPackRuntime(createLiechtensteinPostalContextRuntimeTestPack());
   const azerbaijan = new PostalContextPackRuntime(createAzerbaijanPostalContextRuntimeTestPack());
   const albania = new PostalContextPackRuntime(createAlbaniaPostalContextRuntimeTestPack());
-  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland, italy, estonia, switzerland, germany, czechia, denmark, malta, monaco, australia, latvia, lithuania, liechtenstein, azerbaijan, albania]);
+  const armenia = new PostalContextPackRuntime(createArmeniaPostalContextRuntimeTestPack());
+  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland, italy, estonia, switzerland, germany, czechia, denmark, malta, monaco, australia, latvia, lithuania, liechtenstein, azerbaijan, albania, armenia]);
 
   assert.equal(store.getRuntime('jp'), japan);
   assert.equal(store.getRuntime('sg'), singapore);
@@ -112,7 +115,8 @@ test('in-memory store can route independent supported-country runtimes', () => {
   assert.equal(store.getRuntime('li'), liechtenstein);
   assert.equal(store.getRuntime('az'), azerbaijan);
   assert.equal(store.getRuntime('al'), albania);
-  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL']);
+  assert.equal(store.getRuntime('am'), armenia);
+  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM']);
   assert.throws(
     () => createInMemoryPostalContextPackStore([singapore, singapore]),
     /duplicate-postal-context-runtime:SG/,
