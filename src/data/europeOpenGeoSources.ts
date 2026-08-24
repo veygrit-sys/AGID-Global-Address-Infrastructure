@@ -216,6 +216,13 @@ export type EuropeOpenGeoSourceId =
   | 'cuzk-inspire-buildings'
   | 'cuzk-ruian-boundaries'
   | 'cuzk-geoportal'
+  | 'croatian-post-postcode-downloads'
+  | 'dgu-croatia-spatial-unit-register'
+  | 'dgu-croatia-inspire-addresses'
+  | 'dgu-croatia-inspire-buildings'
+  | 'dgu-croatia-inspire-administrative-units'
+  | 'dgu-croatia-cadastral-parcels'
+  | 'gisco-croatia-postcode-points'
   | 'posta-hr'
   | 'dgu-croatia-geoportal'
   | 'croatia-cadastre'
@@ -2240,6 +2247,76 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Generic discovery portal retained for compatibility; production lineage uses the explicit RÚIAN address, VFR, INSPIRE Buildings and boundary source IDs.',
   },
+  'croatian-post-postcode-downloads': {
+    id: 'croatian-post-postcode-downloads',
+    name: 'Hrvatska pošta Post Office and Postcode Downloads',
+    url: 'https://www.posta.hr/preuzimanje-podataka-o-postanskim-uredima-6543/6543',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Permission required for redistribution',
+    notes: 'Official Excel/XML settlement-to-destination-office, post-office, Zagreb street/range, and parcel-locker downloads. Website access is not an open bulk licence; pin permission, capture time, fields, and digest before retaining or redistributing rows.',
+  },
+  'dgu-croatia-spatial-unit-register': {
+    id: 'dgu-croatia-spatial-unit-register',
+    name: 'DGU Croatia Spatial Unit Register',
+    url: 'https://dgu.gov.hr/registar-prostornih-jedinica-172/172',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Dataset-specific DGU Open Licence or issued terms',
+    notes: 'Official register includes delivery-office areas, administration, settlements, streets, buildings and house numbers. A delivery-office area becomes postcode geometry only through a pinned operator-office crosswalk; request, cost, licence, release, CRS, schema and digest remain dataset-specific.',
+  },
+  'dgu-croatia-inspire-addresses': {
+    id: 'dgu-croatia-inspire-addresses',
+    name: 'DGU Croatia INSPIRE Addresses',
+    url: 'https://geoportal.dgu.hr/services/atom/ad/xml',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Croatian Open Licence',
+    notes: 'Official anonymous address download under the DGU open-data terms. Exact display retains the address identifier, locator, hierarchy, validity, release, attribution and digest; an address feature alone does not prove current postal assignment or a building link.',
+  },
+  'dgu-croatia-inspire-buildings': {
+    id: 'dgu-croatia-inspire-buildings',
+    name: 'DGU Croatia INSPIRE Buildings',
+    url: 'https://geoportal.dgu.hr/services/atom/bu-core2d/xml',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Croatian Open Licence',
+    notes: 'Official building features and cadastral-plan WFS context. Exact address-to-building output requires an explicit relationship, common authoritative identifier or reviewed crosswalk; footprint containment and proximity are candidate-only.',
+  },
+  'dgu-croatia-inspire-administrative-units': {
+    id: 'dgu-croatia-inspire-administrative-units',
+    name: 'DGU Croatia INSPIRE Administrative Units',
+    url: 'https://geoportal.dgu.hr/services/atom/au/xml',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Croatian Open Licence',
+    notes: 'Official administrative context with separately pinned release and validity. Counties, the City of Zagreb, cities, municipalities and settlements never create postcode membership or operator delivery coverage.',
+  },
+  'dgu-croatia-cadastral-parcels': {
+    id: 'dgu-croatia-cadastral-parcels',
+    name: 'DGU Croatia INSPIRE Cadastral Parcels',
+    url: 'https://api.uredjenazemlja.hr/services/inspire/cp/wfs',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Croatian Open Licence',
+    notes: 'Official cadastral parcel geometry for candidate validation only. Parcel geometry is not a building, public address link, postal area or permission to publish land-registry owners, rightsholders, occupants or title records.',
+  },
+  'gisco-croatia-postcode-points': {
+    id: 'gisco-croatia-postcode-points',
+    name: 'Eurostat GISCO Croatia Postcode Points',
+    url: 'https://ec.europa.eu/eurostat/web/gisco/geodata/administrative-units/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY-SA 4.0',
+    notes: 'Official-derived postcode points for statistical correspondence. GISCO permits omissions and incorrect positions; a point, buffer, Voronoi cell or NUTS/LAU match is not a Hrvatska pošta or DGU delivery-area perimeter.',
+  },
   'posta-hr': {
     id: 'posta-hr',
     name: 'Croatian Post Office Search',
@@ -3132,7 +3209,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   AL: ['posta-shqiptare-postcodes', 'albania-national-address-system', 'ashk-albania-cadastral-buildings', 'asig-albania', 'albania-geoportal'],
   MK: ['datahub-postal', 'katastar-north-macedonia', 'makstat-geodata'],
   CZ: ['ceska-posta-psc', 'ceska-posta-customer-outputs', 'cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
-  HR: ['posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
+  HR: ['croatian-post-postcode-downloads', 'dgu-croatia-spatial-unit-register', 'dgu-croatia-inspire-addresses', 'dgu-croatia-inspire-buildings', 'dgu-croatia-inspire-administrative-units', 'dgu-croatia-cadastral-parcels', 'gisco-croatia-postcode-points', 'posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
   HU: ['posta-hu', 'lechner-hungary-geodata', 'hungary-public-road-data'],
   PL: ['poczta-polska', 'geoportal-gov-pl', 'gus-teryt-poland'],
   SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia'],

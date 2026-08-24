@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -146,6 +146,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'GR',
     postalCodeFormat: 'NNN NN',
     fullCodeGeometrySemantics: 'routing-locality-first',
+  },
+  HR: {
+    countryCode: 'HR',
+    postalCodeFormat: 'NNNNN',
+    fullCodeGeometrySemantics: 'area-or-non-area',
   },
 };
 
@@ -365,6 +370,16 @@ export function normalizeGreecePostalCode(value: unknown) {
   return `${normalized.slice(0, 3)} ${normalized.slice(3)}`;
 }
 
+export function normalizeCroatiaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .toUpperCase()
+    .replace(/\s+/g, '');
+  if (/^HR(?!-)/.test(normalized)) return null;
+  const digits = normalized.startsWith('HR-') ? normalized.slice(3) : normalized;
+  return /^\d{5}$/.test(digits) ? digits : null;
+}
+
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
@@ -394,5 +409,6 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'AT') return normalizeAustriaPostalCode(value);
   if (normalizedCountry === 'CY') return normalizeCyprusPostalCode(value);
   if (normalizedCountry === 'GR') return normalizeGreecePostalCode(value);
+  if (normalizedCountry === 'HR') return normalizeCroatiaPostalCode(value);
   return null;
 }

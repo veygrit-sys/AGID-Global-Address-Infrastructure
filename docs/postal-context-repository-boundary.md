@@ -609,6 +609,36 @@ vintage, CRS and digest. Public artifacts exclude addressees, residents,
 owners, rightsholders, occupants, cadastral/title records, delivery
 instructions, credentials and protected attributes.
 
+### `agid-postal-hr`
+
+The Croatia repository owns pinned Hrvatska pošta postcode, settlement,
+destination-office and Zagreb street/range assertions; DGU Spatial Unit
+Register delivery-office areas; DGU INSPIRE address, building, administrative
+and cadastral layers; derived postal surfaces; synthetic fixtures and release
+validation. Five domestic digits and international `HR-NNNNN` display are
+formatting rules, not current allocation, delivery or geometry authority.
+
+A DGU delivery-office area is an official government spatial unit, not
+automatically an operator-authored postcode perimeter. Production promotion
+requires a versioned explicit crosswalk from Hrvatska pošta destination-office
+assignment to the DGU register identifier. Codes for PO boxes, organizations,
+routes and other non-area use remain typed and are never forced into polygons.
+GISCO points, settlements, municipalities, counties, buffers and Voronoi cells
+never substitute for that crosswalk.
+
+Exact address display requires a DGU INSPIRE address identifier with locator,
+street or square, settlement, administration, validity, licence, vintage and
+digest. Exact building display additionally requires an explicit distributable
+address-building relation, common authoritative identifier or reviewed
+crosswalk. A cadastral parcel, land-registry record, footprint, containment or
+proximity match is candidate evidence only and never publishes owners,
+rightsholders, occupants or title data.
+
+Hrvatska pošta website/download reuse terms, DGU Open Licence obligations and
+each requested Spatial Unit Register delivery are pinned separately. No public
+artifact promotes operator web content to open bulk data or general DGU portal
+access to a dataset-specific licence.
+
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 
 ### Heavy artifact store

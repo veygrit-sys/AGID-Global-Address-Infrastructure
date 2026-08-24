@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeCroatiaPostalCode,
   normalizeCyprusPostalCode,
   normalizeAustriaPostalCode,
   normalizeAlbaniaPostalCode,
@@ -174,6 +175,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeCyprusPostalCode('CY2008'), null);
   assert.equal(normalizeCyprusPostalCode('99010'), null);
   assert.equal(normalizePostalContextPostalCode('cy', 'CY-0001'), '0001');
+  assert.equal(normalizeCroatiaPostalCode('１００００'), '10000');
+  assert.equal(normalizeCroatiaPostalCode('10 000'), '10000');
+  assert.equal(normalizeCroatiaPostalCode('HR-10000'), '10000');
+  assert.equal(normalizeCroatiaPostalCode('HR10000'), null);
+  assert.equal(normalizeCroatiaPostalCode('100-00'), null);
+  assert.equal(normalizePostalContextPostalCode('hr', 'HR-00001'), '00001');
 });
 
 test('declares country-specific full-code geometry semantics', () => {

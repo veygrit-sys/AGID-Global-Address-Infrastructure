@@ -1,0 +1,85 @@
+{
+  "schema_version": "agid-postal-country-repository-v0.1",
+  "repository": {
+    "name": "agid-postal-hr",
+    "country_code": "HR",
+    "maturity": "M1_metadata",
+    "canonical_upstream": false
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Poštanski broj",
+    "full_code_format": "NNNNN domestic; HR-NNNNN international display",
+    "full_code_default_geometry": "operator_assignment + dgu_delivery_office_area_via_explicit_crosswalk | derived_surface | official_derived_point | non_area",
+    "assignment_rule": "A pinned Hrvatska pošta row, lookup receipt or separately permitted snapshot establishes a five-digit assignment to a destination post office at its capture time. Syntax, HR- display, a settlement, office, street, range or UPU example does not establish current allocation, address membership or deliverability.",
+    "perimeter_rule": "The DGU Spatial Unit Register contains official graphical delivery-office areas. Such an area is government geometry, not automatically a Hrvatska pošta-authored postcode perimeter. Postcode area output requires a versioned explicit operator destination-office to DGU register identifier crosswalk; GISCO points, settlements, administration, buffers and Voronoi cells never substitute for it. Derived address-membership surfaces stay derived and uncertainty-bearing.",
+    "address_rule": "Exact address display requires a permitted DGU INSPIRE address identifier with locator, street or square, settlement, administrative hierarchy, validity, release, Croatian Open Licence attribution and digest, plus separately pinned postal assignment evidence. Operator street/range rows and address features remain distinct.",
+    "building_rule": "Exact building display requires an explicit distributable address-building relation, common authoritative identifier or reviewed crosswalk. A building footprint, cadastral parcel, land-registry record, containment or proximity match is candidate-only.",
+    "service_status_rule": "Destination-office assignment, office operation, parcel-locker service, delivery eligibility and lookup/download availability are time-stamped operational assertions separate from geometry, address identity and administrative context.",
+    "administrative_rule": "Counties, the City of Zagreb, cities, municipalities and settlements remain separately sourced context. They do not create postcode membership, Hrvatska pošta service coverage or a DGU delivery-office boundary."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment, office area, address, building, explicit link, derived surface, point, administration and service validity when supplied.",
+    "known_time": "Publication, operator capture, DGU issue, ingest, licence review, correction and release timestamps retained independently.",
+    "history_rule": "New Hrvatska pošta, DGU or GISCO snapshots append versioned assertions. No refresh rewrites older evidence, converts a point into a perimeter, or silently replaces an operator-office crosswalk."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Every five-digit code references a permitted Hrvatska pošta receipt or snapshot with destination-office identity, capture time, terms and digest." },
+    { "id": "delivery-area-crosswalk", "pass": "Every official government postal surface retains the operator destination-office assertion, DGU delivery-area identifier, explicit crosswalk version, validity, issue terms, CRS and digests." },
+    { "id": "postal-geometry", "pass": "Geometry declares operator-official, official-government, official-derived-point or derived authority; derived surfaces retain members, exclusions, method and uncertainty." },
+    { "id": "official-address", "pass": "Each exact address retains a DGU identifier, locator, hierarchy, validity, release, attribution, licence URI, digest and separate postal assignment evidence." },
+    { "id": "building-link", "pass": "An exact building has an explicit distributable relationship, common authoritative identifier or reviewed crosswalk; parcels, footprints, containment and proximity never silently substitute." },
+    { "id": "dataset-specific-rights", "pass": "Every operator, DGU, GISCO or other artifact pins exact terms, attribution, schema, coverage, vintage, CRS and digest." },
+    { "id": "privacy", "pass": "No addressee, resident, owner, rightsholder, occupant, title record, phone, credential or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, identifiers, geometry semantics, coverage and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, licence, freshness, coverage and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "croatian-post-download-presented-as-open-redistribution-license",
+      "destination-office-presented-as-postcode-perimeter",
+      "dgu-delivery-area-used-without-explicit-operator-office-crosswalk",
+      "gisco-point-or-administrative-unit-presented-as-postcode-perimeter",
+      "buffer-or-voronoi-surface-presented-as-official",
+      "general-dgu-portal-terms-substituted-for-dataset-specific-rights",
+      "address-feature-presented-as-current-postal-assignment",
+      "parcel-or-footprint-presented-as-exact-address-building-link",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postcode-stored-as-number",
+      "addressee-owner-rightsholder-occupant-title-or-protected-cadastral-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "addressee_identity",
+    "occupancy",
+    "ownership",
+    "building_identity_from_proximity",
+    "destination_office_equals_postcode_perimeter",
+    "dgu_delivery_area_is_operator_authored",
+    "gisco_point_equals_postal_perimeter",
+    "administrative_boundary_equals_postcode",
+    "every_postcode_is_a_polygon",
+    "po_box_is_a_residential_area",
+    "survey_cadastral_or_title_certification"
+  ]
+}

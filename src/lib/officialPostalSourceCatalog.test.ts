@@ -286,6 +286,35 @@ test('separates Greece postal, point, cadastral, building, and planned-register 
   assert.equal(planOnly.strength, 'weak');
 });
 
+test('separates Croatia operator, delivery-area, address, building, parcel, and point authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('HR');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('croatian-post-postcode-downloads')?.authority, 'postal-operator');
+  assert.equal(byId.get('croatian-post-postcode-downloads')?.availability, 'commercial-or-restricted');
+  assert.match(byId.get('croatian-post-postcode-downloads')?.notes.join(' ') ?? '', /Excel\/XML.*five digits.*not.*open redistribution.*perimeter.*delivery/i);
+  assert.equal(byId.get('upu-croatia-addressing')?.authority, 'intergovernmental-postal-standard');
+  assert.match(byId.get('upu-croatia-addressing')?.notes.join(' ') ?? '', /five domestic digits.*HR-.*PO-box.*not prove current allocation/i);
+  assert.equal(byId.get('dgu-croatia-spatial-unit-register')?.trustTier, 'authoritative');
+  assert.equal(byId.get('dgu-croatia-spatial-unit-register')?.depth, 'postcode');
+  assert.match(byId.get('dgu-croatia-spatial-unit-register')?.notes.join(' ') ?? '', /delivery-office areas.*not automatically.*postcode perimeter.*crosswalk/i);
+  assert.equal(byId.get('dgu-croatia-inspire-addresses')?.depth, 'address');
+  assert.match(byId.get('dgu-croatia-inspire-addresses')?.notes.join(' ') ?? '', /Open Licence.*identifier.*building linkage.*separate/i);
+  assert.equal(byId.get('dgu-croatia-inspire-buildings')?.depth, 'building');
+  assert.match(byId.get('dgu-croatia-inspire-buildings')?.notes.join(' ') ?? '', /explicit relationship.*common authoritative identifier.*proximity.*candidate-only/i);
+  assert.equal(byId.get('dgu-croatia-inspire-administrative-units')?.depth, 'geo-only');
+  assert.match(byId.get('dgu-croatia-inspire-administrative-units')?.notes.join(' ') ?? '', /do not create postcode membership.*delivery coverage/i);
+  assert.equal(byId.get('dgu-croatia-cadastral-parcels')?.trustTier, 'official');
+  assert.match(byId.get('dgu-croatia-cadastral-parcels')?.notes.join(' ') ?? '', /parcel is not a building.*postal area.*owners.*title/i);
+  assert.equal(byId.get('gisco-croatia-postcode-points')?.trustTier, 'official-derived');
+  assert.match(byId.get('gisco-croatia-postcode-points')?.notes.join(' ') ?? '', /omissions.*incorrect locations.*not.*delivery-area perimeter/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'HR',
+    source: 'Croatian Post',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
   const sources = getOfficialPostalSourcesForCountry('CY');
   const byId = new Map(sources.map(source => [source.id, source]));

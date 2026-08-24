@@ -733,7 +733,7 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
 });
 
 test('Southern Europe address JSON files expose addressRules metadata and postal data sources', () => {
-  const expectedCountries = ['IT', 'ES', 'PT', 'GR', 'MT', 'SM', 'MC', 'VA', 'AD', 'CY'];
+  const expectedCountries = ['IT', 'ES', 'PT', 'GR', 'MT', 'SM', 'MC', 'VA', 'AD', 'CY', 'HR'];
   for (const countryCode of expectedCountries) {
     const rules = loadRules(countryCode);
     assert.ok(rules.languages.length > 0, `${countryCode} should define languages`);
@@ -770,6 +770,20 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
   assert.equal(loadFormat('GR').postalCode?.api, 'https://postalcodes.elta.gr/en/');
   assert.match(loadFormat('GR').postalCode?.source ?? '', /ELTA.*GISCO.*Cadastre.*ELSTAT/i);
   assert.match(loadRules('GR').postalCode?.label ?? '', /5 digits.*NNN NN.*assignment.*point.*area.*building.*separate/i);
+  assert.equal(loadFormat('HR').postalCode?.api, 'https://www.posta.hr/preuzimanje-podataka-o-postanskim-uredima-6543/6543');
+  assert.match(loadFormat('HR').postalCode?.source ?? '', /Hrvatska pošta.*DGU Spatial Unit Register.*INSPIRE Addresses and Buildings/i);
+  assert.match(loadRules('HR').postalCode?.label ?? '', /5 domestic digits.*HR-.*operator assignment.*DGU delivery area.*address.*building.*parcel.*separate/i);
+  assert.deepEqual(loadRules('HR').regionalHierarchy, [
+    'countyOrCityOfZagreb',
+    'cityOrMunicipality',
+    'settlement',
+    'postalDeliveryOffice',
+    'streetOrSquare',
+    'houseNumber',
+    'building',
+    'entrance',
+    'floorOrUnit',
+  ]);
   assert.equal(loadFormat('CY').postalCode?.api, 'https://www.cypruspost.post/en/api-postal-codes');
   assert.equal(loadFormat('MT').postalCode?.api, 'https://www.maltapost.com/postcode/?l=1');
   assert.match(loadFormat('MT').postalCode?.source ?? '', /MaltaPost.*Address Registrar.*Planning Authority/i);
@@ -799,6 +813,15 @@ test('Southern Europe metadata exposes national geospatial and cadastre sources'
       'ktimatologio-greece',
       'geodata-gov-gr',
       'okxe-greece',
+    ],
+    HR: [
+      'croatian-post-postcode-downloads',
+      'dgu-croatia-spatial-unit-register',
+      'dgu-croatia-inspire-addresses',
+      'dgu-croatia-inspire-buildings',
+      'dgu-croatia-inspire-administrative-units',
+      'dgu-croatia-cadastral-parcels',
+      'gisco-croatia-postcode-points',
     ],
     MT: [
       'maltapost-postcode-finder',
