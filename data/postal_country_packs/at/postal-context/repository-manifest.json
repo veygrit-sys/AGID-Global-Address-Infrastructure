@@ -1,0 +1,74 @@
+{
+  "schema_version": "agid-postal-at-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-at",
+    "country_code": "AT",
+    "country_name": "Austria",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postleitzahl",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "area_or_non_area_assignment_with_optional_official_statistical_region_or_rights_cleared_derived_surface",
+    "assignment_rule": "A pinned Österreichische Post postcode or destination-location record establishes a four-digit assignment at its capture time. UPU syntax, the first digit, a statistical region, or structurally valid digits do not establish current allocation or deliverability.",
+    "perimeter_rule": "A postcode, destination location, delivery route, post office, administrative boundary, or address-point cluster is not automatically an official postal-operator polygon. Statistik Austria postcode regions remain official statistical geometry; an address-membership surface is explicitly derived and uncertainty-bearing.",
+    "address_rule": "Exact address display requires a pinned permitted BEV Address Register assertion or separately licensed Österreichische Post Address Data/PAC assertion with authoritative identity, status, hierarchy, coordinate semantics, capture time, and dataset-specific rights. Interactive search does not establish bulk retention or redistribution rights.",
+    "building_rule": "Exact building display requires the same BEV seven-digit Adresscode plus three-digit Subcode or a reviewed explicit authoritative crosswalk. Address coordinates, building coordinates, parcels, footprints, containment, and proximity remain distinct evidence and proximity is candidate-only.",
+    "service_status_rule": "Current Austrian Post validation or delivery-service state is a time-stamped operational assertion separate from postcode assignment, statistical geometry, address identity, and historical validity.",
+    "cross_border_rule": "A German, Swiss, Liechtenstein, or other foreign routing arrangement, syntax match, border clip, or provider record never changes Austrian country identity. Every AT feature requires independently pinned Austrian assignment and sovereign-boundary evidence.",
+    "administrative_rule": "BEV administrative boundaries and Statistik Austria regional divisions provide hierarchy, clipping, and statistical context only; they do not create postal membership or delivery eligibility."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment, postcode-region, address, building, administrative, and operational validity when supplied by each source.",
+    "known_time": "Publication, capture, ingest, correction, service check, license review, and release timestamps retained independently.",
+    "history_rule": "Current and historical Austrian Post evidence and later BEV or statistical snapshots append versioned assertions; no refresh silently rewrites an earlier release or converts a statistical/derived perimeter into an operator perimeter."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each full code references a pinned Austrian Post record with four-digit text, assignment class, destination location when present, capture time, rights, and digest." },
+    { "id": "postal-perimeter", "pass": "Every surface declares operator-official, official-statistical, or derived authority; derived surfaces retain method, address membership, exclusions, uncertainty, validity, rights, and digest." },
+    { "id": "official-address", "pass": "Each exact address retains provider, authoritative identifier such as BEV Adresscode, status, hierarchy, coordinate type, permitted fields, capture time, terms, and postal cross-check." },
+    { "id": "building-link", "pass": "An exact building has the same BEV Adresscode plus Subcode or a reviewed explicit crosswalk; address point, building point, parcel, footprint, containment, and proximity are never silently substituted." },
+    { "id": "dataset-specific-rights", "pass": "Every BEV, Post, Statistik Austria, GWR, INSPIRE, or search artifact pins its own product, release, access basis, license or contract, attribution, coverage, schema, CRS, update time, and digest." },
+    { "id": "privacy", "pass": "No addressee, household, PAC customer profile, resident, owner, occupant, dwelling microdata, protected GWR record, phone, delivery instruction, credential, or private contract field is published." },
+    { "id": "cross-border", "pass": "AT identity and boundary are independently established; routing, postcode syntax, provider coverage, border proximity, or clipping cannot import DE, CH, or LI identity." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, dataset-specific rights, address/building identifiers, geometry semantics, temporal coverage, cross-border rules, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, license, freshness, cross-border, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "destination-location-or-route-presented-as-postcode-polygon",
+      "statistical-postcode-region-presented-as-postal-operator-perimeter",
+      "derived-address-membership-surface-presented-as-official",
+      "interactive-search-presented-as-bulk-license",
+      "one-bev-product-license-generalized-to-another-product",
+      "address-coordinate-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-identifier-link",
+      "foreign-routing-or-border-clip-presented-as-austrian-country-identity",
+      "postcode-stored-as-number",
+      "addressee-household-resident-owner-occupant-or-protected-gwr-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "addressee_identity", "occupancy", "ownership", "building_identity_from_proximity", "statistical_region_equals_postal_operator_perimeter", "administrative_boundary_equals_postcode", "every_postcode_is_a_polygon", "po_box_is_a_residential_area", "cross_border_routing_determines_country", "survey_or_cadastral_certification"
+  ]
+}

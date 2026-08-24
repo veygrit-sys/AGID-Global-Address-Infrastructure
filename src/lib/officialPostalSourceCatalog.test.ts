@@ -256,6 +256,32 @@ test('separates Andorra postal, government-address, topographic-building, and pa
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Austria postal, contract address, BEV, statistical-region, boundary, and GWR authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('AT');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('austrian-post-postcode')?.authority, 'postal-operator');
+  assert.equal(byId.get('austrian-post-postcode')?.trustTier, 'authoritative');
+  assert.match(byId.get('austrian-post-postcode')?.notes.join(' ') ?? '', /four-digit.*text.*not automatically.*polygon.*country identity/i);
+  assert.equal(byId.get('austrian-post-address-data')?.depth, 'address');
+  assert.equal(byId.get('austrian-post-address-data')?.availability, 'commercial-or-restricted');
+  assert.match(byId.get('austrian-post-address-data')?.notes.join(' ') ?? '', /contract-partitioned.*does not grant public redistribution.*household/i);
+  assert.equal(byId.get('bev-austria-address-register')?.depth, 'building');
+  assert.equal(byId.get('bev-austria-address-register')?.availability, 'bulk-open-data');
+  assert.match(byId.get('bev-austria-address-register')?.notes.join(' ') ?? '', /Adresscode.*Subcode.*specific.*release.*proximity/i);
+  assert.equal(byId.get('statistics-austria-postcode-regions')?.trustTier, 'official-derived');
+  assert.match(byId.get('statistics-austria-postcode-regions')?.notes.join(' ') ?? '', /official statistical.*not an Austrian Post perimeter.*special codes/i);
+  assert.equal(byId.get('bev-austria-administrative-boundaries')?.depth, 'geo-only');
+  assert.match(byId.get('bev-austria-administrative-boundaries')?.notes.join(' ') ?? '', /not postal assignment authority.*country identity/i);
+  assert.equal(byId.get('statistics-austria-gwr')?.availability, 'commercial-or-restricted');
+  assert.match(byId.get('statistics-austria-gwr')?.notes.join(' ') ?? '', /restricted individual data.*not a microdata license.*residents/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'AT',
+    source: 'Österreichische Post postal encyclopedia',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('separates Ukraine postal, operational, address-register, building, and NSDI authority', () => {
   const sources = getOfficialPostalSourcesForCountry('UA');
   const byId = new Map(sources.map(source => [source.id, source]));

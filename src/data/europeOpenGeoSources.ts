@@ -67,6 +67,12 @@ export type EuropeOpenGeoSourceId =
   | 'bkg-lod2-de'
   | 'bkg-vg25'
   | 'openplzapi'
+  | 'austrian-post-postcode'
+  | 'austrian-post-address-data'
+  | 'bev-austria-address-register'
+  | 'statistics-austria-postcode-regions'
+  | 'bev-austria-administrative-boundaries'
+  | 'statistics-austria-gwr'
   | 'opendatasoft-nl-postcodes'
   | 'pdok-bag'
   | 'cbs-nl-postcode-areas'
@@ -2301,6 +2307,60 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Bulgarian INSPIRE spatial data infrastructure for national geospatial validation layers.',
   },
+  'austrian-post-postcode': {
+    id: 'austrian-post-postcode',
+    name: 'Österreichische Post Postal Encyclopedia',
+    url: 'https://www.post.at/en/g/c/postal-encyclopedia',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official current and historical four-digit postcode and destination-location reference. Codes stay text; a destination, route, office, or valid syntax is not automatically a polygon or a delivery guarantee.',
+  },
+  'austrian-post-address-data': {
+    id: 'austrian-post-address-data',
+    name: 'Österreichische Post Address Data and PAC',
+    url: 'https://www.post.at/en/g/c/address-data',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official contract-partitioned address, PAC, autocomplete, geodata, and house/building products. Product access and PAC do not license public redistribution, and household or person fields never enter public AGID artifacts.',
+  },
+  'bev-austria-address-register': {
+    id: 'bev-austria-address-register',
+    name: 'BEV Austria Address Register',
+    url: 'https://www.bev.gv.at/Themen/Adressregister.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official national address identity with immutable seven-digit Adresscode, three-digit building Subcode, and separately typed address coordinate and building coordinate. Exact product terms are pinned; search access and proximity are not bulk or exact building evidence.',
+  },
+  'statistics-austria-postcode-regions': {
+    id: 'statistics-austria-postcode-regions',
+    name: 'Statistik Austria Postcode Regions',
+    url: 'https://www.statistik.at/services/tools/regionale-internationale-daten/regionale-daten-und-gliederungen/regionale-gliederungen',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official statistical postcode-region geometry with product-specific methodology and reference date; it is not an Austrian Post perimeter and does not prove deliverability or cover every non-area code.',
+  },
+  'bev-austria-administrative-boundaries': {
+    id: 'bev-austria-administrative-boundaries',
+    name: 'BEV Austria Administrative Boundaries',
+    url: 'https://www.bev.gv.at/Services/Produkte/Kataster-und-Verzeichnisse/Verwaltungsgrenzen.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official federal-state, district, municipality, and cadastral context. Dataset-specific terms and vintage are required; administrative geometry does not create postal membership, delivery eligibility, or country identity from clipping.',
+  },
+  'statistics-austria-gwr': {
+    id: 'statistics-austria-gwr',
+    name: 'Statistik Austria Address, Buildings and Dwellings Register',
+    url: 'https://www.statistik.at/en/databases/address-buildings-and-dwellings-register/address-buildings-and-dwellings-register/information',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official GWR reference. Individual building and dwelling microdata access is restricted; only permitted aggregate or separately authorized fields may be used, and public metadata is not a record-level redistribution license.',
+  },
   'ukrposhta-postcodes-open-data': {
     id: 'ukrposhta-postcodes-open-data',
     name: 'Ukrposhta Postcodes and Post Offices Open Data',
@@ -2903,7 +2963,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
   BE: ['odwb-be-postcodes'],
   CH: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'swisstopo-building-address-directory', 'swiss-federal-gwr', 'swisstopo-swissbuildings3d', 'swisstopo-swissboundaries3d'],
-  AT: ['openplzapi'],
+  AT: ['austrian-post-postcode', 'austrian-post-address-data', 'bev-austria-address-register', 'statistics-austria-postcode-regions', 'bev-austria-administrative-boundaries', 'statistics-austria-gwr', 'openplzapi'],
   GB: [
     'postcodes-io',
     'ons-postcode-directory',

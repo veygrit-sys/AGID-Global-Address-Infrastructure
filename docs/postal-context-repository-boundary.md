@@ -515,6 +515,37 @@ personal, cadastral-right, protected-register, military and security-sensitive
 data.
 
 一国一repoは、source、license、更新周期、訂正窓口、制度ruleを独立させる単位として採用する。
+
+### `agid-postal-at`
+
+The Austria repository owns pinned Österreichische Post current and historical
+postcode/destination assignment, separately licensed Address Data/PAC evidence,
+BEV address and building identity, Statistik Austria postcode-region products,
+BEV administrative context, derived surfaces, synthetic fixtures and release
+validation. Four-digit syntax and destination locations are assignment clues,
+not automatic postal polygons or delivery guarantees.
+
+Geometry authority remains explicit. A Post perimeter is operator-official only
+when an exact licensed product says so. Statistik Austria PLZ regions are
+official statistical geometry, not Austrian Post perimeters. Rights-cleared BEV
+address membership may produce a versioned `derived` surface with method,
+members, exclusions, uncertainty and temporal lineage. Non-area, organization,
+route and PO-box codes may remain non-areal.
+
+BEV's seven-digit `Adresscode` and three-digit building `Subcode` are retained
+as separate text identifiers. Address coordinates, building coordinates,
+parcels and footprints are distinct; exact building display requires the same
+identifier pair or a reviewed explicit crosswalk, while containment and
+proximity remain candidates. A license for one BEV snapshot never silently
+extends to address search, INSPIRE services or another product.
+
+Austrian Post contract data and protected GWR individual records stay outside
+public artifacts, including addressees, households, residents, owners,
+occupants, dwellings and delivery instructions. Administrative boundaries,
+German/Swiss/Liechtenstein routing, provider coverage, syntax, border clipping
+and proximity never establish postal membership or transfer country identity.
+AT identity cites independently pinned sovereign-boundary evidence.
+
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 
 ### Heavy artifact store

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeAustriaPostalCode,
   normalizeAlbaniaPostalCode,
   normalizeAndorraPostalCode,
   normalizeArmeniaPostalCode,
@@ -161,6 +162,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeUkrainePostalCode('01-001'), null);
   assert.equal(normalizeUkrainePostalCode('UA01001'), null);
   assert.equal(normalizePostalContextPostalCode('ua', '00 001'), '00001');
+  assert.equal(normalizeAustriaPostalCode('０１０１'), '0101');
+  assert.equal(normalizeAustriaPostalCode('01 01'), '0101');
+  assert.equal(normalizeAustriaPostalCode('01-01'), null);
+  assert.equal(normalizeAustriaPostalCode('AT0101'), null);
+  assert.equal(normalizePostalContextPostalCode('at', '00 01'), '0001');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -304,4 +310,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.UA.postalCodeFormat, 'NNNNN');
+  assert.equal(isPostalContextCountryCode('AT'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.AT.fullCodeGeometrySemantics,
+    'area-or-non-area',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AT.postalCodeFormat, 'NNNN');
 });
