@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeCyprusPostalCode,
   normalizeAustriaPostalCode,
   normalizeAlbaniaPostalCode,
   normalizeAndorraPostalCode,
@@ -167,6 +168,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeAustriaPostalCode('01-01'), null);
   assert.equal(normalizeAustriaPostalCode('AT0101'), null);
   assert.equal(normalizePostalContextPostalCode('at', '00 01'), '0001');
+  assert.equal(normalizeCyprusPostalCode('２００８'), '2008');
+  assert.equal(normalizeCyprusPostalCode('20 08'), '2008');
+  assert.equal(normalizeCyprusPostalCode('CY-2008'), '2008');
+  assert.equal(normalizeCyprusPostalCode('CY2008'), null);
+  assert.equal(normalizeCyprusPostalCode('99010'), null);
+  assert.equal(normalizePostalContextPostalCode('cy', 'CY-0001'), '0001');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -316,4 +323,10 @@ test('declares country-specific full-code geometry semantics', () => {
     'area-or-non-area',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AT.postalCodeFormat, 'NNNN');
+  assert.equal(isPostalContextCountryCode('CY'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.CY.fullCodeGeometrySemantics,
+    'address-range-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CY.postalCodeFormat, 'NNNN');
 });

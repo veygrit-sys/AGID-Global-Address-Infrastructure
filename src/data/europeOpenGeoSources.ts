@@ -192,6 +192,13 @@ export type EuropeOpenGeoSourceId =
   | 'cyprus-department-lands-surveys'
   | 'cyprus-open-data-portal'
   | 'inspire-cyprus'
+  | 'cyprus-post-postcode-directory'
+  | 'cyprus-post-postcode-api'
+  | 'cyprus-dls-inspire-addresses'
+  | 'cyprus-dls-inspire-buildings'
+  | 'cyprus-dls-administrative-units'
+  | 'cystat-postal-sectors'
+  | 'eu-cyprus-protocol-10'
   | 'datahub-postal'
   | 'zauberware-postal-codes'
   | 'eu-postal-code-package'
@@ -2007,6 +2014,69 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Cyprus INSPIRE spatial data infrastructure for boundaries and national geospatial validation layers.',
   },
+  'cyprus-post-postcode-directory': {
+    id: 'cyprus-post-postcode-directory',
+    name: 'Cyprus Post Code Directory and Street Assignments',
+    url: 'https://data.gov.cy/el/dataset/odigos-tahydromikoy-kodika-post-code-directory',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official annual CC BY 4.0 four-digit codes remain text; locality, street, and street-range assignments are not automatically a postal polygon or delivery guarantee.',
+  },
+  'cyprus-post-postcode-api': {
+    id: 'cyprus-post-postcode-api',
+    name: 'Cyprus Post Postal Codes API',
+    url: 'https://www.cypruspost.post/en/api-postal-codes',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official request-based postcode search API for current validation. Access, service availability, retention, and rate terms remain operational and controlled; API access is not a bulk license or geometry authority.',
+  },
+  'cyprus-dls-inspire-addresses': {
+    id: 'cyprus-dls-inspire-addresses',
+    name: 'Cyprus DLS INSPIRE Addresses',
+    url: 'https://www.data.gov.cy/el/dataset/dieythynseis-addresses-inspire',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official CC BY 4.0 DLS address points, locators, identifiers, and address-building/address-parcel relationship tables. Point, building relation, and parcel relation remain distinct and need pinned coverage and vintage.',
+  },
+  'cyprus-dls-inspire-buildings': {
+    id: 'cyprus-dls-inspire-buildings',
+    name: 'Cyprus DLS INSPIRE Buildings',
+    url: 'https://www.data.gov.cy/el/dataset/ktiria-inspire',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CC BY 4.0 DLS building features and footprints. Exact address-to-building display requires an explicit relationship or reviewed identifier crosswalk; containment and proximity are candidate-only.',
+  },
+  'cyprus-dls-administrative-units': {
+    id: 'cyprus-dls-administrative-units',
+    name: 'Cyprus DLS INSPIRE Administrative Units',
+    url: 'https://www.data.gov.cy/index.php/el/dataset/dioikitikes-enotites-administrative-units-inspire',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CC BY 4.0 district, municipality/community, quarter, and outline context. Administrative geometry is not postal membership, Cyprus Post service coverage, effective control, or a sovereignty decision.',
+  },
+  'cystat-postal-sectors': {
+    id: 'cystat-postal-sectors',
+    name: 'CYSTAT Statistical Postal Sectors',
+    url: 'https://www.data.gov.cy/en/dataset/481',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CC BY 4.0 statistical postal-sector geometry tied to census/reference time; it is not a current Cyprus Post perimeter and does not prove address membership or deliverability.',
+  },
+  'eu-cyprus-protocol-10': {
+    id: 'eu-cyprus-protocol-10',
+    name: 'EU Cyprus Protocol 10',
+    url: 'https://eur-lex.europa.eu/eli/treaty/acc_2003/act_1/pro_10/sign/eng',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official legal context for areas where the Republic government does not exercise effective control and Green Line/SBA treatment. Effective control, EU-law application, postal service, country identity, and sovereignty remain separate assertions.',
+  },
   'datahub-postal': {
     id: 'datahub-postal',
     name: 'DataHub Logistics Postal Codes',
@@ -3014,7 +3084,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   ],
   VA: ['zauberware-postal-codes', 'vatican-city-state', 'openstreetmap-vatican'],
   AD: ['correos-andorra-postcodes', 'andorra-urban-address-guide', 'andorra-topographic-buildings', 'andorra-cartografia', 'andorra-open-data', 'postalcodes-info'],
-  CY: ['postalcodes-info', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],
+  CY: ['cyprus-post-postcode-directory', 'cyprus-post-postcode-api', 'cyprus-dls-inspire-addresses', 'cyprus-dls-inspire-buildings', 'cyprus-dls-administrative-units', 'cystat-postal-sectors', 'eu-cyprus-protocol-10', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus', 'postalcodes-info'],
   RO: ['okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
   BG: ['scrape4u-postal-codes', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
   UA: ['ukrposhta-postcodes-open-data', 'ukrposhta-index-and-address-api', 'ukraine-unified-address-register', 'ukraine-building-register', 'ukraine-nsdi', 'eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],

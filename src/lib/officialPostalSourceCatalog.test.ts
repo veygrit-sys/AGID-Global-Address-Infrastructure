@@ -256,6 +256,38 @@ test('separates Andorra postal, government-address, topographic-building, and pa
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('CY');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('cyprus-post-postcode-directory')?.authority, 'postal-operator');
+  assert.equal(byId.get('cyprus-post-postcode-directory')?.availability, 'bulk-open-data');
+  assert.match(byId.get('cyprus-post-postcode-directory')?.notes.join(' ') ?? '', /four-digit.*text.*street range.*not a postal polygon.*control evidence/i);
+  assert.equal(byId.get('cyprus-post-postcode-api')?.availability, 'auth-required-api');
+  assert.match(byId.get('cyprus-post-postcode-api')?.notes.join(' ') ?? '', /request-based.*not a bulk license.*perimeter/i);
+  assert.equal(byId.get('cyprus-dls-inspire-addresses')?.depth, 'address');
+  assert.match(byId.get('cyprus-dls-inspire-addresses')?.notes.join(' ') ?? '', /address point.*building relation.*parcel relation.*proximity/i);
+  assert.equal(byId.get('cyprus-dls-inspire-buildings')?.depth, 'building');
+  assert.match(byId.get('cyprus-dls-inspire-buildings')?.notes.join(' ') ?? '', /footprint.*does not prove postal assignment.*explicit relationship/i);
+  assert.equal(byId.get('cyprus-dls-administrative-units')?.depth, 'geo-only');
+  assert.match(byId.get('cyprus-dls-administrative-units')?.notes.join(' ') ?? '', /not postal membership.*effective control.*sovereignty/i);
+  assert.equal(byId.get('cystat-postal-sectors')?.trustTier, 'official-derived');
+  assert.match(byId.get('cystat-postal-sectors')?.notes.join(' ') ?? '', /statistical.*not a current Cyprus Post perimeter.*control/i);
+  assert.equal(byId.get('eu-cyprus-protocol-10')?.sourceRole, 'legal-framework-only');
+  assert.equal(byId.get('eu-cyprus-protocol-10')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('eu-cyprus-protocol-10')?.notes.join(' ') ?? '', /legal context only.*separate from sovereignty.*never.*postal validation/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'CY',
+    source: 'Cyprus Post Code Directory',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const legalOnly = classifyPostalSourceTrust({
+    countryCode: 'CY',
+    source: 'Cyprus Protocol 10',
+  });
+  assert.equal(legalOnly.strength, 'weak');
+});
+
 test('separates Austria postal, contract address, BEV, statistical-region, boundary, and GWR authority', () => {
   const sources = getOfficialPostalSourcesForCountry('AT');
   const byId = new Map(sources.map(source => [source.id, source]));

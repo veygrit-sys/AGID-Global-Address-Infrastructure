@@ -768,12 +768,13 @@ test('Southern Europe address JSON files expose addressRules metadata and postal
   ]);
   assert.equal(loadFormat('IT').postalCode?.api, 'https://www.poste.it/cap');
   assert.equal(loadFormat('GR').postalCode?.api, 'https://itemsearch.elta.gr/en-GB/');
-  assert.equal(loadFormat('CY').postalCode?.api, 'https://postalcodes.info/');
+  assert.equal(loadFormat('CY').postalCode?.api, 'https://www.cypruspost.post/en/api-postal-codes');
   assert.equal(loadFormat('MT').postalCode?.api, 'https://www.maltapost.com/postcode/?l=1');
   assert.match(loadFormat('MT').postalCode?.source ?? '', /MaltaPost.*Address Registrar.*Planning Authority/i);
   assert.equal(loadFormat('MC').postalCode?.api, 'https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux');
   assert.match(loadFormat('MC').postalCode?.source ?? '', /La Poste.*DPUM.*IMSEE/i);
-  assert.equal(loadFormat('CY').postalCode?.source, 'postalcodes.info / Cyprus open data');
+  assert.match(loadFormat('CY').postalCode?.source ?? '', /Cyprus Post.*DLS INSPIRE.*CYSTAT/i);
+  assert.match(loadRules('CY').postalCode?.label ?? '', /4 digits.*CY-.*assignment.*area.*source evidence/i);
 });
 
 test('Southern Europe metadata exposes national geospatial and cadastre sources', () => {

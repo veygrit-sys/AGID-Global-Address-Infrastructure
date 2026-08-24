@@ -546,6 +546,38 @@ German/Swiss/Liechtenstein routing, provider coverage, syntax, border clipping
 and proximity never establish postal membership or transfer country identity.
 AT identity cites independently pinned sovereign-boundary evidence.
 
+### `agid-postal-cy`
+
+The Cyprus repository owns pinned Cyprus Post directory, street/range and
+permitted API assignment evidence, DLS INSPIRE addresses and buildings, DLS
+administrative context, CYSTAT statistical postal sectors, derived surfaces,
+synthetic fixtures and release validation. Four-digit syntax and the inbound
+`CY-` prefix are presentation rules, not allocation, deliverability or geometry.
+
+Geometry authority remains explicit. A Cyprus Post perimeter is operator-
+official only when an exact pinned operator product publishes and licenses it.
+CYSTAT postal sectors are official statistical geometry tied to census/reference
+time, not current Post perimeters. Rights-cleared street/range and DLS address
+membership may create a versioned `derived` surface with members, method,
+exclusions, uncertainty, validity and lineage. PO-box, organization, route and
+other non-area codes may remain non-areal.
+
+DLS INSPIRE Address points, address-building relationship tables, parcel
+relations and INSPIRE Building footprints retain separate identifiers and
+semantics. Exact building display requires an explicit relationship, common
+authoritative identifier or reviewed crosswalk; parcel containment and
+proximity remain candidates. Every open-data artifact pins its own CC BY 4.0
+resource, attribution, schema, coverage, vintage, CRS and digest.
+
+CY country identity, Republic-government effective-control/service coverage,
+the Green Line, non-government-controlled areas, Sovereign Base Areas and the
+existing `CYGL`, `TRNC` and `SBA` feature classes remain separate assertions.
+Foreign routing, missing service, API state, DLS extent, postcode syntax,
+administrative geometry and clipping never decide sovereignty, recognition or
+control and never silently merge those classes. Public artifacts exclude
+addressees, residents, owners, rightsholders, occupants, title records,
+delivery instructions, credentials and protected cadastral fields.
+
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 
 ### Heavy artifact store
