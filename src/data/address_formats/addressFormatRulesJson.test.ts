@@ -1094,6 +1094,17 @@ test('Belgium address metadata separates postal cantons, BeSt identity, regional
   for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
 });
 
+test('Montenegro address metadata separates postcode, PAK, UZN address and building, MONSTAT, and private property evidence', () => {
+  const format = loadFormat('ME');
+  const rules = loadRules('ME');
+  const sourceIds = ["posta-crne-gore-postcode-office-directory","posta-crne-gore-pak-addressing","uzn-montenegro-address-register","uzn-montenegro-real-estate-cadastre","uzn-montenegro-geoportal","uzn-montenegro-spatial-unit-record","monstat-montenegro-spatial-register"];
+  assert.equal(format.postalCode?.api, 'https://www.postacg.me/centar-za-korisnike/lokacije-poslovnica/');
+  assert.match(format.postalCode?.source ?? '', /Pošta Crne Gore.*PAK.*UZN Address Register.*cadastre.*MONSTAT/i);
+  assert.match(rules.postalCode?.label ?? '', /5 digits.*six-digit PAK.*routing.*derived.*address point.*explicit UZN link.*property.*private/i);
+  assert.deepEqual(rules.regionalHierarchy, ['municipalityOrCapital', 'settlement', 'localCommunity', 'statisticalOrCensusCircle', 'cadastralMunicipality', 'postalOfficeAssignment', 'postalAddressCodePak', 'streetOrSquare', 'houseNumber', 'authoritativeAddressRegisterId', 'cadastralParcelAndBuildingIdentifier', 'explicitRightsClearedBuilding']);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+
 test('Bulgaria address metadata separates routing, EKATTE, address, and cadastral building evidence', () => {
   const format = loadFormat('BG');
   const rules = loadRules('BG');

@@ -3576,6 +3576,41 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Public parcel geometry and allow-listed identifiers are validation context only. A parcel is not a building, address link, postal district, or permission to publish owners, residents, rightsholders, occupants, title, value, encumbrance, or restriction records.'],
   },
   {
+    id: 'posta-crne-gore-postcode-office-directory', countryCodes: ['ME'], label: 'Pošta Crne Gore Post Office Directory', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode',
+    url: 'https://www.postacg.me/centar-za-korisnike/lokacije-poslovnica/', sourceNames: ['posta crne gore post office directory', 'pošta crne gore poštanski broj', 'montenegro post offices'], openSourceIds: ['posta-crne-gore-postcode-office-directory'], requiresCredential: false,
+    notes: ['Official five-digit post-office assignment and delivery-office reference. An office point, address or operational flag is not a postcode perimeter, current address assignment or delivery guarantee.'],
+  },
+  {
+    id: 'posta-crne-gore-pak-addressing', countryCodes: ['ME'], label: 'Pošta Crne Gore Postal Address Code (PAK)', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'street', validationReadiness: 'metadata-only',
+    url: 'https://www.postacg.me/centar-za-korisnike/postanski-rjecnik/', sourceNames: ['posta crne gore pak', 'poštanski adresni kod crna gora', 'montenegro postal address code'], openSourceIds: ['posta-crne-gore-pak-addressing'], requiresCredential: false,
+    notes: ['Official definition establishes six-digit PAK as a code for a part of a street visited by a carrier; it is route evidence, not the five-digit postcode, polygon, building or household.'],
+  },
+  {
+    id: 'uzn-montenegro-address-register', countryCodes: ['ME'], label: 'UZN Montenegro Address Register', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'address', validationReadiness: 'metadata-only',
+    url: 'https://www.gov.me/clanak/usluge', sourceNames: ['uzn montenegro address register', 'adresni registar crna gora', 'montenegro house number register'], openSourceIds: ['uzn-montenegro-address-register'], requiresCredential: true,
+    notes: ['Official address identity and house-number register; exact access, fee basis, municipal coverage, completeness, allowed fields, terms, schema, CRS and digest are required.'],
+  },
+  {
+    id: 'uzn-montenegro-real-estate-cadastre', countryCodes: ['ME'], label: 'UZN Montenegro Real Estate Cadastre', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'building', validationReadiness: 'metadata-only',
+    url: 'https://www.gov.me/dokumenta/cee0bb11-5aa8-47c4-b07e-61a76184cd03', sourceNames: ['uzn montenegro real estate cadastre', 'katastar nepokretnosti crna gora', 'montenegro cadastral buildings'], openSourceIds: ['uzn-montenegro-real-estate-cadastre'], requiresCredential: true,
+    notes: ['Exact building use requires a permitted layer and explicit address relation or common authoritative identifier. Parcel and property-right records do not become public building or personal output.'],
+  },
+  {
+    id: 'uzn-montenegro-geoportal', countryCodes: ['ME'], label: 'UZN Montenegro Geoportal', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', validationReadiness: 'metadata-only',
+    url: 'https://geoportal.co.me/geoportal/geoportal.html', sourceNames: ['uzn montenegro geoportal', 'geoportal co me', 'montenegro cadastral viewer'], openSourceIds: ['uzn-montenegro-geoportal', 'geoportal-montenegro'], requiresCredential: false,
+    notes: ['Official viewer and catalog prove visibility only; each underlying service or layer needs its own access, terms, fields, coverage, schema, CRS and digest.'],
+  },
+  {
+    id: 'uzn-montenegro-spatial-unit-record', countryCodes: ['ME'], label: 'UZN Montenegro Spatial Unit Record', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', validationReadiness: 'metadata-only',
+    url: 'https://wapi.gov.me/download/cee0bb11-5aa8-47c4-b07e-61a76184cd03?version=1.0', sourceNames: ['uzn montenegro spatial unit record', 'evidencija prostornih jedinica crna gora', 'montenegro administrative units'], openSourceIds: ['uzn-montenegro-spatial-unit-record'], requiresCredential: true,
+    notes: ['Official spatial-unit identifiers and graphics provide administrative and statistical context only; they do not create postal membership, building linkage or sovereignty conclusions.'],
+  },
+  {
+    id: 'monstat-montenegro-spatial-register', countryCodes: ['ME'], label: 'MONSTAT Montenegro Spatial Register', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'locality', validationReadiness: 'metadata-only',
+    url: 'https://monstat.org/cg/page.php?id=99&pageid=99', sourceNames: ['monstat montenegro spatial register', 'prostorni registar monstat', 'montenegro statistical spatial units'], openSourceIds: ['monstat-montenegro-spatial-register'], requiresCredential: false,
+    notes: ['Official names, codes and statistical hierarchy complement separately pinned UZN graphics. Statistical membership is not postal, address or building authority.'],
+  },
+  {
     id: 'posta-srbije-post-office-list',
     countryCodes: ['RS'],
     label: 'Pošta Srbije Post Office List',

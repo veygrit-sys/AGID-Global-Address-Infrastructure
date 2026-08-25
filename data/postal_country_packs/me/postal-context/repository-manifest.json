@@ -1,0 +1,129 @@
+{
+  "schema_version": "agid-postal-me-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-me",
+    "country_code": "ME",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Poštanski broj",
+    "full_code_format": "NNNNN",
+    "pak_name": "Poštanski adresni kod (PAK)",
+    "pak_format": "NNNNNN",
+    "full_code_default_geometry": "destination_post_office_assignment_with_derived_address_membership_surface_or_point_or_non_area",
+    "assignment_rule": "A pinned Pošta Crne Gore branch directory or versioned operator document establishes a five-digit destination post-office assignment at its capture time. The code remains text with leading zeroes. Syntax, a branch address, office point, locality, delivery-office flag or PAK alone does not establish a current postal perimeter or universal deliverability.",
+    "pak_rule": "Pošta Crne Gore defines the six-digit PAK as a code for a part of a street visited by a postal carrier. PAK is delivery-route or address-range evidence, not the five-digit postcode, a guaranteed polygon, an exact building, a household or a resident identity.",
+    "geometry_rule": "No nationwide Pošta Crne Gore-authored postcode or PAK vector polygon distribution is assumed. A surface generated from rights-cleared UZN address membership is derived, versioned and uncertainty-bearing. Office points, delivery routes, municipal or spatial units, cadastral parcels, street buffers, Voronoi cells and interpolation never become official postal geometry.",
+    "address_rule": "The UZN Address Register is the authoritative source for house numbers, streets and squares, cadastral municipality and parcel references, municipality and settlement identifiers. Every extract pins exact municipal coverage, completeness, edition, access basis, allowed fields, terms, schema, CRS and digest. An address point, house number or cadastral parcel reference is not a building footprint and does not identify a person.",
+    "building_rule": "Exact building display requires an exact rights-cleared UZN building feature plus a source-defined address-to-building relationship, common authoritative cadastral identifier or reviewed explicit crosswalk. Parcel containment, building number text, address equality, overlap, centroid or proximity creates candidates only.",
+    "cadastral_rule": "UZN real-estate cadastre and electronic property-list evidence is controlled, fee- and purpose-specific validation context. Public output excludes owner, rightsholder, personal identifier, resident, occupant, title or right basis, encumbrance, restriction, transaction, value, income and tax fields.",
+    "administration_rule": "UZN spatial-unit graphics and MONSTAT names, codes and statistical hierarchy provide dated municipality, settlement, local-community, cadastral-municipality and statistical-circle context. They do not create postcode or PAK membership, delivery eligibility, address identity, building linkage or territorial conclusions.",
+    "licence_rule": "Public viewing, search, a paid receipt or statutory access does not imply bulk extraction, derivative or redistribution rights. Every Pošta Crne Gore, UZN and MONSTAT artifact pins the exact product, authority, purpose, access or fee basis, allowed public fields, derivative rights, capture and effective time, coverage, terms, schema, CRS, transform and digest.",
+    "crs_rule": "Every geometry retains its source CRS and exact service or dataset metadata. WGS84 output records a reviewed versioned transform; coordinates are never relabelled as EPSG:4326 without transformation.",
+    "territory_rule": "The release covers Montenegro only as stated by each pinned source. Administrative, statistical, cadastral or postal coverage is not a sovereignty determination and clipping cannot fill postal gaps.",
+    "freshness_rule": "Postal, address, building, cadastral and spatial-unit sources refresh independently. Mixed-edition joins fail closed unless their validity and knowledge intervals overlap and the cross-source relationship remains valid."
+  },
+  "integration": {
+    "agid_country_code": "ME",
+    "coordinate_flow": "coordinate -> derived rights-cleared address-membership surface or address point -> Pošta Crne Gore five-digit assignment and optional PAK -> UZN/MONSTAT hierarchy -> explicit UZN building relation -> ME AGID cell",
+    "postcode_flow": "canonical five digits -> destination post-office assignment -> optional derived address-membership surface -> PAK and UZN address candidates -> explicit building relation -> AGID cells",
+    "pak_flow": "canonical six-digit PAK -> operator route or street-part evidence -> matching UZN address identifiers -> optional derived route or surface -> explicit building relation -> AGID cells",
+    "building_output_gate": "source-defined relationship, common authoritative cadastral identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "canonical-postcode",
+      "pass": "Five-digit postcodes remain text and preserve leading zeroes; ME- prefixes and hyphens are rejected."
+    },
+    {
+      "id": "pak-is-separate",
+      "pass": "Six-digit PAK remains route or street-part evidence and is never stored as the five-digit postcode or assumed to be a polygon."
+    },
+    {
+      "id": "operator-receipt",
+      "pass": "Every postal assignment pins exact Pošta Crne Gore source, purpose, version, capture time, terms, schema and digest."
+    },
+    {
+      "id": "derived-geometry",
+      "pass": "Every postal surface records rights-cleared members, exclusions, method, uncertainty, validation, validity and lineage and is labelled derived."
+    },
+    {
+      "id": "official-address",
+      "pass": "Every UZN address retains its authoritative identifier, allowed components, reference time, coverage, access basis, schema, source CRS and digest."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Building output has an explicit authoritative relation; address point, parcel, containment, overlap and proximity alone never pass."
+    },
+    {
+      "id": "administration-separate",
+      "pass": "UZN and MONSTAT spatial units remain context and never substitute for postal or building evidence."
+    },
+    {
+      "id": "privacy",
+      "pass": "No resident, owner, rightsholder, occupant, personal identifier, title, encumbrance, value, tax, contact or shipment data is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "Pinned Pošta Crne Gore postcode and PAK evidence passes terms, version, freshness, coverage and redistribution gates."
+      },
+      {
+        "id": "M3_address",
+        "definition": "UZN Address Register and UZN/MONSTAT spatial-unit artifacts pass access, field, coverage, completeness, CRS and licence gates."
+      },
+      {
+        "id": "M4_geometry",
+        "definition": "Derived postal geometry and exact permitted building joins pass membership, topology, ambiguity, identifier, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "postcode-or-post-office-row-presented-as-polygon",
+      "pak-presented-as-five-digit-postcode-or-universal-polygon",
+      "office-point-route-municipality-parcel-buffer-voronoi-or-interpolation-presented-as-official-postal-area",
+      "address-point-house-number-or-parcel-presented-as-building-footprint",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "geoportal-view-paid-receipt-or-statutory-access-presented-as-redistribution-right",
+      "owner-rightsholder-resident-occupant-personal-id-title-encumbrance-value-income-or-tax-data-published",
+      "administrative-statistical-cadastral-or-postal-coverage-presented-as-sovereignty-determination",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-or-pak-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_ME_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_ME_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_ME_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_ME_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-pak-address-cadastre-or-property-rows",
+    "every-postcode-or-pak-is-a-polygon",
+    "post-office-is-postcode-area",
+    "pak-is-building-or-household",
+    "administrative-boundary-equals-postal-area",
+    "address-point-or-parcel-is-building-footprint",
+    "nearest-building-is-exact-address-link",
+    "property-register-is-public-address-output"
+  ]
+}

@@ -420,6 +420,7 @@ export {
   normalizeBulgariaPostalCode,
   normalizeBelarusPostalCode,
   normalizeBelgiumPostalCode,
+  normalizeMontenegroPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,

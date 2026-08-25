@@ -334,6 +334,13 @@ export type EuropeOpenGeoSourceId =
   | 'rgz-serbia-real-estate-cadastre'
   | 'bosnia-geoportal'
   | 'bosnia-cadastre-reference'
+  | 'posta-crne-gore-postcode-office-directory'
+  | 'posta-crne-gore-pak-addressing'
+  | 'uzn-montenegro-address-register'
+  | 'uzn-montenegro-real-estate-cadastre'
+  | 'uzn-montenegro-geoportal'
+  | 'uzn-montenegro-spatial-unit-record'
+  | 'monstat-montenegro-spatial-register'
   | 'geoportal-montenegro'
   | 'montenegro-cadastre'
   | 'posta-shqiptare-postcodes'
@@ -3499,6 +3506,34 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Bosnia and Herzegovina cadastre reference for entity-level cadastral and settlement validation.',
   },
+  'posta-crne-gore-postcode-office-directory': {
+    id: 'posta-crne-gore-postcode-office-directory', name: 'Pošta Crne Gore Post Office Directory', url: 'https://www.postacg.me/centar-za-korisnike/lokacije-poslovnica/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official five-digit number identifies a unique post office and the directory records office address and delivery-office status. An office point or flag is not its service perimeter; exact version, terms and redistribution rights must be pinned.',
+  },
+  'posta-crne-gore-pak-addressing': {
+    id: 'posta-crne-gore-pak-addressing', name: 'Pošta Crne Gore Postal Address Code (PAK)', url: 'https://www.postacg.me/centar-za-korisnike/postanski-rjecnik/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official six-digit PAK marks a part of a street visited by a carrier. It is route or address-range evidence, not the five-digit postcode, automatically a polygon, building, household or resident identity.',
+  },
+  'uzn-montenegro-address-register': {
+    id: 'uzn-montenegro-address-register', name: 'UZN Montenegro Address Register', url: 'https://www.gov.me/clanak/usluge', kind: 'address', coverage: 'country', usage: 'primary', license: 'Controlled or fee-specific; exact product terms required',
+    notes: 'Official house numbers, streets and squares with municipal, settlement, cadastral-municipality and parcel references. An address record or point is not a building footprint or postal assignment; municipal coverage, completeness and terms must be pinned.',
+  },
+  'uzn-montenegro-real-estate-cadastre': {
+    id: 'uzn-montenegro-real-estate-cadastre', name: 'UZN Montenegro Real Estate Cadastre', url: 'https://www.gov.me/dokumenta/cee0bb11-5aa8-47c4-b07e-61a76184cd03', kind: 'building', coverage: 'country', usage: 'validation', license: 'Controlled, fee- and purpose-specific',
+    notes: 'Official fee-specific building and parcel evidence requires an exact permitted layer and explicit address relationship. A parcel is not a building; owner, rightsholder, resident, title, encumbrance, value and tax fields stay private.',
+  },
+  'uzn-montenegro-geoportal': {
+    id: 'uzn-montenegro-geoportal', name: 'UZN Montenegro Geoportal', url: 'https://geoportal.co.me/geoportal/geoportal.html', kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Viewer/reference only until layer-specific rights are pinned',
+    notes: 'Official viewer and metadata catalog can validate candidate layers. Viewer visibility is not bulk vector access, an exact address-building relation or a redistribution licence.',
+  },
+  'uzn-montenegro-spatial-unit-record': {
+    id: 'uzn-montenegro-spatial-unit-record', name: 'UZN Montenegro Spatial Unit Record', url: 'https://wapi.gov.me/download/cee0bb11-5aa8-47c4-b07e-61a76184cd03?version=1.0', kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Controlled or fee-specific; exact layer terms required',
+    notes: 'Official administrative, cadastral and statistical geometry provides dated context. Unit boundaries are not postal or PAK areas, delivery evidence, building links or sovereignty determinations.',
+  },
+  'monstat-montenegro-spatial-register': {
+    id: 'monstat-montenegro-spatial-register', name: 'MONSTAT Montenegro Spatial Register', url: 'https://monstat.org/cg/page.php?id=99&pageid=99', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official spatial-unit names, codes and lower-to-higher hierarchy complement separately pinned UZN graphical authority. Statistical membership is not postal assignment, address existence or building identity.',
+  },
   'geoportal-montenegro': {
     id: 'geoportal-montenegro',
     name: 'Montenegro Geoportal',
@@ -4041,7 +4076,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   RU: ['datahub-postal', 'rosreestr-nspd', 'russia-open-data-geo'],
   RS: ['datahub-postal', 'geosrbija', 'rgz-serbia', 'posta-srbije-post-office-list', 'posta-srbije-pak-definition', 'posta-srbije-pak-lookup', 'posta-srbije-wsp-address-api', 'rgz-serbia-address-register-open-data', 'rgz-serbia-spatial-unit-register', 'rgz-serbia-geosrbija-buildings', 'rgz-serbia-real-estate-cadastre'],
   BA: ['datahub-postal', 'bosnia-geoportal', 'bosnia-cadastre-reference'],
-  ME: ['eurostat-gisco-postcodes', 'geoportal-montenegro', 'montenegro-cadastre'],
+  ME: ['posta-crne-gore-postcode-office-directory', 'posta-crne-gore-pak-addressing', 'uzn-montenegro-address-register', 'uzn-montenegro-real-estate-cadastre', 'uzn-montenegro-geoportal', 'uzn-montenegro-spatial-unit-record', 'monstat-montenegro-spatial-register', 'eurostat-gisco-postcodes', 'geoportal-montenegro', 'montenegro-cadastre'],
   XK: ['spotzi-postal-codes', 'kosovo-geoportal', 'kosovo-cadastre'],
   AL: ['posta-shqiptare-postcodes', 'albania-national-address-system', 'ashk-albania-cadastral-buildings', 'asig-albania', 'albania-geoportal'],
   MK: ['datahub-postal', 'katastar-north-macedonia', 'makstat-geodata'],

@@ -1124,3 +1124,21 @@ editions, attribution, CRS and digests remain separate. Personal, ownership, tit
 transaction, tax, cadastral-income and valuation fields are excluded. The complete
 evidence ladder and promotion rules are in
 [postal-context-belgium-runtime.md](postal-context-belgium-runtime.md).
+
+### `agid-postal-me`
+
+The Montenegro repository owns pinned Pošta Crne Gore five-digit destination
+post-office assignment and six-digit PAK routing evidence. No nationwide
+operator-authored postcode or PAK polygon is assumed; a surface produced from
+rights-cleared UZN address membership remains derived, uncertainty-bearing and
+non-canonical. Office points, routes, administrative units, parcels, buffers,
+Voronoi cells and interpolation never substitute for postal authority.
+
+UZN Address Register identity, real-estate cadastral buildings, Geoportal layers
+and spatial-unit graphics remain separately licensed and versioned. Exact building
+display requires a permitted building feature plus an explicit source relation,
+common authoritative cadastral identifier or reviewed crosswalk. MONSTAT names,
+codes and statistical hierarchy add context only. Owner, rightsholder, resident,
+occupant, personal identifier, title, encumbrance, value and tax fields are
+excluded. The evidence ladder is documented in
+[postal-context-montenegro-runtime.md](postal-context-montenegro-runtime.md).

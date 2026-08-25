@@ -9,7 +9,7 @@ import {
 } from './officialPostalSourceCatalog';
 
 test('registers official and open postal sources for the priority rollout countries', () => {
-  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
+  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'ME', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
     assert.ok(sources.length > 0, `${countryCode} should have at least one registered source`);
     assert.ok(getPreferredPostalSourceIdsForCountry(countryCode).length > 0, `${countryCode} should expose preferred source ids`);
@@ -17,7 +17,7 @@ test('registers official and open postal sources for the priority rollout countr
 });
 
 test('prefers country-specific official sources before the UPU global fallback', () => {
-  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
+  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'ME', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
 
   for (const countryCode of countrySpecificCountries) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
@@ -37,6 +37,7 @@ test('prefers country-specific official sources before the UPU global fallback',
   assert.ok(getOfficialPostalSourcesForCountry('BG').some(source => source.id === 'bulgarian-posts-postcode-reference'));
   assert.ok(getOfficialPostalSourcesForCountry('BY').some(source => source.id === 'nca-belarus-postal-code-zones'));
   assert.ok(getOfficialPostalSourcesForCountry('BE').some(source => source.id === 'bpost-belgium-postal-cantons'));
+  assert.ok(getOfficialPostalSourcesForCountry('ME').some(source => source.id === 'posta-crne-gore-postcode-office-directory'));
   assert.equal(getOfficialPostalSourcesForCountry('LV')[0]?.id, 'latvijas-pasts-check-address');
   assert.equal(getOfficialPostalSourcesForCountry('LT')[0]?.id, 'lietuvos-pastas-postcode-search');
   assert.equal(getOfficialPostalSourcesForCountry('JE')[0]?.id, 'jersey-post-address-finder');
@@ -790,6 +791,19 @@ test('Belgium catalog separates postal cantons, federal address consolidation, r
   assert.equal(sources.get('paradigm-brussels-urbis-buildings-addresses')?.depth, 'building');
   assert.equal(sources.get('fps-finance-belgium-cadastral-plan')?.trustTier, 'official');
   assert.equal(sources.get('fps-finance-belgium-administrative-units')?.depth, 'geo-only');
+});
+
+test('Montenegro catalog separates post-office assignment, PAK, address, cadastre, geoportal, and spatial authority', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('ME').map(source => [source.id, source]));
+  assert.equal(sources.get('posta-crne-gore-postcode-office-directory')?.authority, 'postal-operator');
+  assert.equal(sources.get('posta-crne-gore-postcode-office-directory')?.depth, 'postcode');
+  assert.equal(sources.get('posta-crne-gore-pak-addressing')?.depth, 'street');
+  assert.equal(sources.get('uzn-montenegro-address-register')?.depth, 'address');
+  assert.equal(sources.get('uzn-montenegro-address-register')?.requiresCredential, true);
+  assert.equal(sources.get('uzn-montenegro-real-estate-cadastre')?.depth, 'building');
+  assert.equal(sources.get('uzn-montenegro-geoportal')?.trustTier, 'official');
+  assert.equal(sources.get('uzn-montenegro-spatial-unit-record')?.depth, 'geo-only');
+  assert.equal(sources.get('monstat-montenegro-spatial-register')?.depth, 'locality');
 });
 
 test('catalog source ids are unique and sorted by trust for a country lookup', () => {
