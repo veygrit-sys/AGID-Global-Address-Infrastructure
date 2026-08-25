@@ -421,6 +421,7 @@ export {
   normalizeBelarusPostalCode,
   normalizeBelgiumPostalCode,
   normalizeMontenegroPostalCode,
+  normalizeRomaniaPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,

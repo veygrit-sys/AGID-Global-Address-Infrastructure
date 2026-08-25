@@ -890,7 +890,7 @@ test('Eastern Europe address JSON files expose addressRules metadata and postal 
   }
 
   assert.deepEqual(loadRules('RO').englishOrder, ['name', 'street', 'houseNumber', 'postcode', 'city', 'country']);
-  assert.equal(loadRules('RO').postalCode?.label, '6 digits required');
+  assert.match(loadRules('RO').postalCode?.label ?? '', /6 digits required.*assignment class.*derived.*CUA.*explicit ANCPI.*private/i);
   assert.match(loadRules('UA').postalCode?.label ?? '', /5 digits.*routing.*service status.*area requires source evidence/i);
   assert.equal(loadFormat('UA').postalCode?.api, 'https://index.ukrposhta.ua/');
   assert.match(loadFormat('UA').postalCode?.source ?? '', /Ukrposhta.*UPU.*Unified State Address Register.*NSDI/i);
@@ -930,7 +930,7 @@ test('Eastern Europe address JSON files expose addressRules metadata and postal 
     { code: 'sq', name: 'Albanian' },
     { code: 'sr', name: 'Serbian' },
   ]);
-  assert.equal(loadFormat('RO').postalCode?.api, 'https://2015.index.okfn.org/place/romania/postcodes/');
+  assert.equal(loadFormat('RO').postalCode?.api, 'https://www.posta-romana.ro/cauta-cod-postal.html');
   assert.equal(loadFormat('RU').postalCode?.api, 'https://datahub.io/logistics/postal-codes-ru');
   assert.equal(loadFormat('XK').postalCode?.api, 'https://www.spotzi.com/en/data-catalog?page=1&categories=Postal+Codes');
   assert.equal(loadFormat('MK').postalCode?.api, 'https://datahub.io/logistics/postal-codes-mk');
@@ -1089,6 +1089,37 @@ test('Belgium address metadata separates postal cantons, BeSt identity, regional
     'bestAddressIdAndRegionalSourceId',
     'addressableObjectType',
     'explicitRegionalBuildingOrCadastreLink',
+    'exactRightsClearedBuilding',
+  ]);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+
+test('Romania address metadata separates assignment class, derived geometry, RENNS CUA, ANCPI construction, SIRUTA, and private property evidence', () => {
+  const format = loadFormat('RO');
+  const rules = loadRules('RO');
+  const sourceIds = [
+    'posta-romana-postcode-search',
+    'posta-romana-postcode-structure',
+    'posta-romana-infocod',
+    'posta-romana-postcode-geography-status',
+    'ancpi-romania-renns',
+    'ancpi-romania-inis-addresses-buildings',
+    'ancpi-romania-registered-property-viewer',
+    'insse-romania-siruta-localities',
+  ];
+  assert.equal(format.postalCode?.api, 'https://www.posta-romana.ro/cauta-cod-postal.html');
+  assert.match(format.postalCode?.source ?? '', /Poșta Română.*Infocod.*RENNS.*INIS.*SIRUTA/i);
+  assert.match(rules.postalCode?.label ?? '', /6 digits.*assignment class.*derived.*CUA.*explicit ANCPI.*property.*private/i);
+  assert.deepEqual(rules.regionalHierarchy, [
+    'countyOrBucharest',
+    'municipalityCityCommuneOrBucharestSector',
+    'localitySiruta',
+    'postalAssignmentClass',
+    'streetOrStreetSection',
+    'administrativeNumber',
+    'uniqueAddressCodeCua',
+    'addressPointAndParcelReference',
+    'explicitAncpiConstructionIdentifier',
     'exactRightsClearedBuilding',
   ]);
   for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));

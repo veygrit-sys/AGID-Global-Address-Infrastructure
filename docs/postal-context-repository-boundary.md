@@ -1125,6 +1125,25 @@ transaction, tax, cadastral-income and valuation fields are excluded. The comple
 evidence ladder and promotion rules are in
 [postal-context-belgium-runtime.md](postal-context-belgium-runtime.md).
 
+### `agid-postal-ro`
+
+The Romania repository owns pinned Poșta Română six-digit assignment and its
+street-section, single-building or locality-wide assignment class. The operator's
+dated digitalization material stated that the then-current postcode database had
+no geographic coordinates. Therefore no nationwide operator-authored polygon is
+assumed; a surface from rights-cleared RENNS CUA membership remains derived,
+uncertainty-bearing and non-canonical. Streets, offices, counties, UATs,
+localities, parcels, buffers, Voronoi cells and interpolation never substitute
+for postal authority.
+
+RENNS CUA identity and points, ANCPI INIS constructions and property, and INSSE
+SIRUTA hierarchy remain separately licensed and versioned. Exact building display
+requires a permitted construction plus an explicit source relation, common stable
+identifier or reviewed crosswalk. Owner, rightsholder, resident, occupant,
+domicile, entity association, land-book rights, title, encumbrance, value and tax
+fields are excluded. The evidence ladder is documented in
+[postal-context-romania-runtime.md](postal-context-romania-runtime.md).
+
 ### `agid-postal-me`
 
 The Montenegro repository owns pinned Pošta Crne Gore five-digit destination

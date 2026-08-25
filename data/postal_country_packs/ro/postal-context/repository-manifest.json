@@ -1,0 +1,126 @@
+{
+  "schema_version": "agid-postal-ro-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ro",
+    "country_code": "RO",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Cod poștal",
+    "full_code_format": "NNNNNN",
+    "full_code_default_geometry": "address_range_or_locality_assignment_with_derived_cua_membership_surface_or_point_or_non_area",
+    "assignment_rule": "A pinned Poșta Română result or licensed Infocod release establishes a six-digit assignment at its capture or effective time. The code remains text with leading zeroes. Search syntax, county, locality, street, number, postal office or administrative membership alone does not establish a current postal perimeter or universal deliverability.",
+    "assignment_granularity_rule": "Official Poșta Română documentation records street, street-part or single-building codes in Bucharest, county-seat municipalities and specified municipalities, while other localities can share one locality-wide code. Each row retains its actual assignment class; no class is promoted to a universal polygon.",
+    "geography_status_rule": "Poșta Română digitalization documentation stated that the existing postcode database had no geographic coordinates. This is dated negative evidence, not a permanent ban on future operator geography; a newer exact operator release may supersede it only when pinned and reviewed.",
+    "geometry_rule": "No nationwide current Poșta Română-authored postcode polygon distribution is assumed. A surface generated from rights-cleared RENNS CUA address members joined to pinned operator assignments is derived, versioned, uncertainty-bearing and non-canonical. Street buffers, postal-office points, county, UAT or locality boundaries, cadastral parcels, Voronoi cells and interpolation never become official postal geometry.",
+    "address_rule": "RENNS is the authoritative national street-nomenclature and administrative-address system. An allowed artifact may provide CUA, street, administrative number, SIRUTA context, parcel reference and an address point with source dates. A CUA point or parcel reference is not a building footprint, postal assignment, dwelling unit, resident or legal-entity identity.",
+    "building_rule": "Exact building display requires an exact rights-cleared ANCPI construction feature plus a source-defined address-to-construction relationship, common stable authoritative identifier or reviewed explicit crosswalk. Parcel containment, point containment, overlap, text equality, centroid or proximity creates candidates only.",
+    "cadastral_rule": "ANCPI INIS and registered-property evidence is controlled, fee- and purpose-specific validation context. Public output excludes owner, rightsholder, resident, occupant, domicile, legal-entity association, land-book rights, title or right basis, encumbrance, restriction, valuation, transaction and tax fields.",
+    "administration_rule": "INSSE SIRUTA and exact WebGIS locality artifacts provide dated county, UAT, locality names, codes, hierarchy and separately licensed geometry. RENNS, INSSE and cadastral administration do not create postcode membership, delivery eligibility, building linkage or sovereignty conclusions.",
+    "licence_rule": "Public lookup, portal viewing, query capability, payment or statutory public character does not imply bulk extraction, derivative or redistribution rights. Every Poșta Română, ANCPI and INSSE artifact pins exact product or layer, authority, purpose, access or fee basis, allowed public fields, derivative rights, edition, capture and effective time, coverage, terms, schema, CRS, reviewed transform and digest.",
+    "crs_rule": "Every geometry retains its source CRS. ANCPI INIS EPSG:3844 or other source coordinates become WGS84 only through a reviewed versioned transform and are never relabelled as EPSG:4326.",
+    "territory_rule": "The release covers Romania only as stated by each pinned source. Postal regions, counties, Bucharest sectors, UATs, SIRUTA localities and cadastral coverage are not sovereignty determinations and clipping cannot fill postal gaps.",
+    "freshness_rule": "Postal, RENNS address, INIS construction and INSSE hierarchy sources refresh independently. Mixed-edition joins fail closed unless their validity and knowledge intervals overlap and the relationship remains valid."
+  },
+  "integration": {
+    "agid_country_code": "RO",
+    "coordinate_flow": "coordinate -> derived rights-cleared CUA membership surface or RENNS address point -> Poșta Română six-digit assignment -> SIRUTA and administrative hierarchy -> explicit ANCPI construction relation -> RO AGID cell",
+    "postcode_flow": "canonical six digits -> pinned operator assignment class -> optional derived CUA membership surface -> RENNS address candidates -> explicit construction relation -> AGID cells",
+    "building_output_gate": "source-defined relationship, common stable authoritative identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "canonical-postcode",
+      "pass": "Six-digit postcodes remain text and preserve leading zeroes; RO prefixes and hyphens are rejected."
+    },
+    {
+      "id": "assignment-class",
+      "pass": "Street section, single building, locality-wide, postal-office and special assignments remain explicitly typed."
+    },
+    {
+      "id": "operator-receipt",
+      "pass": "Every postal assignment pins exact Poșta Română source, version, capture or effective time, terms, schema and digest."
+    },
+    {
+      "id": "derived-geometry",
+      "pass": "Every postal surface records rights-cleared CUA members, exclusions, method, uncertainty, validation, validity and lineage and is labelled derived."
+    },
+    {
+      "id": "official-address",
+      "pass": "Every RENNS address retains CUA, allowed components, dates, coverage, access basis, schema, source CRS and digest."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Building output has an explicit authoritative relation; address point, parcel, containment, overlap and proximity alone never pass."
+    },
+    {
+      "id": "administration-separate",
+      "pass": "INSSE SIRUTA and administrative units remain context and never substitute for postal or building evidence."
+    },
+    {
+      "id": "privacy",
+      "pass": "No resident, owner, rightsholder, occupant, domicile, legal-entity association, title, encumbrance, value, tax, contact or shipment data is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "Pinned Poșta Română assignment evidence passes terms, version, freshness, coverage and redistribution gates."
+      },
+      {
+        "id": "M3_address",
+        "definition": "RENNS CUA address and INSSE SIRUTA artifacts pass access, allowed-field, coverage, completeness, CRS and licence gates."
+      },
+      {
+        "id": "M4_geometry",
+        "definition": "Derived postal geometry and exact permitted ANCPI construction joins pass membership, topology, ambiguity, identifier, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "postcode-search-row-or-postal-office-presented-as-polygon",
+      "street-section-single-building-or-locality-assignment-presented-as-universal-polygon",
+      "street-buffer-county-uat-locality-parcel-voronoi-or-interpolation-presented-as-official-postal-area",
+      "cua-address-point-administrative-number-or-parcel-presented-as-building-footprint",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "portal-view-query-paid-receipt-public-character-or-statutory-access-presented-as-redistribution-right",
+      "owner-rightsholder-resident-occupant-domicile-entity-title-encumbrance-value-or-tax-data-published",
+      "administrative-statistical-cadastral-or-postal-coverage-presented-as-sovereignty-determination",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_RO_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_RO_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_RO_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_RO_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-renns-inis-siruta-or-property-rows",
+    "every-postcode-is-a-polygon",
+    "postcode-search-result-is-bulk-data",
+    "administrative-boundary-equals-postal-area",
+    "cua-address-point-or-parcel-is-building-footprint",
+    "nearest-building-is-exact-address-link",
+    "property-register-is-public-address-output"
+  ]
+}

@@ -290,6 +290,14 @@ export type EuropeOpenGeoSourceId =
   | 'zbgis-slovakia-inspire-buildings'
   | 'zbgis-slovakia-administrative-units'
   | 'zbgis-slovakia-cadastral-parcels'
+  | 'posta-romana-postcode-search'
+  | 'posta-romana-postcode-structure'
+  | 'posta-romana-infocod'
+  | 'posta-romana-postcode-geography-status'
+  | 'ancpi-romania-renns'
+  | 'ancpi-romania-inis-addresses-buildings'
+  | 'ancpi-romania-registered-property-viewer'
+  | 'insse-romania-siruta-localities'
   | 'ancpi-romania-geoportal'
   | 'romania-open-data'
   | 'bulgarian-posts-postcode-reference'
@@ -3041,6 +3049,86 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'A cadastral parcel is not a building, address link, or postcode area and never authorizes publication of an owner, rightsholder, occupant, title, encumbrance, or restriction record.',
   },
+  'posta-romana-postcode-search': {
+    id: 'posta-romana-postcode-search',
+    name: 'Poșta Română Postcode Search',
+    url: 'https://www.posta-romana.ro/cauta-cod-postal.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public query/reference; no public bulk or derivative rights inferred',
+    notes: 'Official six-digit postcode lookup returns county, locality, street and number or postal-subunit context. Each result is a pinned query receipt, not a bulk database, coordinate source, postcode polygon or universal delivery guarantee.',
+  },
+  'posta-romana-postcode-structure': {
+    id: 'posta-romana-postcode-structure',
+    name: 'Poșta Română Six-Digit Postcode Structure',
+    url: 'https://www.posta-romana.ro/cnpr-data/_editor/files/2016-09/Anexa%204A.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official public reference; exact document edition required',
+    notes: 'Official structure distinguishes street, street-part, building and locality assignment patterns. It is semantic evidence, not a current allocation list, geometry, deliverability guarantee or universal polygon.',
+  },
+  'posta-romana-infocod': {
+    id: 'posta-romana-infocod',
+    name: 'Poșta Română Infocod',
+    url: 'https://www.posta-romana.ro/cnpr-data/_editor/files/2016-09/Criterii%20si%20conditii.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled request and contract; exact redistribution and derivative rights required',
+    notes: 'Official electronic postcode database is supplied through request, handoff and update conditions. Availability and monthly updates do not make rows, addresses or derivatives open for public redistribution.',
+  },
+  'posta-romana-postcode-geography-status': {
+    id: 'posta-romana-postcode-geography-status',
+    name: 'Poșta Română Dated Postcode Geography Status',
+    url: 'https://www.posta-romana.ro/cnpr-data/_editor/files/Invitatie%20de%20participare%20la%20consultarea%20pietei%20-%20Proiecte%20Digitalizare%20Posta%20Romana%20%28update%201%29.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official public reference; time-specific negative evidence',
+    notes: 'The dated official consultation states that the then-current postcode database had no geographic coordinates. It prevents invented operator polygons but does not rule out a future exact official geography release.',
+  },
+  'ancpi-romania-renns': {
+    id: 'ancpi-romania-renns',
+    name: 'ANCPI RENNS National Street Nomenclature Register',
+    url: 'https://renns.ancpi.ro/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public search/view plus controlled institutional service; exact bulk and derivative rights required',
+    notes: 'Official RENNS can expose CUA, administrative number, SIRUTA context, parcel reference and an address point with dates. A public query or public character is not blanket bulk permission; a CUA point is not a postcode, building footprint, resident, domicile or legal-entity link.',
+  },
+  'ancpi-romania-inis-addresses-buildings': {
+    id: 'ancpi-romania-inis-addresses-buildings',
+    name: 'ANCPI INIS Addresses and Constructions',
+    url: 'https://geoportal.ancpi.ro/hosted_services/rest/services/INIS/INIS_Viewer/MapServer/layers',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Service- and layer-specific; exact public fields and redistribution rights required',
+    notes: 'Official INIS exposes address, construction and property candidates in source CRS EPSG:3844. Exact building display needs an explicit relationship or common stable identifier; query visibility is not a reusable vector or redistribution licence.',
+  },
+  'ancpi-romania-registered-property-viewer': {
+    id: 'ancpi-romania-registered-property-viewer',
+    name: 'ANCPI Registered Property Viewer',
+    url: 'https://geoportal.ancpi.ro/imobile.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Viewer and purpose-limited validation only',
+    notes: 'Official viewer is for individual registered-property validation, not a reusable vector or bulk professional dataset. A displayed property is not an exact building-address link and owner, rightsholder, land-book rights and other personal or property-right data remain excluded.',
+  },
+  'insse-romania-siruta-localities': {
+    id: 'insse-romania-siruta-localities',
+    name: 'INSSE SIRUTA Localities WebGIS',
+    url: 'https://webgis.insse.ro/servicii/rest/services/Operational/Localitati/MapServer/layers',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Romanian Open Government Licence; exact service and layer terms required',
+    notes: 'Official INSSE layer supplies SIRUTA locality codes, superior hierarchy, county, type and geometry. It is administrative and statistical context, not postal assignment, deliverability, exact building linkage or a sovereignty determination.',
+  },
   'ancpi-romania-geoportal': {
     id: 'ancpi-romania-geoportal',
     name: 'ANCPI Romania Geoportal',
@@ -4068,7 +4156,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   VA: ['zauberware-postal-codes', 'vatican-city-state', 'openstreetmap-vatican'],
   AD: ['correos-andorra-postcodes', 'andorra-urban-address-guide', 'andorra-topographic-buildings', 'andorra-cartografia', 'andorra-open-data', 'postalcodes-info'],
   CY: ['cyprus-post-postcode-directory', 'cyprus-post-postcode-api', 'cyprus-dls-inspire-addresses', 'cyprus-dls-inspire-buildings', 'cyprus-dls-administrative-units', 'cystat-postal-sectors', 'eu-cyprus-protocol-10', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus', 'postalcodes-info'],
-  RO: ['okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
+  RO: ['posta-romana-postcode-search', 'posta-romana-postcode-structure', 'posta-romana-infocod', 'posta-romana-postcode-geography-status', 'ancpi-romania-renns', 'ancpi-romania-inis-addresses-buildings', 'ancpi-romania-registered-property-viewer', 'insse-romania-siruta-localities', 'okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
   BG: ['bulgarian-posts-postcode-reference', 'bulgarian-posts-post-office-directory', 'grao-bulgaria-address-classifier', 'agcc-bulgaria-cadastral-map', 'agcc-bulgaria-inspire-buildings', 'nsi-bulgaria-ekatte', 'nsi-bulgaria-administrative-spatial-data', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
   UA: ['ukrposhta-postcodes-open-data', 'ukrposhta-index-and-address-api', 'ukraine-unified-address-register', 'ukraine-building-register', 'ukraine-nsdi', 'eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
   MD: ['scrape4u-postal-codes', 'geoportal-moldova', 'moldova-open-data'],

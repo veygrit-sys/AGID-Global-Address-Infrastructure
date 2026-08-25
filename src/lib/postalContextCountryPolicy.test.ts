@@ -32,6 +32,7 @@ import {
   normalizeBelarusPostalCode,
   normalizeBelgiumPostalCode,
   normalizeMontenegroPostalCode,
+  normalizeRomaniaPostalCode,
   normalizeMaltaPostalCode,
   normalizeMonacoPostalCode,
   normalizeDenmarkPostalCode,
@@ -157,6 +158,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeMontenegroPostalCode('8100'), null);
   assert.equal(normalizeMontenegroPostalCode('810000'), null);
   assert.equal(normalizePostalContextPostalCode('me', '81 000'), '81000');
+  assert.equal(normalizeRomaniaPostalCode('００００００'), '000000');
+  assert.equal(normalizeRomaniaPostalCode('000 000'), '000000');
+  assert.equal(normalizeRomaniaPostalCode('RO-000000'), null);
+  assert.equal(normalizeRomaniaPostalCode('00000'), null);
+  assert.equal(normalizeRomaniaPostalCode('0000000'), null);
+  assert.equal(normalizePostalContextPostalCode('ro', '000 000'), '000000');
   assert.equal(normalizeDenmarkPostalCode('\uFF10\uFF10\uFF11\uFF12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('00 12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('0012'), '0012');

@@ -9,7 +9,7 @@ import {
 } from './officialPostalSourceCatalog';
 
 test('registers official and open postal sources for the priority rollout countries', () => {
-  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'ME', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
+  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'ME', 'RO', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
     assert.ok(sources.length > 0, `${countryCode} should have at least one registered source`);
     assert.ok(getPreferredPostalSourceIdsForCountry(countryCode).length > 0, `${countryCode} should expose preferred source ids`);
@@ -804,6 +804,27 @@ test('Montenegro catalog separates post-office assignment, PAK, address, cadastr
   assert.equal(sources.get('uzn-montenegro-geoportal')?.trustTier, 'official');
   assert.equal(sources.get('uzn-montenegro-spatial-unit-record')?.depth, 'geo-only');
   assert.equal(sources.get('monstat-montenegro-spatial-register')?.depth, 'locality');
+});
+
+test('Romania catalog separates operator assignment, dated geography status, RENNS, INIS, property viewer, and SIRUTA authority', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('RO').map(source => [source.id, source]));
+  assert.equal(sources.get('posta-romana-postcode-search')?.authority, 'postal-operator');
+  assert.equal(sources.get('posta-romana-postcode-search')?.depth, 'address');
+  assert.equal(sources.get('posta-romana-postcode-structure')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.get('posta-romana-infocod')?.requiresCredential, true);
+  assert.equal(sources.get('posta-romana-postcode-geography-status')?.depth, 'postcode');
+  assert.match(sources.get('posta-romana-postcode-geography-status')?.notes.join(' ') ?? '', /lacked geographic coordinates.*newer.*operator geography/i);
+  assert.equal(sources.get('ancpi-romania-renns')?.depth, 'address');
+  assert.equal(sources.get('ancpi-romania-inis-addresses-buildings')?.depth, 'building');
+  assert.match(sources.get('ancpi-romania-inis-addresses-buildings')?.notes.join(' ') ?? '', /EPSG:3844.*explicit address relation.*queryability.*not unrestricted redistribution/i);
+  assert.equal(sources.get('ancpi-romania-registered-property-viewer')?.trustTier, 'official');
+  assert.equal(sources.get('insse-romania-siruta-localities')?.depth, 'locality');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'RO',
+    source: 'Poșta Română Postcode Search',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
 });
 
 test('catalog source ids are unique and sorted by trust for a country lookup', () => {
