@@ -202,8 +202,7 @@ export function validatePostalContextGeometryCollection(
           || feature.publicationClass === 'public_facility'))
       || (feature.role === 'entrance_point' && feature.publicationClass === 'public_facility');
     if (!validPublicationClass) errors.push(`invalid-geometry-publication-class:${feature.id}`);
-    if ((feature.role === 'postal_area' || feature.role === 'building_footprint')
-      && geometryIsPoint(feature.geometry)) {
+    if (feature.role === 'building_footprint' && geometryIsPoint(feature.geometry)) {
       errors.push(`polygon-role-requires-polygon:${feature.id}`);
     }
     if ((feature.role === 'address_point' || feature.role === 'entrance_point')

@@ -150,6 +150,14 @@ export type AsiaOpenGeoSourceId =
   | 'osm-bahrain'
   | 'kuwait-post'
   | 'osm-kuwait'
+  | 'upu-oman-postal-addressing'
+  | 'oman-post-office-locator'
+  | 'oman-post-website-terms'
+  | 'gov-oman-building-addressing-service'
+  | 'ncsi-oman-wilayat-boundaries'
+  | 'ncsi-oman-open-government-data-policy'
+  | 'nsgia-oman-geospatial-governance'
+  | 'nsgia-oman-portal-terms'
   | 'nsgia-oman'
   | 'oman-post'
   | 'osm-oman'
@@ -1652,6 +1660,80 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Kuwait OSM roads, blocks, areas, POI, and fallback address tags.',
   },
+  'upu-oman-postal-addressing': {
+    id: 'upu-oman-postal-addressing',
+    name: 'UPU Oman Postal Addressing System',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/omnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The January 2026 UPU/Oman Post sheet defines three digits coded by post office and region and placed above the locality for P.O. box delivery. It is format metadata, not a current code table, subscriber record, office catchment or polygon.',
+  },
+  'oman-post-office-locator': {
+    id: 'oman-post-office-locator',
+    name: 'Oman Post Office Locator',
+    url: 'https://www.omanpost.om/index.php/office-locator',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Oman Post website terms; exact record reuse and redistribution permission must be separately pinned',
+    notes: 'Pinned records can validate a displayed office, three-digit code and office point. A locator point is not a service catchment, postal polygon, P.O. box subscriber, building or delivery entitlement.',
+  },
+  'oman-post-website-terms': {
+    id: 'oman-post-website-terms',
+    name: 'Oman Post Website Terms and Privacy Policy',
+    url: 'https://website.omanpost.om/index.php/privacy-and-policy',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Website viewing only; republishing and data harvesting are restricted unless separate permission controls',
+    notes: 'Legal boundary only. Public page access does not authorize scraping, bulk reuse, derivative publication or redistribution of office, address, P.O. box or subscriber records.',
+  },
+  'gov-oman-building-addressing-service': {
+    id: 'gov-oman-building-addressing-service',
+    name: 'Gov.om Building Addressing or Numbering Service',
+    url: 'https://gov.om/en/w/request-building-addressing-or-numbering',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Muscat Governorate workflow metadata confirms a building-addressing or numbering service. The service page is not a reusable address register, building footprint source or claim of national coverage.',
+  },
+  'ncsi-oman-wilayat-boundaries': {
+    id: 'ncsi-oman-wilayat-boundaries',
+    name: 'NCSI Oman Wilayat Boundaries',
+    url: 'https://ncsigeostatportal.ncsi.gov.om/server/rest/services/NCSIData/WilayatB/FeatureServer/layers',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official metadata names the Ministry of Interior as owner and NCSI as alternative source. Exact edition, owner permission, dataset licence, fields, CRS and digest must be pinned; a wilayat is not a postal catchment.',
+  },
+  'ncsi-oman-open-government-data-policy': {
+    id: 'ncsi-oman-open-government-data-policy',
+    name: 'Oman Open Government Data Policy',
+    url: 'https://data.ncsi.gov.om/sites/default/files/documents/Open%20_Government_data_policy.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The national policy governs data actually published as open data. It is not the dataset licence for every portal layer and does not validate postal, address or building records.',
+  },
+  'nsgia-oman-geospatial-governance': {
+    id: 'nsgia-oman-geospatial-governance',
+    name: 'NSGIA Oman Geospatial Governance and ONGD17',
+    url: 'https://nsaomangeoportal.gov.om/en/about-nsa',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'NSGIA governs national geospatial standards and ONGD17. Governance, map indexes and datum pages are not postal assignments, building datasets, product licences or automatic WGS84 transform attestations.',
+  },
+  'nsgia-oman-portal-terms': {
+    id: 'nsgia-oman-portal-terms',
+    name: 'NSGIA Geoportal Terms and Conditions',
+    url: 'https://gisserver.nsaomangeoportal.gov.om/en/node/83',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Registration, authorization and portal access terms are legal metadata. Viewer or query access is not a postal assignment, feature licence or repository redistribution permission.',
+  },
   'nsgia-oman': {
     id: 'nsgia-oman',
     name: 'Oman National Survey and Geospatial Information Authority',
@@ -2185,7 +2267,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
   KW: ['kuwait-post', 'osm-kuwait'],
   LB: ['libanpost', 'osm-lebanon'],
-  OM: ['nsgia-oman', 'oman-post', 'osm-oman'],
+  OM: ['upu-oman-postal-addressing', 'oman-post-office-locator', 'oman-post-website-terms', 'gov-oman-building-addressing-service', 'ncsi-oman-wilayat-boundaries', 'ncsi-oman-open-government-data-policy', 'nsgia-oman-geospatial-governance', 'nsgia-oman-portal-terms', 'nsgia-oman', 'oman-post', 'osm-oman'],
   PS: ['palestine-open-data-postcodes', 'palestine-post', 'osm-palestine'],
   QA: ['qatar-gis-geoportal', 'osm-qatar'],
   SA: ['spl-national-address-components', 'spl-national-address-api-v31', 'spl-national-address-api-terms', 'spl-national-address-short-address', 'geosa-saudi-geospatial-foundation-themes', 'rega-saudi-geospatial-real-estate-portal', 'rega-saudi-real-estate-registration-framework', 'spl-sa', 'spl-national-address-api', 'saudi-gis-national-platform', 'osm-saudi-arabia'],

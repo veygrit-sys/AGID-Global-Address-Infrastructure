@@ -36,6 +36,7 @@ import {
   normalizeTaiwanPostalCode,
   normalizeKoreaPostalCode,
   normalizeSaudiArabiaPostalCode,
+  normalizeOmanPostalCode,
   normalizeMaltaPostalCode,
   normalizeMonacoPostalCode,
   normalizeDenmarkPostalCode,
@@ -187,6 +188,13 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeSaudiArabiaPostalCode('0000'), null);
   assert.equal(normalizeSaudiArabiaPostalCode('000000'), null);
   assert.equal(normalizePostalContextPostalCode('sa', '00 000'), '00000');
+  assert.equal(normalizeOmanPostalCode('０００'), '000');
+  assert.equal(normalizeOmanPostalCode('0 00'), '000');
+  assert.equal(normalizeOmanPostalCode('OM-000'), null);
+  assert.equal(normalizeOmanPostalCode('00-0'), null);
+  assert.equal(normalizeOmanPostalCode('00'), null);
+  assert.equal(normalizeOmanPostalCode('0000'), null);
+  assert.equal(normalizePostalContextPostalCode('om', '0 00'), '000');
   assert.equal(normalizePostalContextPostalCode('ro', '000 000'), '000000');
   assert.equal(normalizeDenmarkPostalCode('\uFF10\uFF10\uFF11\uFF12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('00 12'), '0012');
@@ -513,6 +521,12 @@ test('declares country-specific full-code geometry semantics', () => {
     'address-range-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.SA.postalCodeFormat, 'NNNNN');
+  assert.equal(isPostalContextCountryCode('OM'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.OM.fullCodeGeometrySemantics,
+    'routing-locality-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.OM.postalCodeFormat, 'NNN');
   assert.equal(isPostalContextCountryCode('GE'), true);
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.GE.fullCodeGeometrySemantics,

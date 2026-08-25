@@ -260,6 +260,37 @@ test('Saudi Arabia metadata exposes SPL National Address identifiers and indepen
   assert.ok(rules.regionalHierarchy?.includes('explicitAddressLinkedBuildingFeature'));
 });
 
+test('Oman metadata exposes routing-code points, P.O. boxes, civic numbering, administrative context, and licence boundaries', () => {
+  const format = loadFormat('OM');
+  const rules = loadRules('OM');
+  const expectedSourceIds = [
+    'upu-oman-postal-addressing',
+    'oman-post-office-locator',
+    'oman-post-website-terms',
+    'gov-oman-building-addressing-service',
+    'ncsi-oman-wilayat-boundaries',
+    'ncsi-oman-open-government-data-policy',
+    'nsgia-oman-geospatial-governance',
+    'nsgia-oman-portal-terms',
+  ];
+
+  for (const sourceId of expectedSourceIds) {
+    assert.ok(format.openSourceIds?.includes(sourceId), `OM should expose ${sourceId}`);
+    assert.ok(rules.openSourceIds?.includes(sourceId), `OM addressRules should expose ${sourceId}`);
+    const source = ASIA_OPEN_GEO_SOURCES[sourceId as keyof typeof ASIA_OPEN_GEO_SOURCES];
+    assert.ok(source, `${sourceId} should be registered as an Asia open geo source`);
+    assert.match(source.url, /^https?:\/\//, `${sourceId} should expose a testable URL`);
+  }
+
+  assert.equal(format.postalCode?.format, 'NNN');
+  assert.equal(format.postalCode?.regex, '^\\d{3}$');
+  assert.match(format.postalCode?.source ?? '', /UPU.*Oman Post.*office.*NCSI.*NSGIA/i);
+  assert.match(rules.postalCode?.label ?? '', /3 digits.*post.?office.*point.*not.*polygon.*P\.O\. box.*building.*explicit.*private/i);
+  assert.ok(rules.regionalHierarchy?.includes('postOfficePointOrNoCanonicalGeometry'));
+  assert.ok(rules.regionalHierarchy?.includes('poBoxNumberWhenProvided'));
+  assert.ok(rules.regionalHierarchy?.includes('explicitAddressLinkedBuildingFeature'));
+});
+
 test('Taiwan address metadata exposes 3+3, doorplate, building, cadastral, and administrative sources', () => {
   const format = loadFormat('TW');
   const rules = loadRules('TW');
@@ -474,7 +505,7 @@ test('West Asia address JSON files expose table-derived addressRules metadata', 
   ]);
   assert.equal(loadRules('IR').postalCode?.label, '10 digits required');
   assert.equal(loadRules('AE').postalCode, null);
-  assert.equal(loadRules('OM').postalCode?.label, '3 digits required');
+  assert.match(loadRules('OM').postalCode?.label ?? '', /3 digits.*post.?office.*not.*polygon/i);
 });
 
 test('West Asia address metadata exposes national postal, geospatial, and OSM sources', () => {

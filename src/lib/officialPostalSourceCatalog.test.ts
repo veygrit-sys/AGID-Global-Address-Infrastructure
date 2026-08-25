@@ -895,6 +895,27 @@ test('Saudi catalog separates National Address semantics, API identifiers, geosp
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('Oman catalog separates routing-code semantics, office points, website terms, civic numbering, administration, and geodetic governance', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('OM').map(source => [source.id, source]));
+  assert.equal(sources.get('upu-oman-postal-addressing')?.authority, 'postal-operator');
+  assert.equal(sources.get('upu-oman-postal-addressing')?.validationReadiness, 'metadata-only');
+  assert.match(sources.get('upu-oman-postal-addressing')?.notes.join(' ') ?? '', /three digits.*post office.*region.*not.*catchment.*polygon/i);
+  assert.equal(sources.get('oman-post-office-locator')?.depth, 'postcode');
+  assert.match(sources.get('oman-post-office-locator')?.notes.join(' ') ?? '', /office.*code.*point.*not.*catchment.*subscriber.*building/i);
+  assert.equal(sources.get('oman-post-website-terms')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('gov-oman-building-addressing-service')?.depth, 'address');
+  assert.equal(sources.get('ncsi-oman-wilayat-boundaries')?.depth, 'geo-only');
+  assert.equal(sources.get('ncsi-oman-open-government-data-policy')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('nsgia-oman-geospatial-governance')?.trustTier, 'authoritative');
+  assert.equal(sources.get('nsgia-oman-portal-terms')?.sourceRole, 'legal-framework-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'OM',
+    source: 'Oman Post Office Locator',
+  });
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
+});
+
 test('catalog source ids are unique and sorted by trust for a country lookup', () => {
   const ids = OFFICIAL_POSTAL_SOURCE_CATALOG.map(source => source.id);
   assert.equal(new Set(ids).size, ids.length);

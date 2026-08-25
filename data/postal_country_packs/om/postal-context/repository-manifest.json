@@ -1,0 +1,124 @@
+{
+  "schema_version": "agid-postal-om-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-om",
+    "country_code": "OM",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Oman three-digit post-office routing code",
+    "full_code_format": "NNN",
+    "full_code_default_geometry": "point_or_none_not_area",
+    "assignment_rule": "The UPU Oman addressing sheet defines a three-digit postcode whose coding method identifies post office and region, placed on its own line above the locality for P.O. box delivery. A code remains text. Syntax, a branch name, locality, governorate or map point alone does not prove a current mailbox, recipient, delivery entitlement or polygon membership.",
+    "office_rule": "A pinned Oman Post office-locator record may establish the named retail office, displayed three-digit code and office point for its capture time. It does not establish an exhaustive national code list, a service catchment, home-delivery area, P.O. box subscriber, building, entrance or polygon.",
+    "geometry_rule": "The canonical geometry for a three-digit code is point or none until an official rights-cleared source explicitly defines an area. An office coordinate, locality centroid, governorate or wilayat boundary, drive-time area, nearest-office partition, Voronoi cell, interpolation or model output never becomes official postal geometry. A generated service surface stays derived, uncertainty-bearing, non-canonical, versioned and independently removable.",
+    "address_rule": "P.O. box number, postcode, locality and country are typed postal-address evidence. Building Number, Way Number, Arabic or English street name, locality and any map code are separate physical-address evidence. A P.O. box does not identify a building or occupant, and a physical address does not prove a P.O. box assignment.",
+    "building_rule": "Exact building display requires a rights-cleared authoritative building feature and a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address. A government building-numbering service establishes a workflow, not reusable rows or footprints. Postal code, office point, locality, administrative containment, text similarity, overlap and proximity create candidates only.",
+    "administration_rule": "NCSI governorate or wilayat features provide separately licensed, dated administrative context. They do not create a postal catchment, assign a P.O. box, identify a building or settle postal delivery responsibility.",
+    "licence_rule": "Website visibility, ArcGIS query capability, a download tool, government open-data policy, a service form or public map never by itself grants repository redistribution. Every exact artifact must pin its owner, dataset licence, access method, attribution, derivative rights, edition, coverage, fields, CRS and digest. Oman Post website terms prohibit republishing and data harvesting unless a separately controlling permission is recorded.",
+    "privacy_rule": "Subscriber, recipient, telephone, identity document, account, P.O. box key, correspondence, shipment, query history, residence, occupant, owner, title and rightsholder data are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains its source CRS, axis order, epoch and stated accuracy. NSGIA ONGD17 or product-specific projected CRS is never relabelled WGS84. EPSG:4326 output requires a reviewed, versioned transform and accuracy statement.",
+    "territory_rule": "The repository uses ISO code OM and only source-stated Sultanate of Oman coverage. Postal, branch, administrative, topographic or address coverage is not a sovereignty determination; enclaves, islands, borders, desert, offshore and absent coverage are not model-filled as official.",
+    "freshness_rule": "UPU addressing rules, Oman Post offices and codes, P.O. box assignments, building numbering, administrative boundaries, geodetic standards, licences and building data refresh independently. Mixed-edition joins fail closed unless valid-time, known-time and the explicit relationship overlap."
+  },
+  "integration": {
+    "agid_country_code": "OM",
+    "coordinate_flow": "coordinate -> exact permitted civic-address point or post-office point -> three-digit routing code candidate -> locality/wilayat/governorate -> explicit address-building relation -> OM AGID cell",
+    "postcode_flow": "canonical three digits -> pinned office/code records -> point or no canonical geometry -> optional derived service surface -> locality context -> explicit civic-address/building relation -> AGID cells",
+    "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "canonical-postcode",
+      "pass": "Three digits remain text; prefixes, punctuation and two- or four-digit values are rejected."
+    },
+    {
+      "id": "post-office-not-area",
+      "pass": "A three-digit code and office point are never presented as an official polygon or full service catchment."
+    },
+    {
+      "id": "po-box-separation",
+      "pass": "P.O. box, office code, physical address, building and recipient remain separate typed entities."
+    },
+    {
+      "id": "derived-surface",
+      "pass": "Method, inputs, uncertainty, exclusions, topology, version, time and digest are recorded; output remains derived and non-canonical."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has an authoritative relation or reviewed crosswalk; containment, proximity and text match alone never pass."
+    },
+    {
+      "id": "product-specific-crs",
+      "pass": "ONGD17 or the exact source CRS, epoch, axis order and reviewed transform are pinned per product."
+    },
+    {
+      "id": "licence-and-access",
+      "pass": "Exact product licence, access, attribution, derivative, retention and redistribution conditions are pinned."
+    },
+    {
+      "id": "privacy",
+      "pass": "No P.O. box subscriber, recipient, contact, correspondence, resident, occupant, owner, title or query data is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_office_assignment",
+        "definition": "A complete rights-cleared office/code artifact passes ownership, licence, coverage, freshness and digest gates."
+      },
+      {
+        "id": "M3_derived_service_geometry_and_address",
+        "definition": "Any derived surface and public civic-address artifact pass method, uncertainty, topology, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "three-digit-office-code-or-point-presented-as-official-postal-polygon",
+      "governorate-wilayat-locality-drive-time-voronoi-or-model-presented-as-official-postal-area",
+      "derived-service-surface-published-without-derived-noncanonical-label-uncertainty-lineage-and-version",
+      "po-box-or-postcode-presented-as-building-recipient-or-delivery-entitlement",
+      "building-numbering-service-or-address-point-presented-as-building-footprint",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "website-viewer-download-tool-open-data-policy-or-service-form-presented-as-redistribution-right",
+      "subscriber-recipient-contact-correspondence-resident-occupant-owner-title-right-or-query-data-published",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-or-po-box-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_OM_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_OM_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_OM_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_OM_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-office-address-building-administrative-subscriber-or-correspondence-rows",
+    "post-office-point-is-postal-polygon",
+    "nearest-office-or-wilayat-is-delivery-catchment",
+    "po-box-is-building-or-recipient",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link"
+  ]
+}
