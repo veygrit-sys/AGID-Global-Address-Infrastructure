@@ -67,14 +67,14 @@ english:
       type: text
     - key: postcode
       label: Postal Code
-      placeholder: "11511"
+      placeholder: "0000000"
       required: true
       type: text
 postalCode:
-  format: NNNNN
-  regex: ^\d{5}$
-  api: https://github.com/Badawy403/Egy.List
-  source: Badawy403/Egy.List / DataHub postal-codes-eg
+  format: NNNNNNN
+  regex: ^\d{7}$
+  api: https://www.egyptpost.org/
+  source: UPU Egypt Postal Addressing System (July 2023) / Egypt Post GIS / CAPMAS / Egyptian Survey Authority
 addressRules:
   languages:
     - code: ar
@@ -96,10 +96,17 @@ addressRules:
     - governorate
     - country
   regionalHierarchy:
-    - cityOrTown
     - governorate
+    - locality
+    - neighbourhood
+    - community
+    - sevenDigitPostcode
+    - officialPostalAreaOrNoCanonicalGeometry
+    - explicitCivicAddressPoint
+    - explicitAddressLinkedBuildingFeature
+    - exactRightsClearedBuilding
   postalCode:
-    label: 5 digits required
+    label: 7 digits; province 2, locality 1, neighbourhood 2, community 2. Legacy values need an authoritative crosswalk; codes and GPS results are not automatic official polygons, and buildings need explicit links.
     required: true
     usage: required
   openSourceIds:
@@ -132,6 +139,11 @@ addressRules:
     - gbif-occurrence
     - rcmrd-gmes-africa-geoportal
 openSourceIds:
+  - upu-egypt-postal-addressing-2023
+  - egypt-post-new-postcode-guide
+  - egypt-post
+  - capmas-egypt-gis
+  - esa-egypt-geoportal
   - egy-list
   - datahub-postal
   - osm-nominatim

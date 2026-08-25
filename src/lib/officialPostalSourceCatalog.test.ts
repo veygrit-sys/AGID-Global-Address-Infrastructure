@@ -895,6 +895,17 @@ test('Saudi catalog separates National Address semantics, API identifiers, geosp
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('Egypt catalog separates seven-digit semantics, lookup, operator, statistics, survey, and community evidence', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('EG').map(source => [source.id, source]));
+  assert.equal(sources.get('upu-egypt-postal-addressing-2023')?.authority, 'postal-operator');
+  assert.match(sources.get('upu-egypt-postal-addressing-2023')?.notes.join(' ') ?? '', /seven digits.*province.*locality.*neighbourhood.*community.*not.*geometry/i);
+  assert.equal(sources.get('egypt-post-new-postcode-guide')?.depth, 'address');
+  assert.equal(sources.get('egypt-post')?.trustTier, 'authoritative');
+  assert.equal(sources.get('capmas-egypt-gis')?.depth, 'geo-only');
+  assert.equal(sources.get('esa-egypt-geoportal')?.depth, 'geo-only');
+  assert.equal(sources.get('egy-list')?.authority, 'community');
+});
+
 test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
   assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');

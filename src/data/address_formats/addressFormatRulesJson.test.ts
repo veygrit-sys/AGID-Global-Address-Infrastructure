@@ -1589,8 +1589,8 @@ test('North Africa address JSON files expose addressRules metadata and postal da
   ]);
   assert.equal(loadRules('TN').postalCode?.label, '4 digits required');
   assert.equal(loadRules('MR').postalCode?.label, '5 digits used');
-  assert.equal(loadFormat('EG').postalCode?.api, 'https://github.com/Badawy403/Egy.List');
-  assert.equal(loadFormat('EG').postalCode?.source, 'Badawy403/Egy.List / DataHub postal-codes-eg');
+  assert.equal(loadFormat('EG').postalCode?.api, 'https://www.egyptpost.org/');
+  assert.match(loadFormat('EG').postalCode?.source ?? '', /UPU Egypt.*Egypt Post.*CAPMAS.*Survey Authority/i);
   assert.equal(loadFormat('DZ').postalCode?.api, 'https://www.poste.dz/customer/bureaux_postaux');
   assert.equal(loadFormat('LY').postalCode?.api, 'https://libyapost.ly/en/services/');
   assert.equal(loadFormat('MA').postalCode?.api, 'https://codepostal.ma/default.aspx');

@@ -427,6 +427,7 @@ export {
   normalizeSaudiArabiaPostalCode,
   normalizeOmanPostalCode,
   normalizeSouthAfricaPostalCode,
+  normalizeEgyptPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,

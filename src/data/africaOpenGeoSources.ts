@@ -66,6 +66,11 @@ export type AfricaOpenGeoSourceId =
   | 'nspdr-south-africa-terms'
   | 'ngi-south-africa'
   | 'datahub-postal'
+  | 'upu-egypt-postal-addressing-2023'
+  | 'egypt-post-new-postcode-guide'
+  | 'egypt-post'
+  | 'capmas-egypt-gis'
+  | 'esa-egypt-geoportal'
   | 'egy-list'
   | 'sapo-postcodes'
   | 'postafind-za'
@@ -726,14 +731,63 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'Varies by dataset',
     notes: 'Reusable postal-code CSV datasets for countries where maintained open packages exist.',
   },
+  'upu-egypt-postal-addressing-2023': {
+    id: 'upu-egypt-postal-addressing-2023',
+    name: 'UPU Egypt Postal Addressing System (July 2023)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/egyEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines seven digits as province, locality, neighbourhood and community components; it is not a current assignment table, crosswalk or polygon source.',
+  },
+  'egypt-post-new-postcode-guide': {
+    id: 'egypt-post-new-postcode-guide',
+    name: 'Egypt Post GIS New Postcode User Guide',
+    url: 'https://www.eta.gov.eg/sites/default/files/2021-12/%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%20%D9%84%D9%84%D8%B9%D8%AB%D9%88%D8%B1%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%AF%D9%8A%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official GPS or structured-address lookup workflow; a pinned result may establish a point and code, not a postal surface, reusable bulk dataset or app licence.',
+  },
+  'egypt-post': {
+    id: 'egypt-post',
+    name: 'Egypt Post',
+    url: 'https://www.egyptpost.org/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact Egypt Post product permission and terms must be pinned',
+    notes: 'Official operator reference; only a pinned record validates its stated code or office, not geometry, building linkage or bulk licence.',
+  },
+  'capmas-egypt-gis': {
+    id: 'capmas-egypt-gis',
+    name: 'CAPMAS Egypt GIS services',
+    url: 'https://capmas.gov.eg/Admin/Pages%20Files/20242714302%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%202024.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact product terms must be pinned',
+    notes: 'Official statistical, administrative and described building-level GIS services; service metadata is not postal geometry, an address-building relation or a product licence.',
+  },
+  'esa-egypt-geoportal': {
+    id: 'esa-egypt-geoportal',
+    name: 'Egyptian Survey Authority Geoportal',
+    url: 'https://www.esa.gov.eg/geoportal.aspx',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Copyright and product-specific permission required',
+    notes: 'National survey, cadastral and topographic context; portal visibility is not postal authority, explicit address-building linkage or redistribution permission.',
+  },
   'egy-list': {
     id: 'egy-list',
     name: 'Egy.List',
     url: 'https://github.com/Badawy403/Egy.List',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Egypt governorate, city, district, and postal-code reference data.',
+    usage: 'validation',
+    license: 'Dataset licence and Egypt Post provenance must be proven',
+    notes: 'Community legacy candidate and discrepancy data only; it is not current Egypt Post authority, a seven-digit migration crosswalk or geometry evidence.',
   },
   'sapo-postcodes': {
     id: 'sapo-postcodes',
@@ -911,7 +965,7 @@ const BASE_OPEN_SOURCE_IDS: AfricaOpenGeoSourceId[] = [
 
 const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeoSourceId[]>> = {
   DZ: ['algerie-poste'],
-  EG: ['egy-list', 'datahub-postal'],
+  EG: ['upu-egypt-postal-addressing-2023', 'egypt-post-new-postcode-guide', 'egypt-post', 'capmas-egypt-gis', 'esa-egypt-geoportal', 'egy-list', 'datahub-postal'],
   LY: ['libya-post-services'],
   MA: ['poste-maroc-codepostal', 'datahub-postal'],
   MR: ['mauripost'],
