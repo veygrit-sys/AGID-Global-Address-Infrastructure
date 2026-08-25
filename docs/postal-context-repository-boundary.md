@@ -1109,3 +1109,18 @@ ATE and SOATO identities add dated administrative context only. Administrative
 units do not establish postal membership or replace the NCA postal-zone layer.
 The pack remains fail-closed when paid-service rights, public-map layer identity,
 territorial clipping, freshness or exact address-to-building linkage is absent.
+
+### `agid-postal-be`
+
+The Belgium repository owns pinned bpost four-digit assignment and exact versioned
+bpost/NGI Postal Cantons vector evidence. BOSA BeSt Address remains a federal
+crosswalk over the original Flanders, Wallonia and Brussels identifiers; exact
+building display requires an explicit permitted regional registry relation or
+stable common identifier. Administrative boundaries, WMS pixels, address points,
+centroids, parcels, containment and proximity never replace those evidence gates.
+
+Source-specific bpost/NGI, BOSA, Vlaanderen, SPW, UrbIS and FPS Finance licences,
+editions, attribution, CRS and digests remain separate. Personal, ownership, title,
+transaction, tax, cadastral-income and valuation fields are excluded. The complete
+evidence ladder and promotion rules are in
+[postal-context-belgium-runtime.md](postal-context-belgium-runtime.md).

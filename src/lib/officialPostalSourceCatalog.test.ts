@@ -9,7 +9,7 @@ import {
 } from './officialPostalSourceCatalog';
 
 test('registers official and open postal sources for the priority rollout countries', () => {
-  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
+  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
     assert.ok(sources.length > 0, `${countryCode} should have at least one registered source`);
     assert.ok(getPreferredPostalSourceIdsForCountry(countryCode).length > 0, `${countryCode} should expose preferred source ids`);
@@ -17,7 +17,7 @@ test('registers official and open postal sources for the priority rollout countr
 });
 
 test('prefers country-specific official sources before the UPU global fallback', () => {
-  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
+  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
 
   for (const countryCode of countrySpecificCountries) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
@@ -36,6 +36,7 @@ test('prefers country-specific official sources before the UPU global fallback',
   assert.equal(getOfficialPostalSourcesForCountry('FI')[0]?.id, 'posti-finland-postal-code-services');
   assert.ok(getOfficialPostalSourcesForCountry('BG').some(source => source.id === 'bulgarian-posts-postcode-reference'));
   assert.ok(getOfficialPostalSourcesForCountry('BY').some(source => source.id === 'nca-belarus-postal-code-zones'));
+  assert.ok(getOfficialPostalSourcesForCountry('BE').some(source => source.id === 'bpost-belgium-postal-cantons'));
   assert.equal(getOfficialPostalSourcesForCountry('LV')[0]?.id, 'latvijas-pasts-check-address');
   assert.equal(getOfficialPostalSourcesForCountry('LT')[0]?.id, 'lietuvos-pastas-postcode-search');
   assert.equal(getOfficialPostalSourcesForCountry('JE')[0]?.id, 'jersey-post-address-finder');
@@ -772,6 +773,23 @@ test('keeps weak third-party postal lists below official and official-derived so
   assert.equal(datahub.tier, 'weak');
   assert.equal(geonames.strength, 'weak');
   assert.equal(geonames.tier, 'community');
+});
+
+test('Belgium catalog separates postal cantons, federal address consolidation, regional buildings, cadastre, and administration', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('BE').map(source => [source.id, source]));
+
+  assert.equal(sources.get('bpost-belgium-postcode-reference')?.authority, 'postal-operator');
+  assert.equal(sources.get('bpost-belgium-postal-cantons')?.depth, 'postcode');
+  assert.equal(sources.get('bpost-belgium-postal-cantons')?.trustTier, 'authoritative');
+  assert.equal(sources.get('bpost-address-validation')?.depth, 'address');
+  assert.equal(sources.get('bosa-belgium-best-address')?.depth, 'address');
+  assert.equal(sources.get('digitaal-vlaanderen-address-register')?.availability, 'public-api');
+  assert.equal(sources.get('digitaal-vlaanderen-building-register')?.depth, 'building');
+  assert.equal(sources.get('spw-wallonia-icar-addresses')?.depth, 'address');
+  assert.equal(sources.get('spw-wallonia-picc-buildings')?.depth, 'building');
+  assert.equal(sources.get('paradigm-brussels-urbis-buildings-addresses')?.depth, 'building');
+  assert.equal(sources.get('fps-finance-belgium-cadastral-plan')?.trustTier, 'official');
+  assert.equal(sources.get('fps-finance-belgium-administrative-units')?.depth, 'geo-only');
 });
 
 test('catalog source ids are unique and sorted by trust for a country lookup', () => {

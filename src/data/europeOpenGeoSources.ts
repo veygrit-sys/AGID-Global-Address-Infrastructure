@@ -76,6 +76,18 @@ export type EuropeOpenGeoSourceId =
   | 'opendatasoft-nl-postcodes'
   | 'pdok-bag'
   | 'cbs-nl-postcode-areas'
+  | 'bpost-belgium-postcode-reference'
+  | 'bpost-belgium-postal-cantons'
+  | 'bpost-address-validation'
+  | 'bosa-belgium-best-address'
+  | 'digitaal-vlaanderen-address-register'
+  | 'digitaal-vlaanderen-building-register'
+  | 'digitaal-vlaanderen-grb'
+  | 'spw-wallonia-icar-addresses'
+  | 'spw-wallonia-picc-buildings'
+  | 'paradigm-brussels-urbis-buildings-addresses'
+  | 'fps-finance-belgium-cadastral-plan'
+  | 'fps-finance-belgium-administrative-units'
   | 'odwb-be-postcodes'
   | 'postcodes-io'
   | 'ons-postcode-directory'
@@ -1116,6 +1128,126 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'primary',
     license: 'CC BY 3.0 NL',
     notes: 'Annual CBS postcode GeoPackages with Esri Nederland derived geometry and required attribution.',
+  },
+  'bpost-belgium-postcode-reference': {
+    id: 'bpost-belgium-postcode-reference',
+    name: 'bpost Belgium Postcode Reference',
+    url: 'https://www.bpost.be/nl/postcodevalidatie-tool',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public operator reference; pin exact download terms, edition and redistribution rights',
+    notes: 'Official four-digit postcode lookup and downloadable list. Preserve leading zeroes and do not add B-/BE-; a row proves neither a polygon, exact address, deliverability nor building.',
+  },
+  'bpost-belgium-postal-cantons': {
+    id: 'bpost-belgium-postal-cantons',
+    name: 'bpost / NGI Belgium Postal Cantons',
+    url: 'https://publish.geo.be/geonetwork/srv/search?keyword=postal+code',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Pin the exact geo.be metadata record, downloadable-layer terms and attribution before redistribution',
+    notes: 'Official postal-canton boundaries include ordinary and listed special codes and are updated as needed. Only the exact versioned vector feature is canonical; WMS pixels, municipal boundaries and interpolation are not postal geometry, and containment does not prove deliverability.',
+  },
+  'bpost-address-validation': {
+    id: 'bpost-address-validation',
+    name: 'bpost Address Validation Service',
+    url: 'https://www.bpost.be/nl/adres-controleren',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Public service/widget reference; exact API terms and response-retention rights apply',
+    notes: 'Official operator validation and formatting evidence. Responses are not bundled, do not create building geometry and do not replace a pinned BeSt or regional registry identifier.',
+  },
+  'bosa-belgium-best-address': {
+    id: 'bosa-belgium-best-address',
+    name: 'BOSA BeSt Address',
+    url: 'https://data.gov.be/nl/datasets/fpsbosa-dis-best-full',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0; retain BOSA and each regional source attribution and exact release lineage',
+    notes: 'Official weekly consolidation of the three regional address registers supplies street names, house numbers, postcodes, coordinates and source identifiers. A coordinate is not a building footprint and regional validity and licence lineage remain authoritative.',
+  },
+  'digitaal-vlaanderen-address-register': {
+    id: 'digitaal-vlaanderen-address-register',
+    name: 'Digitaal Vlaanderen Address Register',
+    url: 'https://www.vlaanderen.be/datavindplaats/catalogus/adressenregister-gemeenten',
+    kind: 'address',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Modellicentie Gratis Hergebruik; pin version, attribution and current terms',
+    notes: 'Authentic Flemish address source with stable address and addressable-object identity. Building, building unit, parcel, berth and stand types remain distinct; only an explicit registry relation may promote an exact building.',
+  },
+  'digitaal-vlaanderen-building-register': {
+    id: 'digitaal-vlaanderen-building-register',
+    name: 'Digitaal Vlaanderen Building Register',
+    url: 'https://www.vlaanderen.be/datavindplaats/catalogus/gebouwenregister-gebouwen',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Modellicentie Gratis Hergebruik; pin version, attribution and current terms',
+    notes: 'Stable Flemish building and building-unit identifiers and lifecycle records. Exact output requires an explicit Address Register relation or reviewed common identifier; building units and spatial proximity are not footprints.',
+  },
+  'digitaal-vlaanderen-grb': {
+    id: 'digitaal-vlaanderen-grb',
+    name: 'Grootschalig Referentie Bestand Vlaanderen',
+    url: 'https://www.vlaanderen.be/datavindplaats/catalogus/wfs-grb',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Gratis open data licentie Vlaanderen v1.02; required GRB attribution',
+    notes: 'Official large-scale Flemish reference geometry used by the Building Register. GRB geometry is released with its own edition and lineage and does not create an address-to-building relation by containment.',
+  },
+  'spw-wallonia-icar-addresses': {
+    id: 'spw-wallonia-icar-addresses',
+    name: 'SPW Wallonia ICAR Address Register',
+    url: 'https://geoportail.wallonie.be/catalogue/2998bccd-dae4-49fb-b6a5-867e6c37680f.html',
+    kind: 'address',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'CC BY 4.0; source attribution and modification notice required',
+    notes: 'Authentic Walloon address register supplies identifiers, street, police number, box, postcode, address zone and municipality. Geometry exists only for exact PICC matches and is a building centroid, not a footprint.',
+  },
+  'spw-wallonia-picc-buildings': {
+    id: 'spw-wallonia-picc-buildings',
+    name: 'SPW Wallonia PICC Buildings',
+    url: 'https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'CC BY 4.0 public PICC edition; attribution and modification notice required',
+    notes: 'Official high-precision Walloon reference building geometry with weekly maintenance. Exact building display requires an explicit ICAR-PICC relation or common identifier; centroid containment and restricted PICC-vTOPO content are excluded.',
+  },
+  'paradigm-brussels-urbis-buildings-addresses': {
+    id: 'paradigm-brussels-urbis-buildings-addresses',
+    name: 'Paradigm Brussels UrbIS Buildings and Addresses',
+    url: 'https://be.brussels/en/about-region/urbis-data',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Brussels UrbIS open-data licence; pin exact product edition, attribution and third-party exclusions',
+    notes: 'Official regional addresses and buildings include maintained identifiers such as inspire_Id. Exact building display requires an explicit UrbIS address relation or common stable identifier; cadastral parcels and third-party FPS Finance terms remain separate.',
+  },
+  'fps-finance-belgium-cadastral-plan': {
+    id: 'fps-finance-belgium-cadastral-plan',
+    name: 'FPS Finance Belgium Cadastral Plan',
+    url: 'https://finances.belgium.be/fr/experts-partenaires/donnees-ouvertes-patrimoine/jeux-donnees/plan-cadastral',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'FPS Finance common open-data licence based on CC BY; pin exact edition and attribution',
+    notes: 'Nationwide public plan layers include parcels, buildings and some address context. The plan does not establish legal property boundaries, a parcel is not a building, and owner, rightsholder, title, tax, income and valuation fields are excluded.',
+  },
+  'fps-finance-belgium-administrative-units': {
+    id: 'fps-finance-belgium-administrative-units',
+    name: 'FPS Finance Belgium Administrative Units',
+    url: 'https://finances.belgium.be/fr/experts-partenaires/donnees-ouvertes-patrimoine/jeux-donnees/unites-administratives',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'FPS Finance common open-data licence based on CC BY; pin exact edition and attribution',
+    notes: 'Official dated Belgian administrative boundaries and identifiers add region, province, arrondissement and municipality context only. They do not replace postal cantons or establish postcode, address, building or delivery evidence.',
   },
   'odwb-be-postcodes': {
     id: 'odwb-be-postcodes',
@@ -3823,7 +3955,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   FR: ['data-gouv-fr-postcodes', 'ban-fr', 'ign-bd-topo', 'insee-cog'],
   DE: ['deutsche-post-plz-server', 'deutsche-post-datafactory', 'bkg-postleitzahlgebiete', 'bkg-georeferenced-addresses', 'adv-hk-de', 'adv-hu-de', 'bkg-lod2-de', 'bkg-vg25'],
   NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
-  BE: ['odwb-be-postcodes'],
+  BE: ['bpost-belgium-postcode-reference', 'bpost-belgium-postal-cantons', 'bpost-address-validation', 'bosa-belgium-best-address', 'digitaal-vlaanderen-address-register', 'digitaal-vlaanderen-building-register', 'digitaal-vlaanderen-grb', 'spw-wallonia-icar-addresses', 'spw-wallonia-picc-buildings', 'paradigm-brussels-urbis-buildings-addresses', 'fps-finance-belgium-cadastral-plan', 'fps-finance-belgium-administrative-units', 'odwb-be-postcodes'],
   CH: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'swisstopo-building-address-directory', 'swiss-federal-gwr', 'swisstopo-swissbuildings3d', 'swisstopo-swissboundaries3d'],
   AT: ['austrian-post-postcode', 'austrian-post-address-data', 'bev-austria-address-register', 'statistics-austria-postcode-regions', 'bev-austria-administrative-boundaries', 'statistics-austria-gwr', 'openplzapi'],
   GB: [

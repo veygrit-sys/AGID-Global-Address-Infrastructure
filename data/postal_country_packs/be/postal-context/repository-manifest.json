@@ -1,0 +1,90 @@
+{
+  "schema_version": "agid-postal-be-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-be",
+    "country_code": "BE",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postcode / Code postal / Postleitzahl",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "pinned_official_bpost_postal_canton_or_honest_non_area",
+    "assignment_rule": "A pinned bpost lookup, downloaded postcode list or validation receipt can establish a four-digit postcode assignment at its capture time. The code remains text with leading zeroes and no B- or BE- prefix. Syntax, locality text, an address result or a service point does not independently establish current deliverability or geometry.",
+    "geometry_rule": "The exact versioned bpost postal-canton vector distributed through geo.be is canonical postal geometry when its metadata record, feature code, edition, validity, terms, topology, source CRS, reviewed transform and digest are pinned. WMS pixels, municipal boundaries, centroids, buffers, Voronoi cells, interpolation and gap filling never substitute for that vector layer.",
+    "special_code_rule": "A special, organization or service postcode may use an official postal-canton feature only when the pinned bpost layer contains that exact code and feature. Otherwise it remains non-area evidence; the presence of special codes such as 0612, 1049 or 6099 in a catalog does not prove a delivery perimeter beyond the exact published feature.",
+    "address_rule": "BOSA BeSt Address consolidates official Brussels, Flanders and Wallonia address identities, street names, house numbers, boxes, postcodes and source-qualified coordinates. The original regional source ID, object type, validity and licence lineage remain authoritative; an address coordinate or ICAR building centroid is not a building footprint, and person, resident, recipient or household data is excluded.",
+    "building_rule": "Exact building output requires an explicit permitted Address Register to Building Register relation, ICAR to PICC relation, UrbIS address-to-building relation, common stable regional identifier or reviewed authoritative crosswalk to one exact rights-cleared building feature. A parcel, address point, centroid, containment, proximity or text match creates candidates only; owner, rightsholder, title, transaction, tax, cadastral income and valuation fields are excluded.",
+    "regional_rule": "Flanders, Wallonia and Brussels artifacts remain separate partitions with their original identifiers, object types, lifecycle, editions, licences and exclusions. BeSt consolidation never erases the regional source or upgrades a building unit, parcel, berth, stand, centroid or address point into a footprint.",
+    "administrative_rule": "FPS Finance administrative units provide dated region, province or Brussels-Capital, arrondissement and municipality context. Brussels has no province layer in the hierarchy. Administrative membership does not replace a postal canton or establish postcode assignment, address identity, building identity or deliverability.",
+    "licence_rule": "Every bpost, BOSA, Digitaal Vlaanderen, SPW, Paradigm and FPS Finance artifact pins the exact product and edition, provider, licence or service terms, attribution, permitted fields and derivatives, capture and effective time, coverage, schema, source CRS, reviewed transform and digest. CC BY 4.0, Vlaanderen open-data, UrbIS, bpost/NGI and federal terms remain separately attributable and are not collapsed into one assumed licence.",
+    "crs_rule": "Every postal, address, PICC, GRB, UrbIS, cadastral and administrative geometry retains its published source CRS and original coordinates. WGS84 output is generated only through a reviewed versioned transform whose parameters, axis order, accuracy and lineage are recorded; a web-map display never proves EPSG:4326 source data.",
+    "territory_rule": "The BE pack covers Belgium only and records regional, language, cross-border and clipping decisions explicitly. Postal membership does not determine sovereignty or language regime, and clipping against national or administrative boundaries cannot fill postal, address or building gaps.",
+    "freshness_rule": "bpost postal-canton, BeSt weekly, regional register, PICC, GRB, UrbIS, cadastral and administrative releases retain independent refresh schedules and valid times. A stale, unidentified or mixed-edition artifact cannot silently remain current; the runtime reports lineage and fails closed where freshness is unknown."
+  },
+  "integration": {
+    "agid_country_code": "BE",
+    "coordinate_flow": "coordinate -> pinned bpost postal-canton feature or honest non-area -> dated federal administrative context -> exact BeSt and regional address identity -> explicit regional building relation -> exact rights-cleared building -> BE AGID cell",
+    "postcode_flow": "canonical four digits -> pinned bpost assignment -> exact bpost postal-canton feature when present -> BeSt/regional address branches -> explicit regional building relation -> AGID cells",
+    "building_output_gate": "exact BeSt/regional address identity plus an explicit permitted registry relation, common stable identifier or reviewed authoritative crosswalk to one exact rights-cleared Flanders, Wallonia, Brussels or federal cadastral building feature"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode is exactly four-character text, preserves leading zeroes, rejects B-/BE- prefixes and is never serialized as a number." },
+    { "id": "operator-assignment", "pass": "Every current assignment pins the exact bpost lookup, list or validation receipt, edition, capture/effective time, terms, schema and digest." },
+    { "id": "official-postal-canton", "pass": "Every canonical surface pins the actual bpost postal-canton vector feature, edition, terms, coverage, topology, CRS, transform and digest." },
+    { "id": "special-code", "pass": "A special code receives geometry only from its exact pinned postal-canton feature; otherwise it remains non-area." },
+    { "id": "best-regional-address", "pass": "Every address retains BeSt ID, original regional source ID, object type, components, coordinate semantics, validity, licence and digest." },
+    { "id": "regional-building-link", "pass": "Exact building output requires an explicit Flanders, Wallonia or Brussels registry relation/common stable identifier or reviewed authoritative crosswalk." },
+    { "id": "privacy", "pass": "Person, resident, recipient, household, owner, rightsholder, title, transaction, tax, cadastral income, valuation and other non-public fields are excluded." },
+    { "id": "administrative-context", "pass": "Region, province-or-Brussels, arrondissement and municipality editions and identifiers are pinned and remain separate from postal and building evidence." },
+    { "id": "coverage-freshness-and-rights", "pass": "Every dataset and output enforces exact regional coverage, validity, update schedule, source-specific licence, attribution, redistribution and derivative-work rules." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "Pinned bpost four-digit assignment and special-code evidence passes time, terms, schema and digest gates." },
+      { "id": "M3_official_geometry", "definition": "Pinned bpost postal-canton vector artifacts pass feature identity, edition, rights, topology, territory, CRS, freshness and correction gates." },
+      { "id": "M4_address_building", "definition": "BeSt and regional address/building evidence passes identity, explicit-link, privacy, coverage, regional licence and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "postcode-list-row-presented-as-polygon",
+      "wms-pixel-municipality-buffer-voronoi-or-interpolation-presented-as-postal-canton",
+      "special-code-given-invented-polygon",
+      "address-point-or-icar-centroid-presented-as-building-footprint",
+      "building-unit-parcel-berth-or-stand-presented-as-building",
+      "nearest-contained-or-text-matched-building-presented-as-exact-link",
+      "best-consolidation-used-without-regional-source-lineage",
+      "regional-licences-collapsed-into-one-assumed-licence",
+      "administrative-unit-substituted-for-postal-canton",
+      "owner-rightsholder-title-transaction-tax-income-valuation-residence-or-person-data-published",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "stale-or-mixed-edition-layer-presented-as-current",
+      "cross-border-clipping-used-to-fill-coverage",
+      "postcode-stored-as-number-or-prefixed-with-b-or-be"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_BE_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BE_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_BE_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BE_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "shipping bpost, BeSt or regional production rows in this seed",
+    "scraping WMS or public viewers into an unlicensed mirror",
+    "inventing postal polygons from administrative boundaries or mathematical interpolation",
+    "inferring buildings from address points, centroids, parcels, containment, proximity or text",
+    "publishing personal, ownership, rights, title, transaction, tax, income or valuation data",
+    "claiming exact deliverability from postal-canton containment"
+  ]
+}

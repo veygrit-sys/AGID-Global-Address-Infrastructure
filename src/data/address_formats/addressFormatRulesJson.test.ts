@@ -1069,6 +1069,31 @@ test('Belarus address metadata separates Belpost assignment, NCA postal zones, a
   for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
 });
 
+test('Belgium address metadata separates postal cantons, BeSt identity, regional buildings, cadastre, and administration', () => {
+  const format = loadFormat('BE');
+  const rules = loadRules('BE');
+  const sourceIds = ["bpost-belgium-postcode-reference","bpost-belgium-postal-cantons","bpost-address-validation","bosa-belgium-best-address","digitaal-vlaanderen-address-register","digitaal-vlaanderen-building-register","digitaal-vlaanderen-grb","spw-wallonia-icar-addresses","spw-wallonia-picc-buildings","paradigm-brussels-urbis-buildings-addresses","fps-finance-belgium-cadastral-plan","fps-finance-belgium-administrative-units"];
+
+  assert.equal(format.postalCode?.api, 'https://www.bpost.be/nl/postcodevalidatie-tool');
+  assert.match(format.postalCode?.source ?? '', /bpost.*postal cantons.*BOSA BeSt.*Flanders.*Wallonia.*Brussels.*FPS Finance/i);
+  assert.match(rules.postalCode?.label ?? '', /4 digits.*no B-\/BE- prefix.*postal-canton polygon.*BeSt.*explicit.*building/i);
+  assert.deepEqual(rules.regionalHierarchy, [
+    'region',
+    'provinceOrBrusselsCapital',
+    'administrativeArrondissement',
+    'municipalityNis',
+    'postalCantonOrSpecialCode',
+    'localityOrMunicipalityPart',
+    'streetName',
+    'houseNumberAndBox',
+    'bestAddressIdAndRegionalSourceId',
+    'addressableObjectType',
+    'explicitRegionalBuildingOrCadastreLink',
+    'exactRightsClearedBuilding',
+  ]);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+
 test('Bulgaria address metadata separates routing, EKATTE, address, and cadastral building evidence', () => {
   const format = loadFormat('BG');
   const rules = loadRules('BG');
