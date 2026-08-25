@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-rs
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-rs
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -81,6 +81,11 @@ Czechia-specific Česká pošta PSČ assignment and class lineage, RÚIAN
 address-place and building identity, VFR/INSPIRE building geometry, territorial
 context, informational-versus-reference status and derived-surface rules belong
 to `agid-postal-cz`.
+
+Norway-specific Posten Bring assignment and G/P/B/S categories, Kartverket
+Postnummerområder geometry, Matrikkelen address/unit/building-point identity,
+licensed FKB building linkage, administrative context and NO/SJ territory
+partition rules belong to `agid-postal-no`.
 
 Denmark-specific PostNord assignment, DAGI Postnummerinddeling and
 administrative history, DAR address and access-point identity, BBR building
@@ -734,6 +739,32 @@ CC BY 4.0 terms, source CRS (`EPSG:3794` where published), reviewed WGS84
 transform, schema and digest. The AGID repository keeps only contracts and
 small synthetic fixtures; production records and heavy geometry belong in the
 country release store.
+
+### `agid-postal-no`
+
+The Norway repository owns pinned Posten Bring four-digit assignment and
+G/P/B/S category receipts, Kartverket Postnummerområder releases, Matrikkelen
+address, apartment-level and building-point identity, separately licensed FKB
+building relations, administrative context, synthetic fixtures and release
+validation. A Posten assignment row is not polygon authority; only the exact
+pinned Kartverket postcode-area feature is official area geometry. PO-box,
+special-service and unmatched codes remain non-area, and buffers, Voronoi cells
+or municipality substitution never manufacture official coverage.
+
+Matrikkelen address points establish address identity and postcode-district
+membership, not footprints. Apartment-level identity requires the composite
+address and unit identifiers and never identifies an occupant or household.
+Building points preserve building number, status and representation point but
+remain distinct from building outlines. Exact FKB geometry requires the same
+Matrikkelen building number or a reviewed explicit crosswalk; containment and
+proximity are candidates only.
+
+Every open Kartverket distribution pins its exact metadata record, source date,
+digest and CC BY 4.0 attribution. NLOD is not assumed merely because a dataset
+is public. FKB-Bygning remains in a controlled rights partition because Norge
+digitalt access and private-purchase conditions do not authorize general public
+redistribution. Svalbard and Jan Mayen category codes 21/22 never silently merge
+ISO `SJ` records into the `NO` country pack.
 
 
 ### `agid-postal-rs`

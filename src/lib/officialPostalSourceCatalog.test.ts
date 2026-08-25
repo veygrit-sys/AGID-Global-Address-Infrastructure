@@ -422,6 +422,41 @@ test('separates Slovenia normal, special, service-area, postal-district, address
   assert.equal(specialOnly.tier, 'weak');
 });
 
+test('separates Norway assignment, area, address, unit, building, and territory authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('NO');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('posten-bring-norway-postcode-register')?.authority, 'postal-operator');
+  assert.equal(byId.get('posten-bring-norway-postcode-register')?.trustTier, 'authoritative');
+  assert.match(byId.get('posten-bring-norway-postcode-register')?.notes.join(' ') ?? '', /four-digit.*G.*P.*B.*S.*does not provide polygon.*terms.*Svalbard.*Jan Mayen/i);
+  assert.equal(byId.get('kartverket-norway-postcode-areas')?.availability, 'bulk-open-data');
+  assert.match(byId.get('kartverket-norway-postcode-areas')?.notes.join(' ') ?? '', /official.*CC BY 4\.0.*month end.*post-office-box.*non-area.*invented/i);
+  assert.equal(byId.get('kartverket-norway-address-api')?.availability, 'public-api');
+  assert.match(byId.get('kartverket-norway-address-api')?.notes.join(' ') ?? '', /individual-address.*daily.*bulk.*downloads.*licence.*not.*building footprint/i);
+  assert.equal(byId.get('kartverket-norway-matrikkelen-address')?.depth, 'address');
+  assert.match(byId.get('kartverket-norway-matrikkelen-address')?.notes.join(' ') ?? '', /official.*address identity.*point.*postcode-district.*not a building footprint/i);
+  assert.equal(byId.get('kartverket-norway-matrikkelen-address-unit')?.depth, 'address');
+  assert.match(byId.get('kartverket-norway-matrikkelen-address-unit')?.notes.join(' ') ?? '', /addressId plus bruksenhetId.*composite.*not.*occupant.*household/i);
+  assert.equal(byId.get('kartverket-norway-matrikkelen-building-points')?.depth, 'building');
+  assert.match(byId.get('kartverket-norway-matrikkelen-building-points')?.notes.join(' ') ?? '', /building number.*representation point.*address.*identifiers.*not a footprint/i);
+  assert.equal(byId.get('geovekst-norway-fkb-buildings')?.availability, 'licensed-bulk-data');
+  assert.equal(byId.get('geovekst-norway-fkb-buildings')?.requiresCredential, true);
+  assert.match(byId.get('geovekst-norway-fkb-buildings')?.notes.join(' ') ?? '', /1:1.*building number.*Norge digitalt.*private.*purchased.*not open redistribution/i);
+  assert.equal(byId.get('kartverket-norway-administrative-units')?.depth, 'geo-only');
+  assert.match(byId.get('kartverket-norway-administrative-units')?.notes.join(' ') ?? '', /county.*municipality.*context only.*do not create postcode.*NO.*ISO SJ/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'NO',
+    source: 'Posten Bring Norway Postcode Register',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const fkb = classifyPostalSourceTrust({
+    countryCode: 'NO',
+    source: 'Geovekst FKB-Bygning',
+  });
+  assert.equal(fkb.strength, 'strong');
+  assert.equal(fkb.tier, 'official');
+});
+
 test('separates Serbia postcode, PAK, API, open address, building, parcel, administration, and territory authority', () => {
   const sources = getOfficialPostalSourcesForCountry('RS');
   const byId = new Map(sources.map(source => [source.id, source]));

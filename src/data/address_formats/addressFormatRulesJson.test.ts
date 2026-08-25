@@ -660,9 +660,13 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
 
   assert.deepEqual(loadRules('SE').englishOrder, ['name', 'street', 'postcode', 'city', 'country']);
   assert.equal(loadRules('SE').postalCode?.label, '5 digits required');
-  assert.equal(loadRules('NO').postalCode?.label, '4 digits required');
+  assert.match(loadRules('NO').postalCode?.label ?? '', /4 digits.*G\/P\/B\/S.*official area.*non-area.*address.*unit.*building.*NO\/SJ.*separate/i);
   assert.equal(loadRules('IS').postalCode?.label, '3 digits required');
-  assert.equal(loadFormat('NO').postalCode?.api, 'https://data.norge.no/nb');
+  assert.equal(loadFormat('NO').postalCode?.api, 'https://www.bring.no/en/services/address-verification-services/postcodes');
+  assert.equal(
+    loadFormat('NO').postalCode?.source,
+    'Posten Bring postcode register with Kartverket Postnummerområder, Matrikkelen address/unit/building-point, and licensed FKB building evidence',
+  );
   assert.equal(loadFormat('DK').postalCode?.api, 'https://api.dataforsyningen.dk/postnumre');
   assert.equal(
     loadFormat('EE').postalCode?.api,
@@ -680,7 +684,16 @@ test('Nordic and Baltic address JSON files expose addressRules metadata and post
 test('Nordic and Baltic metadata exposes national geospatial and open-data sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     SE: ['lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
-    NO: ['kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
+    NO: [
+      'posten-bring-norway-postcode-register',
+      'kartverket-norway-postcode-areas',
+      'kartverket-norway-address-api',
+      'kartverket-norway-matrikkelen-address',
+      'kartverket-norway-matrikkelen-address-unit',
+      'kartverket-norway-matrikkelen-building-points',
+      'geovekst-norway-fkb-buildings',
+      'kartverket-norway-administrative-units',
+    ],
     DK: [
       'postnord-dk-postcode-finder',
       'dagi-denmark-postcode-areas',

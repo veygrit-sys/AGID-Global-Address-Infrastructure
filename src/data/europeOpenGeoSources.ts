@@ -91,6 +91,14 @@ export type EuropeOpenGeoSourceId =
   | 'data-norge'
   | 'kartverket-norway'
   | 'geonorge-norway'
+  | 'posten-bring-norway-postcode-register'
+  | 'kartverket-norway-postcode-areas'
+  | 'kartverket-norway-address-api'
+  | 'kartverket-norway-matrikkelen-address'
+  | 'kartverket-norway-matrikkelen-address-unit'
+  | 'kartverket-norway-matrikkelen-building-points'
+  | 'geovekst-norway-fkb-buildings'
+  | 'kartverket-norway-administrative-units'
   | 'brreg-address-register'
   | 'postcode-eu'
   | 'postnord-dk-postcode-finder'
@@ -1216,6 +1224,85 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Norwegian national geodata catalog for addresses, boundaries, roads, elevation, and place-name datasets.',
+  },
+  'posten-bring-norway-postcode-register': {
+    id: 'posten-bring-norway-postcode-register',
+    name: 'Posten Bring Norway Postcode Register',
+    url: 'https://www.bring.no/en/services/address-verification-services/postcodes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit postcode register with G street-address, P post-office-box, B both and S special-service classes. It supplies assignment metadata, no polygon; Svalbard and Jan Mayen classification and exact redistribution terms must remain explicit.',
+  },
+  'kartverket-norway-postcode-areas': {
+    id: 'kartverket-norway-postcode-areas',
+    name: 'Kartverket Postnummerområder',
+    url: 'https://kartkatalog.geonorge.no/metadata/postnummeromraader/462a5297-33ef-438a-82a5-07fff5799be3',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official postcode areal extent with post-office-box codes additional to the area partition and a monthly end-of-month update cycle except July and December. A missing feature remains non-area; no invented area is allowed.',
+  },
+  'kartverket-norway-address-api': {
+    id: 'kartverket-norway-address-api',
+    name: 'Kartverket Address REST API',
+    url: 'https://ws.geonorge.no/adresser/v1/',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0; pin the exact distribution record',
+    notes: 'Public API for individual official address lookups; larger bulk use must come from the published download distribution. An address point is not a building footprint.',
+  },
+  'kartverket-norway-matrikkelen-address': {
+    id: 'kartverket-norway-matrikkelen-address',
+    name: 'Kartverket Matrikkelen Address',
+    url: 'https://kartkatalog.geonorge.no/metadata/matrikkelen-adresse/f7df7a18-b30f-4745-bd64-d0863812350c',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official address identity and point geometry with postcode district membership. An official address point is not a building footprint.',
+  },
+  'kartverket-norway-matrikkelen-address-unit': {
+    id: 'kartverket-norway-matrikkelen-address-unit',
+    name: 'Kartverket Matrikkelen Address Apartment Level',
+    url: 'https://kartkatalog.geonorge.no/metadata/matrikkelen-adresse-leilighetsnivaa/365b0591-b536-42a6-a20d-22e404fbfe55',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official dwelling-unit address data: addressId plus bruksenhetId form the composite identity. A unit record is not an occupant or household identity.',
+  },
+  'kartverket-norway-matrikkelen-building-points': {
+    id: 'kartverket-norway-matrikkelen-building-points',
+    name: 'Kartverket Matrikkelen Building Point',
+    url: 'https://kartkatalog.geonorge.no/metadata/matrikkelen-bygningspunkt/24d7e9d1-87f6-45a0-b38e-3447f8d7f9a1',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official building number, status and representation point with address and property identifiers. The representation point is not a footprint.',
+  },
+  'geovekst-norway-fkb-buildings': {
+    id: 'geovekst-norway-fkb-buildings',
+    name: 'Geovekst FKB-Bygning',
+    url: 'https://kartkatalog.geonorge.no/metadata/uuid/8b4304ea-4fb0-479c-a24d-fa225e2c6e97',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Norge digitalt licence; private actors require purchased access',
+    notes: 'Detailed building geometry has a stated 1:1 relation to Matrikkelen building number, but access is restricted and is not generally redistributable. Use only under separately pinned rights.',
+  },
+  'kartverket-norway-administrative-units': {
+    id: 'kartverket-norway-administrative-units',
+    name: 'Kartverket Administrative Units',
+    url: 'https://kartkatalog.geonorge.no/metadata/administrative-enheter-kommuner/041f1e6e-bdbc-4091-b48f-8a5990f3cc5b',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official county and municipality context, including multilingual names. Administrative units are not postcode areas and do not decide the NO versus ISO SJ territory partition.',
   },
   'brreg-address-register': {
     id: 'brreg-address-register',
@@ -3404,7 +3491,17 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   IE: ['ideal-postcodes-reference'],
   LI: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'liechtenstein-post-access-points', 'llv-liechtenstein-building-addresses', 'llv-liechtenstein-gwr-public', 'llv-liechtenstein-official-survey', 'llv-liechtenstein-sovereign-boundaries', 'swisstopo-swissbuildings3d'],
   SE: ['civictechsweden-posmkod', 'lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
-  NO: ['data-norge', 'kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
+  NO: [
+    'data-norge', 'kartverket-norway', 'geonorge-norway',
+    'posten-bring-norway-postcode-register',
+    'kartverket-norway-postcode-areas',
+    'kartverket-norway-address-api',
+    'kartverket-norway-matrikkelen-address',
+    'kartverket-norway-matrikkelen-address-unit',
+    'kartverket-norway-matrikkelen-building-points',
+    'geovekst-norway-fkb-buildings',
+    'kartverket-norway-administrative-units',
+  ],
   DK: [
     'postnord-dk-postcode-finder',
     'dagi-denmark-postcode-areas',
