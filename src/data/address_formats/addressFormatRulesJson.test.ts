@@ -1038,6 +1038,30 @@ test('Finland address metadata separates Posti assignment, Paavo statistics, add
   for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
 });
 
+
+test('Bulgaria address metadata separates routing, EKATTE, address, and cadastral building evidence', () => {
+  const format = loadFormat('BG');
+  const rules = loadRules('BG');
+  const sourceIds = ['bulgarian-posts-postcode-reference', 'bulgarian-posts-post-office-directory', 'grao-bulgaria-address-classifier', 'agcc-bulgaria-cadastral-map', 'agcc-bulgaria-inspire-buildings', 'nsi-bulgaria-ekatte', 'nsi-bulgaria-administrative-spatial-data'];
+
+  assert.equal(format.postalCode?.api, 'https://www.bgpost.bg/en/');
+  assert.match(format.postalCode?.source ?? '', /Bulgarian Posts.*GRAO.*AGCC.*NSI EKATTE/i);
+  assert.match(rules.postalCode?.label ?? '', /4 digits.*routing.*EKATTE.*address.*cadastral building.*non-area/i);
+  assert.deepEqual(rules.regionalHierarchy, [
+    'districtOblast',
+    'municipality',
+    'settlementEkatte',
+    'postalAssignmentOrSpecialEndpoint',
+    'streetBoulevardSquareOrQuarter',
+    'houseOrBlockNumber',
+    'entranceFloorApartment',
+    'authorizedAddressIdentifierAndAccessPoint',
+    'cadastralBuildingIdentifier',
+    'explicitRightsClearedBuilding',
+  ]);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+
 test('Serbia address metadata separates postcode, PAK, house-number point, building, and territorial evidence', () => {
   const format = loadFormat('RS');
   const rules = loadRules('RS');
@@ -1092,7 +1116,7 @@ test('Central, Eastern, and Balkan Europe metadata exposes national geospatial s
     ],
     HR: ['dgu-croatia-geoportal', 'croatia-cadastre'],
     RO: ['ancpi-romania-geoportal', 'romania-open-data'],
-    BG: ['cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
+    BG: ['bulgarian-posts-postcode-reference', 'bulgarian-posts-post-office-directory', 'grao-bulgaria-address-classifier', 'agcc-bulgaria-cadastral-map', 'agcc-bulgaria-inspire-buildings', 'nsi-bulgaria-ekatte', 'nsi-bulgaria-administrative-spatial-data', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
     UA: [
       'ukrposhta-postcodes-open-data',
       'ukrposhta-index-and-address-api',

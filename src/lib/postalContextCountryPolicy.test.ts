@@ -28,6 +28,7 @@ import {
   normalizeNorwayPostalCode,
   normalizeHungaryPostalCode,
   normalizeFinlandPostalCode,
+  normalizeBulgariaPostalCode,
   normalizeMaltaPostalCode,
   normalizeMonacoPostalCode,
   normalizeDenmarkPostalCode,
@@ -131,6 +132,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeFinlandPostalCode('FI-00000'), null);
   assert.equal(normalizeFinlandPostalCode('0000'), null);
   assert.equal(normalizePostalContextPostalCode('fi', '00 000'), '00000');
+  assert.equal(normalizeBulgariaPostalCode('００００'), '0000');
+  assert.equal(normalizeBulgariaPostalCode('00 00'), '0000');
+  assert.equal(normalizeBulgariaPostalCode('BG-0000'), null);
+  assert.equal(normalizeBulgariaPostalCode('00000'), null);
+  assert.equal(normalizePostalContextPostalCode('bg', '00 00'), '0000');
   assert.equal(normalizeDenmarkPostalCode('\uFF10\uFF10\uFF11\uFF12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('00 12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('0012'), '0012');
@@ -351,6 +357,12 @@ test('declares country-specific full-code geometry semantics', () => {
     'routing-locality-first',
   );
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.FI.postalCodeFormat, 'NNNNN');
+  assert.equal(isPostalContextCountryCode('BG'), true);
+  assert.equal(
+    POSTAL_CONTEXT_COUNTRY_POLICIES.BG.fullCodeGeometrySemantics,
+    'routing-locality-first',
+  );
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BG.postalCodeFormat, 'NNNN');
   assert.equal(isPostalContextCountryCode('LV'), true);
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.LV.fullCodeGeometrySemantics,

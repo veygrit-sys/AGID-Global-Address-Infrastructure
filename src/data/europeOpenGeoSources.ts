@@ -280,6 +280,13 @@ export type EuropeOpenGeoSourceId =
   | 'zbgis-slovakia-cadastral-parcels'
   | 'ancpi-romania-geoportal'
   | 'romania-open-data'
+  | 'bulgarian-posts-postcode-reference'
+  | 'bulgarian-posts-post-office-directory'
+  | 'grao-bulgaria-address-classifier'
+  | 'agcc-bulgaria-cadastral-map'
+  | 'agcc-bulgaria-inspire-buildings'
+  | 'nsi-bulgaria-ekatte'
+  | 'nsi-bulgaria-administrative-spatial-data'
   | 'cadastre-bulgaria'
   | 'bulgaria-inspire-geoportal'
   | 'ukrposhta-postcodes-open-data'
@@ -2904,6 +2911,74 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Romanian open data portal for public administrative, locality, and geospatial datasets.',
   },
+  'bulgarian-posts-postcode-reference': {
+    id: 'bulgarian-posts-postcode-reference',
+    name: 'Bulgarian Posts Postcode Reference',
+    url: 'https://www.bgpost.bg/en/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit routing reference retained as a pinned receipt. It supplies no assumed nationwide operator-authored polygon and does not by itself prove current deliverability.',
+  },
+  'bulgarian-posts-post-office-directory': {
+    id: 'bulgarian-posts-post-office-directory',
+    name: 'Bulgarian Posts Offices and Contacts',
+    url: 'https://www.bgpost.bg/en/contacts',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official post-office and service-point evidence. An office location is not a postcode area, recipient building or premise-delivery guarantee.',
+  },
+  'grao-bulgaria-address-classifier': {
+    id: 'grao-bulgaria-address-classifier',
+    name: 'GRAO Bulgaria Address Classifier / CAIS Address Register',
+    url: 'https://www.grao.bg/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled statutory or service access; field-specific output rights',
+    notes: 'Only an actual authorized deployed-service receipt may establish an address identifier or access point. Roadmap material is not production evidence; person and residence data are excluded.',
+  },
+  'agcc-bulgaria-cadastral-map': {
+    id: 'agcc-bulgaria-cadastral-map',
+    name: 'AGCC Bulgaria Cadastral Map and Registers',
+    url: 'https://kais.cadastre.bg/en/Map/Index',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Registered or paid services under artifact-specific KAIS terms; pin output rights',
+    notes: 'An exact cadastral building identifier, outline and address relation require authorized evidence. Parcels and independent objects are not buildings; owner, rightsholder, title-act and personal fields are excluded.',
+  },
+  'agcc-bulgaria-inspire-buildings': {
+    id: 'agcc-bulgaria-inspire-buildings',
+    name: 'AGCC Bulgaria INSPIRE Buildings',
+    url: 'https://www.cadastre.bg/privezhdane-na-nalichnite-geodanni-za-administrativni-edinici-i-sgradi-v-agkk-direktiva-2007/2/%D0%95%D0%9E',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Exact distribution-specific terms required; INSPIRE label is not a licence',
+    notes: 'Pin the exact distribution, coverage, identifiers, schema and licence. An INSPIRE project page is not a production dataset, and an exact address link requires a common identifier or explicit source relation.',
+  },
+  'nsi-bulgaria-ekatte': {
+    id: 'nsi-bulgaria-ekatte',
+    name: 'NSI Bulgaria EKATTE Register',
+    url: 'https://www.nsi.bg/nrnm/ekatte/index',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'NSI Licence 2.0; pin exact version and review derivative-work conditions',
+    notes: 'Official dated district, municipality, mayoralty and settlement identifiers provide administrative context, not postcode membership, delivery eligibility, address identity or building identity.',
+  },
+  'nsi-bulgaria-administrative-spatial-data': {
+    id: 'nsi-bulgaria-administrative-spatial-data',
+    name: 'NSI Bulgaria Administrative Spatial Data',
+    url: 'https://www.nsi.bg/nrnm/spatial-data-files',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'NSI Licence 2.0; pin exact version and review derivative-work conditions',
+    notes: 'Settlement points in EPSG:4326 and administrative polygons in EPSG:9391 are distinct dated context products, not postal geometry; transformed output requires reviewed lineage.',
+  },
   'cadastre-bulgaria': {
     id: 'cadastre-bulgaria',
     name: 'Bulgaria Cadastre Agency',
@@ -3728,7 +3803,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   AD: ['correos-andorra-postcodes', 'andorra-urban-address-guide', 'andorra-topographic-buildings', 'andorra-cartografia', 'andorra-open-data', 'postalcodes-info'],
   CY: ['cyprus-post-postcode-directory', 'cyprus-post-postcode-api', 'cyprus-dls-inspire-addresses', 'cyprus-dls-inspire-buildings', 'cyprus-dls-administrative-units', 'cystat-postal-sectors', 'eu-cyprus-protocol-10', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus', 'postalcodes-info'],
   RO: ['okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
-  BG: ['scrape4u-postal-codes', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
+  BG: ['bulgarian-posts-postcode-reference', 'bulgarian-posts-post-office-directory', 'grao-bulgaria-address-classifier', 'agcc-bulgaria-cadastral-map', 'agcc-bulgaria-inspire-buildings', 'nsi-bulgaria-ekatte', 'nsi-bulgaria-administrative-spatial-data', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
   UA: ['ukrposhta-postcodes-open-data', 'ukrposhta-index-and-address-api', 'ukraine-unified-address-register', 'ukraine-building-register', 'ukraine-nsdi', 'eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
   MD: ['scrape4u-postal-codes', 'geoportal-moldova', 'moldova-open-data'],
   BY: ['scrape4u-postal-codes', 'belarus-nca-geoportal'],

@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-fi, agid-postal-rs
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-fi, agid-postal-bg, agid-postal-rs
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -90,14 +90,14 @@ Hungary-specific Magyar Posta Partner Extra assignment and special-endpoint
 semantics, derived-surface rules, KCR address and unit identity, Lechner EHA
 location and cadastral linkage, separately rights-cleared INSPIRE/NTA/cadastral
 building evidence, KSH administration, privacy and redistribution partitions
+belong to `agid-postal-hu`.
 Finland-specific Posti assignment and Basic Address File membership, Statistics
 Finland Paavo statistical geometry, DVV address/building identity, Ryhti open
 building evidence, NLS interpolated address/topographic context, EPSG:3067
 transform rules and FI/AX territory partitioning belong to `agid-postal-fi`.
-
-
-belong to `agid-postal-hu`.
-
+Bulgaria-specific Bulgarian Posts routing, GRAO/CAIS address identity, AGCC
+cadastral buildings, NSI EKATTE administration, EPSG:9391 transforms and
+noncanonical derived-surface rules belong to `agid-postal-bg`.
 
 Denmark-specific PostNord assignment, DAGI Postnummerinddeling and
 administrative history, DAR address and access-point identity, BBR building
@@ -847,6 +847,41 @@ territory partition and never inherits mainland street or geometry assumptions.
 Every artifact pins provider, URL, terms/licence, attribution, edition, capture
 time, coverage, schema, CRS, reviewed transform and digest. The AGID repository
 keeps only contracts and small synthetic fixtures; all source rows and heavy
+geometry remain in a separately governed country release store.
+
+
+### `agid-postal-bg`
+
+The Bulgaria repository owns pinned Bulgarian Posts four-digit routing
+references and post-office receipts, actual authorized GRAO/CAIS address
+identifiers and access points, AGCC cadastral and INSPIRE building evidence,
+dated NSI EKATTE administration, synthetic fixtures and release validation.
+
+No nationwide Bulgarian Posts-authored postcode polygon distribution is
+assumed. A surface may be built only from complete, rights-cleared and
+time-compatible postcode membership with authoritative coordinates. It remains
+noncanonical derived geometry and records method, members, exclusions,
+uncertainty, topology, coverage and validity. EKATTE settlements,
+administrative polygons, buffers, Voronoi cells, nearest-code assignment and
+cross-border gap filling never become postal geometry. PO-box, organization,
+dedicated and post-office codes remain non-area without independent evidence.
+
+Roadmaps for a centralized Address Register do not establish that a production
+record or public bulk service exists. Exact address output requires an actual
+authorized GRAO/CAIS or municipal receipt. Exact building output additionally
+requires a common cadastral building identifier, source-defined relation or
+reviewed authoritative crosswalk to the exact rights-cleared AGCC feature.
+Parcels, independent objects, containment, proximity and text matching remain
+candidates only. Person, residence, recipient, household, owner, rightsholder,
+legal-act and title data never enter public artifacts.
+
+EKATTE points and polygons provide dated administrative context only. Every
+artifact pins provider, exact URL, access basis, fee/terms or licence version,
+attribution, edition, capture time, coverage, schema, source CRS, reviewed
+transform and digest. EPSG:9391 and other source coordinates are never silently
+published as WGS84. Public viewers, statutory registers and INSPIRE labels do
+not by themselves grant bulk or derivative-work rights. The AGID repository
+keeps only contracts and small synthetic fixtures; source rows and heavy
 geometry remain in a separately governed country release store.
 
 

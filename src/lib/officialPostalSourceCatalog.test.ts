@@ -17,7 +17,7 @@ test('registers official and open postal sources for the priority rollout countr
 });
 
 test('prefers country-specific official sources before the UPU global fallback', () => {
-  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
+  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
 
   for (const countryCode of countrySpecificCountries) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
@@ -34,6 +34,7 @@ test('prefers country-specific official sources before the UPU global fallback',
   assert.equal(getOfficialPostalSourcesForCountry('DE')[0]?.id, 'bkg-postleitzahlgebiete');
   assert.equal(getOfficialPostalSourcesForCountry('CZ')[0]?.id, 'ceska-posta-customer-outputs');
   assert.equal(getOfficialPostalSourcesForCountry('FI')[0]?.id, 'posti-finland-postal-code-services');
+  assert.ok(getOfficialPostalSourcesForCountry('BG').some(source => source.id === 'bulgarian-posts-postcode-reference'));
   assert.equal(getOfficialPostalSourcesForCountry('LV')[0]?.id, 'latvijas-pasts-check-address');
   assert.equal(getOfficialPostalSourcesForCountry('LT')[0]?.id, 'lietuvos-pastas-postcode-search');
   assert.equal(getOfficialPostalSourcesForCountry('JE')[0]?.id, 'jersey-post-address-finder');
@@ -536,6 +537,31 @@ test('separates Finland operator assignment, Paavo statistics, address, building
   assert.equal(paavo.tier, 'official-derived');
 });
 
+
+test('separates Bulgaria postal routing, controlled address, cadastral building, and EKATTE authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('BG');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('bulgarian-posts-postcode-reference')?.authority, 'postal-operator');
+  assert.equal(byId.get('bulgarian-posts-postcode-reference')?.availability, 'web-search');
+  assert.match(byId.get('bulgarian-posts-postcode-reference')?.notes.join(' ') ?? '', /four-digit.*pinned.*no nationwide.*polygon.*deliverability/i);
+  assert.equal(byId.get('bulgarian-posts-post-office-directory')?.depth, 'delivery-point');
+  assert.match(byId.get('bulgarian-posts-post-office-directory')?.notes.join(' ') ?? '', /service-point.*not a postcode area.*delivery guarantee.*bulk redistribution/i);
+  assert.equal(byId.get('grao-bulgaria-address-classifier')?.availability, 'commercial-or-restricted');
+  assert.equal(byId.get('grao-bulgaria-address-classifier')?.requiresCredential, true);
+  assert.match(byId.get('grao-bulgaria-address-classifier')?.notes.join(' ') ?? '', /actual authorized.*roadmap.*not production.*residence.*excluded/i);
+  assert.equal(byId.get('agcc-bulgaria-cadastral-map')?.depth, 'building');
+  assert.equal(byId.get('agcc-bulgaria-cadastral-map')?.requiresCredential, true);
+  assert.match(byId.get('agcc-bulgaria-cadastral-map')?.notes.join(' ') ?? '', /building identifier.*parcel.*independent object.*not a building.*owners.*excluded/i);
+  assert.equal(byId.get('agcc-bulgaria-inspire-buildings')?.depth, 'building');
+  assert.match(byId.get('agcc-bulgaria-inspire-buildings')?.notes.join(' ') ?? '', /exact endpoint.*INSPIRE.*not.*unrestricted licence.*common identifier/i);
+  assert.equal(byId.get('nsi-bulgaria-ekatte')?.depth, 'locality');
+  assert.match(byId.get('nsi-bulgaria-ekatte')?.notes.join(' ') ?? '', /district.*municipality.*settlement.*context only.*never establishes postcode/i);
+  assert.equal(byId.get('nsi-bulgaria-administrative-spatial-data')?.depth, 'geo-only');
+  assert.match(byId.get('nsi-bulgaria-administrative-spatial-data')?.notes.join(' ') ?? '', /EPSG:4326.*EPSG:9391.*separate.*neither.*postal geometry/i);
+  const classification = classifyPostalSourceTrust({ countryCode: 'BG', source: 'Bulgarian Posts Postcode Reference' });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
 
 test('separates Serbia postcode, PAK, API, open address, building, parcel, administration, and territory authority', () => {
   const sources = getOfficialPostalSourcesForCountry('RS');

@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -95,6 +95,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   FI: {
     countryCode: 'FI',
     postalCodeFormat: 'NNNNN',
+    fullCodeGeometrySemantics: 'routing-locality-first',
+  },
+  BG: {
+    countryCode: 'BG',
+    postalCodeFormat: 'NNNN',
     fullCodeGeometrySemantics: 'routing-locality-first',
   },
   DK: {
@@ -320,6 +325,13 @@ export function normalizeFinlandPostalCode(value: unknown) {
   return /^\d{5}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeBulgariaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{4}$/.test(normalized) ? normalized : null;
+}
+
 
 export function normalizeDenmarkPostalCode(value: unknown) {
   const normalized = String(value ?? '')
@@ -486,6 +498,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'NO') return normalizeNorwayPostalCode(value);
   if (normalizedCountry === 'HU') return normalizeHungaryPostalCode(value);
   if (normalizedCountry === 'FI') return normalizeFinlandPostalCode(value);
+  if (normalizedCountry === 'BG') return normalizeBulgariaPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);
   if (normalizedCountry === 'MT') return normalizeMaltaPostalCode(value);
   if (normalizedCountry === 'MC') return normalizeMonacoPostalCode(value);

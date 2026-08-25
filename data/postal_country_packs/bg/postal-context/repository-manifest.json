@@ -1,0 +1,91 @@
+{
+  "schema_version": "agid-postal-bg-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-bg",
+    "country_code": "BG",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Пощенски код",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "routing_assignment_plus_separate_derived_or_non_area_geometry",
+    "assignment_rule": "A pinned Bulgarian Posts reference or transaction receipt can establish a four-digit postcode, postal locality or post-office routing assignment at its capture time. Syntax, a UPU addressing example, an EKATTE settlement, a municipality, a geocoder result or a service-point location does not establish a current assignment, deliverability or a polygon.",
+    "geometry_rule": "No nationwide Bulgarian Posts-authored postcode polygon distribution is assumed. A surface may be derived only from complete, rights-cleared and time-compatible postcode membership with authoritative coordinates; it remains noncanonical derived geometry and records method, members, exclusions, uncertainty, topology, coverage and validity. EKATTE or administrative boundaries, buffers, nearest assignment and Voronoi cells are never substitutes.",
+    "special_code_rule": "PO-box, organization, dedicated, post-office and other special routing records remain endpoint or non-area evidence unless independent authoritative area evidence exists. Their occurrence or service-point coordinates never authorize a polygon.",
+    "address_rule": "GRAO/NKNPA or a deployed CAIS Address Register receipt may establish an address identifier and access point only under the exact released service and access rights; planning documents do not establish production availability. Municipal address decisions remain source-qualified inputs. Current/permanent residence, person, recipient and household data are excluded.",
+    "building_rule": "Exact building output requires an explicit authorized relation or common cadastral building identifier between an allowed address record and an exact rights-cleared AGCC cadastral or INSPIRE building feature. A parcel, independent object, containment, proximity or text match creates candidates only; owners, rightsholders, title acts and personal identifiers are never public output.",
+    "administrative_rule": "NSI EKATTE district, municipality, mayoralty, settlement and spatial releases add dated administrative context only. Their unit codes, points or polygons do not create postcode membership, address identity, delivery eligibility or building identity.",
+    "licence_rule": "Every Bulgarian Posts, GRAO/CAIS, municipal, AGCC/KAIS and NSI artifact pins the exact page, service, file, access basis, fee/terms or licence version, attribution, edition, capture time, coverage, schema, CRS, reviewed transform and digest. A public viewer, statutory register, INSPIRE label or NSI source page is not by itself unrestricted bulk or derivative-work permission.",
+    "crs_rule": "Every geometry retains its published source CRS. NSI administrative files published in BGS2005 / UTM zone 35N (EPSG:9391), and any AGCC source CRS, are transformed to WGS84 only through reviewed versioned transforms; original coordinates and transform lineage remain auditable.",
+    "territory_rule": "The BG pack clips derived output to evidence-backed Bulgarian territory for the same validity interval. Postal assignment never determines sovereignty, and cross-border clipping cannot fill postal, address or building coverage gaps."
+  },
+  "integration": {
+    "agid_country_code": "BG",
+    "coordinate_flow": "coordinate -> rights-cleared derived postcode surface or honest non-area -> EKATTE administrative context -> exact allowed address identifier/access point -> explicit cadastral building relation -> exact rights-cleared building -> BG AGID cell",
+    "postcode_flow": "canonical four digits -> pinned Bulgarian Posts routing assignment or special endpoint -> optional noncanonical derived surface -> allowed address relation -> explicit cadastral building relation -> AGID cells",
+    "building_output_gate": "exact allowed address identity plus an explicit AGCC source relation, common cadastral building identifier or reviewed authoritative crosswalk to an exact rights-cleared building feature"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode is four-character text and preserves leading zeroes." },
+    { "id": "operator-assignment", "pass": "Every current assignment pins the Bulgarian Posts source, capture/effective time, scope, terms, schema and digest." },
+    { "id": "derived-area-separation", "pass": "Every generated surface is marked noncanonical derived, records membership method and uncertainty, and is never called a Bulgarian Posts official polygon." },
+    { "id": "special-non-area", "pass": "PO-box, organization, dedicated and post-office records remain non-area unless independent area evidence passes its own gate." },
+    { "id": "authoritative-address", "pass": "Every address pins the actual GRAO/CAIS or municipal source, identifier, access-point semantics, validity and access rights; roadmap claims never promote." },
+    { "id": "building-link", "pass": "Exact building output requires an explicit cadastral relation or common identifier; parcel, independent-object, nearest, containment and text matching do not pass." },
+    { "id": "privacy", "pass": "Person, residence, recipient, household, owner, rightsholder, title-act and personal-identifier fields are excluded." },
+    { "id": "ekatte-context", "pass": "EKATTE release, unit code, validity, licence terms, CRS and transform are pinned and administration remains separate from postal evidence." },
+    { "id": "coverage-and-rights", "pass": "Every service, dataset and derived output enforces exact geographic coverage, access basis, fee/terms, redistribution and derivative-work rules." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "Pinned Bulgarian Posts assignments and special-code classifications pass time, terms, schema and digest gates." },
+      { "id": "M3_derived_geometry", "definition": "Rights-cleared membership-derived surfaces pass method, coverage, uncertainty, topology, territory, CRS and correction gates." },
+      { "id": "M4_address_building", "definition": "Actual authorized GRAO/CAIS, municipal and AGCC evidence passes identity, explicit-building-link, privacy, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "bulgarian-posts-presented-as-official-polygon-without-artifact",
+      "ekatte-settlement-or-administration-substituted-for-postcode-area",
+      "buffer-voronoi-nearest-or-gap-fill-substituted-for-postal-evidence",
+      "special-or-postbox-code-given-invented-polygon",
+      "address-register-roadmap-presented-as-production-receipt",
+      "address-access-point-presented-as-building-footprint",
+      "parcel-or-independent-object-presented-as-building",
+      "nearest-or-contained-building-presented-as-exact-address-link",
+      "public-kais-viewer-presented-as-bulk-redistribution-right",
+      "owner-rightsholder-title-residence-or-person-data-published",
+      "nsi-data-transformed-without-exact-licence-review",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "cross-border-clipping-used-to-fill-coverage",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_BG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BG_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_BG_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BG_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-bulgarian-posts-grao-agcc-or-nsi-rows",
+    "every-four-digit-code-is-a-polygon",
+    "ekatte-settlement-is-postcode-area",
+    "post-office-or-po-box-is-area",
+    "address-access-point-is-building-footprint",
+    "parcel-or-independent-object-is-building",
+    "nearest-footprint-is-exact-building",
+    "address-identifies-person-residence-owner-or-title"
+  ]
+}
