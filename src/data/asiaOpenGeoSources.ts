@@ -34,6 +34,14 @@ export type AsiaOpenGeoSourceId =
   | 'lx-korea'
   | 'juso-kr'
   | 'osm-korea'
+  | 'korea-post-postcode-system'
+  | 'korea-post-postcode-api'
+  | 'mois-juso-basic-districts'
+  | 'mois-juso-road-address-api'
+  | 'mois-juso-building-db'
+  | 'mois-juso-electronic-map'
+  | 'molit-korea-gis-integrated-buildings'
+  | 'molit-korea-continuous-cadastral-map'
   | 'post-tw'
   | 'nlsc-taiwan'
   | 'tgos-taiwan'
@@ -499,6 +507,85 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'reference',
     notes: 'China postal-code reference source for mainland delivery validation.',
+  },
+  'korea-post-postcode-system': {
+    id: 'korea-post-postcode-system',
+    name: 'Korea Post Five-digit Postcode System',
+    url: 'https://www.koreapost.go.kr/kpost/subIndex/134.do?pSiteIdx=125',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official system reference: since 1 August 2015 the five-digit National Basic District Number is the postcode. Digit structure is not current assignment or geometry evidence.',
+  },
+  'korea-post-postcode-api': {
+    id: 'korea-post-postcode-api',
+    name: 'Korea Post Postcode API',
+    url: 'https://www.data.go.kr/data/15056971/openapi.do?recommendDataYn=Y',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Credentialed public-data API; service-key, approval, traffic, field and redistribution terms apply',
+    notes: 'Official service-key API returns a five-digit postcode with road-name and land-lot addresses. A query receipt is assignment evidence, not geometry or a bulk redistribution licence.',
+  },
+  'mois-juso-basic-districts': {
+    id: 'mois-juso-basic-districts',
+    name: 'MOIS Juso National Basic Districts',
+    url: 'https://eng.juso.go.kr/addrlink/adresInfoProvd/guidance/provdAdresInfo.do',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'KOGL Type 1 attribution shown for the electronic-map product; application approval and exact product-specific terms still apply',
+    notes: 'The exact current official Polygon or MultiPolygon carrying the same five-digit National Basic District Number is canonical postal geometry. Every layer pins product-specific CRS: EPSG:5179 or EPSG:5186 is verified rather than assumed.',
+  },
+  'mois-juso-road-address-api': {
+    id: 'mois-juso-road-address-api',
+    name: 'MOIS Juso Real-time Road Address API',
+    url: 'https://www.data.go.kr/data/15057017/openapi.do?recommendDataYn=Y',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Credentialed public-data API; exact approval, purpose, fields and reuse terms apply',
+    notes: 'Official road-address API can return five-digit postcode, public address components, road-address management number and 25-digit building management number. The response is not a building footprint.',
+  },
+  'mois-juso-building-db': {
+    id: 'mois-juso-building-db',
+    name: 'MOIS Juso Public Building DB',
+    url: 'https://eng.juso.go.kr/addrlink/adresInfoProvd/guidance/othbcAdresInfo.do',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact public-address artifact terms, edition, public-field allowlist and attribution required',
+    notes: 'Official building-level address and 25-digit building-management identity. One road address can relate to multiple buildings; a DB row supplies no geometry and no resident or household identity.',
+  },
+  'mois-juso-electronic-map': {
+    id: 'mois-juso-electronic-map',
+    name: 'MOIS Juso Electronic Map',
+    url: 'https://www.data.go.kr/tcs/dss/selectFileDataDetailView.do?publicDataPk=15050413',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Application, identity and purpose approval with exact KOGL, derivative and redistribution terms per layer',
+    notes: 'Official buildings, building groups, entrances, roads, National Basic Districts and administrative geometry. Exact building output needs an explicit source-defined identifier or documented join; approval is not unrestricted vector redistribution.',
+  },
+  'molit-korea-gis-integrated-buildings': {
+    id: 'molit-korea-gis-integrated-buildings',
+    name: 'MOLIT GIS Integrated Building Information',
+    url: 'https://www.data.go.kr/data/15052097/fileData.do?recommendDataYn=Y',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'No use restriction recorded for the exact portal product; edition, schema, fields, attribution and third-party rights still pinned',
+    notes: 'Official topographic building geometry integrated with public building-register attributes. Exact Juso linkage requires a stable identifier or reviewed crosswalk; spatial overlap is not a crosswalk and private register fields stay excluded.',
+  },
+  'molit-korea-continuous-cadastral-map': {
+    id: 'molit-korea-continuous-cadastral-map',
+    name: 'MOLIT Nationwide Continuous Cadastral Map',
+    url: 'https://www.data.go.kr/data/15125044/fileData.do?recommendDataYn=Y',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'KOGL Type 4: attribution, non-commercial use and no modification for the exact nationwide snapshot',
+    notes: 'Official reference-only continuous cadastral drawing, not survey data. A parcel is not a building, postcode area or exact address link; owner and rights data are excluded.',
   },
   'epost-kr': {
     id: 'epost-kr',
@@ -2011,7 +2098,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'geolonia-addresses',
     'osm-japan',
   ],
-  KR: ['epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
+  KR: ['korea-post-postcode-system', 'korea-post-postcode-api', 'mois-juso-basic-districts', 'mois-juso-road-address-api', 'mois-juso-building-db', 'mois-juso-electronic-map', 'molit-korea-gis-integrated-buildings', 'molit-korea-continuous-cadastral-map', 'epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
   KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
   KH: ['cambodia-post', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],

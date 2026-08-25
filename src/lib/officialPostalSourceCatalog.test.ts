@@ -851,6 +851,29 @@ test('Taiwan catalog separates 3+3 assignment, legal terms, doorplates, building
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('Korea catalog separates postcode semantics, official districts, address identifiers, buildings, and cadastre', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('KR').map(source => [source.id, source]));
+  assert.equal(sources.get('korea-post-postcode-system')?.authority, 'postal-operator');
+  assert.equal(sources.get('korea-post-postcode-system')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.get('korea-post-postcode-api')?.availability, 'auth-required-api');
+  assert.equal(sources.get('mois-juso-basic-districts')?.trustTier, 'authoritative');
+  assert.equal(sources.get('mois-juso-basic-districts')?.depth, 'postcode');
+  assert.match(sources.get('mois-juso-basic-districts')?.notes.join(' ') ?? '', /same five-digit.*canonical postal geometry.*model geometry cannot fill/i);
+  assert.equal(sources.get('mois-juso-road-address-api')?.depth, 'address');
+  assert.equal(sources.get('mois-juso-building-db')?.depth, 'building');
+  assert.equal(sources.get('mois-juso-electronic-map')?.requiresCredential, true);
+  assert.match(sources.get('mois-juso-electronic-map')?.notes.join(' ') ?? '', /documented source relation.*containment.*do not suffice.*not unrestricted/i);
+  assert.equal(sources.get('molit-korea-gis-integrated-buildings')?.depth, 'building');
+  assert.equal(sources.get('molit-korea-continuous-cadastral-map')?.trustTier, 'official');
+  assert.equal(sources.get('molit-korea-continuous-cadastral-map')?.validationReadiness, 'metadata-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'KR',
+    source: 'Korea Post Postcode API',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('catalog source ids are unique and sorted by trust for a country lookup', () => {
   const ids = OFFICIAL_POSTAL_SOURCE_CATALOG.map(source => source.id);
   assert.equal(new Set(ids).size, ids.length);

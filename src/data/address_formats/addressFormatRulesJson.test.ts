@@ -194,10 +194,18 @@ test('Japan address metadata exposes GSI, jageocoder, Geolonia, and OSM Japan so
   assert.equal(format.postalCode?.source, 'Japan Post / zipcloud / jageocoder / Geolonia');
 });
 
-test('South Korea address metadata exposes NGII, LX, road-name address, and OSM Korea sources', () => {
+test('South Korea address metadata exposes postal district, Juso identifier, building, and cadastral sources', () => {
   const format = loadFormat('KR');
   const rules = loadRules('KR');
   const expectedSourceIds = [
+    'korea-post-postcode-system',
+    'korea-post-postcode-api',
+    'mois-juso-basic-districts',
+    'mois-juso-road-address-api',
+    'mois-juso-building-db',
+    'mois-juso-electronic-map',
+    'molit-korea-gis-integrated-buildings',
+    'molit-korea-continuous-cadastral-map',
     'ngii-korea',
     'lx-korea',
     'juso-kr',
@@ -213,7 +221,13 @@ test('South Korea address metadata exposes NGII, LX, road-name address, and OSM 
     assert.match(source.url, /^https?:\/\//, `${sourceId} should expose a testable URL`);
   }
 
-  assert.equal(format.postalCode?.source, 'Korea Post / ePOST / Juso road-name address');
+  assert.equal(format.postalCode?.format, 'NNNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{5}$');
+  assert.match(format.postalCode?.source ?? '', /Korea Post.*MOIS Juso.*National Basic District.*road address.*building.*MOLIT.*cadastral/i);
+  assert.match(rules.postalCode?.label ?? '', /5 digits.*National Basic District.*official.*explicit.*building-management.*unit.*private/i);
+  assert.ok(rules.regionalHierarchy?.includes('nationalBasicDistrict'));
+  assert.ok(rules.regionalHierarchy?.includes('buildingManagementNumber'));
+  assert.ok(rules.regionalHierarchy?.includes('exactAddressLinkedJusoBuilding'));
 });
 
 test('Taiwan address metadata exposes 3+3, doorplate, building, cadastral, and administrative sources', () => {

@@ -423,6 +423,7 @@ export {
   normalizeMontenegroPostalCode,
   normalizeRomaniaPostalCode,
   normalizeTaiwanPostalCode,
+  normalizeKoreaPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,
