@@ -1161,3 +1161,11 @@ codes and statistical hierarchy add context only. Owner, rightsholder, resident,
 occupant, personal identifier, title, encumbrance, value and tax fields are
 excluded. The evidence ladder is documented in
 [postal-context-montenegro-runtime.md](postal-context-montenegro-runtime.md).
+
+## Taiwan source boundary
+
+The Taiwan repository owns pinned Chunghwa Post six-digit 3+3 assignment evidence and its exact address-range, delivery-district, delivery-specific, P.O. box, military special-box and organization semantics. The first three digits are administrative routing context; the last three are delivery context. Neither valid syntax, a lookup row nor the published three-digit centre-coordinate table is a postal perimeter.
+
+MOI-coordinated and local-government doorplate artifacts, NLSC Taiwan eMap buildings and doorplates, cadastral services and administrative boundaries remain separate evidence partitions. A reusable full-code surface may be derived only from rights-cleared doorplate members joined to a pinned operator assignment and must retain members, exclusions, uncertainty, validity and lineage. It is never relabelled official. Exact building output requires a source-defined relation, common stable authoritative identifier or reviewed crosswalk; containment and proximity are candidates only.
+
+WMS or WMTS display, viewer access, government-unit WFS eligibility, payment or subscription does not imply public vector or derivative redistribution. Public output excludes household registration, resident, occupant, domicile, owner, rightsholder, title, encumbrance, value, tax, contact, shipment and query-history data. TWD97 source CRS metadata and reviewed transforms are mandatory, and source-stated administrative, postal or cadastral coverage is not a sovereignty determination.

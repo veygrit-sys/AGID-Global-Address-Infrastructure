@@ -216,10 +216,18 @@ test('South Korea address metadata exposes NGII, LX, road-name address, and OSM 
   assert.equal(format.postalCode?.source, 'Korea Post / ePOST / Juso road-name address');
 });
 
-test('Taiwan address metadata exposes NLSC, TGOS, OSM Taiwan, and g0v sources', () => {
+test('Taiwan address metadata exposes 3+3, doorplate, building, cadastral, and administrative sources', () => {
   const format = loadFormat('TW');
   const rules = loadRules('TW');
   const expectedSourceIds = [
+    'chunghwa-post-3plus3-data',
+    'chunghwa-post-3plus3-lookup',
+    'chunghwa-post-3plus3-license',
+    'moi-taiwan-national-doorplate-location',
+    'nlsc-taiwan-emap-buildings',
+    'nlsc-taiwan-emap-doorplates',
+    'nlsc-taiwan-administrative-boundaries',
+    'nlsc-taiwan-cadastral-map',
     'nlsc-taiwan',
     'tgos-taiwan',
     'osm-taiwan',
@@ -236,7 +244,12 @@ test('Taiwan address metadata exposes NLSC, TGOS, OSM Taiwan, and g0v sources', 
   }
 
   assert.deepEqual(rules.languages, [{ code: 'zh-Hant', name: 'Chinese (Traditional)' }]);
-  assert.equal(format.postalCode?.source, 'Chunghwa Post / NLSC / TGOS');
+  assert.equal(format.postalCode?.format, 'NNN NNN');
+  assert.equal(format.postalCode?.regex, '^\\d{3}\\s?\\d{3}$');
+  assert.match(format.postalCode?.source ?? '', /Chunghwa Post 3\+3.*MOI.*doorplate.*NLSC.*buildings.*cadastral.*administrative/i);
+  assert.match(rules.postalCode?.label ?? '', /6 digits.*address-range.*derived.*doorplate.*explicit.*NLSC.*household.*private/i);
+  assert.equal(rules.postalCode?.required, true);
+  assert.equal(rules.postalCode?.usage, 'required');
 });
 
 test('Hong Kong address metadata exposes LandsD, CSDI, and OSM Hong Kong sources', () => {

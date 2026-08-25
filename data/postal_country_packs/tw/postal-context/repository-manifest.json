@@ -1,0 +1,86 @@
+{
+  "schema_version": "agid-postal-tw-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-tw",
+    "country_code": "TW",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "3+3碼郵遞區號",
+    "full_code_format": "NNNNNN",
+    "full_code_default_geometry": "address_range_or_delivery_specific_assignment_with_derived_doorplate_membership_surface_or_point_or_non_area",
+    "assignment_rule": "A pinned Chunghwa Post 3+3 data row or lookup receipt establishes a six-digit address-range, delivery-district or delivery-specific assignment at its capture or effective time. The code remains text with leading zeroes. Valid syntax, a three-digit administrative prefix, a centre point, post office, P.O. box or military special box does not establish a current six-digit perimeter or universal deliverability.",
+    "assignment_granularity_rule": "The first three digits identify an administrative district and the last three identify a delivery district or delivery-specific number. Road, section, lane, alley, house-number, odd-even and range rules remain typed assignment evidence; P.O. box, military special-box and organization codes remain non-area unless an exact source says otherwise.",
+    "geometry_rule": "No nationwide current Chunghwa Post-authored full 3+3 polygon distribution is assumed. A surface generated from rights-cleared official doorplate members joined to a pinned operator assignment is derived, versioned, uncertainty-bearing and non-canonical. Three-digit centre points, road or lane buffers, administrative boundaries, cadastral parcels, building footprints, Voronoi cells and interpolation never become official postal geometry.",
+    "address_rule": "MOI-coordinated nationwide doorplate positioning and exact local-government artifacts may provide a public civic address and point when their access, coverage and allowed fields are pinned. A doorplate point is not a building footprint, postal perimeter, household, resident, occupant, domicile or organization identity.",
+    "building_rule": "Exact building display requires an exact rights-cleared NLSC Taiwan eMap building feature plus a source-defined address-to-building relationship, common stable authoritative identifier or reviewed explicit crosswalk. Point containment, parcel containment, overlap, text equality, centroid or proximity creates candidates only.",
+    "cadastral_rule": "NLSC cadastral map services remain validation context unless an exact reusable vector artifact and licence are pinned. Parcel display does not prove building identity, address linkage, ownership or land rights, and public output excludes owners, rightsholders, residents, occupants, land numbers tied to private persons, titles, encumbrances, values, transactions and taxes.",
+    "administration_rule": "Pinned NLSC county or special-municipality, township or city or district, and village or li boundaries supply dated administrative context in their stated coverage. Administrative membership does not create a 3+3 assignment, delivery eligibility, building linkage or sovereignty conclusion.",
+    "licence_rule": "The Taiwan Open Government Data License and Chunghwa Post public authorization apply only to the exact artifacts they cover. Public lookup, WMS or WMTS display, viewer access, government WFS eligibility, payment, subscription or statutory public character does not imply bulk vector extraction, derivative or redistribution rights. Every artifact pins product, layer, purpose, access basis, allowed public fields, derivative rights, edition, capture and effective time, coverage, terms, schema, CRS, reviewed transform and digest.",
+    "crs_rule": "Every geometry retains its source CRS. NLSC TWD97 longitude-latitude EPSG:3824, TWD97 TM2 zone 121 EPSG:3826, zone 119 EPSG:3825 or other source coordinates become WGS84 only through a reviewed versioned transform and are never relabelled as EPSG:4326.",
+    "territory_rule": "The release uses ISO code TW and only the coverage explicitly stated by each pinned source. Postal, administrative, cadastral or map coverage is not a sovereignty determination; clipping cannot fill postal gaps or settle disputed coverage.",
+    "freshness_rule": "Chunghwa Post assignments, MOI doorplate positions, NLSC buildings, cadastral services and administrative boundaries refresh independently. Mixed-edition joins fail closed unless their validity and knowledge intervals overlap and the explicit relationship remains valid."
+  },
+  "integration": {
+    "agid_country_code": "TW",
+    "coordinate_flow": "coordinate -> derived rights-cleared doorplate-membership surface or official doorplate point -> Chunghwa Post 3+3 assignment -> administrative hierarchy -> explicit licensed NLSC building relation -> TW AGID cell",
+    "postcode_flow": "canonical six digits -> pinned operator assignment class -> optional derived doorplate-membership surface -> official doorplate candidates -> explicit NLSC building relation -> AGID cells",
+    "building_output_gate": "source-defined relationship, common stable authoritative identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Six-digit 3+3 postcodes remain text and preserve leading zeroes; TW prefixes, hyphens and legacy three- or five-digit forms are rejected by this runtime." },
+    { "id": "assignment-class", "pass": "Administrative prefix, delivery district, delivery-specific, address-range, P.O. box, military special-box and organization assignments remain explicitly typed." },
+    { "id": "operator-receipt", "pass": "Every postal assignment pins exact Chunghwa Post source, version, capture or effective time, terms, schema and digest." },
+    { "id": "derived-geometry", "pass": "Every postal surface records rights-cleared doorplate members, exclusions, method, uncertainty, validation, validity and lineage and is labelled derived." },
+    { "id": "official-doorplate", "pass": "Every official doorplate retains allowed address components, point status, authority, dates, coverage, access basis, schema, source CRS and digest." },
+    { "id": "explicit-building-link", "pass": "Building output has an explicit authoritative relation; doorplate point, parcel, containment, overlap and proximity alone never pass." },
+    { "id": "administration-separate", "pass": "NLSC administrative and cadastral layers remain context and never substitute for postal or building evidence." },
+    { "id": "privacy", "pass": "No household registration, resident, owner, rightsholder, occupant, domicile, organization association, title, encumbrance, value, tax, contact or shipment data is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "Pinned Chunghwa Post 3+3 assignment evidence passes terms, version, freshness, coverage and redistribution gates." },
+      { "id": "M3_address", "definition": "MOI or local-government doorplate and NLSC administrative artifacts pass access, allowed-field, coverage, completeness, CRS and licence gates." },
+      { "id": "M4_geometry", "definition": "Derived postal geometry and exact permitted NLSC building joins pass membership, topology, ambiguity, identifier, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "three-digit-centre-or-lookup-row-presented-as-six-digit-polygon",
+      "address-range-delivery-specific-po-box-or-military-code-presented-as-universal-polygon",
+      "road-lane-buffer-administrative-boundary-parcel-building-voronoi-or-interpolation-presented-as-official-postal-area",
+      "doorplate-point-or-cadastral-parcel-presented-as-building-footprint",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "lookup-viewer-wms-wmts-government-wfs-paid-subscription-or-statutory-access-presented-as-redistribution-right",
+      "household-resident-owner-rightsholder-occupant-domicile-organization-title-encumbrance-value-or-tax-data-published",
+      "administrative-cadastral-map-or-postal-coverage-presented-as-sovereignty-determination",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_TW_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_TW_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_TW_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_TW_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-doorplate-building-cadastral-or-administrative-rows",
+    "every-3plus3-code-is-a-polygon",
+    "three-digit-centre-is-a-boundary",
+    "administrative-boundary-equals-postal-area",
+    "doorplate-point-or-parcel-is-building-footprint",
+    "nearest-building-is-exact-address-link",
+    "household-or-land-register-is-public-address-output"
+  ]
+}

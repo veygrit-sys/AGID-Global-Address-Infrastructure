@@ -9,7 +9,7 @@ import {
 } from './officialPostalSourceCatalog';
 
 test('registers official and open postal sources for the priority rollout countries', () => {
-  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'ME', 'RO', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
+  for (const countryCode of ['JP', 'US', 'GB', 'BR', 'SG', 'FR', 'NL', 'AU', 'HK', 'AQ', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BE', 'ME', 'RO', 'TW', 'LV', 'LT', 'LI', 'PT', 'JE', 'IM', 'GI']) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
     assert.ok(sources.length > 0, `${countryCode} should have at least one registered source`);
     assert.ok(getPreferredPostalSourceIdsForCountry(countryCode).length > 0, `${countryCode} should expose preferred source ids`);
@@ -17,7 +17,7 @@ test('registers official and open postal sources for the priority rollout countr
 });
 
 test('prefers country-specific official sources before the UPU global fallback', () => {
-  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'ME', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
+  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'ME', 'TW', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
 
   for (const countryCode of countrySpecificCountries) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
@@ -822,6 +822,30 @@ test('Romania catalog separates operator assignment, dated geography status, REN
   const classification = classifyPostalSourceTrust({
     countryCode: 'RO',
     source: 'Poșta Română Postcode Search',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
+test('Taiwan catalog separates 3+3 assignment, legal terms, doorplates, buildings, administration, and cadastral authority', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('TW').map(source => [source.id, source]));
+  assert.equal(sources.get('chunghwa-post-3plus3-data')?.authority, 'postal-operator');
+  assert.equal(sources.get('chunghwa-post-3plus3-data')?.trustTier, 'authoritative');
+  assert.equal(sources.get('chunghwa-post-3plus3-data')?.depth, 'street');
+  assert.match(sources.get('chunghwa-post-3plus3-data')?.notes.join(' ') ?? '', /address-range.*delivery-specific.*not canonical polygons/i);
+  assert.equal(sources.get('chunghwa-post-3plus3-lookup')?.depth, 'address');
+  assert.equal(sources.get('chunghwa-post-3plus3-license')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('moi-taiwan-national-doorplate-location')?.validationReadiness, 'metadata-only');
+  assert.match(sources.get('moi-taiwan-national-doorplate-location')?.notes.join(' ') ?? '', /point is not a building footprint.*household/i);
+  assert.equal(sources.get('nlsc-taiwan-emap-buildings')?.depth, 'building');
+  assert.equal(sources.get('nlsc-taiwan-emap-buildings')?.requiresCredential, true);
+  assert.match(sources.get('nlsc-taiwan-emap-buildings')?.notes.join(' ') ?? '', /source-defined address relation.*WMS.*not an open vector/i);
+  assert.equal(sources.get('nlsc-taiwan-emap-doorplates')?.depth, 'address');
+  assert.equal(sources.get('nlsc-taiwan-administrative-boundaries')?.depth, 'geo-only');
+  assert.equal(sources.get('nlsc-taiwan-cadastral-map')?.trustTier, 'official');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'TW',
+    source: 'Chunghwa Post 3+3 Postal Code Data',
   });
   assert.equal(classification.strength, 'strong');
   assert.equal(classification.tier, 'authoritative');

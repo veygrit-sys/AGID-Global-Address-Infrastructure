@@ -39,6 +39,14 @@ export type AsiaOpenGeoSourceId =
   | 'tgos-taiwan'
   | 'osm-taiwan'
   | 'g0v-taiwan'
+  | 'chunghwa-post-3plus3-data'
+  | 'chunghwa-post-3plus3-lookup'
+  | 'chunghwa-post-3plus3-license'
+  | 'moi-taiwan-national-doorplate-location'
+  | 'nlsc-taiwan-emap-buildings'
+  | 'nlsc-taiwan-emap-doorplates'
+  | 'nlsc-taiwan-administrative-boundaries'
+  | 'nlsc-taiwan-cadastral-map'
   | 'alamgc-mongolia'
   | 'nsdi-mongolia'
   | 'zipcode-mn'
@@ -537,6 +545,84 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'validation',
     license: 'ODbL',
     notes: 'Korean OSM community data for roads, POI, buildings, and fallback address tags.',
+  },
+  'chunghwa-post-3plus3-data': {
+    id: 'chunghwa-post-3plus3-data',
+    name: 'Chunghwa Post 3+3 Postal Code Open Data',
+    url: 'https://data.gov.tw/dataset/150689',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Taiwan Open Government Data License v1 with exact Chunghwa Post public authorization review',
+    notes: 'Official six-digit 3+3 address-range and delivery-specific assignment data. The first three digits are an administrative prefix and the last three are a delivery district or specific code; rows are not official polygons.',
+  },
+  'chunghwa-post-3plus3-lookup': {
+    id: 'chunghwa-post-3plus3-lookup',
+    name: 'Chunghwa Post 3+3 Postal Code Lookup',
+    url: 'https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=208&list=3',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address lookup uses county or city, district, road or place, section, lane, alley, house number, floor, room, odd-even and range semantics. The registered Web Service is single-query and access-controlled; lookup is not bulk data or geometry.',
+  },
+  'chunghwa-post-3plus3-license': {
+    id: 'chunghwa-post-3plus3-license',
+    name: 'Chunghwa Post 3+3 Public Authorization',
+    url: 'https://www.post.gov.tw/post/internet/Download/all_list.jsp',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official legal and download reference for exact covered 3+3 artifacts and third-party-rights review. License metadata is not postal assignment, address, geometry or deliverability evidence.',
+  },
+  'moi-taiwan-national-doorplate-location': {
+    id: 'moi-taiwan-national-doorplate-location',
+    name: 'MOI Nationwide Doorplate Location Coordination',
+    url: 'https://maps.nlsc.gov.tw/pro/get_map_message.jsp',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled/query or exact local-government terms; no blanket national bulk grant assumed',
+    notes: 'Local governments maintain and upload doorplate locations; NLSC obtains nationwide positions every two months for map and search functions. A doorplate is a point, not a building footprint, and public positioning is not blanket bulk permission; household data stays private.',
+  },
+  'nlsc-taiwan-emap-buildings': {
+    id: 'nlsc-taiwan-emap-buildings',
+    name: 'NLSC Taiwan eMap Building Frames',
+    url: 'https://www.nlsc.gov.tw/cp.aspx?n=1549',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Controlled, fee or subscription product; exact derivative and redistribution rights required',
+    notes: 'Official Taiwan eMap building geometry requires an explicit address relation or common stable identifier for exact output. Viewer, WMS, WMTS or government WFS eligibility is not an open reusable vector licence.',
+  },
+  'nlsc-taiwan-emap-doorplates': {
+    id: 'nlsc-taiwan-emap-doorplates',
+    name: 'NLSC Taiwan eMap Doorplate Layer',
+    url: 'https://maps.nlsc.gov.tw/S09SOA/pro/wfs.jsp',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Viewer/WMS or controlled government-unit WFS; exact vector rights required',
+    notes: 'Official doorplate layer is point and address evidence, not a building or postal polygon. Public image display and government-unit WFS application do not automatically authorize public vector redistribution.',
+  },
+  'nlsc-taiwan-administrative-boundaries': {
+    id: 'nlsc-taiwan-administrative-boundaries',
+    name: 'NLSC Taiwan Administrative Boundary Downloads',
+    url: 'https://maps.nlsc.gov.tw/pro/download.jsp',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Taiwan Open Government Data License v1; exact edition and attribution required',
+    notes: 'Official county or city, township or district, and village or li boundaries retain TWD97 EPSG:3824, TM2 zone 121 EPSG:3826 or zone 119 EPSG:3825 source metadata. They are not postal areas and coverage is not a sovereignty conclusion.',
+  },
+  'nlsc-taiwan-cadastral-map': {
+    id: 'nlsc-taiwan-cadastral-map',
+    name: 'NLSC Taiwan Cadastral Map',
+    url: 'https://maps.nlsc.gov.tw/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Viewer or source-specific controlled access; no blanket vector redistribution right assumed',
+    notes: 'Official cadastral viewer and services provide parcel validation context. Viewer pixels are not reusable vectors, parcels are not buildings or exact address links, and owner or rights information is excluded.',
   },
   'post-tw': {
     id: 'post-tw',
@@ -1948,7 +2034,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   SY: ['syria-post', 'osm-syria', 'hot-osm-west-asia'],
   TH: ['thailand-post'],
   TR: ['turkiye-ptt', 'osm-turkey'],
-  TW: ['post-tw', 'nlsc-taiwan', 'tgos-taiwan', 'osm-taiwan', 'g0v-taiwan'],
+  TW: ['chunghwa-post-3plus3-data', 'chunghwa-post-3plus3-lookup', 'chunghwa-post-3plus3-license', 'moi-taiwan-national-doorplate-location', 'nlsc-taiwan-emap-buildings', 'nlsc-taiwan-emap-doorplates', 'nlsc-taiwan-administrative-boundaries', 'nlsc-taiwan-cadastral-map', 'post-tw', 'nlsc-taiwan', 'tgos-taiwan', 'osm-taiwan', 'g0v-taiwan'],
   TJ: ['tajik-post', 'osm-tajikistan', 'openaerialmap-tajikistan', 'hot-osm-central-asia'],
   TM: ['turkmenpost', 'osm-turkmenistan', 'hot-osm-central-asia'],
   UZ: ['pochta-uz', 'uzbekistan-open-data-geo', 'uzbekistan-state-urban-cadastre', 'osm-uzbekistan'],
