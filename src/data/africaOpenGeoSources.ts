@@ -55,7 +55,11 @@ export type AfricaOpenGeoSourceId =
   | 'salpost-sierra-leone'
   | 'algerie-poste'
   | 'libya-post-services'
+  | 'upu-morocco-postcode-manual'
   | 'poste-maroc-codepostal'
+  | 'morocco-open-data-postal'
+  | 'morocco-open-data-license'
+  | 'ancfcc-morocco-cartography'
   | 'mauripost'
   | 'la-poste-tunisienne-codes'
   | 'sudapost'
@@ -621,14 +625,54 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     usage: 'reference',
     notes: 'Official Algeria Post postal-office and postcode lookup by wilaya for code and locality confirmation.',
   },
+  'upu-morocco-postcode-manual': {
+    id: 'upu-morocco-postcode-manual',
+    name: 'UPU Morocco postcode case study',
+    url: 'https://www.upu.int/UPU/media/upu/publications/manualAddressingAddressingAndPostcodeManualEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines five digits: routeing zone and province positions; endings 0, 1, 7 and 8 are home-delivery sectors, 2 through 6 use an agency or centre code, and 9 is a large-volume recipient. It is not an assignment table or polygon source.',
+  },
   'poste-maroc-codepostal': {
     id: 'poste-maroc-codepostal',
-    name: 'Poste Maroc postcode directory',
-    url: 'https://codepostal.ma/default.aspx',
+    name: 'Barid Al-Maghrib postcode directory',
+    url: 'https://www.codepostal.ma/search.aspx',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Poste Maroc postcode search and directory for city, district, street, and postal-code validation.',
+    license: 'Exact operator record and terms must be pinned',
+    notes: 'Official postcode search and directory; only a pinned record validates its stated code or locality, not geometry, completeness, live bulk API access or redistribution permission.',
+  },
+  'morocco-open-data-postal': {
+    id: 'morocco-open-data-postal',
+    name: 'Morocco Open Data – Poste Maroc datasets',
+    url: 'https://www.data.gov.ma/data/fr/organization/poste-maroc',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open Data Commons Open Database License (ODbL), exact resource metadata controls',
+    notes: 'Official district, locality, agency-code, agency-address and agency-coordinate resources; postcode lists state September 2018. Agency coordinates are points, not sector surfaces, and freshness plus exact resource licence must be pinned.',
+  },
+  'morocco-open-data-license': {
+    id: 'morocco-open-data-license',
+    name: 'Morocco Open Data reuse licence',
+    url: 'https://www.data.gov.ma/fr/la-licence',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'ODbL-derived portal licence',
+    notes: 'ODbL-derived attribution, licence notice, share-alike and open-access duties apply to the exact covered dataset; the policy is legal metadata, not postal assignment or geometry evidence.',
+  },
+  'ancfcc-morocco-cartography': {
+    id: 'ancfcc-morocco-cartography',
+    name: 'ANCFCC Morocco cartography and cadastre',
+    url: 'https://www.ancfcc.gov.ma/nos-m%C3%A9tiers/cartographie/produits/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact product order, permission and terms required',
+    notes: 'Official topographic, administrative, city-plan, cadastral and geodetic context; these products are not postal sectors or explicit address-building links, and catalogue visibility or payment is not public redistribution permission.',
   },
   'la-poste-tunisienne-codes': {
     id: 'la-poste-tunisienne-codes',
@@ -967,7 +1011,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   DZ: ['algerie-poste'],
   EG: ['upu-egypt-postal-addressing-2023', 'egypt-post-new-postcode-guide', 'egypt-post', 'capmas-egypt-gis', 'esa-egypt-geoportal', 'egy-list', 'datahub-postal'],
   LY: ['libya-post-services'],
-  MA: ['poste-maroc-codepostal', 'datahub-postal'],
+  MA: ['upu-morocco-postcode-manual', 'poste-maroc-codepostal', 'morocco-open-data-postal', 'morocco-open-data-license', 'ancfcc-morocco-cartography', 'datahub-postal'],
   MR: ['mauripost'],
   NG: ['nipost-postcode', 'hot-osm-west-africa'],
   SD: ['sudapost'],

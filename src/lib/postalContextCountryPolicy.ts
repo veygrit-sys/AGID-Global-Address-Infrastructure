@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -151,6 +151,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'EG',
     postalCodeFormat: 'NNNNNNN',
     fullCodeGeometrySemantics: 'postal-area-first',
+  },
+  MA: {
+    countryCode: 'MA',
+    postalCodeFormat: 'NNNNN',
+    fullCodeGeometrySemantics: 'area-or-non-area',
   },
   DK: {
     countryCode: 'DK',
@@ -452,6 +457,27 @@ export function normalizeEgyptPostalCode(value: unknown) {
   return /^\d{7}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeMoroccoPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{5}$/.test(normalized) ? normalized : null;
+}
+
+export type MoroccoPostalCodeDeliveryType =
+  | 'home_delivery_sector'
+  | 'agency_or_centre'
+  | 'large_volume_recipient';
+
+export function classifyMoroccoPostalCode(value: unknown): MoroccoPostalCodeDeliveryType | null {
+  const normalized = normalizeMoroccoPostalCode(value);
+  if (!normalized) return null;
+  const ending = normalized.at(-1)!;
+  if ('0178'.includes(ending)) return 'home_delivery_sector';
+  if ('23456'.includes(ending)) return 'agency_or_centre';
+  return 'large_volume_recipient';
+}
+
 export function normalizeDenmarkPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -628,6 +654,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'OM') return normalizeOmanPostalCode(value);
   if (normalizedCountry === 'ZA') return normalizeSouthAfricaPostalCode(value);
   if (normalizedCountry === 'EG') return normalizeEgyptPostalCode(value);
+  if (normalizedCountry === 'MA') return normalizeMoroccoPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);
   if (normalizedCountry === 'MT') return normalizeMaltaPostalCode(value);
   if (normalizedCountry === 'MC') return normalizeMonacoPostalCode(value);

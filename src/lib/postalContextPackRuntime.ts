@@ -16,7 +16,7 @@ import {
   hasDefinitivePostalContextAssertionQuality,
   postalContextAssertionAllowedForUse,
 } from './postalContextAssertionPolicy';
-import { normalizePostalContextPostalCode } from './postalContextCountryPolicy';
+import { classifyMoroccoPostalCode, normalizePostalContextPostalCode } from './postalContextCountryPolicy';
 import {
   resolvePostalContext,
   type PostalContextResolutionCandidate,
@@ -428,6 +428,8 @@ export {
   normalizeOmanPostalCode,
   normalizeSouthAfricaPostalCode,
   normalizeEgyptPostalCode,
+  normalizeMoroccoPostalCode,
+  classifyMoroccoPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,
@@ -517,6 +519,12 @@ export function validatePostalContextRuntimePack(
     }
     if (!feature.source.digest) errors.push(`geometry-source-digest-required:${feature.id}`);
     if (!feature.source.licenseId) errors.push(`geometry-source-license-required:${feature.id}`);
+    if (pack.graph.release.countryCode === 'MA'
+      && feature.role === 'postal_area'
+      && node.postalCode
+      && classifyMoroccoPostalCode(node.postalCode) !== 'home_delivery_sector') {
+      errors.push(`morocco-non-area-postcode-has-postal-area:${feature.id}:${node.postalCode}`);
+    }
   }
 
   return { valid: errors.length === 0, errors, warnings };

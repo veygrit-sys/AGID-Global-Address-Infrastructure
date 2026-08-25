@@ -39,6 +39,8 @@ import {
   normalizeOmanPostalCode,
   normalizeSouthAfricaPostalCode,
   normalizeEgyptPostalCode,
+  normalizeMoroccoPostalCode,
+  classifyMoroccoPostalCode,
   normalizeMaltaPostalCode,
   normalizeMonacoPostalCode,
   normalizeDenmarkPostalCode,
@@ -212,6 +214,21 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeEgyptPostalCode('000000'), null);
   assert.equal(normalizeEgyptPostalCode('00000000'), null);
   assert.equal(normalizePostalContextPostalCode('eg', '00 0 00 00'), '0000000');
+  assert.equal(normalizeMoroccoPostalCode('０００００'), '00000');
+  assert.equal(normalizeMoroccoPostalCode('00 000'), '00000');
+  assert.equal(normalizeMoroccoPostalCode('MA-00000'), null);
+  assert.equal(normalizeMoroccoPostalCode('000-00'), null);
+  assert.equal(normalizeMoroccoPostalCode('0000'), null);
+  assert.equal(normalizeMoroccoPostalCode('000000'), null);
+  assert.equal(classifyMoroccoPostalCode('00000'), 'home_delivery_sector');
+  assert.equal(classifyMoroccoPostalCode('00001'), 'home_delivery_sector');
+  assert.equal(classifyMoroccoPostalCode('00002'), 'agency_or_centre');
+  assert.equal(classifyMoroccoPostalCode('00006'), 'agency_or_centre');
+  assert.equal(classifyMoroccoPostalCode('00007'), 'home_delivery_sector');
+  assert.equal(classifyMoroccoPostalCode('00008'), 'home_delivery_sector');
+  assert.equal(classifyMoroccoPostalCode('00009'), 'large_volume_recipient');
+  assert.equal(classifyMoroccoPostalCode('MA-00000'), null);
+  assert.equal(normalizePostalContextPostalCode('ma', '00 000'), '00000');
   assert.equal(normalizePostalContextPostalCode('ro', '000 000'), '000000');
   assert.equal(normalizeDenmarkPostalCode('\uFF10\uFF10\uFF11\uFF12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('00 12'), '0012');
@@ -553,6 +570,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('EG'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.EG.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.EG.postalCodeFormat, 'NNNNNNN');
+  assert.equal(isPostalContextCountryCode('MA'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MA.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MA.postalCodeFormat, 'NNNNN');
   assert.equal(isPostalContextCountryCode('GE'), true);
   assert.equal(
     POSTAL_CONTEXT_COUNTRY_POLICIES.GE.fullCodeGeometrySemantics,

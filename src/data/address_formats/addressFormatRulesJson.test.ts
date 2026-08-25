@@ -1593,7 +1593,7 @@ test('North Africa address JSON files expose addressRules metadata and postal da
   assert.match(loadFormat('EG').postalCode?.source ?? '', /UPU Egypt.*Egypt Post.*CAPMAS.*Survey Authority/i);
   assert.equal(loadFormat('DZ').postalCode?.api, 'https://www.poste.dz/customer/bureaux_postaux');
   assert.equal(loadFormat('LY').postalCode?.api, 'https://libyapost.ly/en/services/');
-  assert.equal(loadFormat('MA').postalCode?.api, 'https://codepostal.ma/default.aspx');
+  assert.equal(loadFormat('MA').postalCode?.api, 'https://www.codepostal.ma/search.aspx');
   assert.equal(loadFormat('MR').postalCode?.api, 'https://www.mauripost.mr/');
   assert.equal(loadFormat('SD').postalCode?.api, 'https://sudapost.sd/wp/');
   assert.equal(loadFormat('TN').postalCode?.api, 'https://www.laposte.tn/codes.php');
