@@ -91,8 +91,8 @@ english:
 postalCode:
   format: NNNN
   regex: ^\d{4}$
-  api: https://pcf.postafind.co.za/search
-  source: South African Post Office / PostaFind / GeoNames postal data
+  api: https://www.postoffice.co.za/
+  source: UPU South Africa Postal Addressing System / South African Post Office / NGI / Stats SA / SASDI
 addressRules:
   languages:
     - code: en
@@ -128,13 +128,25 @@ addressRules:
     - country
   regionalHierarchy:
     - province
-    - municipality
+    - districtOrMetropolitanMunicipality
+    - localMunicipality
+    - deliveryLocalityOrPostOffice
+    - fourDigitPostcode
+    - deliveryTypePhysicalRuralPoBoxOrPrivateBag
+    - officialPostalAreaPointOrNoCanonicalGeometry
+    - explicitCivicAddressPoint
+    - explicitAddressLinkedBuildingFeature
+    - exactRightsClearedBuilding
   postalCode:
-    label: 4 digits required
+    label: 4 digits; distinguish physical, rural, PO Box and Private Bag delivery. A code, locality or office point is not automatically a polygon; exact building output requires an explicit authoritative address-building relation.
     required: true
     usage: required
   openSourceIds:
+    - upu-south-africa-postal-addressing
     - sapo-postcodes
+    - stats-sa-geography
+    - sasdi-south-africa
+    - nspdr-south-africa-terms
     - postafind-za
     - ngi-south-africa
     - hot-osm-east-southern-africa
@@ -188,7 +200,11 @@ addressRules:
     - libpostal parser when configured server-side
     - local fallback aliases only when open-source lookups are unavailable
 openSourceIds:
+  - upu-south-africa-postal-addressing
   - sapo-postcodes
+  - stats-sa-geography
+  - sasdi-south-africa
+  - nspdr-south-africa-terms
   - postafind-za
   - ngi-south-africa
   - hot-osm-east-southern-africa

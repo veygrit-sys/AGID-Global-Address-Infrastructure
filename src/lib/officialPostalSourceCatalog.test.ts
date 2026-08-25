@@ -895,6 +895,19 @@ test('Saudi catalog separates National Address semantics, API identifiers, geosp
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
+  assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');
+  assert.equal(sources.get('upu-south-africa-postal-addressing')?.validationReadiness, 'metadata-only');
+  assert.match(sources.get('upu-south-africa-postal-addressing')?.notes.join(' ') ?? '', /physical.*rural.*postal-delivery.*not.*polygon/i);
+  assert.equal(sources.get('sapo-postcodes')?.trustTier, 'authoritative');
+  assert.equal(sources.get('postafind-za')?.authority, 'commercial-or-restricted');
+  assert.equal(sources.get('ngi-south-africa')?.depth, 'geo-only');
+  assert.equal(sources.get('stats-sa-geography')?.depth, 'geo-only');
+  assert.equal(sources.get('sasdi-south-africa')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('nspdr-south-africa-terms')?.sourceRole, 'legal-framework-only');
+});
+
 test('Oman catalog separates routing-code semantics, office points, website terms, civic numbering, administration, and geodetic governance', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('OM').map(source => [source.id, source]));
   assert.equal(sources.get('upu-oman-postal-addressing')?.authority, 'postal-operator');

@@ -60,6 +60,10 @@ export type AfricaOpenGeoSourceId =
   | 'la-poste-tunisienne-codes'
   | 'sudapost'
   | 'correios-mocambique-codigos-postais'
+  | 'upu-south-africa-postal-addressing'
+  | 'stats-sa-geography'
+  | 'sasdi-south-africa'
+  | 'nspdr-south-africa-terms'
   | 'ngi-south-africa'
   | 'datahub-postal'
   | 'egy-list'
@@ -666,14 +670,51 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     usage: 'reference',
     notes: 'Official Correios de Mocambique postal-code directory and customer guidance for postcode and locality validation.',
   },
-  'ngi-south-africa': {
-    id: 'ngi-south-africa',
-    name: 'National Geospatial Information South Africa',
-    url: 'https://www.ngi.gov.za/',
+  'upu-south-africa-postal-addressing': {
+    id: 'upu-south-africa-postal-addressing',
+    name: 'UPU South Africa Postal Addressing System',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/zafEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines four digits and separates physical, rural, PO Box and Private Bag delivery semantics; it is not a current code table or polygon source.',
+  },
+  'stats-sa-geography': {
+    id: 'stats-sa-geography',
+    name: 'Statistics South Africa Geography Metadata',
+    url: 'https://apps.statssa.gov.za/census01/html/Geography_Metadata.htm',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'South African national mapping authority reference for geodetic control, aerial imagery, topographic mapping, and SDI context.',
+    license: 'Exact release terms must be pinned',
+    notes: 'Official statistical and administrative geography; exact edition and licence are required and boundaries are not postal areas.',
+  },
+  'sasdi-south-africa': {
+    id: 'sasdi-south-africa',
+    name: 'South African Spatial Data Infrastructure Act',
+    url: 'https://www.gov.za/documents/acts/spatial-data-infrastructure-act-54-2003-04-feb-2004',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official spatial-data governance and metadata framework, not a dataset licence, postal assignment, or feature source.',
+  },
+  'nspdr-south-africa-terms': {
+    id: 'nspdr-south-africa-terms',
+    name: 'National Spatial Planning Data Repository access terms',
+    url: 'https://nspdr.dlrrd.gov.za/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Portal access and disclaimer boundary; visibility or credentials do not grant public redistribution of postal, address, or building features.',
+  },
+  'ngi-south-africa': {
+    id: 'ngi-south-africa',
+    name: 'Chief Directorate: National Geospatial Information',
+    url: 'https://ngi.dlrrd.gov.za/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'National mapping, geodetic control, aerial imagery and topographic authority; the authority page is not postal geometry or an explicit address-building link.',
   },
   'datahub-postal': {
     id: 'datahub-postal',
@@ -701,7 +742,8 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official South African postal-code lookup reference for suburb, street, PO Box, city, and province validation.',
+    license: 'Exact SAPO product permission and terms must be pinned',
+    notes: 'Official postcode and delivery type validation reference; an exact product licence is required, and search output is not geometry or bulk reuse permission.',
   },
   'postafind-za': {
     id: 'postafind-za',
@@ -709,8 +751,9 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     url: 'https://pcf.postafind.co.za/search',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'fallback',
-    notes: 'Public South African postal-code search useful as a fallback/reference alongside SAPO and open geodata.',
+    usage: 'validation',
+    license: 'Terms and provenance must be pinned',
+    notes: 'Third-party discrepancy and fallback search; it is not silently promoted to SAPO assignment authority or bulk redistribution permission.',
   },
   'british-overseas-postal-reference': {
     id: 'british-overseas-postal-reference',
@@ -907,7 +950,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SC: ['seychelles-post-po-box-directory', 'rcmrd-gmes-africa-geoportal'],
   SZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ZA: ['sapo-postcodes', 'postafind-za', 'ngi-south-africa', 'hot-osm-east-southern-africa'],
+  ZA: ['upu-south-africa-postal-addressing', 'sapo-postcodes', 'postafind-za', 'ngi-south-africa', 'stats-sa-geography', 'sasdi-south-africa', 'nspdr-south-africa-terms', 'hot-osm-east-southern-africa'],
 };
 
 export function getAfricaOpenSourceIds(countryCode: string): AfricaOpenGeoSourceId[] {
