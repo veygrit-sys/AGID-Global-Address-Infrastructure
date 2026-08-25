@@ -422,6 +422,55 @@ test('separates Slovenia normal, special, service-area, postal-district, address
   assert.equal(specialOnly.tier, 'weak');
 });
 
+test('separates Serbia postcode, PAK, API, open address, building, parcel, administration, and territory authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('RS');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('posta-srbije-post-office-list')?.authority, 'postal-operator');
+  assert.equal(byId.get('posta-srbije-post-office-list')?.trustTier, 'authoritative');
+  assert.match(byId.get('posta-srbije-post-office-list')?.notes.join(' ') ?? '', /five-digit.*post-office.*not.*perimeter.*delivery guarantee.*terms.*digest/i);
+  assert.equal(byId.get('posta-srbije-pak-definition')?.depth, 'street');
+  assert.equal(byId.get('posta-srbije-pak-definition')?.validationReadiness, 'metadata-only');
+  assert.match(byId.get('posta-srbije-pak-definition')?.notes.join(' ') ?? '', /six-digit PAK.*part of a street.*side.*house-number range.*not.*five-digit.*polygon.*building.*resident/i);
+  assert.equal(byId.get('posta-srbije-pak-lookup')?.availability, 'web-search');
+  assert.match(byId.get('posta-srbije-pak-lookup')?.notes.join(' ') ?? '', /street.*house number.*five-digit postcode.*destination post office.*six-digit PAK.*not.*bulk.*geometry/i);
+  assert.equal(byId.get('posta-srbije-wsp-address-api')?.availability, 'auth-required-api');
+  assert.equal(byId.get('posta-srbije-wsp-address-api')?.requiresCredential, true);
+  assert.match(byId.get('posta-srbije-wsp-address-api')?.notes.join(' ') ?? '', /registered-user.*postcode.*PAK.*documentation is not authorization.*credentials.*private.*not a postal polygon/i);
+  assert.equal(byId.get('rgz-serbia-address-register-open-data')?.availability, 'bulk-open-data');
+  assert.equal(byId.get('rgz-serbia-address-register-open-data')?.depth, 'address');
+  assert.match(byId.get('rgz-serbia-address-register-open-data')?.notes.join(' ') ?? '', /weekly.*CSV.*GPKG.*Serbian Open Data License.*unique address code.*house-number point.*source.*download date.*not.*building footprint.*PAK/i);
+  assert.equal(byId.get('rgz-serbia-spatial-unit-register')?.depth, 'geo-only');
+  assert.match(byId.get('rgz-serbia-spatial-unit-register')?.notes.join(' ') ?? '', /administrative.*coverage.*territorial vintage.*do not create postcode.*PAK.*sovereignty/i);
+  assert.equal(byId.get('rgz-serbia-geosrbija-buildings')?.depth, 'building');
+  assert.match(byId.get('rgz-serbia-geosrbija-buildings')?.notes.join(' ') ?? '', /portal visibility is not.*licence.*address-building relation.*containment.*candidate-only/i);
+  assert.equal(byId.get('rgz-serbia-real-estate-cadastre')?.depth, 'geo-only');
+  assert.match(byId.get('rgz-serbia-real-estate-cadastre')?.notes.join(' ') ?? '', /parcel is not a building.*address.*postcode.*PAK.*owner.*title.*value/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'RS',
+    source: 'Pošta Srbije Post Office List',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const query = classifyPostalSourceTrust({
+    countryCode: 'RS',
+    source: 'Pošta Srbije Find PAK',
+  });
+  assert.equal(query.strength, 'strong');
+  assert.equal(query.tier, 'authoritative');
+  const semanticOnly = classifyPostalSourceTrust({
+    countryCode: 'RS',
+    source: 'Pošta Srbije Postal Address Code (PAK)',
+  });
+  assert.equal(semanticOnly.strength, 'weak');
+  assert.equal(semanticOnly.tier, 'weak');
+  const datahubOnly = classifyPostalSourceTrust({
+    countryCode: 'RS',
+    source: 'DataHub postal-codes-rs',
+  });
+  assert.equal(datahubOnly.strength, 'weak');
+  assert.equal(datahubOnly.tier, 'weak');
+});
+
 test('separates Cyprus postal, DLS, statistical-sector, and legal-context authority', () => {
   const sources = getOfficialPostalSourcesForCountry('CY');
   const byId = new Map(sources.map(source => [source.id, source]));

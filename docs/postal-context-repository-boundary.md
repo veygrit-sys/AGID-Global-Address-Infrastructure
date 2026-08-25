@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-rs
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -735,6 +735,43 @@ transform, schema and digest. The AGID repository keeps only contracts and
 small synthetic fixtures; production records and heavy geometry belong in the
 country release store.
 
+
+### `agid-postal-rs`
+
+The Serbia repository owns pinned Pošta Srbije five-digit destination-office
+receipts, six-digit PAK semantics and query receipts, approved WSP address
+verification receipts, RGZ open-address artifacts, separately licensed
+building relationships, synthetic fixtures and release validation. Five-digit
+syntax and an office point do not prove a current assignment, service perimeter
+or universal deliverability.
+
+Pošta Srbije defines PAK as a routing code for a part of a street, including
+street side and house-number range. That makes PAK stronger than a locality
+label but does not make it a polygon, exact building, household, resident or
+replacement for the five-digit destination post office. Public lookup maps and
+WSP responses remain query or API evidence; neither grants bulk geometry rights.
+
+No nationwide operator-authored postcode or PAK polygon is assumed. A surface
+or route built from rights-cleared RGZ house-number points and pinned operator
+assignments is explicitly `derived`, records membership, exclusions, method,
+uncertainty, validation and validity, and leaves sparse or ambiguous areas as
+coverage gaps. Nearest-office, street buffers, administrative boundaries and
+Voronoi cells never become official postal geometry.
+
+RGZ Address Register CSV/GPKG artifacts may be reused under the Serbian Open
+Data License with the required RGZ source, download date, download URL and
+change/redesign notice. A unique address code and house-number point establish
+address identity, not a building footprint or postcode/PAK. Exact building
+output requires a source-defined relation, common authoritative identifier or
+reviewed crosswalk to a separately licensed building collection. Parcels and
+object-part references remain candidate or validation evidence only.
+
+Every administrative, cadastral and building artifact pins its own access,
+licence, public fields, schema, source CRS, transform, coverage, exclusions and
+territorial vintage. Source coverage never determines sovereignty; `RS` and
+`XK` records are not silently merged. Owners, rightsholders, residents,
+occupants, title/value records, contacts, credentials and shipment data never
+enter public artifacts.
 
 一方、PCG schema、共通ETL、API型を国ごとにcopyしてはならない。
 

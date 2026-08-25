@@ -272,6 +272,14 @@ export type EuropeOpenGeoSourceId =
   | 'russia-open-data-geo'
   | 'geosrbija'
   | 'rgz-serbia'
+  | 'posta-srbije-post-office-list'
+  | 'posta-srbije-pak-definition'
+  | 'posta-srbije-pak-lookup'
+  | 'posta-srbije-wsp-address-api'
+  | 'rgz-serbia-address-register-open-data'
+  | 'rgz-serbia-spatial-unit-register'
+  | 'rgz-serbia-geosrbija-buildings'
+  | 'rgz-serbia-real-estate-cadastre'
   | 'bosnia-geoportal'
   | 'bosnia-cadastre-reference'
   | 'geoportal-montenegro'
@@ -2835,6 +2843,79 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Serbian cadastre and geodetic authority reference for address and parcel validation.',
   },
+  'posta-srbije-post-office-list': {
+    id: 'posta-srbije-post-office-list',
+    name: 'Pošta Srbije Post Office List',
+    url: 'https://www.posta.rs/DocumentViewer.aspx?Dokument=spisak-postatag-eng.pdf&IdDokument=2624',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit post-office list; an office point or address is not its postcode service perimeter, and exact terms and redistribution rights must be pinned.',
+  },
+  'posta-srbije-pak-definition': {
+    id: 'posta-srbije-pak-definition',
+    name: 'Pošta Srbije Postal Address Code (PAK)',
+    url: 'https://www.posta.rs/lat/stanovnistvo/usluga.aspx?usluga=postanske-usluge/postanski-adresni-kod-pak',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official six-digit PAK identifies a part of a street, including side and house-number range; it is route or address-range evidence, not automatically a polygon, building, household, or five-digit postcode.',
+  },
+  'posta-srbije-pak-lookup': {
+    id: 'posta-srbije-pak-lookup',
+    name: 'Pošta Srbije Find PAK',
+    url: 'https://www.posta.rs/lat/alati/pronadjite-pak.aspx',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official query returns street, house number/subnumber, populated place, five-digit postcode, destination office and PAK; its map is a query reference, not a bulk geometry or extraction licence.',
+  },
+  'posta-srbije-wsp-address-api': {
+    id: 'posta-srbije-wsp-address-api',
+    name: 'Pošta Srbije WSP Address Verification API',
+    url: 'https://www.posta.rs/wsp-help/uvod/uvod.aspx',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official registered-user API can return current postcode and PAK from address inputs; credentials, contacts and shipment payloads are never public-pack data, and documentation is not authorization.',
+  },
+  'rgz-serbia-address-register-open-data': {
+    id: 'rgz-serbia-address-register-open-data',
+    name: 'RGZ Serbia Address Register Open Data',
+    url: 'https://data.gov.rs/sr/datasets/adresni-registar/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Serbian Open Data License 1.0',
+    notes: 'Official street and house-number CSV/GPKG include unique address code, administrative and cadastral references, and house-number point geometry. A point or parcel reference is not a building footprint or postal assignment.',
+  },
+  'rgz-serbia-spatial-unit-register': {
+    id: 'rgz-serbia-spatial-unit-register',
+    name: 'RGZ Serbia Spatial Unit Register',
+    url: 'https://www.rgz.gov.rs/%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D0%B0%D1%80-%D0%BF%D1%80%D0%BE%D1%81%D1%82%D0%BE%D1%80%D0%BD%D0%B8%D1%85-%D1%98%D0%B5%D0%B4%D0%B8%D0%BD%D0%B8%D1%86%D0%B0',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official administrative and statistical geometry requires layer-specific access, licence, coverage, exclusions and territorial vintage; it is not postal or PAK authority and never determines sovereignty.',
+  },
+  'rgz-serbia-geosrbija-buildings': {
+    id: 'rgz-serbia-geosrbija-buildings',
+    name: 'RGZ GeoSrbija Buildings',
+    url: 'https://www.rgz.gov.rs/geo-srbija',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official portal building data needs a dataset-specific licence and an explicit address-building relation or reviewed authoritative crosswalk; containment, parcel overlap and proximity remain candidate evidence.',
+  },
+  'rgz-serbia-real-estate-cadastre': {
+    id: 'rgz-serbia-real-estate-cadastre',
+    name: 'RGZ Serbia Real Estate Cadastre',
+    url: 'https://www.rgz.gov.rs/services-of-real-estate-cadastre',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official cadastral validation context is dataset- and fee-specific. A parcel is not a building, address, postcode or PAK area, and owner, rightsholder, resident, title, value and restriction records stay excluded.',
+  },
   'bosnia-geoportal': {
     id: 'bosnia-geoportal',
     name: 'Bosnia and Herzegovina Geoportal Reference',
@@ -3369,7 +3450,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   MD: ['scrape4u-postal-codes', 'geoportal-moldova', 'moldova-open-data'],
   BY: ['scrape4u-postal-codes', 'belarus-nca-geoportal'],
   RU: ['datahub-postal', 'rosreestr-nspd', 'russia-open-data-geo'],
-  RS: ['datahub-postal', 'geosrbija', 'rgz-serbia'],
+  RS: ['datahub-postal', 'geosrbija', 'rgz-serbia', 'posta-srbije-post-office-list', 'posta-srbije-pak-definition', 'posta-srbije-pak-lookup', 'posta-srbije-wsp-address-api', 'rgz-serbia-address-register-open-data', 'rgz-serbia-spatial-unit-register', 'rgz-serbia-geosrbija-buildings', 'rgz-serbia-real-estate-cadastre'],
   BA: ['datahub-postal', 'bosnia-geoportal', 'bosnia-cadastre-reference'],
   ME: ['eurostat-gisco-postcodes', 'geoportal-montenegro', 'montenegro-cadastre'],
   XK: ['spotzi-postal-codes', 'kosovo-geoportal', 'kosovo-cadastre'],

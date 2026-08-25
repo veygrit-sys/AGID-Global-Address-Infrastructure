@@ -961,6 +961,30 @@ test('Slovenia address metadata separates postal districts, address centroids, b
 });
 
 test('Central, Eastern, and Balkan Europe metadata exposes national geospatial sources', () => {
+test('Serbia address metadata separates postcode, PAK, house-number point, building, and territorial evidence', () => {
+  const format = loadFormat('RS');
+  const rules = loadRules('RS');
+
+  assert.equal(format.postalCode?.api, 'https://www.posta.rs/lat/alati/pronadjite-pak.aspx');
+  assert.match(format.postalCode?.source ?? '', /Pošta Srbije.*RGZ Adresni registar/i);
+  assert.match(
+    rules.postalCode?.label ?? '',
+    /5 digits.*six-digit PAK.*routing.*house-number point.*building.*territorial coverage.*separate/i,
+  );
+  assert.deepEqual(rules.regionalHierarchy, [
+    'autonomousProvinceOrAdministrativeDistrict',
+    'localGovernmentUnit',
+    'cityMunicipality',
+    'populatedPlace',
+    'street',
+    'houseNumberAndSubnumber',
+    'uniqueAddressCode',
+    'postalAddressCodePak',
+    'destinationPostOffice',
+    'explicitCadastralBuilding',
+  ]);
+});
+
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     PL: ['geoportal-gov-pl', 'gus-teryt-poland'],
     CZ: ['cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
@@ -996,7 +1020,14 @@ test('Central, Eastern, and Balkan Europe metadata exposes national geospatial s
     MD: ['geoportal-moldova', 'moldova-open-data'],
     BY: ['belarus-nca-geoportal'],
     RU: ['rosreestr-nspd', 'russia-open-data-geo'],
-    RS: ['geosrbija', 'rgz-serbia'],
+    RS: [
+      'geosrbija', 'rgz-serbia',
+      'posta-srbije-post-office-list', 'posta-srbije-pak-definition',
+      'posta-srbije-pak-lookup', 'posta-srbije-wsp-address-api',
+      'rgz-serbia-address-register-open-data',
+      'rgz-serbia-spatial-unit-register', 'rgz-serbia-geosrbija-buildings',
+      'rgz-serbia-real-estate-cadastre',
+    ],
     BA: ['bosnia-geoportal', 'bosnia-cadastre-reference'],
     ME: ['geoportal-montenegro', 'montenegro-cadastre'],
     XK: ['kosovo-geoportal', 'kosovo-cadastre'],
