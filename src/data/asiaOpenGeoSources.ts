@@ -109,7 +109,15 @@ export type AsiaOpenGeoSourceId =
   | 'vietnam-postcode'
   | 'pos-malaysia'
   | 'onemap-sg'
+  | 'indonesia-post-law-2009'
+  | 'indonesia-post-regulation-2025'
   | 'pos-indonesia'
+  | 'upu-indonesia-addressing'
+  | 'sdi-indonesia-village-postcode'
+  | 'kemendagri-indonesia-admin-codes'
+  | 'bps-indonesia-statistical-area-codes'
+  | 'big-indonesia-village-boundaries'
+  | 'big-indonesia-rbi-buildings'
   | 'phlpost'
   | 'post-gov-bn'
   | 'bhutan-post'
@@ -1252,14 +1260,86 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'primary',
     notes: 'Authoritative Singapore address and postal search; current API access requires a registered bearer token.',
   },
+  'indonesia-post-law-2009': {
+    id: 'indonesia-post-law-2009',
+    name: 'Indonesia Postal Law 38/2009',
+    url: 'https://jdih.komdigi.go.id/produk_hukum/view/id/155/t/undangundang%20nomor%2038%20tahun%202009%20tanggal%2014%20oktober%202009',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official definition permits numbers, letters, or their combination and uses kode pos to identify an address or area; the law is not a current directory, polygon, or building relation.',
+  },
+  'indonesia-post-regulation-2025': {
+    id: 'indonesia-post-regulation-2025',
+    name: 'Indonesia Ministerial Regulation 8/2025 – postal code system',
+    url: 'https://jdih.komdigi.go.id/produk_hukum/view/id/967/t/peraturan%2Bmenteri%2Bkomunikasi%2Bdan%2Bdigital%2Bnomor%2B8%2Btahun%2B2025',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official 2025 scheme permits numeric, alphabetic, or combined codes down to the smallest area; the regulation is not an assignment schedule, postal geometry, or proof that future codes remain five digits.',
+  },
   'pos-indonesia': {
     id: 'pos-indonesia',
-    name: 'Pos Indonesia Postcode Search',
-    url: 'https://www.posindonesia.co.id/id',
+    name: 'Pos Indonesia Kodepos Search',
+    url: 'https://kodepos.posindonesia.co.id/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Indonesia postcode lookup.',
+    notes: 'Official current postcode and locality lookup at capture time; search access is not a documented bulk API, complete history, postal geometry, delivery entitlement, or redistribution grant.',
+  },
+  'upu-indonesia-addressing': {
+    id: 'upu-indonesia-addressing',
+    name: 'UPU Indonesia Addressing Sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/idnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official addressing reference shows five digits after the locality and province, city or regency, district, village or urban village and RT/RW context; it is not a current assignment database or geometry.',
+  },
+  'sdi-indonesia-village-postcode': {
+    id: 'sdi-indonesia-village-postcode',
+    name: 'Satu Data village and urban-village postcode crosswalk',
+    url: 'https://data.go.id/dataset/dataset/kode-pos-desa-kelurahan-di-indonesia',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Provincial dataset crosswalks postcode with BPS and Kemendagri identifiers and is marked as still fulfilling Satu Data principles; it is not a national Pos Indonesia directory or postal geometry.',
+  },
+  'kemendagri-indonesia-admin-codes': {
+    id: 'kemendagri-indonesia-admin-codes',
+    name: 'Kemendagri administrative area codes 2025',
+    url: 'https://ditjenbinaadwil.kemendagri.go.id/peraturan/keputusan-menteri-dalam-negeri-300.2.2-2430-2025-228',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official province, city or regency, district, village and island identifiers for a pinned edition; administrative codes require an explicit crosswalk and are not postcodes or postal geometry.',
+  },
+  'bps-indonesia-statistical-area-codes': {
+    id: 'bps-indonesia-statistical-area-codes',
+    name: 'BPS statistical work-area codes',
+    url: 'https://ppid.bps.go.id/app/konten/1202/Unduh.html',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official statistical-area and village identifiers for pinned regulations or master editions; BPS codes need explicit crosswalks and are not Pos Indonesia assignments or geometry.',
+  },
+  'big-indonesia-village-boundaries': {
+    id: 'big-indonesia-village-boundaries',
+    name: 'BIG village and urban-village administrative boundaries',
+    url: 'https://tanahair.indonesia.go.id/sdi/dataset/administrasi_ar_desakel',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'BIG metadata warns that non-definitive boundaries are not an official reference and documents equal-distance gap allocation in an edition; administrative geometry is not postal geometry and exact rights must be pinned.',
+  },
+  'big-indonesia-rbi-buildings': {
+    id: 'big-indonesia-rbi-buildings',
+    name: 'BIG RBI building and public-facility layers',
+    url: 'https://tanahair.indonesia.go.id/sdi/id/organization/badan-informasi-geospasial',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Regional, scale- and edition-specific RBI building or public-facility features require an exact layer, licence, CRS and digest plus an explicit civic-address relation; proximity is not an address link.',
   },
   phlpost: {
     id: 'phlpost',
@@ -2276,7 +2356,17 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   CN: ['china-postal-code'],
   GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],
   HK: ['landsd-hk', 'csdi-hk', 'osm-hong-kong'],
-  ID: ['pos-indonesia'],
+  ID: [
+    'indonesia-post-law-2009',
+    'indonesia-post-regulation-2025',
+    'pos-indonesia',
+    'upu-indonesia-addressing',
+    'sdi-indonesia-village-postcode',
+    'kemendagri-indonesia-admin-codes',
+    'bps-indonesia-statistical-area-codes',
+    'big-indonesia-village-boundaries',
+    'big-indonesia-rbi-buildings',
+  ],
   AE: ['makani-dubai-open-data', 'osm-uae'],
   BH: ['bahrain-open-data', 'osm-bahrain'],
   IL: ['israel-post', 'govmap-israel', 'data-gov-il', 'osm-israel'],
