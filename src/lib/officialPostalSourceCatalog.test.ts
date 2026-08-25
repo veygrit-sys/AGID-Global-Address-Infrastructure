@@ -456,6 +456,48 @@ test('separates Norway assignment, area, address, unit, building, and territory 
   assert.equal(fkb.strength, 'strong');
   assert.equal(fkb.tier, 'official');
 });
+test('separates Hungary operator assignment, KCR address, derived geometry, building, and administrative authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('HU');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('magyar-posta-partner-extra-postcodes')?.authority, 'postal-operator');
+  assert.equal(byId.get('magyar-posta-partner-extra-postcodes')?.availability, 'bulk-open-data');
+  assert.match(byId.get('magyar-posta-partner-extra-postcodes')?.notes.join(' ') ?? '', /four-digit.*XML.*application background.*terms.*no official postcode polygon.*delivery guarantee/i);
+  assert.equal(byId.get('magyar-posta-addressing-database')?.depth, 'address');
+  assert.match(byId.get('magyar-posta-addressing-database')?.notes.join(' ') ?? '', /post-office-box.*dedicated.*not.*bulk address.*polygon.*building-footprint/i);
+  assert.equal(byId.get('hungary-central-address-register-kcr')?.availability, 'licensed-bulk-data');
+  assert.equal(byId.get('hungary-central-address-register-kcr')?.requiresCredential, true);
+  assert.match(byId.get('hungary-central-address-register-kcr')?.notes.join(' ') ?? '', /unique address ID.*unit.*coordinate.*cadastral.*statutory.*not authorize.*public mirror.*not a footprint.*resident/i);
+  assert.equal(byId.get('lechner-hungary-eha')?.depth, 'address');
+  assert.match(byId.get('lechner-hungary-eha')?.notes.join(' ') ?? '', /inside the parcel.*entrance.*geometric centre.*not automatically.*building footprint/i);
+  assert.equal(byId.get('lechner-hungary-inspire-buildings')?.depth, 'building');
+  assert.match(byId.get('lechner-hungary-inspire-buildings')?.notes.join(' ') ?? '', /exact feed.*coverage.*licence.*sample.*not nationwide.*nearest.*not.*exact address/i);
+  assert.equal(byId.get('lechner-hungary-nta-buildings')?.availability, 'auth-required-api');
+  assert.equal(byId.get('lechner-hungary-nta-buildings')?.requiresCredential, true);
+  assert.match(byId.get('lechner-hungary-nta-buildings')?.notes.join(' ') ?? '', /generalized WMTS.*orthophoto.*tile.*not.*editable vector.*exact footprint.*not unrestricted redistribution/i);
+  assert.equal(byId.get('hungary-land-registry-cadastral-map')?.availability, 'commercial-or-restricted');
+  assert.match(byId.get('hungary-land-registry-cadastral-map')?.notes.join(' ') ?? '', /parcel.*building.*house number.*not a building.*paid.*not.*public bulk.*owner.*title.*rightsholder/i);
+  assert.equal(byId.get('ksh-hungary-administrative-units')?.depth, 'geo-only');
+  assert.match(byId.get('ksh-hungary-administrative-units')?.notes.join(' ') ?? '', /region.*county.*district.*municipality.*context only.*does not create postcode.*delivery.*building.*sovereignty/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'HU',
+    source: 'Magyar Posta Partner Extra Postcodes',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const kcr = classifyPostalSourceTrust({
+    countryCode: 'HU',
+    source: 'Hungary KCR Central Address Register',
+  });
+  assert.equal(kcr.strength, 'strong');
+  assert.equal(kcr.tier, 'authoritative');
+  const nta = classifyPostalSourceTrust({
+    countryCode: 'HU',
+    source: 'Lechner NTA Buildings',
+  });
+  assert.equal(nta.strength, 'strong');
+  assert.equal(nta.tier, 'official');
+});
+
 
 test('separates Serbia postcode, PAK, API, open address, building, parcel, administration, and territory authority', () => {
   const sources = getOfficialPostalSourcesForCountry('RS');

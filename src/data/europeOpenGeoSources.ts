@@ -235,6 +235,14 @@ export type EuropeOpenGeoSourceId =
   | 'dgu-croatia-geoportal'
   | 'croatia-cadastre'
   | 'posta-hu'
+  | 'magyar-posta-partner-extra-postcodes'
+  | 'magyar-posta-addressing-database'
+  | 'hungary-central-address-register-kcr'
+  | 'lechner-hungary-eha'
+  | 'lechner-hungary-inspire-buildings'
+  | 'lechner-hungary-nta-buildings'
+  | 'hungary-land-registry-cadastral-map'
+  | 'ksh-hungary-administrative-units'
   | 'lechner-hungary-geodata'
   | 'hungary-public-road-data'
   | 'poczta-polska'
@@ -2473,6 +2481,84 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Hungarian national geospatial and planning data reference for settlements and administrative geography.',
   },
+  'magyar-posta-partner-extra-postcodes': {
+    id: 'magyar-posta-partner-extra-postcodes',
+    name: 'Magyar Posta Partner Extra postcode master data',
+    url: 'https://www.posta.hu/partnerextra',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public Partner Extra terms; exact terms and release must be pinned',
+    notes: 'Official four-digit postcode and settlement XML intended for use as an application background database. Pin the exact file, release time, terms, schema and digest; it provides assignment evidence but no postcode polygon authority.',
+  },
+  'magyar-posta-addressing-database': {
+    id: 'magyar-posta-addressing-database',
+    name: 'Magyar Posta official addressing rules and validation',
+    url: 'https://www.posta.hu/ugyfelszolgalat/helyes_cimzes',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official addressing, post-office-box and dedicated or highlighted postcode semantics. The page or a validation receipt is not a public bulk address dataset, postcode polygon or building-footprint source.',
+  },
+  'hungary-central-address-register-kcr': {
+    id: 'hungary-central-address-register-kcr',
+    name: 'Hungary Central Address Register (KCR)',
+    url: 'https://kormany.hu/application/documents/a1d04d40-1689-4efd-96c7-aca55ac17219/download',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled statutory access; public redistribution not assumed',
+    notes: 'Authoritative unique address ID, postcode, public-place components, house number, building, staircase, floor, door, coordinate, cadastral identifier, object type and history. Statutory transfer to named recipients is not authority for a public mirror; personal, owner and rightsholder data remain excluded.',
+  },
+  'lechner-hungary-eha': {
+    id: 'lechner-hungary-eha',
+    name: 'Lechner Elérési Hely Adatbázis (EHA)',
+    url: 'https://lechnerkozpont.hu/cikk/teradatok-a-mindennapokban-cimadatok-tobb-mint-hazszam',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled access; exact output terms must be pinned',
+    notes: 'Official address-location geometry inside a parcel and address-to-cadastral-number relation. A point can mean an entrance or geometric centre and is not automatically a building footprint.',
+  },
+  'lechner-hungary-inspire-buildings': {
+    id: 'lechner-hungary-inspire-buildings',
+    name: 'Lechner INSPIRE Buildings download',
+    url: 'https://inspire.lechnerkozpont.hu/inspire/atom/DLS_Buildings.xml',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Per exact INSPIRE distribution metadata and product terms',
+    notes: 'Building feature candidate whose exact distribution, metadata identifier, edition, coverage, licence, schema, CRS and digest must be pinned. Sample or partial coverage is not nationwide completeness, and proximity is not an exact address link.',
+  },
+  'lechner-hungary-nta-buildings': {
+    id: 'lechner-hungary-nta-buildings',
+    name: 'Lechner National Base Map (NTA) buildings',
+    url: 'https://nta.lechnerkozpont.hu/adatretegek',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Registered NTA map-service terms; redistribution not assumed',
+    notes: 'Generalized building map layer exposed through WMTS, including cadastral and orthophoto-derived evidence. It is not an editable vector service or an exact building footprint source unless separate rights and identifiers are proven.',
+  },
+  'hungary-land-registry-cadastral-map': {
+    id: 'hungary-land-registry-cadastral-map',
+    name: 'Hungary land-registry cadastral map',
+    url: 'https://www.foldhivatal.hu/content/view/72/111/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Controlled or paid cadastral-map access; exact reuse rights required',
+    notes: 'Official parcel, mapped building or structure, street and house-number evidence. A parcel is not a building; owner, title, value and rightsholder fields are excluded from public address context.',
+  },
+  'ksh-hungary-administrative-units': {
+    id: 'ksh-hungary-administrative-units',
+    name: 'KSH Hungary administrative units',
+    url: 'https://www.ksh.hu/teruletiatlasz_kozigazgatasi_egysegek',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official region, county, district, municipality and Budapest-district context. Administrative units are not postcode areas and do not establish postal assignment, deliverability or building identity.',
+  },
   'hungary-public-road-data': {
     id: 'hungary-public-road-data',
     name: 'Hungarian Public Road Data',
@@ -3555,7 +3641,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   MK: ['datahub-postal', 'katastar-north-macedonia', 'makstat-geodata'],
   CZ: ['ceska-posta-psc', 'ceska-posta-customer-outputs', 'cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
   HR: ['croatian-post-postcode-downloads', 'dgu-croatia-spatial-unit-register', 'dgu-croatia-inspire-addresses', 'dgu-croatia-inspire-buildings', 'dgu-croatia-inspire-administrative-units', 'dgu-croatia-cadastral-parcels', 'gisco-croatia-postcode-points', 'posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
-  HU: ['posta-hu', 'lechner-hungary-geodata', 'hungary-public-road-data'],
+  HU: ['magyar-posta-partner-extra-postcodes', 'magyar-posta-addressing-database', 'hungary-central-address-register-kcr', 'lechner-hungary-eha', 'lechner-hungary-inspire-buildings', 'lechner-hungary-nta-buildings', 'hungary-land-registry-cadastral-map', 'ksh-hungary-administrative-units', 'lechner-hungary-geodata', 'hungary-public-road-data'],
   PL: ['poczta-polska', 'geoportal-gov-pl', 'gus-teryt-poland'],
   SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia', 'posta-slovenije-postcode-csv', 'posta-slovenije-special-postcodes', 'posta-slovenije-delivery-area-webgis', 'gurs-slovenia-postal-districts', 'gurs-slovenia-address-register', 'gurs-slovenia-public-features-api', 'gurs-slovenia-real-estate-cadastre-buildings', 'gurs-slovenia-spatial-unit-register', 'gurs-slovenia-cadastral-parcels'],
   SK: ['slovenska-posta-psc', 'zbgis-slovakia', 'slovakia-address-register', 'slovak-post-postcode-search', 'slovak-post-access-point-xml', 'slovakia-register-addresses-portal', 'slovakia-register-addresses-openapi', 'zbgis-slovakia-inspire-buildings', 'zbgis-slovakia-administrative-units', 'zbgis-slovakia-cadastral-parcels'],

@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-rs
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-rs
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -86,6 +86,12 @@ Norway-specific Posten Bring assignment and G/P/B/S categories, Kartverket
 Postnummerområder geometry, Matrikkelen address/unit/building-point identity,
 licensed FKB building linkage, administrative context and NO/SJ territory
 partition rules belong to `agid-postal-no`.
+Hungary-specific Magyar Posta Partner Extra assignment and special-endpoint
+semantics, derived-surface rules, KCR address and unit identity, Lechner EHA
+location and cadastral linkage, separately rights-cleared INSPIRE/NTA/cadastral
+building evidence, KSH administration, privacy and redistribution partitions
+belong to `agid-postal-hu`.
+
 
 Denmark-specific PostNord assignment, DAGI Postnummerinddeling and
 administrative history, DAR address and access-point identity, BBR building
@@ -765,6 +771,45 @@ is public. FKB-Bygning remains in a controlled rights partition because Norge
 digitalt access and private-purchase conditions do not authorize general public
 redistribution. Svalbard and Jan Mayen category codes 21/22 never silently merge
 ISO `SJ` records into the `NO` country pack.
+
+### `agid-postal-hu`
+
+The Hungary repository owns pinned Magyar Posta Partner Extra four-digit
+assignment files, separately retained addressing and special-endpoint rules,
+authorized KCR and EHA address evidence, separately rights-cleared building and
+cadastral artifacts, administrative context, synthetic fixtures and release
+validation. Partner Extra data may serve as an application background database,
+but a postcode row is not an operator-authored polygon or delivery guarantee.
+
+No nationwide Magyar Posta postcode polygon layer is assumed. Production may
+derive a noncanonical surface only from complete, rights-cleared and
+time-compatible assignment membership plus authoritative coordinates. Every
+surface retains method, members, exclusions, uncertainty, topology, coverage
+and validity. Settlement, district, county, nearest-point assignment, buffers
+and Voronoi cells never substitute for postal evidence. Post-office-box,
+dedicated or highlighted codes remain non-area routing endpoints unless an
+independent authoritative source supplies area geometry.
+
+KCR establishes address identity, allowed building/staircase/floor/door
+components, coordinates, cadastral relation, object type and history. Its
+statutory transfer rules do not grant public mirror rights. Unit-level display
+never identifies occupants, recipients, households, owners or rightsholders.
+EHA locations may represent an entrance or geometric centre inside a parcel;
+they are not automatically footprints.
+
+Exact building output requires a common authoritative identifier or reviewed
+explicit crosswalk from the KCR/EHA address to an exact rights-cleared building
+feature. INSPIRE coverage and licence are pinned per distribution, sample
+coverage is not nationwide, NTA generalized WMTS evidence is not an editable
+exact vector footprint, and a cadastral parcel is not a building. Containment,
+proximity and text similarity remain candidate evidence only.
+
+Every artifact pins provider, exact source URL, access terms, capture or
+download time, edition, coverage, schema, source CRS, reviewed transform and
+digest. The AGID repository keeps only contracts and small synthetic fixtures;
+Magyar Posta, KCR, EHA, INSPIRE, NTA, cadastral and KSH source rows and heavy
+geometry stay in a separately governed country release store.
+
 
 
 ### `agid-postal-rs`

@@ -973,7 +973,36 @@ test('Slovenia address metadata separates postal districts, address centroids, b
   ]);
 });
 
-test('Central, Eastern, and Balkan Europe metadata exposes national geospatial sources', () => {
+test('Hungary address metadata separates operator assignment, KCR unit address, and exact building evidence', () => {
+  const format = loadFormat('HU');
+  const rules = loadRules('HU');
+  const sourceIds = [
+    'magyar-posta-partner-extra-postcodes', 'magyar-posta-addressing-database',
+    'hungary-central-address-register-kcr', 'lechner-hungary-eha',
+    'lechner-hungary-inspire-buildings', 'lechner-hungary-nta-buildings',
+    'hungary-land-registry-cadastral-map', 'ksh-hungary-administrative-units',
+  ];
+
+  assert.equal(format.postalCode?.api, 'https://www.posta.hu/partnerextra');
+  assert.match(format.postalCode?.source ?? '', /Magyar Posta Partner Extra.*KCR.*EHA.*INSPIRE.*NTA.*KSH/i);
+  assert.match(rules.postalCode?.label ?? '', /4 digits.*operator assignment.*special non-area.*derived surface.*KCR.*building/i);
+  assert.deepEqual(rules.regionalHierarchy, [
+    'region',
+    'county',
+    'districtOrBudapestDistrict',
+    'municipality',
+    'postalAssignmentOrSpecialEndpoint',
+    'publicPlaceNameAndType',
+    'houseNumber',
+    'buildingAndStaircase',
+    'floorAndDoor',
+    'kcrAddressId',
+    'addressCoordinateAndCadastralId',
+    'explicitRightsClearedBuilding',
+  ]);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+
 test('Serbia address metadata separates postcode, PAK, house-number point, building, and territorial evidence', () => {
   const format = loadFormat('RS');
   const rules = loadRules('RS');
@@ -998,6 +1027,7 @@ test('Serbia address metadata separates postcode, PAK, house-number point, build
   ]);
 });
 
+test('Central, Eastern, and Balkan Europe metadata exposes national geospatial sources', () => {
   const expectedSourceIdsByCountry: Record<string, string[]> = {
     PL: ['geoportal-gov-pl', 'gus-teryt-poland'],
     CZ: ['cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
@@ -1008,7 +1038,13 @@ test('Serbia address metadata separates postcode, PAK, house-number point, build
       'zbgis-slovakia-inspire-buildings', 'zbgis-slovakia-administrative-units',
       'zbgis-slovakia-cadastral-parcels',
     ],
-    HU: ['lechner-hungary-geodata', 'hungary-public-road-data'],
+    HU: [
+      'magyar-posta-partner-extra-postcodes', 'magyar-posta-addressing-database',
+      'hungary-central-address-register-kcr', 'lechner-hungary-eha',
+      'lechner-hungary-inspire-buildings', 'lechner-hungary-nta-buildings',
+      'hungary-land-registry-cadastral-map', 'ksh-hungary-administrative-units',
+      'lechner-hungary-geodata', 'hungary-public-road-data',
+    ],
     SI: [
       'eprostor-slovenia', 'gurs-slovenia',
       'posta-slovenije-postcode-csv', 'posta-slovenije-special-postcodes',
