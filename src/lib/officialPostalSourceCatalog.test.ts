@@ -498,6 +498,44 @@ test('separates Hungary operator assignment, KCR address, derived geometry, buil
   assert.equal(nta.tier, 'official');
 });
 
+test('separates Finland operator assignment, Paavo statistics, address, building, and FI/AX authority', () => {
+  const sources = getOfficialPostalSourcesForCountry('FI');
+  const byId = new Map(sources.map(source => [source.id, source]));
+  assert.equal(byId.get('posti-finland-postal-code-services')?.authority, 'postal-operator');
+  assert.equal(byId.get('posti-finland-postal-code-services')?.availability, 'bulk-open-data');
+  assert.match(byId.get('posti-finland-postal-code-services')?.notes.join(' ') ?? '', /five-digit|valid Finnish postcodes/i);
+  assert.match(byId.get('posti-finland-postal-code-services')?.notes.join(' ') ?? '', /no map data.*not.*delivery perimeter.*canonical polygon/i);
+  assert.equal(byId.get('posti-finland-basic-address-file')?.depth, 'address');
+  assert.match(byId.get('posti-finland-basic-address-file')?.notes.join(' ') ?? '', /street.*house-number.*excludes Aland.*no map geometry.*not.*building/i);
+  assert.equal(byId.get('statistics-finland-paavo-postal-areas')?.trustTier, 'official-derived');
+  assert.match(byId.get('statistics-finland-paavo-postal-areas')?.notes.join(' ') ?? '', /annual.*CC BY 4\.0.*building-address.*year.*variant.*EPSG:3067.*may differ.*not a Posti delivery perimeter/i);
+  assert.equal(byId.get('dvv-finland-building-dwelling-register')?.availability, 'licensed-bulk-data');
+  assert.equal(byId.get('dvv-finland-building-dwelling-register')?.requiresCredential, true);
+  assert.match(byId.get('dvv-finland-building-dwelling-register')?.notes.join(' ') ?? '', /address.*dwelling.*building.*permanent-identifier.*not a public bulk mirror.*resident.*owner/i);
+  assert.equal(byId.get('syke-finland-ryhti-building-addresses')?.depth, 'building');
+  assert.match(byId.get('syke-finland-ryhti-building-addresses')?.notes.join(' ') ?? '', /permanent identifier.*source-defined relation.*transition.*2028.*detailed.*contract/i);
+  assert.equal(byId.get('nls-finland-topographic-road-addresses')?.depth, 'address');
+  assert.match(byId.get('nls-finland-topographic-road-addresses')?.notes.join(' ') ?? '', /calculated.*interpolated.*not an exact entrance.*building footprint/i);
+  assert.equal(byId.get('nls-finland-topographic-buildings')?.depth, 'building');
+  assert.match(byId.get('nls-finland-topographic-buildings')?.notes.join(' ') ?? '', /independent.*common identifier.*crosswalk.*proximity.*containment/i);
+  assert.equal(byId.get('nls-finland-municipal-division')?.depth, 'geo-only');
+  assert.match(byId.get('nls-finland-municipal-division')?.notes.join(' ') ?? '', /region.*subregion.*municipality.*context only.*never establishes postcode/i);
+  assert.equal(byId.get('aland-post-postal-services')?.authority, 'postal-operator');
+  assert.match(byId.get('aland-post-postal-services')?.notes.join(' ') ?? '', /AX.*Posti Basic Address File excludes Aland.*not expanded.*FI\/AX.*never silently merge/i);
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'FI',
+    source: 'Posti Finland Postal Code Services',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+  const paavo = classifyPostalSourceTrust({
+    countryCode: 'FI',
+    source: 'Statistics Finland Paavo Postal Code Areas',
+  });
+  assert.equal(paavo.strength, 'strong');
+  assert.equal(paavo.tier, 'official-derived');
+});
+
 
 test('separates Serbia postcode, PAK, API, open address, building, parcel, administration, and territory authority', () => {
   const sources = getOfficialPostalSourcesForCountry('RS');

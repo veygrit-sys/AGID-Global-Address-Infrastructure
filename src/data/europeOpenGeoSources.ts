@@ -110,6 +110,14 @@ export type EuropeOpenGeoSourceId =
   | 'dagi-denmark-boundaries'
   | 'geodanmark'
   | 'posti-finland-postal-code-services'
+  | 'posti-finland-basic-address-file'
+  | 'statistics-finland-paavo-postal-areas'
+  | 'dvv-finland-building-dwelling-register'
+  | 'syke-finland-ryhti-building-addresses'
+  | 'nls-finland-topographic-road-addresses'
+  | 'nls-finland-topographic-buildings'
+  | 'nls-finland-municipal-division'
+  | 'aland-post-postal-services'
   | 'avoindata-fi-postcodes'
   | 'nls-finland'
   | 'maanmittauslaitos-open-data'
@@ -1409,7 +1417,85 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Posti postal-code and basic-address files, updated daily or weekly for current Finnish address data.',
+    notes: 'Official five-digit postcode assignments retain release/effective time and terms; the file has no map data and is not a delivery perimeter or canonical polygon.',
+  },
+  'posti-finland-basic-address-file': {
+    id: 'posti-finland-basic-address-file',
+    name: 'Posti Finland Basic Address File',
+    url: 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official street, municipality and house-number-selection membership updated weekly; it excludes Aland, supplies no geometry and is not a premise or building register.',
+  },
+  'statistics-finland-paavo-postal-areas': {
+    id: 'statistics-finland-paavo-postal-areas',
+    name: 'Statistics Finland Paavo Postal Code Areas',
+    url: 'https://stat.fi/en/services/statistical-data-services/geographic-data/geographic-data-by-postal-code-area',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Annual official-derived statistical areas generalized from building-address postcodes; an address postcode may differ, and release year plus sea/coastline variant are mandatory. Paavo is not a Posti delivery perimeter or canonical postal polygon.',
+  },
+  'dvv-finland-building-dwelling-register': {
+    id: 'dvv-finland-building-dwelling-register',
+    name: 'DVV Population Information System Building and Dwelling Register',
+    url: 'https://asiakastesti.elamantapahtumat.vtj.dvv.fi/doc/en',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled statutory or contract access; field-specific output rights',
+    notes: 'Authoritative building, dwelling, address and permanent identifiers require authorized access; this is not a public bulk mirror, and resident, occupant, owner and rightsholder fields are excluded.',
+  },
+  'syke-finland-ryhti-building-addresses': {
+    id: 'syke-finland-ryhti-building-addresses',
+    name: 'SYKE Ryhti Open Building and Address Data',
+    url: 'https://ryhti.syke.fi/en/front-page/services/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Dataset-specific open terms, normally CC BY 4.0; pin exact distribution',
+    notes: 'Open completed buildings and building addresses may carry a permanent identifier and explicit relation. Municipal transition continues through 2028, and detailed building fields can require a contract, so coverage is never assumed complete.',
+  },
+  'nls-finland-topographic-road-addresses': {
+    id: 'nls-finland-topographic-road-addresses',
+    name: 'NLS Finland Topographic Road Addresses',
+    url: 'https://www.maanmittauslaitos.fi/en/maps-and-spatial-data/datasets-and-interfaces/product-descriptions/topographic-database',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official open road-address locations can be calculated or interpolated; they are not exact entrances, building footprints or exact address-to-building links.',
+  },
+  'nls-finland-topographic-buildings': {
+    id: 'nls-finland-topographic-buildings',
+    name: 'NLS Finland Topographic Buildings',
+    url: 'https://www.maanmittauslaitos.fi/en/maps-and-spatial-data/datasets-and-interfaces/product-descriptions/topographic-database',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official open topographic building geometry is an independent feature. An exact address link requires a common identifier or reviewed crosswalk; containment, parcel and nearest matching are not exact.',
+  },
+  'nls-finland-municipal-division': {
+    id: 'nls-finland-municipal-division',
+    name: 'NLS Finland Administrative Divisions',
+    url: 'https://www.maanmittauslaitos.fi/en/maps-and-spatial-data/datasets-and-interfaces',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official region, subregion and municipality context is administrative evidence and not postcode assignment, postal geometry or delivery evidence.',
+  },
+  'aland-post-postal-services': {
+    id: 'aland-post-postal-services',
+    name: 'Aland Post Postal Services',
+    url: 'https://www.alandpost.ax/en/post-offices-and-agents',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official AX postal-operator reference. Posti Basic Address File excludes Aland, so postcode-level evidence is not expanded to street or geometry and FI/AX records never silently merge.',
   },
   'avoindata-fi-postcodes': {
     id: 'avoindata-fi-postcodes',
@@ -3598,7 +3684,21 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
     'dagi-denmark-boundaries',
     'geodanmark',
   ],
-  FI: ['posti-finland-postal-code-services', 'avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
+  FI: [
+    'posti-finland-postal-code-services',
+    'posti-finland-basic-address-file',
+    'statistics-finland-paavo-postal-areas',
+    'dvv-finland-building-dwelling-register',
+    'syke-finland-ryhti-building-addresses',
+    'nls-finland-topographic-road-addresses',
+    'nls-finland-topographic-buildings',
+    'nls-finland-municipal-division',
+    'aland-post-postal-services',
+    'avoindata-fi-postcodes',
+    'nls-finland',
+    'maanmittauslaitos-open-data',
+    'dvv-finland-address-data',
+  ],
   LV: ['latvijas-pasts-check-address', 'vzd-latvia-address-register', 'vzd-latvia-cadastral-buildings', 'vzd-latvia-administrative-boundaries', 'kartes-lv-postal-codes', 'lgia-latvia', 'data-gov-lv-geodata'],
   EE: ['omniva-estonia-postcodes', 'estonia-aks-postal-codes', 'estonia-aks-postal-areas', 'estonia-aks-address-objects', 'estonia-aks-building-shapes', 'estonia-ehak-admin-boundaries'],
   LT: ['lietuvos-pastas-postcode-search', 'registru-centras-address-register', 'registru-centras-ntr-buildings', 'registru-centras-address-boundaries', 'geoportal-lt', 'open-data-lithuania'],

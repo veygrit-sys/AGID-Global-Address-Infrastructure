@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-rs
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-fi, agid-postal-rs
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -90,6 +90,12 @@ Hungary-specific Magyar Posta Partner Extra assignment and special-endpoint
 semantics, derived-surface rules, KCR address and unit identity, Lechner EHA
 location and cadastral linkage, separately rights-cleared INSPIRE/NTA/cadastral
 building evidence, KSH administration, privacy and redistribution partitions
+Finland-specific Posti assignment and Basic Address File membership, Statistics
+Finland Paavo statistical geometry, DVV address/building identity, Ryhti open
+building evidence, NLS interpolated address/topographic context, EPSG:3067
+transform rules and FI/AX territory partitioning belong to `agid-postal-fi`.
+
+
 belong to `agid-postal-hu`.
 
 
@@ -810,6 +816,38 @@ digest. The AGID repository keeps only contracts and small synthetic fixtures;
 Magyar Posta, KCR, EHA, INSPIRE, NTA, cadastral and KSH source rows and heavy
 geometry stay in a separately governed country release store.
 
+
+### `agid-postal-fi`
+
+The Finland repository owns pinned Posti five-digit assignments and Basic
+Address File membership, annual Statistics Finland Paavo statistical geometry,
+authorized DVV address/building identity, versioned Ryhti open-building data,
+NLS road-address/building/administrative evidence, Aland partition metadata,
+synthetic fixtures and release validation.
+
+Posti files contain no map data. Paavo areas are official-derived statistical
+areas generalized from building-address postcodes, and an address postcode can
+differ from its statistical area. Each release pins its year and sea-extended
+or coastline-clipped variant and remains noncanonical; it is never a Posti
+delivery perimeter. PO-box, corporate and dedicated codes remain non-area
+without independent authoritative area evidence.
+
+Posti street and house-number selection proves routing membership, not a
+premise. DVV controlled data may supply exact address, apartment, building and
+permanent identifiers only under allowed access and output rights. Ryhti may
+supply an exact building only through a permanent identifier or source-defined
+relation, with municipal transition coverage and exact licence pinned. NLS
+road addresses are calculated or interpolated rather than exact entrances, and
+NLS topographic buildings require an explicit identifier or reviewed crosswalk;
+nearest, containment, parcel and text matching remain candidates only.
+
+Posti Basic Address File excludes Aland and the postcode file provides only
+postcode-level Aland information. AX evidence is retained as a separate
+territory partition and never inherits mainland street or geometry assumptions.
+Every artifact pins provider, URL, terms/licence, attribution, edition, capture
+time, coverage, schema, CRS, reviewed transform and digest. The AGID repository
+keeps only contracts and small synthetic fixtures; all source rows and heavy
+geometry remain in a separately governed country release store.
 
 
 ### `agid-postal-rs`

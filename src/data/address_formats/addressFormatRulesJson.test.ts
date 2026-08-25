@@ -704,7 +704,14 @@ test('Nordic and Baltic metadata exposes national geospatial and open-data sourc
       'dagi-denmark-boundaries',
       'geodanmark',
     ],
-    FI: ['posti-finland-postal-code-services', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
+    FI: [
+      'posti-finland-postal-code-services', 'posti-finland-basic-address-file',
+      'statistics-finland-paavo-postal-areas', 'dvv-finland-building-dwelling-register',
+      'syke-finland-ryhti-building-addresses', 'nls-finland-topographic-road-addresses',
+      'nls-finland-topographic-buildings', 'nls-finland-municipal-division',
+      'aland-post-postal-services', 'nls-finland', 'maanmittauslaitos-open-data',
+      'dvv-finland-address-data',
+    ],
     LV: [
       'latvijas-pasts-check-address',
       'vzd-latvia-address-register',
@@ -999,6 +1006,34 @@ test('Hungary address metadata separates operator assignment, KCR unit address, 
     'kcrAddressId',
     'addressCoordinateAndCadastralId',
     'explicitRightsClearedBuilding',
+  ]);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+test('Finland address metadata separates Posti assignment, Paavo statistics, address, building, and FI/AX evidence', () => {
+  const format = loadFormat('FI');
+  const rules = loadRules('FI');
+  const sourceIds = [
+    'posti-finland-postal-code-services', 'posti-finland-basic-address-file',
+    'statistics-finland-paavo-postal-areas', 'dvv-finland-building-dwelling-register',
+    'syke-finland-ryhti-building-addresses', 'nls-finland-topographic-road-addresses',
+    'nls-finland-topographic-buildings', 'nls-finland-municipal-division',
+    'aland-post-postal-services',
+  ];
+
+  assert.equal(format.postalCode?.api, 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services');
+  assert.match(format.postalCode?.source ?? '', /Posti.*Paavo.*DVV.*Ryhti.*NLS/i);
+  assert.match(rules.postalCode?.label ?? '', /5 digits.*Posti assignment.*Paavo statistical.*address.*apartment.*building.*FI\/AX/i);
+  assert.deepEqual(rules.regionalHierarchy, [
+    'region',
+    'subRegion',
+    'municipality',
+    'postalAssignmentOrSpecialEndpoint',
+    'streetName',
+    'houseNumberAndRange',
+    'addressPointOrInterpolatedRoadLocation',
+    'stairwayAndApartment',
+    'permanentBuildingIdentifier',
+    'explicitRyhtiOrSourceLinkedBuilding',
   ]);
   for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
 });
