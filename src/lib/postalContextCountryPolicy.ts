@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -156,6 +156,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'MA',
     postalCodeFormat: 'NNNNN',
     fullCodeGeometrySemantics: 'area-or-non-area',
+  },
+  IN: {
+    countryCode: 'IN',
+    postalCodeFormat: 'NNNNNN',
+    fullCodeGeometrySemantics: 'delivery-network-first',
   },
   DK: {
     countryCode: 'DK',
@@ -464,6 +469,13 @@ export function normalizeMoroccoPostalCode(value: unknown) {
   return /^\d{5}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeIndiaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^[1-9]\d{5}$/.test(normalized) ? normalized : null;
+}
+
 export type MoroccoPostalCodeDeliveryType =
   | 'home_delivery_sector'
   | 'agency_or_centre'
@@ -655,6 +667,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'ZA') return normalizeSouthAfricaPostalCode(value);
   if (normalizedCountry === 'EG') return normalizeEgyptPostalCode(value);
   if (normalizedCountry === 'MA') return normalizeMoroccoPostalCode(value);
+  if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);
   if (normalizedCountry === 'MT') return normalizeMaltaPostalCode(value);
   if (normalizedCountry === 'MC') return normalizeMonacoPostalCode(value);

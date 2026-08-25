@@ -1,0 +1,86 @@
+{
+  "schema_version": "agid-postal-in-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-in", "country_code": "IN", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "India six-digit Postal Index Number (PIN)",
+    "full_code_format": "NNNNNN",
+    "full_code_default_geometry": "delivery_network_assignment",
+    "assignment_rule": "India Post defines PIN as a six-digit postcode for a particular area mapped to the post office that receives mail items for delivery under its jurisdiction. The first digit identifies one of nine PIN regions, including region 9 for Army Postal Service; the first two identify a subregion or circle, the first three a sorting or revenue district, and the final three a delivery post office. Syntax or a directory row remains assignment evidence and does not by itself prove polygon membership.",
+    "office_rule": "The Department of Posts directory records circle, region, division, office, PIN, office type, delivery status, district and state. One PIN may have multiple Head, Sub or Branch Office rows and both Delivery and Non Delivery records. Office rows and points stay typed network evidence; they are not interchangeable with a PIN boundary.",
+    "geometry_rule": "Canonical PIN geometry requires the exact Department of Posts official PIN Boundary GeoJSON artifact with resource URL, edition, coverage, GODL or dataset-specific licence, CRS, topology and digest pinned. Catalog metadata alone is not the boundary file. A permitted generated surface from office, locality, address and administrative evidence remains derived and uncertainty-bearing; office points, LGD or Survey of India boundaries, interpolation, Voronoi and model output never become official PIN polygons.",
+    "digipin_rule": "DIGIPIN is an India Post ten-character alphanumeric geocode derived from latitude and longitude on an approximately four-metre grid in its stated EPSG:4326 WGS84 epoch and coverage. It complements a conventional postal address; it is not a six-digit PIN assignment, postal polygon, building, person, occupancy record or proof of mail-booking integration.",
+    "address_rule": "House or flat number, street, locality, village or urban local body, subdistrict, district, state or union territory, PIN, post office and DIGIPIN remain typed evidence. Neither PIN membership, a post-office record nor a DIGIPIN cell identifies an occupant, owner, exact entrance or exact building footprint.",
+    "building_rule": "Exact building display requires rights-cleared authoritative building geometry and a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address. PIN containment, DIGIPIN containment, cadastral overlap, street-text match, nearest building, office proximity or administrative membership creates candidates only.",
+    "administration_rule": "Local Government Directory PIN crosswalks and Survey of India Administrative Boundary Database features provide separately versioned administrative context. Village, local-body, subdistrict, district and state boundaries are not PIN boundaries unless the Department of Posts exact source explicitly publishes that relation.",
+    "licence_rule": "The Government Open Data License - India applies only to an exact dataset whose metadata declares it and requires the recorded attribution and conditions. Portal catalog metadata, lookup access, government authorship, a public viewer, a free product or an open-source encoder never by themselves grant extraction or redistribution of another artifact. Every production artifact pins provider, dataset, licence, attribution, edition, coverage, schema, CRS and digest.",
+    "privacy_rule": "Recipients, contacts, correspondence, shipment or booking records, query history, residents, occupants, owners, tenants, private access instructions and personal address registrations are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, axis order, epoch and accuracy. DIGIPIN uses its stated EPSG:4326 WGS84 epoch 2005 contract; a PIN boundary product retains its own exact CRS and topology metadata. Coordinates are never merely relabelled WGS84, and transformations require reviewed parameters and accuracy statements.",
+    "territory_rule": "The repository uses ISO code IN and exact source-stated coverage. Postal, PIN-boundary, DIGIPIN, LGD and Survey of India coverage are recorded as source facts and are not used to decide sovereignty, jurisdiction or borders; uncovered or disputed areas are not model-filled as official.",
+    "freshness_rule": "PIN assignments, office delivery status, official boundaries, DIGIPIN specification, LGD crosswalks, civic addresses, buildings, administrative boundaries and licences refresh independently. Mixed-edition joins fail closed unless validity, known-time and an explicit relation overlap."
+  },
+  "integration": {
+    "agid_country_code": "IN",
+    "coordinate_flow": "coordinate -> exact official PIN boundary or permitted civic-address point or DIGIPIN cell -> typed office and delivery evidence -> village-or-local-body/subdistrict/district/state-or-UT -> explicit address-building relation -> IN AGID cell",
+    "postcode_flow": "canonical six digits -> pinned Department of Posts office assignments -> delivery and non-delivery records -> official PIN boundary or no canonical geometry -> optional derived surface -> DIGIPIN/address/building evidence -> AGID cells",
+    "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-pin", "pass": "Exactly six digits beginning 1 through 9 remain text; prefixes, punctuation and five- or seven-digit values are rejected." },
+    { "id": "assignment-versus-boundary", "pass": "Department of Posts PIN and office assignment authority is recorded independently from official or derived geometry authority." },
+    { "id": "typed-office-network", "pass": "Head, Sub and Branch Office and Delivery or Non Delivery records remain typed; multiple rows sharing a PIN are preserved." },
+    { "id": "official-boundary-artifact", "pass": "The exact Department of Posts boundary resource, edition, coverage, dataset licence, CRS, topology and digest are pinned before canonical geometry publication." },
+    { "id": "derived-pin-surface", "pass": "Generated surfaces record inputs, method, uncertainty, exclusions, topology, version, time and digest and remain non-canonical." },
+    { "id": "digipin-parallel-layer", "pass": "DIGIPIN cells remain location geocodes separate from PIN, address, building, person and postal-booking assertions." },
+    { "id": "explicit-building-link", "pass": "Exact building output has an authoritative relation or reviewed crosswalk; containment, text and proximity alone never pass." },
+    { "id": "licence-crs-territory-privacy", "pass": "Dataset-specific rights, attribution, CRS, epoch, coverage and privacy exclusions are pinned without geopolitical inference." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "A complete rights-cleared PIN and typed office assignment passes authority, coverage, freshness, licence and digest gates." },
+      { "id": "M3_geometry_and_address", "definition": "Official or derived PIN geometry, DIGIPIN and public civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates." },
+      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "directory-row-or-office-point-presented-as-official-pin-polygon",
+      "catalog-metadata-presented-as-the-official-pin-boundary-artifact",
+      "lgd-or-survey-of-india-administrative-boundary-presented-as-pin-boundary",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-pin-polygon",
+      "delivery-and-nondelivery-office-rows-collapsed-without-type-and-lineage",
+      "digipin-presented-as-pin-address-building-person-or-booking-entitlement",
+      "pin-office-or-digipin-presented-as-exact-building-recipient-or-delivery-entitlement",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "portal-viewer-free-product-government-authorship-or-open-source-code-presented-as-data-redistribution-right",
+      "recipient-contact-correspondence-query-resident-occupant-owner-or-private-access-data-published",
+      "source-crs-or-epoch-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "pin-digipin-building-or-delivery-point-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_IN_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_IN_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_IN_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_IN_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-pin-office-boundary-digipin-address-building-administrative-or-query-rows",
+    "all-six-digit-pins-have-polygons",
+    "office-point-or-administrative-boundary-is-pin-area",
+    "digipin-is-pin-building-person-or-booking-proof",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ]
+}

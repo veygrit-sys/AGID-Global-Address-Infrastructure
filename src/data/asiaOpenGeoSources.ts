@@ -60,9 +60,14 @@ export type AsiaOpenGeoSourceId =
   | 'zipcode-mn'
   | 'hot-osm-mongolia'
   | 'osm-mongolia'
+  | 'india-post-regulations-2024'
   | 'postalpincode-in'
   | 'data-gov-in-pincode'
+  | 'data-gov-in-pincode-boundary'
+  | 'data-gov-in-godl'
+  | 'india-lgd-pin-crosswalk'
   | 'india-digipin'
+  | 'survey-of-india-abdb'
   | 'india-pincode-api-oss'
   | 'survey-of-india'
   | 'datameet-maps'
@@ -819,23 +824,59 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Mongolia OSM roads, settlements, POI, local names, and fallback address tags for sparse-address areas.',
   },
+  'india-post-regulations-2024': {
+    id: 'india-post-regulations-2024',
+    name: 'India Post Office Regulations 2024 – PIN definition',
+    url: 'https://www.indiapost.gov.in/documents/actsandpolicies',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official six-digit PIN maps a particular area to the post office receiving mail for delivery; these semantics are not a current directory, PIN polygon, address, or building relation.',
+  },
   'postalpincode-in': {
     id: 'postalpincode-in',
-    name: 'India Postal PIN Code API',
+    name: 'Third-party India Postal PIN Code API',
     url: 'https://api.postalpincode.in/',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Public India PIN code lookup API for post office and locality validation.',
+    usage: 'fallback',
+    notes: 'Public third-party lookup for discrepancy validation only; it is not an official India Post source, geometry authority, or bulk redistribution grant.',
   },
   'data-gov-in-pincode': {
     id: 'data-gov-in-pincode',
-    name: 'Data.gov.in All India Pincode Directory',
-    url: 'https://www.data.gov.in/catalog/all-india-pincode-directory-through-webservice',
+    name: 'Department of Posts All India Pincode Directory',
+    url: 'https://www.data.gov.in/resource/all-india-pincode-directory-till-last-month',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    notes: 'Official monthly OGD PIN directory with circle, region, division, office, office type, Delivery or Non Delivery status, district and state. Multiple typed office rows may share a PIN; rows are assignments, not geometry.',
+  },
+  'data-gov-in-pincode-boundary': {
+    id: 'data-gov-in-pincode-boundary',
+    name: 'Department of Posts All India Pincode Boundary GeoJSON catalog',
+    url: 'https://sikkim.data.gov.in/catalog/all-india-pincode-boundary-geo-json',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official catalog metadata states that PIN boundary GeoJSON exists; the exact resource, edition, licence, coverage, CRS, topology, join key and digest are required. Catalog metadata is not geometry.',
+  },
+  'data-gov-in-godl': {
+    id: 'data-gov-in-godl',
+    name: 'Government Open Data License – India',
+    url: 'https://ap.data.gov.in/godl',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Reuse framework for an exact covered dataset whose metadata declares GODL-India; it is legal metadata, not postal assignment, PIN geometry, address, or building evidence.',
+  },
+  'india-lgd-pin-crosswalk': {
+    id: 'india-lgd-pin-crosswalk',
+    name: 'Local Government Directory PIN crosswalk',
+    url: 'https://data.gov.in/catalog/local-government-directory-lgd',
+    kind: 'admin-boundary',
+    coverage: 'country',
     usage: 'validation',
-    notes: 'Government open-data webservice for India PIN, post office, district, and state validation.',
+    notes: 'Official village and local-body administrative crosswalk with PIN context; it is not Department of Posts assignment authority, PIN geometry, civic-address geometry, or a building relation.',
   },
   'india-digipin': {
     id: 'india-digipin',
@@ -844,7 +885,16 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'geocoding',
     coverage: 'country',
     usage: 'reference',
-    notes: 'India Post digital address code reference for location-linked delivery and address precision.',
+    notes: 'Official ten-character location grid with approximately four-metre cells under a pinned specification and encoder version; a parallel location layer, not a six-digit PIN, address, building, person, or postal-booking entitlement.',
+  },
+  'survey-of-india-abdb': {
+    id: 'survey-of-india-abdb',
+    name: 'Survey of India Administrative Boundary Database',
+    url: 'https://surveyofindia.gov.in/pages/administrative-boundary-data-base-abdb-',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official state, district, subdistrict and village administrative geometry under exact product terms; administrative context is not PIN geometry or an address-building relation.',
   },
   'india-pincode-api-oss': {
     id: 'india-pincode-api-oss',
@@ -2231,9 +2281,14 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   BH: ['bahrain-open-data', 'osm-bahrain'],
   IL: ['israel-post', 'govmap-israel', 'data-gov-il', 'osm-israel'],
   IN: [
-    'postalpincode-in',
+    'india-post-regulations-2024',
     'data-gov-in-pincode',
+    'data-gov-in-pincode-boundary',
+    'data-gov-in-godl',
+    'india-lgd-pin-crosswalk',
     'india-digipin',
+    'survey-of-india-abdb',
+    'postalpincode-in',
     'india-pincode-api-oss',
     'survey-of-india',
     'datameet-maps',
