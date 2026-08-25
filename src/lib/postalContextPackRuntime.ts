@@ -424,6 +424,7 @@ export {
   normalizeRomaniaPostalCode,
   normalizeTaiwanPostalCode,
   normalizeKoreaPostalCode,
+  normalizeSaudiArabiaPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeCroatiaPostalCode,

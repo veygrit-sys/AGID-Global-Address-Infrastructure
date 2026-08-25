@@ -874,6 +874,27 @@ test('Korea catalog separates postcode semantics, official districts, address id
   assert.equal(classification.tier, 'authoritative');
 });
 
+test('Saudi catalog separates National Address semantics, API identifiers, geospatial themes, and cadastre', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('SA').map(source => [source.id, source]));
+  assert.equal(sources.get('spl-national-address-components')?.authority, 'postal-operator');
+  assert.equal(sources.get('spl-national-address-components')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.get('spl-national-address-api-v31')?.availability, 'auth-required-api');
+  assert.equal(sources.get('spl-national-address-api-v31')?.depth, 'building');
+  assert.match(sources.get('spl-national-address-api-v31')?.notes.join(' ') ?? '', /BuildingNumber.*PKAddressID.*point.*not.*postal polygon.*footprint/i);
+  assert.equal(sources.get('spl-national-address-api-terms')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('spl-national-address-short-address')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.get('geosa-saudi-geospatial-foundation-themes')?.depth, 'geo-only');
+  assert.match(sources.get('geosa-saudi-geospatial-foundation-themes')?.notes.join(' ') ?? '', /Buildings.*Land Parcels.*National Address.*SANSRS.*not.*implicit joins/i);
+  assert.equal(sources.get('rega-saudi-geospatial-real-estate-portal')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.get('rega-saudi-real-estate-registration-framework')?.sourceRole, 'legal-framework-only');
+  const classification = classifyPostalSourceTrust({
+    countryCode: 'SA',
+    source: 'SPL National Address API v3.1',
+  });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'authoritative');
+});
+
 test('catalog source ids are unique and sorted by trust for a country lookup', () => {
   const ids = OFFICIAL_POSTAL_SOURCE_CATALOG.map(source => source.id);
   assert.equal(new Set(ids).size, ids.length);

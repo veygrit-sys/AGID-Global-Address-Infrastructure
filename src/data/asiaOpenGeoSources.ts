@@ -133,6 +133,13 @@ export type AsiaOpenGeoSourceId =
   | 'osm-palestine'
   | 'spl-sa'
   | 'spl-national-address-api'
+  | 'spl-national-address-components'
+  | 'spl-national-address-api-v31'
+  | 'spl-national-address-api-terms'
+  | 'spl-national-address-short-address'
+  | 'geosa-saudi-geospatial-foundation-themes'
+  | 'rega-saudi-geospatial-real-estate-portal'
+  | 'rega-saudi-real-estate-registration-framework'
   | 'saudi-gis-national-platform'
   | 'osm-saudi-arabia'
   | 'makani-dubai-open-data'
@@ -1467,6 +1474,71 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Palestine OSM roads, places, Arabic/English names, POI, and fallback address tags.',
   },
+  'spl-national-address-components': {
+    id: 'spl-national-address-components',
+    name: 'SPL National Address Components',
+    url: 'https://narg.address.gov.sa/en/national-address-1/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official semantics define a five-digit postal code plus Building Number, Street, District, City and four-digit Secondary or Additional Number. Component semantics alone are not current assignment, polygon, footprint, unit or deliverability evidence.',
+  },
+  'spl-national-address-api-v31': {
+    id: 'spl-national-address-api-v31',
+    name: 'SPL National Address API v3.1',
+    url: 'https://api.address.gov.sa/apidocumentation',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Credentialed, purpose-limited SPL API; exact product, plan, terms, display, retention and redistribution conditions apply',
+    notes: 'Pinned responses can supply public National Address components, opaque PKAddressID, BuildingNumber, PostCode, AdditionalNumber, optional UnitNumber and a point. A point or nullable PolygonString is not a postal polygon, parcel or building footprint.',
+  },
+  'spl-national-address-api-terms': {
+    id: 'spl-national-address-api-terms',
+    name: 'SPL National Address API Terms of Use',
+    url: 'https://api.address.gov.sa/termsofuse',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Limited non-exclusive non-sublicensable API licence; exact current terms control',
+    notes: 'Legal boundary only: credentials, purpose limits, privacy disclosure, requested removal, rate limits and restricted resale or sublicensing do not grant bulk harvesting or repository redistribution rights.',
+  },
+  'spl-national-address-short-address': {
+    id: 'spl-national-address-short-address',
+    name: 'SPL National Address Short Address',
+    url: 'https://narg.address.gov.sa/en/door-step/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Short Address has four letters and four numbers and resolves through SPL. It is a typed lookup identifier, not geometry, a reusable building footprint, a unit, or permission to expose account identity.',
+  },
+  'geosa-saudi-geospatial-foundation-themes': {
+    id: 'geosa-saudi-geospatial-foundation-themes',
+    name: 'GEOSA National Geospatial Foundation Themes and Governance',
+    url: 'https://www.geoportal.sa/Geoportal/pdf/Saudi%20Arabian%20National%20Geospatial%20Governance.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official governance defines separate Buildings, Land Parcels, National Address and administrative themes under SANSRS. A standard or theme listing is metadata, not a redistributable dataset or cross-theme join.',
+  },
+  'rega-saudi-geospatial-real-estate-portal': {
+    id: 'rega-saudi-geospatial-real-estate-portal',
+    name: 'REGA Geospatial Real Estate Portal',
+    url: 'https://rega.gov.sa/en/rega-services/platforms/geospatial-real-estate-portal/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official viewer can validate regions, cities, neighborhoods, land plots and registration areas. Viewer visibility is not reusable vector, parcel-to-address, building, ownership or redistribution authority.',
+  },
+  'rega-saudi-real-estate-registration-framework': {
+    id: 'rega-saudi-real-estate-registration-framework',
+    name: 'REGA Real Estate Registration Law and Implementing Regulations',
+    url: 'https://rega.gov.sa/en/laws-and-decisions/regulations-and-by-laws/regulations/implementing-regulations-of-the-law-of-real-estate-registration/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Legal and cadastral semantics describe Real Estate Maps and Sheets. They do not publish parcel vectors or authorize public owner, rightsholder, title, encumbrance, value or transaction output.',
+  },
   'spl-sa': {
     id: 'spl-sa',
     name: 'Saudi Post SPL National Address',
@@ -2116,7 +2188,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   OM: ['nsgia-oman', 'oman-post', 'osm-oman'],
   PS: ['palestine-open-data-postcodes', 'palestine-post', 'osm-palestine'],
   QA: ['qatar-gis-geoportal', 'osm-qatar'],
-  SA: ['spl-sa', 'spl-national-address-api', 'saudi-gis-national-platform', 'osm-saudi-arabia'],
+  SA: ['spl-national-address-components', 'spl-national-address-api-v31', 'spl-national-address-api-terms', 'spl-national-address-short-address', 'geosa-saudi-geospatial-foundation-themes', 'rega-saudi-geospatial-real-estate-portal', 'rega-saudi-real-estate-registration-framework', 'spl-sa', 'spl-national-address-api', 'saudi-gis-national-platform', 'osm-saudi-arabia'],
   SG: ['onemap-sg'],
   SY: ['syria-post', 'osm-syria', 'hot-osm-west-asia'],
   TH: ['thailand-post'],

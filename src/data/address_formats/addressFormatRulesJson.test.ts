@@ -230,6 +230,36 @@ test('South Korea address metadata exposes postal district, Juso identifier, bui
   assert.ok(rules.regionalHierarchy?.includes('exactAddressLinkedJusoBuilding'));
 });
 
+test('Saudi Arabia metadata exposes SPL National Address identifiers and independent GEOSA/REGA evidence', () => {
+  const format = loadFormat('SA');
+  const rules = loadRules('SA');
+  const expectedSourceIds = [
+    'spl-national-address-components',
+    'spl-national-address-api-v31',
+    'spl-national-address-api-terms',
+    'spl-national-address-short-address',
+    'geosa-saudi-geospatial-foundation-themes',
+    'rega-saudi-geospatial-real-estate-portal',
+    'rega-saudi-real-estate-registration-framework',
+  ];
+
+  for (const sourceId of expectedSourceIds) {
+    assert.ok(format.openSourceIds?.includes(sourceId), `SA should expose ${sourceId}`);
+    assert.ok(rules.openSourceIds?.includes(sourceId), `SA addressRules should expose ${sourceId}`);
+    const source = ASIA_OPEN_GEO_SOURCES[sourceId as keyof typeof ASIA_OPEN_GEO_SOURCES];
+    assert.ok(source, `${sourceId} should be registered as an Asia open geo source`);
+    assert.match(source.url, /^https?:\/\//, `${sourceId} should expose a testable URL`);
+  }
+
+  assert.equal(format.postalCode?.format, 'NNNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{5}$');
+  assert.match(format.postalCode?.source ?? '', /Saudi Post SPL.*National Address.*GEOSA.*Buildings.*REGA.*registration/i);
+  assert.match(rules.postalCode?.label ?? '', /5 digits.*BuildingNumber.*not.*polygon.*footprint.*Short Address.*explicit licensed relation.*unit.*private/i);
+  assert.ok(rules.regionalHierarchy?.includes('fourDigitAdditionalNumber'));
+  assert.ok(rules.regionalHierarchy?.includes('opaquePkAddressIdWhenReturned'));
+  assert.ok(rules.regionalHierarchy?.includes('explicitAddressLinkedBuildingFeature'));
+});
+
 test('Taiwan address metadata exposes 3+3, doorplate, building, cadastral, and administrative sources', () => {
   const format = loadFormat('TW');
   const rules = loadRules('TW');
