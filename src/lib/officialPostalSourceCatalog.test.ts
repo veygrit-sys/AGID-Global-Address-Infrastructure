@@ -17,7 +17,7 @@ test('registers official and open postal sources for the priority rollout countr
 });
 
 test('prefers country-specific official sources before the UPU global fallback', () => {
-  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
+  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
 
   for (const countryCode of countrySpecificCountries) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
@@ -35,6 +35,7 @@ test('prefers country-specific official sources before the UPU global fallback',
   assert.equal(getOfficialPostalSourcesForCountry('CZ')[0]?.id, 'ceska-posta-customer-outputs');
   assert.equal(getOfficialPostalSourcesForCountry('FI')[0]?.id, 'posti-finland-postal-code-services');
   assert.ok(getOfficialPostalSourcesForCountry('BG').some(source => source.id === 'bulgarian-posts-postcode-reference'));
+  assert.ok(getOfficialPostalSourcesForCountry('BY').some(source => source.id === 'nca-belarus-postal-code-zones'));
   assert.equal(getOfficialPostalSourcesForCountry('LV')[0]?.id, 'latvijas-pasts-check-address');
   assert.equal(getOfficialPostalSourcesForCountry('LT')[0]?.id, 'lietuvos-pastas-postcode-search');
   assert.equal(getOfficialPostalSourcesForCountry('JE')[0]?.id, 'jersey-post-address-finder');
@@ -537,6 +538,27 @@ test('separates Finland operator assignment, Paavo statistics, address, building
   assert.equal(paavo.tier, 'official-derived');
 });
 
+
+test('separates Belarus operator assignment, official-derived postal zones, controlled address, building, and administration', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('BY').map(source => [source.id, source]));
+
+  assert.equal(sources.get('belpost-belarus-postcode-reference')?.authority, 'postal-operator');
+  assert.equal(sources.get('belpost-belarus-postcode-reference')?.availability, 'web-search');
+  assert.equal(sources.get('nca-belarus-postal-code-zones')?.trustTier, 'official-derived');
+  assert.equal(sources.get('nca-belarus-postal-code-zones')?.depth, 'postcode');
+  assert.equal(sources.get('nca-belarus-address-register')?.depth, 'address');
+  assert.equal(sources.get('nca-belarus-address-register')?.requiresCredential, true);
+  assert.equal(sources.get('nca-belarus-capital-structure-addresses')?.availability, 'commercial-or-restricted');
+  assert.equal(sources.get('nca-belarus-real-estate-register')?.depth, 'building');
+  assert.equal(sources.get('nca-belarus-property-characteristics-register')?.requiresCredential, true);
+  assert.equal(sources.get('nca-belarus-ate-register')?.depth, 'geo-only');
+  assert.equal(sources.get('nca-belarus-soato-classifier')?.depth, 'locality');
+  assert.equal(sources.get('nca-belarus-public-cadastral-map')?.availability, 'web-search');
+
+  const classification = classifyPostalSourceTrust({ countryCode: 'BY', source: 'NCA Belarus Postal Code Zones' });
+  assert.equal(classification.strength, 'strong');
+  assert.equal(classification.tier, 'official-derived');
+});
 
 test('separates Bulgaria postal routing, controlled address, cadastral building, and EKATTE authority', () => {
   const sources = getOfficialPostalSourcesForCountry('BG');

@@ -1039,6 +1039,36 @@ test('Finland address metadata separates Posti assignment, Paavo statistics, add
 });
 
 
+test('Belarus address metadata separates Belpost assignment, NCA postal zones, address identity, capital structures, and administration', () => {
+  const format = loadFormat('BY');
+  const rules = loadRules('BY');
+  const sourceIds = [
+    'belpost-belarus-postcode-reference', 'nca-belarus-postal-code-zones',
+    'nca-belarus-address-register', 'nca-belarus-capital-structure-addresses',
+    'nca-belarus-real-estate-register', 'nca-belarus-property-characteristics-register',
+    'nca-belarus-ate-register', 'nca-belarus-soato-classifier',
+    'nca-belarus-public-cadastral-map',
+  ];
+
+  assert.equal(format.postalCode?.api, 'https://www.belpost.by/');
+  assert.match(format.postalCode?.source ?? '', /Belpost.*NCA postal-code zones.*Address Register.*capital-structure.*ATE\/SOATO/i);
+  assert.match(rules.postalCode?.label ?? '', /6 digits.*Belpost assignment.*official-derived.*semiannual zone.*isolated premise.*capital structure/i);
+  assert.deepEqual(rules.regionalHierarchy, [
+    'oblastOrMinskCity',
+    'rayonOrCityOfRegionalSubordination',
+    'villageCouncilOrCityDistrict',
+    'settlementSoato',
+    'postalAssignmentOrSpecialEndpoint',
+    'streetRoadOrInternalAddressElement',
+    'capitalStructureNumberAndCorpus',
+    'entranceFloorApartmentOrIsolatedPremise',
+    'authoritativeAddressIdAndGeocode',
+    'capitalStructureOrRealEstateIdentifier',
+    'explicitRightsClearedBuilding',
+  ]);
+  for (const sourceId of sourceIds) assert.ok(format.openSourceIds?.includes(sourceId));
+});
+
 test('Bulgaria address metadata separates routing, EKATTE, address, and cadastral building evidence', () => {
   const format = loadFormat('BG');
   const rules = loadRules('BG');
@@ -1126,7 +1156,7 @@ test('Central, Eastern, and Balkan Europe metadata exposes national geospatial s
       'data-gov-ua-geodata', 'ukraine-cadastre-map',
     ],
     MD: ['geoportal-moldova', 'moldova-open-data'],
-    BY: ['belarus-nca-geoportal'],
+    BY: ['belpost-belarus-postcode-reference', 'nca-belarus-postal-code-zones', 'nca-belarus-address-register', 'nca-belarus-capital-structure-addresses', 'nca-belarus-real-estate-register', 'nca-belarus-property-characteristics-register', 'nca-belarus-ate-register', 'nca-belarus-soato-classifier', 'nca-belarus-public-cadastral-map', 'belarus-nca-geoportal'],
     RU: ['rosreestr-nspd', 'russia-open-data-geo'],
     RS: [
       'geosrbija', 'rgz-serbia',

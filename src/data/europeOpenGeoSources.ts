@@ -298,6 +298,15 @@ export type EuropeOpenGeoSourceId =
   | 'ukraine-cadastre-map'
   | 'geoportal-moldova'
   | 'moldova-open-data'
+  | 'belpost-belarus-postcode-reference'
+  | 'nca-belarus-postal-code-zones'
+  | 'nca-belarus-address-register'
+  | 'nca-belarus-capital-structure-addresses'
+  | 'nca-belarus-real-estate-register'
+  | 'nca-belarus-property-characteristics-register'
+  | 'nca-belarus-ate-register'
+  | 'nca-belarus-soato-classifier'
+  | 'nca-belarus-public-cadastral-map'
   | 'belarus-nca-geoportal'
   | 'rosreestr-nspd'
   | 'russia-open-data-geo'
@@ -3132,6 +3141,96 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Moldovan open data portal for public administrative and locality datasets.',
   },
+  'belpost-belarus-postcode-reference': {
+    id: 'belpost-belarus-postcode-reference',
+    name: 'Belpost Belarus Postcode Reference',
+    url: 'https://www.belpost.by/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public web reference; pin exact lookup terms before reuse',
+    notes: 'Official six-digit operator assignment reference. A code or post-office relationship is not a polygon, building, current deliverability guarantee or unrestricted bulk dataset.',
+  },
+  'nca-belarus-postal-code-zones': {
+    id: 'nca-belarus-postal-code-zones',
+    name: 'NCA Belarus Postal Code Zones',
+    url: 'https://nca.by/about/activity/adresnaya-sistema-respubliki-belarus/reestr-adresov/zony-deystviya-pochtovykh-kodov/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public map/reference; exact data-service terms or contract required for redistribution',
+    notes: 'NCA states nationwide postal zoning entered production in 2020 and boundaries are updated every six months. The layer is official-derived from Belpost assignments and state registers, not a Belpost-authored delivery perimeter; public-map viewing is not a bulk licence.',
+  },
+  'nca-belarus-address-register': {
+    id: 'nca-belarus-address-register',
+    name: 'NCA Belarus Address Register',
+    url: 'https://nca.by/about/activity/adresnaya-sistema-respubliki-belarus/reestr-adresov/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled or paid data service; exact contract and public output rights required',
+    notes: 'Authoritative state address identifiers, object types, components and geocodes. An address geocode is not a building footprint; land parcel, capital structure, isolated premise and parking space object types remain distinct, and person or residence data is excluded.',
+  },
+  'nca-belarus-capital-structure-addresses': {
+    id: 'nca-belarus-capital-structure-addresses',
+    name: 'NCA Belarus Capital Structure Address SHP Service',
+    url: 'https://nca.by/services/providing-information/from-addresses-of-belarus/information-unfinished-buildings-shp-format/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Paid district-scoped service; exact contract and output rights required',
+    notes: 'Controlled SHP address export for capital structures and unfinished structures includes address identity, object type, components and postcode. It does not by itself supply an exact building footprint or authorize a national mirror.',
+  },
+  'nca-belarus-real-estate-register': {
+    id: 'nca-belarus-real-estate-register',
+    name: 'NCA Unified State Register of Immovable Property',
+    url: 'https://nca.by/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Registered or paid access; exact query or contract terms required',
+    notes: 'Authoritative real-estate and capital-structure identity is usable only through allowed fields and an explicit address relation. Parcel, isolated-premise and parking-space records are not buildings; owners, rightsholders, title acts and transactions are excluded.',
+  },
+  'nca-belarus-property-characteristics-register': {
+    id: 'nca-belarus-property-characteristics-register',
+    name: 'NCA Property Characteristics Register',
+    url: 'https://nca.by/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Registered or paid access; exact query or contract terms required',
+    notes: 'Source-qualified building characteristics may enrich an explicitly identified capital structure under field-level output rights. Characteristics, valuation or proximity never establish address identity or a footprint relation.',
+  },
+  'nca-belarus-ate-register': {
+    id: 'nca-belarus-ate-register',
+    name: 'NCA Belarus ATE/TE Register',
+    url: 'https://nca.by/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled or paid register/API/SHP service; exact terms required',
+    notes: 'Official administrative-territorial and territorial unit identities and separately provided geometry add dated context only. They do not establish postcode membership, address identity, building identity or postal coverage.',
+  },
+  'nca-belarus-soato-classifier': {
+    id: 'nca-belarus-soato-classifier',
+    name: 'NCA Belarus SOATO Classifier',
+    url: 'https://nca.by/services/providing-information/from-unified-register-belarus/soato-classifier/',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Paid standard query; exact receipt and output rights required',
+    notes: 'Official SOATO codes, names, categories and administrative centres provide locality and hierarchy context. Classifier membership is not postal assignment or geometry and special-regime omissions must be retained.',
+  },
+  'nca-belarus-public-cadastral-map': {
+    id: 'nca-belarus-public-cadastral-map',
+    name: 'NCA Belarus Public Cadastral Map',
+    url: 'https://map.nca.by/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Public viewer/reference only; no bulk or derivative rights inferred',
+    notes: 'Viewer can expose postal-zone and cadastral context for validation. A visible map layer is not a downloadable licensed artifact, exact building-address relation or permission to reproduce the database.',
+  },
   'belarus-nca-geoportal': {
     id: 'belarus-nca-geoportal',
     name: 'Belarus National Cadastral Agency Geoportal',
@@ -3806,7 +3905,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   BG: ['bulgarian-posts-postcode-reference', 'bulgarian-posts-post-office-directory', 'grao-bulgaria-address-classifier', 'agcc-bulgaria-cadastral-map', 'agcc-bulgaria-inspire-buildings', 'nsi-bulgaria-ekatte', 'nsi-bulgaria-administrative-spatial-data', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
   UA: ['ukrposhta-postcodes-open-data', 'ukrposhta-index-and-address-api', 'ukraine-unified-address-register', 'ukraine-building-register', 'ukraine-nsdi', 'eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
   MD: ['scrape4u-postal-codes', 'geoportal-moldova', 'moldova-open-data'],
-  BY: ['scrape4u-postal-codes', 'belarus-nca-geoportal'],
+  BY: ['belpost-belarus-postcode-reference', 'nca-belarus-postal-code-zones', 'nca-belarus-address-register', 'nca-belarus-capital-structure-addresses', 'nca-belarus-real-estate-register', 'nca-belarus-property-characteristics-register', 'nca-belarus-ate-register', 'nca-belarus-soato-classifier', 'nca-belarus-public-cadastral-map', 'belarus-nca-geoportal'],
   RU: ['datahub-postal', 'rosreestr-nspd', 'russia-open-data-geo'],
   RS: ['datahub-postal', 'geosrbija', 'rgz-serbia', 'posta-srbije-post-office-list', 'posta-srbije-pak-definition', 'posta-srbije-pak-lookup', 'posta-srbije-wsp-address-api', 'rgz-serbia-address-register-open-data', 'rgz-serbia-spatial-unit-register', 'rgz-serbia-geosrbija-buildings', 'rgz-serbia-real-estate-cadastre'],
   BA: ['datahub-postal', 'bosnia-geoportal', 'bosnia-cadastre-reference'],

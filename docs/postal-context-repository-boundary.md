@@ -18,7 +18,7 @@ Address-Grid-ID
   v
 agid-postal-{country}
   |  owns: country source profiles, transforms, validation, release metadata
-  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-fi, agid-postal-bg, agid-postal-rs
+  |  examples: agid-postal-jp, agid-postal-sg, agid-postal-nl, agid-postal-gb, agid-postal-fr, agid-postal-nz, agid-postal-is, agid-postal-it, agid-postal-ee, agid-postal-ch, agid-postal-de, agid-postal-cz, agid-postal-dk, agid-postal-mt, agid-postal-mc, agid-postal-au, agid-postal-lv, agid-postal-lt, agid-postal-li, agid-postal-sk, agid-postal-si, agid-postal-no, agid-postal-hu, agid-postal-fi, agid-postal-bg, agid-postal-by, agid-postal-rs
   |  publishes: immutable artifact manifest
   v
 content-addressed object storage / CDN
@@ -1085,3 +1085,27 @@ License compatibilityはprovider名ではなくsource releaseごとに判断す�
 7. 二回連続のsource refresh、holdout、drift、rollback試験後にstable候補とする。
 
 日本referenceがこの境界を満たしてから、同じPCG contractで次の国repoを追加する。
+
+### `agid-postal-by`
+
+The Belarus repository owns pinned Belpost six-digit assignment evidence and
+NCA-produced postal-code zone lineage. NCA states that nationwide postal zoning
+entered production in 2020 and zone boundaries are updated every six months.
+Those government-produced zones are official-derived spatial evidence, not
+Belpost-authored delivery perimeters. A public cadastral-map view does not grant
+bulk redistribution; every released layer pins its product, capture and effective
+time, coverage, methodology, terms, schema, CRS, transform and digest.
+
+The NCA Address Register supplies authoritative address identity and geocode.
+Capital-structure address exports, the real-estate register and property-
+characteristics register remain separately licensed or controlled. Exact building
+display requires an explicit permitted registry relation or common capital-
+structure/real-estate identifier to an exact rights-cleared building feature.
+Land parcels, isolated premises, parking spaces, containment, proximity and text
+matching create candidates only. Owner, rightsholder, transaction, valuation,
+resident, recipient and other personal fields are excluded.
+
+ATE and SOATO identities add dated administrative context only. Administrative
+units do not establish postal membership or replace the NCA postal-zone layer.
+The pack remains fail-closed when paid-service rights, public-map layer identity,
+territorial clipping, freshness or exact address-to-building linkage is absent.

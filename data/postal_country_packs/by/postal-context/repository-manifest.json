@@ -1,0 +1,90 @@
+{
+  "schema_version": "agid-postal-by-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-by",
+    "country_code": "BY",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Паштовы індэкс / Почтовый индекс",
+    "full_code_format": "NNNNNN",
+    "full_code_default_geometry": "official_derived_nca_postal_zone_or_honest_non_area",
+    "assignment_rule": "A pinned Belpost lookup or transaction receipt can establish a six-digit postcode and serving-post-office assignment at its capture time. Syntax, a UPU example, SOATO membership, an address geocode or a post-office point does not establish a current assignment, deliverability or geometry.",
+    "geometry_rule": "NCA states that nationwide postal-code zoning entered production in 2020 and boundaries are updated every six months from Belpost assignments, Address Register records and ATE/TE data. A pinned NCA zone may be authoritative official-derived geometry, but it is not called a Belpost-authored delivery perimeter. Public-map viewing, administrative boundaries, buffers, Voronoi cells, nearest-code assignment and cross-border gap filling never substitute for the actual layer and reuse rights.",
+    "special_code_rule": "PO-box, poste-restante, organization, dedicated and post-office-only records remain endpoint or non-area evidence unless an independent pinned NCA zone explicitly includes them. A service point or textual relationship never authorizes an invented polygon.",
+    "address_rule": "The NCA Address Register is authoritative for current address identity and geocode and distinguishes land parcels, capital structures, unfinished structures, isolated premises and parking spaces. Every public field requires an authorized API, export or receipt; a geocode is not a footprint and person, resident, recipient or household data is excluded.",
+    "building_rule": "Exact building output requires an explicit permitted relation or common capital-structure or real-estate identifier between an allowed Address Register/capital-structure record and an exact rights-cleared real-estate or building feature. A parcel, isolated premise, parking space, containment, proximity, address text or property characteristic alone creates candidates only; owner, rightsholder, title, transaction and valuation fields are excluded.",
+    "administrative_rule": "NCA ATE/TE and SOATO identifiers, categories, hierarchy and separately licensed geometry add dated administrative context only. They do not independently establish postcode membership, address identity, building identity or postal service coverage.",
+    "licence_rule": "Every Belpost and NCA artifact pins the exact page, lookup, data service, map layer or paid receipt; provider and product; terms or contract; permitted fields and derivatives; capture and effective time; coverage; methodology; schema; source CRS; reviewed transform; and digest. NCA website reuse rules and a public cadastral-map view do not grant reuse of paid register outputs, APIs, map databases or bulk derivatives.",
+    "crs_rule": "Every NCA geometry retains its published source CRS and original coordinates. WGS84 output is generated only through a reviewed versioned transform whose parameters, axis order, accuracy and lineage are recorded; a web-map display is never treated as proof that the source data is EPSG:4326.",
+    "territory_rule": "The BY pack clips output only to evidence-backed Belarus coverage for the same validity interval and records exclusions and disputed or cross-border decisions separately. Postal assignment never determines sovereignty, and clipping cannot fill postal, address or building coverage gaps.",
+    "freshness_rule": "NCA postal-zone releases are checked against the stated six-month update cycle. A stale or unidentified viewer capture cannot silently remain current; the runtime reports its effective and capture times and fails closed where freshness is unknown."
+  },
+  "integration": {
+    "agid_country_code": "BY",
+    "coordinate_flow": "coordinate -> pinned NCA official-derived postal-code zone or honest non-area -> dated ATE/SOATO context -> exact allowed Address Register identifier and geocode -> explicit capital-structure/real-estate relation -> exact rights-cleared building -> BY AGID cell",
+    "postcode_flow": "canonical six digits -> pinned Belpost assignment -> pinned NCA official-derived zone when licensed -> allowed Address Register relations -> explicit capital-structure/real-estate relation -> AGID cells",
+    "building_output_gate": "exact allowed address identity plus an explicit permitted registry relation, common capital-structure identifier, common real-estate identifier or reviewed authoritative crosswalk to one exact rights-cleared building feature"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode is exactly six-character text, preserves leading zeroes and is never serialized as a number." },
+    { "id": "operator-assignment", "pass": "Every current assignment pins Belpost lookup or transaction evidence, capture/effective time, scope, terms, schema and digest." },
+    { "id": "official-derived-zone", "pass": "Every surface pins the actual NCA postal-zone layer, methodology, six-month edition, coverage, rights, topology, CRS and digest and is never called a Belpost delivery perimeter." },
+    { "id": "special-non-area", "pass": "PO-box, poste-restante, organization, dedicated and post-office records remain non-area unless an independent NCA zone explicitly covers them." },
+    { "id": "authoritative-address", "pass": "Every address pins the NCA identifier, object type, components, geocode semantics, validity, service or receipt and public output rights." },
+    { "id": "building-link", "pass": "Exact building output requires an explicit permitted registry relation or common capital-structure/real-estate identifier; parcel, isolated-premise, parking-space, nearest, containment and text matching do not pass." },
+    { "id": "privacy", "pass": "Person, resident, recipient, household, owner, rightsholder, title, transaction, valuation and other non-public fields are excluded." },
+    { "id": "administrative-context", "pass": "ATE/TE and SOATO edition, identifiers, coverage, omissions, terms and digest are pinned and remain separate from postal and address evidence." },
+    { "id": "coverage-freshness-and-rights", "pass": "Every service, map layer, dataset and output enforces exact territorial coverage, semiannual zone freshness, access basis, fees, redistribution and derivative-work rules." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "Pinned Belpost assignment and special-code evidence passes time, terms, schema and digest gates." },
+      { "id": "M3_official_derived_geometry", "definition": "Pinned NCA postal-zone artifacts pass layer identity, methodology, edition, coverage, rights, topology, territory, CRS, freshness and correction gates." },
+      { "id": "M4_address_building", "definition": "Authorized NCA address, capital-structure and real-estate evidence passes identity, explicit-building-link, privacy, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "nca-official-derived-zone-presented-as-belpost-authored-delivery-perimeter",
+      "public-cadastral-map-view-presented-as-bulk-redistribution-right",
+      "administrative-unit-substituted-for-postcode-zone",
+      "buffer-voronoi-nearest-or-gap-fill-substituted-for-postal-evidence",
+      "special-or-postbox-code-given-invented-polygon",
+      "address-geocode-presented-as-building-footprint",
+      "parcel-isolated-premise-or-parking-space-presented-as-building",
+      "nearest-contained-or-text-matched-building-presented-as-exact-link",
+      "paid-register-output-published-without-contract-rights",
+      "owner-rightsholder-title-transaction-valuation-residence-or-person-data-published",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "stale-zone-layer-presented-as-current",
+      "cross-border-clipping-used-to-fill-coverage",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_BY_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BY_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_BY_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BY_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "shipping Belpost or NCA production rows in this seed",
+    "scraping the public cadastral map into an unlicensed mirror",
+    "inventing postal polygons from administrative boundaries or interpolation",
+    "inferring buildings from points, parcels, isolated premises or proximity",
+    "publishing personal, ownership, rights, title, transaction or valuation data",
+    "claiming complete delivery coverage from postal-zone containment"
+  ]
+}
