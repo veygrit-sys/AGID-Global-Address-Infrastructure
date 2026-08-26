@@ -213,6 +213,16 @@ export type AsiaOpenGeoSourceId =
   | 'osm-lebanon'
   | 'jordanpost'
   | 'rjgc-jordan'
+  | 'upu-jordan-addressing-2004'
+  | 'modee-jordan-postal-policy-2025'
+  | 'trc-jordan-postal-sector'
+  | 'jordan-post-offices-open-data-2023'
+  | 'jordan-open-government-data-license-v1'
+  | 'rjgc-jordan-eservices'
+  | 'rjgc-gam-building-mou'
+  | 'dls-jordan-village-codes-2022'
+  | 'gam-jordan-streets-2019'
+  | 'jordan-digital-mailbox-pilot-2026'
   | 'osm-jordan'
   | 'israel-post'
   | 'govmap-israel'
@@ -2167,7 +2177,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Jordan postal-code and post-office delivery reference.',
+    notes: 'Jordan postal-operator reference. A current pinned Jordan Post result may support a five-digit routing assignment, but it is not a canonical polygon, exact civic address, building relation, delivery entitlement, complete history, or blanket reuse licence.',
   },
   'rjgc-jordan': {
     id: 'rjgc-jordan',
@@ -2176,7 +2186,37 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Jordan national geospatial and cartographic authority reference for maps, imagery, and survey data.',
+    notes: 'Jordan national mapping and survey authority. Exact product, edition, CRS, scale, access terms and rights are mandatory; official mapping does not itself create a postcode assignment, postal polygon, civic address, or public building relation.',
+  },
+  'upu-jordan-addressing-2004': {
+    id: 'upu-jordan-addressing-2004', name: 'UPU Jordan Addressing Sheet 2004', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/jorEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Dated September 2004 syntax evidence for five digits to the right of the locality and the region-department-zone-sector-unit coding description. It is not current assignment rows, postal geometry, civic addresses, buildings, or reuse permission.'
+  },
+  'modee-jordan-postal-policy-2025': {
+    id: 'modee-jordan-postal-policy-2025', name: 'Jordan ICT and Postal Policy 2025', url: 'https://www.modee.gov.jo/EBV4.0/Root_Storage/AR/EB_News/ICTP_Policy_2025.pdf', kind: 'standard', coverage: 'country', usage: 'primary', notes: 'Current policy and explanatory memorandum describe incomplete physical addressing and postal codes used for carrier-route sorting, and call for finer digital street/building location. Policy evidence is not a postcode polygon, address registry, or building dataset.'
+  },
+  'trc-jordan-postal-sector': {
+    id: 'trc-jordan-postal-sector', name: 'Jordan TRC Postal Sector', url: 'https://trc.gov.jo/EN/ListDetails/Postal_Sector/1289/1', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Official regulator context for Jordan Post as the public postal operator. Regulatory status does not publish current assignments, geometry, civic addresses, or buildings.'
+  },
+  'jordan-post-offices-open-data-2023': {
+    id: 'jordan-post-offices-open-data-2023', name: 'Jordan Post Offices Open Data', url: 'https://opendata.gov.jo/en/dataset/jordan-post-offices-1661-2023', kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Jordan Open Government Data License when attached to the exact artifact', notes: 'Official post-office rows include governorate, directorate, address, hours, postal code and property status. They are point or service-routing references, not postal polygons, civic-address coverage, delivery points, or buildings; pin the exact artifact, license, dates, schema, attribution and digest.'
+  },
+  'jordan-open-government-data-license-v1': {
+    id: 'jordan-open-government-data-license-v1', name: 'Jordan Open Government Data License v1.0', url: 'https://www.modee.gov.jo/ebv4.0/root_storage/en/eb_list_page/ogd-license_en.pdf', kind: 'standard', coverage: 'country', usage: 'reference', license: 'Jordan Open Government Data License v1.0', notes: 'Permits reuse of data expressly published under it with required attribution, non-endorsement and disclaimers. A portal page, map, service or institutional source is not covered unless the exact artifact carries the license; Arabic prevails.'
+  },
+  'rjgc-jordan-eservices': {
+    id: 'rjgc-jordan-eservices', name: 'RJGC Geospatial E-services', url: 'https://rjgc.gov.jo/eservices/index.php', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official maps, imagery and geospatial products use account, application and payment workflows. Access is product-specific and does not grant a postal relation or blanket redistribution rights.'
+  },
+  'rjgc-gam-building-mou': {
+    id: 'rjgc-gam-building-mou', name: 'RJGC and Greater Amman Municipality geospatial MoU', url: 'https://www.rjgc.gov.jo/index.php/ar/node/607', kind: 'building', coverage: 'country', usage: 'reference', notes: 'The institutional MoU mentions numbered building points, neighbourhoods, districts, streets and boundaries exchanged with Greater Amman Municipality. Controlled exchange is not a public building/address artifact or reuse licence.'
+  },
+  'dls-jordan-village-codes-2022': {
+    id: 'dls-jordan-village-codes-2022', name: 'Jordan DLS Village Codes Open Data', url: 'https://opendata.gov.jo/en/dataset/dlsvillagecode-1344-2022', kind: 'gazetteer', coverage: 'country', usage: 'reference', license: 'Jordan Open Government Data License when attached to the exact artifact', notes: 'Official village-code administrative and cadastral context. Village codes are not postcodes, postal assignments, civic addresses, building identifiers, or geometry.'
+  },
+  'gam-jordan-streets-2019': {
+    id: 'gam-jordan-streets-2019', name: 'Greater Amman Streets Open Data', url: 'https://opendata.gov.jo/en/dataset/streets-inside-and-outside-265-2019', kind: 'address', coverage: 'country', usage: 'reference', license: 'Jordan Open Government Data License when attached to the exact artifact', notes: 'Official street and planning-area context for the exact licensed spreadsheet. It is not national address coverage, postcode geometry, a civic-address registry, or a building relation.'
+  },
+  'jordan-digital-mailbox-pilot-2026': {
+    id: 'jordan-digital-mailbox-pilot-2026', name: 'Jordan Digital Postal Box Pilot 2026', url: 'https://petra.gov.jo/gweb/index.php/en/news/jordan-post-digital-mailbox-strategic-project-to-build-integrated-national-database', kind: 'address', coverage: 'country', usage: 'reference', notes: 'Official-news evidence of a pilot linking a digital postal box, postal code and home location, with planned Sanad integration. No public production schema, API, bulk dataset, personal-address permission or geometry licence is established.'
   },
   'osm-jordan': {
     id: 'osm-jordan',
@@ -3170,7 +3210,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
   PH: ['phlpost-zip-code-locator', 'upu-philippines-addressing', 'psa-philippine-standard-geographic-code', 'geoportal-philippines-data-inventory', 'geoportal-philippines-download-policy', 'namria-topographic-mapping', 'psa-popcen-cbms-geotagging', 'philippines-lra-land-registration', 'phlpost'],
   PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
-  JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
+  JO: ['jordanpost', 'upu-jordan-addressing-2004', 'modee-jordan-postal-policy-2025', 'trc-jordan-postal-sector', 'jordan-post-offices-open-data-2023', 'jordan-open-government-data-license-v1', 'rjgc-jordan', 'rjgc-jordan-eservices', 'rjgc-gam-building-mou', 'dls-jordan-village-codes-2022', 'gam-jordan-streets-2019', 'jordan-digital-mailbox-pilot-2026', 'osm-jordan'],
   KW: ['kuwait-post', 'upu-kuwait-addressing', 'paci-kuwait-finder', 'paci-kuwait-address-services', 'paci-kuwait-building-register', 'kuwait-municipality-parcels', 'kuwait-csb-census-gis', 'osm-kuwait'],
   LB: ['libanpost', 'osm-lebanon'],
   OM: ['upu-oman-postal-addressing', 'oman-post-office-locator', 'oman-post-website-terms', 'gov-oman-building-addressing-service', 'ncsi-oman-wilayat-boundaries', 'ncsi-oman-open-government-data-policy', 'nsgia-oman-geospatial-governance', 'nsgia-oman-portal-terms', 'nsgia-oman', 'oman-post', 'osm-oman'],

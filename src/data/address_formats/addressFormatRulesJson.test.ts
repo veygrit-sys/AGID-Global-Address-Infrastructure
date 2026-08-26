@@ -527,7 +527,7 @@ test('West Asia address metadata exposes national postal, geospatial, and OSM so
     IQ: ['iraq-post', 'osm-iraq'],
     SY: ['syria-post', 'osm-syria', 'hot-osm-west-asia'],
     LB: ['libanpost', 'osm-lebanon'],
-    JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
+    JO: ['jordanpost', 'upu-jordan-addressing-2004', 'modee-jordan-postal-policy-2025', 'trc-jordan-postal-sector', 'jordan-post-offices-open-data-2023', 'jordan-open-government-data-license-v1', 'rjgc-jordan', 'rjgc-jordan-eservices', 'rjgc-gam-building-mou', 'dls-jordan-village-codes-2022', 'gam-jordan-streets-2019', 'jordan-digital-mailbox-pilot-2026', 'osm-jordan'],
     IL: ['israel-post', 'govmap-israel', 'data-gov-il', 'osm-israel'],
     PS: ['palestine-open-data-postcodes', 'palestine-post', 'osm-palestine'],
     SA: ['spl-sa', 'spl-national-address-api', 'saudi-gis-national-platform', 'osm-saudi-arabia'],

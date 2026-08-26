@@ -2878,6 +2878,36 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official Kenya postal operator post-office directory; use for postcode/post-office confirmation.'],
   },
   {
+    id: 'jordanpost', countryCodes: ['JO'], label: 'Jordan Post', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://jordanpost.com.jo/', sourceNames: ['jordan post','jordanpost','jordan postal code'], openSourceIds: ['jordanpost'], requiresCredential: false, notes: ['Official five-digit postal and post-office reference.','Pinned results may support dated routing assignments, not canonical polygons, exact addresses, buildings, delivery entitlement or blanket reuse.'],
+  },
+  {
+    id: 'upu-jordan-addressing-2004', countryCodes: ['JO'], label: 'UPU Jordan Addressing Sheet 2004', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/jorEn.pdf', sourceNames: ['upu jordan addressing','upu jordan postcode'], openSourceIds: ['upu-jordan-addressing-2004'], requiresCredential: false, notes: ['Dated five-digit syntax and address-placement evidence.','Not current allocations, geometry, addresses or reuse permission.'],
+  },
+  {
+    id: 'modee-jordan-postal-policy-2025', countryCodes: ['JO'], label: 'Jordan ICT and Postal Policy 2025', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.modee.gov.jo/EBV4.0/Root_Storage/AR/EB_News/ICTP_Policy_2025.pdf', sourceNames: ['jordan ict and postal policy 2025','modee jordan postal policy'], openSourceIds: ['modee-jordan-postal-policy-2025'], requiresCredential: false, notes: ['Documents incomplete physical addressing and carrier-route postcode limits.','Policy is not assignment data or geometry.'],
+  },
+  {
+    id: 'jordan-post-offices-open-data-2023', countryCodes: ['JO'], label: 'Jordan Post Offices Open Data', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'locality', validationReadiness: 'reference-eligible', url: 'https://opendata.gov.jo/en/dataset/jordan-post-offices-1661-2023', sourceNames: ['jordan post offices open data','jordan post office dataset'], openSourceIds: ['jordan-post-offices-open-data-2023'], requiresCredential: false, notes: ['Exact licensed artifact may validate post-office and routing context.','Post-office rows are not postal polygons, civic addresses, buildings or delivery points.'],
+  },
+  {
+    id: 'jordan-open-government-data-license-v1', countryCodes: ['JO'], label: 'Jordan Open Government Data License v1.0', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.modee.gov.jo/ebv4.0/root_storage/en/eb_list_page/ogd-license_en.pdf', sourceNames: ['jordan open government data license','jordanian open data license'], openSourceIds: ['jordan-open-government-data-license-v1'], requiresCredential: false, notes: ['Applies only to exact artifacts expressly published under it with required attribution.'],
+  },
+  {
+    id: 'rjgc-jordan', countryCodes: ['JO'], label: 'Royal Jordanian Geographic Centre', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://www.rjgc.gov.jo/', sourceNames: ['royal jordanian geographic centre','rjgc jordan'], openSourceIds: ['rjgc-jordan','rjgc-jordan-eservices'], requiresCredential: true, notes: ['Official mapping and survey authority with product-specific access and rights.','Mapping does not create a postal relation or public address-building dataset.'],
+  },
+  {
+    id: 'rjgc-gam-building-mou', countryCodes: ['JO'], label: 'RJGC and GAM Geospatial MoU', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'building', validationReadiness: 'metadata-only', url: 'https://www.rjgc.gov.jo/index.php/ar/node/607', sourceNames: ['rjgc gam building mou','greater amman building points'], openSourceIds: ['rjgc-gam-building-mou'], requiresCredential: true, notes: ['Controlled institutional building-point exchange is not public data or reuse permission.'],
+  },
+  {
+    id: 'dls-jordan-village-codes-2022', countryCodes: ['JO'], label: 'Jordan DLS Village Codes 2022', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'locality', validationReadiness: 'metadata-only', url: 'https://opendata.gov.jo/en/dataset/dlsvillagecode-1344-2022', sourceNames: ['jordan village codes','dls jordan village codes'], openSourceIds: ['dls-jordan-village-codes-2022'], requiresCredential: false, notes: ['Administrative or cadastral identifier context only; never a postcode, address or building.'],
+  },
+  {
+    id: 'gam-jordan-streets-2019', countryCodes: ['JO'], label: 'Greater Amman Streets Open Data 2019', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'street', validationReadiness: 'metadata-only', url: 'https://opendata.gov.jo/en/dataset/streets-inside-and-outside-265-2019', sourceNames: ['greater amman streets open data','gam jordan streets'], openSourceIds: ['gam-jordan-streets-2019'], requiresCredential: false, notes: ['Exact licensed artifact may provide street context, not national civic addresses, postcode geometry or buildings.'],
+  },
+  {
+    id: 'jordan-digital-mailbox-pilot-2026', countryCodes: ['JO'], label: 'Jordan Digital Postal Box Pilot 2026', authority: 'government', trustTier: 'official', availability: 'unknown', depth: 'address', validationReadiness: 'metadata-only', url: 'https://petra.gov.jo/gweb/index.php/en/news/jordan-post-digital-mailbox-strategic-project-to-build-integrated-national-database', sourceNames: ['jordan digital postal box pilot','jordan digital mailbox pilot'], openSourceIds: ['jordan-digital-mailbox-pilot-2026'], requiresCredential: true, notes: ['Pilot evidence only; no public production schema, API, personal-address permission or geometry licence.'],
+  },
+  {
     id: 'zipcode-mn', countryCodes: ['MN'], label: 'CRC Mongolia Unified Postal Code map and list', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'building', validationReadiness: 'reference-eligible', url: 'https://www.zipcode.mn/', sourceNames: ['crc mongolia zipcode','mongolia unified postal code','zipcode mn'], openSourceIds: ['zipcode-mn'], requiresCredential: false, notes: ['Official current search, map and list for five-digit zones and nine-digit codes.','An exact result is assignment evidence, not automatic bulk reuse, canonical geometry, civic-address rights or delivery proof.'],
   },
   {
