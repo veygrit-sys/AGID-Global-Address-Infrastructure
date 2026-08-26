@@ -132,6 +132,14 @@ export type AsiaOpenGeoSourceId =
   | 'bps-indonesia-statistical-area-codes'
   | 'big-indonesia-village-boundaries'
   | 'big-indonesia-rbi-buildings'
+  | 'phlpost-zip-code-locator'
+  | 'upu-philippines-addressing'
+  | 'psa-philippine-standard-geographic-code'
+  | 'geoportal-philippines-data-inventory'
+  | 'geoportal-philippines-download-policy'
+  | 'namria-topographic-mapping'
+  | 'psa-popcen-cbms-geotagging'
+  | 'philippines-lra-land-registration'
   | 'phlpost'
   | 'post-gov-bn'
   | 'bhutan-post'
@@ -1494,6 +1502,79 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'reference',
     notes: 'Regional, scale- and edition-specific RBI building or public-facility features require an exact layer, licence, CRS and digest plus an explicit civic-address relation; proximity is not an address link.',
   },
+  'phlpost-zip-code-locator': {
+    id: 'phlpost-zip-code-locator',
+    name: 'PHLPost official ZIP Code Locator',
+    url: 'https://phlpost.gov.ph/zip-code-locator/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The official locator publishes Region, Province, City/Municipality and four-digit ZIP Code rows. A locator row is postal assignment and routing evidence, not barangay coverage, a canonical polygon, delivery point, civic address, building, complete version history or blanket redistribution licence.',
+  },
+  'upu-philippines-addressing': {
+    id: 'upu-philippines-addressing',
+    name: 'UPU Philippines addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/phlEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official addressing sheet places four digits to the left of the locality or province and describes zone, province/district/city and municipality/delivery-office digit roles. Digit hierarchy and address examples are semantics, not current allocation, boundaries, deliverability, address points or building relations.',
+  },
+  'psa-philippine-standard-geographic-code': {
+    id: 'psa-philippine-standard-geographic-code',
+    name: 'PSA Philippine Standard Geographic Code',
+    url: 'https://psa.gov.ph/classification/psgc',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0 unless otherwise stated by PSA',
+    notes: 'The versioned PSGC classifies regions, provinces, highly urbanized cities, cities, municipalities and barangays and publishes dated masterlists and an API. A PSGC code or administrative unit is not a PHLPost assignment, postal polygon, street address or building relation; exact edition and any content-specific exception must be pinned.',
+  },
+  'geoportal-philippines-data-inventory': {
+    id: 'geoportal-philippines-data-inventory',
+    name: 'Geoportal Philippines data inventory',
+    url: 'https://www.geoportal.gov.ph/gpresources/GP_DataInventory.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The March 2025 official inventory records providers, uploaded layers, metadata and restriction classes including no restriction/open, conditional downloading, restricted and not indicated. Inventory metadata is not the dataset, a common licence, postal authority, civic-address register or address-building crosswalk.',
+  },
+  'geoportal-philippines-download-policy': {
+    id: 'geoportal-philippines-download-policy',
+    name: 'Geoportal Philippines download procedure',
+    url: 'https://www.geoportal.gov.ph/gpresources/How%20to%20Download%20data%20from%20Geoportal%20Philippines.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official procedure requires requestor identity, agency, purpose, contact details and acceptance of terms and privacy provisions for downloadable layers. Portal access or download success is not blanket redistribution, postal authority, address authority or permission to publish personal or restricted attributes.',
+  },
+  'namria-topographic-mapping': {
+    id: 'namria-topographic-mapping',
+    name: 'NAMRIA topographic mapping roadmap and products',
+    url: 'https://www.namria.gov.ph/jdownloads/Info_Mapper/Infomapper_2024_NAMRIA_Advancing_Geospatial_Information_Management_through_Innovation.pdf',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'NAMRIA documents nationwide and selected urban topographic map series, digital line maps, orthoimages, administrative maps and varying production and update coverage. Topographic roads or buildings are geometry, not PHLPost polygons or civic-address identities; exact product, rights, scale, epoch, CRS, coverage and digest are required.',
+  },
+  'psa-popcen-cbms-geotagging': {
+    id: 'psa-popcen-cbms-geotagging',
+    name: 'PSA POPCEN-CBMS geotagging and building-construction listing',
+    url: 'https://psa.gov.ph/content/psa-clears-2024-popcen-cbms-geotagging-service-facilities-and-government-projects',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'PSA geotags service facilities, government projects and ongoing building constructions for statistics and planning. Census and CBMS collection is not a public national civic-address or building register, postal geometry or delivery evidence; confidential household, respondent, permit and establishment details never become public AGID output.',
+  },
+  'philippines-lra-land-registration': {
+    id: 'philippines-lra-land-registration',
+    name: 'Philippines Land Registration Authority',
+    url: 'https://lra.gov.ph/message-from-the-administrator/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'LRA registers transactions involving titled and untitled land and provides controlled title and registered-document services. A title, parcel or recorded interest is not a postal surface, building footprint, civic-address relation or public owner/occupant dataset; exact service terms, authority and privacy controls apply.',
+  },
   phlpost: {
     id: 'phlpost',
     name: 'PHLPost ZIP Code Search',
@@ -2679,7 +2760,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
   MY: ['pos-malaysia'],
   NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
-  PH: ['phlpost'],
+  PH: ['phlpost-zip-code-locator', 'upu-philippines-addressing', 'psa-philippine-standard-geographic-code', 'geoportal-philippines-data-inventory', 'geoportal-philippines-download-policy', 'namria-topographic-mapping', 'psa-popcen-cbms-geotagging', 'philippines-lra-land-registration', 'phlpost'],
   PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
   JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
   KW: ['kuwait-post', 'upu-kuwait-addressing', 'paci-kuwait-finder', 'paci-kuwait-address-services', 'paci-kuwait-building-register', 'kuwait-municipality-parcels', 'kuwait-csb-census-gis', 'osm-kuwait'],
