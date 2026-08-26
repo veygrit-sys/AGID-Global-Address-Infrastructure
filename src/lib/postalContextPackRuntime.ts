@@ -453,6 +453,7 @@ export {
   normalizeKyrgyzstanPostalCode,
   normalizeUnitedStatesPostalCode,
   normalizeArgentinaPostalCode,
+  normalizeUruguayPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

@@ -757,6 +757,18 @@ test('separates Argentina CPA authority, address geography, boundaries, and cada
   assert.equal(arSources.find(source => source.id === 'argentina-cadastre-law-26209')?.sourceRole, 'legal-framework-only');
 });
 
+test('separates Uruguay official postal polygons, service observations, address points, catalog, and cadastre', () => {
+  const uySources = getOfficialPostalSourcesForCountry('UY');
+  const ids = uySources.map(source => source.id);
+  assert.equal(uySources.find(source => source.id === 'correo-uruguayo-postal-polygons')?.trustTier, 'authoritative');
+  assert.equal(uySources.find(source => source.id === 'correo-uruguayo-address-services')?.trustTier, 'authoritative');
+  for (const id of ['correo-uruguayo-address-services', 'ide-uy-addresses', 'ide-uy', 'dnc-uy-parcels']) assert.ok(ids.includes(id));
+  assert.equal(uySources.find(source => source.id === 'correo-uruguayo-postal-polygons')?.availability, 'bulk-open-data');
+  assert.equal(uySources.find(source => source.id === 'correo-uruguayo-address-services')?.depth, 'address');
+  assert.equal(uySources.find(source => source.id === 'ide-uy-addresses')?.trustTier, 'official');
+  assert.equal(uySources.find(source => source.id === 'ide-uy')?.sourceRole, 'legal-framework-only');
+  assert.equal(uySources.find(source => source.id === 'dnc-uy-parcels')?.depth, 'geo-only');
+});
 test('separates United States postal authority, geography, and crosswalk sources', () => {
   const usSources = getOfficialPostalSourcesForCountry('US');
   const usSourceIds = usSources.map(source => source.id);

@@ -36,6 +36,11 @@ export type AmericasOpenGeoSourceId =
   | 'idera-argentina'
   | 'argentina-cadastre-law-26209'
   | 'osm-argentina'
+  | 'correo-uruguayo-postal-polygons'
+  | 'correo-uruguayo-address-services'
+  | 'ide-uy-addresses'
+  | 'dnc-uy-parcels'
+  | 'osm-uruguay'
   | 'zippopotam'
   | 'canada-post-postal'
   | 'correos-mexico'
@@ -594,6 +599,31 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
     notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Correo Argentino, IGN, Georef, cadastral, occupant or exact address-building authority.',
   },
+  'correo-uruguayo-postal-polygons': {
+    id: 'correo-uruguayo-postal-polygons', name: 'Correo Uruguayo official postal-code polygons', url: 'https://catalogodatos.gub.uy/dataset/correo-codigo-postal',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Licencia de Datos Abiertos de Uruguay',
+    notes: 'Official five-digit postcode SHP/KML releases from Correo Uruguayo. The August 2023 SHP is EPSG:4326 and supplies official release geometry, but production must pin its exact resource UUID, retrieval time, digest, validity and supersession instead of treating the catalog page or a current lookup as a timeless boundary.',
+  },
+  'correo-uruguayo-address-services': {
+    id: 'correo-uruguayo-address-services', name: 'Correo Uruguayo address and postcode web services', url: 'https://www.correo.com.uy/servicios-web',
+    kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Official services can return normalized street, door number, block, lot, locality, department, postcode and EPSG:4326 address point context. A response is time-bound assignment/address evidence, not a parcel, building footprint, occupant record or bulk redistribution grant; pin terms and minimize retained requests.',
+  },
+  'ide-uy-addresses': {
+    id: 'ide-uy-addresses', name: 'Sistema Único de Direcciones Geográficas del Uruguay', url: 'https://catalogodatos.gub.uy/dataset/ide-direcciones-geograficas-del-uruguay',
+    kind: 'address', coverage: 'country', usage: 'primary', license: 'Licencia de Datos Abiertos de Uruguay',
+    notes: 'Official nationwide address points and identifiers with street nomenclature, door numbers and locality/department context, updated by participating authorities. Preserve departmental resource release and provenance; an address point or identifier is not postal-area geometry, a cadastral parcel, building footprint or automatic address-building relation.',
+  },
+  'dnc-uy-parcels': {
+    id: 'dnc-uy-parcels', name: 'Dirección Nacional de Catastro parcel shapes', url: 'https://catalogodatos.gub.uy/dataset/direccion-nacional-de-catastro-shapes-del-parcelario-rural-y-urbano',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'Licencia de Datos Abiertos de Uruguay',
+    notes: 'Official monthly urban and rural parcel shapes from DNC. A parcel supplies cadastral context only and is not a postal polygon, civic address, building footprint, unit, owner/occupant record or exact address-building relation without an explicit stable source key.',
+  },
+  'osm-uruguay': {
+    id: 'osm-uruguay', name: 'OpenStreetMap Uruguay', url: 'https://wiki.openstreetmap.org/wiki/Uruguay',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Correo Uruguayo, IDE, DNC, occupant or exact address-building authority.',
+  },
   'geoportal-cl': {
     id: 'geoportal-cl',
     name: 'Geoportal de Chile',
@@ -634,10 +664,11 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     id: 'ide-uy',
     name: 'Infraestructura de Datos Espaciales de Uruguay',
     url: 'https://www.gub.uy/infraestructura-datos-espaciales/',
-    kind: 'admin-boundary',
+    kind: 'data-catalog',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Uruguay official spatial data infrastructure for national geodata reference.',
+    license: 'Artifact-specific; open catalog resources commonly use Licencia de Datos Abiertos de Uruguay',
+    notes: 'Official national discovery and interoperability context. Each selected boundary, road, locality or address resource retains its producer, resource UUID, release, CRS, validity, licence and digest; catalog presence is not postal assignment or building authority.',
   },
   'ide-py': {
     id: 'ide-py',
@@ -812,7 +843,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   PE: ['geo-vivienda-pe'],
   EC: ['codigo-postal-ec'],
   PY: ['ide-py'],
-  UY: ['ide-uy'],
+  UY: ['correo-uruguayo-postal-polygons', 'correo-uruguayo-address-services', 'ide-uy-addresses', 'ide-uy', 'dnc-uy-parcels', 'osm-uruguay'],
   GF: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   AI: ['british-overseas-postal-reference', 'anguilla-post', 'anguilla-gov-gis'],
   BM: ['british-overseas-postal-reference', 'bermuda-post', 'bermuda-gov-maps'],
