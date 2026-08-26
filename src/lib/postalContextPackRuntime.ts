@@ -444,6 +444,7 @@ export {
   normalizeLebanonPostalCode,
   normalizeAfghanistanPostalCode,
   normalizeIsraelPostalCode,
+  normalizeIraqPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

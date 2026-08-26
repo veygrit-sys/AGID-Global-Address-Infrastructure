@@ -2932,6 +2932,36 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     id: 'data-gov-il-terms-2025', countryCodes: ['IL'], label: 'Data.gov.il terms updated 2025-08-30', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://data.gov.il/terms-of-use', sourceNames: ['data gov il terms','israel open data licence'], openSourceIds: ['data-gov-il-terms-2025'], requiresCredential: false, notes: ['Default open-data terms allow reuse with attribution, subject to exact dataset overrides.','Privacy, misleading use, unlawful use, third-party rights, systems and software remain excluded or restricted.'],
   },
   {
+    id: 'iraq-post', countryCodes: ['IQ'], label: 'Iraq Post and Savings Company', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://post.iq/', sourceNames: ['iraq post','iraq post and savings company','general company for post and savings'], openSourceIds: ['iraq-post'], requiresCredential: false, notes: ['Official operator and service-domain reference.','No current public bulk assignment, postal-object, geometry, address or building licence is established.'],
+  },
+  {
+    id: 'iraq-post-platform', countryCodes: ['IQ'], label: 'Iraq Post delivery platform', authority: 'postal-operator', trustTier: 'authoritative', availability: 'auth-required-api', depth: 'delivery-point', validationReadiness: 'metadata-only', url: 'https://iq-post-platform.post.iq/', sourceNames: ['iraq post delivery platform','iraq post platform'], openSourceIds: ['iraq-post-platform'], requiresCredential: true, notes: ['Official operational platform.','Accounts, addresses and locations are private operational records, not open validation or redistribution data.'],
+  },
+  {
+    id: 'iraq-post-privacy-2025', countryCodes: ['IQ'], label: 'Iraq Post app privacy policy 2025', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://app.post.iq/pages/privacypolicy.html', sourceNames: ['iraq post privacy policy','post iq privacy'], openSourceIds: ['iraq-post-privacy-2025'], requiresCredential: false, notes: ['Updated 2025-05-25 and identifies name, email, phone and permitted location as personal data.','Privacy boundary only; not a data or assignment licence.'],
+  },
+  {
+    id: 'upu-iraq-addressing-2005', countryCodes: ['IQ'], label: 'UPU Iraq addressing sheet 03/2005', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/irqEn.pdf', sourceNames: ['upu iraq addressing 2005','iraq five digit postcode format'], openSourceIds: ['upu-iraq-addressing-2005'], requiresCredential: false, notes: ['Documents five digits below locality and region, province, delivery-type and post-office-number semantics.','Dated format reference only; examples and contacts are not reusable records or current assignments.'],
+  },
+  {
+    id: 'iraq-post-2004-code-announcement', countryCodes: ['IQ'], label: 'Iraqi Post and Ministry of Communications 2004 code announcement', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://govinfo.library.unt.edu/cpa-iraq/pressreleases/20040524_postal.html', sourceNames: ['iraq postcode announcement 2004','iraqi post five digit scheme'], openSourceIds: ['iraq-post-2004-code-announcement'], requiresCredential: false, notes: ['Historical provenance for the five-digit region, province, office and delivery-category scheme.','Not a current assignment list, geometry artifact or reuse licence.'],
+  },
+  {
+    id: 'iraq-post-new-code-storymap-2025', countryCodes: ['IQ'], label: 'Iraqi postal zone-sector StoryMap 2025', authority: 'unknown', trustTier: 'weak', availability: 'web-search', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://storymaps.arcgis.com/stories/71daa78e94c94969a080c6aecace4f57', sourceNames: ['iraqi postal code new system','iraq postal zone sector storymap'], openSourceIds: ['iraq-post-new-code-storymap-2025'], requiresCredential: false, notes: ['Describes a proposed or transitional five-digit zone plus three-character sector model.','ArcGIS item owner is fatima_atlasgis and licence/access-information fields are empty; official authorship, deployment, coverage and reuse are unverified.'],
+  },
+  {
+    id: 'iraq-open-government-portal', countryCodes: ['IQ'], label: 'Iraq National Open Government Portal', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'locality', validationReadiness: 'metadata-only', url: 'https://nogp.gov.iq/', sourceNames: ['iraq open government portal','iraq nogp'], openSourceIds: ['iraq-open-government-portal'], requiresCredential: false, notes: ['Official catalog for government-published resources.','Pin the exact resource, publisher, update, policy and digest; catalog presence is not postal authority.'],
+  },
+  {
+    id: 'iraq-open-government-data-policy', countryCodes: ['IQ'], label: 'Iraq open-government data policy', authority: 'official-open-data', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://nogp.gov.iq/POLICIES.aspx', sourceNames: ['iraq open data policy','iraq nogp policies'], openSourceIds: ['iraq-open-government-data-policy'], requiresCredential: false, notes: ['Aims to enable reuse and redistribution of public government data.','Exact-resource applicability, policy version, data-protection, privacy and information-security restrictions must be pinned.'],
+  },
+  {
+    id: 'iraq-geographic-portal', countryCodes: ['IQ'], label: 'Iraq Geographic Portal', authority: 'government', trustTier: 'official', availability: 'auth-required-api', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://igp.ur.gov.iq/Default.aspx', sourceNames: ['iraq geographic portal','iraq igp'], openSourceIds: ['iraq-geographic-portal'], requiresCredential: true, notes: ['Government spatial-data infrastructure with controlled and public services.','Exact layer authority, jurisdiction, terms, CRS, topology, validity and digest are required; administrative geometry is not postal geometry.'],
+  },
+  {
+    id: 'iraq-statistics-gis', countryCodes: ['IQ'], label: 'Iraq Commission of Statistics and GIS', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://cosit.gov.iq/', sourceNames: ['iraq statistics and gis','iraq cosit'], openSourceIds: ['iraq-statistics-gis'], requiresCredential: false, notes: ['Official administrative and statistical context.','Exact artifact, year, definitions, licence and digest are required; statistical boundaries are not postcode assignments or postal zones.'],
+  },
+  {
     id: 'afghan-post', countryCodes: ['AF'], label: 'Afghan Post official postal service', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://afghanpost.gov.af/en', sourceNames: ['afghan post','afghanpost','afghanistan post'], openSourceIds: ['afghan-post'], requiresCredential: false, notes: ['Official operator and online-service reference.','The site states all rights reserved; public pages are not bulk assignment, address, geometry or building reuse permission.'],
   },
   {
@@ -6865,6 +6895,7 @@ const POSTAL_OPERATOR_PATTERNS = [
   /\bepost\b/i,
   /\bphlpost\b/i,
   /\bisrael\s*post\b/i,
+  /\biraq\s*post\b/i,
   /\bafghan\s*post\b/i,
   /\blibanpost\b/i,
   /\bslpost\b/i,

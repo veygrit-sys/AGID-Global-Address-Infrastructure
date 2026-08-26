@@ -216,6 +216,15 @@ export type AsiaOpenGeoSourceId =
   | 'iran-open-data'
   | 'osm-iran'
   | 'iraq-post'
+  | 'iraq-post-platform'
+  | 'iraq-post-privacy-2025'
+  | 'upu-iraq-addressing-2005'
+  | 'iraq-post-2004-code-announcement'
+  | 'iraq-post-new-code-storymap-2025'
+  | 'iraq-open-government-portal'
+  | 'iraq-open-government-data-policy'
+  | 'iraq-geographic-portal'
+  | 'iraq-statistics-gis'
   | 'osm-iraq'
   | 'syria-post'
   | 'osm-syria'
@@ -2189,12 +2198,93 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'iraq-post': {
     id: 'iraq-post',
-    name: 'Iraq Post',
-    url: 'https://www.iraqpost.net/',
+    name: 'Iraq Post and Savings Company',
+    url: 'https://post.iq/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official operator domain and service reference. No public current bulk postcode assignment, object-type, validity, polygon, address register or building relation is bundled; exact written data and redistribution rights are required.',
+  },
+  'iraq-post-platform': {
+    id: 'iraq-post-platform',
+    name: 'Iraq Post delivery platform',
+    url: 'https://iq-post-platform.post.iq/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official operational delivery platform. Account, merchant, office, address and location input are operational/private records, not an open postcode, address or building dataset.',
+  },
+  'iraq-post-privacy-2025': {
+    id: 'iraq-post-privacy-2025',
+    name: 'Iraq Post app privacy policy 2025',
+    url: 'https://app.post.iq/pages/privacypolicy.html',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Policy updated 2025-05-25 identifies name, email, phone and permitted location as personal data. It is a privacy boundary, not a reuse licence or postal assignment source.',
+  },
+  'upu-iraq-addressing-2005': {
+    id: 'upu-iraq-addressing-2005',
+    name: 'UPU Iraq addressing sheet 03/2005',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/irqEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Documents a five-digit postcode below the locality and labels region, province, delivery type and post-office-number components. The dated sheet and its real examples or contacts are not current assignments, geometry, addresses or reuse permission.',
+  },
+  'iraq-post-2004-code-announcement': {
+    id: 'iraq-post-2004-code-announcement',
+    name: 'Iraqi Post and Ministry of Communications 2004 code announcement',
+    url: 'https://govinfo.library.unt.edu/cpa-iraq/pressreleases/20040524_postal.html',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Historical scheme provenance for five digits covering region, province, post office and office-level delivery categories. It is not a current assignment release, current coverage proof, geometry or licence.',
+  },
+  'iraq-post-new-code-storymap-2025': {
+    id: 'iraq-post-new-code-storymap-2025',
+    name: 'Iraqi postal zone-sector ArcGIS StoryMap 2025',
+    url: 'https://storymaps.arcgis.com/stories/71daa78e94c94969a080c6aecace4f57',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Iraq postal-service reference for local postal-code and delivery validation.',
+    notes: 'Describes converting five-digit post-office numbers to zones and adding a three-character sector derived from roads and streets. ArcGIS metadata shows owner fatima_atlasgis with no licence or access-information statement; Iraq Post authorship, deployment, coverage and reuse rights are unverified, so this is migration-candidate evidence only.',
+  },
+  'iraq-open-government-portal': {
+    id: 'iraq-open-government-portal',
+    name: 'Iraq National Open Government Portal',
+    url: 'https://nogp.gov.iq/',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official public-data catalog. Catalog presence does not make a record postal authority; pin the exact dataset, resource, publisher, schema, update, policy and digest.',
+  },
+  'iraq-open-government-data-policy': {
+    id: 'iraq-open-government-data-policy',
+    name: 'Iraq National Open Government Portal policies',
+    url: 'https://nogp.gov.iq/POLICIES.aspx',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Policy aims to enable reuse and redistribution of public government data subject to data protection, privacy and information-security law. Apply only to an exact published resource and pin policy version and exceptions.',
+  },
+  'iraq-geographic-portal': {
+    id: 'iraq-geographic-portal',
+    name: 'Iraq Geographic Portal',
+    url: 'https://igp.ur.gov.iq/Default.aspx',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Government spatial-data infrastructure coordinated for controlled exchange and public services. Exact layer access, authority, jurisdiction, terms, CRS, topology, validity and digest are required; administrative geometry is not postal geometry.',
+  },
+  'iraq-statistics-gis': {
+    id: 'iraq-statistics-gis',
+    name: 'Iraq Commission of Statistics and GIS',
+    url: 'https://cosit.gov.iq/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Ministry of Planning statistical and GIS authority for administrative and statistical context. Exact artifact, year, definitions, licence and digest are required; statistical boundaries do not establish postal assignments or delivery zones.',
   },
   'osm-iraq': {
     id: 'osm-iraq',
@@ -3386,7 +3476,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'osm-india',
     'hot-osm-south-asia',
   ],
-  IQ: ['iraq-post', 'osm-iraq'],
+  IQ: ['iraq-post', 'iraq-post-platform', 'iraq-post-privacy-2025', 'upu-iraq-addressing-2005', 'iraq-post-2004-code-announcement', 'iraq-post-new-code-storymap-2025', 'iraq-open-government-portal', 'iraq-open-government-data-policy', 'iraq-geographic-portal', 'iraq-statistics-gis', 'osm-iraq'],
   IR: ['gavahi-post-ir', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
   JP: [
     'zipcloud-jp',

@@ -2084,3 +2084,20 @@ test('Laos address metadata exposes official delivery-scope, administrative, pri
   assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding'));
   assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
 });
+
+test('Iraq address metadata separates five-digit postal objects, unverified migration zones, private delivery addresses, government context, buildings, territorial scope, and AGID', () => {
+  const format = loadFormat('IQ');
+  const rules = loadRules('IQ');
+  assert.equal(format.postalCode?.format, 'NNNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{5}$');
+  assert.match(format.postalCode?.api ?? '', /post\.iq/i);
+  assert.match(format.postalCode?.source ?? '', /Iraq Post.*privacy policy 2025.*UPU.*03\/2005.*2004.*ArcGIS.*2025.*NOGP.*IGP.*COSIT/i);
+  assert.equal(rules.postalCode?.label, '5 digits required for postal addressing');
+  assert.equal(rules.postalCode?.required, true);
+  assert.match(rules.postalCode?.usage ?? '', /opaque Iraq Post assignment.*region.*governorate.*delivery-type.*post-office.*P\.O\. Box.*business holdout.*polygon is never presumed.*zone-plus-sector.*unverified owner.*migration candidate.*territorial scope/i);
+  assert.deepEqual(rules.regionalHierarchy, ['officialFiveDigitPostalAssignment','postalOfficeDeliveryTypePoBoxOrBusinessHoldout','recipientOrOrganization','houseStreetQuarterAlley','districtLocalityGovernorate','officialPostalObjectGeometryWhenExactlyRightsCleared','unverifiedZoneSectorMigrationCandidate','iraqGeographicPortalAdministrativeCandidate','statisticsGisAdministrativeContextIndependentFromPostcode','optionalDerivedPostalContextSurface','explicitRightsClearedCivicAddress','explicitAddressLinkedBuilding','exactRightsClearedBuildingGeometry','agidIndependentSpatialIndex','territorialScopeExplicitAndVersioned']);
+  assert.equal(format.native?.fields.some(field => field.key === 'poBox'), true);
+  assert.equal(format.english?.fields.some(field => field.key === 'quarter'), true);
+  assert.equal(format.native?.fields.some(field => field.key === 'buildingId'), true);
+  for (const id of ["iraq-post","iraq-post-platform","iraq-post-privacy-2025","upu-iraq-addressing-2005","iraq-post-2004-code-announcement","iraq-post-new-code-storymap-2025","iraq-open-government-portal","iraq-open-government-data-policy","iraq-geographic-portal","iraq-statistics-gis","osm-iraq"]) assert.ok(format.openSourceIds?.includes(id));
+});
