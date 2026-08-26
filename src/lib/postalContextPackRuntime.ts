@@ -451,6 +451,7 @@ export {
   normalizeChinaPostalCode,
   normalizeCambodiaPostalCode,
   normalizeKyrgyzstanPostalCode,
+  normalizeUnitedStatesPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

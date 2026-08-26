@@ -62,6 +62,7 @@ import {
   normalizeChinaPostalCode,
   normalizeCambodiaPostalCode,
   normalizeKyrgyzstanPostalCode,
+  normalizeUnitedStatesPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -523,7 +524,13 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeLiechtensteinPostalCode('94-00'), null);
   assert.equal(normalizeLiechtensteinPostalCode('8000'), null);
   assert.equal(normalizePostalContextPostalCode('li', '94 00'), '9400');
-  assert.equal(normalizePostalContextPostalCode('US', '00001'), null);
+  assert.equal(normalizeUnitedStatesPostalCode('００００１'), '00001');
+  assert.equal(normalizeUnitedStatesPostalCode('00001 0001'), '00001-0001');
+  assert.equal(normalizeUnitedStatesPostalCode('000010001'), '00001-0001');
+  assert.equal(normalizeUnitedStatesPostalCode('00001-0001'), '00001-0001');
+  assert.equal(normalizeUnitedStatesPostalCode('US-00001'), null);
+  assert.equal(normalizeUnitedStatesPostalCode('00001 000'), null);
+  assert.equal(normalizePostalContextPostalCode('us', '000010001'), '00001-0001');
   assert.equal(normalizeAzerbaijanPostalCode('ＡＺ１０１０'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('az 1010'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('1010'), 'AZ1010');
@@ -585,9 +592,11 @@ test('normalizes supported country postal codes without cross-country guessing',
 test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('JP'), true);
   assert.equal(isPostalContextCountryCode('SG'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.US.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.US.postalCodeFormat, 'NNNNN or NNNNN-NNNN');
   assert.equal(isPostalContextCountryCode('NL'), true);
   assert.equal(isPostalContextCountryCode('GB'), true);
-  assert.equal(isPostalContextCountryCode('US'), false);
+  assert.equal(isPostalContextCountryCode('US'), true);
   assert.equal(isPostalContextCountryCode('FR'), true);
   assert.equal(isPostalContextCountryCode('NZ'), true);
   assert.equal(

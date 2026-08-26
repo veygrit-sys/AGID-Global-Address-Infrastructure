@@ -20,7 +20,17 @@ export type AmericasOpenGeoSourceId =
   | 'eea-natura-2000'
   | 'eea-eunis-habitats'
   | 'jrc-esdac-soils'
+  | 'usps-web-tools'
+  | 'usps-ais-products'
+  | 'usps-publication-28-2024'
+  | 'usps-zip-code-lookup'
+  | 'us-census-zcta-2020'
+  | 'us-census-tiger-line'
   | 'us-census-geocoder'
+  | 'usdot-national-address-database'
+  | 'usgs-national-structures-dataset'
+  | 'hud-usps-zip-crosswalk'
+  | 'osm-united-states'
   | 'zippopotam'
   | 'canada-post-postal'
   | 'correos-mexico'
@@ -233,14 +243,60 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'reference',
     notes: 'European soil and terrain source for natural geography context in overlapping European-linked territory records.',
   },
+  'usps-web-tools': {
+    id: 'usps-web-tools', name: 'USPS Addresses 3.0 APIs', url: 'https://developers.usps.com/apis',
+    kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'OAuth-protected USPS address standardization and ZIP/ZIP+4 delivery-point context. Credentials, request addresses, and responses are never bundled; a result does not prove an occupant or building footprint.',
+  },
+  'usps-ais-products': {
+    id: 'usps-ais-products', name: 'USPS Address Information System Products', url: 'https://postalpro.usps.com/address-quality-solutions',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Licensed monthly City State, ZIP+4, Five-Digit ZIP, Carrier Route, and delivery-statistics products. They describe delivery objects and assignments, not open reusable polygons or address-building links.',
+  },
+  'usps-publication-28-2024': {
+    id: 'usps-publication-28-2024', name: 'USPS Publication 28, October 2024', url: 'https://pe.usps.com/text/pub28/',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official postal-addressing format guidance for delivery lines, secondary units, rural and highway-contract routes, general delivery, PO Boxes, Puerto Rico, and military mail; not a redistributable address or geometry dataset.',
+  },
+  'usps-zip-code-lookup': {
+    id: 'usps-zip-code-lookup', name: 'USPS ZIP Code Lookup', url: 'https://tools.usps.com/zip-code-lookup.htm',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official interactive address, City/State, and ZIP lookup. Results are transient validation evidence and USPS explicitly does not confirm that a person or company is at an address.',
+  },
+  'us-census-zcta-2020': {
+    id: 'us-census-zcta-2020', name: 'U.S. Census ZIP Code Tabulation Areas', url: 'https://www.census.gov/programs-surveys/geography/guidance/geo-areas/zctas.html',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'U.S. public domain; exact release metadata required',
+    notes: 'Generalized statistical block-based representations of some USPS ZIP Codes. ZCTAs are not USPS delivery boundaries, do not represent every valid ZIP, and cannot disclose Title 13 protected address locations.',
+  },
+  'us-census-tiger-line': {
+    id: 'us-census-tiger-line', name: 'U.S. Census TIGER/Line', url: 'https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/tiger-geo-line.html',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'U.S. public domain; exact release metadata required',
+    notes: 'Official statistical geography and address-range context. TIGER/Line does not determine legal ownership, jurisdiction, USPS delivery assignment, or exact building membership.',
+  },
   'us-census-geocoder': {
-    id: 'us-census-geocoder',
-    name: 'U.S. Census Geocoder',
-    url: 'https://geocoding.geo.census.gov/geocoder/',
-    kind: 'geocoding',
-    coverage: 'country',
-    usage: 'validation',
-    notes: 'U.S. public address geocoder for domestic address validation and coordinates.',
+    id: 'us-census-geocoder', name: 'U.S. Census Geocoder', url: 'https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.html',
+    kind: 'geocoding', coverage: 'country', usage: 'validation',
+    notes: 'Public MAF/TIGER-based address-to-coordinate and geography evidence. It is not USPS delivery validation, occupant proof, a building footprint, or an automatic address-building relation.',
+  },
+  'usdot-national-address-database': {
+    id: 'usdot-national-address-database', name: 'USDOT National Address Database', url: 'https://catalog.data.gov/dataset/national-address-database-nad',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'Artifact-specific; catalog metadata reports CC0 with access and rights restrictions',
+    notes: 'Provider-dependent address-point compilation. Pin the exact release, contributing jurisdiction, field provenance, disclaimer, access class, rights and digest; a point is not a USPS assignment or building footprint.',
+  },
+  'usgs-national-structures-dataset': {
+    id: 'usgs-national-structures-dataset', name: 'USGS National Structures Dataset', url: 'https://data.usgs.gov/datacatalog/data/USGS:db4fb1b6-1282-4e5b-9866-87a68912c5d1',
+    kind: 'facility', coverage: 'country', usage: 'validation', license: 'U.S. public domain; exact layer provenance required',
+    notes: 'Selected structure points and preliminary building polygons. Coverage and feature purpose vary; no civic-address, USPS delivery, parcel, owner, occupant, or comprehensive-building relation is implied.',
+  },
+  'hud-usps-zip-crosswalk': {
+    id: 'hud-usps-zip-crosswalk', name: 'HUD USPS ZIP Code Crosswalk', url: 'https://www.huduser.gov/portal/dataset/uspszip-api.html',
+    kind: 'statistics', coverage: 'country', usage: 'validation',
+    notes: 'Derived ZIP-to-geography allocation ratios for analysis. It is not a USPS delivery polygon, delivery-point validator, civic address, or building relation.',
+  },
+  'osm-united-states': {
+    id: 'osm-united-states', name: 'OpenStreetMap United States', url: 'https://wiki.openstreetmap.org/wiki/United_States',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community road, address and building validation kept in an ODbL provenance partition. It is not USPS authority, cadastral authority, occupant proof, or an automatic address-building join.',
   },
   zippopotam: {
     id: 'zippopotam',
@@ -709,7 +765,7 @@ const BASE_OPEN_SOURCE_IDS: AmericasOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSourceId[]>> = {
-  US: ['us-census-geocoder'],
+  US: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder', 'usdot-national-address-database', 'usgs-national-structures-dataset', 'hud-usps-zip-crosswalk', 'osm-united-states'],
   CA: ['canada-post-postal'],
   MX: ['correos-mexico'],
   CR: ['correos-cr-postal', 'snit-cr'],

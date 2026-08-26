@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -15,6 +15,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   JP: {
     countryCode: 'JP',
     postalCodeFormat: 'NNN-NNNN',
+    fullCodeGeometrySemantics: 'area-or-non-area',
+  },
+  US: {
+    countryCode: 'US',
+    postalCodeFormat: 'NNNNN or NNNNN-NNNN',
     fullCodeGeometrySemantics: 'area-or-non-area',
   },
   SG: {
@@ -765,6 +770,15 @@ export function normalizeCambodiaPostalCode(value: unknown) {
   return /^\d{6}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeUnitedStatesPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  if (/^\d{5}$/.test(normalized)) return normalized;
+  if (/^\d{9}$/.test(normalized)) return `${normalized.slice(0, 5)}-${normalized.slice(5)}`;
+  return /^\d{5}-\d{4}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizeKyrgyzstanPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -963,6 +977,7 @@ export function normalizeGeorgiaPostalCode(value: unknown) {
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
+  if (normalizedCountry === 'US') return normalizeUnitedStatesPostalCode(value);
   if (normalizedCountry === 'SG') return normalizeSingaporePostalCode(value);
   if (normalizedCountry === 'NL') return normalizeNetherlandsPostalCode(value);
   if (normalizedCountry === 'GB') return normalizeUnitedKingdomPostalCode(value);

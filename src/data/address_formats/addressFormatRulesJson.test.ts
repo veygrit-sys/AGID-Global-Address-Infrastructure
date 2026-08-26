@@ -2182,3 +2182,14 @@ test('Cambodia address metadata separates Prakas 77 assignments, administrative 
   for (const key of ['recipient', 'building', 'floor', 'unit', 'room', 'village', 'commune', 'district', 'province', 'postOffice', 'poBox']) assert.ok(format.native.fields.some((item: any) => item.key === key));
   for (const id of ["cambodia-post","mptc-cambodia-prakas-77-2025","upu-cambodia-addressing-2018","ncdd-cambodia-gazetteer","mlmupc-cambodia-cadastral-services","mlmupc-cambodia-building-services","odc-cambodia-postal-codes","osm-cambodia"]) assert.ok(format.openSourceIds?.includes(id));
 });
+
+test('United States address metadata separates USPS delivery objects, ZCTA, civic addresses, buildings, jurisdiction, privacy, time, and AGID', () => {
+  const format = loadFormat('US'); const rules = loadRules('US');
+  const expected = ['usps-web-tools','usps-ais-products','usps-publication-28-2024','usps-zip-code-lookup','us-census-zcta-2020','us-census-tiger-line','us-census-geocoder','usdot-national-address-database','usgs-national-structures-dataset','hud-usps-zip-crosswalk','osm-united-states'];
+  assert.equal(format.postalCode?.format, 'NNNNN or NNNNN-NNNN'); assert.equal(format.postalCode?.regex, '^\\d{5}(?:-\\d{4})?$');
+  assert.match(format.postalCode?.source ?? '', /USPS.*Addresses 3\.0.*AIS.*Publication 28.*2024.*Census ZCTA.*TIGER.*NAD.*USGS.*HUD.*OpenStreetMap/i);
+  assert.match(rules.postalCode?.usage ?? '', /delivery-network.*P\.O\. Box.*military.*no polygon.*ZCTA.*not a USPS.*address-building relation.*Puerto Rico.*APO\/FPO\/DPO.*AGID/i);
+  for (const key of ['recipient','attention','organization','building','houseNumber','secondaryUnitDesignator','unit','ruralRoute','highwayContractRoute','poBox','generalDelivery','urbanization','county']) assert.ok(format.native?.fields.some(item => item.key === key), key);
+  for (const id of expected) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
+  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding')); assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+});
