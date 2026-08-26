@@ -3,13 +3,20 @@
   "name": "Kuwait",
   "native": {
     "name": "الكويت",
-    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}",
+    "addressFormat": "{{organization}}\nالرقم الآلي {{buildingId}}\nمبنى {{houseNumber}}، شارع {{street}}، قطعة {{suburb}}\n{{city}}، {{state}}\n{{postcode}} الكويت",
     "ordering": "small-to-big",
     "fields": [
       {
         "key": "organization",
         "label": "اسم المبنى",
         "placeholder": "برج الحمراء",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "الرقم الآلي للعنوان (PACI)",
+        "placeholder": "00000000",
         "required": false,
         "type": "text"
       },
@@ -42,22 +49,36 @@
         "type": "text"
       },
       {
+        "key": "state",
+        "label": "المحافظة",
+        "placeholder": "محافظة العاصمة",
+        "required": true,
+        "type": "text"
+      },
+      {
         "key": "postcode",
         "label": "الرمز البريدي",
-        "placeholder": "13001",
-        "required": false,
+        "placeholder": "00000",
+        "required": true,
         "type": "text"
       }
     ]
   },
   "english": {
-    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}\n{{country}}",
+    "addressFormat": "{{organization}}\nPACI No. {{buildingId}}\nBuilding {{houseNumber}}, Street {{street}}, Block {{suburb}}\n{{city}}, {{state}}\n{{postcode}} KUWAIT",
     "ordering": "small-to-big",
     "fields": [
       {
         "key": "organization",
         "label": "Building Name",
         "placeholder": "Al Hamra Tower",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "PACI Automated Address No.",
+        "placeholder": "00000000",
         "required": false,
         "type": "text"
       },
@@ -90,10 +111,17 @@
         "type": "text"
       },
       {
+        "key": "state",
+        "label": "Governorate",
+        "placeholder": "Capital Governorate",
+        "required": true,
+        "type": "text"
+      },
+      {
         "key": "postcode",
         "label": "Postal Code",
-        "placeholder": "13001",
-        "required": false,
+        "placeholder": "00000",
+        "required": true,
         "type": "text"
       }
     ]
@@ -101,8 +129,8 @@
   "postalCode": {
     "format": "NNNNN",
     "regex": "^\\d{5}$",
-    "api": "https://www.moc.gov.kw/en/important-links?tab=3",
-    "source": "Ministry of Communications"
+    "api": "https://www.moc.gov.kw/en/important-links?tab=2",
+    "source": "Kuwait Ministry of Communications postal-code tables / UPU Kuwait addressing / PACI address and building services / Kuwait Municipality GIS / CSB census GIS"
   },
   "addressRules": {
     "languages": [
@@ -112,27 +140,62 @@
       }
     ],
     "nativeOrder": [
+      "postcode",
       "governorate",
       "area",
+      "block",
       "street",
       "building",
+      "paciAutomatedAddressNumber",
       "name"
     ],
     "englishOrder": [
+      "postcode",
       "governorate",
       "area",
+      "block",
       "street",
       "building",
+      "paciAutomatedAddressNumber",
       "name"
     ],
     "regionalHierarchy": [
       "governorate",
-      "area"
+      "areaOrDistrict",
+      "block",
+      "streetOrLane",
+      "buildingNumber",
+      "paciAutomatedAddressNumber",
+      "currentFiveDigitPostcode",
+      "blockOrPoBoxAssignmentClass",
+      "officialPostalSurfaceOrNoCanonicalGeometry",
+      "optionalDerivedBlockSurface",
+      "explicitPaciAddressPoint",
+      "explicitAddressLinkedBuildingOrParcel",
+      "exactRightsClearedBuildingGeometry"
     ],
-    "postalCode": null
+    "postalCode": {
+      "label": "current 5 digits; MOC block assignments and P.O. box ranges stay distinct; governorate/area/block/street/building and PACI automated address evidence remain typed; derived block surfaces are non-canonical; exact buildings require an explicit rights-cleared relation",
+      "required": true,
+      "usage": "required"
+    },
+    "normalizationPriority": [
+      "pinned Kuwait Ministry of Communications block or P.O. box-range assignment",
+      "UPU five-digit and address-order semantics",
+      "explicit PACI governorate area block street building and automated-number relation",
+      "rights-cleared PACI or Municipality geometry with exact edition CRS and digest",
+      "CSB administrative and statistical context with explicit crosswalk",
+      "OSM only for source-qualified discrepancy validation"
+    ]
   },
   "openSourceIds": [
     "kuwait-post",
+    "upu-kuwait-addressing",
+    "paci-kuwait-finder",
+    "paci-kuwait-address-services",
+    "paci-kuwait-building-register",
+    "kuwait-municipality-parcels",
+    "kuwait-csb-census-gis",
     "osm-kuwait",
     "osm-nominatim",
     "osm-overpass",

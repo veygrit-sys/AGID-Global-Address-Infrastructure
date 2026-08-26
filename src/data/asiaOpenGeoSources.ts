@@ -162,6 +162,12 @@ export type AsiaOpenGeoSourceId =
   | 'bahrain-open-data'
   | 'osm-bahrain'
   | 'kuwait-post'
+  | 'upu-kuwait-addressing'
+  | 'paci-kuwait-finder'
+  | 'paci-kuwait-address-services'
+  | 'paci-kuwait-building-register'
+  | 'kuwait-municipality-parcels'
+  | 'kuwait-csb-census-gis'
   | 'osm-kuwait'
   | 'upu-oman-postal-addressing'
   | 'oman-post-office-locator'
@@ -1773,12 +1779,66 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'kuwait-post': {
     id: 'kuwait-post',
-    name: 'Kuwait Ministry Postal Services',
-    url: 'https://www.moc.gov.kw/en/important-links?tab=3',
+    name: 'Kuwait Ministry of Communications postal-code tables',
+    url: 'https://www.moc.gov.kw/en/important-links?tab=2',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    notes: 'Official tables distinguish governorate, area and block-number assignments from P.O. box-number ranges. A row is current assignment evidence when captured and pinned; it is not a polygon, complete history, public bulk API or redistribution grant.',
+  },
+  'upu-kuwait-addressing': {
+    id: 'upu-kuwait-addressing',
+    name: 'UPU Kuwait addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kwtEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Kuwait Ministry of Communications page listing postal codes and post-office numbers.',
+    notes: 'Official addressing reference specifies five digits to the left of KUWAIT and separates P.O. box or block, zone and sector coding. Its examples are not a current assignment database, postal surface or building relation.',
+  },
+  'paci-kuwait-finder': {
+    id: 'paci-kuwait-finder',
+    name: 'PACI Kuwait Finder',
+    url: 'https://pacigis.github.io/?language=en',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official PACI address and landmark viewer with informational-only, as-is and boundary-accuracy disclaimers. View access is not bulk redistribution permission; map boundaries are not legal, engineering, survey or canonical postal geometry.',
+  },
+  'paci-kuwait-address-services': {
+    id: 'paci-kuwait-address-services',
+    name: 'PACI address availability and civil-address services',
+    url: 'https://services.paci.gov.kw/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official services register and validate civil addresses and automated unit or property numbers. Personal Civil ID, tenancy, owner and resident records are restricted and never public AGID output.',
+  },
+  'paci-kuwait-building-register': {
+    id: 'paci-kuwait-building-register',
+    name: 'PACI building and automated-number services',
+    url: 'https://services.paci.gov.kw/applications-guide',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official workflows add or update buildings and issue automated parcel or address numbers. A registered identifier is address evidence, not a public building footprint, ownership record or redistribution permission; exact geometry needs a permitted stable relation.',
+  },
+  'kuwait-municipality-parcels': {
+    id: 'kuwait-municipality-parcels',
+    name: 'Kuwait Municipality GIS parcel service',
+    url: 'https://gismaps.baladia.gov.kw/arcgis/rest/services/KM/KM_Dynamic_All_Parcels/MapServer/layers',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Municipality ArcGIS layers expose parcel and base-map metadata in Kuwait-specific CRS. Endpoint queryability is not licence or topology approval; a parcel is not a postal block, civic building or ownership output.',
+  },
+  'kuwait-csb-census-gis': {
+    id: 'kuwait-csb-census-gis',
+    name: 'Kuwait CSB Census 2011 GIS',
+    url: 'https://gis.csb.gov.kw/en/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official 2011 census portal provides historical governorate, population-settlement and municipal-block statistical context with accuracy, timeliness and completeness disclaimers. It is not current postal assignment, canonical postal geometry or unrestricted redistribution authority.',
   },
   'osm-kuwait': {
     id: 'osm-kuwait',
@@ -2410,7 +2470,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   PH: ['phlpost'],
   PK: ['pakpost', 'survey-of-pakistan', 'pak-nsdi', 'pbs-gis-pakistan', 'osm-pakistan'],
   JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
-  KW: ['kuwait-post', 'osm-kuwait'],
+  KW: ['kuwait-post', 'upu-kuwait-addressing', 'paci-kuwait-finder', 'paci-kuwait-address-services', 'paci-kuwait-building-register', 'kuwait-municipality-parcels', 'kuwait-csb-census-gis', 'osm-kuwait'],
   LB: ['libanpost', 'osm-lebanon'],
   OM: ['upu-oman-postal-addressing', 'oman-post-office-locator', 'oman-post-website-terms', 'gov-oman-building-addressing-service', 'ncsi-oman-wilayat-boundaries', 'ncsi-oman-open-government-data-policy', 'nsgia-oman-geospatial-governance', 'nsgia-oman-portal-terms', 'nsgia-oman', 'oman-post', 'osm-oman'],
   PS: ['palestine-open-data-postcodes', 'palestine-post', 'osm-palestine'],
