@@ -142,6 +142,14 @@ export type AsiaOpenGeoSourceId =
   | 'philippines-lra-land-registration'
   | 'phlpost'
   | 'post-gov-bn'
+  | 'brunei-post-postcode-booklet'
+  | 'upu-brunei-addressing'
+  | 'brunei-survey-house-numbering'
+  | 'brunei-survey-digital-map-products'
+  | 'brunei-survey-geoportal'
+  | 'brunei-survey-geoportal-user-guide'
+  | 'brunei-deps-bpp-2021'
+  | 'brunei-land-registration-framework'
   | 'bhutan-post'
   | 'bhutan-post-postcode-finder'
   | 'bhutan-post-domestic-footprint'
@@ -1601,6 +1609,78 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'primary',
     notes: 'Brunei official postcode reference.',
   },
+  'brunei-post-postcode-booklet': {
+    id: 'brunei-post-postcode-booklet',
+    name: 'Brunei Postal Services Postcode Booklet, second edition',
+    url: 'https://www.post.gov.bn/Documents/Buku%20Poskod%20Edisi%20ke%202%20%28Kemaskini%2026122018%29.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official dated booklet lists Mukim, Kampong and six-character postcode rows and shows addressing examples. A pinned row is assignment and routing evidence, not a polygon, delivery entitlement, exact house or building relation, complete current history or blanket redistribution licence.',
+  },
+  'upu-brunei-addressing': {
+    id: 'upu-brunei-addressing',
+    name: 'UPU Brunei Darussalam addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/brnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines six alphanumeric characters without an internal space, district, Mukim, village and delivery-point routing roles, and house, floor, building, Simpang, Jalan, Kampong, town or district and P.O. box address formats. Routing roles and examples are not geographic boundaries, current assignments or building identities.',
+  },
+  'brunei-survey-house-numbering': {
+    id: 'brunei-survey-house-numbering',
+    name: 'Brunei Survey Department House Numbering',
+    url: 'https://www.survey.gov.bn/permohonan-maklumat-peralamatan/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official house, building and unit address-information and verification applications require site plan, land title or TOL, applicant identity and a fee. An exact authorized result can support a civic address, but application access is not a public address register, building geometry, owner relation or redistribution licence.',
+  },
+  'brunei-survey-digital-map-products': {
+    id: 'brunei-survey-digital-map-products',
+    name: 'Brunei Survey Department digital map products',
+    url: 'https://www.survey.gov.bn/peta/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official paid products include roads, settlements, administrative boundaries, cadastral lots and public and private buildings at declared scales and coverage. Exact product, layer, price, restriction, edition, scale, CRS and rights are required; a mapped feature is not postcode geometry or a civic-address link.',
+  },
+  'brunei-survey-geoportal': {
+    id: 'brunei-survey-geoportal',
+    name: 'Brunei Survey Department Geoportal',
+    url: 'https://geoportal.survey.gov.bn/start',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official portal separates public and registered capabilities for LOT, TOL, Gazette, plans, imagery and certified-plan access. Search, viewing, purchase or registration does not create postal authority, an address-building relation or blanket redistribution rights.',
+  },
+  'brunei-survey-geoportal-user-guide': {
+    id: 'brunei-survey-geoportal-user-guide',
+    name: 'Brunei Survey Geoportal user guide and restriction-of-use gate',
+    url: 'https://geoportal.survey.gov.bn/pdf/GeoportalUserGuide.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official guide requires acceptance of restriction-of-use terms and documents GDBD2009/Brunei BRSO map context, lot search and viewer workflows. The guide and displayed parcel examples are legal and access metadata, not reusable geometry, postcode assignment, civic address or building evidence.',
+  },
+  'brunei-deps-bpp-2021': {
+    id: 'brunei-deps-bpp-2021',
+    name: 'Brunei DEPS Population and Housing Census 2021',
+    url: 'https://deps.mofe.gov.bn/census-and-survey/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official published aggregates describe population, households and occupied housing units by district, Mukim and village. Census geography and housing statistics are not postcode boundaries, public household or address records, building identities or exact address-building relations.',
+  },
+  'brunei-land-registration-framework': {
+    id: 'brunei-land-registration-framework',
+    name: 'Brunei Land Department registration framework',
+    url: 'https://www.land.gov.bn/undang-undang/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The official land framework governs titles, registers, ownership, leases, mortgages, strata and certified survey plans. Land titles, lot searches, owners and transactions are controlled property-rights evidence, not public postcode polygons, building footprints, civic-address links or reusable personal data.',
+  },
   'bhutan-post': {
     id: 'bhutan-post',
     name: 'Bhutan Post Postcode Finder',
@@ -2784,7 +2864,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   AM: ['haypost-am', 'haypost-address-reference', 'armenia-real-estate-address-register', 'armenia-national-geoportal-buildings', 'cadastre-armenia', 'armstat-geodata', 'geonames-armenia'],
   AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
   BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
-  BN: ['post-gov-bn'],
+  BN: ['brunei-post-postcode-booklet', 'upu-brunei-addressing', 'brunei-survey-house-numbering', 'brunei-survey-digital-map-products', 'brunei-survey-geoportal', 'brunei-survey-geoportal-user-guide', 'brunei-deps-bpp-2021', 'brunei-land-registration-framework', 'post-gov-bn'],
   BT: ['bhutan-post-postcode-finder', 'bhutan-post-domestic-footprint', 'upu-bhutan-addressing', 'bhutan-nlcs-geoportal', 'bhutan-nlcs-map-products', 'bhutan-nlcs-cadastral-information', 'bhutan-nsb-phcb-2017', 'bhutan-esakor-land-building-transactions', 'bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
   CN: ['china-postal-code'],
   GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],

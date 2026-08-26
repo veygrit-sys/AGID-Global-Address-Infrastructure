@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -185,6 +185,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   PH: {
     countryCode: 'PH',
     postalCodeFormat: 'NNNN',
+    fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  BN: {
+    countryCode: 'BN',
+    postalCodeFormat: 'AANNNN',
     fullCodeGeometrySemantics: 'delivery-network-first',
   },
   KW: {
@@ -533,6 +538,14 @@ export function normalizeBhutanPostalCode(value: unknown) {
   return /^\d{5}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeBruneiPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .toUpperCase()
+    .replace(/\s+/g, '');
+  return /^[BKPT][A-Z]\d{4}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizeIndonesiaPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -758,6 +771,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'BT') return normalizeBhutanPostalCode(value);
   if (normalizedCountry === 'ID') return normalizeIndonesiaPostalCode(value);
   if (normalizedCountry === 'PH') return normalizePhilippinesPostalCode(value);
+  if (normalizedCountry === 'BN') return normalizeBruneiPostalCode(value);
   if (normalizedCountry === 'KW') return normalizeKuwaitPostalCode(value);
   if (normalizedCountry === 'BH') return normalizeBahrainPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);

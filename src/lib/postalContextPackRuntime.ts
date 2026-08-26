@@ -433,6 +433,7 @@ export {
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,
   normalizeBhutanPostalCode,
+  normalizeBruneiPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

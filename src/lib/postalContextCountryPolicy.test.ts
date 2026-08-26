@@ -44,6 +44,7 @@ import {
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,
   normalizeBhutanPostalCode,
+  normalizeBruneiPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -267,6 +268,14 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeBhutanPostalCode('9999'), null);
   assert.equal(normalizeBhutanPostalCode('999999'), null);
   assert.equal(normalizePostalContextPostalCode('bt', '９９ ９９９'), '99999');
+  assert.equal(normalizeBruneiPostalCode('ｂｚ９９９９'), 'BZ9999');
+  assert.equal(normalizeBruneiPostalCode('BZ 9999'), 'BZ9999');
+  assert.equal(normalizeBruneiPostalCode('AA9999'), null);
+  assert.equal(normalizeBruneiPostalCode('BN-BZ9999'), null);
+  assert.equal(normalizeBruneiPostalCode('BZ-9999'), null);
+  assert.equal(normalizeBruneiPostalCode('BZ999'), null);
+  assert.equal(normalizeBruneiPostalCode('BZ99999'), null);
+  assert.equal(normalizePostalContextPostalCode('bn', 'ｂｚ ９９９９'), 'BZ9999');
   assert.equal(normalizeIndonesiaPostalCode('１００００'), '10000');
   assert.equal(normalizeIndonesiaPostalCode('10 000'), '10000');
   assert.equal(normalizeIndonesiaPostalCode('ID-10000'), null);
