@@ -116,17 +116,27 @@ test('separates global official fallback from country-specific official source g
   );
 });
 
-test('does not count metadata-only Guatemala evidence as country-specific validation evidence', () => {
+test('counts the official Guatemala directory while keeping legal and geospatial context non-validating', () => {
   const entries = collectOfficialPostalSourceCoverage(loadAddressFormats());
   const guatemala = entries.find(entry => entry.countryCode === 'GT');
 
   assert.ok(guatemala);
-  assert.equal(guatemala.countrySpecificOfficialEvidence, false);
-  assert.equal(guatemala.countrySpecificOfficialSourceMissing, true);
-  assert.equal(guatemala.usesGlobalOfficialFallback, true);
+  assert.equal(guatemala.countrySpecificOfficialEvidence, true);
+  assert.equal(guatemala.countrySpecificOfficialSourceMissing, false);
+  assert.equal(guatemala.usesGlobalOfficialFallback, false);
+  assert.ok(guatemala.evidence.some(source => (
+    source.id === 'catalog:correos-guatemala-postcode-directory' &&
+    source.sourceRole === 'postal-reference-data' &&
+    source.validationReadiness === 'reference-eligible'
+  )));
   assert.ok(guatemala.evidence.some(source => (
     source.id === 'catalog:correos-guatemala-postal-legal-framework' &&
     source.sourceRole === 'legal-framework-only' &&
+    source.validationReadiness === 'metadata-only'
+  )));
+  assert.ok(guatemala.evidence.some(source => (
+    source.id === 'catalog:segeplan-gt-ide' &&
+    source.sourceRole === 'context-only' &&
     source.validationReadiness === 'metadata-only'
   )));
 });

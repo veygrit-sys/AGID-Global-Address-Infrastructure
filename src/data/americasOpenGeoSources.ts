@@ -62,7 +62,15 @@ export type AmericasOpenGeoSourceId =
   | 'correos-cr-postal'
   | 'snit-cr'
   | 'ineter-ni-ide'
+  | 'correos-guatemala-postal'
+  | 'correos-guatemala-postcode-directory'
+  | 'upu-guatemala-addressing-2025'
+  | 'correos-guatemala-postal-legal-framework'
   | 'segeplan-gt-ide'
+  | 'ine-guatemala-census-settlements'
+  | 'ign-guatemala-cartography'
+  | 'ric-guatemala-cadastre'
+  | 'osm-guatemala'
   | 'belize-statistical-institute'
   | 'data-gouv-fr-postcodes'
   | 'la-poste-fr-overseas'
@@ -139,7 +147,8 @@ export interface AmericasOpenGeoSource {
     | 'data-catalog'
     | 'bathymetry'
     | 'cryosphere'
-    | 'topography';
+    | 'topography'
+    | 'cadastre';
   coverage: 'global' | 'americas' | 'country' | 'territory' | 'polar' | 'antarctic' | 'arctic' | 'greenland';
   usage: 'primary' | 'fallback' | 'validation' | 'reference';
   license?: string;
@@ -540,14 +549,95 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'reference',
     notes: 'Nicaragua official spatial data infrastructure for national geospatial reference layers.',
   },
+  'correos-guatemala-postal': {
+    id: 'correos-guatemala-postal',
+    name: 'Dirección General de Correos y Telégrafos de Guatemala',
+    url: 'https://correos.gob.gt/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public official operator website; individual artifact and reuse terms must be pinned',
+    notes: 'The current government postal operator runs the national postal system and publishes postcode directories. Use pinned operator artifacts or observations; the website alone is not a reusable nationwide address corpus, full-code geometry release, building relation or delivery entitlement.',
+  },
+  'correos-guatemala-postcode-directory': {
+    id: 'correos-guatemala-postcode-directory',
+    name: 'Correos de Guatemala department postcode directories',
+    url: 'https://correos.gob.gt/CodigosPos/ListaCodigos/Guatemala.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public official PDF directories; no blanket open bulk-data licence asserted',
+    notes: 'Official department PDFs enumerate five-digit assignments for departments, municipalities, Guatemala City zones and named localities. A production release must inventory every file, retrieval time and digest. The tables provide assignment labels, not postal polygons, civic addresses, buildings, occupants or perpetual validity.',
+  },
+  'upu-guatemala-addressing-2025': {
+    id: 'upu-guatemala-addressing-2025',
+    name: 'UPU Guatemala addressing sheet (November 2025)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/gtmEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; current syntax and layout reference, not a bulk-data licence',
+    notes: 'The November 2025 UPU sheet documents five digits, department, distribution-route, delivery-office and code positions, plus municipality or rural-locality and premises layout. It does not provide nationwide reusable geometry, address points or building relations.',
+  },
+  'correos-guatemala-postal-legal-framework': {
+    id: 'correos-guatemala-postal-legal-framework',
+    name: 'Correos de Guatemala postal legal framework',
+    url: 'https://correos.gob.gt/transparencia/laip/estructura-organica-y-funciones/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Public legal and institutional reference; not postal reference data',
+    notes: 'Official transparency material identifies the national postal legal framework and operator mandate. It is legal context, not a current assignment table, geometry release, civic-address register or delivery entitlement.',
+  },
   'segeplan-gt-ide': {
     id: 'segeplan-gt-ide',
-    name: 'SEGEPLAN Geoportal Guatemala',
-    url: 'https://ideg.segeplan.gob.gt/geoportal/',
+    name: 'SEGEPLAN SINIT and IDE Guatemala',
+    url: 'https://portal.segeplan.gob.gt/segeplan/?page_id=6743',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Guatemala official geoportal for administrative and planning geodata.',
+    license: 'Portal described as freely accessible; layer producer, release and reuse terms remain specific',
+    notes: 'The official SINIT/IDE geoportal exposes administrative, planning and settlement context through downloads and OGC services. Pin layer, producer, vintage, CRS and rights; an accessible department, municipality, populated place or urban layer is not a Correos assignment or postal polygon.',
+  },
+  'ine-guatemala-census-settlements': {
+    id: 'ine-guatemala-census-settlements',
+    name: 'INE Guatemala 2018 census populated places',
+    url: 'https://datos.ine.gob.gt/dataset/censo-2018-lugares-poblados',
+    kind: 'statistics',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Creative Commons Attribution; exact resource and edition specific',
+    notes: 'INE publishes census tables and georeferenced populated-place resources under CC BY. Names may be self-identified and are not automatically official municipal names, current postal assignments, postal geometry, civic addresses or buildings.',
+  },
+  'ign-guatemala-cartography': {
+    id: 'ign-guatemala-cartography',
+    name: 'Instituto Geográfico Nacional Guatemala',
+    url: 'https://www.ign.gob.gt/',
+    kind: 'topography',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Product, service and dataset-specific terms must be pinned',
+    notes: 'IGN is the national cartographic provider. Pin the exact product, scale, release, CRS, coverage and reuse rights; maps and boundaries are not postal assignments, official full-code geometry, civic-address data or exact building relations.',
+  },
+  'ric-guatemala-cadastre': {
+    id: 'ric-guatemala-cadastre',
+    name: 'Registro de Información Catastral de Guatemala',
+    url: 'https://portal.ric.gob.gt/productos',
+    kind: 'cadastre',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Registered, paid, product and purpose-specific cadastral services',
+    notes: 'RIC cadastral products and remote consultations are registered or tariffed and coverage is process-specific. Parcel, finca, owner, tenure, legal record, containment or proximity is not postal assignment, public address data or an exact address-to-building relation.',
+  },
+  'osm-guatemala': {
+    id: 'osm-guatemala',
+    name: 'OpenStreetMap Guatemala',
+    url: 'https://wiki.openstreetmap.org/wiki/Guatemala',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, zones, addresses and buildings remain in a separate ODbL partition and are not Correos, UPU, SEGEPLAN, INE, IGN, RIC, cadastral, occupant or exact address-building authority.',
   },
   'belize-statistical-institute': {
     id: 'belize-statistical-institute',
@@ -1127,7 +1217,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   MX: ['correos-mexico'],
   CR: ['correos-cr-postal', 'snit-cr'],
   NI: ['ineter-ni-ide'],
-  GT: ['segeplan-gt-ide'],
+  GT: ['correos-guatemala-postal', 'correos-guatemala-postcode-directory', 'upu-guatemala-addressing-2025', 'correos-guatemala-postal-legal-framework', 'segeplan-gt-ide', 'ine-guatemala-census-settlements', 'ign-guatemala-cartography', 'ric-guatemala-cadastre', 'osm-guatemala'],
   BZ: ['belize-statistical-institute'],
   GL: ['postnord-greenland', ...getPolarOpenSourceIds('GL')],
   PM: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],

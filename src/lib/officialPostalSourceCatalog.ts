@@ -45,6 +45,7 @@ export type PostalSourceValidationReadiness =
 
 export type PostalSourceRole =
   | 'postal-reference-data'
+  | 'context-only'
   | 'legal-framework-only';
 
 export type OfficialPostalSourceProfile = {
@@ -651,6 +652,30 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Cartographic, urban, cadastral or building context is product- and contract-specific.', 'Portal visibility, rendered tiles, containment or proximity are not an open licence, postal assignment, civic-address register or exact address-building relation.'],
   },
   {
+    id: 'correos-guatemala-postal', countryCodes: ['GT'], label: 'Dirección General de Correos y Telégrafos de Guatemala',
+    authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode',
+    url: 'https://correos.gob.gt/',
+    sourceNames: ['direccion general de correos y telegrafos guatemala', 'dirección general de correos y telégrafos de guatemala'],
+    openSourceIds: ['correos-guatemala-postal'], requiresCredential: false,
+    notes: ['Current designated government postal operator for Guatemala.', 'Use pinned operator artifacts or observations; the public site alone is not a reusable address corpus, full-code polygon release, building relation or delivery entitlement.'],
+  },
+  {
+    id: 'correos-guatemala-postcode-directory', countryCodes: ['GT'], label: 'Correos de Guatemala department postcode directories',
+    authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible',
+    url: 'https://correos.gob.gt/CodigosPos/ListaCodigos/Guatemala.pdf',
+    sourceNames: ['correos guatemala codigos postales', 'guatemala postcode directory', 'lista codigos postales guatemala'],
+    openSourceIds: ['correos-guatemala-postcode-directory'], requiresCredential: false,
+    notes: ['Official department PDFs enumerate five-digit department, municipality, Guatemala City zone and named-locality assignments.', 'Inventory and digest every department file; public PDF access is not a blanket open bulk-data or geometry licence, and table rows do not establish polygons, civic addresses or buildings.'],
+  },
+  {
+    id: 'upu-guatemala-addressing-2025', countryCodes: ['GT'], label: 'UPU Guatemala addressing sheet (November 2025)',
+    authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/gtmEn.pdf',
+    sourceNames: ['upu guatemala addressing 2025', 'guatemala five digit postcode', 'guatemala postal format'],
+    openSourceIds: ['upu-guatemala-addressing-2025'], requiresCredential: false,
+    notes: ['November 2025 official sheet documents five-digit coding positions and address layout for municipality or rural locality and premises.', 'It is not a nationwide reusable assignment file, postal geometry, civic-address register or building relation.'],
+  },
+  {
     id: 'correos-guatemala-postal-legal-framework',
     countryCodes: ['GT'],
     label: 'Correos de Guatemala postal legal framework',
@@ -661,20 +686,42 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     sourceRole: 'legal-framework-only',
     validationReadiness: 'metadata-only',
     url: 'https://correos.gob.gt/ART10/inciso_1/Normativa.pdf',
-    sourceNames: [
-      'correos de guatemala',
-      'direccion general de correos y telegrafos',
-      'codigo postal de la republica de guatemala',
-      'guatemala postal code normativa',
-    ],
+    sourceNames: ['codigo postal de la republica de guatemala', 'guatemala postal normativa decreto 650'],
     openSourceIds: ['correos-guatemala-postal-legal-framework'],
     requiresCredential: false,
-    notes: [
-      'Official Correos de Guatemala transparency material identifies the national postal legal framework.',
-      'This entry is a legal-framework reference, not a current postcode-to-locality dataset or postal lookup service.',
-      'It does not establish reusable data rights, current nationwide mapping completeness, or delivery-point validity.',
-      'Identify a current official postal-reference dataset before recording source version, reuse, coverage, correction, and quality evidence.',
-    ],
+    notes: ['Official transparency material identifies the national postal legal framework and operator mandate.', 'Legal authority is not a current postcode-to-locality dataset, geometry, address, delivery-point validity or delivery entitlement.'],
+  },
+  {
+    id: 'segeplan-gt-ide', countryCodes: ['GT'], label: 'SEGEPLAN SINIT and IDE Guatemala',
+    authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://portal.segeplan.gob.gt/segeplan/?page_id=6743',
+    sourceNames: ['segeplan ide guatemala', 'sinit guatemala', 'ideg guatemala'],
+    openSourceIds: ['segeplan-gt-ide'], requiresCredential: false,
+    notes: ['Official planning and spatial-data portal with downloads and OGC services.', 'Pin layer producer, release, CRS and reuse terms; administrative or settlement geometry is not postal assignment or polygon authority.'],
+  },
+  {
+    id: 'ine-guatemala-census-settlements', countryCodes: ['GT'], label: 'INE Guatemala 2018 census populated places',
+    authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'locality', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://datos.ine.gob.gt/dataset/censo-2018-lugares-poblados',
+    sourceNames: ['ine guatemala lugares poblados 2018', 'censo guatemala populated places'],
+    openSourceIds: ['ine-guatemala-census-settlements'], requiresCredential: false,
+    notes: ['CC BY census tables and georeferenced populated-place resources support historical statistical context.', 'Self-identified names and census geometry are not current postal assignments, official municipal names, civic addresses or buildings.'],
+  },
+  {
+    id: 'ign-guatemala-cartography', countryCodes: ['GT'], label: 'Instituto Geográfico Nacional Guatemala',
+    authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://www.ign.gob.gt/',
+    sourceNames: ['ign guatemala', 'instituto geografico nacional guatemala'],
+    openSourceIds: ['ign-guatemala-cartography'], requiresCredential: false,
+    notes: ['National cartographic provider; every product needs scale, release, CRS, coverage and reuse rights pinned.', 'Cartography is not postal assignment, full-code geometry, address or exact building-link authority.'],
+  },
+  {
+    id: 'ric-guatemala-cadastre', countryCodes: ['GT'], label: 'Registro de Información Catastral de Guatemala',
+    authority: 'commercial-or-restricted', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://portal.ric.gob.gt/productos',
+    sourceNames: ['ric guatemala catastro', 'registro de informacion catastral guatemala'],
+    openSourceIds: ['ric-guatemala-cadastre'], requiresCredential: true,
+    notes: ['Cadastral products, certified maps and remote consultation are registered, tariffed, product-specific and coverage-dependent.', 'Parcel, finca, owner, tenure, containment or proximity is not postal assignment, public address data or an exact address-building relation.'],
   },
   {
     id: 'correios-cep-api',
@@ -7388,7 +7435,7 @@ export function getOfficialPostalSourcesForCountry(countryCode: string) {
 }
 
 export function isPostalReferenceDataSource(profile: OfficialPostalSourceProfile) {
-  return profile.sourceRole !== 'legal-framework-only';
+  return (profile.sourceRole ?? 'postal-reference-data') === 'postal-reference-data';
 }
 
 export function classifyPostalSourceTrust(input: {
@@ -7414,9 +7461,17 @@ export function classifyPostalSourceTrust(input: {
     };
   }
 
-  const matches = sortProfiles(OFFICIAL_POSTAL_SOURCE_CATALOG.filter(profile => (
-    sourceAppliesToCountry(profile, countryCode) && profileMatchesText(profile, textKeys)
-  )));
+  const explicitSourceIds = new Set((input.sourceIds ?? []).map(normalizeTextKey).filter(Boolean));
+  const exactMatches = explicitSourceIds.size
+    ? OFFICIAL_POSTAL_SOURCE_CATALOG.filter(profile => (
+        sourceAppliesToCountry(profile, countryCode) && explicitSourceIds.has(normalizeTextKey(profile.id))
+      ))
+    : [];
+  const matches = sortProfiles(exactMatches.length
+    ? exactMatches
+    : OFFICIAL_POSTAL_SOURCE_CATALOG.filter(profile => (
+        sourceAppliesToCountry(profile, countryCode) && profileMatchesText(profile, textKeys)
+      )));
 
   if (matches.length) {
     const postalReferenceMatches = matches.filter(isPostalReferenceDataSource);
