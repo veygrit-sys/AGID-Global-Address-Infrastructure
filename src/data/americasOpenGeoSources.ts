@@ -113,6 +113,12 @@ export type AmericasOpenGeoSourceId =
   | 'osm-brazil'
   | 'viacep-br'
   | 'brasilapi'
+  | 'ipostel-venezuela-postcode-lookup'
+  | 'upu-venezuela-addressing-2019'
+  | 'ine-venezuela-populated-places-2001'
+  | 'igvsb-venezuela-geographic-authority'
+  | 'venezuela-geography-cartography-cadastre-law-2000'
+  | 'osm-venezuela'
   | 'georef-ar'
   | 'geoportal-cl'
   | 'correos-chile-postcode-lookup'
@@ -1046,6 +1052,36 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'validation',
     notes: 'Open-source third-party Brazilian API project with CEP endpoints and public reference data. It is validation evidence, not Correios assignment, polygon, deliverability or exact building proof.',
   },
+  'ipostel-venezuela-postcode-lookup': {
+    id: 'ipostel-venezuela-postcode-lookup', name: 'IPOSTEL Venezuelan postcode lookup', url: 'https://www.ipostel.gob.ve/codigo-postal-venezolano/',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: "UPU identifies IPOSTEL as Venezuela's designated operator. Retain only a permitted time-bound four-digit lookup observation with endpoint state and digest; public availability must be revalidated, and a result is not bulk data, a polygon, occupant proof or a building relation.",
+  },
+  'upu-venezuela-addressing-2019': {
+    id: 'upu-venezuela-addressing-2019', name: 'UPU Venezuela addressing sheet, May 2019', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/venEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'May 2019 evidence for four digits, with first digit as postal region and remaining digits as delivery office, plus home, organization, rural and P.O. box address layouts. It is not a current assignment table, bulk address corpus, geometry release or building relation.',
+  },
+  'ine-venezuela-populated-places-2001': {
+    id: 'ine-venezuela-populated-places-2001', name: 'INE Venezuela populated-place nomenclator context for the 2001 census', url: 'https://unstats.un.org/unsd/demographic/meetings/wshops/Chile_31May11/docs/country/venezuela-s4.pdf',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'A 2011 UN Statistics workshop document describes dated INE 2001 populated-place and indigenous-community context classified by federal entity, municipality and parish. Obtain the exact underlying INE artifact before production; this is not current administration, IPOSTEL assignment, postal geometry or building evidence.',
+  },
+  'igvsb-venezuela-geographic-authority': {
+    id: 'igvsb-venezuela-geographic-authority', name: 'Instituto Geográfico de Venezuela Simón Bolívar', url: 'https://www.igvsb.gob.ve/',
+    kind: 'data-catalog', coverage: 'country', usage: 'reference',
+    notes: 'National geographic, cartographic and cadastral authority reference. Each usable layer requires current availability, producer, edition, jurisdiction, terms, CRS, quality and digest; geographic, administrative or cadastral authority is not IPOSTEL assignment, postal geometry or an exact address-building link.',
+  },
+  'venezuela-geography-cartography-cadastre-law-2000': {
+    id: 'venezuela-geography-cartography-cadastre-law-2000', name: 'Venezuela Geography, Cartography and National Cadastre Law, 2000', url: 'https://faolex.fao.org/docs/pdf/ven24796.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Legal context for public territorial information, IGVSB functions and national or municipal cadastral roles. Public-information language is not automatically a bulk-data licence, current dataset, postal polygon, address-building relation, owner-data permission or resolution of territorial status.',
+  },
+  'osm-venezuela': {
+    id: 'osm-venezuela', name: 'OpenStreetMap Venezuela', url: 'https://wiki.openstreetmap.org/wiki/Venezuela',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not IPOSTEL, UPU, INE, IGVSB, cadastral, owner, occupant or exact address-building authority.',
+  },
   'correo-argentino-cpa': {
     id: 'correo-argentino-cpa', name: 'Correo Argentino CPA lookup and guidance', url: 'https://www.correoargentino.com.ar/categorias/consulta-cpa',
     kind: 'postal-code', coverage: 'country', usage: 'primary',
@@ -1705,6 +1741,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   SV: ['correos-el-salvador', 'upu-el-salvador-addressing-2019', 'cnr-el-salvador-geographic-codes', 'onec-el-salvador-geographic-catalog', 'cnr-el-salvador-cadastre', 'osm-el-salvador'],
   PY: ['ide-py'],
   UY: ['correo-uruguayo-postal-polygons', 'correo-uruguayo-address-services', 'ide-uy-addresses', 'ide-uy', 'dnc-uy-parcels', 'osm-uruguay'],
+  VE: ['ipostel-venezuela-postcode-lookup', 'upu-venezuela-addressing-2019', 'ine-venezuela-populated-places-2001', 'igvsb-venezuela-geographic-authority', 'venezuela-geography-cartography-cadastre-law-2000', 'osm-venezuela'],
   GF: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   AI: ['british-overseas-postal-reference', 'anguilla-post', 'anguilla-gov-gis'],
   BM: ['british-overseas-postal-reference', 'bermuda-post', 'bermuda-gov-maps'],

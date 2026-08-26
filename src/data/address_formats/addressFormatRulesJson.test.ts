@@ -1882,6 +1882,11 @@ test('Americas country JSON files expose addressRules, Spanish delivery metadata
     'district_or_subdistrict', 'neighborhood_or_locality', 'eight_digit_typed_cep_object',
     'street_or_delivery_range', 'civic_address', 'building_or_unit',
   ]);
+  assert.deepEqual(loadRules('VE').regionalHierarchy, [
+    'country', 'postal_region', 'federal_entity_or_capital_district', 'municipality',
+    'parish', 'locality_or_populated_place', 'delivery_office_or_four_digit_postal_object',
+    'urbanization_sector_or_barrio', 'street_or_route', 'civic_address', 'building_or_unit',
+  ]);
   assert.deepEqual(loadRules('CO').regionalHierarchy, [
     'country', 'department', 'municipality_or_district', 'six_digit_postal_area',
     'locality_neighborhood_or_rural_settlement', 'street_and_placa',
@@ -1900,6 +1905,7 @@ test('South America address JSON files link country-specific postal APIs and geo
     EC: ['codigo-postal-ec'],
     PY: ['ide-py'],
     UY: ['ide-uy'],
+    VE: ['ipostel-venezuela-postcode-lookup'],
   };
 
   for (const [countryCode, expectedSourceIds] of Object.entries(expectedSourceIdsByCountry)) {
