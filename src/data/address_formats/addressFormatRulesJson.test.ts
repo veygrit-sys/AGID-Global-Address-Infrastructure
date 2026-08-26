@@ -156,7 +156,7 @@ test('East Asia address JSON files expose table-derived addressRules metadata', 
     'building',
     'name',
   ]);
-  assert.deepEqual(loadRules('CN').languages, [{ code: 'zh-Hans', name: 'Chinese (Simplified)' }]);
+  assert.deepEqual(loadRules('CN').languages, [{ code: 'zh-Hans', name: 'Chinese (Simplified)' }, { code: 'en', name: 'English display or Hanyu Pinyin transliteration' }]);
   assert.deepEqual(loadRules('HK').languages, [
     { code: 'zh-Hant', name: 'Chinese (Traditional)' },
     { code: 'en', name: 'English' },
@@ -2141,4 +2141,18 @@ test('Uzbekistan address metadata separates delivery indices, offices, dated dat
   assert.equal(rules.postalCode?.required, true); assert.match(rules.postalCode?.usage ?? '', /six-digit.*delivery.*post.?office.*not.*polygon.*2019.*current.*building relation/i);
   for (const key of ['building','blockOrMassif','houseNumber','unit','postOffice','poBox']) assert.ok(format.native?.fields.some(item => item.key === key), key);
   for (const id of ['pochta-uz','uzpost-index-map','upu-uzbekistan-addressing-2019','uzbekistan-postal-index-open-data-2019','uzbekistan-open-data-terms','uzbekistan-open-data-registry-2026','uzbekistan-cadastre-agency','uzbekistan-state-real-estate-register','osm-uzbekistan']) assert.ok(format.openSourceIds?.includes(id));
+});
+
+
+test('China address metadata separates postal routing, delivery address code, civic names, buildings, Tianditu, territory, and AGID', () => {
+  const format = loadFormat('CN');
+  const rules = loadRules('CN');
+  assert.equal(format.postalCode.format, 'NNNNNN');
+  assert.equal(new RegExp(format.postalCode.regex).test('999999'), true);
+  assert.equal(new RegExp(format.postalCode.regex).test('CN-999999'), false);
+  assert.match(format.postalCode.source, /China Post.*UPU.*2013.*State Post Bureau.*41832.*39609.*Tianditu.*real-estate.*OpenStreetMap/i);
+  assert.equal(rules.postalCode.required, true);
+  assert.match(rules.postalCode.usage, /four-level six-digit.*delivery-region.*not.*polygon.*41832.*separate.*building-level.*rights-cleared.*AGID.*HK.*MO.*TW/i);
+  for (const key of ['recipient', 'building', 'floor', 'unit', 'room', 'postOffice', 'poBox']) assert.ok(format.native.fields.some((item: any) => item.key === key));
+  for (const id of ["china-postal-code","upu-china-addressing-2013","china-postal-and-address-code-response-2025","china-universal-delivery-address-code-gbt41832","china-address-geocode-gbt39609","china-geographical-names-regulation-2022","tianditu-china","china-geospatial-platform-management-2019","china-real-estate-query-rules-2024","osm-china"]) assert.ok(format.openSourceIds?.includes(id));
 });

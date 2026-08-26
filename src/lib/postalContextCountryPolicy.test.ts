@@ -59,6 +59,7 @@ import {
   normalizeIranPostalCode,
   normalizeUzbekistanPostalCode,
   normalizeKazakhstanPostalCode,
+  normalizeChinaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -424,6 +425,14 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeKazakhstanPostalCode('X99-X9X9'), null);
   assert.equal(normalizeKazakhstanPostalCode('Х99X9X9'), null);
   assert.equal(normalizeKazakhstanPostalCode('X99X9X'), null);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CN.postalCodeFormat, 'NNNNNN');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CN.fullCodeGeometrySemantics, 'delivery-network-first');
+  assert.equal(normalizeChinaPostalCode('９９９９９９'), '999999');
+  assert.equal(normalizeChinaPostalCode('99 99 99'), '999999');
+  assert.equal(normalizeChinaPostalCode('CN-999999'), null);
+  assert.equal(normalizeChinaPostalCode('999-999'), null);
+  assert.equal(normalizeChinaPostalCode('99999'), null);
+  assert.equal(normalizePostalContextPostalCode('cn', '00 00 01'), '000001');
   assert.equal(normalizePostalContextPostalCode('kz', 'ｘ９９ｘ９ｘ９'), 'X99X9X9');
 
 

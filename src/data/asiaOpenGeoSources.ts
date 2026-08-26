@@ -29,6 +29,15 @@ export type AsiaOpenGeoSourceId =
   | 'geolonia-addresses'
   | 'osm-japan'
   | 'china-postal-code'
+  | 'upu-china-addressing-2013'
+  | 'china-postal-and-address-code-response-2025'
+  | 'china-universal-delivery-address-code-gbt41832'
+  | 'china-address-geocode-gbt39609'
+  | 'china-geographical-names-regulation-2022'
+  | 'tianditu-china'
+  | 'china-geospatial-platform-management-2019'
+  | 'china-real-estate-query-rules-2024'
+  | 'osm-china'
   | 'epost-kr'
   | 'ngii-korea'
   | 'lx-korea'
@@ -679,13 +688,44 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     notes: 'Japan OSM community data for buildings, shops, POI, roads, and fallback address tags.',
   },
   'china-postal-code': {
-    id: 'china-postal-code',
-    name: 'China Post / EMS Postal Code Reference',
-    url: 'http://www.ems.com.cn/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'China postal-code reference source for mainland delivery validation.',
+    id: 'china-postal-code', name: 'China Post postal-code authority and lookup framework', url: 'https://www.chinapost.com.cn/cn/report/1813/134220-1.htm', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'The postal enterprise compiles codes under State Post Bureau rules and provides free postcode lookup at postal outlets. Operator authority does not publish a current bulk assignment, address or geometry corpus and does not make a six-digit code a polygon or building.',
+  },
+  'upu-china-addressing-2013': {
+    id: 'upu-china-addressing-2013', name: 'UPU China addressing sheet 09/2013', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/chnEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The UPU 09/2013 sheet documents six digits before the province, delivery-region and destination-county coding context, Chinese big-to-small and Latin small-to-big order, and door, floor, building, complex, P.O. Box and poste-restante elements. Examples are not current assignments or reusable address data.',
+  },
+  'china-postal-and-address-code-response-2025': {
+    id: 'china-postal-and-address-code-response-2025', name: 'State Post Bureau response on postal and universal delivery address codes 2025', url: 'https://www.spb.gov.cn/gjyzj/c200041/202510/745c2008e015403eb27fd9726f6bea07.shtml', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Confirms the 1986 four-level six-digit delivery-region code used for sorting and distinguishes the separate high-precision universal delivery address code. Neither statement publishes current assignments, polygons or address-building relations.',
+  },
+  'china-universal-delivery-address-code-gbt41832': {
+    id: 'china-universal-delivery-address-code-gbt41832', name: 'GB/T 41832-2022 Universal delivery address coding rule', url: 'https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=173DB35E1CA95C7EF9CCA37E7E4C1A4E', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current national standard for a separate universal delivery address code. The standard abstract and code concept are not postcode assignments, AGID cells, an invertible public algorithm, bulk address data or a redistribution licence.',
+  },
+  'china-address-geocode-gbt39609': {
+    id: 'china-address-geocode-gbt39609', name: 'GB/T 39609-2020 Rules for geocode of address', url: 'https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=277CC47971433149B62E57A37C295168', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'National geocoding rules provide a semantic framework only. They do not publish address rows, coordinates, postal geometry, building links or reuse rights.',
+  },
+  'china-geographical-names-regulation-2022': {
+    id: 'china-geographical-names-regulation-2022', name: 'China Geographical Names Regulation 2022', url: 'https://xzfg.moj.gov.cn/front/law/detail?LawID=1479&Query=', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Defines standard geographical names and requires local authorities to compile standard addresses in their responsibilities. Legal naming authority is not an open national address, doorplate or building corpus.',
+  },
+  'tianditu-china': {
+    id: 'tianditu-china', name: 'National Platform for Common Geospatial Information Services (Tianditu)', url: 'https://www.tianditu.gov.cn/', kind: 'geocoding', coverage: 'country', usage: 'reference',
+    notes: 'Official online geospatial, place-name and address service candidate. Pin exact layer or API owner, key, quota, terms, attribution, jurisdiction, validity, CRS, topology and digest; service visibility is not a postal assignment or bulk redistribution licence.',
+  },
+  'china-geospatial-platform-management-2019': {
+    id: 'china-geospatial-platform-management-2019', name: 'China geospatial public-service platform management framework', url: 'https://www.ngcc.cn/xwzx/bnyw/202401/t20240110_2222.html', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Describes Tianditu as the national portal and online services as free to use. Free online access is not a blanket licence and does not override exact dataset, API, attribution, map-review, security or redistribution conditions.',
+  },
+  'china-real-estate-query-rules-2024': {
+    id: 'china-real-estate-query-rules-2024', name: 'China real-estate registration query rules 2024', url: 'https://f.mnr.gov.cn/202405/t20240523_2846208.html', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Current rules preserve purpose-limited access to real-estate registration materials and electronic query results. Rights, right-holder, parcel and unit records are not an open address or building corpus and must not be republished as household data.',
+  },
+  'osm-china': {
+    id: 'osm-china', name: 'OpenStreetMap China', url: 'https://wiki.openstreetmap.org/wiki/WikiProject_China', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, places, addresses and buildings under ODbL. OSM does not provide China Post assignment authority, canonical postal geometry, exact civic identity, resident data, delivery entitlement or territorial authority.',
   },
   'korea-post-postcode-system': {
     id: 'korea-post-postcode-system',
@@ -3503,7 +3543,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
   BN: ['brunei-post-postcode-booklet', 'upu-brunei-addressing', 'brunei-survey-house-numbering', 'brunei-survey-digital-map-products', 'brunei-survey-geoportal', 'brunei-survey-geoportal-user-guide', 'brunei-deps-bpp-2021', 'brunei-land-registration-framework', 'post-gov-bn'],
   BT: ['bhutan-post-postcode-finder', 'bhutan-post-domestic-footprint', 'upu-bhutan-addressing', 'bhutan-nlcs-geoportal', 'bhutan-nlcs-map-products', 'bhutan-nlcs-cadastral-information', 'bhutan-nsb-phcb-2017', 'bhutan-esakor-land-building-transactions', 'bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
-  CN: ['china-postal-code'],
+  CN: ['china-postal-code', 'upu-china-addressing-2013', 'china-postal-and-address-code-response-2025', 'china-universal-delivery-address-code-gbt41832', 'china-address-geocode-gbt39609', 'china-geographical-names-regulation-2022', 'tianditu-china', 'china-geospatial-platform-management-2019', 'china-real-estate-query-rules-2024', 'osm-china'],
   GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],
   HK: ['landsd-hk', 'csdi-hk', 'osm-hong-kong'],
   ID: [
