@@ -143,6 +143,14 @@ export type AsiaOpenGeoSourceId =
   | 'phlpost'
   | 'post-gov-bn'
   | 'bhutan-post'
+  | 'bhutan-post-postcode-finder'
+  | 'bhutan-post-domestic-footprint'
+  | 'upu-bhutan-addressing'
+  | 'bhutan-nlcs-geoportal'
+  | 'bhutan-nlcs-map-products'
+  | 'bhutan-nlcs-cadastral-information'
+  | 'bhutan-nsb-phcb-2017'
+  | 'bhutan-esakor-land-building-transactions'
   | 'turkiye-ptt'
   | 'osm-turkey'
   | 'gavahi-post-ir'
@@ -1602,6 +1610,78 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'primary',
     notes: 'Bhutan Post postcode finder.',
   },
+  'bhutan-post-postcode-finder': {
+    id: 'bhutan-post-postcode-finder',
+    name: 'Bhutan Post Postcode Finder',
+    url: 'https://bhutanpost.bt/postcode/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit locator exposes Dzongkhag, Gewog, Post Office and Postal Code rows. A pinned row is routing-assignment evidence, not a polygon, delivery entitlement, exact address, building relation, complete history or blanket redistribution licence.',
+  },
+  'bhutan-post-domestic-footprint': {
+    id: 'bhutan-post-domestic-footprint',
+    name: 'Bhutan Post domestic postal footprint',
+    url: 'https://bhutanpost.bt/forms/ar2023.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official annual report maps post offices and codes across the domestic network. Office symbols and labels describe service footprint; they are not catchment polygons, address points, building links or a reusable boundary dataset.',
+  },
+  'upu-bhutan-addressing': {
+    id: 'upu-bhutan-addressing',
+    name: 'UPU Bhutan addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/btnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines five digits to the right of the locality and routing semantics for Dzongdey, Dzongkhag, Dungkhag and delivery area, plus building, flat, shop, village, Gewog, P.O. box and organization formats. Digit roles and examples are not boundaries, current assignments, civic-address records or building identities.',
+  },
+  'bhutan-nlcs-geoportal': {
+    id: 'bhutan-nlcs-geoportal',
+    name: 'Bhutan NLCS Geo-Portal',
+    url: 'https://www.nlcs.gov.bt/dz/?page_id=38',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official portal coordinates map, data and metadata sharing. Portal discovery does not create postal authority, guarantee nationwide layer coverage or grant common download and redistribution rights.',
+  },
+  'bhutan-nlcs-map-products': {
+    id: 'bhutan-nlcs-map-products',
+    name: 'Bhutan NLCS map services and access rules',
+    url: 'https://www.nlcs.gov.bt/dz/?page_id=203',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official topographic and administrative map products require exact applications, approval, payment or use agreements as applicable, and cadastral maps are not public. Product access is not an open licence or postal, civic-address or building relation.',
+  },
+  'bhutan-nlcs-cadastral-information': {
+    id: 'bhutan-nlcs-cadastral-information',
+    name: 'Bhutan NLCS Cadastral Information Division',
+    url: 'https://web.nlcs.gov.bt/cadastral-information-division/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'NLCS manages cadastral surveys, maps, geodatabases and eSakor. Parcels, Thrams and map features remain controlled land evidence and do not become postal surfaces, public civic addresses, buildings or owner and occupant relations.',
+  },
+  'bhutan-nsb-phcb-2017': {
+    id: 'bhutan-nsb-phcb-2017',
+    name: 'Bhutan NSB 2017 Population and Housing Census mapping',
+    url: 'https://www.nsb.gov.bt/wp-content/uploads/2020/10/PHCB2017_national.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official house listing and mapping created urban and rural enumeration areas for statistics. Enumeration areas, household listings and mapped structures are not postal boundaries, public address points or exact address-building relations, and confidential records stay excluded.',
+  },
+  'bhutan-esakor-land-building-transactions': {
+    id: 'bhutan-esakor-land-building-transactions',
+    name: 'Bhutan eSakor land, flat and building transactions',
+    url: 'https://esakor.nlcs.gov.bt/faq_eSakor',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The controlled NDI-linked transaction service handles land, flat and building records plus identity, permanent-address, party, witness, Thram and plot information. It is private rights evidence, not a public address or building API, postcode polygon or redistribution source.',
+  },
   'nlcs-bhutan': {
     id: 'nlcs-bhutan',
     name: 'National Land Commission Bhutan',
@@ -2705,7 +2785,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
   BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
   BN: ['post-gov-bn'],
-  BT: ['bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
+  BT: ['bhutan-post-postcode-finder', 'bhutan-post-domestic-footprint', 'upu-bhutan-addressing', 'bhutan-nlcs-geoportal', 'bhutan-nlcs-map-products', 'bhutan-nlcs-cadastral-information', 'bhutan-nsb-phcb-2017', 'bhutan-esakor-land-building-transactions', 'bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
   CN: ['china-postal-code'],
   GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],
   HK: ['landsd-hk', 'csdi-hk', 'osm-hong-kong'],
