@@ -101,6 +101,14 @@ export type AmericasOpenGeoSourceId =
   | 'brasilapi'
   | 'georef-ar'
   | 'geoportal-cl'
+  | 'correos-chile-postcode-lookup'
+  | 'correos-chile-normalization-api'
+  | 'upu-chile-addressing-2017'
+  | 'ide-chile-dpa-2023'
+  | 'subdere-chile-cut'
+  | 'ine-chile-open-geodata'
+  | 'sii-chile-digital-cadastre'
+  | 'osm-chile'
   | 'colombia-en-mapas'
   | 'codigo-postal-colombia-472-viewer'
   | 'codigo-postal-colombia-csv'
@@ -973,12 +981,92 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
   },
   'geoportal-cl': {
     id: 'geoportal-cl',
-    name: 'Geoportal de Chile',
+    name: 'Geoportal de Chile / IDE Chile catalog',
     url: 'https://geoportal.cl/catalog',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Chile national geospatial catalog for administrative and territorial reference data.',
+    notes: 'National geospatial catalog for discovering administrative and territorial layers. Every production layer still requires its producer, edition, scope, CRS, item terms and digest; catalog presence is not CorreosChile assignment, block-face geometry, civic-address identity or a building relation.',
+  },
+  'correos-chile-postcode-lookup': {
+    id: 'correos-chile-postcode-lookup',
+    name: 'CorreosChile official postcode lookup and FAQ',
+    url: 'https://www.correos.cl/codigo-postal',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Interactive official service; exact site, cache, automation and redistribution terms must be pinned',
+    notes: 'CorreosChile states that a seven-digit code is address-dependent and identifies an area down to one side of a block; lookup requires commune, street and municipal number. A result is a time-bound assignment observation, not bulk reuse permission, exact parcel, apartment, person, building or polygon geometry.',
+  },
+  'correos-chile-normalization-api': {
+    id: 'correos-chile-normalization-api',
+    name: 'CorreosChile v2 address normalization API',
+    url: 'https://developers.correos.cl/v2/normalizacion',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Customer credential and CorreosChile integration terms required',
+    notes: 'Credentialed POST service accepts address plus commune and returns normalized street, municipal number, remainder, commune and postcode. Pin customer authorization, request purpose, service version, observed time, retention and cache terms; a response is not coordinates, a building ID, a reusable address corpus or a national postcode polygon release.',
+  },
+  'upu-chile-addressing-2017': {
+    id: 'upu-chile-addressing-2017',
+    name: 'UPU Chile addressing sheet (March 2017)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/chlEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; not a bulk assignment or address-data licence',
+    notes: 'Documents seven digits to the left of the commune: three for the postal distribution area, usually a commune, and four for a sequential block face. It also separates commune fallbacks, post-office codes, rural no-number addresses and building/floor/apartment remainder; its examples are not production address rows.',
+  },
+  'ide-chile-dpa-2023': {
+    id: 'ide-chile-dpa-2023',
+    name: 'IDE Chile political-administrative division 2023',
+    url: 'https://www.ide.cl/noticias/2023-09-actualizacion-de-la-cartografia-de-division-politica-administrativa-en/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Pin exact Shapefile edition, producer metadata and item-level terms',
+    notes: 'Joint SUBDERE, IGM, DIFROL and INE region-to-commune cartography. It is official administrative context, not CorreosChile postal assignment, block-face geometry, civic address, parcel or building linkage.',
+  },
+  'subdere-chile-cut': {
+    id: 'subdere-chile-cut',
+    name: 'SUBDERE Chile unique territorial codes (CUT)',
+    url: 'https://www.subdere.gov.cl/documentacion/c%C3%B3digos-%C3%BAnicos-territoriales-actualizados-al-06-de-septiembre-2018',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government publication; pin the exact edition and reuse terms',
+    notes: 'Official identifiers for regions, provinces and communes, including the Ñuble update. CUT codes identify administrative units and cannot prove a current postcode, block face, address, building, parcel or delivery entitlement.',
+  },
+  'ine-chile-open-geodata': {
+    id: 'ine-chile-open-geodata',
+    name: 'INE Chile open geodata and Census 2024 cartography',
+    url: 'https://www.ine.gob.cl/herramientas/portal-de-mapas/geodatos-abiertos',
+    kind: 'statistics',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Open-access catalog; pin exact dataset methodology, disclosure controls and item terms',
+    notes: 'Official census block/entity, base-cartography, building-count and building-permit context. Statistical blocks, counted structures or permits are not CorreosChile assignments, postal geometry, exact civic-address-to-building relations, households or occupants.',
+  },
+  'sii-chile-digital-cadastre': {
+    id: 'sii-chile-digital-cadastre',
+    name: 'SII Chile digital real-estate cadastre',
+    url: 'https://www.sii.cl/destacados/impuesto_territorial/index.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Public consultation is not bulk reuse; interoperability and detailed records are access-controlled',
+    notes: 'Official parcel/property, role, land, construction and valuation context. Public or authorized queries must not be scraped or republished, and owner RUT, valuation and detailed property data remain restricted; a parcel or tax role is not postal geometry or an automatic address-building relation.',
+  },
+  'osm-chile': {
+    id: 'osm-chile',
+    name: 'OpenStreetMap Chile',
+    url: 'https://wiki.openstreetmap.org/wiki/Chile',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separately attributed ODbL partition and are not CorreosChile, IDE, SUBDERE, INE, SII, occupant or exact civic-address-to-building authority.',
   },
   'colombia-en-mapas': {
     id: 'colombia-en-mapas',
@@ -1417,7 +1505,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CP: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   BR: ['viacep-br', 'brasilapi'],
   AR: ['correo-argentino-cpa', 'georef-ar', 'ign-argentina-geospatial', 'idera-argentina', 'argentina-cadastre-law-26209', 'osm-argentina'],
-  CL: ['geoportal-cl'],
+  CL: ['correos-chile-postcode-lookup', 'correos-chile-normalization-api', 'upu-chile-addressing-2017', 'ide-chile-dpa-2023', 'subdere-chile-cut', 'ine-chile-open-geodata', 'sii-chile-digital-cadastre', 'geoportal-cl', 'osm-chile'],
   CO: ['codigo-postal-colombia-472-viewer', 'codigo-postal-colombia-csv', 'codigo-postal-colombia-shapefile', 'codigo-postal-colombia-open-license', 'codigo-postal-colombia-arcgis', 'upu-colombia-addressing-2022', 'upu-colombia-s42-2021', 'dane-colombia-divipola-mgn-2025', 'igac-colombia-open-cadastre', 'igac-colombia-sinic-open-constructions', 'colombia-en-mapas', 'osm-colombia'],
   PE: ['geo-vivienda-pe'],
   EC: ['codigo-postal-ec', 'codigo-postal-ec-technical-standard', 'dinarp-ecuador-postal-interoperability', 'inec-ecuador-census-cartography', 'igm-ecuador-base-cartography', 'sistema-nacional-catastro-ecuador', 'osm-ecuador'],
