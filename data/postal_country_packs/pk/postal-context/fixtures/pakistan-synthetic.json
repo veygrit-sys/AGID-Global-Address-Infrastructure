@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-pk-synthetic-fixtures-v0.1",
+  "country_code": "PK",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "00000",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "pk-syn-delivery-office",
+      "synthetic_address": {
+        "postcode": "00000",
+        "assignment_class": "delivery_post_office",
+        "delivery_post_office": "Synthetic Delivery Office",
+        "account_office": "Synthetic Account Office",
+        "province": "Synthetic Province"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-five-character-string",
+          "delivery-office-assignment-only"
+        ],
+        "must_not_assert": [
+          "syntax-proves-current-assignment",
+          "directory-row-is-official-postal-boundary",
+          "office-is-delivery-point-or-building",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "pk-syn-non-delivery-office",
+      "synthetic_address": {
+        "postcode": "00000",
+        "assignment_class": "non_delivery_post_office",
+        "delivery_post_office": "Synthetic Non-Delivery Office",
+        "attached_branch_office_code": "00000"
+      },
+      "expected": {
+        "must_assert": [
+          "non-delivery-office-remains-nonspatial"
+        ],
+        "must_not_assert": [
+          "non-delivery-office-is-home-or-catchment",
+          "routing-prefix-or-office-suffix-is-boundary",
+          "pbs-census-block-is-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "pk-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "00000",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "PK-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-or-recipient",
+          "map-or-model-output-is-automatically-licensed"
+        ]
+      }
+    }
+  ]
+}

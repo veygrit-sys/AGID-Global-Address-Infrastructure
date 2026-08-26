@@ -7891,6 +7891,13 @@
                   "type": "text"
                 },
                 {
+                  "key": "buildingId",
+                  "label": "مستند عمارت شناخت",
+                  "placeholder": "PK-SYN-BLDG",
+                  "required": false,
+                  "type": "text"
+                },
+                {
                   "key": "houseNumber",
                   "label": "مکان نمبر",
                   "placeholder": "123",
@@ -7946,6 +7953,13 @@
                   "type": "text"
                 },
                 {
+                  "key": "buildingId",
+                  "label": "Authoritative Building ID",
+                  "placeholder": "PK-SYN-BLDG",
+                  "required": false,
+                  "type": "text"
+                },
+                {
                   "key": "houseNumber",
                   "label": "House No.",
                   "placeholder": "123",
@@ -7992,8 +8006,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": "https://www.pakpost.gov.pk/postcode.php",
-              "source": "Pakistan Post / Survey of Pakistan / Pak-NSDI"
+              "api": "https://pakpost.gov.pk/postcodes.php",
+              "source": "Pakistan Post postcode directories and amendments / UPU Pakistan addressing / Survey of Pakistan law and products / Pakistan NSDI / PBS GIS"
             },
             "addressRules": {
               "languages": [
@@ -8023,19 +8037,49 @@
                 "country"
               ],
               "regionalHierarchy": [
-                "province"
+                "provinceOrTerritory",
+                "division",
+                "district",
+                "tehsilOrTaluka",
+                "localityOrSector",
+                "deliveryPostOffice",
+                "accountOffice",
+                "attachedBranchOfficeCode",
+                "fiveDigitPostcode",
+                "typedDeliveryOrNonDeliveryAssignment",
+                "officialPostalSurfaceOrNoCanonicalGeometry",
+                "optionalDerivedPostalSurface",
+                "explicitRightsClearedCivicAddressPoint",
+                "explicitAddressLinkedBuilding",
+                "exactRightsClearedBuildingGeometry"
               ],
               "postalCode": {
-                "label": "5 digits required",
+                "label": "Exactly 5 digits kept as text, including leading zeroes; first two digits are routing-district semantics and last three identify a delivery post office; preserve delivery, non-delivery, account and attached-branch records; no canonical polygon without an exact licensed source; census blocks are not postal areas; exact building requires an explicit rights-cleared civic-address link",
                 "required": true,
                 "usage": "required"
-              }
+              },
+              "aliasLayers": [
+                "Pakistan Post delivery-post-office and account-office names",
+                "official English and Urdu administrative names",
+                "source-qualified regional-script aliases",
+                "OSM and GeoNames alternate names for fallback only"
+              ],
+              "normalizationPriority": [
+                "pinned Pakistan Post delivery and non-delivery directory edition plus amendments",
+                "exact rights-cleared postal boundary and explicit postcode relation under applicable Survey of Pakistan requirements",
+                "Pakistan NSDI and PBS administrative context without promoting census blocks to postal geometry",
+                "rights-cleared civic-address point and explicit building relation",
+                "OSM and other global sources only for discrepancy validation or fallback"
+              ]
             },
             "openSourceIds": [
-              "pakpost",
-              "survey-of-pakistan",
-              "pak-nsdi",
-              "pbs-gis-pakistan",
+              "pakistan-post-postcode-directory",
+              "upu-pakistan-addressing",
+              "pakistan-post-postcode-amendments",
+              "survey-of-pakistan-mapping-law",
+              "survey-of-pakistan-geospatial-products",
+              "pakistan-nsdi",
+              "pakistan-pbs-census-gis",
               "osm-pakistan",
               "osm-nominatim",
               "osm-overpass",
@@ -8051,7 +8095,10 @@
               "hydrosheds",
               "esa-worldcover",
               "protected-planet-wdpa",
-              "gbif-occurrence"
+              "gbif-occurrence",
+              "survey-of-pakistan",
+              "pak-nsdi",
+              "pbs-gis-pakistan"
             ]
           }
         }

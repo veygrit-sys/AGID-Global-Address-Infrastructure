@@ -78,6 +78,13 @@ export type AsiaOpenGeoSourceId =
   | 'pak-nsdi'
   | 'pbs-gis-pakistan'
   | 'osm-pakistan'
+  | 'pakistan-post-postcode-directory'
+  | 'upu-pakistan-addressing'
+  | 'pakistan-post-postcode-amendments'
+  | 'survey-of-pakistan-mapping-law'
+  | 'survey-of-pakistan-geospatial-products'
+  | 'pakistan-nsdi'
+  | 'pakistan-pbs-census-gis'
   | 'bd-post'
   | 'survey-bangladesh'
   | 'osm-bangladesh'
@@ -964,6 +971,69 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'reference',
     license: 'ODbL',
     notes: 'Humanitarian OSM mapping reference for disaster, rural, and low-address-density areas across South Asia.',
+  },
+  'pakistan-post-postcode-directory': {
+    id: 'pakistan-post-postcode-directory',
+    name: 'Pakistan Post Post Code Directory',
+    url: 'https://pakpost.gov.pk/postcodes.php',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official searchable and downloadable delivery and non-delivery post-office directories expose five-digit strings, delivery post office, account office, province and attached branch-office code. A pinned row is assignment and routing evidence, not a postal polygon, delivery entitlement, building relation, complete history or blanket redistribution licence.',
+  },
+  'upu-pakistan-addressing': {
+    id: 'upu-pakistan-addressing',
+    name: 'UPU Pakistan addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/pakEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official addressing metadata defines exactly five digits to the right of the locality, with the first two digits identifying a routing district and the last three a delivery post office. The 2004 sheet establishes syntax and address order, not a current allocation table, polygon, delivery point or building.',
+  },
+  'pakistan-post-postcode-amendments': {
+    id: 'pakistan-post-postcode-amendments',
+    name: 'Pakistan Post National Post Code Directory amendments',
+    url: 'https://www.pakpost.gov.pk/pdfForms/2024-5-16-Director-General-Circular-02-4-2022-under-the-DGPPO-IBD.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official circular records additions and amendments to delivery and non-delivery post-office entries. It proves allocations change by effective edition and must be overlaid explicitly; it is not a consolidated current directory, polygon release or reuse grant.',
+  },
+  'survey-of-pakistan-mapping-law': {
+    id: 'survey-of-pakistan-mapping-law',
+    name: 'Survey of Pakistan mapping-law and registration guidance',
+    url: 'https://www.surveyofpakistan.gov.pk/detail/MDRlMTFkMjktMDRiMy00MDAyLTkzOTQtNGZjYmFlN2ZkNTdi',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official guidance under the Surveying and Mapping Act and Rules requires applicable registration, approved official base mapping and vetting or licensing for covered geospatial production. Public access or mathematical generation is not permission to distribute a map, and generated postal surfaces remain non-official unless all legal and source-specific gates pass.',
+  },
+  'survey-of-pakistan-geospatial-products': {
+    id: 'survey-of-pakistan-geospatial-products',
+    name: 'Survey of Pakistan geospatial products',
+    url: 'https://www.surveyofpakistan.gov.pk/Detail/ZWU5ZmYxYmQtZWJhMy00MjNiLWFmMTktMmE0OTMwYTAzMTE1',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The national mapping authority supplies maps and digital geospatial products by request and applicable terms. Product availability is not an open licence, postal-code boundary authority, civic-address register or building relation; exact product, approval, edition, CRS, scale, rights and digest must be pinned.',
+  },
+  'pakistan-nsdi': {
+    id: 'pakistan-nsdi',
+    name: 'Pakistan National Spatial Data Infrastructure',
+    url: 'https://nsdi.gov.pk/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Survey of Pakistan leads the NSDI for spatial-data coordination and access. Portal or map presence is context only until an exact permitted layer, authoritative identifiers, edition, coverage, CRS, licence and digest are pinned; NSDI context is not automatically postal geometry.',
+  },
+  'pakistan-pbs-census-gis': {
+    id: 'pakistan-pbs-census-gis',
+    name: 'Pakistan Bureau of Statistics GIS and Digital Census 2023',
+    url: 'https://www.pbs.gov.pk/gis/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official census GIS provides separately versioned administrative and census context. Census blocks are enumerator-workload units, not postal areas, delivery points or buildings, and administrative overlap never proves a postcode boundary or address-building link.',
   },
   pakpost: {
     id: 'pakpost',
@@ -2540,7 +2610,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   MY: ['pos-malaysia'],
   NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
   PH: ['phlpost'],
-  PK: ['pakpost', 'survey-of-pakistan', 'pak-nsdi', 'pbs-gis-pakistan', 'osm-pakistan'],
+  PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
   JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
   KW: ['kuwait-post', 'upu-kuwait-addressing', 'paci-kuwait-finder', 'paci-kuwait-address-services', 'paci-kuwait-building-register', 'kuwait-municipality-parcels', 'kuwait-csb-census-gis', 'osm-kuwait'],
   LB: ['libanpost', 'osm-lebanon'],
