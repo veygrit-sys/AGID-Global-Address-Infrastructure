@@ -67,7 +67,13 @@ export type AmericasOpenGeoSourceId =
   | 'snit-cr'
   | 'snit-cr-terms'
   | 'osm-costa-rica'
+  | 'correos-nicaragua-postcode-search'
+  | 'upu-nicaragua-addressing-2014'
+  | 'inide-nicaragua-territorial-2023'
   | 'ineter-ni-ide'
+  | 'ineter-nicaragua-cartographic-base'
+  | 'ineter-nicaragua-cadastral-ide'
+  | 'osm-nicaragua'
   | 'correos-guatemala-postal'
   | 'correos-guatemala-postcode-directory'
   | 'upu-guatemala-addressing-2025'
@@ -634,14 +640,75 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     license: 'ODbL',
     notes: 'Community roads, landmarks, addresses and buildings remain in a separate ODbL partition and are not Correos, UPU, INEC, IGN, SNIT, cadastral, occupant or exact civic-address-to-building authority.',
   },
-  'ineter-ni-ide': {
-    id: 'ineter-ni-ide',
-    name: 'INETER IDE Nicaragua',
-    url: 'https://www.ineter.gob.ni/ideineter.html',
+  'correos-nicaragua-postcode-search': {
+    id: 'correos-nicaragua-postcode-search',
+    name: 'Correos de Nicaragua official postcode search',
+    url: 'https://www.correos.gob.ni/codigo-postal/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Interactive official service; pin exact terms, automation, caching and redistribution authority',
+    notes: 'Official five-digit structure links geopostal region, municipality or Managua quadrant, and urban barrio or rural comarca; detail results may be Código Maestro. A result is a time-bound observation, not bulk reuse permission, an automatic polygon, exact address, building link, person or delivery entitlement.',
+  },
+  'upu-nicaragua-addressing-2014': {
+    id: 'upu-nicaragua-addressing-2014',
+    name: 'UPU Nicaragua addressing sheet (May 2014)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nicEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; not a current bulk assignment or address-data licence',
+    notes: 'Dated evidence for five digits before municipality, with traditional directional and barrio or residential address lines. Its examples and 2014 status are not current assignment rows, reusable addresses, geometry, civic-address identity or building evidence.',
+  },
+  'inide-nicaragua-territorial-2023': {
+    id: 'inide-nicaragua-territorial-2023',
+    name: 'INIDE Anuario Estadístico 2023 territorial context',
+    url: 'https://www.inide.gob.ni/docs/Anuarios/Anuario2023/Anuario_Estadistico_2023.pdf',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Nicaragua official spatial data infrastructure for national geospatial reference layers.',
+    license: 'Government publication; pin exact edition, tables, artifact and item terms',
+    notes: 'Official statistical identities for fifteen departments, two autonomous Caribbean Coast regions and 153 municipalities. Administrative identity is not Correos assignment, postal geometry, address or building linkage.',
+  },
+  'ineter-ni-ide': {
+    id: 'ineter-ni-ide',
+    name: 'INETER Nicaragua national boundary geoservices',
+    url: 'https://www.ineter.gob.ni/geoportales/miacnicaragua/index.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official WMS/WFS access; exact layer terms and reproduction authority must be pinned',
+    notes: 'Official national, departmental and municipal WMS/WFS layers with source metadata. Pin exact layer, date, maintenance state, CRS, terms and digest; service access and administrative containment are not Correos assignment or postal geometry.',
+  },
+  'ineter-nicaragua-cartographic-base': {
+    id: 'ineter-nicaragua-cartographic-base',
+    name: 'INETER national digital cartographic base BCN50',
+    url: 'https://www.ineter.gob.ni/geoportales/idebcn/index.html',
+    kind: 'topography',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official map and OGC service access; exact dataset, edition and reuse terms must be pinned',
+    notes: 'Official 1:50,000 national base-cartography discovery. Roads, settlements, names and topography support review only and do not prove a Correos assignment, postal polygon, civic address or building relation.',
+  },
+  'ineter-nicaragua-cadastral-ide': {
+    id: 'ineter-nicaragua-cadastral-ide',
+    name: 'INETER cadastral spatial data infrastructure terms',
+    url: 'https://idec.ineter.gob.ni/agrimensuras/terminos/',
+    kind: 'cadastre',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Consultation is limited to lawful academic or personal non-commercial use; reproduction or a substitute dataset requires express authorization',
+    notes: 'Official cadastral consultation and spatial context are not bulk-open. Parcel, survey, owner, credential or licensed-user data cannot establish Correos geometry or an exact civic-address-to-building relation and must not be republished without authority.',
+  },
+  'osm-nicaragua': {
+    id: 'osm-nicaragua',
+    name: 'OpenStreetMap Nicaragua',
+    url: 'https://wiki.openstreetmap.org/wiki/Nicaragua',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, landmarks, addresses and buildings remain in a separately attributed ODbL partition and are not Correos, UPU, INIDE, INETER, cadastral, owner, occupant or exact civic-address-to-building authority.',
   },
   'correos-guatemala-postal': {
     id: 'correos-guatemala-postal',
@@ -1571,7 +1638,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico'],
   CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],
-  NI: ['ineter-ni-ide'],
+  NI: ['correos-nicaragua-postcode-search', 'upu-nicaragua-addressing-2014', 'inide-nicaragua-territorial-2023', 'ineter-ni-ide', 'ineter-nicaragua-cartographic-base', 'ineter-nicaragua-cadastral-ide', 'osm-nicaragua'],
   GT: ['correos-guatemala-postal', 'correos-guatemala-postcode-directory', 'upu-guatemala-addressing-2025', 'correos-guatemala-postal-legal-framework', 'segeplan-gt-ide', 'ine-guatemala-census-settlements', 'ign-guatemala-cartography', 'ric-guatemala-cadastre', 'osm-guatemala'],
   BZ: ['belize-statistical-institute'],
   GL: ['postnord-greenland', ...getPolarOpenSourceIds('GL')],

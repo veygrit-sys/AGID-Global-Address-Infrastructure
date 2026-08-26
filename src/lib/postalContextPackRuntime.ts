@@ -462,6 +462,7 @@ export {
   normalizeCostaRicaPostalCode,
   normalizeChilePostalCode,
   normalizeDominicanRepublicPostalCode,
+  normalizeNicaraguaPostalCode,
   normalizeColombiaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
