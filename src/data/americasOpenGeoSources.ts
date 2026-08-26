@@ -60,7 +60,13 @@ export type AmericasOpenGeoSourceId =
   | 'osm-cuba'
   | 'correos-mexico'
   | 'correos-cr-postal'
+  | 'upu-costa-rica-addressing-2009'
+  | 'upu-costa-rica-address-policy-case-study'
+  | 'inec-cr-geographic-classification'
+  | 'inec-cr-uged-2024'
   | 'snit-cr'
+  | 'snit-cr-terms'
+  | 'osm-costa-rica'
   | 'ineter-ni-ide'
   | 'correos-guatemala-postal'
   | 'correos-guatemala-postcode-directory'
@@ -524,12 +530,53 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
   },
   'correos-cr-postal': {
     id: 'correos-cr-postal',
-    name: 'Correos de Costa Rica Codigo Postal',
+    name: 'Correos de Costa Rica Código Postal',
     url: 'https://correos.go.cr/codigo-postal/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Costa Rica postal-code lookup.',
+    license: 'Public interactive operator service; request, response, cache and redistribution terms must be pinned',
+    notes: 'Official single-observation postcode service. A response can support a time-bound assignment, but is not a reusable nationwide address corpus, district polygon release, building relation, occupant identity or delivery entitlement.',
+  },
+  'upu-costa-rica-addressing-2009': {
+    id: 'upu-costa-rica-addressing-2009',
+    name: 'UPU Costa Rica addressing sheet (April 2009)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/criEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; not a bulk postal-data licence',
+    notes: 'Documents five digits, the province-canton-district coding method and address layout. It is historical semantics and example context, not a current nationwide assignment table, geometry, civic-address register or building relation.',
+  },
+  'upu-costa-rica-address-policy-case-study': {
+    id: 'upu-costa-rica-address-policy-case-study',
+    name: 'UPU Addressing the World: Costa Rica case study',
+    url: 'https://www.upu.int/UPU/media/upu/publications/whitePaperAddressingTheWorldEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; not a delivery-point data licence',
+    notes: 'Explains that each district received a postcode based on official administrative numbering and that the operator created a separate internal 19-digit delivery-point code. The publication does not release those delivery points, addresses or buildings.',
+  },
+  'inec-cr-geographic-classification': {
+    id: 'inec-cr-geographic-classification',
+    name: 'INEC Costa Rica geographic classification and DTA codes',
+    url: 'https://sistemas.inec.cr/pad5/index.php/catalog/379/related-materials',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact manual edition and resource-level reuse terms must be pinned',
+    notes: 'Official province, canton and district identity/code context. It can validate the 1+2+2 code structure, but is not by itself a current Correos assignment, postal geometry, civic address or building authority.',
+  },
+  'inec-cr-uged-2024': {
+    id: 'inec-cr-uged-2024',
+    name: 'INEC Unidad Geoestadística Distrital 2024',
+    url: 'https://inec.cr/mapas-cartografia/unidad-geoestadistica-distrital-2024',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Pin archive digest and confirm resource-level CC BY-SA 4.0 applicability before redistribution',
+    notes: 'Downloadable 2024 geostatistical district geometry whose boundaries deliberately avoid some imaginary DTA limits. It is a candidate official-derived reference surface only after exact code, vintage, topology and licence checks; it is not operator-issued postal geometry.',
   },
   'snit-cr': {
     id: 'snit-cr',
@@ -538,7 +585,28 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Costa Rica national territorial information system and OGC service reference.',
+    license: 'Reference-only: SNIT general conditions prohibit commercial use of direct or derived geographic information',
+    notes: 'Official national territorial catalog and OGC-service reference. Preserve layer producer, officiality, release, CRS and metadata; portal visibility is not postal authority or redistribution permission.',
+  },
+  'snit-cr-terms': {
+    id: 'snit-cr-terms',
+    name: 'SNIT Costa Rica general conditions of use',
+    url: 'https://www.snitcr.go.cr/snit_condiciones',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Commercial use of direct or derived SNIT geographic information is not authorized',
+    notes: 'Rights gate only. It prevents silently publishing or serving commercial direct or derived SNIT geometry and is not assignment, address, polygon or building data.',
+  },
+  'osm-costa-rica': {
+    id: 'osm-costa-rica',
+    name: 'OpenStreetMap Costa Rica',
+    url: 'https://wiki.openstreetmap.org/wiki/Costa_Rica',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, landmarks, addresses and buildings remain in a separate ODbL partition and are not Correos, UPU, INEC, IGN, SNIT, cadastral, occupant or exact civic-address-to-building authority.',
   },
   'ineter-ni-ide': {
     id: 'ineter-ni-ide',
@@ -1215,7 +1283,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico'],
-  CR: ['correos-cr-postal', 'snit-cr'],
+  CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],
   NI: ['ineter-ni-ide'],
   GT: ['correos-guatemala-postal', 'correos-guatemala-postcode-directory', 'upu-guatemala-addressing-2025', 'correos-guatemala-postal-legal-framework', 'segeplan-gt-ide', 'ine-guatemala-census-settlements', 'ign-guatemala-cartography', 'ric-guatemala-cadastre', 'osm-guatemala'],
   BZ: ['belize-statistical-institute'],

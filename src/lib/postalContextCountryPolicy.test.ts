@@ -70,6 +70,7 @@ import {
   normalizeEcuadorPostalCode,
   normalizeElSalvadorPostalCode,
   normalizeGuatemalaPostalCode,
+  normalizeCostaRicaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -582,6 +583,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeGuatemalaPostalCode('GT-99999'), null);
   assert.equal(normalizeGuatemalaPostalCode('9999'), null);
   assert.equal(normalizePostalContextPostalCode('gt', '99 999'), '99999');
+  assert.equal(normalizeCostaRicaPostalCode('１０１０２'), '10102');
+  assert.equal(normalizeCostaRicaPostalCode('10 102'), '10102');
+  assert.equal(normalizeCostaRicaPostalCode('99 999'), null);
+  assert.equal(normalizeCostaRicaPostalCode('CR-10102'), null);
+  assert.equal(normalizeCostaRicaPostalCode('1010'), null);
+  assert.equal(normalizePostalContextPostalCode('cr', '10 102'), '10102');
   assert.equal(normalizeAzerbaijanPostalCode('ＡＺ１０１０'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('az 1010'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('1010'), 'AZ1010');
@@ -651,6 +658,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('GT'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GT.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GT.postalCodeFormat, 'NNNNN');
+  assert.equal(isPostalContextCountryCode('CR'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CR.fullCodeGeometrySemantics, 'postal-area-first');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CR.postalCodeFormat, 'NNNNN');
   assert.equal(isPostalContextCountryCode('EC'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.EC.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.EC.postalCodeFormat, 'NNNNNN');
