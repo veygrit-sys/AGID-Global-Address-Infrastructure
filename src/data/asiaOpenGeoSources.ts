@@ -119,6 +119,11 @@ export type AsiaOpenGeoSourceId =
   | 'osm-nepal'
   | 'hot-osm-nepal'
   | 'cambodia-post'
+  | 'mptc-cambodia-prakas-77-2025'
+  | 'upu-cambodia-addressing-2018'
+  | 'ncdd-cambodia-gazetteer'
+  | 'mlmupc-cambodia-cadastral-services'
+  | 'mlmupc-cambodia-building-services'
   | 'odc-cambodia-postal-codes'
   | 'osm-cambodia'
   | 'lao-post-postcode'
@@ -1459,7 +1464,56 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Cambodia Post official site for national postal-service and postcode reference under the live 2026 domain.',
+    notes: 'UPU-designated national operator and current service/address reference. The public site is not a bulk postcode, polygon, civic-address, or building corpus.',
+  },
+  'mptc-cambodia-prakas-77-2025': {
+    id: 'mptc-cambodia-prakas-77-2025',
+    name: 'MPTC Prakas No. 77 Postal Codes (2025)',
+    url: 'https://file.go.gov.kh/mptc/prakas-postal-codes.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Official reference; no reusable data licence stated on the 59-page PDF',
+    notes: 'Signed and effective 30 December 2025. It explicitly assigns six-digit PP0000, PPDD00, and PPDDCC codes to province/capital, municipality/district/khan, and commune/sangkat postal areas, but publishes no coordinate geometry or address-building relation.',
+  },
+  'upu-cambodia-addressing-2018': {
+    id: 'upu-cambodia-addressing-2018',
+    name: 'UPU Cambodia Addressing Sheet 11/2018',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/khmEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Documents six digits as province, district or municipality, and commune components plus urban/rural address elements. Dated examples are not current Prakas 77 assignments, reusable addresses, geometry, or buildings.',
+  },
+  'ncdd-cambodia-gazetteer': {
+    id: 'ncdd-cambodia-gazetteer',
+    name: 'NCDD Cambodia Gazetteer Database Online',
+    url: 'https://db.ncdd.gov.kh/gazetteer/view/index.castle',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public official viewer/download reference; exact artifact reuse terms must be pinned',
+    notes: 'Lists Khmer and Latin names, codes, references, and GIS for provinces, municipalities/districts/khans, communes/sangkats, and villages. Administrative code equality or containment is only derivation evidence, never proof of official postal geometry.',
+  },
+  'mlmupc-cambodia-cadastral-services': {
+    id: 'mlmupc-cambodia-cadastral-services',
+    name: 'MLMUPC Cambodia Cadastral Services',
+    url: 'https://mlmupc.gov.kh/cadastral-services/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Purpose-limited paid/request service; not open bulk data',
+    notes: 'Electronic cadastral information, parcel, map-copy, orthophoto and survey services are request- and fee-based. Parcel or rights information is not postal geometry, an open address corpus, or a resident/building relation.',
+  },
+  'mlmupc-cambodia-building-services': {
+    id: 'mlmupc-cambodia-building-services',
+    name: 'MLMUPC Cambodia Construction and Land Online Services',
+    url: 'https://service.mlmupc.gov.kh/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Authenticated/request public service; no open national building-data licence',
+    notes: 'The government portal accepts construction, cadastral, licence and other service requests. Portal availability does not publish reusable building identities, footprints, entrances, civic-address joins, owners, occupants, or postal assignments.',
   },
   'odc-cambodia-postal-codes': {
     id: 'odc-cambodia-postal-codes',
@@ -1468,8 +1522,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'validation',
-    license: 'Open Development Cambodia terms; verify source-file redistribution before bundling',
-    notes: '2026 postal-code dataset referencing Cambodia Ministry of Posts and Telecommunications Prakas No. 77 dated 2025-12-30.',
+    license: 'CC BY-SA 4.0 for ODC-published material; pin source-PDF and transformation rights separately',
+    notes: 'ODC extracted Prakas No. 77 into Khmer and English CSV tables and records the 30 December 2025 lineage. It is independently transformed validation data, not MPTC geometry or a building corpus.',
   },
   'osm-cambodia': {
     id: 'osm-cambodia',
@@ -1479,7 +1533,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'validation',
     license: 'ODbL',
-    notes: 'Cambodia OSM roads, settlements, Khmer names, and fallback address-tag reference.',
+    notes: 'Community roads, settlements, Khmer names, address tags and buildings for independent validation. OSM does not supply MPTC assignment, official postal geometry, exact civic-to-building identity, cadastre, or delivery entitlement.',
   },
   'osm-nepal': {
     id: 'osm-nepal',
@@ -3589,7 +3643,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   ],
   KR: ['korea-post-postcode-system', 'korea-post-postcode-api', 'mois-juso-basic-districts', 'mois-juso-road-address-api', 'mois-juso-building-db', 'mois-juso-electronic-map', 'molit-korea-gis-integrated-buildings', 'molit-korea-continuous-cadastral-map', 'epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
   KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
-  KH: ['cambodia-post', 'odc-cambodia-postal-codes', 'osm-cambodia'],
+  KH: ['cambodia-post', 'mptc-cambodia-prakas-77-2025', 'upu-cambodia-addressing-2018', 'ncdd-cambodia-gazetteer', 'mlmupc-cambodia-cadastral-services', 'mlmupc-cambodia-building-services', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ["post-kz","qazpost-open-api","upu-kazakhstan-addressing-2025","kazakhstan-postal-index-rules-2026","kazakhstan-post-law","kazakhstan-addressing-rules-2026","kazakhstan-address-register","kazakhstan-nsdi","kazakhstan-nsdi-use-rules-2023","kazakhstan-public-cadastral-map","kazakhstan-real-estate-rights-register","osm-kazakhstan"],
   LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
   LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],

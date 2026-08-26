@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -266,6 +266,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'CN',
     postalCodeFormat: 'NNNNNN',
     fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  KH: {
+    countryCode: 'KH',
+    postalCodeFormat: 'NNNNNN',
+    fullCodeGeometrySemantics: 'postal-area-first',
   },
   KW: {
     countryCode: 'KW',
@@ -748,6 +753,13 @@ export function normalizeChinaPostalCode(value: unknown) {
   return /^\d{6}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeCambodiaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{6}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizeIndonesiaPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -989,6 +1001,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'UZ') return normalizeUzbekistanPostalCode(value);
   if (normalizedCountry === 'KZ') return normalizeKazakhstanPostalCode(value);
   if (normalizedCountry === 'CN') return normalizeChinaPostalCode(value);
+  if (normalizedCountry === 'KH') return normalizeCambodiaPostalCode(value);
   if (normalizedCountry === 'KW') return normalizeKuwaitPostalCode(value);
   if (normalizedCountry === 'BH') return normalizeBahrainPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);

@@ -2156,3 +2156,17 @@ test('China address metadata separates postal routing, delivery address code, ci
   for (const key of ['recipient', 'building', 'floor', 'unit', 'room', 'postOffice', 'poBox']) assert.ok(format.native.fields.some((item: any) => item.key === key));
   for (const id of ["china-postal-code","upu-china-addressing-2013","china-postal-and-address-code-response-2025","china-universal-delivery-address-code-gbt41832","china-address-geocode-gbt39609","china-geographical-names-regulation-2022","tianditu-china","china-geospatial-platform-management-2019","china-real-estate-query-rules-2024","osm-china"]) assert.ok(format.openSourceIds?.includes(id));
 });
+
+test('Cambodia address metadata separates Prakas 77 assignments, administrative GIS, civic buildings, cadastre, time, and AGID', () => {
+  const format = loadFormat('KH');
+  const rules = loadRules('KH');
+  assert.equal(format.postalCode.format, 'NNNNNN');
+  assert.equal(new RegExp(format.postalCode.regex).test('999999'), true);
+  assert.equal(new RegExp(format.postalCode.regex).test('KH-999999'), false);
+  assert.equal(new RegExp(format.postalCode.regex).test('99999'), false);
+  assert.match(format.postalCode.source, /MPTC.*Prakas No\. 77.*UPU.*11\/2018.*Cambodia Post.*NCDD.*MLMUPC.*ODC.*OpenStreetMap/i);
+  assert.equal(rules.postalCode.required, true);
+  assert.match(rules.postalCode.usage, /PP0000.*PPDD00.*PPDDCC.*administrative.*does not.*official postal geometry.*building relation.*legacy.*village.*civic.*cadastral.*AGID.*rights-cleared/i);
+  for (const key of ['recipient', 'building', 'floor', 'unit', 'room', 'village', 'commune', 'district', 'province', 'postOffice', 'poBox']) assert.ok(format.native.fields.some((item: any) => item.key === key));
+  for (const id of ["cambodia-post","mptc-cambodia-prakas-77-2025","upu-cambodia-addressing-2018","ncdd-cambodia-gazetteer","mlmupc-cambodia-cadastral-services","mlmupc-cambodia-building-services","odc-cambodia-postal-codes","osm-cambodia"]) assert.ok(format.openSourceIds?.includes(id));
+});

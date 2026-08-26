@@ -449,6 +449,7 @@ export {
   normalizeUzbekistanPostalCode,
   normalizeKazakhstanPostalCode,
   normalizeChinaPostalCode,
+  normalizeCambodiaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
