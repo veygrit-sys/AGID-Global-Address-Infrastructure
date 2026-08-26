@@ -43,6 +43,13 @@ export type AmericasOpenGeoSourceId =
   | 'osm-uruguay'
   | 'zippopotam'
   | 'canada-post-postal'
+  | 'canada-post-addresscomplete'
+  | 'canada-post-licensed-postal-data'
+  | 'statcan-pccf-licensed'
+  | 'statcan-census-fsa-2021'
+  | 'statcan-national-address-register'
+  | 'statcan-open-database-buildings'
+  | 'osm-canada'
   | 'correos-mexico'
   | 'correos-cr-postal'
   | 'snit-cr'
@@ -331,12 +338,83 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
   },
   'canada-post-postal': {
     id: 'canada-post-postal',
-    name: 'Canada Post Postal Code Lookup',
-    url: 'https://www.canadapost-postescanada.ca/cpc/en/tools/find-a-postal-code.page',
+    name: 'Canada Post postal-code structure and lookup',
+    url: 'https://www.canadapost-postescanada.ca/cpc/en/support/articles/addressing-guidelines/postal-codes.page',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    license: 'Public official guidance and lookup; not a bulk assignment or geometry data licence',
+    notes: 'Canada Post defines the FSA and LDU and explains that a full code can represent a block face, single building, large-volume receiver or rural community. Public guidance or lookup observations are time-bound reference evidence, not bundled bulk assignments, universal polygons, building footprints or delivery entitlement.',
+  },
+  'canada-post-addresscomplete': {
+    id: 'canada-post-addresscomplete',
+    name: 'Canada Post AddressComplete API',
+    url: 'https://www.canadapost-postescanada.ca/ac/support/api/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Authenticated service under Canada Post AddressComplete account and EULA terms',
+    notes: 'Official Find and Retrieve service requires an API key and returns formatted address details. A response is a time-bound address observation, not a reusable postal polygon, building footprint, occupant identity or automatic address-building relation.',
+  },
+  'canada-post-licensed-postal-data': {
+    id: 'canada-post-licensed-postal-data',
+    name: 'Canada Post licensed postal data products',
+    url: 'https://www.canadapost-postescanada.ca/cpc/en/commercial/data-solutions/license-data.page',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Commercial licence; product, purpose, transfer, retention and redistribution specific',
+    notes: 'Licensed monthly products include full postal-code address ranges, delivery data and postal-code coordinates. They can provide assignment evidence under an exact contract and release, but coordinates or ranges are not blanket official full-code polygons and licensed rows cannot be republished here.',
+  },
+  'statcan-pccf-licensed': {
+    id: 'statcan-pccf-licensed',
+    name: 'Statistics Canada Postal Code Conversion File',
+    url: 'https://www.statcan.gc.ca/en/microdata/dli/application/section1/section_i-postal_codemo_coversion_file_pccf_access.pdf',
+    kind: 'geocoding',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Official Canadian postal-code lookup reference; use as a reference source, not a bundled open dataset.',
+    license: 'Non-transferable purpose-limited PCCF licence including Canada Post intellectual property',
+    notes: 'PCCF links postal codes to census geography and coordinates but the licence requires a disclaimer that it does not validate postal codes. Distribution and external derived services are restricted; a crosswalk or coordinate is not a postal boundary, exact address-building relation or delivery entitlement.',
+  },
+  'statcan-census-fsa-2021': {
+    id: 'statcan-census-fsa-2021',
+    name: 'Statistics Canada 2021 Census Forward Sortation Area Boundary File',
+    url: 'https://www150.statcan.gc.ca/n1/pub/92-179-g/92-179-g2021001-eng.htm',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Official-derived public census release with Canada Post acknowledgement; exact terms apply',
+    notes: 'CFSA polygons are derived from respondent-reported postal codes and dissemination areas and are not necessarily equivalent to Canada Post FSA geography. The 2021 product supplies census reference geometry, not current assignment validation, LDU geometry, full-code polygons, addresses or buildings.',
+  },
+  'statcan-national-address-register': {
+    id: 'statcan-national-address-register',
+    name: 'Statistics Canada National Address Register',
+    url: 'https://www150.statcan.gc.ca/n1/en/catalogue/46260002',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Statistics Canada Open Licence with provider-specific acknowledgements',
+    notes: 'The versioned NAR publishes non-confidential georeferenced civic addresses with addressId and locationId fields and mailing context. It does not prove Canada Post delivery entitlement, an occupant or organization, full provider coverage or an automatic link to a building footprint.',
+  },
+  'statcan-open-database-buildings': {
+    id: 'statcan-open-database-buildings',
+    name: 'Statistics Canada Open Database of Buildings',
+    url: 'https://www150.statcan.gc.ca/n1/en/catalogue/34260001',
+    kind: 'facility',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Open Government Licence - Canada; contributing provider and release specific',
+    notes: 'The ODB harmonizes government building footprints, but current coverage is incomplete and provider quality varies. Footprints are not postal assignments, address points, units, occupants or exact address-building relations without an explicit stable cross-key.',
+  },
+  'osm-canada': {
+    id: 'osm-canada',
+    name: 'OpenStreetMap Canada',
+    url: 'https://wiki.openstreetmap.org/wiki/Canada',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Canada Post, Statistics Canada, provincial, territorial, municipal, cadastral, occupant or exact address-building authority.',
   },
   'correos-mexico': {
     id: 'correos-mexico',
@@ -956,7 +1034,7 @@ const BASE_OPEN_SOURCE_IDS: AmericasOpenGeoSourceId[] = [
 
 const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSourceId[]>> = {
   US: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder', 'usdot-national-address-database', 'usgs-national-structures-dataset', 'hud-usps-zip-crosswalk', 'osm-united-states'],
-  CA: ['canada-post-postal'],
+  CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
   MX: ['correos-mexico'],
   CR: ['correos-cr-postal', 'snit-cr'],
   NI: ['ineter-ni-ide'],

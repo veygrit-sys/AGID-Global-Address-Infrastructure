@@ -1003,3 +1003,20 @@ test('separates El Salvador postal operator, dated UPU semantics, CNR administra
   assert.equal(svSources.find(source => source.id === 'onec-el-salvador-geographic-catalog')?.sourceRole, 'legal-framework-only');
   assert.equal(svSources.find(source => source.id === 'cnr-el-salvador-cadastre')?.availability, 'commercial-or-restricted');
 });
+
+test('separates Canada Post assignment, AddressComplete, licensed PCCF, census FSA, NAR addresses, and buildings', () => {
+  const caSources = getOfficialPostalSourcesForCountry('CA');
+  const ids = caSources.map(source => source.id);
+  for (const id of [
+    'canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data',
+    'statcan-pccf-licensed', 'statcan-census-fsa-2021',
+    'statcan-national-address-register', 'statcan-open-database-buildings',
+  ]) assert.ok(ids.includes(id));
+  assert.equal(caSources.find(source => source.id === 'canada-post-postal')?.trustTier, 'authoritative');
+  assert.equal(caSources.find(source => source.id === 'canada-post-addresscomplete')?.requiresCredential, true);
+  assert.equal(caSources.find(source => source.id === 'canada-post-licensed-postal-data')?.availability, 'licensed-bulk-data');
+  assert.equal(caSources.find(source => source.id === 'statcan-pccf-licensed')?.validationReadiness, 'metadata-only');
+  assert.equal(caSources.find(source => source.id === 'statcan-census-fsa-2021')?.trustTier, 'official-derived');
+  assert.equal(caSources.find(source => source.id === 'statcan-national-address-register')?.depth, 'address');
+  assert.equal(caSources.find(source => source.id === 'statcan-open-database-buildings')?.depth, 'building');
+});
