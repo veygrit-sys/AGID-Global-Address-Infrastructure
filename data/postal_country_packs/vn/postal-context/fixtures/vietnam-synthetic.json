@@ -1,0 +1,76 @@
+{
+  "schema_version": "agid-postal-vn-synthetic-fixtures-v0.1",
+  "country_code": "VN",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "99999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "vn-syn-five-digit-assignment",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "typed_current_national_postcode_assignment",
+        "province_or_municipality": "Synthetic Province",
+        "ward_or_commune": "Synthetic Ward"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-five-digit-string",
+          "assignment-object-may-be-area-or-non-area"
+        ],
+        "must_not_assert": [
+          "syntax-proves-current-assignment",
+          "portal-or-decision-row-is-official-postal-boundary",
+          "ward-or-commune-code-is-canonical-polygon",
+          "post-office-or-special-delivery-object-is-area",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "vn-syn-administrative-join",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "explicit_synthetic_administrative_join",
+        "administrative_id": "VN-SYN-ADMIN"
+      },
+      "expected": {
+        "must_assert": [
+          "administrative-join-remains-derived"
+        ],
+        "must_not_assert": [
+          "administrative-boundary-join-is-postal-authority-polygon",
+          "legacy-district-is-current-unit",
+          "administrative-overlap-proves-delivery"
+        ]
+      }
+    },
+    {
+      "fixture_id": "vn-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "VN-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "vpostcode-point-is-legal-address-or-building-footprint",
+          "nsdi-map-building-or-parcel-is-civic-address-link",
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-recipient-or-account-holder",
+          "portal-query-registration-request-or-payment-is-redistribution-right"
+        ]
+      }
+    }
+  ]
+}

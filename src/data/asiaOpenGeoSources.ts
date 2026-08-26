@@ -121,6 +121,14 @@ export type AsiaOpenGeoSourceId =
   | 'osm-bhutan'
   | 'thailand-post'
   | 'vietnam-postcode'
+  | 'vietnam-national-postcode-portal'
+  | 'vietnam-postcode-decision-2334-2025'
+  | 'vnpost-two-tier-postcode-notice'
+  | 'upu-vietnam-addressing'
+  | 'vnpost-vpostcode-digital-address'
+  | 'vietnam-nso-administrative-units'
+  | 'vietnam-nsdi-portal'
+  | 'vietnam-survey-map-data-service'
   | 'pos-malaysia'
   | 'onemap-sg'
   | 'indonesia-post-law-2009'
@@ -1418,6 +1426,78 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'primary',
     notes: 'Vietnam Post national postal-address code platform and postcode lookup reference.',
+  },
+  'vietnam-national-postcode-portal': {
+    id: 'vietnam-national-postcode-portal',
+    name: 'Vietnam National Postcode Portal',
+    url: 'https://mabuuchinh.vn/Default.aspx',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The Ministry of Science and Technology portal is the current lookup and download entry point for five-digit national postcode assignments. A pinned result proves a dated assignment only; it is not a polygon, delivery entitlement, civic address, building relation, complete history or blanket redistribution licence.',
+  },
+  'vietnam-postcode-decision-2334-2025': {
+    id: 'vietnam-postcode-decision-2334-2025',
+    name: 'Vietnam Decision 2334/QD-BKHCN postcode amendment',
+    url: 'https://cspl.mic.gov.vn/Pages/TinTuc/tinchitiet.aspx?tintucid=139048',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The Ministry legal-policy notice records the 2025 amendment for wards, communes and equivalent units under the new two-tier administration and confirms a five-character structure. Legal structure and assignment tables do not themselves publish postal geometry, civic addresses or building links.',
+  },
+  'vnpost-two-tier-postcode-notice': {
+    id: 'vnpost-two-tier-postcode-notice',
+    name: 'Vietnam Post two-tier postcode notice',
+    url: 'https://vnpost.vn/en/hoat-dong-nganh/thong-bao-sua-doi-ma-buu-chinh-quoc-gia-theo-don-vi-hanh-chinh-2-cap',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Vietnam Post confirms Decision 2334, five-digit lookup through the national portal and alignment to the two-tier administrative system. The notice is routing and transition evidence, not a bulk allocation licence, polygon set, address registry or building database.',
+  },
+  'upu-vietnam-addressing': {
+    id: 'upu-vietnam-addressing',
+    name: 'UPU Viet Nam addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/vnmEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The 2021 UPU sheet defines five digits, position beside the province name, house, alley, lane, street, ward, district, province, rural and post-office formats, and non-area assignments to service or special-delivery objects. It predates the 2025 two-tier reform and is not current allocation data, geometry or a building relation.',
+  },
+  'vnpost-vpostcode-digital-address': {
+    id: 'vnpost-vpostcode-digital-address',
+    name: 'Vietnam Post Vpostcode digital address platform',
+    url: 'https://vnpost.vn/vi/hoat-dong-nganh/ra-mat-nen-tang-ma-dia-chi-buu-chinh-vpostcode',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Vietnam Post describes a national digital address platform built from digital maps and national postcodes for location codes. A viewed or queried code is not automatically a legal civic address, postal polygon, building footprint, occupant record or reusable bulk dataset; exact API and reuse terms are required.',
+  },
+  'vietnam-nso-administrative-units': {
+    id: 'vietnam-nso-administrative-units',
+    name: 'Vietnam NSO administrative-unit directory and crosswalk',
+    url: 'https://danhmuchanhchinh.nso.gov.vn/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The National Statistics Office directory exposes current units, new-to-old conversion, comparison and history. Identifiers and names support temporal administrative validation; directory rows are not boundary geometry, postcode assignments, civic addresses, buildings or redistribution permission.',
+  },
+  'vietnam-nsdi-portal': {
+    id: 'vietnam-nsdi-portal',
+    name: 'Vietnam National Spatial Data Infrastructure portal',
+    url: 'https://vnsdi.mae.gov.vn/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official NSDI portal advertises administrative maps, base maps and registered data access. Registration, viewing or attribution does not prove reuse rights, postal authority, a current postcode relation, civic address or exact address-building link; exact product, edition, CRS, scale and terms must be pinned.',
+  },
+  'vietnam-survey-map-data-service': {
+    id: 'vietnam-survey-map-data-service',
+    name: 'Vietnam official surveying and mapping data service',
+    url: 'https://dichvucong.monre.gov.vn/pages/ChiTietThuTucHanhChinh.aspx?tt=129',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The ministry procedure governs requests for surveying, mapping and geospatial products and excludes state-secret material. A supplied product remains subject to exact request, product, scale, CRS, fee and rights; roads, parcels or buildings do not become postcode surfaces or civic-address links by containment or proximity.',
   },
   'pos-malaysia': {
     id: 'pos-malaysia',
@@ -2937,7 +3017,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   TJ: ['tajik-post', 'osm-tajikistan', 'openaerialmap-tajikistan', 'hot-osm-central-asia'],
   TM: ['turkmenpost', 'osm-turkmenistan', 'hot-osm-central-asia'],
   UZ: ['pochta-uz', 'uzbekistan-open-data-geo', 'uzbekistan-state-urban-cadastre', 'osm-uzbekistan'],
-  VN: ['vietnam-postcode'],
+  VN: ['vietnam-national-postcode-portal', 'vietnam-postcode-decision-2334-2025', 'vnpost-two-tier-postcode-notice', 'upu-vietnam-addressing', 'vnpost-vpostcode-digital-address', 'vietnam-nso-administrative-units', 'vietnam-nsdi-portal', 'vietnam-survey-map-data-service', 'vietnam-postcode'],
   YE: ['yemen-post', 'osm-yemen', 'hot-osm-west-asia'],
 };
 
