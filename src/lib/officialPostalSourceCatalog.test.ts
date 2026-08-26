@@ -747,6 +747,16 @@ test('classifies official postal APIs and government address APIs as strong evid
   assert.equal(singaporeOneMap.strength, 'strong');
 });
 
+test('separates Argentina CPA authority, address geography, boundaries, and cadastre law', () => {
+  const arSources = getOfficialPostalSourcesForCountry('AR');
+  const ids = arSources.map(source => source.id);
+  assert.equal(arSources[0]?.id, 'correo-argentino-cpa');
+  for (const id of ['georef-ar', 'ign-argentina-geospatial', 'idera-argentina', 'argentina-cadastre-law-26209']) assert.ok(ids.includes(id));
+  assert.equal(arSources.find(source => source.id === 'georef-ar')?.depth, 'address');
+  assert.equal(arSources.find(source => source.id === 'ign-argentina-geospatial')?.depth, 'geo-only');
+  assert.equal(arSources.find(source => source.id === 'argentina-cadastre-law-26209')?.sourceRole, 'legal-framework-only');
+});
+
 test('separates United States postal authority, geography, and crosswalk sources', () => {
   const usSources = getOfficialPostalSourcesForCountry('US');
   const usSourceIds = usSources.map(source => source.id);

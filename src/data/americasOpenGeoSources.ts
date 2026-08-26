@@ -31,6 +31,11 @@ export type AmericasOpenGeoSourceId =
   | 'usgs-national-structures-dataset'
   | 'hud-usps-zip-crosswalk'
   | 'osm-united-states'
+  | 'correo-argentino-cpa'
+  | 'ign-argentina-geospatial'
+  | 'idera-argentina'
+  | 'argentina-cadastre-law-26209'
+  | 'osm-argentina'
   | 'zippopotam'
   | 'canada-post-postal'
   | 'correos-mexico'
@@ -559,14 +564,35 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'validation',
     notes: 'Open-source Brazilian API project with CEP endpoints and public Brazilian reference data.',
   },
+  'correo-argentino-cpa': {
+    id: 'correo-argentino-cpa', name: 'Correo Argentino CPA lookup and guidance', url: 'https://www.correoargentino.com.ar/categorias/consulta-cpa',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official operator reference for the current eight-character CPA. Urban assignments can identify each block face, while small settlements, rural zones and special cases can share one CPA. The operator does not publish open code lists, and an interactive result is not geometry, occupant proof or a building relation.',
+  },
   'georef-ar': {
-    id: 'georef-ar',
-    name: 'Argentina Georef API',
-    url: 'https://datosgobar.github.io/georef-ar-api/',
-    kind: 'geocoding',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Argentina official geographic data normalization API for provinces, departments, municipalities, streets, and addresses.',
+    id: 'georef-ar', name: 'Argentina Georef service', url: 'https://portal-andino.datos.gob.ar/dataset/servicio-normalizacion-datos-geograficos',
+    kind: 'geocoding', coverage: 'country', usage: 'primary', license: 'CC BY 4.0 catalog entry; pin exact resource metadata',
+    notes: 'Official geographic normalization for provinces, departments, municipalities, localities, streets and addresses using IGN, BAHRA and INDEC context. Address and location endpoints provide derived points/context, not postal assignment, parcel or building geometry.',
+  },
+  'ign-argentina-geospatial': {
+    id: 'ign-argentina-geospatial', name: 'Instituto Geográfico Nacional SIG layers', url: 'https://www.ign.gob.ar/NuestrasActividades/InformacionGeoespacial/CapasSIG',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'Artifact-specific attribution and metadata required',
+    notes: 'Official names and territorial layers require exact layer authority, release, CRS, validity and licence. Some departmental or international representations are reference geometry and must not be relabelled as CPA delivery boundaries.',
+  },
+  'idera-argentina': {
+    id: 'idera-argentina', name: 'IDERA geoservice and fundamental-data catalog', url: 'https://www.idera.gob.ar/index.php/servicios/buscador-de-dbyf',
+    kind: 'data-catalog', coverage: 'country', usage: 'reference',
+    notes: 'National discovery and interoperability catalog for decentralized government geospatial producers. Each discovered service or layer retains its own producer, jurisdiction, metadata, licence, coverage and release; catalog presence is not postal or building authority.',
+  },
+  'argentina-cadastre-law-26209': {
+    id: 'argentina-cadastre-law-26209', name: 'Argentina National Cadastre Law 26.209', url: 'https://www.argentina.gob.ar/normativa/nacional/ley-26209-124298/texto',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Legal framework establishing provincial and CABA cadastral administration and georeferenced parcel status. Parcels and ownership records are not postal areas, addresses, buildings or public address-building relations.',
+  },
+  'osm-argentina': {
+    id: 'osm-argentina', name: 'OpenStreetMap Argentina', url: 'https://wiki.openstreetmap.org/wiki/Argentina',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Correo Argentino, IGN, Georef, cadastral, occupant or exact address-building authority.',
   },
   'geoportal-cl': {
     id: 'geoportal-cl',
@@ -780,7 +806,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   MF: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   CP: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   BR: ['viacep-br', 'brasilapi'],
-  AR: ['georef-ar'],
+  AR: ['correo-argentino-cpa', 'georef-ar', 'ign-argentina-geospatial', 'idera-argentina', 'argentina-cadastre-law-26209', 'osm-argentina'],
   CL: ['geoportal-cl'],
   CO: ['colombia-en-mapas'],
   PE: ['geo-vivienda-pe'],

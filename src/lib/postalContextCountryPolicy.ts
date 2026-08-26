@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'AR', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -20,6 +20,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   US: {
     countryCode: 'US',
     postalCodeFormat: 'NNNNN or NNNNN-NNNN',
+    fullCodeGeometrySemantics: 'area-or-non-area',
+  },
+  AR: {
+    countryCode: 'AR',
+    postalCodeFormat: 'ANNNNAAA',
     fullCodeGeometrySemantics: 'area-or-non-area',
   },
   SG: {
@@ -779,6 +784,14 @@ export function normalizeUnitedStatesPostalCode(value: unknown) {
   return /^\d{5}-\d{4}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeArgentinaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .toUpperCase()
+    .replace(/\s+/g, '');
+  return /^[A-HJ-NP-Z]\d{4}[A-Z]{3}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizeKyrgyzstanPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -978,6 +991,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
   if (normalizedCountry === 'US') return normalizeUnitedStatesPostalCode(value);
+  if (normalizedCountry === 'AR') return normalizeArgentinaPostalCode(value);
   if (normalizedCountry === 'SG') return normalizeSingaporePostalCode(value);
   if (normalizedCountry === 'NL') return normalizeNetherlandsPostalCode(value);
   if (normalizedCountry === 'GB') return normalizeUnitedKingdomPostalCode(value);

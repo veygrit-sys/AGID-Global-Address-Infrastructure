@@ -452,6 +452,7 @@ export {
   normalizeCambodiaPostalCode,
   normalizeKyrgyzstanPostalCode,
   normalizeUnitedStatesPostalCode,
+  normalizeArgentinaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

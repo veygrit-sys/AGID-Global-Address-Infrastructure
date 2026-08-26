@@ -63,6 +63,7 @@ import {
   normalizeCambodiaPostalCode,
   normalizeKyrgyzstanPostalCode,
   normalizeUnitedStatesPostalCode,
+  normalizeArgentinaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -531,6 +532,14 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeUnitedStatesPostalCode('US-00001'), null);
   assert.equal(normalizeUnitedStatesPostalCode('00001 000'), null);
   assert.equal(normalizePostalContextPostalCode('us', '000010001'), '00001-0001');
+  assert.equal(normalizeArgentinaPostalCode('ｚ９９９９ｚｚｚ'), 'Z9999ZZZ');
+  assert.equal(normalizeArgentinaPostalCode('z 9999 zzz'), 'Z9999ZZZ');
+  assert.equal(normalizeArgentinaPostalCode('Z9999-ZZZ'), null);
+  assert.equal(normalizeArgentinaPostalCode('9999'), null);
+  assert.equal(normalizeArgentinaPostalCode('AR-Z9999ZZZ'), null);
+  assert.equal(normalizeArgentinaPostalCode('I9999ZZZ'), null);
+  assert.equal(normalizeArgentinaPostalCode('O9999ZZZ'), null);
+  assert.equal(normalizePostalContextPostalCode('ar', 'z 9999 zzz'), 'Z9999ZZZ');
   assert.equal(normalizeAzerbaijanPostalCode('ＡＺ１０１０'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('az 1010'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('1010'), 'AZ1010');
