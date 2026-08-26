@@ -1876,6 +1876,12 @@ test('Americas country JSON files expose addressRules, Spanish delivery metadata
     'locality_or_community', 'five_digit_typed_postal_object', 'civic_address',
     'building_or_unit',
   ]);
+  assert.deepEqual(loadRules('BR').regionalHierarchy, [
+    'country', 'great_region', 'federative_unit', 'intermediate_geographic_region',
+    'immediate_geographic_region', 'municipality_or_federal_district',
+    'district_or_subdistrict', 'neighborhood_or_locality', 'eight_digit_typed_cep_object',
+    'street_or_delivery_range', 'civic_address', 'building_or_unit',
+  ]);
   assert.deepEqual(loadRules('CO').regionalHierarchy, [
     'country', 'department', 'municipality_or_district', 'six_digit_postal_area',
     'locality_neighborhood_or_rural_settlement', 'street_and_placa',

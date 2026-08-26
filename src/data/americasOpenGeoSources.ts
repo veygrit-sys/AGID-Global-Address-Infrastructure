@@ -103,6 +103,14 @@ export type AmericasOpenGeoSourceId =
   | 'turks-caicos-post'
   | 'turks-caicos-gis'
   | 'south-georgia-gis'
+  | 'correios-cep-api'
+  | 'correios-dne-licensing'
+  | 'upu-brazil-addressing'
+  | 'ibge-cnefe-2022'
+  | 'ibge-municipal-mesh-2024'
+  | 'ibge-cartographic-base-2023'
+  | 'inde-brazil'
+  | 'osm-brazil'
   | 'viacep-br'
   | 'brasilapi'
   | 'georef-ar'
@@ -980,6 +988,46 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'reference',
     notes: 'Territory reference for South Georgia settlements, research stations, islands, and protected areas.',
   },
+  'correios-cep-api': {
+    id: 'correios-cep-api', name: 'Correios Busca CEP API', url: 'https://www.correios.com.br/atendimento/developers/manuais/manual-api-busca-cep',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Contract credentials and exact API terms required',
+    notes: 'Official eight digits and typed CEP/address observations for authorized contract clients. Query data and response caches require exact terms; a response is not a polygon, building footprint, occupant proof or bulk redistribution right.',
+  },
+  'correios-dne-licensing': {
+    id: 'correios-dne-licensing', name: 'Correios DNE licensing contract reference', url: 'https://www.correios.com.br/enviar/precisa-de-ajuda/contrate-os-correios/arquivos/contratos-formalizados-ate-fevereiro-de-2020/anexo-dne-gu',
+    kind: 'address', coverage: 'country', usage: 'reference', license: 'Commercial, non-exclusive and purpose-limited Correios licence',
+    notes: 'DNE is licensed national address and CEP reference data. Contract access is not open redistribution or automatic postal geometry, building, occupant or AGID authority.',
+  },
+  'upu-brazil-addressing': {
+    id: 'upu-brazil-addressing', name: 'UPU Brazil addressing sheet', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/braEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Pinned publication evidence for the eight-digit CEP structure and Brazilian address layout, including Brasília and P.O. box examples. It is not a current assignment table, geometry release, address corpus or building relation.',
+  },
+  'ibge-cnefe-2022': {
+    id: 'ibge-cnefe-2022', name: 'IBGE CNEFE 2022 Census address register for statistical purposes', url: 'https://www.ibge.gov.br/estatisticas/sociais/populacao/38734-cadastro-nacional-de-enderecos-para-fins-estatisticos.html',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'Exact CNEFE release, privacy controls, dictionary and terms required',
+    notes: 'Official statistical address, CEP aggregate and geocoded-point context. Preserve NV_GEO_COORD or equivalent quality: a point may be an entrance, accessible point, rural gate, earlier location, street-face midpoint or census-sector centroid; it is not Correios assignment, deliverability, postal polygon, building footprint, occupant proof or exact address-to-building relation.',
+  },
+  'ibge-municipal-mesh-2024': {
+    id: 'ibge-municipal-mesh-2024', name: 'IBGE 2024 municipal territorial mesh', url: 'https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'Exact IBGE release metadata and terms required',
+    notes: 'Official 2024 administrative boundary context in SIRGAS 2000. Municipality, Federal District and special operational coverage is administrative, not postal, address, parcel, building or Correios assignment authority.',
+  },
+  'ibge-cartographic-base-2023': {
+    id: 'ibge-cartographic-base-2023', name: 'IBGE Continuous Cartographic Base of Brazil 1:250,000, 2023', url: 'https://www.ibge.gov.br/geociencias/todos-os-produtos-geociencias/15759-brasil.html?edicao=38558',
+    kind: 'topography', coverage: 'country', usage: 'reference',
+    notes: 'Official national reference cartography for names, roads and geographic context. It is not CEP assignment, postal geometry, exact civic address, building or cadastral evidence.',
+  },
+  'inde-brazil': {
+    id: 'inde-brazil', name: 'Brazil National Data Infrastructure / geospatial discovery', url: 'https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados',
+    kind: 'data-catalog', coverage: 'country', usage: 'reference',
+    notes: 'Government discovery, governance and interoperability context. Catalog presence does not transfer a producer, licence, scope, postal authority, address authority or building relation.',
+  },
+  'osm-brazil': {
+    id: 'osm-brazil', name: 'OpenStreetMap Brazil', url: 'https://wiki.openstreetmap.org/wiki/Brazil',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Correios, DNE, IBGE, CNEFE, cadastral, occupant or exact address-building authority.',
+  },
   'viacep-br': {
     id: 'viacep-br',
     name: 'ViaCEP',
@@ -987,7 +1035,7 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Free Brazilian CEP webservice with JSON/XML postal-code lookup and address search.',
+    notes: 'Third-party Brazilian CEP candidate service with JSON/XML lookup and address search. Preserve service provenance and never treat a response as Correios assignment proof, postal geometry, deliverability or a building relation.',
   },
   brasilapi: {
     id: 'brasilapi',
@@ -996,7 +1044,7 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     kind: 'postal-code',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Open-source Brazilian API project with CEP endpoints and public Brazilian reference data.',
+    notes: 'Open-source third-party Brazilian API project with CEP endpoints and public reference data. It is validation evidence, not Correios assignment, polygon, deliverability or exact building proof.',
   },
   'correo-argentino-cpa': {
     id: 'correo-argentino-cpa', name: 'Correo Argentino CPA lookup and guidance', url: 'https://www.correoargentino.com.ar/categorias/consulta-cpa',
@@ -1648,7 +1696,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   BL: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   MF: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
   CP: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
-  BR: ['viacep-br', 'brasilapi'],
+  BR: ['correios-cep-api', 'correios-dne-licensing', 'upu-brazil-addressing', 'ibge-cnefe-2022', 'ibge-municipal-mesh-2024', 'ibge-cartographic-base-2023', 'inde-brazil', 'osm-brazil', 'viacep-br', 'brasilapi'],
   AR: ['correo-argentino-cpa', 'georef-ar', 'ign-argentina-geospatial', 'idera-argentina', 'argentina-cadastre-law-26209', 'osm-argentina'],
   CL: ['correos-chile-postcode-lookup', 'correos-chile-normalization-api', 'upu-chile-addressing-2017', 'ide-chile-dpa-2023', 'subdere-chile-cut', 'ine-chile-open-geodata', 'sii-chile-digital-cadastre', 'geoportal-cl', 'osm-chile'],
   CO: ['codigo-postal-colombia-472-viewer', 'codigo-postal-colombia-csv', 'codigo-postal-colombia-shapefile', 'codigo-postal-colombia-open-license', 'codigo-postal-colombia-arcgis', 'upu-colombia-addressing-2022', 'upu-colombia-s42-2021', 'dane-colombia-divipola-mgn-2025', 'igac-colombia-open-cadastre', 'igac-colombia-sinic-open-constructions', 'colombia-en-mapas', 'osm-colombia'],

@@ -463,6 +463,7 @@ export {
   normalizeChilePostalCode,
   normalizeDominicanRepublicPostalCode,
   normalizeNicaraguaPostalCode,
+  normalizeBrazilPostalCode,
   normalizeColombiaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
