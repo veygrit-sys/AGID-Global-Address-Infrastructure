@@ -445,7 +445,7 @@ test('South Asia address JSON files expose table-derived addressRules metadata',
     { code: 'en', name: 'English' },
   ]);
   assert.equal(loadRules('BD').postalCode?.label, '4 digits required');
-  assert.deepEqual(loadRules('MV').regionalHierarchy, ['islandOrAtoll']);
+  assert.deepEqual(loadRules('MV').regionalHierarchy, ['administrativeAtoll','islandOrCity','wardOrLocality','streetHouseFloorApartmentOrUnit','fiveDigitPostcode','officialPostalAssignmentWithoutCanonicalGeometry','postalServicePointOrNonAreaObject','optionalIslandAdministrativeJoinSurface','optionalDerivedDeliverySurface','ldCodeAndFcodeWithoutPostalPromotion','censusIslandContextWithoutAddressPromotion','explicitRightsClearedCivicAddress','explicitAddressLinkedBuilding','exactRightsClearedBuildingGeometry']);
   assert.deepEqual(loadRules('AF').languages, [
     { code: 'ps', name: 'Pashto' },
     { code: 'fa-AF', name: 'Dari' },

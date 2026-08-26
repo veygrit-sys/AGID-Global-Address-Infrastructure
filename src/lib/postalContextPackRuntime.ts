@@ -437,6 +437,7 @@ export {
   normalizeVietnamPostalCode,
   normalizeMalaysiaPostalCode,
   normalizeMyanmarPostalCode,
+  normalizeMaldivesPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

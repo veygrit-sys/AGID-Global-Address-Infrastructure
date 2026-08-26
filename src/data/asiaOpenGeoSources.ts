@@ -111,6 +111,12 @@ export type AsiaOpenGeoSourceId =
   | 'maldives-post'
   | 'mlsa-maldives'
   | 'onemap-maldives'
+  | 'upu-maldives-addressing-2004'
+  | 'maldives-onemap-island-api-2024'
+  | 'maldives-geomatics-land-survey-standard-2025'
+  | 'maldives-land-registration-survey-guideline-2020'
+  | 'maldives-bureau-statistics-gis-maps'
+  | 'maldives-census-island-atoll-2022'
   | 'osm-maldives'
   | 'afghan-post'
   | 'afghan-postal-code-system'
@@ -1358,16 +1364,16 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Maldives postcode finder for island and atoll delivery.',
+    notes: 'Official five-digit postcode finder for island and atoll delivery. A pinned result is assignment evidence, not a canonical polygon, civic-address registry, building relation, complete history or bulk reuse licence.',
   },
   'mlsa-maldives': {
     id: 'mlsa-maldives',
     name: 'Maldives Land and Survey Authority',
-    url: 'https://www.mlsa.gov.mv/',
+    url: 'https://www.geomatics.gov.mv/nationalmapping.php',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Maldives official mapping and island registry authority for base maps, land registry, islands, and atolls.',
+    usage: 'reference',
+    notes: 'Official authority for the national map, authoritative boundary maps, island registry, geographic feature names and NSDI. Exact layer, rights, edition, scale, CRS and digest are required; land-registry context does not create a postcode or civic-address relation.',
   },
   'onemap-maldives': {
     id: 'onemap-maldives',
@@ -1375,9 +1381,15 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://onemap.mv/',
     kind: 'map-tile',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'National map of Maldives maintained by the Maldives Land and Survey Authority for island and address context.',
+    usage: 'reference',
+    notes: 'Authoritative national map maintained by the Geomatics Department. Public viewing does not establish a postal-code relation, civic address, building identity, exact layer reuse rights or blanket redistribution permission.',
   },
+  'upu-maldives-addressing-2004': { id: 'upu-maldives-addressing-2004', name: 'UPU Maldives addressing sheet 2004', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mdvEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Documents five digits to the right of locality, Malé-region and atoll prefix structures, and a centered address example. The September 2004 sheet is dated syntax, not current allocations, geometry, civic addresses or buildings.' },
+  'maldives-onemap-island-api-2024': { id: 'maldives-onemap-island-api-2024', name: 'OneMap Maldives island FeatureServer 2024', url: 'https://services7.arcgis.com/yvCbn3q8PPtPLZIM/arcgis/rest/services/island_20240509/FeatureServer', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official linked island layer endpoint. An exact layer may provide island geometry and identifiers when item metadata and reuse rights are pinned; it is not a postcode polygon, civic-address registry or building relation.' },
+  'maldives-geomatics-land-survey-standard-2025': { id: 'maldives-geomatics-land-survey-standard-2025', name: 'Maldives Land Survey Submission Standard 2025', url: 'https://geomatics.gov.mv/uploads/Land%20Survey%20Submission%20Standards_SRVY2025-1.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Defines WGS 84, UTM Zone 43N, survey exchange files and plot, reef and island feature codes. A submission standard is not public cadastral data, postcode authority, civic-address data, building geometry or a reuse licence.' },
+  'maldives-land-registration-survey-guideline-2020': { id: 'maldives-land-registration-survey-guideline-2020', name: 'Maldives land-registration survey guideline 2020', url: 'https://geomatics.gov.mv/uploads/Guidelines%20for%20Land%20Registration%20Survey%20of%20Islands_20201015%20V1_1.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Requires atoll, island name, FCode, surveyor, shoreline and survey-map details for island registration. It is a controlled survey workflow, not a public parcel, postcode, address or building dataset.' },
+  'maldives-bureau-statistics-gis-maps': { id: 'maldives-bureau-statistics-gis-maps', name: 'Maldives Bureau of Statistics GIS Maps', url: 'https://statisticsmaldives.gov.mv/quicklink/gis-maps/', kind: 'admin-boundary', coverage: 'country', usage: 'validation', notes: 'Official Census and statistics map entry point. The map disclaimer makes data informational, dynamic and unsuitable without independent verification for legal, engineering, navigational or precision use; it is not postal, civic-address or building authority.' },
+  'maldives-census-island-atoll-2022': { id: 'maldives-census-island-atoll-2022', name: 'Maldives Census 2022 island and atoll indicators', url: 'https://statisticsmaldives.gov.mv/census-2022-island-and-atoll-level-indicator-sheets/', kind: 'gazetteer', coverage: 'country', usage: 'validation', notes: 'Official aggregate island and atoll indicator sheets for administrative-name and coverage validation. Census aggregates do not establish postcode assignments, household addresses, building relations or postal polygons.' },
   'osm-maldives': {
     id: 'osm-maldives',
     name: 'OpenStreetMap Maldives',
@@ -3070,7 +3082,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   KH: ['cambodia-post', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
   LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
-  MV: ['maldives-post', 'mlsa-maldives', 'onemap-maldives', 'osm-maldives'],
+  MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
   MN: ['alamgc-mongolia', 'nsdi-mongolia', 'zipcode-mn', 'hot-osm-mongolia', 'osm-mongolia'],
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
   MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
