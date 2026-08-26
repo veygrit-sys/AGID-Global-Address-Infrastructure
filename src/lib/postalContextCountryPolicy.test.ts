@@ -66,6 +66,7 @@ import {
   normalizeArgentinaPostalCode,
   normalizeUruguayPostalCode,
   normalizeEcuadorPostalCode,
+  normalizeElSalvadorPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -554,6 +555,12 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeEcuadorPostalCode('EC-999999'), null);
   assert.equal(normalizeEcuadorPostalCode('99999'), null);
   assert.equal(normalizePostalContextPostalCode('ec', '99 99 99'), '999999');
+  assert.equal(normalizeElSalvadorPostalCode('９９９９'), '9999');
+  assert.equal(normalizeElSalvadorPostalCode('99 99'), '9999');
+  assert.equal(normalizeElSalvadorPostalCode('99-99'), null);
+  assert.equal(normalizeElSalvadorPostalCode('SV-9999'), null);
+  assert.equal(normalizeElSalvadorPostalCode('999'), null);
+  assert.equal(normalizePostalContextPostalCode('sv', '99 99'), '9999');
   assert.equal(normalizeAzerbaijanPostalCode('ＡＺ１０１０'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('az 1010'), 'AZ1010');
   assert.equal(normalizeAzerbaijanPostalCode('1010'), 'AZ1010');

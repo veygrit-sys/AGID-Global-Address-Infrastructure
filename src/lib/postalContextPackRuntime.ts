@@ -455,6 +455,7 @@ export {
   normalizeArgentinaPostalCode,
   normalizeUruguayPostalCode,
   normalizeEcuadorPostalCode,
+  normalizeElSalvadorPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

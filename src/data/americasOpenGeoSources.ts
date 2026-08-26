@@ -81,6 +81,12 @@ export type AmericasOpenGeoSourceId =
   | 'igm-ecuador-base-cartography'
   | 'sistema-nacional-catastro-ecuador'
   | 'osm-ecuador'
+  | 'correos-el-salvador'
+  | 'upu-el-salvador-addressing-2019'
+  | 'cnr-el-salvador-geographic-codes'
+  | 'onec-el-salvador-geographic-catalog'
+  | 'cnr-el-salvador-cadastre'
+  | 'osm-el-salvador'
   | 'ide-uy'
   | 'ide-py'
   | 'noaa-etopo'
@@ -727,6 +733,66 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     license: 'ODbL',
     notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not MINTEL, DINARP, INEC, IGM, cadastral, occupant or exact address-building authority.',
   },
+  'correos-el-salvador': {
+    id: 'correos-el-salvador',
+    name: 'Dirección General de Correos de El Salvador',
+    url: 'https://www.correos.gob.sv/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public official website; no blanket bulk assignment or polygon redistribution grant identified',
+    notes: 'Official postal operator operational reference. The public site lists services and offices but no versioned reusable national bulk assignment or postal-polygon release was identified; page or permitted lookup observations are time-bound evidence, not bulk assignment rows, polygon bytes, parcels, buildings or delivery entitlements.',
+  },
+  'upu-el-salvador-addressing-2019': {
+    id: 'upu-el-salvador-addressing-2019',
+    name: 'UPU El Salvador addressing sheet (May 2019)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/SLVEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official intergovernmental publication; not a data redistribution licence',
+    notes: 'The dated UPU sheet specifies four digits for region, department, locality or delivery area, and distribution and places the code left of the locality. It supplies format semantics, not current assignments, reusable digital geometry, exact addresses, buildings or a perpetual boundary release.',
+  },
+  'cnr-el-salvador-geographic-codes': {
+    id: 'cnr-el-salvador-geographic-codes',
+    name: 'CNR national geographic location codes',
+    url: 'https://www.cnr.gob.sv/codigos-de-ubicaciones-geograficas-nacionales/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Public downloadable artifacts; exact terms, administrative vintage and redistribution rights must be pinned',
+    notes: 'CNR publishes two-digit department, four-digit municipality and six-digit canton location codes plus municipality GeoJSON and Shapefile context. These are administrative codes, not postal codes; administrative polygons are not postal boundaries, address points, parcels, building footprints or exact address-building relations.',
+  },
+  'onec-el-salvador-geographic-catalog': {
+    id: 'onec-el-salvador-geographic-catalog',
+    name: 'ONEC El Salvador geographic catalog',
+    url: 'https://onec.bcr.gob.sv/clasificadoresv2/Clasificadores/Index/195?tipo=11',
+    kind: 'statistics',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official statistical reference; exact catalog vintage and artifact terms apply',
+    notes: 'Official statistical geographic identities require a pinned vintage. The 2019 catalog and current post-2023 department-municipality-district hierarchy need an explicit crosswalk; these identities are not postal assignments, postal polygons, parcels, buildings or delivery authority.',
+  },
+  'cnr-el-salvador-cadastre': {
+    id: 'cnr-el-salvador-cadastre',
+    name: 'CNR geographic and national cadastre services',
+    url: 'https://www.cnr.gob.sv/servicios/detalle-de-servicios-del-instituto-geografico-y-del-catastro-nacional/',
+    kind: 'data-catalog',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Paid or purpose-bound products; exact access, field, privacy and redistribution terms required',
+    notes: 'Official paid cadastral location and parcel products may contain parcel graphics, addresses, owners, neighbors and registration context. A parcel is not postal geometry or an automatic address-building relation, and personal or property fields require explicit lawful purpose, minimisation and publication authority.',
+  },
+  'osm-el-salvador': {
+    id: 'osm-el-salvador',
+    name: 'OpenStreetMap El Salvador',
+    url: 'https://wiki.openstreetmap.org/wiki/El_Salvador',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Correos, UPU, CNR, ONEC, cadastral, occupant or exact address-building authority.',
+  },
   'ide-uy': {
     id: 'ide-uy',
     name: 'Infraestructura de Datos Espaciales de Uruguay',
@@ -909,6 +975,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CO: ['colombia-en-mapas'],
   PE: ['geo-vivienda-pe'],
   EC: ['codigo-postal-ec', 'codigo-postal-ec-technical-standard', 'dinarp-ecuador-postal-interoperability', 'inec-ecuador-census-cartography', 'igm-ecuador-base-cartography', 'sistema-nacional-catastro-ecuador', 'osm-ecuador'],
+  SV: ['correos-el-salvador', 'upu-el-salvador-addressing-2019', 'cnr-el-salvador-geographic-codes', 'onec-el-salvador-geographic-catalog', 'cnr-el-salvador-cadastre', 'osm-el-salvador'],
   PY: ['ide-py'],
   UY: ['correo-uruguayo-postal-polygons', 'correo-uruguayo-address-services', 'ide-uy-addresses', 'ide-uy', 'dnc-uy-parcels', 'osm-uruguay'],
   GF: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],

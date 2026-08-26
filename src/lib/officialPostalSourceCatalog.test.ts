@@ -987,3 +987,19 @@ test('catalog source ids are unique and sorted by trust for a country lookup', (
   assert.equal(jpSources[0].id, 'japan-post-digital-address-api');
   assert.ok(jpSources.find(source => source.id === 'zipcloud-jp'));
 });
+
+test('separates El Salvador postal operator, dated UPU semantics, CNR administration, ONEC statistics, and cadastre', () => {
+  const svSources = getOfficialPostalSourcesForCountry('SV');
+  const ids = svSources.map(source => source.id);
+  for (const id of [
+    'correos-el-salvador', 'upu-el-salvador-addressing-2019',
+    'cnr-el-salvador-geographic-codes', 'onec-el-salvador-geographic-catalog',
+    'cnr-el-salvador-cadastre',
+  ]) assert.ok(ids.includes(id));
+  assert.equal(svSources.find(source => source.id === 'correos-el-salvador')?.trustTier, 'authoritative');
+  assert.equal(svSources.find(source => source.id === 'correos-el-salvador')?.availability, 'web-search');
+  assert.equal(svSources.find(source => source.id === 'upu-el-salvador-addressing-2019')?.sourceRole, 'legal-framework-only');
+  assert.equal(svSources.find(source => source.id === 'cnr-el-salvador-geographic-codes')?.validationReadiness, 'metadata-only');
+  assert.equal(svSources.find(source => source.id === 'onec-el-salvador-geographic-catalog')?.sourceRole, 'legal-framework-only');
+  assert.equal(svSources.find(source => source.id === 'cnr-el-salvador-cadastre')?.availability, 'commercial-or-restricted');
+});
