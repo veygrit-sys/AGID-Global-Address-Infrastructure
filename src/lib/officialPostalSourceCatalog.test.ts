@@ -769,6 +769,23 @@ test('separates Uruguay official postal polygons, service observations, address 
   assert.equal(uySources.find(source => source.id === 'ide-uy')?.sourceRole, 'legal-framework-only');
   assert.equal(uySources.find(source => source.id === 'dnc-uy-parcels')?.depth, 'geo-only');
 });
+test('separates Ecuador postal lookup, legal semantics, interoperability, census buildings, base cartography, and cadastre', () => {
+  const ecSources = getOfficialPostalSourcesForCountry('EC');
+  const ids = ecSources.map(source => source.id);
+  for (const id of [
+    'codigo-postal-ec', 'codigo-postal-ec-technical-standard',
+    'dinarp-ecuador-postal-interoperability', 'inec-ecuador-census-cartography',
+    'igm-ecuador-base-cartography', 'sistema-nacional-catastro-ecuador',
+  ]) assert.ok(ids.includes(id));
+  assert.equal(ecSources.find(source => source.id === 'codigo-postal-ec')?.trustTier, 'authoritative');
+  assert.equal(ecSources.find(source => source.id === 'codigo-postal-ec')?.availability, 'web-search');
+  assert.equal(ecSources.find(source => source.id === 'codigo-postal-ec-technical-standard')?.sourceRole, 'legal-framework-only');
+  assert.equal(ecSources.find(source => source.id === 'dinarp-ecuador-postal-interoperability')?.requiresCredential, true);
+  assert.equal(ecSources.find(source => source.id === 'inec-ecuador-census-cartography')?.depth, 'building');
+  assert.equal(ecSources.find(source => source.id === 'igm-ecuador-base-cartography')?.validationReadiness, 'metadata-only');
+  assert.equal(ecSources.find(source => source.id === 'sistema-nacional-catastro-ecuador')?.sourceRole, 'legal-framework-only');
+});
+
 test('separates United States postal authority, geography, and crosswalk sources', () => {
   const usSources = getOfficialPostalSourcesForCountry('US');
   const usSourceIds = usSources.map(source => source.id);

@@ -75,6 +75,12 @@ export type AmericasOpenGeoSourceId =
   | 'colombia-en-mapas'
   | 'geo-vivienda-pe'
   | 'codigo-postal-ec'
+  | 'codigo-postal-ec-technical-standard'
+  | 'dinarp-ecuador-postal-interoperability'
+  | 'inec-ecuador-census-cartography'
+  | 'igm-ecuador-base-cartography'
+  | 'sistema-nacional-catastro-ecuador'
+  | 'osm-ecuador'
   | 'ide-uy'
   | 'ide-py'
   | 'noaa-etopo'
@@ -653,12 +659,73 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
   },
   'codigo-postal-ec': {
     id: 'codigo-postal-ec',
-    name: 'Codigo Postal Ecuador',
+    name: 'Sistema Código Postal Ecuador',
     url: 'https://www.codigopostal.gob.ec/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Ecuador postal-code lookup from the telecommunications ministry.',
+    license: 'Public official lookup; no blanket bulk polygon redistribution grant identified',
+    notes: 'Official MINTEL postal lookup for the six-digit province-district-postal-zone code. The site accepts address, place, code and CUEN searches and describes its adjusted cartography as referential and unsuitable for precision projects. A lookup observation or rendered boundary is time-bound evidence, not a reusable bulk polygon, cadastral parcel, building footprint or delivery entitlement.',
+  },
+  'codigo-postal-ec-technical-standard': {
+    id: 'codigo-postal-ec-technical-standard',
+    name: 'Norma Técnica del Código Postal Ecuatoriano',
+    url: 'https://www.gob.ec/sites/default/files/regulations/2018-11/Documento_Norma-Tecnica-Codigo-Postal-Ecuatoriano.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official legal publication; not a data redistribution licence',
+    notes: 'The national technical standard defines six numeric digits: two for province, two for planning district and two for postal zone. It establishes the postal zone as a territorial portion and provides system semantics, not current reusable assignments, digital polygons, addresses, buildings or a perpetual boundary release.',
+  },
+  'dinarp-ecuador-postal-interoperability': {
+    id: 'dinarp-ecuador-postal-interoperability',
+    name: 'DINARP postal interoperability catalog',
+    url: 'https://www.registrospublicos.gob.ec/wp-content/uploads/downloads/2023/08/anexo_2_-_interoperabilidad_-_catalogo_de_datos_-_libre_acceso_y_justificacion_juridica-ago_2023-1.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Institutional interoperability access; exact authorization, purpose and response terms required',
+    notes: 'The official catalog enumerates postal-zone, street-intersection, locality, parish, latitude and longitude fields. Catalog metadata is not anonymous API authorization, bulk redistribution rights, postal polygon bytes, a building footprint or an exact civic-address-to-building relation.',
+  },
+  'inec-ecuador-census-cartography': {
+    id: 'inec-ecuador-census-cartography',
+    name: 'INEC Cartografía Censal WMS 2022',
+    url: 'https://idgn.ecuadorencifras.gob.ec/server/rest/services/Cartografia_Censal_WMS_2022/MapServer',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'INEC statistical cartography use and distribution policy; exact service and download terms apply',
+    notes: 'Official census layers include localities, road axes, entrances, blocks and census-building multipoints with census identifiers. They are statistical operational context without metric precision or jurisdictional proof and are not postal assignments, cadastral parcels, address registers, footprints, occupants or automatic building links.',
+  },
+  'igm-ecuador-base-cartography': {
+    id: 'igm-ecuador-base-cartography',
+    name: 'Instituto Geográfico Militar Ecuador base cartography',
+    url: 'https://www.geoportaligm.gob.ec/portal/index.php/descargas/cartografia-de-libre-acceso/registro/',
+    kind: 'data-catalog',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Artifact-specific IGM licence; some products restrict commercial use and redistribution',
+    notes: 'Official base-cartography discovery and OGC services. Every selected artifact must pin scale, vintage, CRS, licence and digest. IGM reference geography is not postal assignment authority, a precise postal boundary, civic address, parcel, building relation or blanket publication permission.',
+  },
+  'sistema-nacional-catastro-ecuador': {
+    id: 'sistema-nacional-catastro-ecuador',
+    name: 'Sistema Nacional de Catastro and national cadastral standard',
+    url: 'https://www.registrospublicos.gob.ec/sistema-nacional-de-catastro/',
+    kind: 'data-catalog',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Municipal and artifact-specific access, privacy and reuse conditions',
+    notes: 'The national framework standardizes an integrated georeferenced cadastre, while municipal and metropolitan GADs remain responsible for their urban and rural cadastral data. A national framework page is not an open parcel corpus; parcel, owner, resident, value, unit and property identifiers require exact local authority and privacy review.',
+  },
+  'osm-ecuador': {
+    id: 'osm-ecuador',
+    name: 'OpenStreetMap Ecuador',
+    url: 'https://wiki.openstreetmap.org/wiki/Ecuador',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not MINTEL, DINARP, INEC, IGM, cadastral, occupant or exact address-building authority.',
   },
   'ide-uy': {
     id: 'ide-uy',
@@ -841,7 +908,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CL: ['geoportal-cl'],
   CO: ['colombia-en-mapas'],
   PE: ['geo-vivienda-pe'],
-  EC: ['codigo-postal-ec'],
+  EC: ['codigo-postal-ec', 'codigo-postal-ec-technical-standard', 'dinarp-ecuador-postal-interoperability', 'inec-ecuador-census-cartography', 'igm-ecuador-base-cartography', 'sistema-nacional-catastro-ecuador', 'osm-ecuador'],
   PY: ['ide-py'],
   UY: ['correo-uruguayo-postal-polygons', 'correo-uruguayo-address-services', 'ide-uy-addresses', 'ide-uy', 'dnc-uy-parcels', 'osm-uruguay'],
   GF: ['la-poste-fr-overseas', 'data-gouv-fr-postcodes'],
