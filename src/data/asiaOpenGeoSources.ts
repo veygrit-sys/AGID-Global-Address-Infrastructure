@@ -243,8 +243,14 @@ export type AsiaOpenGeoSourceId =
   | 'jordan-digital-mailbox-pilot-2026'
   | 'osm-jordan'
   | 'israel-post'
+  | 'israel-post-mail-guide-2020'
+  | 'israel-post-terms'
+  | 'upu-israel-addressing-2022'
   | 'govmap-israel'
+  | 'population-authority-israel-street-list'
+  | 'cbs-israel-geography'
   | 'data-gov-il'
+  | 'data-gov-il-terms-2025'
   | 'osm-israel'
   | 'palestine-open-data-postcodes'
   | 'palestine-post'
@@ -2371,30 +2377,84 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'israel-post': {
     id: 'israel-post',
-    name: 'Israel Post Postal Code Lookup',
-    url: 'https://israelpost.co.il/',
+    name: 'Israel Post postcode lookup',
+    url: 'https://israelpost.co.il/שירותים/איתור-מיקוד/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Israel Post postcode lookup for Hebrew, Arabic, and English address rendering.',
+    notes: 'Official current seven-digit postcode lookup. Israel Post terms say site information is informational only, must not be relied upon for official or commercial use, and all rights are reserved; no responses, addresses, assignments, geometry or building data are bundled or scraped.',
+  },
+  'israel-post-mail-guide-2020': {
+    id: 'israel-post-mail-guide-2020',
+    name: 'Israel Post mail guide 2020',
+    url: 'https://israelpost.co.il/media/2640/149869-002.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Section 7.1 defines a postcode as seven digits representing the mail-delivery address, assigned by the company and updated from time to time. Section 8 defines a separate nine-digit distribution code. The guide is semantics, not a current bulk assignment, postal polygon, address register, building relation or reuse licence.',
+  },
+  'israel-post-terms': {
+    id: 'israel-post-terms',
+    name: 'Israel Post website terms of use',
+    url: 'https://israelpost.co.il/pages/termsofuse',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The current terms state that site information is informational only, is not binding, may not be relied on for official or commercial use, and all rights are reserved. The lookup is therefore reference-only unless a separate written licence is pinned.',
+  },
+  'upu-israel-addressing-2022': {
+    id: 'upu-israel-addressing-2022',
+    name: 'UPU Israel addressing sheet (10/2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/isrFr.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The UPU sheet places seven digits to the left of the locality and documents recipient, house number and street, postcode and locality, and country lines. Its routing note for items to localities under the Palestinian Authority is not an IL assignment, boundary, coverage or sovereignty claim; real examples are not reusable records.',
   },
   'govmap-israel': {
     id: 'govmap-israel',
-    name: 'Govmap Israel API',
-    url: 'https://api.govmap.gov.il/',
+    name: 'Survey of Israel GovMap',
+    url: 'https://www.govmap.gov.il/',
     kind: 'geocoding',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Israel government map API and national geospatial reference for addresses, places, and map layers.',
+    usage: 'validation',
+    notes: 'Survey of Israel government map for address, locality, block and parcel search and map layers. API use can require registration and exact terms; map or search output is a spatial candidate, not Israel Post assignment, licensed postal geometry, exact civic-address relation, building relation or territorial authority.',
+  },
+  'population-authority-israel-street-list': {
+    id: 'population-authority-israel-street-list',
+    name: 'Population and Immigration Authority Israel street list',
+    url: 'https://data.gov.il/he/datasets/population_authority/321',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Periodically published government locality and street reference. Pin the exact resource, publisher metadata, schema, update time, item-specific licence or applicable Data.gov.il terms and digest. Street names do not prove house numbers, postcodes, postal geometry, buildings or delivery.',
+  },
+  'cbs-israel-geography': {
+    id: 'cbs-israel-geography',
+    name: 'Israel Central Bureau of Statistics geography',
+    url: 'https://www.cbs.gov.il/he/cbsNewBrand/Pages/שכבות-ממג-מערכת-מידע-גאוגרפית-GIS.aspx',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official locality and statistical-area GIS layers plus locality, district and region dictionaries. Exact year, artifact, definitions, licence, CRS and digest must be pinned. Statistical and administrative geography is not a postcode, postal polygon, address or building relation.',
   },
   'data-gov-il': {
     id: 'data-gov-il',
-    name: 'Israel Open Government Data',
+    name: 'Israel Government Data Portal',
     url: 'https://data.gov.il/',
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Israel open-government data portal for datasets and administrative validation references.',
+    notes: 'Government open-data catalog. Each production artifact must pin its exact dataset, resource, publisher, schema, update time, item-specific licence or applicable portal terms and digest; catalog presence alone is not postal or building authority.',
+  },
+  'data-gov-il-terms-2025': {
+    id: 'data-gov-il-terms-2025',
+    name: 'Data.gov.il open-data terms updated 2025-08-30',
+    url: 'https://data.gov.il/terms-of-use',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The default portal licence allows worldwide royalty-free commercial and non-commercial copying, distribution and derivatives with source attribution, subject to dataset-specific overrides and restrictions including privacy, misleading use, unlawful use, third-party rights, protected systems and software. Pin the terms effective at retrieval.',
   },
   'osm-israel': {
     id: 'osm-israel',
@@ -2404,7 +2464,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'validation',
     license: 'ODbL',
-    notes: 'Israel OSM address, road, building, Hebrew/Arabic/English names, and fallback data.',
+    notes: 'OSM road, address and building validation under ODbL. OSM never supplies Israel Post assignment, canonical postal geometry, legal civic-address identity, delivery entitlement or territorial authority.',
   },
   'palestine-open-data-postcodes': {
     id: 'palestine-open-data-postcodes',
@@ -3310,7 +3370,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   ],
   AE: ['makani-dubai-open-data', 'osm-uae'],
   BH: ['bahrain-post-services-directory', 'upu-bahrain-addressing', 'iga-bahrain-address-services', 'bahrain-open-data-terms', 'bahrain-open-data-geographic-locations', 'bahrain-municipal-geographic-explorer', 'slrb-bahrain-cadastre', 'bahrain-open-data', 'osm-bahrain'],
-  IL: ['israel-post', 'govmap-israel', 'data-gov-il', 'osm-israel'],
+  IL: ['israel-post', 'israel-post-mail-guide-2020', 'israel-post-terms', 'upu-israel-addressing-2022', 'govmap-israel', 'population-authority-israel-street-list', 'cbs-israel-geography', 'data-gov-il', 'data-gov-il-terms-2025', 'osm-israel'],
   IN: [
     'india-post-regulations-2024',
     'data-gov-in-pincode',

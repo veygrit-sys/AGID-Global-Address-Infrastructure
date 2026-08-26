@@ -2908,6 +2908,30 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     id: 'jordan-digital-mailbox-pilot-2026', countryCodes: ['JO'], label: 'Jordan Digital Postal Box Pilot 2026', authority: 'government', trustTier: 'official', availability: 'unknown', depth: 'address', validationReadiness: 'metadata-only', url: 'https://petra.gov.jo/gweb/index.php/en/news/jordan-post-digital-mailbox-strategic-project-to-build-integrated-national-database', sourceNames: ['jordan digital postal box pilot','jordan digital mailbox pilot'], openSourceIds: ['jordan-digital-mailbox-pilot-2026'], requiresCredential: true, notes: ['Pilot evidence only; no public production schema, API, personal-address permission or geometry licence.'],
   },
   {
+    id: 'israel-post', countryCodes: ['IL'], label: 'Israel Post official postcode lookup', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://israelpost.co.il/שירותים/איתור-מיקוד/', sourceNames: ['israel post','israel postal company','israel postcode'], openSourceIds: ['israel-post'], requiresCredential: false, notes: ['Official current seven-digit postcode reference.','Website terms prohibit official or commercial reliance and reserve all rights; no scraping, bulk assignment, address, geometry or building reuse is authorised.'],
+  },
+  {
+    id: 'israel-post-mail-guide-2020', countryCodes: ['IL'], label: 'Israel Post mail guide 2020', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://israelpost.co.il/media/2640/149869-002.pdf', sourceNames: ['israel post mail guide','israel seven digit postcode guide'], openSourceIds: ['israel-post-mail-guide-2020'], requiresCredential: false, notes: ['Defines a seven-digit postcode representing a delivery address and a separate nine-digit distribution code.','Semantics only; not a current assignment release, polygon, address register, building relation or reuse licence.'],
+  },
+  {
+    id: 'israel-post-terms', countryCodes: ['IL'], label: 'Israel Post website terms', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://israelpost.co.il/pages/termsofuse', sourceNames: ['israel post terms','israel post website terms'], openSourceIds: ['israel-post-terms'], requiresCredential: false, notes: ['Information-only, non-binding and not for official or commercial reliance; all rights reserved.','A separately executed licence is required before production reuse.'],
+  },
+  {
+    id: 'upu-israel-addressing-2022', countryCodes: ['IL'], label: 'UPU Israel addressing sheet 10/2022', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/isrFr.pdf', sourceNames: ['upu israel addressing 2022','israel seven digit address format'], openSourceIds: ['upu-israel-addressing-2022'], requiresCredential: false, notes: ['Places seven digits before the locality and documents address-line order.','Examples and cross-border routing notes are not reusable assignments, addresses, geometry, territorial boundaries or sovereignty evidence.'],
+  },
+  {
+    id: 'govmap-israel', countryCodes: ['IL'], label: 'Survey of Israel GovMap', authority: 'government', trustTier: 'official', availability: 'auth-required-api', depth: 'address', validationReadiness: 'metadata-only', url: 'https://www.govmap.gov.il/', sourceNames: ['govmap israel','survey of israel govmap'], openSourceIds: ['govmap-israel'], requiresCredential: true, notes: ['Government map and search reference for addresses, localities, blocks, parcels and layers.','Exact API registration, terms, response, CRS and digest are required; it is not postal assignment or blanket reuse authority.'],
+  },
+  {
+    id: 'population-authority-israel-street-list', countryCodes: ['IL'], label: 'Population Authority Israel street list', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'street', validationReadiness: 'metadata-only', url: 'https://data.gov.il/he/datasets/population_authority/321', sourceNames: ['israel street list','population authority israel streets'], openSourceIds: ['population-authority-israel-street-list'], requiresCredential: false, notes: ['Government locality and street reference published periodically.','Pin exact resource and applicable item or Data.gov.il licence; streets are not postcodes, addresses, polygons or buildings.'],
+  },
+  {
+    id: 'cbs-israel-geography', countryCodes: ['IL'], label: 'Israel CBS geography and dictionaries', authority: 'government', trustTier: 'official', availability: 'public-api', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://www.cbs.gov.il/he/cbsNewBrand/Pages/שכבות-ממג-מערכת-מידע-גאוגרפית-GIS.aspx', sourceNames: ['israel cbs geography','israel localities dictionary'], openSourceIds: ['cbs-israel-geography'], requiresCredential: false, notes: ['Official locality and statistical-area context with geography dictionaries.','Exact year, artifact, licence and digest are required; administrative or statistical geography is not postal authority.'],
+  },
+  {
+    id: 'data-gov-il-terms-2025', countryCodes: ['IL'], label: 'Data.gov.il terms updated 2025-08-30', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://data.gov.il/terms-of-use', sourceNames: ['data gov il terms','israel open data licence'], openSourceIds: ['data-gov-il-terms-2025'], requiresCredential: false, notes: ['Default open-data terms allow reuse with attribution, subject to exact dataset overrides.','Privacy, misleading use, unlawful use, third-party rights, systems and software remain excluded or restricted.'],
+  },
+  {
     id: 'afghan-post', countryCodes: ['AF'], label: 'Afghan Post official postal service', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://afghanpost.gov.af/en', sourceNames: ['afghan post','afghanpost','afghanistan post'], openSourceIds: ['afghan-post'], requiresCredential: false, notes: ['Official operator and online-service reference.','The site states all rights reserved; public pages are not bulk assignment, address, geometry or building reuse permission.'],
   },
   {
@@ -6840,6 +6864,7 @@ const POSTAL_OPERATOR_PATTERNS = [
   /\bhaypost\b/i,
   /\bepost\b/i,
   /\bphlpost\b/i,
+  /\bisrael\s*post\b/i,
   /\bafghan\s*post\b/i,
   /\blibanpost\b/i,
   /\bslpost\b/i,

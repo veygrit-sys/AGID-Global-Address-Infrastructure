@@ -443,6 +443,7 @@ export {
   normalizeLaosPostalCode,
   normalizeLebanonPostalCode,
   normalizeAfghanistanPostalCode,
+  normalizeIsraelPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

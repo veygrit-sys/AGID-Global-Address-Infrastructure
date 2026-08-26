@@ -2013,6 +2013,24 @@ test('European multilingual countries expose high-quality language-specific addr
 });
 
 
+test('Israel address metadata separates seven-digit assignments, non-area postal objects, government context, buildings, territorial scope, privacy, and AGID', () => {
+  const format = loadFormat('IL');
+  const rules = loadRules('IL');
+  const expected = ["israel-post","israel-post-mail-guide-2020","israel-post-terms","upu-israel-addressing-2022","govmap-israel","population-authority-israel-street-list","cbs-israel-geography","data-gov-il","data-gov-il-terms-2025","osm-israel"];
+  for (const id of expected) {
+    assert.ok(format.openSourceIds?.includes(id), 'IL should expose ' + id);
+    assert.ok(rules.openSourceIds?.includes(id), 'IL rules should expose ' + id);
+    assert.match(ASIA_OPEN_GEO_SOURCES[id as keyof typeof ASIA_OPEN_GEO_SOURCES].url, /^https?:\/\//);
+  }
+  assert.equal(format.postalCode?.format, 'NNNNNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{7}$');
+  assert.match(format.postalCode?.source ?? '', /Israel Post.*UPU.*10\/2022.*GovMap.*Data\.gov\.il.*2025-08-30/i);
+  assert.match(rules.postalCode?.usage ?? '', /opaque Israel Post assignment.*updated.*address.*route.*P\.O\. Box.*non-area.*polygon is never presumed.*nine-digit distribution code.*territorial scope/i);
+  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding'));
+  assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+  assert.ok(rules.regionalHierarchy.includes('territorialScopeExplicitAndVersioned'));
+});
+
 test('Afghanistan address metadata exposes current six digits, postal-map, administrative, privacy, building, and AGID boundaries', () => {
   const format = loadFormat('AF');
   const rules = loadRules('AF');
