@@ -109,6 +109,13 @@ export type AmericasOpenGeoSourceId =
   | 'ine-chile-open-geodata'
   | 'sii-chile-digital-cadastre'
   | 'osm-chile'
+  | 'inposdom-postcode-search'
+  | 'upu-dominican-republic-addressing-2005'
+  | 'one-dominican-territorial-division-2021'
+  | 'iderd-dominican-geoservices'
+  | 'ign-dominican-cartographic-base'
+  | 'registro-inmobiliario-dominican-cadastre'
+  | 'osm-dominican-republic'
   | 'colombia-en-mapas'
   | 'codigo-postal-colombia-472-viewer'
   | 'codigo-postal-colombia-csv'
@@ -1068,6 +1075,76 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     license: 'ODbL',
     notes: 'Community roads, addresses and buildings remain in a separately attributed ODbL partition and are not CorreosChile, IDE, SUBDERE, INE, SII, occupant or exact civic-address-to-building authority.',
   },
+  'inposdom-postcode-search': {
+    id: 'inposdom-postcode-search',
+    name: 'INPOSDOM official postcode search',
+    url: 'https://inposdom.gob.do/codigo-postal/index.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Interactive official service; pin exact terms, automation, caching and redistribution authority',
+    notes: 'Official search accepts an address, sector or five-digit postcode and returns current operator context. A result is a time-bound observation, not bulk reuse permission, a person, delivery entitlement, exact civic address, building link or verified national polygon release.',
+  },
+  'upu-dominican-republic-addressing-2005': {
+    id: 'upu-dominican-republic-addressing-2005',
+    name: 'UPU Dominican Republic addressing sheet (March 2005)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/domEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; not a current bulk assignment or address-data licence',
+    notes: 'Dated formatting evidence for five digits to the left of the locality, with street and number plus district. Its example and 2005 status are not current assignment rows, geometry, civic-address identity or building evidence.',
+  },
+  'one-dominican-territorial-division-2021': {
+    id: 'one-dominican-territorial-division-2021',
+    name: 'ONE División Territorial 2021',
+    url: 'https://one.gob.do/publicaciones/2021/division-territorial-2021',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government publication; pin exact edition, downloadable artifact and item terms',
+    notes: 'Official legal and cartographic identities for provinces, municipalities, municipal districts, sections, parajes and barrios. Administrative codes and boundaries are not INPOSDOM assignment, postal geometry, address or building relations.',
+  },
+  'iderd-dominican-geoservices': {
+    id: 'iderd-dominican-geoservices',
+    name: 'IDE-RD metadata catalog and OGC geoservices',
+    url: 'https://iderd.gob.do/recursos/directorio-de-geoservicios/',
+    kind: 'data-catalog',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Catalog and services are discoverable; each producer layer requires independent terms review',
+    notes: 'Official CSW, WMS, WMTS and WFS discovery and access. Pin producer, layer, edition, scope, CRS, quality, terms and digest; service visibility is not postal assignment or an exact civic-address-to-building relation.',
+  },
+  'ign-dominican-cartographic-base': {
+    id: 'ign-dominican-cartographic-base',
+    name: 'IGN-JJHM Dominican Republic cartographic base',
+    url: 'https://mapas.ign.gob.do/',
+    kind: 'topography',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official map access; exact dataset, edition and reuse terms must be pinned',
+    notes: 'Official cartographic and geographic context from IGN-JJHM. Roads, place names, imagery or topographic objects can support review but do not prove an INPOSDOM postcode, official postal polygon, civic address or building relation.',
+  },
+  'registro-inmobiliario-dominican-cadastre': {
+    id: 'registro-inmobiliario-dominican-cadastre',
+    name: 'Registro Inmobiliario parcel locator and cadastral consultation',
+    url: 'https://servicios.ri.gob.do/ConsultaParcelario',
+    kind: 'cadastre',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Portal consultation is limited by RI terms; commercial reuse requires prior written authorization',
+    notes: 'Official approved and in-process parcel context, positional designation and property-location services. Portal content is not bulk-open, and parcel containment, ownership or condominium data cannot establish postal geometry or an exact civic-address-to-building relation.',
+  },
+  'osm-dominican-republic': {
+    id: 'osm-dominican-republic',
+    name: 'OpenStreetMap Dominican Republic',
+    url: 'https://wiki.openstreetmap.org/wiki/Dominican_Republic',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separately attributed ODbL partition and are not INPOSDOM, ONE, IDE-RD, IGN, RI, owner, occupant or exact address-to-building authority.',
+  },
   'colombia-en-mapas': {
     id: 'colombia-en-mapas',
     name: 'Colombia en Mapas',
@@ -1490,6 +1567,7 @@ const BASE_OPEN_SOURCE_IDS: AmericasOpenGeoSourceId[] = [
 const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSourceId[]>> = {
   US: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder', 'usdot-national-address-database', 'usgs-national-structures-dataset', 'hud-usps-zip-crosswalk', 'osm-united-states'],
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
+  DO: ['inposdom-postcode-search', 'upu-dominican-republic-addressing-2005', 'one-dominican-territorial-division-2021', 'iderd-dominican-geoservices', 'ign-dominican-cartographic-base', 'registro-inmobiliario-dominican-cadastre', 'osm-dominican-republic'],
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico'],
   CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],
