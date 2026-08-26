@@ -53,6 +53,7 @@ import {
   normalizeJordanPostalCode,
   normalizeLaosPostalCode,
   normalizeLebanonPostalCode,
+  normalizeAfghanistanPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -361,6 +362,15 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeLebanonPostalCode('99-999-999'), null);
   assert.equal(normalizeLebanonPostalCode('99999'), null);
   assert.equal(normalizePostalContextPostalCode('lb', '۰۱ ۲۳۴ ۵۶۷'), '01 234 567');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AF.postalCodeFormat, 'NNNNNN');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.AF.fullCodeGeometrySemantics, 'postal-area-first');
+  assert.equal(normalizeAfghanistanPostalCode('۹۹۹۹۹۹'), '999999');
+  assert.equal(normalizeAfghanistanPostalCode('٩٩ ٩٩ ٩٩'), '999999');
+  assert.equal(normalizeAfghanistanPostalCode('９９９９９９'), '999999');
+  assert.equal(normalizeAfghanistanPostalCode('AF-999999'), null);
+  assert.equal(normalizeAfghanistanPostalCode('999-999'), null);
+  assert.equal(normalizeAfghanistanPostalCode('9999'), null);
+  assert.equal(normalizePostalContextPostalCode('af', '۹۹۹۹۹۹'), '999999');
 
 
   assert.equal(normalizeIndonesiaPostalCode('１００００'), '10000');

@@ -2908,6 +2908,21 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     id: 'jordan-digital-mailbox-pilot-2026', countryCodes: ['JO'], label: 'Jordan Digital Postal Box Pilot 2026', authority: 'government', trustTier: 'official', availability: 'unknown', depth: 'address', validationReadiness: 'metadata-only', url: 'https://petra.gov.jo/gweb/index.php/en/news/jordan-post-digital-mailbox-strategic-project-to-build-integrated-national-database', sourceNames: ['jordan digital postal box pilot','jordan digital mailbox pilot'], openSourceIds: ['jordan-digital-mailbox-pilot-2026'], requiresCredential: true, notes: ['Pilot evidence only; no public production schema, API, personal-address permission or geometry licence.'],
   },
   {
+    id: 'afghan-post', countryCodes: ['AF'], label: 'Afghan Post official postal service', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://afghanpost.gov.af/en', sourceNames: ['afghan post','afghanpost','afghanistan post'], openSourceIds: ['afghan-post'], requiresCredential: false, notes: ['Official operator and online-service reference.','The site states all rights reserved; public pages are not bulk assignment, address, geometry or building reuse permission.'],
+  },
+  {
+    id: 'afghan-postal-code-system', countryCodes: ['AF'], label: 'Afghanistan Postal Code System', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'address', validationReadiness: 'reference-eligible', url: 'https://postalcode.afghanpost.gov.af/', sourceNames: ['afghanistan postal code system','afghan post postal code map'], openSourceIds: ['afghan-postal-code-system'], requiresCredential: false, notes: ['Current six-digit address and postcode map with postal-area, coordinate, locality, road and post-office responses.','Pin exact response, schema, validity, terms and digest; interactive access is not bulk or personal-address permission.'],
+  },
+  {
+    id: 'upu-afghanistan-addressing-2025', countryCodes: ['AF'], label: 'UPU Afghanistan addressing sheet 07/2025', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/afgEn.pdf', sourceNames: ['upu afghanistan addressing 2025','afghanistan six digit postcode'], openSourceIds: ['upu-afghanistan-addressing-2025'], requiresCredential: false, notes: ['Documents the six-digit system effective 1 October 2024 and its province, district and delivery-zone components.','Examples are not current bulk assignments, reusable addresses, geometry or building relations.'],
+  },
+  {
+    id: 'afghan-post-policy', countryCodes: ['AF'], label: 'Afghan Post address standardization policy', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://afghanpost.gov.af/en/afghan-post-policy-0', sourceNames: ['afghan post policy','afghan postal address standardization'], openSourceIds: ['afghan-post-policy'], requiresCredential: false, notes: ['Policy intent covers address standardization, numbering and network expansion.','It is not assignment data, geometry, address or building data, or a reuse licence.'],
+  },
+  {
+    id: 'ocha-afghanistan-admin-boundaries-2026', countryCodes: ['AF'], label: 'OCHA Afghanistan COD-AB 2026', authority: 'official-derived-open-source', trustTier: 'official-derived', availability: 'bulk-open-data', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://data.humdata.org/dataset/cod-ab-afg', sourceNames: ['ocha afghanistan cod ab','afghanistan administrative boundaries agcho nsia'], openSourceIds: ['ocha-afghanistan-admin-boundaries-2026'], requiresCredential: false, notes: ['Version 03 administrative boundaries sourced from AGCHO and NSIA under CC BY 3.0 IGO.','The 401 humanitarian-use districts differ from 457 designated districts lacking boundaries; administrative P-codes never create postal assignment or geometry.'],
+  },
+  {
     id: 'libanpost', countryCodes: ['LB'], label: 'LibanPost official postal service', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://www.libanpost.com/english/individuals', sourceNames: ['libanpost','lebanon post','lebanon postcode'], openSourceIds: ['libanpost'], requiresCredential: false, notes: ['Official current postal and P.O. Box service reference.','Pinned responses may support dated context, not bulk reuse, canonical polygons, exact addresses, buildings, complete history or delivery entitlement.'],
   },
   {
@@ -6825,6 +6840,7 @@ const POSTAL_OPERATOR_PATTERNS = [
   /\bhaypost\b/i,
   /\bepost\b/i,
   /\bphlpost\b/i,
+  /\bafghan\s*post\b/i,
   /\blibanpost\b/i,
   /\bslpost\b/i,
   /\bmaldives post\b/i,

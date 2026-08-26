@@ -2013,6 +2013,24 @@ test('European multilingual countries expose high-quality language-specific addr
 });
 
 
+test('Afghanistan address metadata exposes current six digits, postal-map, administrative, privacy, building, and AGID boundaries', () => {
+  const format = loadFormat('AF');
+  const rules = loadRules('AF');
+  const expected = ["afghan-post","afghan-postal-code-system","upu-afghanistan-addressing-2025","afghan-post-policy","ocha-afghanistan-admin-boundaries-2026","hot-osm-afghanistan","osm-afghanistan"];
+  for (const id of expected) {
+    assert.ok(format.openSourceIds?.includes(id), 'AF should expose ' + id);
+    assert.ok(rules.openSourceIds?.includes(id), 'AF rules should expose ' + id);
+    assert.match(ASIA_OPEN_GEO_SOURCES[id as keyof typeof ASIA_OPEN_GEO_SOURCES].url, /^https?:\/\//);
+  }
+  assert.equal(format.postalCode?.format, 'NNNNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{6}$');
+  assert.match(format.postalCode?.source ?? '', /Afghan Post.*UPU.*07\/2025.*OCHA.*2026/i);
+  assert.match(rules.postalCode?.usage ?? '', /province.*city or rural district.*delivery zone.*postal-area-first.*P-code.*not.*reusable polygon.*building relation/i);
+  assert.ok(rules.regionalHierarchy.includes('officialPostalAreaGeometryWhenExactlyRightsCleared'));
+  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding'));
+  assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+});
+
 test('Lebanon address metadata exposes postal/NAC/P-code, administrative, privacy, building, and AGID boundaries', () => {
   const format = loadFormat('LB');
   const rules = loadRules('LB');

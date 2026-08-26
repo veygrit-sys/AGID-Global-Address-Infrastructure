@@ -136,6 +136,9 @@ export type AsiaOpenGeoSourceId =
   | 'osm-maldives'
   | 'afghan-post'
   | 'afghan-postal-code-system'
+  | 'upu-afghanistan-addressing-2025'
+  | 'afghan-post-policy'
+  | 'ocha-afghanistan-admin-boundaries-2026'
   | 'hot-osm-afghanistan'
   | 'osm-afghanistan'
   | 'nlcs-bhutan'
@@ -1539,12 +1542,12 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'afghan-post': {
     id: 'afghan-post',
-    name: 'Afghan Post Postal Code Reference',
-    url: 'http://afghanpost.gov.af/',
+    name: 'Afghan Post',
+    url: 'https://afghanpost.gov.af/en',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'reference',
-    notes: 'Afghanistan postal-code reference from Afghan Post.',
+    usage: 'primary',
+    notes: 'Official postal-operator and online-service reference linking the current Postal Code System. The website states all rights reserved; public viewing is not bulk postcode, address, geometry or building redistribution permission.',
   },
   'afghan-postal-code-system': {
     id: 'afghan-postal-code-system',
@@ -1553,7 +1556,35 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Afghan Post postal-code search interface with road and locality lookup for 4-digit postcode validation.',
+    notes: 'Current Afghan Post map searches an address or six-digit postcode and can return postal-area GeoJSON, coordinates, province, city or rural district, localities, roads, home numbers and post-office context. Exact response, schema, validity, terms and digest are required; interactive access is not a bulk-data or personal-address licence.',
+  },
+  'upu-afghanistan-addressing-2025': {
+    id: 'upu-afghanistan-addressing-2025',
+    name: 'UPU Afghanistan addressing sheet (07/2025)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/afgEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official sheet states that a new six-digit system took effect on 1 October 2024: province 10-43, city district 01-50 or rural district 51-99, and delivery zone 01-99. Address examples are not reusable production records, current bulk assignments, geometry, building relations or delivery proof.',
+  },
+  'afghan-post-policy': {
+    id: 'afghan-post-policy',
+    name: 'Afghan Post postal reform and address standardization policy',
+    url: 'https://afghanpost.gov.af/en/afghan-post-policy-0',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official policy describes standardizing postal addresses, completing postal numbering and expanding the post-office network. Policy intent is not a current assignment row, postal polygon, address register, building dataset or reuse grant.',
+  },
+  'ocha-afghanistan-admin-boundaries-2026': {
+    id: 'ocha-afghanistan-admin-boundaries-2026',
+    name: 'OCHA Afghanistan COD-AB administrative boundaries',
+    url: 'https://data.humdata.org/dataset/cod-ab-afg',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 3.0 IGO',
+    notes: 'OCHA/HDX version 03 is sourced from AGCHO and NSIA and publishes 34 provinces and 401 humanitarian-use districts under CC BY 3.0 IGO. The 2026 metadata warns that 457 districts are designated but boundary data are unavailable; administrative P-codes and boundaries are not postcodes or postal geometry.',
   },
   'hot-osm-afghanistan': {
     id: 'hot-osm-afghanistan',
@@ -3257,7 +3288,7 @@ const BASE_OPEN_SOURCE_IDS: AsiaOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>> = {
-  AF: ['afghan-post', 'afghan-postal-code-system', 'hot-osm-afghanistan', 'osm-afghanistan'],
+  AF: ['afghan-post', 'afghan-postal-code-system', 'upu-afghanistan-addressing-2025', 'afghan-post-policy', 'ocha-afghanistan-admin-boundaries-2026', 'hot-osm-afghanistan', 'osm-afghanistan'],
   AM: ['haypost-am', 'haypost-address-reference', 'armenia-real-estate-address-register', 'armenia-national-geoportal-buildings', 'cadastre-armenia', 'armstat-geodata', 'geonames-armenia'],
   AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
   BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
