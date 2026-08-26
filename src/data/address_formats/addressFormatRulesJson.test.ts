@@ -571,7 +571,7 @@ test('Central Asia address JSON files expose table-derived addressRules metadata
   assert.deepEqual(loadRules('UZ').regionalHierarchy, ['provinceOrRepublicOrCapitalCity', 'district', 'locality', 'mahallaOrBlockOrMassif', 'street', 'houseNumber', 'unit', 'postOfficeAssignment', 'officialCivicAddressId', 'cadastralParcelOrBuildingId', 'explicitRightsClearedBuilding']);
   assert.deepEqual(loadRules('KZ').russianOrder, ['recipient', 'organization', 'building', 'street', 'houseNumber', 'corpus', 'unit', 'postcode', 'locality', 'postOffice', 'district', 'province', 'poBox', 'country']);
   assert.deepEqual(loadRules('TM').regionalHierarchy, ['welayat']);
-  assert.deepEqual(loadRules('KG').regionalHierarchy, ['oblast']);
+  assert.deepEqual(loadRules('KG').regionalHierarchy, ['country', 'provinceOrRepublicanCity', 'districtOrRayon', 'localityOrVillage', 'microdistrictOrAddressSubLocality', 'street', 'houseNumber', 'building', 'floor', 'unitOrApartment', 'room', 'postOfficeOrMobilePostalObject', 'poBox', 'postcode', 'explicitRightsClearedBuilding']);
   assert.deepEqual(loadRules('TJ').regionalHierarchy, ['viloyat']);
   assert.match(loadRules('KZ').postalCode?.label ?? '', /7-character.*legacy 6-digit.*neither.*polygon/i);
 });
@@ -580,7 +580,7 @@ test('Central Asia address metadata exposes national geoportals, postal, and OSM
   const expectedSourceIdsByCountry = {
     KZ: ['kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
     UZ: ['pochta-uz', 'uzpost-index-map', 'upu-uzbekistan-addressing-2019', 'uzbekistan-postal-index-open-data-2019', 'uzbekistan-open-data-terms', 'uzbekistan-open-data-registry-2026', 'uzbekistan-cadastre-agency', 'uzbekistan-state-real-estate-register', 'osm-uzbekistan'],
-    KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
+    KG: ['kyrgyz-post-new-postal-codes-2025', 'kyrgyz-post-address-guidance', 'upu-kyrgyzstan-addressing-2019', 'upu-kyrgyzstan-designated-operators', 'gosreg-kyrgyz-address-register', 'cadastre-kyrgyz-property-portal', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
     TJ: ['tajik-post', 'osm-tajikistan', 'openaerialmap-tajikistan', 'hot-osm-central-asia'],
     TM: ['turkmenpost', 'osm-turkmenistan', 'hot-osm-central-asia'],
   } as const;
@@ -2155,6 +2155,18 @@ test('China address metadata separates postal routing, delivery address code, ci
   assert.match(rules.postalCode.usage, /four-level six-digit.*delivery-region.*not.*polygon.*41832.*separate.*building-level.*rights-cleared.*AGID.*HK.*MO.*TW/i);
   for (const key of ['recipient', 'building', 'floor', 'unit', 'room', 'postOffice', 'poBox']) assert.ok(format.native.fields.some((item: any) => item.key === key));
   for (const id of ["china-postal-code","upu-china-addressing-2013","china-postal-and-address-code-response-2025","china-universal-delivery-address-code-gbt41832","china-address-geocode-gbt39609","china-geographical-names-regulation-2022","tianditu-china","china-geospatial-platform-management-2019","china-real-estate-query-rules-2024","osm-china"]) assert.ok(format.openSourceIds?.includes(id));
+});
+
+test('Kyrgyzstan address metadata separates operator directory and mobile objects, UPU, Address Register, cadastre, models, time, and AGID', () => {
+  const format = loadFormat('KG'); const rules = loadRules('KG');
+  assert.equal(format.postalCode?.format, 'NNNNNN');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('799999'), true);
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('KG-799999'), false);
+  assert.match(format.postalCode?.source ?? '', /Kyrgyz Post.*2025-10-16.*2025-10-28.*UPU.*03\/2019.*Address Register.*Cadastre.*Open Data.*CAIAG.*OpenStreetMap/i);
+  assert.equal(rules.postalCode?.required, true); assert.match(rules.postalCode?.usage ?? '', /1\+3\+2.*delivery-network.*not.*polygon.*multiple.*mobile.*route.*street.*house.*building.*exact address-building relation.*AGID/i);
+  for (const key of ['recipient','building','floor','unit','room','microdistrict','locality','district','province','postOffice','poBox']) assert.ok(format.native?.fields.some(item => item.key === key), key);
+  for (const id of ['kyrgyz-post-new-postal-codes-2025','kyrgyz-post-address-guidance','upu-kyrgyzstan-addressing-2019','upu-kyrgyzstan-designated-operators','gosreg-kyrgyz-address-register','cadastre-kyrgyz-property-portal','data-gov-kg','caiag-geonode-kg','osm-kyrgyzstan']) assert.ok(format.openSourceIds?.includes(id));
+  assert.equal(format.openSourceIds?.includes('nsdi-kyrgyzstan'), false);
 });
 
 test('Cambodia address metadata separates Prakas 77 assignments, administrative GIS, civic buildings, cadastre, time, and AGID', () => {

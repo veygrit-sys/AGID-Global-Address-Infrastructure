@@ -375,6 +375,12 @@ export type AsiaOpenGeoSourceId =
   | 'uzbekistan-open-data-geo'
   | 'uzbekistan-state-urban-cadastre'
   | 'osm-uzbekistan'
+  | 'kyrgyz-post-new-postal-codes-2025'
+  | 'kyrgyz-post-address-guidance'
+  | 'upu-kyrgyzstan-addressing-2019'
+  | 'upu-kyrgyzstan-designated-operators'
+  | 'gosreg-kyrgyz-address-register'
+  | 'cadastre-kyrgyz-property-portal'
   | 'nsdi-kyrgyzstan'
   | 'data-gov-kg'
   | 'caiag-geonode-kg'
@@ -3466,42 +3472,45 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Uzbekistan OSM streets, settlements, local Uzbek/Russian names, POI, and fallback address data.',
   },
+  'kyrgyz-post-new-postal-codes-2025': {
+    id: 'kyrgyz-post-new-postal-codes-2025', name: 'Kyrgyz Post New Postal Codes', url: 'https://post.kg/language/en/new-postal-codes/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Current operator directory published 16 October 2025 and updated 28 October 2025. It presents six-digit codes with branch and address context; one code may have multiple rows, and the non-numeric mobile post office is a route-like postal object. It supplies no official polygon or building relation and states no reusable bulk-data licence.',
+  },
+  'kyrgyz-post-address-guidance': {
+    id: 'kyrgyz-post-address-guidance', name: 'Kyrgyz Post Address and Postcode Guidance', url: 'https://post.kg/language/en/frequently-asked-questions/', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Current operator guidance describes locality, district, region, street, house or building, apartment, P.O. Box and postcode fields and lookup by street plus house or building. It is guidance, not a public address corpus, building relation or geometry dataset.',
+  },
+  'upu-kyrgyzstan-addressing-2019': {
+    id: 'upu-kyrgyzstan-addressing-2019', name: 'UPU Kyrgyzstan Addressing Sheet 03/2019', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kgzEn.pdf', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Dated UPU 03/2019 sheet documents six digits as country, three region digits and two post office digits plus urban, rural and P.O. Box address elements. Its examples supply no current assignment, coordinate geometry, building relation or redistribution right.',
+  },
+  'upu-kyrgyzstan-designated-operators': {
+    id: 'upu-kyrgyzstan-designated-operators', name: 'UPU Kyrgyzstan Designated Operator Directory', url: 'https://www.upu.int/en/universal-postal-union/about-upu/member-countries?ccid=80&csid=-1', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Current intergovernmental operator-status reference. It does not define postcode rows, universal operator coverage, delivery entitlement, postal geometry, addresses or buildings.',
+  },
+  'gosreg-kyrgyz-address-register': {
+    id: 'gosreg-kyrgyz-address-register', name: 'Kyrgyz State Agency Address Register and GIS', url: 'https://gosreg.gov.kg/ru/', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'The current State Agency site identifies the Address Register, National Integrated Cadastral System and GIS in the Address Register. Register identity and GIS are not postal assignment or geometry; exact artifact rights and licence are required.',
+  },
+  'cadastre-kyrgyz-property-portal': {
+    id: 'cadastre-kyrgyz-property-portal', name: 'Kyrgyz Cadastre Service Portal', url: 'https://www.cadastre.kg/svc-portal/main/index.do', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Official portal searches property, parcel, street, building, apartment, person and organization contexts; some services require contract, account or fee. Query visibility is not open address or building data and cannot publish people, owners, property geometry or postal relations.',
+  },
   'nsdi-kyrgyzstan': {
-    id: 'nsdi-kyrgyzstan',
-    name: 'Kyrgyz Republic Geoportal',
-    url: 'https://www.nsdi.kg/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Kyrgyz Republic geoinformation and climate data portal with map interface, metadata catalog, and spatial layers.',
+    id: 'nsdi-kyrgyzstan', name: 'Legacy Kyrgyz NSDI Domain Safety Tombstone', url: 'https://www.nsdi.kg/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Legacy hostname retained only to prevent unsafe reuse. As observed 26 August 2026 it resolves to an unrelated gambling site, not the historic geoportal; never ingest it and never include it in active Kyrgyzstan source lists.',
   },
   'data-gov-kg': {
-    id: 'data-gov-kg',
-    name: 'Kyrgyz Republic Open Data Portal',
-    url: 'https://data.gov.kg/en/',
-    kind: 'gazetteer',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Kyrgyz government open-data portal for public datasets, statistics, and geography-linked validation references.',
+    id: 'data-gov-kg', name: 'Kyrgyz Republic Open Data Portal', url: 'https://data.gov.kg/', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official CKAN portal with dataset-specific metadata and licences. The administrative classifier observed is dated 2019 and lacks a stated licence; portal presence is not current postal authority, geometry or blanket redistribution permission.',
   },
   'caiag-geonode-kg': {
-    id: 'caiag-geonode-kg',
-    name: 'CAIAG GeoNode Kyrgyzstan',
-    url: 'https://geonode.caiag.kg/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Kyrgyzstan GeoNode instance for geospatial layers, documents, and climate/geography reference data.',
+    id: 'caiag-geonode-kg', name: 'CAIAG GeoNode Kyrgyzstan', url: 'https://geonode.caiag.kg/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Research and community geospatial catalog with layer-specific rights and provenance. It is not postal assignment authority; any layer used for derived validation requires an exact licence, version, CRS and digest.',
   },
   'osm-kyrgyzstan': {
-    id: 'osm-kyrgyzstan',
-    name: 'OpenStreetMap Kyrgyzstan',
-    url: 'https://wiki.openstreetmap.org/wiki/Kyrgyzstan',
-    kind: 'address',
-    coverage: 'country',
-    usage: 'validation',
-    license: 'ODbL',
-    notes: 'Kyrgyzstan OSM roads, settlements, mountain/rural place names, POI, and fallback address tags.',
+    id: 'osm-kyrgyzstan', name: 'OpenStreetMap Kyrgyzstan', url: 'https://wiki.openstreetmap.org/wiki/Kyrgyzstan', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'ODbL community roads, places, addresses and building features for validation only; not operator assignment, official postal geometry, cadastre, exact civic identity or delivery entitlement.',
   },
   'tajik-post': {
     id: 'tajik-post',
@@ -3642,7 +3651,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'osm-japan',
   ],
   KR: ['korea-post-postcode-system', 'korea-post-postcode-api', 'mois-juso-basic-districts', 'mois-juso-road-address-api', 'mois-juso-building-db', 'mois-juso-electronic-map', 'molit-korea-gis-integrated-buildings', 'molit-korea-continuous-cadastral-map', 'epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
-  KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
+  KG: ['kyrgyz-post-new-postal-codes-2025', 'kyrgyz-post-address-guidance', 'upu-kyrgyzstan-addressing-2019', 'upu-kyrgyzstan-designated-operators', 'gosreg-kyrgyz-address-register', 'cadastre-kyrgyz-property-portal', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
   KH: ['cambodia-post', 'mptc-cambodia-prakas-77-2025', 'upu-cambodia-addressing-2018', 'ncdd-cambodia-gazetteer', 'mlmupc-cambodia-cadastral-services', 'mlmupc-cambodia-building-services', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ["post-kz","qazpost-open-api","upu-kazakhstan-addressing-2025","kazakhstan-postal-index-rules-2026","kazakhstan-post-law","kazakhstan-addressing-rules-2026","kazakhstan-address-register","kazakhstan-nsdi","kazakhstan-nsdi-use-rules-2023","kazakhstan-public-cadastral-map","kazakhstan-real-estate-rights-register","osm-kazakhstan"],
   LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
