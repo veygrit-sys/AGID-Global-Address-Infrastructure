@@ -2878,6 +2878,39 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official Kenya postal operator post-office directory; use for postcode/post-office confirmation.'],
   },
   {
+    id: 'zipcode-mn', countryCodes: ['MN'], label: 'CRC Mongolia Unified Postal Code map and list', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'building', validationReadiness: 'reference-eligible', url: 'https://www.zipcode.mn/', sourceNames: ['crc mongolia zipcode','mongolia unified postal code','zipcode mn'], openSourceIds: ['zipcode-mn'], requiresCredential: false, notes: ['Official current search, map and list for five-digit zones and nine-digit codes.','An exact result is assignment evidence, not automatic bulk reuse, canonical geometry, civic-address rights or delivery proof.'],
+  },
+  {
+    id: 'crc-mongolia-unified-postcode-2019', countryCodes: ['MN'], label: 'CRC Mongolia MNS 6775:2019 unified postcode explanation', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://old.crc.gov.mn/articles/slug12105/en', sourceNames: ['mns 6775 2019','crc mongolia unified postcode'], openSourceIds: ['crc-mongolia-unified-postcode-2019'], requiresCredential: false, notes: ['Distinguishes five-digit zones from nine-digit building-assigned codes.','Policy and syntax are not current allocations, geometry or reuse permission.'],
+  },
+  {
+    id: 'upu-mongolia-addressing', countryCodes: ['MN'], label: 'UPU Mongolia Addressing Sheet', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mngEn.pdf', sourceNames: ['upu mongolia addressing','upu mongolia postcode'], openSourceIds: ['upu-mongolia-addressing'], requiresCredential: false, notes: ['Documents five-digit placement and urban, rural and P.O. Box address structure.','Examples are not current allocations, postal polygons or production addresses.'],
+  },
+  {
+    id: 'crc-mongolia-postal-regulation', countryCodes: ['MN'], label: 'CRC Mongolia Postal Regulation', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.crc.gov.mn/postal-regulation', sourceNames: ['crc mongolia postal regulation'], openSourceIds: ['crc-mongolia-postal-regulation'], requiresCredential: false, notes: ['Establishes current postal regulatory mandate.','Regulatory status is not postal data or geometry.'],
+  },
+  {
+    id: 'alamgc-mongolia', countryCodes: ['MN'], label: 'Mongolia General Authority for Land Administration, Geodesy and Cartography', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://en.gazar.gov.mn/', sourceNames: ['gazar mongolia','alamgc mongolia'], openSourceIds: ['alamgc-mongolia'], requiresCredential: true, notes: ['Official land, mapping and address authority.','Exact product rights, identifiers, edition, CRS, scale and digest are required.'],
+  },
+  {
+    id: 'nsdi-mongolia', countryCodes: ['MN'], label: 'Mongolia National Spatial Data Infrastructure Geoportal', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://en.gazar.gov.mn/p/500', sourceNames: ['mongolia nsdi','mongolia geoportal'], openSourceIds: ['nsdi-mongolia'], requiresCredential: true, notes: ['Official searchable, viewable and purchasable spatial products with access levels.','Portal access is not a postcode relation or blanket reuse right.'],
+  },
+  {
+    id: 'gazar-mongolia-address-system', countryCodes: ['MN'], label: 'Mongolia government coordinate-based address system', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'building', validationReadiness: 'metadata-only', url: 'https://address.gazar.gov.mn/mn', sourceNames: ['mongolia address system','address gazar mongolia'], openSourceIds: ['gazar-mongolia-address-system'], requiresCredential: true, notes: ['Official address registry and grid viewer/service context.','Government grid codes are distinct from postal codes and AGID; exact address and building rights are required.'],
+  },
+  {
+    id: 'gazar-mongolia-spatial-data-standards', countryCodes: ['MN'], label: 'Mongolia address and boundary spatial-data standards', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://gazar.gov.mn/service/spatial-data', sourceNames: ['mns 6925-15','mongolia spatial data standards'], openSourceIds: ['gazar-mongolia-spatial-data-standards'], requiresCredential: false, notes: ['Lists official address and boundary data specifications.','Standards are not datasets or reuse licences.'],
+  },
+  {
+    id: 'gazar-mongolia-boundaries', countryCodes: ['MN'], label: 'Mongolia official boundaries theme', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://en.gazar.gov.mn/service/9', sourceNames: ['mongolia official boundaries','gazar boundaries'], openSourceIds: ['gazar-mongolia-boundaries'], requiresCredential: true, notes: ['Official administrative point and polygon theme with access levels.','A boundary needs exact rights and a reviewed postcode crosswalk before any derived surface.'],
+  },
+  {
+    id: 'gazar-mongolia-open-spatial-data', countryCodes: ['MN'], label: 'Mongolia open spatial data programme', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://en.gazar.gov.mn/p/oron-zajn-neelttej-g-gd-l', sourceNames: ['mongolia open spatial data','gazar open data'], openSourceIds: ['gazar-mongolia-open-spatial-data'], requiresCredential: false, notes: ['Describes reusable government open data publication.','Exact artifact licence, fields, edition, coverage and digest remain mandatory.'],
+  },
+  {
+    id: 'nso-mongolia-administrative-units', countryCodes: ['MN'], label: 'Mongolia NSO administrative and territorial units', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'locality', validationReadiness: 'metadata-only', url: 'https://data.1212.mn/pxweb/en/NSO/NSO__Regional%20development__Territory%2C%20administrative%20units/DT_NSO_0100_001V1.px/', sourceNames: ['mongolia nso administrative units','1212 mongolia territory'], openSourceIds: ['nso-mongolia-administrative-units'], requiresCredential: false, notes: ['Official annual aggregate administrative context.','Counts and areas are not postcode assignments, canonical boundaries, addresses or buildings.'],
+  },
+  {
     id: 'maldives-post', countryCodes: ['MV'], label: 'Maldives Post Postcode Finder', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible', url: 'https://www.maldivespost.com/postcode-finder', sourceNames: ['maldives post','maldives post postcode finder','maldives postcode'], openSourceIds: ['maldives-post'], requiresCredential: false, notes: ['Official current five-digit postcode lookup for island and atoll delivery.','Pinned results are assignments, not canonical polygons, civic addresses, buildings, complete history or blanket reuse rights.'],
   },
   {

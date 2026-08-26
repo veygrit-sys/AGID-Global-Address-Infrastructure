@@ -60,6 +60,14 @@ export type AsiaOpenGeoSourceId =
   | 'zipcode-mn'
   | 'hot-osm-mongolia'
   | 'osm-mongolia'
+  | 'crc-mongolia-unified-postcode-2019'
+  | 'upu-mongolia-addressing'
+  | 'crc-mongolia-postal-regulation'
+  | 'gazar-mongolia-address-system'
+  | 'gazar-mongolia-spatial-data-standards'
+  | 'gazar-mongolia-boundaries'
+  | 'gazar-mongolia-open-spatial-data'
+  | 'nso-mongolia-administrative-units'
   | 'india-post-regulations-2024'
   | 'postalpincode-in'
   | 'data-gov-in-pincode'
@@ -869,30 +877,102 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'alamgc-mongolia': {
     id: 'alamgc-mongolia',
-    name: 'Agency for Land Administration and Management, Geodesy and Cartography Mongolia',
-    url: 'https://www.gazar.gov.mn/',
+    name: 'Mongolia General Authority for Land Administration, Geodesy and Cartography',
+    url: 'https://en.gazar.gov.mn/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Mongolia land administration, geodesy, cartography, cadastre, and administrative geography reference.',
+    notes: 'Official land, mapping, address and administrative-geography authority. Authority status does not make every viewer, cadastral record, building or service output openly redistributable or postal.',
   },
   'nsdi-mongolia': {
     id: 'nsdi-mongolia',
-    name: 'Mongolia National Spatial Data Infrastructure',
-    url: 'https://nsdi.gov.mn/',
+    name: 'Mongolia National Spatial Data Infrastructure Geoportal',
+    url: 'https://en.gazar.gov.mn/p/500',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Mongolia national spatial data infrastructure for official geospatial layers and administrative validation.',
+    usage: 'reference',
+    notes: 'Official Geoportal supports searching, viewing and purchasing spatial products under access levels. Exact layer, edition, rights, CRS, scale and digest are required; portal access is not a postcode relation or blanket reuse right.',
   },
   'zipcode-mn': {
     id: 'zipcode-mn',
-    name: 'Mongolia ZipCode',
-    url: 'https://zipcode.mn/',
+    name: 'CRC Mongolia Unified Postal Code map and list',
+    url: 'https://www.zipcode.mn/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Mongolia 5-digit postal-code lookup for aimag, sum, bag, and delivery-area validation.',
+    notes: 'Official current CRC map, search and list reference for five-digit zones and nine-digit unified codes. An exact result is assignment evidence, not automatically reusable bulk rows, a canonical postcode polygon, a civic-address licence or proof of delivery.',
+  },
+  'crc-mongolia-unified-postcode-2019': {
+    id: 'crc-mongolia-unified-postcode-2019',
+    name: 'CRC Mongolia unified postal-code introduction and MNS 6775:2019',
+    url: 'https://old.crc.gov.mn/articles/slug12105/en',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CRC explanation distinguishes a five-digit zone from a nine-digit code formed by appending four digits and assigned to a building. It is syntax and policy evidence, not current rows, geometry or a redistribution licence.',
+  },
+  'upu-mongolia-addressing': {
+    id: 'upu-mongolia-addressing',
+    name: 'UPU Mongolia addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mngEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'UPU documents five digits to the right of province or capital and urban, rural, P.O. Box and organization examples including extended codes. Examples and codification are not a current national allocation set or polygon release.',
+  },
+  'crc-mongolia-postal-regulation': {
+    id: 'crc-mongolia-postal-regulation',
+    name: 'CRC Mongolia postal regulation',
+    url: 'https://www.crc.gov.mn/postal-regulation',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official current postal regulator mandate and service-network framework. Regulatory authority is not a postcode row, postal boundary, building relation or data reuse permission.',
+  },
+  'gazar-mongolia-address-system': {
+    id: 'gazar-mongolia-address-system',
+    name: 'Mongolia government coordinate-based address system',
+    url: 'https://address.gazar.gov.mn/mn',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official system reports standardized coordinate-based addresses and hierarchical grids down to 10 metres. Its grid code is distinct from CRC postal codes and AGID; viewer and service access do not establish public address or building reuse rights.',
+  },
+  'gazar-mongolia-spatial-data-standards': {
+    id: 'gazar-mongolia-spatial-data-standards',
+    name: 'Mongolia spatial-data standards including address and boundary themes',
+    url: 'https://gazar.gov.mn/service/spatial-data',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official page lists MNS 6925-15 address and MNS 6925-16 boundary spatial-data specifications. Standards define schemas, not released address, parcel, building or postal data and not a reuse licence.',
+  },
+  'gazar-mongolia-boundaries': {
+    id: 'gazar-mongolia-boundaries',
+    name: 'Mongolia official boundaries theme',
+    url: 'https://en.gazar.gov.mn/service/9',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official administrative-boundary theme uses point and polygon geodatabases with open and ordered distribution and access levels. An exact permitted product may support a derived join, but a boundary is not a postal polygon or building address.',
+  },
+  'gazar-mongolia-open-spatial-data': {
+    id: 'gazar-mongolia-open-spatial-data',
+    name: 'Mongolia Gazar open spatial data programme',
+    url: 'https://en.gazar.gov.mn/p/oron-zajn-neelttej-g-gd-l',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official programme describes usable and redistributable government open data. Each exact portal artifact still requires its own item, licence, edition, fields, coverage and digest; programme status alone does not license viewer outputs.',
+  },
+  'nso-mongolia-administrative-units': {
+    id: 'nso-mongolia-administrative-units',
+    name: 'Mongolia NSO administrative and territorial units',
+    url: 'https://data.1212.mn/pxweb/en/NSO/NSO__Regional%20development__Territory%2C%20administrative%20units/DT_NSO_0100_001V1.px/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official annual aggregate statistics validate aimag, capital, soum, district, bag and khoroo context and change timing. Counts and areas do not establish postal assignments, boundaries, civic addresses or buildings.',
   },
   'hot-osm-mongolia': {
     id: 'hot-osm-mongolia',
@@ -3083,7 +3163,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
   LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
   MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
-  MN: ['alamgc-mongolia', 'nsdi-mongolia', 'zipcode-mn', 'hot-osm-mongolia', 'osm-mongolia'],
+  MN: ['zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
   MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
   MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],

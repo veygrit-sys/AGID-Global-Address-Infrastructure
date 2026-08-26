@@ -438,6 +438,7 @@ export {
   normalizeMalaysiaPostalCode,
   normalizeMyanmarPostalCode,
   normalizeMaldivesPostalCode,
+  normalizeMongoliaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

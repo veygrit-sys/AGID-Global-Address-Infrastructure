@@ -166,7 +166,7 @@ test('East Asia address JSON files expose table-derived addressRules metadata', 
     { code: 'zh-Hant', name: 'Chinese (Traditional)' },
     { code: 'pt', name: 'Portuguese' },
   ]);
-  assert.deepEqual(loadRules('MN').regionalHierarchy, ['aimag', 'sum', 'bag']);
+  assert.ok(loadRules('MN').regionalHierarchy?.includes('explicitUnifiedCodeLinkedBuilding'));
 });
 
 test('Japan address metadata exposes GSI, jageocoder, Geolonia, and OSM Japan sources', () => {
@@ -369,29 +369,41 @@ test('Macau address metadata exposes DSCC, Macao GeoGuide, and OSM Macau sources
   assert.equal(format.postalCode?.source, 'CTT / DSCC / Macao GeoGuide (No postal codes used)');
 });
 
-test('Mongolia address metadata exposes national NSDI, postal-code, HOT, and OSM sources', () => {
+test('Mongolia address metadata separates five-digit zones, nine-digit building codes, government grids, and AGID', () => {
   const format = loadFormat('MN');
   const rules = loadRules('MN');
   const expectedSourceIds = [
-    'alamgc-mongolia',
-    'nsdi-mongolia',
-    'zipcode-mn',
-    'hot-osm-mongolia',
-    'osm-mongolia',
-  ];
+    "zipcode-mn",
+    "crc-mongolia-unified-postcode-2019",
+    "upu-mongolia-addressing",
+    "crc-mongolia-postal-regulation",
+    "alamgc-mongolia",
+    "nsdi-mongolia",
+    "gazar-mongolia-address-system",
+    "gazar-mongolia-spatial-data-standards",
+    "gazar-mongolia-boundaries",
+    "gazar-mongolia-open-spatial-data",
+    "nso-mongolia-administrative-units"
+];
 
   for (const sourceId of expectedSourceIds) {
-    assert.ok(format.openSourceIds?.includes(sourceId), `MN should expose ${sourceId}`);
-    assert.ok(rules.openSourceIds?.includes(sourceId), `MN addressRules should expose ${sourceId}`);
-
+    assert.ok(format.openSourceIds?.includes(sourceId));
+    assert.ok(rules.openSourceIds?.includes(sourceId));
     const source = ASIA_OPEN_GEO_SOURCES[sourceId as keyof typeof ASIA_OPEN_GEO_SOURCES];
-    assert.ok(source, `${sourceId} should be registered as an Asia open geo source`);
-    assert.match(source.url, /^https?:\/\//, `${sourceId} should expose a testable URL`);
+    assert.ok(source);
+    assert.match(source.url, /^https?:\/\//);
   }
 
-  assert.deepEqual(rules.regionalHierarchy, ['aimag', 'sum', 'bag']);
-  assert.equal(format.postalCode?.source, 'Mongol Post / zipcode.mn / ALAMGC NSDI');
+  assert.equal(format.postalCode?.format, 'NNNNN or NNNNN-NNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{5}(?:-\\d{4})?$');
+  assert.match(format.postalCode?.source ?? '', /CRC Mongolia.*MNS 6775:2019.*UPU Mongolia.*Gazar address system.*NSDI.*boundaries/i);
+  assert.match(rules.postalCode?.label ?? '', /5-digit postal zone.*9-digit unified building code.*exact rights-cleared.*link.*building/i);
+  assert.ok(rules.regionalHierarchy?.includes('fiveDigitPostalZone'));
+  assert.ok(rules.regionalHierarchy?.includes('nineDigitUnifiedBuildingCodeWhenAssigned'));
+  assert.ok(rules.regionalHierarchy?.includes('gazarAddressGridWithoutPostalPromotion'));
+  assert.ok(rules.regionalHierarchy?.includes('explicitUnifiedCodeLinkedBuilding'));
 });
+
 
 test('Southeast Asia address JSON files expose table-derived addressRules metadata', () => {
   const expectedCountries = ['MM', 'TH', 'VN', 'KH', 'LA', 'MY', 'SG', 'ID', 'PH', 'BN', 'TL'];

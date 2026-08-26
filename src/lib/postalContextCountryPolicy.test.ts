@@ -49,6 +49,7 @@ import {
   normalizeMalaysiaPostalCode,
   normalizeMyanmarPostalCode,
   normalizeMaldivesPostalCode,
+  normalizeMongoliaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -319,6 +320,17 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeMaldivesPostalCode('1234'), null);
   assert.equal(normalizeMaldivesPostalCode('012345'), null);
   assert.equal(normalizePostalContextPostalCode('mv', '٠١ ٢٣٤'), '01234');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MN.postalCodeFormat, 'NNNNN or NNNNN-NNNN');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MN.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(normalizeMongoliaPostalCode('９９ ９９９'), '99999');
+  assert.equal(normalizeMongoliaPostalCode('９９９９９－９９９９'), '99999-9999');
+  assert.equal(normalizeMongoliaPostalCode('999999999'), '99999-9999');
+  assert.equal(normalizeMongoliaPostalCode('00000-0000'), '00000-0000');
+  assert.equal(normalizeMongoliaPostalCode('MN-99999'), null);
+  assert.equal(normalizeMongoliaPostalCode('9999'), null);
+  assert.equal(normalizeMongoliaPostalCode('999999'), null);
+  assert.equal(normalizeMongoliaPostalCode('9999-99999'), null);
+  assert.equal(normalizePostalContextPostalCode('mn', '９９９９９９９９９'), '99999-9999');
 
 
   assert.equal(normalizeIndonesiaPostalCode('１００００'), '10000');

@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-mn-fixtures-v0.1",
+  "country_code": "MN",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "99999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mn-syn-five-digit-zone",
+      "description": "Synthetic five-digit zone with a derived surface",
+      "synthetic_address": {
+        "postcode": "99999",
+        "aimagOrCapital": "Synthetic Aimag",
+        "soumOrDistrict": "Synthetic Soum",
+        "bagOrKhoroo": "Synthetic Bag"
+      },
+      "expected": {
+        "must_assert": [
+          "derived-zone-surface-only"
+        ],
+        "must_not_assert": [
+          "five-digit-zone-is-canonical-postal-polygon",
+          "administrative-boundary-is-postal-authority-polygon",
+          "derived-surface-is-official"
+        ]
+      }
+    },
+    {
+      "fixture_id": "mn-syn-nine-digit-building-code",
+      "description": "Synthetic nine-digit code and explicit address-building relation",
+      "synthetic_address": {
+        "postcode": "99999-9999",
+        "aimagOrCapital": "Synthetic Capital",
+        "soumOrDistrict": "Synthetic District",
+        "bagOrKhoroo": "Synthetic Khoroo",
+        "building": "Synthetic Building"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-code-building-link-required"
+        ],
+        "must_not_assert": [
+          "nine-digit-code-is-building-footprint",
+          "code-suffix-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-or-recipient"
+        ]
+      }
+    },
+    {
+      "fixture_id": "mn-syn-government-grid-separation",
+      "description": "Synthetic government address grid evidence separated from postal and AGID identifiers",
+      "synthetic_address": {
+        "postcode": "99999"
+      },
+      "expected": {
+        "must_assert": [
+          "government-grid-postal-code-and-agid-remain-distinct"
+        ],
+        "must_not_assert": [
+          "gazar-grid-is-postcode",
+          "gazar-grid-is-agid",
+          "grid-containment-is-civic-address-or-building",
+          "viewer-standard-or-open-data-programme-is-redistribution-right"
+        ]
+      }
+    }
+  ]
+}
