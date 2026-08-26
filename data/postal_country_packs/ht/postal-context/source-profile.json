@@ -1,0 +1,148 @@
+{
+  "country_code": "HT",
+  "artifact_scope": "metadata-only-contract-seed",
+  "sources": [
+    {
+      "bundled_here": false,
+      "source_id": "office-postes-haiti-postcode-search",
+      "provider": "Office des Postes d’Haïti",
+      "source_url": "https://laposte.gouv.ht/codes.php",
+      "role": [
+        "official-single-observation-postcode-search"
+      ],
+      "production_scope": "Pin each successful request/response observation, timestamp, response digest and applicable terms; do not bulk scrape or treat downtime as absence.",
+      "assignment_authority": "official_postal_operator_observation",
+      "geometry_authority": "none",
+      "redistribution_class": "OBSERVATION_ONLY_TERMS_UNCONFIRMED"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "upu-haiti-addressing-2017",
+      "provider": "Universal Postal Union",
+      "source_url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/HTIEn.pdf",
+      "role": [
+        "official-format-hierarchy-and-address-layout-reference-09-2017"
+      ],
+      "production_scope": "Metadata and validation guidance only unless separately licensed.",
+      "assignment_authority": "dated_intergovernmental_format_reference_not_current_bulk_assignments",
+      "geometry_authority": "none",
+      "redistribution_class": "UPU_PUBLICATION_TERMS_SEPARATE"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "ihsi-haiti-territorial-codes",
+      "provider": "Institut Haïtien de Statistique et d’Informatique",
+      "source_url": "https://ihsi.gouv.ht/statistiques/statistiques_demographiques_et_sociales/gouvernance_et_autres_activites_communautaires",
+      "role": [
+        "official-six-digit-territorial-code-and-hierarchy-context"
+      ],
+      "production_scope": "Pin exact manual or response, edition, terms, attribution and digest; keep separate from postal assignment.",
+      "assignment_authority": "not_postal",
+      "geometry_authority": "administrative_context_only",
+      "redistribution_class": "TERMS_AND_RESOURCE_PERMISSION_REQUIRED"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "ihsi-haiti-admin-2024",
+      "provider": "Institut Haïtien de Statistique et d’Informatique",
+      "source_url": "https://ihsi.gouv.ht/public/storage/document-views/March2025/Oan4m17p5LEKtsGEnHgt.pdf",
+      "role": [
+        "official-2024-administrative-division-and-population-context"
+      ],
+      "production_scope": "Publication metadata only until exact reuse terms and any machine-readable resource are confirmed.",
+      "assignment_authority": "not_postal",
+      "geometry_authority": "administrative_context_only",
+      "redistribution_class": "PUBLICATION_TERMS_SEPARATE"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "cnigs-haiti-reference-geodata",
+      "provider": "Centre National de l’Information Géo-Spatiale",
+      "source_url": "https://cnigs.ht/",
+      "role": [
+        "official-reference-geodata-authority-and-candidate-boundaries"
+      ],
+      "production_scope": "Acquire an exact authorized resource and pin permission, edition, schema, CRS, attribution and digest before use.",
+      "assignment_authority": "not_postal",
+      "geometry_authority": "official_administrative_or_reference_context_not_postal",
+      "redistribution_class": "RESOURCE_PERMISSION_REQUIRED"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "osm-haiti",
+      "provider": "OpenStreetMap contributors",
+      "source_url": "https://wiki.openstreetmap.org/wiki/Haiti",
+      "role": [
+        "community-address-road-building-and-validation-context"
+      ],
+      "production_scope": "Keep ODbL data and derivatives in a separately attributed provenance partition.",
+      "assignment_authority": "not_official_operator",
+      "geometry_authority": "community_context_only",
+      "redistribution_class": "ODBL_SEPARATE_PARTITION"
+    }
+  ],
+  "assignment_observation_gate": {
+    "maximum_claim": "operator-observation",
+    "required": [
+      "exact-operator-endpoint",
+      "successful-response",
+      "observed-at",
+      "request-purpose",
+      "terms-snapshot",
+      "response-digest",
+      "normalized-htnnnn",
+      "source-provenance"
+    ],
+    "failure_mode": "metadata-only-or-unverified-observation"
+  },
+  "geometry_promotion_gate": {
+    "maximum_claim": "derived-review-geometry",
+    "required": [
+      "explicit-postcode-crosswalk",
+      "resource-permission",
+      "edition",
+      "schema",
+      "crs",
+      "sha256",
+      "topology-validation",
+      "ambiguity-review",
+      "derived-lineage"
+    ],
+    "failure_mode": "no-postal-geometry-or-derived-review-only-never-official-operator-geometry"
+  },
+  "building_promotion_gate": {
+    "maximum_claim": "explicit-address-linked-building",
+    "required": [
+      "rights-cleared-civic-address-id",
+      "rights-cleared-building-id",
+      "explicit-reviewed-relation",
+      "validity",
+      "privacy-review",
+      "geometry-provenance",
+      "sha256"
+    ],
+    "failure_mode": "address-context-only-no-building-claim"
+  },
+  "realtime_and_model": {
+    "permitted_roles": [
+      "single-observation-validation",
+      "normalization",
+      "join-validation",
+      "drift-detection",
+      "review-prioritization",
+      "geometry-compression"
+    ],
+    "prohibited_roles": [
+      "invent-current-assignment",
+      "turn-administration-into-official-postal-geometry",
+      "infer-house-number-unit-building-person-or-delivery-entitlement"
+    ],
+    "outage_rule": "timeout-empty-or-unavailable-is-unknown-not-no-assignment"
+  },
+  "hugging_face": {
+    "dataset_role": "rights-cleared-versioned-derived-artifact-store",
+    "space_role": "demonstration-only",
+    "production_read_rule": "pin-hub-commit-and-verify-shard-digests",
+    "restricted_data_rule": "private-gated-or-external-only-for-private-address-property-owner-household-query-and-credential-data"
+  }
+}

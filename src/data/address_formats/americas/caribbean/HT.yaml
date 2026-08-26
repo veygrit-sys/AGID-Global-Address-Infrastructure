@@ -1,6 +1,12 @@
 countryCode: HT
 name: Haiti
-openSourceIds:
+openSourceIds: &a1
+  - office-postes-haiti-postcode-search
+  - upu-haiti-addressing-2017
+  - ihsi-haiti-territorial-codes
+  - ihsi-haiti-admin-2024
+  - cnigs-haiti-reference-geodata
+  - osm-haiti
   - osm-nominatim
   - osm-overpass
   - openaddresses
@@ -21,67 +27,140 @@ openSourceIds:
   - ibge-geosciences
   - inpe-terrabrasilis
 native:
-  name: French
+  name: Français / Kreyòl ayisyen
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{houseNumber}} {{street}}
-    {{city}}, {{state}} {{postcode}}
-    Haiti
+    {{building}} {{floor}} {{unit}}
+    {{street}} {{houseNumber}}
+    {{neighborhood}}
+    {{postcode}} {{city}}
+    HAITI
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: Destinataire
+      placeholder: ""
+    - key: attention
+      label: À l’attention de
+      placeholder: ""
+    - key: organization
+      label: Organisation
+      placeholder: ""
+    - key: building
+      label: Bâtiment / immeuble
+      placeholder: ""
+    - key: floor
+      label: Étage
+      placeholder: ""
+    - key: unit
+      label: Appartement / local
+      placeholder: ""
+    - key: street
+      label: Voie / rue
+      placeholder: ""
+    - key: houseNumber
+      label: Numéro
+      placeholder: ""
+    - key: neighborhood
+      label: Quartier
+      placeholder: ""
+    - key: communalSectionOrQuarter
+      label: Section communale / quartier
+      placeholder: ""
+    - key: commune
+      label: Commune
+      placeholder: ""
+    - key: arrondissement
+      label: Arrondissement
+      placeholder: ""
+    - key: department
+      label: Département
+      placeholder: ""
+    - key: city
+      label: Localité
+      placeholder: ""
+    - key: postOffice
+      label: Bureau de poste
+      placeholder: ""
+    - key: poBox
+      label: Boîte postale
+      placeholder: ""
+    - key: postcode
+      label: Code postal
+      placeholder: ""
+      required: true
+english:
+  name: International English
+  addressFormat: |-
+    {{recipient}}
+    {{organization}}
+    {{building}} {{floor}} {{unit}}
+    {{houseNumber}} {{street}}
+    {{neighborhood}}
+    {{postcode}} {{city}}
+    HAITI
+  ordering: small-to-big
+  fields:
+    - key: recipient
+      label: Recipient
+      placeholder: ""
+    - key: attention
+      label: Attention
+      placeholder: ""
     - key: organization
       label: Organization
       placeholder: ""
+    - key: building
+      label: Building / premises
+      placeholder: ""
+    - key: floor
+      label: Floor
+      placeholder: ""
+    - key: unit
+      label: Unit / room
+      placeholder: ""
     - key: street
-      label: Street
+      label: Street / thoroughfare
       placeholder: ""
     - key: houseNumber
-      label: House No.
+      label: House number
       placeholder: ""
-    - key: subdistrict
+    - key: neighborhood
       label: Neighborhood
       placeholder: ""
-    - key: city
-      label: City
+    - key: communalSectionOrQuarter
+      label: Communal section / quarter
       placeholder: ""
-    - key: state
-      label: State / Region
+    - key: commune
+      label: Commune
+      placeholder: ""
+    - key: arrondissement
+      label: Arrondissement
+      placeholder: ""
+    - key: department
+      label: Department
+      placeholder: ""
+    - key: city
+      label: Locality
+      placeholder: ""
+    - key: postOffice
+      label: Post office
+      placeholder: ""
+    - key: poBox
+      label: P.O. Box
       placeholder: ""
     - key: postcode
       label: Postcode
       placeholder: ""
-english:
-  name: International English
-  addressFormat: |-
-    {{organization}}
-    {{houseNumber}} {{street}}
-    {{city}}, {{state}} {{postcode}}
-    HAITI
-  ordering: small-to-big
-  fields:
-    - key: organization
-      label: Building / Company
-      placeholder: ""
-    - key: houseNumber
-      label: House No.
-      placeholder: ""
-    - key: street
-      label: Street
-      placeholder: ""
-    - key: city
-      label: City / Town
-      placeholder: ""
-    - key: state
-      label: State / Province
-      placeholder: ""
-    - key: postcode
-      label: Postal Code
-      placeholder: ""
+      required: true
 postalCode:
-  format: country specific or not used
-  regex: null
-  api: null
-  source: GeoNames / UPU
+  format: HTNNNN
+  regex: ^HT\d{4}$
+  api: https://laposte.gouv.ht/codes.php
+  source: Office des Postes d’Haïti postcode search; UPU Haiti addressing sheet
+    09/2017; IHSI territorial codes and 2024 administrative publication; CNIGS
+    reference geodata; OpenStreetMap Haiti validation
 addressRules:
   languages:
     - code: fr
@@ -96,45 +175,72 @@ addressRules:
     - code: en
       name: English
   nativeOrder:
-    - name
+    - recipient
+    - attention
+    - organization
+    - building
+    - floor
+    - unit
     - street
     - houseNumber
+    - neighborhood
+    - communalSectionOrQuarter
+    - commune
+    - arrondissement
+    - department
     - postcode
     - city
     - country
   englishOrder:
-    - name
-    - street
+    - recipient
+    - attention
+    - organization
+    - building
+    - floor
+    - unit
     - houseNumber
+    - street
     - neighborhood
-    - city
-    - region
+    - communalSectionOrQuarter
+    - commune
+    - arrondissement
+    - department
     - postcode
+    - city
     - country
   regionalHierarchy:
-    - region
-    - city
+    - officialHtFourDigitAssignment
+    - deliveryArea
+    - commune
+    - arrondissement
+    - department
+    - ihsiAdministrativeContextIndependentFromPostcode
+    - cnigsReferenceGeometryIndependentFromPostcode
+    - optionalDerivedPostalContextSurface
+    - explicitRightsClearedCivicAddress
+    - explicitAddressLinkedBuilding
+    - exactRightsClearedBuildingGeometry
+    - agidIndependentSpatialIndex
   postalCode:
-    label: country specific or not used
-    required: false
-    usage: optional
-  openSourceIds:
-    - osm-nominatim
-    - osm-overpass
-    - openaddresses
-    - geonames-postal
-    - geonames-gazetteer
-    - geoboundaries
-    - upu-addressing
-    - zippopotam
-    - noaa-etopo
-    - geobc-global-multi-resolution-topography
-    - hydrosheds
-    - protected-planet-wdpa
-    - gbif-occurrence
-    - esa-worldcover
-    - usgs-3dep
-    - nrcan-geospatial
-    - conabio-geoportal
-    - ibge-geosciences
-    - inpe-terrabrasilis
+    label: HT + 4 digits required for postal addressing
+    required: true
+    usage: "Office des Postes d’Haïti and UPU define HT plus four digits as one
+      integral postcode, including domestic mail: digit 1 department, digit 2
+      arrondissement, digit 3 commune and digit 4 delivery area. An operator
+      lookup or release-pinned row can establish an assignment, but syntax, an
+      example, an IHSI code or a place name cannot. No reusable nationwide
+      operator postal-polygon release or licence is bundled. IHSI administrative
+      codes/boundaries and CNIGS reference geography remain separate context and
+      may become derived-review surfaces only through an explicit versioned
+      postcode crosswalk, rights review, CRS/digest pinning and topology
+      validation; they are never silently official postal geometry. A realtime
+      lookup may validate an observation when terms, availability,
+      request/response digest and observation time are recorded, but timeout or
+      absence is not evidence of no assignment. Mathematical or ML surfaces may
+      rank gaps, detect drift and compress validated geometry, never invent
+      assignments, street numbers, units, buildings, people or delivery
+      entitlement. Building display requires a rights-cleared stable
+      civic-address identifier, a separately permitted building/footprint
+      identifier and an explicit reviewed relation. AGID remains an independent
+      spatial index and is not canonical Haitian postal geometry."
+  openSourceIds: *a1

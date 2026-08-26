@@ -67,6 +67,12 @@ export type AmericasOpenGeoSourceId =
   | 'inegi-mexico-address-standard-2024'
   | 'inegi-mexico-denue-2025'
   | 'osm-mexico'
+  | 'office-postes-haiti-postcode-search'
+  | 'upu-haiti-addressing-2017'
+  | 'ihsi-haiti-territorial-codes'
+  | 'ihsi-haiti-admin-2024'
+  | 'cnigs-haiti-reference-geodata'
+  | 'osm-haiti'
   | 'correos-cr-postal'
   | 'upu-costa-rica-addressing-2009'
   | 'upu-costa-rica-address-policy-case-study'
@@ -581,6 +587,36 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'validation',
     license: 'ODbL',
     notes: 'Community roads, between-street descriptions, addresses and buildings stay in a separate ODbL partition and are not Correos, UPU, MINCOM, ONEI, IDERC, GEOCUBA, cadastral, occupant or exact address-building authority.',
+  },
+  'office-postes-haiti-postcode-search': {
+    id: 'office-postes-haiti-postcode-search', name: 'Office des Postes d’Haïti postcode search', url: 'https://laposte.gouv.ht/codes.php',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Public operator lookup; observation, cache, automation and redistribution terms must be confirmed',
+    notes: 'UPU links this designated-operator lookup. It can support a pinned time-bound HT plus four digits assignment observation when available; syntax or a response is not a bulk catalogue, polygon release, civic-address corpus, building relation or delivery entitlement.',
+  },
+  'upu-haiti-addressing-2017': {
+    id: 'upu-haiti-addressing-2017', name: 'UPU Haiti addressing sheet, September 2017', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/HTIEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'UPU publication terms; not a bulk postcode or geometry licence',
+    notes: 'Documents HT plus four digits as the integral postcode even for domestic mail and describes department, arrondissement, commune and delivery area digits. It provides dated examples, not current nationwide assignments, reusable geometry, real addresses or building evidence.',
+  },
+  'ihsi-haiti-territorial-codes': {
+    id: 'ihsi-haiti-territorial-codes', name: 'IHSI territorial coding manual and hierarchy', url: 'https://ihsi.gouv.ht/statistiques/statistiques_demographiques_et_sociales/gouvernance_et_autres_activites_communautaires',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference', license: 'Exact manual, edition and resource-level reuse terms must be pinned',
+    notes: 'Official six-digit territorial codes identify department, arrondissement, commune and communal section, town or quarter. This administrative/statistical hierarchy remains separate from Office des Postes HTNNNN assignment and postal geometry.',
+  },
+  'ihsi-haiti-admin-2024': {
+    id: 'ihsi-haiti-admin-2024', name: 'IHSI 2024 disaggregated population and administrative divisions', url: 'https://ihsi.gouv.ht/public/storage/document-views/March2025/Oan4m17p5LEKtsGEnHgt.pdf',
+    kind: 'statistics', coverage: 'country', usage: 'reference', license: 'IHSI publication terms; machine-readable-resource permission must be confirmed separately',
+    notes: 'Official 2024 context records 10 departments and the evolving arrondissement, commune, quarter and communal-section structure. It is administrative/statistical context, not postal assignment, operator geometry, a civic-address register or building relation.',
+  },
+  'cnigs-haiti-reference-geodata': {
+    id: 'cnigs-haiti-reference-geodata', name: 'CNIGS Haiti reference geospatial information', url: 'https://cnigs.ht/',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Exact CNIGS resource permission, attribution, edition, schema, CRS and digest required',
+    notes: 'CNIGS is the public reference-geodata authority and produces administrative boundaries and toponymy. A specific authorized resource can support independent context or a reviewed derived surface; it is not operator postal assignment or official postal geometry without an explicit crosswalk and source authority.',
+  },
+  'osm-haiti': {
+    id: 'osm-haiti', name: 'OpenStreetMap Haiti', url: 'https://wiki.openstreetmap.org/wiki/Haiti',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Office des Postes, UPU, IHSI, CNIGS, cadastral, owner, occupant or exact address-building authority.',
   },
   'correos-mexico': {
     id: 'correos-mexico', name: 'Correos de México national postcode catalog', url: 'https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx',
@@ -1813,6 +1849,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   US: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder', 'usdot-national-address-database', 'usgs-national-structures-dataset', 'hud-usps-zip-crosswalk', 'osm-united-states'],
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
   DO: ['inposdom-postcode-search', 'upu-dominican-republic-addressing-2005', 'one-dominican-territorial-division-2021', 'iderd-dominican-geoservices', 'ign-dominican-cartographic-base', 'registro-inmobiliario-dominican-cadastre', 'osm-dominican-republic'],
+  HT: ['office-postes-haiti-postcode-search', 'upu-haiti-addressing-2017', 'ihsi-haiti-territorial-codes', 'ihsi-haiti-admin-2024', 'cnigs-haiti-reference-geodata', 'osm-haiti'],
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico', 'sepomex-postal-polygons-2025', 'mexico-postal-service-law', 'upu-mexico-addressing-2017', 'inegi-mexico-geo-key-service', 'inegi-mexico-geostatistical-framework-2025', 'inegi-mexico-address-standard-2024', 'inegi-mexico-denue-2025', 'osm-mexico'],
   CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],

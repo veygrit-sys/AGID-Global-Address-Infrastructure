@@ -2238,3 +2238,14 @@ test('United States address metadata separates USPS delivery objects, ZCTA, civi
   for (const id of expected) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
   assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding')); assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
 });
+
+test('Haiti address metadata separates integral HTNNNN, operator observations, administration, derived geometry, buildings and AGID', () => {
+  const format = loadFormat('HT'); const rules = loadRules('HT');
+  assert.equal(format.postalCode?.format, 'HTNNNN'); assert.equal(format.postalCode?.regex, '^HT\\d{4}$');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('HT9999'), true); assert.equal(new RegExp(format.postalCode?.regex ?? '').test('9999'), false); assert.equal(new RegExp(format.postalCode?.regex ?? '').test('HT-9999'), false);
+  assert.match(format.postalCode?.source ?? '', /Office des Postes.*UPU.*09\/2017.*IHSI.*2024.*CNIGS.*OpenStreetMap/i);
+  assert.equal(rules.postalCode?.required, true); assert.match(rules.postalCode?.usage ?? '', /integral postcode.*IHSI.*CNIGS.*derived-review.*Realtime.*Building display.*AGID remains an independent/i);
+  for (const key of ['recipient','attention','organization','building','floor','unit','street','houseNumber','neighborhood','communalSectionOrQuarter','commune','arrondissement','department','city','postOffice','poBox','postcode']) assert.ok(format.native?.fields.some(item => item.key === key), key);
+  for (const id of ['office-postes-haiti-postcode-search','upu-haiti-addressing-2017','ihsi-haiti-territorial-codes','ihsi-haiti-admin-2024','cnigs-haiti-reference-geodata','osm-haiti']) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
+  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding')); assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+});
