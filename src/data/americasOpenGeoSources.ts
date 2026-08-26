@@ -59,6 +59,14 @@ export type AmericasOpenGeoSourceId =
   | 'geocuba-cartography'
   | 'osm-cuba'
   | 'correos-mexico'
+  | 'sepomex-postal-polygons-2025'
+  | 'mexico-postal-service-law'
+  | 'upu-mexico-addressing-2017'
+  | 'inegi-mexico-geo-key-service'
+  | 'inegi-mexico-geostatistical-framework-2025'
+  | 'inegi-mexico-address-standard-2024'
+  | 'inegi-mexico-denue-2025'
+  | 'osm-mexico'
   | 'correos-cr-postal'
   | 'upu-costa-rica-addressing-2009'
   | 'upu-costa-rica-address-policy-case-study'
@@ -575,13 +583,49 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     notes: 'Community roads, between-street descriptions, addresses and buildings stay in a separate ODbL partition and are not Correos, UPU, MINCOM, ONEI, IDERC, GEOCUBA, cadastral, occupant or exact address-building authority.',
   },
   'correos-mexico': {
-    id: 'correos-mexico',
-    name: 'Correos de Mexico Codigo Postal',
-    url: 'https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Official Mexican postal-code reference for states, municipalities, settlements, and colonia names.',
+    id: 'correos-mexico', name: 'Correos de México national postcode catalog', url: 'https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official five-digit SEPOMEX catalog for settlements, municipalities or territorial demarcations, cities and federative entities. Pin the exact download, edition, schema, terms, attribution and digest; a catalog row is assignment evidence but is not itself polygon geometry, a civic-address corpus, occupant proof or an exact building relation.',
+  },
+  'sepomex-postal-polygons-2025': {
+    id: 'sepomex-postal-polygons-2025', name: 'SEPOMEX 2025 postcode boundaries by federative entity', url: 'https://www.datos.gob.mx/es/dataset/codigos_postales_entidad_federativa',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Creative Commons Attribution 4.0; exact catalog and state resource records, files, attribution, schema, CRS and digests required',
+    notes: 'Official 2025 geographic postcode delimitations published as 32 state SHP resources. Unmodified validated source features may support official-source Polygon or MultiPolygon geometry. Pin every selected resource and validate topology, gaps, overlaps, invalid rings, duplicate-code parts and state coverage; repairs, dissolves, generalisation and compression are separate derived artifacts.',
+  },
+  'mexico-postal-service-law': {
+    id: 'mexico-postal-service-law', name: 'Ley del Servicio Postal Mexicano', url: 'https://www.diputados.gob.mx/LeyesBiblio/pdf/LSPM.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current consolidated postal-service legal framework. A statute is not a current assignment table, open-data license, geometry release, address corpus or building relation.',
+  },
+  'upu-mexico-addressing-2017': {
+    id: 'upu-mexico-addressing-2017', name: 'UPU Mexico addressing sheet, March 2017', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mexEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Documents five digits before locality name and federative-entity abbreviation plus mailing examples. It is historical format context, not current assignments, reusable geometry, a bulk address corpus or building evidence.',
+  },
+  'inegi-mexico-geo-key-service': {
+    id: 'inegi-mexico-geo-key-service', name: 'INEGI unique geographic-key catalog and GeoJSON service', url: 'https://www.inegi.org.mx/servicios/catalogounico.html',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference', license: 'INEGI free-use terms; exact period, query, response digest and attribution required',
+    notes: 'Official federative-entity, municipality or territorial-demarcation, locality, settlement and road identifiers plus geo-statistical geometry. They are not SEPOMEX assignments, postal boundaries, civic addresses or exact building relations.',
+  },
+  'inegi-mexico-geostatistical-framework-2025': {
+    id: 'inegi-mexico-geostatistical-framework-2025', name: 'INEGI Marco Geoestadístico 2025', url: 'https://www.inegi.org.mx/programas/mg/',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'INEGI free-use terms; exact product, partition, dictionary, attribution, schema, CRS and digest required',
+    notes: 'Official federative-entity, municipality, locality, AGEB, block and road context. Geo-statistical geometry is not SEPOMEX assignment or postal geometry, and an AGEB or block is not an individual building.',
+  },
+  'inegi-mexico-address-standard-2024': {
+    id: 'inegi-mexico-address-standard-2024', name: 'SNIEG / INEGI Norma Técnica sobre Domicilios Geográficos, 2024', url: 'https://snieg.inegi.org.mx/2024/11/25/actualizacion-de-la-norma-tecnica-sobre-domicilios-geograficos/',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 22 November 2024 update standardizes structured geographic-address components for identifying a property or building. It does not publish a nationwide address register, SEPOMEX assignment, postal geometry or exact address-to-building rows.',
+  },
+  'inegi-mexico-denue-2025': {
+    id: 'inegi-mexico-denue-2025', name: 'INEGI DENUE 05/2025 economic establishments', url: 'https://www.inegi.org.mx/rnm/index.php/catalog/1103',
+    kind: 'address', coverage: 'country', usage: 'reference', license: 'INEGI free-use terms; exact edition, attribution, public-field policy, schema and digest required',
+    notes: 'Public business-establishment IDs, structured addresses and approximate coordinates. DENUE does not cover every residence or building; street-front positions can be approximate and rural points can be locality centroids. It is not postal geometry, a residential footprint, owner or occupant evidence or an automatic exact building relation.',
+  },
+  'osm-mexico': {
+    id: 'osm-mexico', name: 'OpenStreetMap Mexico', url: 'https://wiki.openstreetmap.org/wiki/Mexico',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not SEPOMEX, UPU, INEGI, DENUE, cadastral, owner, occupant or exact address-building authority.',
   },
   'correos-cr-postal': {
     id: 'correos-cr-postal',
@@ -1770,7 +1814,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
   DO: ['inposdom-postcode-search', 'upu-dominican-republic-addressing-2005', 'one-dominican-territorial-division-2021', 'iderd-dominican-geoservices', 'ign-dominican-cartographic-base', 'registro-inmobiliario-dominican-cadastre', 'osm-dominican-republic'],
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
-  MX: ['correos-mexico'],
+  MX: ['correos-mexico', 'sepomex-postal-polygons-2025', 'mexico-postal-service-law', 'upu-mexico-addressing-2017', 'inegi-mexico-geo-key-service', 'inegi-mexico-geostatistical-framework-2025', 'inegi-mexico-address-standard-2024', 'inegi-mexico-denue-2025', 'osm-mexico'],
   CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],
   NI: ['correos-nicaragua-postcode-search', 'upu-nicaragua-addressing-2014', 'inide-nicaragua-territorial-2023', 'ineter-ni-ide', 'ineter-nicaragua-cartographic-base', 'ineter-nicaragua-cadastral-ide', 'osm-nicaragua'],
   GT: ['correos-guatemala-postal', 'correos-guatemala-postcode-directory', 'upu-guatemala-addressing-2025', 'correos-guatemala-postal-legal-framework', 'segeplan-gt-ide', 'ine-guatemala-census-settlements', 'ign-guatemala-cartography', 'ric-guatemala-cadastre', 'osm-guatemala'],
