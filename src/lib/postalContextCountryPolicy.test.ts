@@ -43,6 +43,7 @@ import {
   normalizeIndiaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizeKuwaitPostalCode,
+  normalizeBahrainPostalCode,
   classifyMoroccoPostalCode,
   normalizeMaltaPostalCode,
   normalizeMonacoPostalCode,
@@ -255,6 +256,14 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeKuwaitPostalCode('0000'), null);
   assert.equal(normalizeKuwaitPostalCode('000000'), null);
   assert.equal(normalizePostalContextPostalCode('kw', '00 000'), '00000');
+  assert.equal(normalizeBahrainPostalCode('１００'), '100');
+  assert.equal(normalizeBahrainPostalCode('1 212'), '1212');
+  assert.equal(normalizeBahrainPostalCode('099'), null);
+  assert.equal(normalizeBahrainPostalCode('1300'), null);
+  assert.equal(normalizeBahrainPostalCode('BH-317'), null);
+  assert.equal(normalizeBahrainPostalCode('31-7'), null);
+  assert.equal(normalizeBahrainPostalCode('12'), null);
+  assert.equal(normalizePostalContextPostalCode('bh', '1 212'), '1212');
   assert.equal(normalizePostalContextPostalCode('ro', '000 000'), '000000');
   assert.equal(normalizeDenmarkPostalCode('\uFF10\uFF10\uFF11\uFF12'), '0012');
   assert.equal(normalizeDenmarkPostalCode('00 12'), '0012');

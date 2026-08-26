@@ -432,6 +432,7 @@ export {
   normalizeIndiaPostalCode,
   normalizeIndonesiaPostalCode,
   normalizeKuwaitPostalCode,
+  normalizeBahrainPostalCode,
   classifyMoroccoPostalCode,
   normalizeSlovakiaPostalCode,
   normalizeGeorgiaPostalCode,

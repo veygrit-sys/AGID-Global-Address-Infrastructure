@@ -160,6 +160,13 @@ export type AsiaOpenGeoSourceId =
   | 'qatar-gis-geoportal'
   | 'osm-qatar'
   | 'bahrain-open-data'
+  | 'bahrain-post-services-directory'
+  | 'upu-bahrain-addressing'
+  | 'iga-bahrain-address-services'
+  | 'bahrain-open-data-terms'
+  | 'bahrain-open-data-geographic-locations'
+  | 'bahrain-municipal-geographic-explorer'
+  | 'slrb-bahrain-cadastre'
   | 'osm-bahrain'
   | 'kuwait-post'
   | 'upu-kuwait-addressing'
@@ -1767,6 +1774,71 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'reference',
     notes: 'Bahrain open-data portal and map reference for public geodata and regional validation.',
   },
+  'bahrain-post-services-directory': {
+    id: 'bahrain-post-services-directory',
+    name: 'Bahrain Post Services Directory',
+    url: 'https://www.bahrainpost.gov.bh/en/images/pdf/services-directory-eng.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Bahrain Post office addresses demonstrate current three- and four-digit locality postcodes. Directory examples are not a complete postcode-block assignment release, canonical boundary, delivery entitlement or bulk redistribution grant.',
+  },
+  'upu-bahrain-addressing': {
+    id: 'upu-bahrain-addressing',
+    name: 'UPU Bahrain addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/bhrEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official addressing metadata defines three or four digits to the right of the locality, valid range 1XX to 12XX, and home versus P.O. box examples. Syntax and examples do not establish a complete allocation table, polygon, box subscriber or building.',
+  },
+  'iga-bahrain-address-services': {
+    id: 'iga-bahrain-address-services',
+    name: 'Bahrain iGA Building and Establishment Address Services',
+    url: 'https://www.iga.gov.bh/en/category/building-and-establishment-address-services',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official iGA services issue, modify and delete building address certificates and numbers. A certificate or registered building number is strong civic-address evidence, but not an unrestricted footprint; CPR, owners, occupants, deeds, applications and contact data are excluded.',
+  },
+  'bahrain-open-data-terms': {
+    id: 'bahrain-open-data-terms',
+    name: 'Bahrain Open Data Portal Terms of Use',
+    url: 'https://www.data.gov.bh/pages/terms-and-conditions/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Bahrain Open Data Portal Terms of Use',
+    notes: 'Portal datasets permit royalty-free copying, distribution, adaptation and applications subject to source/date attribution, transformation notice, prescribed disclaimer, sublicence propagation and removal on iGA request. These terms apply only to exact portal datasets, not every government webpage or viewer.',
+  },
+  'bahrain-open-data-geographic-locations': {
+    id: 'bahrain-open-data-geographic-locations',
+    name: 'Bahrain Open Data Geographic Locations',
+    url: 'https://www.data.gov.bh/explore/dataset/geographical-locations-of-landmarks/api/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Bahrain Open Data Portal Terms of Use',
+    notes: 'Official API datasets expose selected public-place points with block and governorate context under portal terms. Point rows can validate labels and block membership but are not a complete address register, block polygon, building footprint or postcode boundary.',
+  },
+  'bahrain-municipal-geographic-explorer': {
+    id: 'bahrain-municipal-geographic-explorer',
+    name: 'Bahrain Municipal Geographic Explorer',
+    url: 'https://www.mun.gov.bh/newportal/ar/municipal-affairs/services/almstkshf-albldy-aljghrafy',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official interactive map supports location, area classification and road reference. Viewer availability is not a vector licence, exact block-postcode crosswalk, canonical postal surface or legal survey.',
+  },
+  'slrb-bahrain-cadastre': {
+    id: 'slrb-bahrain-cadastre',
+    name: 'Bahrain Survey and Land Registration Bureau Cadastre',
+    url: 'https://www.slrb.gov.bh/en/cadastralsurveys',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'SLRB is the cadastral authority for property boundaries and paid/requested maps. A parcel or deed map is not a postal block, public building footprint or address-building relation, and owner, CPR, title, right and restriction data are never public AGID output.',
+  },
   'osm-bahrain': {
     id: 'osm-bahrain',
     name: 'OpenStreetMap Bahrain',
@@ -2428,7 +2500,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'big-indonesia-rbi-buildings',
   ],
   AE: ['makani-dubai-open-data', 'osm-uae'],
-  BH: ['bahrain-open-data', 'osm-bahrain'],
+  BH: ['bahrain-post-services-directory', 'upu-bahrain-addressing', 'iga-bahrain-address-services', 'bahrain-open-data-terms', 'bahrain-open-data-geographic-locations', 'bahrain-municipal-geographic-explorer', 'slrb-bahrain-cadastre', 'bahrain-open-data', 'osm-bahrain'],
   IL: ['israel-post', 'govmap-israel', 'data-gov-il', 'osm-israel'],
   IN: [
     'india-post-regulations-2024',
