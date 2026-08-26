@@ -85,6 +85,13 @@ export type AsiaOpenGeoSourceId =
   | 'survey-of-pakistan-geospatial-products'
   | 'pakistan-nsdi'
   | 'pakistan-pbs-census-gis'
+  | 'bangladesh-post-postcode-tables'
+  | 'upu-bangladesh-addressing'
+  | 'survey-of-bangladesh-gis-services'
+  | 'bangladesh-nsdi-geoportal'
+  | 'bangladesh-nsdi-data-catalog'
+  | 'bbs-bangladesh-census-2022'
+  | 'dlrs-bangladesh-map-portal'
   | 'bd-post'
   | 'survey-bangladesh'
   | 'osm-bangladesh'
@@ -1080,6 +1087,69 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'validation',
     license: 'ODbL',
     notes: 'Pakistan OSM roads, places, POI, and multilingual names for address lookup fallback.',
+  },
+  'bangladesh-post-postcode-tables': {
+    id: 'bangladesh-post-postcode-tables',
+    name: 'Bangladesh Post official postcode tables',
+    url: 'https://bdpost.portal.gov.bd/site/page/6aaeabe4-479b-4e5a-a671-e9e5b994bf9a/1000',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official district tables publish Upazila, English and Bengali post-office names, office classes and four-digit postcodes. GPO, HO, TSO, UPO, SO, EDSO and EDBO labels and rows with no code remain typed. A pinned page row is assignment evidence, not a polygon, delivery point, building, complete current bulk directory or redistribution licence.',
+  },
+  'upu-bangladesh-addressing': {
+    id: 'upu-bangladesh-addressing',
+    name: 'UPU Bangladesh addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/bgdEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official 2014 addressing metadata defines four digits to the right of the locality, a routing hierarchy through the main regional head office, thana and secondary post office, and village, delivery-post-office and optional thana address lines. It is not a current allocation database, polygon, delivery point or building relation.',
+  },
+  'survey-of-bangladesh-gis-services': {
+    id: 'survey-of-bangladesh-gis-services',
+    name: 'Survey of Bangladesh GIS services and products',
+    url: 'https://sob.portal.gov.bd/pages/static-pages/6922dd32933eb65569e13e50',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The national mapping authority supplies photogrammetric GIS products under existing policy, including Building and Structure, administrative and topographic features in source-declared scales and BUTM2010. Product availability is not an open licence, postal boundary, civic-address register or address-building relation; exact product, terms, edition, scale, CRS and digest are required.',
+  },
+  'bangladesh-nsdi-geoportal': {
+    id: 'bangladesh-nsdi-geoportal',
+    name: 'Bangladesh National Spatial Data Infrastructure',
+    url: 'https://new.nsdi.gov.bd/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Survey of Bangladesh leads the national geoportal for discovery, access and sharing. Public information may not require sign-in and portal data may be free to use, but the official FAQ says provider-specific terms vary. Portal presence never proves postal authority, exact-layer completeness, building identity or blanket redistribution rights.',
+  },
+  'bangladesh-nsdi-data-catalog': {
+    id: 'bangladesh-nsdi-data-catalog',
+    name: 'Bangladesh NSDI official data catalog',
+    url: 'https://new.nsdi.gov.bd/datacatalog/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The official catalog lists editioned SoB geodatabases, coverage, scale, security classification and BUTM2010 CRS, including city and nationwide products. Catalog metadata or a non-restricted label is not the dataset, postal-code crosswalk or reuse licence; the exact layer and provider terms must be pinned.',
+  },
+  'bbs-bangladesh-census-2022': {
+    id: 'bbs-bangladesh-census-2022',
+    name: 'Bangladesh Bureau of Statistics Population and Housing Census 2022',
+    url: 'https://bbs.gov.bd/pages/static-pages/6922e073933eb65569e27220',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official census publications describe GIS and geocode-based enumeration-area maps for complete population counting and separately versioned administrative context. Enumeration areas are census operations, not postcode areas, delivery surfaces, civic addresses or buildings; individual census information is never public AGID output.',
+  },
+  'dlrs-bangladesh-map-portal': {
+    id: 'dlrs-bangladesh-map-portal',
+    name: 'Bangladesh DLRS integrated map purchase portal',
+    url: 'https://map.settlement.gov.bd/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The Department of Land Records and Surveys sells official CS, SA, RS, BRS and BDS mouza maps by district, upazila, mouza and sheet. A purchased or viewed mouza or cadastral map is controlled land evidence, not a postcode polygon, building footprint, civic address relation or permission to publish ownership and occupant data.',
   },
   'bd-post': {
     id: 'bd-post',
@@ -2552,7 +2622,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   AF: ['afghan-post', 'afghan-postal-code-system', 'hot-osm-afghanistan', 'osm-afghanistan'],
   AM: ['haypost-am', 'haypost-address-reference', 'armenia-real-estate-address-register', 'armenia-national-geoportal-buildings', 'cadastre-armenia', 'armstat-geodata', 'geonames-armenia'],
   AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
-  BD: ['bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
+  BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
   BN: ['post-gov-bn'],
   BT: ['bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
   CN: ['china-postal-code'],

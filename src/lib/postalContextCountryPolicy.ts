@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'ID', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'ID', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -165,6 +165,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   PK: {
     countryCode: 'PK',
     postalCodeFormat: 'NNNNN',
+    fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  BD: {
+    countryCode: 'BD',
+    postalCodeFormat: 'NNNN (1000-9999)',
     fullCodeGeometrySemantics: 'delivery-network-first',
   },
   ID: {
@@ -503,6 +508,14 @@ export function normalizePakistanPostalCode(value: unknown) {
   return /^\d{5}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeBangladeshPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/[০-৯]/g, digit => String(digit.charCodeAt(0) - 0x09e6))
+    .replace(/\s+/g, '');
+  return /^[1-9]\d{3}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizeIndonesiaPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -717,6 +730,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'MA') return normalizeMoroccoPostalCode(value);
   if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'PK') return normalizePakistanPostalCode(value);
+  if (normalizedCountry === 'BD') return normalizeBangladeshPostalCode(value);
   if (normalizedCountry === 'ID') return normalizeIndonesiaPostalCode(value);
   if (normalizedCountry === 'KW') return normalizeKuwaitPostalCode(value);
   if (normalizedCountry === 'BH') return normalizeBahrainPostalCode(value);
