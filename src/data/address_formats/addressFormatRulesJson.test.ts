@@ -566,13 +566,14 @@ test('Central Asia address JSON files expose table-derived addressRules metadata
   assert.deepEqual(loadRules('KZ').languages, [
     { code: 'kk', name: 'Kazakh' },
     { code: 'ru', name: 'Russian' },
+    { code: 'en', name: 'English display or Latin transliteration' },
   ]);
   assert.deepEqual(loadRules('UZ').regionalHierarchy, ['provinceOrRepublicOrCapitalCity', 'district', 'locality', 'mahallaOrBlockOrMassif', 'street', 'houseNumber', 'unit', 'postOfficeAssignment', 'officialCivicAddressId', 'cadastralParcelOrBuildingId', 'explicitRightsClearedBuilding']);
-  assert.deepEqual(loadRules('KZ').russianOrder, ['recipient', 'streetOrQuarter', 'houseOrBuilding', 'city', 'oblast', 'postcode']);
+  assert.deepEqual(loadRules('KZ').russianOrder, ['recipient', 'organization', 'building', 'street', 'houseNumber', 'corpus', 'unit', 'postcode', 'locality', 'postOffice', 'district', 'province', 'poBox', 'country']);
   assert.deepEqual(loadRules('TM').regionalHierarchy, ['welayat']);
   assert.deepEqual(loadRules('KG').regionalHierarchy, ['oblast']);
   assert.deepEqual(loadRules('TJ').regionalHierarchy, ['viloyat']);
-  assert.equal(loadRules('KZ').postalCode?.label, '6 digits required');
+  assert.match(loadRules('KZ').postalCode?.label ?? '', /7-character.*legacy 6-digit.*neither.*polygon/i);
 });
 
 test('Central Asia address metadata exposes national geoportals, postal, and OSM reference sources', () => {
@@ -1578,7 +1579,8 @@ test('All Asian country JSON files expose reusable postal API and open geodata s
   assert.ok(loadFormat('IN').openSourceIds?.includes('india-digipin'));
   assert.ok(loadFormat('IN').openSourceIds?.includes('india-pincode-api-oss'));
   assert.ok(loadFormat('SG').openSourceIds?.includes('onemap-sg'));
-  assert.ok(loadFormat('KZ').openSourceIds?.includes('datahub-postal-kz'));
+  assert.ok(loadFormat('KZ').openSourceIds?.includes('post-kz'));
+  assert.ok(loadFormat('KZ').openSourceIds?.includes('kazakhstan-postal-index-rules-2026'));
 });
 
 test('North Africa address JSON files expose addressRules metadata and postal data sources', () => {
@@ -2041,6 +2043,7 @@ test('Afghanistan address metadata exposes current six digits, postal-map, admin
     assert.match(ASIA_OPEN_GEO_SOURCES[id as keyof typeof ASIA_OPEN_GEO_SOURCES].url, /^https?:\/\//);
   }
   assert.equal(format.postalCode?.format, 'NNNNNN');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('999999'), true);
   assert.equal(format.postalCode?.regex, '^\\d{6}$');
   assert.match(format.postalCode?.source ?? '', /Afghan Post.*UPU.*07\/2025.*OCHA.*2026/i);
   assert.match(rules.postalCode?.usage ?? '', /province.*city or rural district.*delivery zone.*postal-area-first.*P-code.*not.*reusable polygon.*building relation/i);
@@ -2112,11 +2115,30 @@ test('Iran address metadata separates ten-digit place IDs, P.O. exceptions, GNAF
 });
 
 
+test('Kazakhstan address metadata separates dual codes, RKA, buildings, NSDI, time, jurisdiction, and AGID', () => {
+  const format = loadFormat('KZ');
+  const rules = loadRules('KZ');
+  assert.equal(format.postalCode?.format, 'LNNLNLN or NNNNNN');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('X99X9X9'), true);
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('999999'), true);
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('X99-X9X9'), false);
+  assert.match(format.postalCode?.source ?? '', /Kazpost.*UPU.*07.*2025.*2026.*Address Register.*RKA.*NSDI.*cadast.*OpenStreetMap/i);
+  assert.equal(rules.postalCode?.required, true);
+  assert.match(rules.postalCode?.usage ?? '', /coexisting.*seven alphanumeric.*real-estate object.*legacy six-digit.*phased out.*not.*polygon.*RKA.*16-digit.*AGID/i);
+  for (const key of ['building', 'houseNumber', 'corpus', 'unit', 'postOffice', 'poBox']) {
+    assert.ok(format.native?.fields.some(item => item.key === key), key);
+  }
+  for (const id of ['post-kz', 'qazpost-open-api', 'upu-kazakhstan-addressing-2025', 'kazakhstan-postal-index-rules-2026', 'kazakhstan-post-law', 'kazakhstan-addressing-rules-2026', 'kazakhstan-address-register', 'kazakhstan-nsdi', 'kazakhstan-nsdi-use-rules-2023', 'kazakhstan-public-cadastral-map', 'kazakhstan-real-estate-rights-register', 'osm-kazakhstan']) {
+    assert.ok(format.openSourceIds?.includes(id));
+  }
+});
+
 test('Uzbekistan address metadata separates delivery indices, offices, dated data, buildings, time, jurisdiction, and AGID', () => {
   const format = loadFormat('UZ'); const rules = loadRules('UZ');
-  assert.equal(format.postalCode?.format, 'NNNNNN'); assert.equal(format.postalCode?.regex, '^\\d{6}$');
-  assert.match(format.postalCode?.source ?? '', /UzPost.*UPU.*07\/2019.*2019.*reuse terms.*2026.*Cadastre.*real-estate.*OpenStreetMap/i);
+  assert.equal(format.postalCode?.format, 'NNNNNN');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('999999'), true);
+  assert.match(format.postalCode?.source ?? '', /UzPost.*UPU.*07.*2019.*2019.*reuse terms.*2026.*Cadastre.*real-estate.*OpenStreetMap/i);
   assert.equal(rules.postalCode?.required, true); assert.match(rules.postalCode?.usage ?? '', /six-digit.*delivery.*post.?office.*not.*polygon.*2019.*current.*building relation/i);
-  for (const key of ['building','blockOrMassif','houseNumber','unit','postOffice','poBox']) assert.ok(format.native.fields.some((item:any)=>item.key===key), key);
+  for (const key of ['building','blockOrMassif','houseNumber','unit','postOffice','poBox']) assert.ok(format.native?.fields.some(item => item.key === key), key);
   for (const id of ['pochta-uz','uzpost-index-map','upu-uzbekistan-addressing-2019','uzbekistan-postal-index-open-data-2019','uzbekistan-open-data-terms','uzbekistan-open-data-registry-2026','uzbekistan-cadastre-agency','uzbekistan-state-real-estate-register','osm-uzbekistan']) assert.ok(format.openSourceIds?.includes(id));
 });

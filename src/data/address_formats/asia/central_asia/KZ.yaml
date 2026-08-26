@@ -3,124 +3,260 @@ name: Kazakhstan
 native:
   name: Қазақстан
   addressFormat: |-
-    {{postcode}}
-    {{state}}, {{city}}
-    {{street}}, {{houseNumber}}
+    {{recipient}}
     {{organization}}
-  ordering: big-to-small
+    {{building}}
+    {{street}} {{houseNumber}} {{corpus}} {{unit}}
+    {{postcode}}, {{locality}} {{postOffice}}
+    {{district}}
+    {{province}}
+    {{poBox}}
+    {{country}}
+  ordering: small-to-big
   fields:
-    - key: postcode
-      label: Пошта индексі
-      placeholder: "010000"
-      required: true
+    - key: recipient
+      label: Алушы
+      placeholder: ""
+      required: false
       type: text
-    - key: state
-      label: Облыс
-      placeholder: Ақмола облысы
-      required: true
+    - key: organization
+      label: Ұйым
+      placeholder: ""
+      required: false
       type: text
-    - key: city
-      label: Қала
-      placeholder: Астана
-      required: true
+    - key: building
+      label: Ғимарат атауы
+      placeholder: ""
+      required: false
       type: text
     - key: street
       label: Көше
-      placeholder: Мәңгілік Ел даңғылы
-      required: true
+      placeholder: ""
+      required: false
       type: text
     - key: houseNumber
-      label: Үй/Пәтер
-      placeholder: "8"
+      label: Үй нөмірі
+      placeholder: ""
       required: true
       type: text
-    - key: organization
-      label: Ғимарат/Кеңсе
-      placeholder: Ақорда
+    - key: corpus
+      label: Корпус
+      placeholder: ""
+      required: false
+      type: text
+    - key: unit
+      label: Пәтер немесе бөлімше
+      placeholder: ""
+      required: false
+      type: text
+    - key: locality
+      label: Елді мекен
+      placeholder: ""
+      required: true
+      type: text
+    - key: district
+      label: Аудан
+      placeholder: ""
+      required: false
+      type: text
+    - key: province
+      label: Облыс
+      placeholder: ""
+      required: false
+      type: text
+    - key: postOffice
+      label: Пошта бөлімшесі (ескі индекс)
+      placeholder: ""
+      required: false
+      type: text
+    - key: postcode
+      label: 7 таңбалы әріптік-сандық немесе бұрынғы 6 таңбалы индекс
+      placeholder: ""
+      required: true
+      type: text
+    - key: poBox
+      label: Абоненттік жәшік
+      placeholder: ""
       required: false
       type: text
 english:
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{houseNumber}} {{street}}
-    {{city}}, {{state}}
-    {{postcode}}
+    {{building}}
+    {{street}} {{houseNumber}} {{corpus}} {{unit}}
+    {{postcode}}, {{locality}} {{postOffice}}
+    {{district}}
+    {{province}}
+    {{poBox}}
     {{country}}
   ordering: small-to-big
   fields:
-    - key: organization
-      label: Building/Office
-      placeholder: Ak Orda
+    - key: recipient
+      label: Recipient
+      placeholder: ""
       required: false
       type: text
-    - key: houseNumber
-      label: House/Apt No.
-      placeholder: "8"
-      required: true
+    - key: organization
+      label: Organization
+      placeholder: ""
+      required: false
+      type: text
+    - key: building
+      label: Building
+      placeholder: ""
+      required: false
       type: text
     - key: street
       label: Street
-      placeholder: Mangilik El Ave
+      placeholder: ""
+      required: false
+      type: text
+    - key: houseNumber
+      label: House Number
+      placeholder: ""
       required: true
       type: text
-    - key: city
-      label: City
-      placeholder: Astana
+    - key: corpus
+      label: Building Corpus
+      placeholder: ""
+      required: false
+      type: text
+    - key: unit
+      label: Apartment or Unit
+      placeholder: ""
+      required: false
+      type: text
+    - key: locality
+      label: Locality or Village
+      placeholder: ""
       required: true
       type: text
-    - key: state
+    - key: district
+      label: District
+      placeholder: ""
+      required: false
+      type: text
+    - key: province
       label: Province
-      placeholder: Akmola Region
-      required: true
+      placeholder: ""
+      required: false
+      type: text
+    - key: postOffice
+      label: Post Office (legacy code context)
+      placeholder: ""
+      required: false
       type: text
     - key: postcode
-      label: Postal Code
-      placeholder: "010000"
+      label: 7-character alphanumeric or legacy 6-digit postcode
+      placeholder: ""
       required: true
       type: text
+    - key: poBox
+      label: P.O. Box
+      placeholder: ""
+      required: false
+      type: text
 postalCode:
-  format: NNNNNN
-  regex: ^\d{6}$
+  format: LNNLNLN or NNNNNN
+  regex: ^(?:[A-Z]\d{2}[A-Z]\d[A-Z]\d|\d{6})$
   api: https://open.post.kz/services/details/26
-  source: Kazpost / QazPost Open API / Kazakhstan NSDI
+  source: Kazpost and QazPost Open API; UPU Kazakhstan addressing sheet 07/2025; Kazakhstan postal-index rules amended 2026; Post Law; Digital Address Register and RKA; NSDI and its use rules; public cadastral map; real-estate rights register; OpenStreetMap
 addressRules:
   languages:
     - code: kk
       name: Kazakh
     - code: ru
       name: Russian
+    - code: en
+      name: English display or Latin transliteration
   nativeOrder:
     - recipient
-    - streetOrQuarter
-    - houseOrBuilding
-    - city
-    - oblast
+    - organization
+    - building
+    - street
+    - houseNumber
+    - corpus
+    - unit
     - postcode
+    - locality
+    - postOffice
+    - district
+    - province
+    - poBox
+    - country
   englishOrder:
     - recipient
-    - streetOrBlock
-    - houseOrBuilding
-    - city
-    - region
+    - organization
+    - building
+    - street
+    - houseNumber
+    - corpus
+    - unit
     - postcode
+    - locality
+    - postOffice
+    - district
+    - province
+    - poBox
+    - country
   russianOrder:
     - recipient
-    - streetOrQuarter
-    - houseOrBuilding
-    - city
-    - oblast
+    - organization
+    - building
+    - street
+    - houseNumber
+    - corpus
+    - unit
     - postcode
+    - locality
+    - postOffice
+    - district
+    - province
+    - poBox
+    - country
   regionalHierarchy:
-    - oblast
+    - provinceOrRepublicanCityOrCapital
+    - district
+    - localityOrVillage
+    - street
+    - houseNumber
+    - corpus
+    - unit
+    - currentAlphanumericRealEstateObjectPostcode
+    - legacyNumericPostOfficeIndex
+    - addressRegistrationCodeRka
+    - cadastralParcelOrBuildingId
+    - explicitRightsClearedBuilding
+  evidenceLayers:
+    - officialCurrentAlphanumericPostcode
+    - officialLegacySixDigitIndex
+    - postalCodeTypeAndTransitionValidity
+    - currentQazPostPinnedResponse
+    - digitalAddressRegisterAndRka
+    - officialSpatialDataUnderDatasetSpecificRights
+    - administrativeAndCadastralContext
+    - optionalDerivedPostalContextSurface
+    - explicitAddressLinkedBuilding
+    - exactRightsClearedBuildingGeometry
+    - agidIndependentSpatialIndex
+    - temporalValidityJurisdictionAndLanguage
   postalCode:
-    label: 6 digits required
+    label: 7-character alphanumeric real-estate-object code or transitional legacy 6-digit post-office index; neither is a guaranteed polygon
     required: true
-    usage: required
+    usage: Kazakhstan currently has two coexisting postcode systems. The UPU 07/2025 sheet and current assignment rules define seven alphanumeric characters before the locality; the first letter identifies a capital, region or city of republican significance, two digits identify an address block, and the remaining letter-digit pairs identify a real-estate object within that block. The legacy six-digit numeric code identifies post-office, district and regional context and is being phased out. A postcode, QazPost response, RKA, address-register result, NSDI or cadastral feature, office point, administrative area, public map, OSM feature, coordinate, proximity surface or model does not independently prove an official postal polygon, exact building footprint or unit, resident, ownership, deliverability, universal jurisdiction coverage or territorial scope. RKA is a separate 16-digit address-registration identifier. AGID is an independent spatial index linked only by a versioned crosswalk.
   openSourceIds:
     - post-kz
-    - datahub-postal-kz
-    - kazakhstan-nsdi
     - qazpost-open-api
+    - upu-kazakhstan-addressing-2025
+    - kazakhstan-postal-index-rules-2026
+    - kazakhstan-post-law
+    - kazakhstan-addressing-rules-2026
+    - kazakhstan-address-register
+    - kazakhstan-nsdi
+    - kazakhstan-nsdi-use-rules-2023
+    - kazakhstan-public-cadastral-map
+    - kazakhstan-real-estate-rights-register
     - osm-kazakhstan
     - osm-nominatim
     - osm-overpass
@@ -139,9 +275,16 @@ addressRules:
     - gbif-occurrence
 openSourceIds:
   - post-kz
-  - datahub-postal-kz
-  - kazakhstan-nsdi
   - qazpost-open-api
+  - upu-kazakhstan-addressing-2025
+  - kazakhstan-postal-index-rules-2026
+  - kazakhstan-post-law
+  - kazakhstan-addressing-rules-2026
+  - kazakhstan-address-register
+  - kazakhstan-nsdi
+  - kazakhstan-nsdi-use-rules-2023
+  - kazakhstan-public-cadastral-map
+  - kazakhstan-real-estate-rights-register
   - osm-kazakhstan
   - osm-nominatim
   - osm-overpass

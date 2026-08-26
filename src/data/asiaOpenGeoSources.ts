@@ -338,6 +338,14 @@ export type AsiaOpenGeoSourceId =
   | 'nsdi-georgia-administrative-boundaries'
   | 'geostat-georgia-administrative-classification'
   | 'post-kz'
+  | 'upu-kazakhstan-addressing-2025'
+  | 'kazakhstan-postal-index-rules-2026'
+  | 'kazakhstan-post-law'
+  | 'kazakhstan-addressing-rules-2026'
+  | 'kazakhstan-address-register'
+  | 'kazakhstan-nsdi-use-rules-2023'
+  | 'kazakhstan-public-cadastral-map'
+  | 'kazakhstan-real-estate-rights-register'
   | 'pochta-uz'
   | 'uzpost-index-map'
   | 'upu-uzbekistan-addressing-2019'
@@ -3232,13 +3240,40 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     notes: 'Official statistical and administrative classification is not postal assignment evidence and is not geometry unless a separate rights-cleared spatial release is pinned.',
   },
   'post-kz': {
-    id: 'post-kz',
-    name: 'Kazpost',
-    url: 'https://post.kz/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Kazakhstan postcode lookup and postal reference.',
+    id: 'post-kz', name: 'Kazpost / QazPost', url: 'https://post.kz/?lang=en', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official national postal operator and current postcode-search reference. No public current bulk assignment, address, polygon or automatic building relation is established.',
+  },
+  'upu-kazakhstan-addressing-2025': {
+    id: 'upu-kazakhstan-addressing-2025', name: 'UPU Kazakhstan addressing sheet 07/2025', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kazEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 07/2025 sheet documents coexistence of seven-character alphanumeric codes and legacy six-digit numeric indices during transition, plus home, rural, organisation, P.O. Box and parcel-locker address forms. Its real examples are not reusable assignments, geometry or building relations.',
+  },
+  'kazakhstan-postal-index-rules-2026': {
+    id: 'kazakhstan-postal-index-rules-2026', name: 'Kazakhstan postal-index assignment rules 2026', url: 'https://adilet.zan.kz/rus/docs/V1600014158', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current rules define a first Latin capital/region/city code, two-digit address block and final letter-digit real-estate-object sequence. Composition and database access language are legal context, not a row, geometry or bulk redistribution licence.',
+  },
+  'kazakhstan-post-law': {
+    id: 'kazakhstan-post-law', name: 'Kazakhstan Post Law', url: 'https://www.adilet.zan.kz/eng/docs/Z1600000498', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Defines national-operator duties to use the Address Register, assign codes to real-estate objects and maintain the unified database. Statutory duties do not themselves publish rows, geometry or reuse rights.',
+  },
+  'kazakhstan-addressing-rules-2026': {
+    id: 'kazakhstan-addressing-rules-2026', name: 'Kazakhstan real-estate addressing rules 2026', url: 'https://adilet.zan.kz/rus/docs/V2600038643', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Defines Digital Address Register registration and the separate 16-digit RKA. RKA is not a postcode, AGID cell, cadastral identifier, footprint, owner or blanket-public record.',
+  },
+  'kazakhstan-address-register': {
+    id: 'kazakhstan-address-register', name: 'Kazakhstan address certificate and RKA service', url: 'https://www.gov.kz/services/3690?lang=en', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'A separate 16-digit RKA and an authenticated government response may establish response-specific registered-address evidence. The service is not an open national address or building corpus and needs lawful purpose, privacy and display rights.',
+  },
+  'kazakhstan-nsdi-use-rules-2023': {
+    id: 'kazakhstan-nsdi-use-rules-2023', name: 'Kazakhstan NSDI use rules', url: 'https://adilet.zan.kz/rus/docs/V2300032134', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Rules provide search, view, download and copy services and generally accessible data without charge. The exact dataset, owner, metadata, access class and reuse conditions still must be pinned; this is not a postal licence.',
+  },
+  'kazakhstan-public-cadastral-map': {
+    id: 'kazakhstan-public-cadastral-map', name: 'Kazakhstan public cadastral map', url: 'https://map.gov4c.kz/egkn/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official interactive parcel and cadastre context requires exact layer rights, schema, CRS, validity and digest. A parcel is not postal geometry and does not establish an address-building relation.',
+  },
+  'kazakhstan-real-estate-rights-register': {
+    id: 'kazakhstan-real-estate-rights-register', name: 'Kazakhstan legal cadastre and real-estate rights register', url: 'https://www.gov.kz/memleket/entities/adilet-mng/activities/11887', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'The legal cadastre includes property rights and rights holders. It is purpose-limited and potentially personal, not an open address corpus, postcode assignment, building crosswalk or public household data.',
   },
   'pochta-uz': {
     id: 'pochta-uz', name: 'O‘zbekiston pochtasi AJ / UzPost', url: 'https://uz.post/', kind: 'postal-code', coverage: 'country', usage: 'primary',
@@ -3279,7 +3314,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Open Kazakhstan postal-code dataset useful as a validation fallback.',
+    notes: 'Third-party validation candidate with no current official-assignment or geometry authority; excluded from the KZ production source profile until exact provenance, update and licence are reviewed.',
   },
   'kazakhstan-nsdi': {
     id: 'kazakhstan-nsdi',
@@ -3288,7 +3323,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Kazakhstan national spatial data infrastructure geoportal for open geospatial data, administrative layers, and official map validation.',
+    notes: 'Government NSDI supports spatial search, view, download and geoservices. Pin the exact dataset, owner, metadata, access class, terms, validity, CRS, topology and digest; portal visibility is not postal assignment, building linkage or blanket redistribution permission.',
   },
   'qazpost-open-api': {
     id: 'qazpost-open-api',
@@ -3297,7 +3332,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Kazakhstan postal address search API for postcode, street, and locality validation.',
+    notes: 'Bearer-token API service 26 searches address, new postcode or RKA and returns multilingual address fields. A pinned response is operational evidence only; access is not open bulk address, customer or geometry data.',
   },
   'osm-kazakhstan': {
     id: 'osm-kazakhstan',
@@ -3515,7 +3550,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   KR: ['korea-post-postcode-system', 'korea-post-postcode-api', 'mois-juso-basic-districts', 'mois-juso-road-address-api', 'mois-juso-building-db', 'mois-juso-electronic-map', 'molit-korea-gis-integrated-buildings', 'molit-korea-continuous-cadastral-map', 'epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
   KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
   KH: ['cambodia-post', 'odc-cambodia-postal-codes', 'osm-cambodia'],
-  KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
+  KZ: ["post-kz","qazpost-open-api","upu-kazakhstan-addressing-2025","kazakhstan-postal-index-rules-2026","kazakhstan-post-law","kazakhstan-addressing-rules-2026","kazakhstan-address-register","kazakhstan-nsdi","kazakhstan-nsdi-use-rules-2023","kazakhstan-public-cadastral-map","kazakhstan-real-estate-rights-register","osm-kazakhstan"],
   LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
   LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
   MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
