@@ -148,7 +148,16 @@ export type AmericasOpenGeoSourceId =
   | 'igac-colombia-open-cadastre'
   | 'igac-colombia-sinic-open-constructions'
   | 'osm-colombia'
+  | 'mtc-peru-postcode-lookup'
+  | 'mtc-peru-postcode-open-data-2018'
+  | 'mtc-peru-cpn-legal-2011'
+  | 'mtc-peru-cpn-structure-2017'
+  | 'upu-peru-designated-operator'
+  | 'inei-peru-ubigeo-2022'
+  | 'ign-peru-open-boundaries-settlements'
   | 'geo-vivienda-pe'
+  | 'cofopri-peru-geo-llaqta'
+  | 'osm-peru'
   | 'codigo-postal-ec'
   | 'codigo-postal-ec-technical-standard'
   | 'dinarp-ecuador-postal-interoperability'
@@ -1415,14 +1424,55 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     license: 'ODbL',
     notes: 'Community roads, addresses and buildings remain in a separately attributed ODbL partition and are not 4-72, DANE, IGAC, cadastral, occupant or exact civic-address-to-building authority.',
   },
+  'mtc-peru-postcode-lookup': {
+    id: 'mtc-peru-postcode-lookup', name: 'MTC Código Postal Nacional lookup', url: 'https://www.codigopostal.gob.pe/pages/invitado/consultaSimple.jsf',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official five-digit location, address, urban nucleus, point-of-interest and populated-centre lookup. Record only permitted time-bound observations with endpoint state and digest. The viewer says geographic boundaries are referential; a result is not bulk data, reusable official polygon, occupant proof or building relation.',
+  },
+  'mtc-peru-postcode-open-data-2018': {
+    id: 'mtc-peru-postcode-open-data-2018', name: 'MTC Código Postal Peru open dataset, 2018', url: 'https://www.datosabiertos.gob.pe/dataset/mtc-codigo-postal-peru',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Open Data Commons Attribution License; exact 2018 release, catalog snapshot, attribution and digest required',
+    notes: 'Official 23 March 2018 XLSX assignment table. It is dated and must not be presented as current without revalidation. The spreadsheet is not a polygon release, address corpus, deliverability proof or building relation.',
+  },
+  'mtc-peru-cpn-legal-2011': {
+    id: 'mtc-peru-cpn-legal-2011', name: 'Decreto Supremo 007-2011-MTC Código Postal Nacional', url: 'https://www.gob.pe/institucion/mtc/normas-legales/322604-007-2011-mtc',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Legal and technical framework assigning MTC administration, updating and dissemination of the CPN. A statute and linked technical annexes are not current assignment rows, a bulk address dataset, geometry release or building relation.',
+  },
+  'mtc-peru-cpn-structure-2017': {
+    id: 'mtc-peru-cpn-structure-2017', name: 'MTC postal-sector statistics and CPN structure, 2017', url: 'https://portal.mtc.gob.pe/comunicaciones/regulacion_internacional/estadistica_catastro/documentos/2017/postales/BoletinEstadisticoSectorPostal-anual2017.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated official evidence for 2,670 codes and five-digit semantics: department or region, road-network routing zone, then postal district, locality, populated centre or urban concentration. Publication maps are not a reusable current geometry release.',
+  },
+  'upu-peru-designated-operator': {
+    id: 'upu-peru-designated-operator', name: 'UPU Peru addressing and designated-operator profile', url: 'https://www.upu.int/en/postal-solutions/programmes-services/addressing-solutions?cid=234&csid=20',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'UPU identifies SERPOST as the designated operator. Institutional and general addressing context is not a current MTC assignment table, bulk address corpus, geometry release or exact building relation.',
+  },
+  'inei-peru-ubigeo-2022': {
+    id: 'inei-peru-ubigeo-2022', name: 'INEI Peru Ubigeo 2022', url: 'https://www.datosabiertos.gob.pe/dataset/ubigeos-c%C3%B3digos-de-ubicaci%C3%B3n-geogr%C3%A1fica-instituto-nacional-de-estad%C3%ADstica-e-inform%C3%A1tica-3',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official department, province and district identifiers for statistical and administrative joins. Pin the exact edition and terms; identity is not an MTC assignment, postcode geometry, civic address or building relation.',
+  },
+  'ign-peru-open-boundaries-settlements': {
+    id: 'ign-peru-open-boundaries-settlements', name: 'IGN Peru open referential boundaries and populated centres', url: 'https://www.datosabiertos.gob.pe/node/9204/revisions/23616/view',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Open Data Commons Attribution License; release, scale, attribution and digest required',
+    notes: 'Official referential department, province and district boundaries plus separate populated-centre releases. They are administrative and cartographic context, not MTC assignments, postcode polygons or exact civic-address-to-building links.',
+  },
   'geo-vivienda-pe': {
-    id: 'geo-vivienda-pe',
-    name: 'GeoVivienda Peru',
-    url: 'https://geo.vivienda.gob.pe/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Peru housing and urban geospatial portal for address-adjacent territorial reference layers.',
+    id: 'geo-vivienda-pe', name: 'GeoVivienda Peru', url: 'https://geo.vivienda.gob.pe/',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'MVCS housing and urban geospatial portal. Each layer requires current availability, producer, edition, jurisdiction, terms, CRS, coverage and digest; portal visibility is not MTC assignment, postal geometry or building-link authority.',
+  },
+  'cofopri-peru-geo-llaqta': {
+    id: 'cofopri-peru-geo-llaqta', name: 'COFOPRI Geo Llaqta and urban-cadastre services', url: 'https://www.idep.gob.pe/wms/wms_cofopri.html',
+    kind: 'cadastre', coverage: 'country', usage: 'reference',
+    notes: 'Official street, lot, block, settlement and construction context with layer-specific coverage. Pin endpoint, layer, jurisdiction, terms, privacy, vintage, CRS and digest; cadastral visibility is not postal assignment, nationwide completeness, owner-data permission or an automatic address-building link.',
+  },
+  'osm-peru': {
+    id: 'osm-peru', name: 'OpenStreetMap Peru', url: 'https://wiki.openstreetmap.org/wiki/Peru',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not MTC, SERPOST, INEI, IGN, GeoVivienda, COFOPRI, cadastral, owner, occupant or exact address-building authority.',
   },
   'codigo-postal-ec': {
     id: 'codigo-postal-ec',
@@ -1736,7 +1786,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   AR: ['correo-argentino-cpa', 'georef-ar', 'ign-argentina-geospatial', 'idera-argentina', 'argentina-cadastre-law-26209', 'osm-argentina'],
   CL: ['correos-chile-postcode-lookup', 'correos-chile-normalization-api', 'upu-chile-addressing-2017', 'ide-chile-dpa-2023', 'subdere-chile-cut', 'ine-chile-open-geodata', 'sii-chile-digital-cadastre', 'geoportal-cl', 'osm-chile'],
   CO: ['codigo-postal-colombia-472-viewer', 'codigo-postal-colombia-csv', 'codigo-postal-colombia-shapefile', 'codigo-postal-colombia-open-license', 'codigo-postal-colombia-arcgis', 'upu-colombia-addressing-2022', 'upu-colombia-s42-2021', 'dane-colombia-divipola-mgn-2025', 'igac-colombia-open-cadastre', 'igac-colombia-sinic-open-constructions', 'colombia-en-mapas', 'osm-colombia'],
-  PE: ['geo-vivienda-pe'],
+  PE: ['mtc-peru-postcode-lookup', 'mtc-peru-postcode-open-data-2018', 'mtc-peru-cpn-legal-2011', 'mtc-peru-cpn-structure-2017', 'upu-peru-designated-operator', 'inei-peru-ubigeo-2022', 'ign-peru-open-boundaries-settlements', 'geo-vivienda-pe', 'cofopri-peru-geo-llaqta', 'osm-peru'],
   EC: ['codigo-postal-ec', 'codigo-postal-ec-technical-standard', 'dinarp-ecuador-postal-interoperability', 'inec-ecuador-census-cartography', 'igm-ecuador-base-cartography', 'sistema-nacional-catastro-ecuador', 'osm-ecuador'],
   SV: ['correos-el-salvador', 'upu-el-salvador-addressing-2019', 'cnr-el-salvador-geographic-codes', 'onec-el-salvador-geographic-catalog', 'cnr-el-salvador-cadastre', 'osm-el-salvador'],
   PY: ['ide-py'],
