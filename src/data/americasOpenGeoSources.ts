@@ -102,6 +102,17 @@ export type AmericasOpenGeoSourceId =
   | 'georef-ar'
   | 'geoportal-cl'
   | 'colombia-en-mapas'
+  | 'codigo-postal-colombia-472-viewer'
+  | 'codigo-postal-colombia-csv'
+  | 'codigo-postal-colombia-shapefile'
+  | 'codigo-postal-colombia-open-license'
+  | 'codigo-postal-colombia-arcgis'
+  | 'upu-colombia-addressing-2022'
+  | 'upu-colombia-s42-2021'
+  | 'dane-colombia-divipola-mgn-2025'
+  | 'igac-colombia-open-cadastre'
+  | 'igac-colombia-sinic-open-constructions'
+  | 'osm-colombia'
   | 'geo-vivienda-pe'
   | 'codigo-postal-ec'
   | 'codigo-postal-ec-technical-standard'
@@ -976,7 +987,117 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Colombian official map portal for territorial, administrative, and geographic reference layers.',
+    notes: 'Official national map catalog for territorial, administrative, cadastral and geographic reference layers. Every production layer still requires its producer, release, coverage, CRS, licence and digest; catalog visibility is not postal assignment or an exact civic-address-to-building relation.',
+  },
+  'codigo-postal-colombia-472-viewer': {
+    id: 'codigo-postal-colombia-472-viewer',
+    name: 'Código Postal Colombia 4-72 official viewer',
+    url: 'https://visor.codigopostal.gov.co/472/visor/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Site publishes an open-data clause; exact response, cache and service terms must be pinned',
+    notes: 'Official 4-72/MINTIC lookup states that six digits represent an area on the national map and exposes normal and expanded postcode results. A live query is time-bound evidence and must not be republished as a nationwide address, parcel, building, person or delivery database.',
+  },
+  'codigo-postal-colombia-csv': {
+    id: 'codigo-postal-colombia-csv',
+    name: '4-72 national postcode CSV',
+    url: 'https://visor.codigopostal.gov.co/472/visor/Codigos_Postales_Nacionales.csv',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: '4-72/MINTIC open-data clause with mandatory attribution and preserved update metadata',
+    notes: 'Official direct national postcode download linked by the viewer. Promotion requires retrieval time, content digest, schema, row scope, update metadata and the applicable licence snapshot; a row is assignment evidence, not geometry or an address-building relation.',
+  },
+  'codigo-postal-colombia-shapefile': {
+    id: 'codigo-postal-colombia-shapefile',
+    name: '4-72 national postcode Shapefile',
+    url: 'https://visor.codigopostal.gov.co/472/visor/Shapefile_Codigo_Postal.zip',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: '4-72/MINTIC open-data clause, subject to artifact-level confirmation against conflicting service metadata',
+    notes: 'Official direct polygon download linked by the viewer. An exact digest-pinned six-digit feature can become official release geometry only after confirming that the open clause applies to the archive, preserving attribution and update metadata, validating CRS/topology and resolving the ArcGIS item all-rights-reserved notice.',
+  },
+  'codigo-postal-colombia-open-license': {
+    id: 'codigo-postal-colombia-open-license',
+    name: '4-72/MINTIC Código Postal Colombia open-data clause',
+    url: 'https://visor.codigopostal.gov.co/472/visor/Clausula_Licencia_Abierta.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'OpenDefinition-style clause permitting use, reuse, redistribution and transformation with attribution',
+    notes: 'Requires the textual source attribution, preservation of update metadata, non-distortion and personal-data protection. It is a rights gate, not a postcode assignment, polygon, address, building or delivery record.',
+  },
+  'codigo-postal-colombia-arcgis': {
+    id: 'codigo-postal-colombia-arcgis',
+    name: '4-72 CCPP ArcGIS MapServer',
+    url: 'https://visor.codigopostal.gov.co/arcgis/rest/services/ccpp/MapServer',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Reference-only until item-level all-rights-reserved metadata is reconciled with the viewer open-data clause',
+    notes: 'Official EPSG:4326 service exposes normal six-digit CodigoPostal polygons, expanded-postcode polygons, sites of interest and property-address points as distinct layers. Do not conflate layers, scrape property points or treat service access as redistribution permission.',
+  },
+  'upu-colombia-addressing-2022': {
+    id: 'upu-colombia-addressing-2022',
+    name: 'UPU Colombia addressing sheet (October 2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/colEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; not a bulk data licence',
+    notes: 'Documents six digits after the locality and the two-digit department, postal-zone and district coding method. Address examples and format semantics are not a reusable assignment table, polygon archive, civic-address register or building relation.',
+  },
+  'upu-colombia-s42-2021': {
+    id: 'upu-colombia-s42-2021',
+    name: 'UPU S42 Colombia standardized address format v8',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/s42/colEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; sample addresses must not be bundled as production rows',
+    notes: 'Separates organization, postcode, department, city, neighborhood/locality, P.O. box, primary and generating thoroughfares, placa, building and apartment elements. It defines formatting, not address existence, ownership, deliverability or an exact building crosswalk.',
+  },
+  'dane-colombia-divipola-mgn-2025': {
+    id: 'dane-colombia-divipola-mgn-2025',
+    name: 'DANE DIVIPOLA Marco Geoestadístico Nacional 2025',
+    url: 'https://geoportal.dane.gov.co/mparcgis/rest/services/Divipola/Serv_DIVIPOLA_MGN_2025/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Pin exact DANE resource terms, service version, layer and retrieval digest',
+    notes: 'Official department, municipality and populated-centre identities and geometry for the 2025 statistical frame. Statistical or administrative membership is context, not 4-72 postal assignment, postal geometry, civic address or building linkage.',
+  },
+  'igac-colombia-open-cadastre': {
+    id: 'igac-colombia-open-cadastre',
+    name: 'IGAC Colombia open cadastral data',
+    url: 'https://www.igac.gov.co/datos-abiertos/datos-abiertos-geoespaciales',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY-SA 4.0 for expressly listed releases; legal-reserve records excluded',
+    notes: 'Official monthly parcel, construction and nomenclature data for municipalities within the relevant cadastral-manager coverage. Pin manager, release, class, field and licence; a parcel or nomenclature point is not postal geometry, a person record or an automatic address-building relation.',
+  },
+  'igac-colombia-sinic-open-constructions': {
+    id: 'igac-colombia-sinic-open-constructions',
+    name: 'IGAC SINIC open cadastral constructions',
+    url: 'https://sigi.igac.gov.co/habilitacion/rest/services/sinic/SINIC_DA/FeatureServer',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Service metadata states no use limitations; exact layer/release licence and exceptions must be pinned',
+    notes: 'Official bimonthly cadastral land, construction and construction-unit context reported by cadastral managers. Coverage, legal exceptions and stable identifiers remain source-specific; geometry alone does not establish a postal assignment, civic address, owner, occupant or explicit address-building relation.',
+  },
+  'osm-colombia': {
+    id: 'osm-colombia',
+    name: 'OpenStreetMap Colombia',
+    url: 'https://wiki.openstreetmap.org/wiki/Colombia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, addresses and buildings remain in a separately attributed ODbL partition and are not 4-72, DANE, IGAC, cadastral, occupant or exact civic-address-to-building authority.',
   },
   'geo-vivienda-pe': {
     id: 'geo-vivienda-pe',
@@ -1297,7 +1418,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   BR: ['viacep-br', 'brasilapi'],
   AR: ['correo-argentino-cpa', 'georef-ar', 'ign-argentina-geospatial', 'idera-argentina', 'argentina-cadastre-law-26209', 'osm-argentina'],
   CL: ['geoportal-cl'],
-  CO: ['colombia-en-mapas'],
+  CO: ['codigo-postal-colombia-472-viewer', 'codigo-postal-colombia-csv', 'codigo-postal-colombia-shapefile', 'codigo-postal-colombia-open-license', 'codigo-postal-colombia-arcgis', 'upu-colombia-addressing-2022', 'upu-colombia-s42-2021', 'dane-colombia-divipola-mgn-2025', 'igac-colombia-open-cadastre', 'igac-colombia-sinic-open-constructions', 'colombia-en-mapas', 'osm-colombia'],
   PE: ['geo-vivienda-pe'],
   EC: ['codigo-postal-ec', 'codigo-postal-ec-technical-standard', 'dinarp-ecuador-postal-interoperability', 'inec-ecuador-census-cartography', 'igm-ecuador-base-cartography', 'sistema-nacional-catastro-ecuador', 'osm-ecuador'],
   SV: ['correos-el-salvador', 'upu-el-salvador-addressing-2019', 'cnr-el-salvador-geographic-codes', 'onec-el-salvador-geographic-catalog', 'cnr-el-salvador-cadastre', 'osm-el-salvador'],
