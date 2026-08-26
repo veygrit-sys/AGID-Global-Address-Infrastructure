@@ -2013,6 +2013,24 @@ test('European multilingual countries expose high-quality language-specific addr
 });
 
 
+test('Lebanon address metadata exposes postal/NAC/P-code, administrative, privacy, building, and AGID boundaries', () => {
+  const format = loadFormat('LB');
+  const rules = loadRules('LB');
+  const expected = ['libanpost','libanpost-address-and-nac','upu-lebanon-addressing','upu-lebanon-postcode-formats-2025','moph-lebanon-administrative-zones','lebanon-atlas-admin-boundaries-2026','dlrc-lebanon-cadastre','lebanon-law-81-2018-personal-data','osm-lebanon'];
+  for (const id of expected) {
+    assert.ok(format.openSourceIds?.includes(id), 'LB should expose ' + id);
+    assert.ok(rules.openSourceIds?.includes(id), 'LB rules should expose ' + id);
+    assert.match(ASIA_OPEN_GEO_SOURCES[id as keyof typeof ASIA_OPEN_GEO_SOURCES].url, /^https?:\/\//);
+  }
+  assert.equal(format.postalCode?.format, 'NNNN or NN NNN NNN');
+  assert.equal(format.postalCode?.regex, '^(?:\\d{4}|\\d{2} \\d{3} \\d{3})$');
+  assert.match(format.postalCode?.source ?? '', /LibanPost.*UPU.*2025.*MOPH/i);
+  assert.match(rules.postalCode?.usage ?? '', /area or non-area.*NAC.*P-code.*not.*official polygon.*building relation/i);
+  assert.ok(rules.regionalHierarchy.includes('libanPostNacCoordinateDerivedLocationToken'));
+  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding'));
+  assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+});
+
 test('Laos address metadata exposes official delivery-scope, administrative, privacy, building, and AGID boundaries', () => {
   const format = loadFormat('LA');
   const rules = loadRules('LA');

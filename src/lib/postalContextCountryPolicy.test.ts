@@ -52,6 +52,7 @@ import {
   normalizeMongoliaPostalCode,
   normalizeJordanPostalCode,
   normalizeLaosPostalCode,
+  normalizeLebanonPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -350,6 +351,16 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeLaosPostalCode('01-234'), null);
   assert.equal(normalizeLaosPostalCode('0123'), null);
   assert.equal(normalizePostalContextPostalCode('la', '໐໑ ໒໓໔'), '01234');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LB.postalCodeFormat, 'NNNN or NN NNN NNN');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LB.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(normalizeLebanonPostalCode('٠١٢٣'), '0123');
+  assert.equal(normalizeLebanonPostalCode('۰۱ ۲۳۴ ۵۶۷'), '01 234 567');
+  assert.equal(normalizeLebanonPostalCode('９９９９'), '9999');
+  assert.equal(normalizeLebanonPostalCode('99 999 999'), '99 999 999');
+  assert.equal(normalizeLebanonPostalCode('LB-9999'), null);
+  assert.equal(normalizeLebanonPostalCode('99-999-999'), null);
+  assert.equal(normalizeLebanonPostalCode('99999'), null);
+  assert.equal(normalizePostalContextPostalCode('lb', '۰۱ ۲۳۴ ۵۶۷'), '01 234 567');
 
 
   assert.equal(normalizeIndonesiaPostalCode('１００００'), '10000');

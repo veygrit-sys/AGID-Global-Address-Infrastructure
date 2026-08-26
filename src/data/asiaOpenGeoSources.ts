@@ -218,6 +218,13 @@ export type AsiaOpenGeoSourceId =
   | 'osm-syria'
   | 'hot-osm-west-asia'
   | 'libanpost'
+  | 'libanpost-address-and-nac'
+  | 'upu-lebanon-addressing'
+  | 'upu-lebanon-postcode-formats-2025'
+  | 'moph-lebanon-administrative-zones'
+  | 'lebanon-atlas-admin-boundaries-2026'
+  | 'dlrc-lebanon-cadastre'
+  | 'lebanon-law-81-2018-personal-data'
   | 'osm-lebanon'
   | 'jordanpost'
   | 'rjgc-jordan'
@@ -2194,11 +2201,74 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   libanpost: {
     id: 'libanpost',
     name: 'LibanPost',
-    url: 'https://www.libanpost.com/',
+    url: 'https://www.libanpost.com/english/individuals',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Lebanon postal-service and postal-code reference.',
+    notes: 'Official postal-operator service reference. An exact current response may support postal or P.O. Box context, but the public site is not bulk assignment data, a canonical national postal polygon, complete history, exact building data, delivery entitlement or a blanket reuse licence.',
+  },
+  'libanpost-address-and-nac': {
+    id: 'libanpost-address-and-nac',
+    name: 'LibanPost address details and NAC location service',
+    url: 'https://www.libanpost.com/AddressDetails.aspx?homeService=1&lang=2',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The official workflow captures governorate, district, area, street, building, floor, block, apartment, P.O. Box or ZIP code, map pin and NAC. NAC is a coordinate-derived location token distinct from postcode and AGID; the form is not public bulk address, person, building or geometry data or reuse permission.',
+  },
+  'upu-lebanon-addressing': {
+    id: 'upu-lebanon-addressing',
+    name: 'UPU Lebanon addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/lbnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Documents recipient, organisation, building name or number, floor, apartment or block, location information, street or area, city or village and district (kaza) address structure. Its examples are not current assignments, reusable addresses, postal polygons, building relations or delivery proof.',
+  },
+  'upu-lebanon-postcode-formats-2025': {
+    id: 'upu-lebanon-postcode-formats-2025',
+    name: 'UPU General Addressing Issues Lebanon postcode formats (2025)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The September 2025 Universal POST*CODE reference lists Lebanon formats 9999 and 99 999 999. Format evidence does not identify current rows, assignment scope, canonical geometry, addresses, buildings or reuse rights.',
+  },
+  'moph-lebanon-administrative-zones': {
+    id: 'moph-lebanon-administrative-zones',
+    name: 'Lebanon Ministry of Public Health Administrative Zones',
+    url: 'https://maps.moph.gov.lb/server/rest/services/Administrative_Zones/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official ArcGIS governorate, district and cadaster layers require exact layer, edition, CRS, topology, attribution, terms and digest. PCODE fields are administrative identifiers, not postcodes; blank copyright text is not an open licence and no postal relation is supplied.',
+  },
+  'lebanon-atlas-admin-boundaries-2026': {
+    id: 'lebanon-atlas-admin-boundaries-2026',
+    name: 'Lebanon Atlas national and subnational administrative boundaries (2026)',
+    url: 'https://services7.arcgis.com/OixUjmnC9qQkjog0/ArcGIS/rest/services/Lebanon_Atlas_%E2%80%93_National_and_Subnational_Administrative_Boundaries/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'OCHA, HDX, CDR and CAS lineage can validate versioned administrative context, with noted P-code consistency caveats. Exact item rights and digest are mandatory; an administrative P-code or boundary is not a postcode, postal polygon, address or building.',
+  },
+  'dlrc-lebanon-cadastre': {
+    id: 'dlrc-lebanon-cadastre',
+    name: 'Lebanon Directorate General of Land Registry and Cadastre',
+    url: 'https://www.lrc.gov.lb/en/content/work-cadastre-offices',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official cadastral offices maintain demarcation, survey, parcel, map and title-register context through controlled or paid services. Province, caza, cadastral zone, parcel, unit, owner and title data are not public civic-address or building data, a postal relation or redistribution permission.',
+  },
+  'lebanon-law-81-2018-personal-data': {
+    id: 'lebanon-law-81-2018-personal-data',
+    name: 'Lebanon Law 81/2018 personal-data framework',
+    url: 'https://economy.gov.lb/ar/services/%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA-%D8%B0%D8%A7%D8%AA-%D8%A7%D9%84%D8%B7%D8%A7%D8%A8%D8%B9-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Ministry of Economy guidance cites Law 81/2018 and Article 98 for personal-data processing. Recipient, account, address, location pin, NAC, coordinates, P.O. Box holder, owner, parcel, unit and title data require an exact lawful basis and approval before access, linkage or publication.',
   },
   'osm-lebanon': {
     id: 'osm-lebanon',
@@ -3253,7 +3323,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
   JO: ['jordanpost', 'upu-jordan-addressing-2004', 'modee-jordan-postal-policy-2025', 'trc-jordan-postal-sector', 'jordan-post-offices-open-data-2023', 'jordan-open-government-data-license-v1', 'rjgc-jordan', 'rjgc-jordan-eservices', 'rjgc-gam-building-mou', 'dls-jordan-village-codes-2022', 'gam-jordan-streets-2019', 'jordan-digital-mailbox-pilot-2026', 'osm-jordan'],
   KW: ['kuwait-post', 'upu-kuwait-addressing', 'paci-kuwait-finder', 'paci-kuwait-address-services', 'paci-kuwait-building-register', 'kuwait-municipality-parcels', 'kuwait-csb-census-gis', 'osm-kuwait'],
-  LB: ['libanpost', 'osm-lebanon'],
+  LB: ['libanpost', 'libanpost-address-and-nac', 'upu-lebanon-addressing', 'upu-lebanon-postcode-formats-2025', 'moph-lebanon-administrative-zones', 'lebanon-atlas-admin-boundaries-2026', 'dlrc-lebanon-cadastre', 'lebanon-law-81-2018-personal-data', 'osm-lebanon'],
   OM: ['upu-oman-postal-addressing', 'oman-post-office-locator', 'oman-post-website-terms', 'gov-oman-building-addressing-service', 'ncsi-oman-wilayat-boundaries', 'ncsi-oman-open-government-data-policy', 'nsgia-oman-geospatial-governance', 'nsgia-oman-portal-terms', 'nsgia-oman', 'oman-post', 'osm-oman'],
   PS: ['palestine-open-data-postcodes', 'palestine-post', 'osm-palestine'],
   QA: ['qatar-gis-geoportal', 'osm-qatar'],

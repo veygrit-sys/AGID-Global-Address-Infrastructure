@@ -441,6 +441,7 @@ export {
   normalizeMongoliaPostalCode,
   normalizeJordanPostalCode,
   normalizeLaosPostalCode,
+  normalizeLebanonPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
