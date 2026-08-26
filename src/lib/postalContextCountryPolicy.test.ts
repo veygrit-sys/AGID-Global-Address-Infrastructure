@@ -56,6 +56,7 @@ import {
   normalizeAfghanistanPostalCode,
   normalizeIsraelPostalCode,
   normalizeIraqPostalCode,
+  normalizeIranPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -393,6 +394,16 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeIraqPostalCode('999999'), null);
   assert.equal(normalizeIraqPostalCode('99999AR1'), null);
   assert.equal(normalizePostalContextPostalCode('iq', '۹۹۹۹۹'), '99999');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IR.postalCodeFormat, 'NNNNNNNNNN');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IR.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(normalizeIranPostalCode('۹۹۹۹۹۹۹۹۹۹'), '9999999999');
+  assert.equal(normalizeIranPostalCode('٩٩٩٩٩ ٩٩٩٩٩'), '9999999999');
+  assert.equal(normalizeIranPostalCode('９９９９９９９９９９'), '9999999999');
+  assert.equal(normalizeIranPostalCode('IR-9999999999'), null);
+  assert.equal(normalizeIranPostalCode('99999-99999'), null);
+  assert.equal(normalizeIranPostalCode('999999999'), null);
+  assert.equal(normalizeIranPostalCode('99999999999'), null);
+  assert.equal(normalizePostalContextPostalCode('ir', '۹۹۹۹۹۹۹۹۹۹'), '9999999999');
 
 
   assert.equal(normalizeIndonesiaPostalCode('１００００'), '10000');

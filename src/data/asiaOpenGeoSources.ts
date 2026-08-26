@@ -211,7 +211,10 @@ export type AsiaOpenGeoSourceId =
   | 'bhutan-esakor-land-building-transactions'
   | 'turkiye-ptt'
   | 'osm-turkey'
+  | 'iran-post'
+  | 'iran-post-gnaf'
   | 'gavahi-post-ir'
+  | 'upu-iran-addressing-2023'
   | 'iran-nsdi'
   | 'iran-open-data'
   | 'osm-iran'
@@ -2159,42 +2162,33 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Turkey OSM roads, buildings, POI, Turkish names, and fallback address tags.',
   },
+  'iran-post': {
+    id: 'iran-post', name: 'National Post Company of Iran', url: 'https://post.ir/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official operator and ten-digit postcode reference. No public current bulk assignment or geometry release is established; a place identifier is not automatically a polygon or building relation.',
+  },
+  'iran-post-gnaf': {
+    id: 'iran-post-gnaf', name: 'Iran Post GNAF standard-address service', url: 'https://gnaf.post.ir/', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Operational standard-address, postcode and geocoding evidence source, not open bulk address data. Exact response terms, purpose, retention, privacy and display rights must be pinned.',
+  },
   'gavahi-post-ir': {
-    id: 'gavahi-post-ir',
-    name: 'Iran Post Postal Code Service',
-    url: 'https://gavahi.post.ir/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Iran Post 10-digit postal-code validation reference.',
+    id: 'gavahi-post-ir', name: 'Iran Post postcode certificate service', url: 'https://gavahi.post.ir/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official interactive certificate and validation reference. A query or certificate is not bulk assignment, public household address, geometry or redistribution permission.',
+  },
+  'upu-iran-addressing-2023': {
+    id: 'upu-iran-addressing-2023', name: 'UPU Iran addressing sheet 10/2023', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/irnEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'UPU 10/2023 documents ten digits, zone through identification and forwarding-code components, address elements, and no postcode for P.O. Box or poste restante. Dated examples are not current assignments or reusable address data.',
   },
   'iran-nsdi': {
-    id: 'iran-nsdi',
-    name: 'Iran National Data Infrastructure Geoportal',
-    url: 'https://iransdi.ir/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Iran national spatial data infrastructure reference for geospatial layers and administrative validation.',
+    id: 'iran-nsdi', name: 'Iran national spatial data infrastructure geoportal', url: 'https://iransdi.ir/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Government spatial and administrative context candidate. Pin exact layer, publisher, authority, jurisdiction, terms, validity, CRS, topology and digest; administrative geometry is not postal geometry.',
   },
   'iran-open-data': {
-    id: 'iran-open-data',
-    name: 'Iran Open Data',
-    url: 'https://iranopendata.org/en/map/',
-    kind: 'gazetteer',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Iran open-data map and public-data reference for place-name and regional checks.',
+    id: 'iran-open-data', name: 'Iran Open Data independent map', url: 'https://iranopendata.org/en/map/', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Independent contextual reference, not Iran Post or government authority. Pin the exact item, publisher, method, date, licence and digest before use.',
   },
   'osm-iran': {
-    id: 'osm-iran',
-    name: 'OpenStreetMap Iran',
-    url: 'https://wiki.openstreetmap.org/wiki/Iran',
-    kind: 'address',
-    coverage: 'country',
-    usage: 'validation',
-    license: 'ODbL',
-    notes: 'Iran OSM roads, settlements, Persian names, POI, and fallback address data.',
+    id: 'osm-iran', name: 'OpenStreetMap Iran', url: 'https://wiki.openstreetmap.org/wiki/Iran', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, places, addresses and buildings under ODbL; not Iran Post assignment authority, canonical postal geometry, private civic identity, delivery entitlement or territorial authority.',
   },
   'iraq-post': {
     id: 'iraq-post',
@@ -3477,7 +3471,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'hot-osm-south-asia',
   ],
   IQ: ['iraq-post', 'iraq-post-platform', 'iraq-post-privacy-2025', 'upu-iraq-addressing-2005', 'iraq-post-2004-code-announcement', 'iraq-post-new-code-storymap-2025', 'iraq-open-government-portal', 'iraq-open-government-data-policy', 'iraq-geographic-portal', 'iraq-statistics-gis', 'osm-iraq'],
-  IR: ['gavahi-post-ir', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
+  IR: ['iran-post', 'iran-post-gnaf', 'gavahi-post-ir', 'upu-iran-addressing-2023', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
   JP: [
     'zipcloud-jp',
     'gsi-japan-tiles',

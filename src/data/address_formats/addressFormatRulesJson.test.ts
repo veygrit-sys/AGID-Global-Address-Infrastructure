@@ -515,7 +515,7 @@ test('West Asia address JSON files expose table-derived addressRules metadata', 
     { code: 'ar', name: 'Arabic' },
     { code: 'en', name: 'English' },
   ]);
-  assert.equal(loadRules('IR').postalCode?.label, '10 digits required');
+  assert.match(loadRules('IR').postalCode?.label ?? '', /10 digits.*regular delivery.*P\.O\. Box.*poste restante/i);
   assert.equal(loadRules('AE').postalCode, null);
   assert.match(loadRules('OM').postalCode?.label ?? '', /3 digits.*post.?office.*not.*polygon/i);
 });
@@ -523,7 +523,7 @@ test('West Asia address JSON files expose table-derived addressRules metadata', 
 test('West Asia address metadata exposes national postal, geospatial, and OSM sources', () => {
   const expectedSourceIdsByCountry = {
     TR: ['turkiye-ptt', 'osm-turkey'],
-    IR: ['gavahi-post-ir', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
+    IR: ['iran-post', 'iran-post-gnaf', 'gavahi-post-ir', 'upu-iran-addressing-2023', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
     IQ: ['iraq-post', 'osm-iraq'],
     SY: ['syria-post', 'osm-syria', 'hot-osm-west-asia'],
     LB: ['libanpost', 'osm-lebanon'],
@@ -2100,4 +2100,13 @@ test('Iraq address metadata separates five-digit postal objects, unverified migr
   assert.equal(format.english?.fields.some(field => field.key === 'quarter'), true);
   assert.equal(format.native?.fields.some(field => field.key === 'buildingId'), true);
   for (const id of ["iraq-post","iraq-post-platform","iraq-post-privacy-2025","upu-iraq-addressing-2005","iraq-post-2004-code-announcement","iraq-post-new-code-storymap-2025","iraq-open-government-portal","iraq-open-government-data-policy","iraq-geographic-portal","iraq-statistics-gis","osm-iraq"]) assert.ok(format.openSourceIds?.includes(id));
+});
+
+test('Iran address metadata separates ten-digit place IDs, P.O. exceptions, GNAF, buildings, time, jurisdiction, and AGID', () => {
+  const format = loadFormat('IR'); const rules = loadRules('IR');
+  assert.equal(format.postalCode?.format, 'NNNNNNNNNN'); assert.equal(format.postalCode?.regex, '^\\d{10}$');
+  assert.match(format.postalCode?.source ?? '', /Iran Post GNAF.*certificate.*UPU.*10\/2023.*NSDI.*Open Data.*OpenStreetMap/i);
+  assert.equal(rules.postalCode?.required, false); assert.match(rules.postalCode?.usage ?? '', /ten-digit.*place identifier.*P\.O\. Box.*poste restante.*not.*polygon.*building relation/i);
+  for (const key of ['building','floor','unit','poBox','postOffice','posteRestante']) assert.ok(format.native.fields.some((item:any)=>item.key===key), key);
+  for (const id of ['iran-post','iran-post-gnaf','gavahi-post-ir','upu-iran-addressing-2023','iran-nsdi','iran-open-data','osm-iran']) assert.ok(format.openSourceIds?.includes(id));
 });
