@@ -137,6 +137,15 @@ export type AsiaOpenGeoSourceId =
   | 'malaysia-mygeo-upi'
   | 'malaysia-mygdi-licensing-2024'
   | 'malaysia-mygeoname'
+  | 'myanmar-post-postcode-lookup'
+  | 'myanmar-national-portal-post-services'
+  | 'upu-myanmar-addressing-2022'
+  | 'myanmar-survey-department'
+  | 'myanmar-one-map-geodatabase-2024'
+  | 'mimu-place-codes-v9-6-2025'
+  | 'mimu-geospatial-data'
+  | 'mimu-terms-and-conditions'
+  | 'ycdc-land-building-services'
   | 'pos-malaysia'
   | 'onemap-sg'
   | 'indonesia-post-law-2009'
@@ -1556,6 +1565,15 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'gazetteer', coverage: 'country', usage: 'validation',
     notes: 'Official geographical-name reference for locality validation. Portal labels are not legal evidence, postcode assignments, boundary geometry, civic addresses or exact building links.',
   },
+  'myanmar-post-postcode-lookup': { id: 'myanmar-post-postcode-lookup', name: 'Myanmar Post Postcode Lookup', url: 'https://www.myanmarpost.com.mm/postcode?tab=information', kind: 'postal-code', coverage: 'country', usage: 'primary', notes: 'Official seven-digit Quarter and Village Tract postcode lookup. A pinned result is assignment evidence, not a canonical polygon, civic-address registry, building relation, complete history or bulk reuse licence.' },
+  'myanmar-national-portal-post-services': { id: 'myanmar-national-portal-post-services', name: 'Myanmar National Portal postal services', url: 'https://myanmar.gov.mm/-/myanmar-post-services', kind: 'postal-code', coverage: 'country', usage: 'reference', notes: 'Government service page identifies Myanmar Post postcode information, door-to-door, smart-locker and postal-agent services. Service availability does not make every postal object an area or grant output redistribution rights.' },
+  'upu-myanmar-addressing-2022': { id: 'upu-myanmar-addressing-2022', name: 'UPU Myanmar addressing sheet 2022', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mmrEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Documents seven digits for Quarter and Village Tract, address-line order, 14 states and regions plus Nay Pyi Taw Union Territory, and home, rural, P.O. Box and building formats. It is not current allocations, geometry or a civic-address registry.' },
+  'myanmar-survey-department': { id: 'myanmar-survey-department', name: 'Myanmar Survey Department', url: 'https://surveydepartment.gov.mm/', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official topographic mapping and aerial-photography authority. Exact product, permission, edition, scale, CRS and digest are required; maps do not create postcode boundaries, civic addresses or building links.' },
+  'myanmar-one-map-geodatabase-2024': { id: 'myanmar-one-map-geodatabase-2024', name: 'One Map Myanmar Geo Database platform', url: 'https://surveydepartment.gov.mm/news/930', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official platform context for standardized inter-agency geospatial information. A news or platform page is not public data, a reuse licence, postal authority, civic-address registry or building relation.' },
+  'mimu-place-codes-v9-6-2025': { id: 'mimu-place-codes-v9-6-2025', name: 'MIMU Place Codes v9.6', url: 'https://www.themimu.info/place-codes', kind: 'gazetteer', coverage: 'country', usage: 'validation', notes: 'Administrative place identifiers for state or region, district, township, village tract and village. MIMU PCodes are not Myanmar Post postcodes and cannot create postal assignments or postal boundaries.' },
+  'mimu-geospatial-data': { id: 'mimu-geospatial-data', name: 'MIMU GIS Resources', url: 'https://www.themimu.info/gis-resources', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Operational 1:250,000 WGS84 administrative and thematic layers for humanitarian and development work. Geospatial datasets require source-specific permission and are not postal boundaries, civic addresses or exact building links.' },
+  'mimu-terms-and-conditions': { id: 'mimu-terms-and-conditions', name: 'MIMU data terms and conditions', url: 'https://www.themimu.info/about-us', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Records attribution, non-sale and non-commercial constraints, as-is disclaimers and special written permission for MIMU geospatial data. Attribution or access alone is not blanket redistribution permission.' },
+  'ycdc-land-building-services': { id: 'ycdc-land-building-services', name: 'Yangon City Development Committee land and building services', url: 'https://myanmar.gov.mm/yangon-city-development-council', kind: 'building', coverage: 'country', usage: 'validation', notes: 'Local controlled land, building and property-service context. Forms and tax records may contain private evidence and are not a national public address registry, postal geometry release or exact reusable address-building relation.' },
   'pos-malaysia': {
     id: 'pos-malaysia',
     name: 'Pos Malaysia Postcode Finder',
@@ -3055,6 +3073,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   MV: ['maldives-post', 'mlsa-maldives', 'onemap-maldives', 'osm-maldives'],
   MN: ['alamgc-mongolia', 'nsdi-mongolia', 'zipcode-mn', 'hot-osm-mongolia', 'osm-mongolia'],
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
+  MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
   MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],
   NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
   PH: ['phlpost-zip-code-locator', 'upu-philippines-addressing', 'psa-philippine-standard-geographic-code', 'geoportal-philippines-data-inventory', 'geoportal-philippines-download-policy', 'namria-topographic-mapping', 'psa-popcen-cbms-geotagging', 'philippines-lra-land-registration', 'phlpost'],
