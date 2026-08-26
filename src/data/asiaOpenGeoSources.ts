@@ -112,6 +112,14 @@ export type AsiaOpenGeoSourceId =
   | 'cambodia-post'
   | 'odc-cambodia-postal-codes'
   | 'osm-cambodia'
+  | 'lao-post-postcode'
+  | 'laos-postal-service-law-2013'
+  | 'laopedia-laos-postcodes'
+  | 'nfms-laos-administrative-boundaries'
+  | 'lsb-laos-phc-2025'
+  | 'laolandreg-laos'
+  | 'laos-electronic-data-law'
+  | 'osm-laos'
   | 'slpost'
   | 'survey-department-sri-lanka'
   | 'data-gov-lk'
@@ -1409,6 +1417,38 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'reference',
     license: 'ODbL',
     notes: 'HOT Nepal humanitarian mapping reference for mountain, disaster, rural road, and building completeness checks.',
+  },
+  'lao-post-postcode': {
+    id: 'lao-post-postcode', name: 'Lao Postal Service postcode reference', url: 'https://www.laopost.com.la/about/postcode', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official current five-digit postcode search and list reference. Pin the exact result, validity, schema, rights and digest; public access is not bulk reuse, canonical polygon, exact civic address, building relation, complete history or delivery entitlement.',
+  },
+  'laos-postal-service-law-2013': {
+    id: 'laos-postal-service-law-2013', name: 'Laos Postal Services Law No. 45/NA (2013)', url: 'https://www.laotradeportal.gov.la/en-gb/site/display/1164', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Articles 9 and 11 define postcode as a location and delivery scope indicator, and the postal network as post office, mail exchange centre and mail route. Law is not an assignment row, polygon, address, building or reuse grant.',
+  },
+  'laopedia-laos-postcodes': {
+    id: 'laopedia-laos-postcodes', name: 'Laopedia Laos postcode reference', url: 'https://laopedia.gov.la/index.php/%E0%BA%A5%E0%BA%B0%E0%BA%AB%E0%BA%B1%E0%BA%94%E0%BB%84%E0%BA%9B%E0%BA%AA%E0%BA%B0%E0%BA%99%E0%BA%B5', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Official explanatory and public allocation reference. An exact pinned result may support validation, but the page is not canonical geometry, full history, exact address/building data or a blanket reuse licence.',
+  },
+  'nfms-laos-administrative-boundaries': {
+    id: 'nfms-laos-administrative-boundaries', name: 'Lao MAF NFMS administrative boundaries', url: 'https://nfms.maf.gov.la/arcgis/rest/services/thematic/NFMSLayer/MapServer/245', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official public ArcGIS country, province and district service. Pin exact layer, edition, CRS, topology, terms and digest; blank copyright text is not an open licence, and the service supplies no postcode assignment or postal relation.',
+  },
+  'lsb-laos-phc-2025': {
+    id: 'lsb-laos-phc-2025', name: 'Lao Statistics Bureau Population and Housing Census 2025', url: 'https://www.lsb.gov.la/phc/?lang=en&p=600', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official aggregate province, district, village, population and housing context. Household, dwelling, individual, building-location and other census microdata are excluded without an exact public licensed artifact and privacy basis.',
+  },
+  'laolandreg-laos': {
+    id: 'laolandreg-laos', name: 'LaoLandReg and cadastral digitisation context', url: 'https://ppmd.mof.gov.la/storage/1718004313REOI%20LaoLanReg%20and%20Data%20Digitization%20Administrator.pdf', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Institutional restricted land-register, textual, cadastral-map, plot-plan, owner and address context. Project documentation is not public parcel, civic-address or building data and grants no redistribution permission.',
+  },
+  'laos-electronic-data-law': {
+    id: 'laos-electronic-data-law', name: 'Laos Electronic Data Law', url: 'https://lsp.moic.gov.la/?id=289&r=site%2Fdisplaylegal', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Legal gate for non-general, personal and official electronic data access and transfer, including permission requirements. Law is not postal, address, geometry or building data.',
+  },
+  'osm-laos': {
+    id: 'osm-laos', name: 'OpenStreetMap Laos', url: 'https://wiki.openstreetmap.org/wiki/Laos', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Laos OSM roads, places, names, POI, fallback address tags and buildings; never Lao Postal Service assignment, canonical postal geometry, exact legal civic address or delivery proof.',
   },
   slpost: {
     id: 'slpost',
@@ -3201,6 +3241,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
   KH: ['cambodia-post', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
+  LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
   LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
   MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
   MN: ['zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],

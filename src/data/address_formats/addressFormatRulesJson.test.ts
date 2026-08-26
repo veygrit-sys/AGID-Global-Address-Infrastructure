@@ -2011,3 +2011,22 @@ test('European multilingual countries expose high-quality language-specific addr
   assert.equal(loadFormat('FI').domestic?.sv?.fields.find(field => field.key === 'city')?.label, 'Postort');
   assert.equal(loadFormat('ES').domestic?.eu?.fields.find(field => field.key === 'street')?.label, 'Kalea');
 });
+
+
+test('Laos address metadata exposes official delivery-scope, administrative, privacy, building, and AGID boundaries', () => {
+  const format = loadFormat('LA');
+  const rules = loadRules('LA');
+  const expected = ['lao-post-postcode','laos-postal-service-law-2013','laopedia-laos-postcodes','nfms-laos-administrative-boundaries','lsb-laos-phc-2025','laolandreg-laos','laos-electronic-data-law','osm-laos'];
+  for (const id of expected) {
+    assert.ok(format.openSourceIds?.includes(id), 'LA should expose ' + id);
+    assert.ok(rules.openSourceIds?.includes(id), 'LA rules should expose ' + id);
+    assert.match(ASIA_OPEN_GEO_SOURCES[id as keyof typeof ASIA_OPEN_GEO_SOURCES].url, /^https?:\/\//);
+  }
+  assert.equal(format.postalCode?.format, 'NNNNN');
+  assert.equal(format.postalCode?.regex, '^\\d{5}$');
+  assert.match(format.postalCode?.source ?? '', /Lao Postal Service.*Postal Services Law 2013.*Laopedia.*NFMS.*Statistics Bureau/i);
+  assert.match(rules.postalCode?.usage ?? '', /delivery-scope.*area.*point.*route.*P\.O\. Box.*(?:not|never).*exact building/i);
+  assert.ok(rules.regionalHierarchy.includes('optionalDerivedAdministrativeJoinSurface'));
+  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding'));
+  assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+});

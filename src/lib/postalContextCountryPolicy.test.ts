@@ -51,6 +51,7 @@ import {
   normalizeMaldivesPostalCode,
   normalizeMongoliaPostalCode,
   normalizeJordanPostalCode,
+  normalizeLaosPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,
@@ -340,6 +341,15 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeJordanPostalCode('JO-99999'), null);
   assert.equal(normalizeJordanPostalCode('99-999'), null);
   assert.equal(normalizePostalContextPostalCode('jo', '٩٩ ٩٩٩'), '99999');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LA.postalCodeFormat, 'NNNNN');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LA.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(normalizeLaosPostalCode('໐໑ ໒໓໔'), '01234');
+  assert.equal(normalizeLaosPostalCode('๐๑ ๒๓๔'), '01234');
+  assert.equal(normalizeLaosPostalCode('０１ ２３４'), '01234');
+  assert.equal(normalizeLaosPostalCode('LA-01234'), null);
+  assert.equal(normalizeLaosPostalCode('01-234'), null);
+  assert.equal(normalizeLaosPostalCode('0123'), null);
+  assert.equal(normalizePostalContextPostalCode('la', '໐໑ ໒໓໔'), '01234');
 
 
   assert.equal(normalizeIndonesiaPostalCode('１００００'), '10000');
@@ -723,6 +733,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('ID'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.ID.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.ID.postalCodeFormat, 'NNNNN');
+  assert.equal(isPostalContextCountryCode('LA'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LA.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.LA.postalCodeFormat, 'NNNNN');
   assert.equal(isPostalContextCountryCode('KW'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.KW.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.KW.postalCodeFormat, 'NNNNN');

@@ -440,6 +440,7 @@ export {
   normalizeMaldivesPostalCode,
   normalizeMongoliaPostalCode,
   normalizeJordanPostalCode,
+  normalizeLaosPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

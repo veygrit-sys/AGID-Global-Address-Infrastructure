@@ -3,96 +3,140 @@ name: Laos
 native:
   name: ລາວ
   addressFormat: |-
+    {{recipient}}
     {{organization}}
     {{houseNumber}} {{street}}
-    {{subdistrict}}, {{district}}
-    {{city}} {{postcode}}
+    {{village}}, {{district}}
+    {{province}} {{postcode}}
+    {{poBox}}
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: ຊື່ຜູ້ຮັບ
+      placeholder: ຜູ້ຮັບທົດລອງ
+      required: false
+      type: text
     - key: organization
-      label: ຊື່ຕຶກ/ບໍລິສັດ
-      placeholder: Patuxai
+      label: ອົງການ/ບໍລິສັດ
+      placeholder: ອົງການທົດລອງ
       required: false
       type: text
     - key: houseNumber
-      label: ເລກທີບ້ານ
-      placeholder: "1"
+      label: ເລກທີອາຄານ/ເຮືອນ
+      placeholder: "99"
       required: false
       type: text
     - key: street
-      label: ຖະໜົນ
-      placeholder: ຖະໜົນລ້ານຊ້າງ
+      label: ຖະໜົນ/ເສັ້ນທາງ
+      placeholder: ຖະໜົນທົດລອງ
       required: true
       type: text
-    - key: subdistrict
-      label: ບ້าน
-      placeholder: ບ້ານຊຽງຍືນ
+    - key: village
+      label: ບ້ານ
+      placeholder: ບ້ານທົດລອງ
       required: true
       type: text
     - key: district
       label: ເມືອງ
-      placeholder: ເມືອງຈັນທະບູລີ
+      placeholder: ເມືອງທົດລອງ
       required: true
       type: text
-    - key: city
-      label: ແຂວງ
-      placeholder: ນະຄອນຫຼວງວຽງຈັນ
+    - key: province
+      label: ແຂວງ/ນະຄອນຫຼວງ
+      placeholder: ແຂວງທົດລອງ
       required: true
       type: text
     - key: postcode
       label: ລະຫັດໄປສະນີ
-      placeholder: "01000"
+      placeholder: "99999"
+      required: false
+      type: text
+    - key: poBox
+      label: ຕູ້ໄປສະນີ
+      placeholder: ""
+      required: false
+      type: text
+    - key: civicAddressId
+      label: ລະຫັດທີ່ຢູ່ພົນລະເຮືອນທີ່ອະນຸຍາດ
+      placeholder: ""
+      required: false
+      type: text
+    - key: buildingId
+      label: ລະຫັດອາຄານທີ່ເຊື່ອມໂຍງໂດຍກົງ
+      placeholder: ""
       required: false
       type: text
 english:
   addressFormat: |-
+    {{recipient}}
     {{organization}}
     {{houseNumber}} {{street}}
-    {{subdistrict}}, {{district}}
-    {{city}} {{postcode}}
+    {{village}}, {{district}}
+    {{province}} {{postcode}}
+    {{poBox}}
     {{country}}
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: Recipient
+      placeholder: Synthetic Recipient
+      required: false
+      type: text
     - key: organization
-      label: Building/Company
-      placeholder: Patuxai
+      label: Organization/Company
+      placeholder: Synthetic Organization
       required: false
       type: text
     - key: houseNumber
-      label: House No.
-      placeholder: "1"
+      label: Building/House No.
+      placeholder: "99"
       required: false
       type: text
     - key: street
-      label: Street
-      placeholder: Lane Xang Ave
+      label: Street/Route
+      placeholder: Synthetic Street
       required: true
       type: text
-    - key: subdistrict
+    - key: village
       label: Village
-      placeholder: Ban Xieng Ngueun
+      placeholder: Synthetic Village
       required: true
       type: text
     - key: district
       label: District
-      placeholder: Chanthabuly
+      placeholder: Synthetic District
       required: true
       type: text
-    - key: city
-      label: Province/City
-      placeholder: Vientiane
+    - key: province
+      label: Province/Capital
+      placeholder: Synthetic Province
       required: true
       type: text
     - key: postcode
       label: Postal Code
-      placeholder: "01000"
+      placeholder: "99999"
+      required: false
+      type: text
+    - key: poBox
+      label: P.O. Box
+      placeholder: ""
+      required: false
+      type: text
+    - key: civicAddressId
+      label: Rights-cleared Civic Address ID
+      placeholder: ""
+      required: false
+      type: text
+    - key: buildingId
+      label: Explicitly Linked Building ID
+      placeholder: ""
       required: false
       type: text
 postalCode:
   format: NNNNN
   regex: ^\d{5}$
-  api: http://www.laopost.com.la/
-  source: Lao Post
+  api: https://www.laopost.com.la/about/postcode
+  source: Lao Postal Service postcode reference; Lao Postal Services Law 2013; Laopedia; MAF NFMS; Lao Statistics Bureau
 addressRules:
   languages:
     - code: lo
@@ -104,40 +148,44 @@ addressRules:
     - village
     - street
     - houseNumber
-    - name
+    - organization
+    - recipient
   englishOrder:
-    - postcode
-    - province
-    - district
-    - village
-    - street
+    - recipient
+    - organization
     - houseNumber
-    - name
+    - street
+    - village
+    - district
+    - province
+    - postcode
+    - country
   regionalHierarchy:
     - province
     - district
-    - village
+    - villageOrMunicipality
+    - streetOrMailRoute
+    - buildingPremiseUnitOrPoBox
+    - fiveDigitPostalDeliveryScope
+    - postOfficeMailExchangeOrMailRouteObject
+    - optionalDerivedAdministrativeJoinSurface
+    - explicitRightsClearedCivicAddress
+    - explicitAddressLinkedBuilding
+    - exactRightsClearedBuildingGeometry
+    - agidIndependentSpatialIndex
   postalCode:
-    label: 5 digits used
+    label: 5 digits when officially assigned
     required: false
-    usage: used
-  openSourceIds:
-    - osm-nominatim
-    - osm-overpass
-    - openaddresses
-    - geonames-postal
-    - geonames-gazetteer
-    - geoboundaries
-    - upu-addressing
-    - nasa-srtm
-    - jaxa-aw3d30
-    - gebco-bathymetry
-    - gmrt-topography
-    - hydrosheds
-    - esa-worldcover
-    - protected-planet-wdpa
-    - gbif-occurrence
+    usage: location and delivery-scope indicator; may be area, point, route, P.O. Box or other non-area object; never an implicit exact building address
 openSourceIds:
+  - lao-post-postcode
+  - laos-postal-service-law-2013
+  - laopedia-laos-postcodes
+  - nfms-laos-administrative-boundaries
+  - lsb-laos-phc-2025
+  - laolandreg-laos
+  - laos-electronic-data-law
+  - osm-laos
   - osm-nominatim
   - osm-overpass
   - openaddresses
