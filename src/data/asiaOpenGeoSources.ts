@@ -339,6 +339,13 @@ export type AsiaOpenGeoSourceId =
   | 'geostat-georgia-administrative-classification'
   | 'post-kz'
   | 'pochta-uz'
+  | 'uzpost-index-map'
+  | 'upu-uzbekistan-addressing-2019'
+  | 'uzbekistan-postal-index-open-data-2019'
+  | 'uzbekistan-open-data-terms'
+  | 'uzbekistan-open-data-registry-2026'
+  | 'uzbekistan-cadastre-agency'
+  | 'uzbekistan-state-real-estate-register'
   | 'datahub-postal-kz'
   | 'kazakhstan-nsdi'
   | 'qazpost-open-api'
@@ -3234,13 +3241,36 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     notes: 'Kazakhstan postcode lookup and postal reference.',
   },
   'pochta-uz': {
-    id: 'pochta-uz',
-    name: 'Uzbekiston Pochtasi Postal Index Search',
-    url: 'https://www.uz.post/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Uzbekistan official postal-index lookup.',
+    id: 'pochta-uz', name: 'O‘zbekiston pochtasi AJ / UzPost', url: 'https://uz.post/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official operator and six-digit postal-index reference. No public page alone grants current bulk assignments, canonical polygons, address harvesting or automatic building relations.',
+  },
+  'uzpost-index-map': {
+    id: 'uzpost-index-map', name: 'UzPost address and postal-index map', url: 'https://uz.post/map', kind: 'geocoding', coverage: 'country', usage: 'primary',
+    notes: 'Current operational address and index search with post-office categories and points; pin exact responses and terms. Interactive access is not permission to harvest addresses or turn an office point into a delivery polygon.',
+  },
+  'upu-uzbekistan-addressing-2019': {
+    id: 'upu-uzbekistan-addressing-2019', name: 'UPU Uzbekistan addressing sheet 07/2019', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/uzbEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 07/2019 sheet documents six digits before locality, delivery-post-office or hub and regional components, separate Tashkent coding and address elements. Dated examples are not current assignments, geometry or building relations.',
+  },
+  'uzbekistan-postal-index-open-data-2019': {
+    id: 'uzbekistan-postal-index-open-data-2019', name: 'Uzbekistan official postal-index open data 2019', url: 'https://olddata.gov.uz/en/datasets/7048', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Official dated branch, post-office name and postal-index list last modified in 2019. It has no geometry and requires exact-version provenance, attribution and current operator validation before production use.',
+  },
+  'uzbekistan-open-data-terms': {
+    id: 'uzbekistan-open-data-terms', name: 'Uzbekistan Open Data Portal reuse terms', url: 'https://olddata.gov.uz/en/pages/copyright', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Portal open data may be reused, modified and used commercially with lawful use, no distortion and source attribution; pin the terms snapshot and any exact-resource override.',
+  },
+  'uzbekistan-open-data-registry-2026': {
+    id: 'uzbekistan-open-data-registry-2026', name: 'Uzbekistan government open-data registry 2026', url: 'https://gov.uz/en/digital/pages/open_data_registry', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Current government catalog lists “Zip Code Addresses”; catalog presence is discovery metadata, not a postal assignment, row, geometry, exact licence or current validation artifact.',
+  },
+  'uzbekistan-cadastre-agency': {
+    id: 'uzbekistan-cadastre-agency', name: 'Cadastre Agency of Uzbekistan', url: 'https://gov.uz/en/kadastr', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official cadastral and spatial context requires exact resource, authority, jurisdiction, access, terms, validity, privacy, CRS and digest; cadastral or administrative geometry is not postal geometry.',
+  },
+  'uzbekistan-state-real-estate-register': {
+    id: 'uzbekistan-state-real-estate-register', name: 'Uzbekistan state register of rights to real estate', url: 'https://gov.uz/en/pages/kochmas_mulklarga_bolgan_huquqlar_reyestri', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Official register concerns real estate, rights and rights holders. It is potentially personal and purpose-limited, not an open address or building corpus and not a postcode-to-building crosswalk.',
   },
   'datahub-postal-kz': {
     id: 'datahub-postal-kz',
@@ -3510,7 +3540,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   TW: ['chunghwa-post-3plus3-data', 'chunghwa-post-3plus3-lookup', 'chunghwa-post-3plus3-license', 'moi-taiwan-national-doorplate-location', 'nlsc-taiwan-emap-buildings', 'nlsc-taiwan-emap-doorplates', 'nlsc-taiwan-administrative-boundaries', 'nlsc-taiwan-cadastral-map', 'post-tw', 'nlsc-taiwan', 'tgos-taiwan', 'osm-taiwan', 'g0v-taiwan'],
   TJ: ['tajik-post', 'osm-tajikistan', 'openaerialmap-tajikistan', 'hot-osm-central-asia'],
   TM: ['turkmenpost', 'osm-turkmenistan', 'hot-osm-central-asia'],
-  UZ: ['pochta-uz', 'uzbekistan-open-data-geo', 'uzbekistan-state-urban-cadastre', 'osm-uzbekistan'],
+  UZ: ['pochta-uz', 'uzpost-index-map', 'upu-uzbekistan-addressing-2019', 'uzbekistan-postal-index-open-data-2019', 'uzbekistan-open-data-terms', 'uzbekistan-open-data-registry-2026', 'uzbekistan-cadastre-agency', 'uzbekistan-state-real-estate-register', 'osm-uzbekistan'],
   VN: ['vietnam-national-postcode-portal', 'vietnam-postcode-decision-2334-2025', 'vnpost-two-tier-postcode-notice', 'upu-vietnam-addressing', 'vnpost-vpostcode-digital-address', 'vietnam-nso-administrative-units', 'vietnam-nsdi-portal', 'vietnam-survey-map-data-service', 'vietnam-postcode'],
   YE: ['yemen-post', 'osm-yemen', 'hot-osm-west-asia'],
 };

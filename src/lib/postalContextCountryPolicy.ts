@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -251,6 +251,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'IR',
     postalCodeFormat: 'NNNNNNNNNN',
     fullCodeGeometrySemantics: 'area-or-non-area',
+  },
+  UZ: {
+    countryCode: 'UZ',
+    postalCodeFormat: 'NNNNNN',
+    fullCodeGeometrySemantics: 'delivery-network-first',
   },
   KW: {
     countryCode: 'KW',
@@ -711,6 +716,13 @@ export function normalizeIranPostalCode(value: unknown) {
   return /^\d{10}$/.test(normalized) ? normalized : null;
 }
 
+export function normalizeUzbekistanPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{6}$/.test(normalized) ? normalized : null;
+}
+
 export function normalizeIndonesiaPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -949,6 +961,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'IL') return normalizeIsraelPostalCode(value);
   if (normalizedCountry === 'IQ') return normalizeIraqPostalCode(value);
   if (normalizedCountry === 'IR') return normalizeIranPostalCode(value);
+  if (normalizedCountry === 'UZ') return normalizeUzbekistanPostalCode(value);
   if (normalizedCountry === 'KW') return normalizeKuwaitPostalCode(value);
   if (normalizedCountry === 'BH') return normalizeBahrainPostalCode(value);
   if (normalizedCountry === 'DK') return normalizeDenmarkPostalCode(value);

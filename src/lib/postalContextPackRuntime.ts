@@ -446,6 +446,7 @@ export {
   normalizeIsraelPostalCode,
   normalizeIraqPostalCode,
   normalizeIranPostalCode,
+  normalizeUzbekistanPostalCode,
   normalizeIndonesiaPostalCode,
   normalizePhilippinesPostalCode,
   normalizeKuwaitPostalCode,

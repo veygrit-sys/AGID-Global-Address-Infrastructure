@@ -567,7 +567,7 @@ test('Central Asia address JSON files expose table-derived addressRules metadata
     { code: 'kk', name: 'Kazakh' },
     { code: 'ru', name: 'Russian' },
   ]);
-  assert.deepEqual(loadRules('UZ').regionalHierarchy, ['viloyat']);
+  assert.deepEqual(loadRules('UZ').regionalHierarchy, ['provinceOrRepublicOrCapitalCity', 'district', 'locality', 'mahallaOrBlockOrMassif', 'street', 'houseNumber', 'unit', 'postOfficeAssignment', 'officialCivicAddressId', 'cadastralParcelOrBuildingId', 'explicitRightsClearedBuilding']);
   assert.deepEqual(loadRules('KZ').russianOrder, ['recipient', 'streetOrQuarter', 'houseOrBuilding', 'city', 'oblast', 'postcode']);
   assert.deepEqual(loadRules('TM').regionalHierarchy, ['welayat']);
   assert.deepEqual(loadRules('KG').regionalHierarchy, ['oblast']);
@@ -578,7 +578,7 @@ test('Central Asia address JSON files expose table-derived addressRules metadata
 test('Central Asia address metadata exposes national geoportals, postal, and OSM reference sources', () => {
   const expectedSourceIdsByCountry = {
     KZ: ['kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
-    UZ: ['uzbekistan-open-data-geo', 'uzbekistan-state-urban-cadastre', 'osm-uzbekistan'],
+    UZ: ['pochta-uz', 'uzpost-index-map', 'upu-uzbekistan-addressing-2019', 'uzbekistan-postal-index-open-data-2019', 'uzbekistan-open-data-terms', 'uzbekistan-open-data-registry-2026', 'uzbekistan-cadastre-agency', 'uzbekistan-state-real-estate-register', 'osm-uzbekistan'],
     KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
     TJ: ['tajik-post', 'osm-tajikistan', 'openaerialmap-tajikistan', 'hot-osm-central-asia'],
     TM: ['turkmenpost', 'osm-turkmenistan', 'hot-osm-central-asia'],
@@ -2109,4 +2109,14 @@ test('Iran address metadata separates ten-digit place IDs, P.O. exceptions, GNAF
   assert.equal(rules.postalCode?.required, false); assert.match(rules.postalCode?.usage ?? '', /ten-digit.*place identifier.*P\.O\. Box.*poste restante.*not.*polygon.*building relation/i);
   for (const key of ['building','floor','unit','poBox','postOffice','posteRestante']) assert.ok(format.native.fields.some((item:any)=>item.key===key), key);
   for (const id of ['iran-post','iran-post-gnaf','gavahi-post-ir','upu-iran-addressing-2023','iran-nsdi','iran-open-data','osm-iran']) assert.ok(format.openSourceIds?.includes(id));
+});
+
+
+test('Uzbekistan address metadata separates delivery indices, offices, dated data, buildings, time, jurisdiction, and AGID', () => {
+  const format = loadFormat('UZ'); const rules = loadRules('UZ');
+  assert.equal(format.postalCode?.format, 'NNNNNN'); assert.equal(format.postalCode?.regex, '^\\d{6}$');
+  assert.match(format.postalCode?.source ?? '', /UzPost.*UPU.*07\/2019.*2019.*reuse terms.*2026.*Cadastre.*real-estate.*OpenStreetMap/i);
+  assert.equal(rules.postalCode?.required, true); assert.match(rules.postalCode?.usage ?? '', /six-digit.*delivery.*post.?office.*not.*polygon.*2019.*current.*building relation/i);
+  for (const key of ['building','blockOrMassif','houseNumber','unit','postOffice','poBox']) assert.ok(format.native.fields.some((item:any)=>item.key===key), key);
+  for (const id of ['pochta-uz','uzpost-index-map','upu-uzbekistan-addressing-2019','uzbekistan-postal-index-open-data-2019','uzbekistan-open-data-terms','uzbekistan-open-data-registry-2026','uzbekistan-cadastre-agency','uzbekistan-state-real-estate-register','osm-uzbekistan']) assert.ok(format.openSourceIds?.includes(id));
 });

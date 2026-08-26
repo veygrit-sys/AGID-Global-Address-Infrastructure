@@ -61,6 +61,7 @@ import { createAfghanistanPostalContextRuntimeTestPack } from '../testFixtures/p
 import { createIsraelPostalContextRuntimeTestPack } from '../testFixtures/postalContextIsraelRuntimeFixture';
 import { createIraqPostalContextRuntimeTestPack } from '../testFixtures/postalContextIraqRuntimeFixture';
 import { createIranPostalContextRuntimeTestPack } from '../testFixtures/postalContextIranRuntimeFixture';
+import { createUzbekistanPostalContextRuntimeTestPack } from '../testFixtures/postalContextUzbekistanRuntimeFixture';
 import { createIndonesiaPostalContextRuntimeTestPack } from '../testFixtures/postalContextIndonesiaRuntimeFixture';
 import { createPhilippinesPostalContextRuntimeTestPack } from '../testFixtures/postalContextPhilippinesRuntimeFixture';
 import { createKuwaitPostalContextRuntimeTestPack } from '../testFixtures/postalContextKuwaitRuntimeFixture';
@@ -80,7 +81,7 @@ test('configured store advertises all supported country packs independently', ()
 
   assert.deepEqual(
     store.statuses().map(status => [status.countryCode, status.state]),
-    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured'], ['IT', 'unconfigured'], ['EE', 'unconfigured'], ['CH', 'unconfigured'], ['DE', 'unconfigured'], ['CZ', 'unconfigured'], ['SK', 'unconfigured'], ['SI', 'unconfigured'], ['NO', 'unconfigured'], ['HU', 'unconfigured'], ['FI', 'unconfigured'], ['BG', 'unconfigured'], ['BY', 'unconfigured'], ['BE', 'unconfigured'], ['ME', 'unconfigured'], ['RO', 'unconfigured'], ['TW', 'unconfigured'], ['KR', 'unconfigured'], ['SA', 'unconfigured'], ['OM', 'unconfigured'], ['ZA', 'unconfigured'], ['EG', 'unconfigured'], ['MA', 'unconfigured'], ['IN', 'unconfigured'], ['PK', 'unconfigured'], ['BD', 'unconfigured'], ['BT', 'unconfigured'], ['ID', 'unconfigured'], ['PH', 'unconfigured'], ['BN', 'unconfigured'], ['VN', 'unconfigured'], ['MY', 'unconfigured'], ['MM', 'unconfigured'], ['MV', 'unconfigured'], ['MN', 'unconfigured'], ['JO', 'unconfigured'], ['LA', 'unconfigured'], ['LB', 'unconfigured'], ['AF', 'unconfigured'], ['IL', 'unconfigured'], ['IQ', 'unconfigured'], ['IR', 'unconfigured'], ['KW', 'unconfigured'], ['BH', 'unconfigured'], ['DK', 'unconfigured'], ['MT', 'unconfigured'], ['MC', 'unconfigured'], ['AU', 'unconfigured'], ['LV', 'unconfigured'], ['LT', 'unconfigured'], ['LI', 'unconfigured'], ['AZ', 'unconfigured'], ['AL', 'unconfigured'], ['AM', 'unconfigured'], ['AD', 'unconfigured'], ['UA', 'unconfigured'], ['AT', 'unconfigured'], ['CY', 'unconfigured'], ['GR', 'unconfigured'], ['HR', 'unconfigured'], ['RS', 'unconfigured'], ['GE', 'unconfigured']],
+    [['JP', 'unconfigured'], ['SG', 'unconfigured'], ['NL', 'unconfigured'], ['GB', 'unconfigured'], ['FR', 'unconfigured'], ['NZ', 'unconfigured'], ['IS', 'unconfigured'], ['IT', 'unconfigured'], ['EE', 'unconfigured'], ['CH', 'unconfigured'], ['DE', 'unconfigured'], ['CZ', 'unconfigured'], ['SK', 'unconfigured'], ['SI', 'unconfigured'], ['NO', 'unconfigured'], ['HU', 'unconfigured'], ['FI', 'unconfigured'], ['BG', 'unconfigured'], ['BY', 'unconfigured'], ['BE', 'unconfigured'], ['ME', 'unconfigured'], ['RO', 'unconfigured'], ['TW', 'unconfigured'], ['KR', 'unconfigured'], ['SA', 'unconfigured'], ['OM', 'unconfigured'], ['ZA', 'unconfigured'], ['EG', 'unconfigured'], ['MA', 'unconfigured'], ['IN', 'unconfigured'], ['PK', 'unconfigured'], ['BD', 'unconfigured'], ['BT', 'unconfigured'], ['ID', 'unconfigured'], ['PH', 'unconfigured'], ['BN', 'unconfigured'], ['VN', 'unconfigured'], ['MY', 'unconfigured'], ['MM', 'unconfigured'], ['MV', 'unconfigured'], ['MN', 'unconfigured'], ['JO', 'unconfigured'], ['LA', 'unconfigured'], ['LB', 'unconfigured'], ['AF', 'unconfigured'], ['IL', 'unconfigured'], ['IQ', 'unconfigured'], ['IR', 'unconfigured'], ['UZ', 'unconfigured'], ['KW', 'unconfigured'], ['BH', 'unconfigured'], ['DK', 'unconfigured'], ['MT', 'unconfigured'], ['MC', 'unconfigured'], ['AU', 'unconfigured'], ['LV', 'unconfigured'], ['LT', 'unconfigured'], ['LI', 'unconfigured'], ['AZ', 'unconfigured'], ['AL', 'unconfigured'], ['AM', 'unconfigured'], ['AD', 'unconfigured'], ['UA', 'unconfigured'], ['AT', 'unconfigured'], ['CY', 'unconfigured'], ['GR', 'unconfigured'], ['HR', 'unconfigured'], ['RS', 'unconfigured'], ['GE', 'unconfigured']],
   );
   assert.deepEqual(store.countryStatus('US').errors, ['unsupported-country']);
 });
@@ -223,9 +224,10 @@ test('in-memory store can route independent supported-country runtimes', () => {
   const israel = new PostalContextPackRuntime(createIsraelPostalContextRuntimeTestPack());
   const iraq = new PostalContextPackRuntime(createIraqPostalContextRuntimeTestPack());
   const iran = new PostalContextPackRuntime(createIranPostalContextRuntimeTestPack());
+  const uzbekistan = new PostalContextPackRuntime(createUzbekistanPostalContextRuntimeTestPack());
   const kuwait = new PostalContextPackRuntime(createKuwaitPostalContextRuntimeTestPack());
   const bahrain = new PostalContextPackRuntime(createBahrainPostalContextRuntimeTestPack());
-  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland, italy, estonia, switzerland, germany, czechia, slovakia, slovenia, norway, hungary, finland, bulgaria, belarus, belgium, montenegro, romania, taiwan, korea, saudiArabia, oman, southAfrica, egypt, morocco, india, pakistan, bangladesh, bhutan, indonesia, philippines, brunei, vietnam, malaysia, myanmar, maldives, mongolia, jordan, laos, lebanon, afghanistan, israel, iraq, iran, kuwait, bahrain, denmark, malta, monaco, australia, latvia, lithuania, liechtenstein, azerbaijan, albania, armenia, andorra, ukraine, austria, cyprus, greece, croatia, serbia, georgia]);
+  const store = createInMemoryPostalContextPackStore([japan, singapore, netherlands, unitedKingdom, france, newZealand, iceland, italy, estonia, switzerland, germany, czechia, slovakia, slovenia, norway, hungary, finland, bulgaria, belarus, belgium, montenegro, romania, taiwan, korea, saudiArabia, oman, southAfrica, egypt, morocco, india, pakistan, bangladesh, bhutan, indonesia, philippines, brunei, vietnam, malaysia, myanmar, maldives, mongolia, jordan, laos, lebanon, afghanistan, israel, iraq, iran, uzbekistan, kuwait, bahrain, denmark, malta, monaco, australia, latvia, lithuania, liechtenstein, azerbaijan, albania, armenia, andorra, ukraine, austria, cyprus, greece, croatia, serbia, georgia]);
 
   assert.equal(store.getRuntime('jp'), japan);
   assert.equal(store.getRuntime('sg'), singapore);
@@ -293,9 +295,10 @@ test('in-memory store can route independent supported-country runtimes', () => {
   assert.equal(store.getRuntime('il'), israel);
   assert.equal(store.getRuntime('iq'), iraq);
   assert.equal(store.getRuntime('ir'), iran);
+  assert.equal(store.getRuntime('uz'), uzbekistan);
   assert.equal(store.getRuntime('kw'), kuwait);
   assert.equal(store.getRuntime('bh'), bahrain);
-  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE']);
+  assert.deepEqual(store.statuses().map(status => status.countryCode), ['JP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE']);
   assert.throws(
     () => createInMemoryPostalContextPackStore([singapore, singapore]),
     /duplicate-postal-context-runtime:SG/,
