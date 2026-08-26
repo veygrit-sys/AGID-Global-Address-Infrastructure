@@ -73,6 +73,12 @@ export type AmericasOpenGeoSourceId =
   | 'ihsi-haiti-admin-2024'
   | 'cnigs-haiti-reference-geodata'
   | 'osm-haiti'
+  | 'correos-panama-postal-system-2026'
+  | 'panama-postal-code-api-2026'
+  | 'upu-panama-addressing-2015'
+  | 'inec-panama-territorial-coding'
+  | 'ign-panama-dpa-2025'
+  | 'osm-panama'
   | 'correos-cr-postal'
   | 'upu-costa-rica-addressing-2009'
   | 'upu-costa-rica-address-policy-case-study'
@@ -617,6 +623,36 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     id: 'osm-haiti', name: 'OpenStreetMap Haiti', url: 'https://wiki.openstreetmap.org/wiki/Haiti',
     kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
     notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Office des Postes, UPU, IHSI, CNIGS, cadastral, owner, occupant or exact address-building authority.',
+  },
+  'correos-panama-postal-system-2026': {
+    id: 'correos-panama-postal-system-2026', name: 'Correos Panama national geolocated postcode launch, May 2026', url: 'https://www.correospanama.gob.pa/panama-da-un-paso-firme-hacia-la-modernizacion-con-el-nuevo-sistema-de-codigos-postales/',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'Public official announcement; underlying system, API, automation, cache and redistribution terms must be pinned separately',
+    notes: 'Correos Panama states that the national system launched on 7 May 2026 with COTEL, INEC, AIG and ANATI participation and geolocates homes, buildings and points. The announcement is system and temporal evidence, not a bulk assignment table, reusable geometry licence, civic-address corpus or exact building relation.',
+  },
+  'panama-postal-code-api-2026': {
+    id: 'panama-postal-code-api-2026', name: 'Sistema de Codigos Postales de Panama public lookup and decoder', url: 'https://codigospostalespanama.gob.pa/',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Free public lookup; API contract, rate, cache, automation and redistribution terms are not an open bulk-data licence',
+    notes: 'The official portal accepts a full two-character estafeta prefix plus eight-character grid and also an eight-character grid alone. A successful pinned response can provide full code, postal zone, estafeta, administrative hierarchy and PICO grid-cell observation; it does not publish a reusable nationwide postal-zone polygon release, stable civic-address ID, building ID, occupant or delivery entitlement.',
+  },
+  'upu-panama-addressing-2015': {
+    id: 'upu-panama-addressing-2015', name: 'UPU Panama addressing sheet, February 2015', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/panEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'UPU publication terms; not a bulk postcode, address or geometry licence',
+    notes: 'The dated pre-2026 sheet documents home delivery, P.O. Box and poste restante address layouts and then-current provinces but no national geolocated code. It must not override the May 2026 system or be treated as current assignments, real-address data, postal geometry or building evidence.',
+  },
+  'inec-panama-territorial-coding': {
+    id: 'inec-panama-territorial-coding', name: 'INEC Panama cartography and political-administrative coding', url: 'https://www.inec.gob.pa/aplicaciones/env2008/otros/manuales/cartografia.pdf',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference', license: 'Exact INEC publication or data resource, edition and reuse terms must be pinned',
+    notes: 'INEC documents a legally constituted and coded province or comarca, district and corregimiento hierarchy used for census cartography. Its edition-specific codes and boundaries remain administrative or statistical context and are not postal zones, estafeta prefixes, PICO cells, civic addresses or building relations.',
+  },
+  'ign-panama-dpa-2025': {
+    id: 'ign-panama-dpa-2025', name: 'IGN Tommy Guardia DPA and settlements map service 2025', url: 'https://sigigntg.anati.gob.pa/arcgisserver/rest/services/Mapa_Web_de_Poblados_2025_MIL1/MapServer',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'CC BY-NC-SA; exact layer, item terms, edition, attribution, CRS and digest required',
+    notes: 'Official 1:25,000 political-administrative and settlement reference layers published in 2025 and described as updated through 2024. The non-commercial share-alike constraint stays attached; DPA containment cannot be relabelled as a Correos postal-zone or grid-cell boundary and does not prove an address-to-building relation.',
+  },
+  'osm-panama': {
+    id: 'osm-panama', name: 'OpenStreetMap Panama', url: 'https://wiki.openstreetmap.org/wiki/Panama',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings stay in a separate ODbL provenance partition and are not Correos, COTEL, INEC, IGN, ANATI, cadastral, owner, occupant, delivery-entitlement or exact address-building authority.',
   },
   'correos-mexico': {
     id: 'correos-mexico', name: 'Correos de México national postcode catalog', url: 'https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx',
@@ -1850,6 +1886,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
   DO: ['inposdom-postcode-search', 'upu-dominican-republic-addressing-2005', 'one-dominican-territorial-division-2021', 'iderd-dominican-geoservices', 'ign-dominican-cartographic-base', 'registro-inmobiliario-dominican-cadastre', 'osm-dominican-republic'],
   HT: ['office-postes-haiti-postcode-search', 'upu-haiti-addressing-2017', 'ihsi-haiti-territorial-codes', 'ihsi-haiti-admin-2024', 'cnigs-haiti-reference-geodata', 'osm-haiti'],
+  PA: ['correos-panama-postal-system-2026', 'panama-postal-code-api-2026', 'upu-panama-addressing-2015', 'inec-panama-territorial-coding', 'ign-panama-dpa-2025', 'osm-panama'],
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico', 'sepomex-postal-polygons-2025', 'mexico-postal-service-law', 'upu-mexico-addressing-2017', 'inegi-mexico-geo-key-service', 'inegi-mexico-geostatistical-framework-2025', 'inegi-mexico-address-standard-2024', 'inegi-mexico-denue-2025', 'osm-mexico'],
   CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],

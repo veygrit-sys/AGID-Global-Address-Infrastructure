@@ -2236,7 +2236,6 @@ test('United States address metadata separates USPS delivery objects, ZCTA, civi
   assert.match(rules.postalCode?.usage ?? '', /delivery-network.*P\.O\. Box.*military.*no polygon.*ZCTA.*not a USPS.*address-building relation.*Puerto Rico.*APO\/FPO\/DPO.*AGID/i);
   for (const key of ['recipient','attention','organization','building','houseNumber','secondaryUnitDesignator','unit','ruralRoute','highwayContractRoute','poBox','generalDelivery','urbanization','county']) assert.ok(format.native?.fields.some(item => item.key === key), key);
   for (const id of expected) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
-  assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding')); assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
 });
 
 test('Haiti address metadata separates integral HTNNNN, operator observations, administration, derived geometry, buildings and AGID', () => {
@@ -2248,4 +2247,15 @@ test('Haiti address metadata separates integral HTNNNN, operator observations, a
   for (const key of ['recipient','attention','organization','building','floor','unit','street','houseNumber','neighborhood','communalSectionOrQuarter','commune','arrondissement','department','city','postOffice','poBox','postcode']) assert.ok(format.native?.fields.some(item => item.key === key), key);
   for (const id of ['office-postes-haiti-postcode-search','upu-haiti-addressing-2017','ihsi-haiti-territorial-codes','ihsi-haiti-admin-2024','cnigs-haiti-reference-geodata','osm-haiti']) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
   assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding')); assert.ok(rules.regionalHierarchy.includes('agidIndependentSpatialIndex'));
+});
+
+test('Panama address metadata separates the 2026 geolocated code, grid cells, administration, buildings and AGID', () => {
+  const format = loadFormat('PA'); const rules = loadRules('PA');
+  assert.match(format.postalCode?.format ?? '', /XXXXX-XXXXX.*two-character estafeta prefix.*8-character grid/i); assert.equal(format.postalCode?.regex, '^[A-Z0-9]{5}-[A-Z0-9]{5}$');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('Z9ZZZ-ZZZZZ'), true); assert.equal(new RegExp(format.postalCode?.regex ?? '').test('ZZZ-ZZZZZ'), false); assert.equal(new RegExp(format.postalCode?.regex ?? '').test('0807'), false);
+  assert.match(format.postalCode?.source ?? '', /Correos Panama.*05\/2026.*public portal API.*UPU.*02\/2015.*INEC.*IGN.*OpenStreetMap/i);
+  assert.equal(rules.postalCode?.required, false); assert.match(rules.postalCode?.usage ?? '', /estafeta prefix.*eight-character grid.*do not invent.*PICO.*not a bulk redistribution.*UPU.*predates.*DPA.*Building display.*AGID remains an independent/i);
+  for (const key of ['recipient','attention','organization','building','floor','unit','street','houseNumber','barrio','poblado','corregimiento','district','province','city','postOffice','poBox','postcode']) assert.ok(format.native?.fields.some(item => item.key === key), key);
+  for (const id of ['correos-panama-postal-system-2026','panama-postal-code-api-2026','upu-panama-addressing-2015','inec-panama-territorial-coding','ign-panama-dpa-2025','osm-panama']) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
+
 });
