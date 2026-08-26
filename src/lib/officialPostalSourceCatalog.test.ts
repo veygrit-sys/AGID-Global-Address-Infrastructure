@@ -1020,3 +1020,19 @@ test('separates Canada Post assignment, AddressComplete, licensed PCCF, census F
   assert.equal(caSources.find(source => source.id === 'statcan-national-address-register')?.depth, 'address');
   assert.equal(caSources.find(source => source.id === 'statcan-open-database-buildings')?.depth, 'building');
 });
+
+test('separates Cuba operator, dated and licensed UPU, legal, spatial, statistical, and cartographic references', () => {
+  const cuSources = getOfficialPostalSourcesForCountry('CU');
+  const ids = cuSources.map(source => source.id);
+  for (const id of [
+    'correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data',
+    'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography',
+  ]) assert.ok(ids.includes(id));
+  assert.equal(cuSources.find(source => source.id === 'correos-cuba-postal')?.trustTier, 'authoritative');
+  assert.equal(cuSources.find(source => source.id === 'upu-cuba-addressing-2004')?.sourceRole, 'legal-framework-only');
+  assert.equal(cuSources.find(source => source.id === 'upu-cuba-postcode-data')?.availability, 'licensed-bulk-data');
+  assert.equal(cuSources.find(source => source.id === 'upu-cuba-postcode-data')?.requiresCredential, true);
+  assert.equal(cuSources.find(source => source.id === 'iderc-cuba-geoportal')?.validationReadiness, 'metadata-only');
+  assert.equal(cuSources.find(source => source.id === 'onei-cuba-dpa')?.sourceRole, 'legal-framework-only');
+  assert.equal(cuSources.find(source => source.id === 'geocuba-cartography')?.availability, 'commercial-or-restricted');
+});

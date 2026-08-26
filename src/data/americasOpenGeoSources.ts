@@ -50,6 +50,14 @@ export type AmericasOpenGeoSourceId =
   | 'statcan-national-address-register'
   | 'statcan-open-database-buildings'
   | 'osm-canada'
+  | 'correos-cuba-postal'
+  | 'upu-cuba-addressing-2004'
+  | 'upu-cuba-postcode-data'
+  | 'mincom-cuba-postal-law'
+  | 'iderc-cuba-geoportal'
+  | 'onei-cuba-dpa'
+  | 'geocuba-cartography'
+  | 'osm-cuba'
   | 'correos-mexico'
   | 'correos-cr-postal'
   | 'snit-cr'
@@ -415,6 +423,86 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     usage: 'validation',
     license: 'ODbL',
     notes: 'Community roads, addresses and buildings remain in a separate ODbL provenance partition and are not Canada Post, Statistics Canada, provincial, territorial, municipal, cadastral, occupant or exact address-building authority.',
+  },
+  'correos-cuba-postal': {
+    id: 'correos-cuba-postal',
+    name: 'Grupo Empresarial Correos de Cuba',
+    url: 'https://www.correos.cu/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public operator website; no reusable bulk-data licence identified',
+    notes: 'UPU identifies Grupo Empresarial Correos de Cuba as the designated operator. Use only pinned operator observations or licensed data; the website and a syntactically valid five-digit value are not reusable nationwide assignments, polygons, addresses or delivery entitlement.',
+  },
+  'upu-cuba-addressing-2004': {
+    id: 'upu-cuba-addressing-2004',
+    name: 'UPU Cuba postal addressing sheet (2004)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cubEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; dated reference, not a bulk-data licence',
+    notes: 'The dated UPU sheet documents five digits, CP before the code, postal-zone context, cross streets, s/n and P.O. Box examples. It does not provide current assignments, reusable full-code geometry, address points or buildings.',
+  },
+  'upu-cuba-postcode-data': {
+    id: 'upu-cuba-postcode-data',
+    name: 'UPU POST*CODE database and Address Verification API - Cuba scope',
+    url: 'https://www.upu.int/en/Postal-Solutions/Technical-Solutions/Products/POST-CODE-and-Locality-Lookups',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'UPU contract, non-disclosure agreement and data-use declaration; release specific',
+    notes: 'Current UPU lookup and licensed data may validate structure, locality and postcode observations. Pin contract, release and API terms; no licensed row or response is bundled, and a lookup result is not postal geometry or an exact address-building relation.',
+  },
+  'mincom-cuba-postal-law': {
+    id: 'mincom-cuba-postal-law',
+    name: 'Cuba Decreto-Ley 30 postal-services framework',
+    url: 'https://www.granma.cu/cuba/2021-12-19/en-vivo-continuan-los-debates-previos-a-la-sesion-ordinaria',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official legal and institutional reference; not postal reference data',
+    notes: 'The 2021 framework identifies the universal postal service and Correos de Cuba as designated operator and records that code dissemination and updating remained work items. It is legal context, not a postcode dataset, geometry release or address register.',
+  },
+  'iderc-cuba-geoportal': {
+    id: 'iderc-cuba-geoportal',
+    name: 'IDERC Cuba geospatial portal',
+    url: 'http://www.iderc.cu/',
+    kind: 'data-catalog',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Layer-specific rights and access terms must be pinned; catalog access is not an open-data licence',
+    notes: 'National SDI metadata and OGC services can provide named-place, administrative and cartographic context. Every layer needs producer, scale, CRS, vintage, access and reuse terms; catalog availability is not postal assignment, official postal geometry, civic address or building authority.',
+  },
+  'onei-cuba-dpa': {
+    id: 'onei-cuba-dpa',
+    name: 'ONEI Cuba political-administrative and settlement statistics',
+    url: 'https://www.onei.gob.cu/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Official publication terms; table and edition specific',
+    notes: 'ONEI province, municipality, settlement and statistical identifiers support administrative context only. Pin the exact edition and code list; statistical identity or a boundary is not a Correos postal assignment, delivery route, address point or building relation.',
+  },
+  'geocuba-cartography': {
+    id: 'geocuba-cartography',
+    name: 'GEOCUBA cartographic and geomatics products',
+    url: 'https://www.geocuba.cu/',
+    kind: 'topography',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Product, contract and redistribution terms must be pinned',
+    notes: 'Official cartographic, urban, cadastral or building context may be product- and contract-specific. Do not treat portal visibility, rendered tiles, containment or proximity as an open licence, postal assignment, civic-address register or exact address-building relation.',
+  },
+  'osm-cuba': {
+    id: 'osm-cuba',
+    name: 'OpenStreetMap Cuba',
+    url: 'https://wiki.openstreetmap.org/wiki/Cuba',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, between-street descriptions, addresses and buildings stay in a separate ODbL partition and are not Correos, UPU, MINCOM, ONEI, IDERC, GEOCUBA, cadastral, occupant or exact address-building authority.',
   },
   'correos-mexico': {
     id: 'correos-mexico',
@@ -1035,6 +1123,7 @@ const BASE_OPEN_SOURCE_IDS: AmericasOpenGeoSourceId[] = [
 const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSourceId[]>> = {
   US: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder', 'usdot-national-address-database', 'usgs-national-structures-dataset', 'hud-usps-zip-crosswalk', 'osm-united-states'],
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
+  CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico'],
   CR: ['correos-cr-postal', 'snit-cr'],
   NI: ['ineter-ni-ide'],
