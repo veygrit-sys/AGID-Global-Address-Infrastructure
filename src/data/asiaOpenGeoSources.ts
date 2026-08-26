@@ -129,6 +129,14 @@ export type AsiaOpenGeoSourceId =
   | 'vietnam-nso-administrative-units'
   | 'vietnam-nsdi-portal'
   | 'vietnam-survey-map-data-service'
+  | 'pos-malaysia-postcode-finder'
+  | 'upu-malaysia-addressing'
+  | 'malaysia-mygdx-postcode-catalog'
+  | 'malaysia-mygeo-fundamental-data-2026'
+  | 'malaysia-mygos-data-services'
+  | 'malaysia-mygeo-upi'
+  | 'malaysia-mygdi-licensing-2024'
+  | 'malaysia-mygeoname'
   | 'pos-malaysia'
   | 'onemap-sg'
   | 'indonesia-post-law-2009'
@@ -1499,14 +1507,63 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'reference',
     notes: 'The ministry procedure governs requests for surveying, mapping and geospatial products and excludes state-secret material. A supplied product remains subject to exact request, product, scale, CRS, fee and rights; roads, parcels or buildings do not become postcode surfaces or civic-address links by containment or proximity.',
   },
+  'pos-malaysia-postcode-finder': {
+    id: 'pos-malaysia-postcode-finder',
+    name: 'Pos Malaysia Postcode Finder',
+    url: 'https://www.pos.com.my/postal-services/quick-access/?postcode-finder',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official five-digit postcode and locality lookup. A pinned result is dated assignment evidence, not a canonical polygon, civic-address registry, building relation, complete history or blanket redistribution licence.',
+  },
+  'upu-malaysia-addressing': {
+    id: 'upu-malaysia-addressing', name: 'UPU Malaysia addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mysEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Documents five digits before locality, address-line order, 13 states and three federal territories, plus P.O. box, locked bag, poste restante and window-ticket delivery. The 2010 sheet is not current allocations, geometry, addresses or buildings.',
+  },
+  'malaysia-mygdx-postcode-catalog': {
+    id: 'malaysia-mygdx-postcode-catalog', name: 'MyGDX Malaysian Postcode catalog',
+    url: 'https://jombelajar.mygdx.gov.my/en/landing-page/listCatalog/256063c2-dbf9-4765-8d84-47a60db3c742?theme=third-theme',
+    kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Government exchange catalog describes Malaysian postcode and locality data sourced from Pos Malaysia. Provider approval and exact API terms are required; catalog visibility is not bulk reuse permission, postal geometry, civic-address or building evidence.',
+  },
+  'malaysia-mygeo-fundamental-data-2026': {
+    id: 'malaysia-mygeo-fundamental-data-2026', name: 'MyGeoportal Fundamental Data List 2026',
+    url: 'https://www.mygeoportal.gov.my/sites/default/files/Dokumen_MyGeoportal/Senarai_Data_Fundamental_2026.pdf',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Lists state, division, district or jajahan, mukim, town and pekan fundamental layers. Release follows each provider agency; an administrative layer is not a postal boundary, address registry or building relation.',
+  },
+  'malaysia-mygos-data-services': {
+    id: 'malaysia-mygos-data-services', name: 'MyGeo Data Services / MyGOS',
+    url: 'https://www.mygeoportal.gov.my/en/applications/mygeo-data-services',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Secure G2G services expose fundamental geospatial themes, lot finding and map views to approved users. Access does not confer public reuse, postal authority, a civic address, building identity or address-building relation.',
+  },
+  'malaysia-mygeo-upi': {
+    id: 'malaysia-mygeo-upi', name: 'Malaysia Unique Parcel Identifier (UPI)',
+    url: 'https://www.mygeoportal.gov.my/index.php/en/unique-parcel-identifier-upi',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'UPI composes state, district or division, subdistrict or town, section, lot and grant identifiers. Public codes and parcel context do not establish postcode assignment, postal geometry, civic address, building footprint, owner or occupant.',
+  },
+  'malaysia-mygdi-licensing-2024': {
+    id: 'malaysia-mygdi-licensing-2024', name: 'MyGDI geospatial pricing and copyright guideline',
+    url: 'https://www.mygeoportal.gov.my/sites/default/files/Dokumen_MyGeoportal/Garis%20Panduan%20MyGDI.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Documents provider-specific pricing, copyright and licence agreements under Malaysian law. Viewing, requesting, paying or attributing is not blanket redistribution permission.',
+  },
+  'malaysia-mygeoname': {
+    id: 'malaysia-mygeoname', name: 'MyGeoName geographical names portal',
+    url: 'https://mygeoname.mygeoportal.gov.my/index.jsp?lang=en',
+    kind: 'gazetteer', coverage: 'country', usage: 'validation',
+    notes: 'Official geographical-name reference for locality validation. Portal labels are not legal evidence, postcode assignments, boundary geometry, civic addresses or exact building links.',
+  },
   'pos-malaysia': {
     id: 'pos-malaysia',
     name: 'Pos Malaysia Postcode Finder',
-    url: 'https://www.pos.com.my/postcode-finder',
+    url: 'https://www.pos.com.my/postal-services/quick-access/?postcode-finder',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Malaysia postcode finder.',
+    notes: 'Legacy registry alias for the official Pos Malaysia finder; lookup rows require pinned retrieval metadata and do not constitute postcode polygons, civic addresses, buildings or redistribution rights.',
   },
   'onemap-sg': {
     id: 'onemap-sg',
@@ -2998,7 +3055,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   MV: ['maldives-post', 'mlsa-maldives', 'onemap-maldives', 'osm-maldives'],
   MN: ['alamgc-mongolia', 'nsdi-mongolia', 'zipcode-mn', 'hot-osm-mongolia', 'osm-mongolia'],
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
-  MY: ['pos-malaysia'],
+  MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],
   NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
   PH: ['phlpost-zip-code-locator', 'upu-philippines-addressing', 'psa-philippine-standard-geographic-code', 'geoportal-philippines-data-inventory', 'geoportal-philippines-download-policy', 'namria-topographic-mapping', 'psa-popcen-cbms-geotagging', 'philippines-lra-land-registration', 'phlpost'],
   PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
