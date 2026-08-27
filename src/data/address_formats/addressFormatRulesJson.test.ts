@@ -1665,7 +1665,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.match(loadFormat('CV').postalCode?.source ?? '', /Correios de Cabo Verde.*UPU August 2026.*CIP.*INGT IDE-CV/i);
   assert.match(loadRules('CV').postalCode?.label ?? '', /4 digits.*canonical UPU.*NNNN-NNN.*CIP.*separate/i);
   assert.equal(loadFormat('GN').postalCode?.api, 'https://www.laposte.gn/');
-  assert.equal(loadFormat('LR').postalCode?.source, 'Liberia Ministry of Posts and Telecommunications official postal service information');
+  assert.match(loadFormat('LR').postalCode?.source ?? '', /UPU Liberia 2017.*Ministry.*service charter.*digital postal address contract.*LISGIS.*Land Authority.*data governance.*OSM/i);
   assert.equal(loadFormat('ML').postalCode?.api, 'https://laposte.ml/');
   assert.equal(loadFormat('NE').postalCode?.api, 'https://nigerposte.ne/code-postal/');
   assert.equal(loadFormat('NG').postalCode?.api, 'https://www.postcode.gov.ng/');
@@ -1673,6 +1673,10 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.deepEqual(loadRules('NG').regionalHierarchy, ['stateOrFct', 'lga', 'wardOrRegistrationArea', 'districtOrLocality', 'currentNumericSixDigitAssignment', 'futureDigitalElevenCharacterAssignmentAfterEffectiveDate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding', 'agidCell']);
   assert.ok(loadFormat('LR').openSourceIds?.includes('mopt-liberia-postal-services'));
   assert.ok(loadRules('LR').openSourceIds?.includes('mopt-liberia-postal-services'));
+  assert.ok(loadFormat('LR').openSourceIds?.includes('upu-liberia-addressing-2017'));
+  assert.ok(loadFormat('LR').openSourceIds?.includes('lisgis-liberia-census-2022-geography'));
+  assert.ok(loadFormat('LR').openSourceIds?.includes('lla-liberia-land-administration'));
+  assert.ok(loadFormat('LR').openSourceIds?.includes('osm-liberia'));
   assert.equal(loadFormat('SL').postalCode?.api, 'https://salpost.gov.sl/');
   assert.equal(loadFormat('SN').postalCode?.api, 'https://www.laposte.sn/services/code-postal-senegal/');
   assert.match(loadFormat('SN').postalCode?.source ?? '', /La Poste Senegal.*UPU Senegal February 2015.*ARTP.*ANAT BaseGeo.*DGID NICAD.*Data Protection Law 2008-12/i);

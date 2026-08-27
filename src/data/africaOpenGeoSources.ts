@@ -136,6 +136,13 @@ export type AfricaOpenGeoSourceId =
   | 'gambia-post-services'
   | 'guinee-poste'
   | 'mopt-liberia-postal-services'
+  | 'upu-liberia-addressing-2017'
+  | 'mopt-liberia-service-charter-2025'
+  | 'mopt-liberia-digital-postal-address-contract-2022'
+  | 'lisgis-liberia-census-2022-geography'
+  | 'lla-liberia-land-administration'
+  | 'liberia-data-governance-policy-2026-draft'
+  | 'osm-liberia'
   | 'la-poste-senegal-codes'
   | 'la-poste-senegal-po-box'
   | 'upu-senegal-addressing-2015'
@@ -1221,13 +1228,43 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     notes: 'Official GAMPOST operator portal used as current postal-network evidence while direct public postcode search remains limited.',
   },
   'mopt-liberia-postal-services': {
-    id: 'mopt-liberia-postal-services',
-    name: 'Liberia Ministry of Posts and Telecommunications',
-    url: 'https://mopt.gov.lr/about-us/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Official Liberia postal authority page describing the ministry mandate to provide postal services nationwide and linking current postal-service resources.',
+    id: 'mopt-liberia-postal-services', name: 'Liberia Ministry of Posts and Telecommunications', url: 'https://mopt.gov.lr/about-us/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'Official public reference; exact assignment artifact and field-level reuse rights must be pinned',
+    notes: 'Government postal authority and nationwide service mandate. The authority page is not a public postcode assignment register, postcode geometry, customer-address dataset or building relation.',
+  },
+  'upu-liberia-addressing-2017': {
+    id: 'upu-liberia-addressing-2017', name: 'UPU Liberia addressing sheet (August 2017)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/lbrEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU publication terms; examples are reference material, not reusable production rows',
+    notes: 'Dated official sheet places four digits to the left of the locality and shows street and P.O. Box examples; it is not a current complete assignment register, postcode polygon, civic-address release or building link.',
+  },
+  'mopt-liberia-service-charter-2025': {
+    id: 'mopt-liberia-service-charter-2025', name: 'Liberia MoPT Service Delivery Charter 2025-2027', url: 'https://mopt.gov.lr/wp-content/uploads/2025/03/FINAL-Updated-Service-Delivery-Charter-SDC.pdf', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Official charter; contact, customer and table reuse require field-level review',
+    notes: 'Current services and regional offices plus customer privacy and confidentiality commitments. A service code, office or contact is not a postcode assignment, delivery catchment, public customer-address row or exact building link.',
+  },
+  'mopt-liberia-digital-postal-address-contract-2022': {
+    id: 'mopt-liberia-digital-postal-address-contract-2022', name: 'Liberia National Digital Postal Address contract', url: 'https://mopt.gov.lr/wp-content/uploads/2022/06/National-Digital-Postal-Address-Contract.pdf', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Contract-specific ownership, deliverable, privacy and redistribution terms',
+    notes: 'The ministry contract listing is project evidence, not proof of a deployed current public national address register, accepted reusable deliverables, authoritative postcode assignment, building relation or complete coverage.',
+  },
+  'lisgis-liberia-census-2022-geography': {
+    id: 'lisgis-liberia-census-2022-geography', name: 'LISGIS Liberia Census 2022 geography', url: 'https://www.lisgis.gov.lr/document/LiberiaCensus2022Report.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact boundary artifact, edition, identifiers and reuse terms must be pinned; structure and household fields are restricted',
+    notes: 'Census 2022 counties, districts, clans and enumeration areas are versioned administrative context. Structure GPS and household estimates are not postal assignment, postal geometry, public civic addresses or exact buildings.',
+  },
+  'lla-liberia-land-administration': {
+    id: 'lla-liberia-land-administration', name: 'Liberia Land Authority land administration and LIS', url: 'https://lla.gov.lr/index.php/about-us/organizational-arrangements/land-administration-department', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled or product-specific access, charges, privacy and redistribution terms apply',
+    notes: 'Cadastre, land register, parcels, geodetic reference and developing Land Information System are controlled land evidence, not postcode polygons, civic addresses, automatic building links or authority to publish holders and interests.',
+  },
+  'liberia-data-governance-policy-2026-draft': {
+    id: 'liberia-data-governance-policy-2026-draft', name: 'Liberia draft Data Governance Policy 2026', url: 'https://mopt.gov.lr/wp-content/uploads/2022/06/2026-Liberia-Data-Governance-Policy-REVISED-CIPESA-1.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official draft says comprehensive legislation is not enacted yet and recommends personal-data protections. It supplies no postal assignment or geometry authority and absence of a comprehensive act never permits publishing person-linked addresses or locations.',
+  },
+  'osm-liberia': {
+    id: 'osm-liberia', name: 'OpenStreetMap Liberia community mapping', url: 'https://wiki.openstreetmap.org/wiki/Liberia', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed share-alike partition required',
+    notes: 'Community roads, addresses and buildings are candidates only and do not establish ministry postcode assignment, canonical postal geometry, cadastral rights, deliverability or an exact address-building relation.',
   },
   'guinee-poste': {
     id: 'guinee-poste',
@@ -2034,7 +2071,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   SN: ['la-poste-senegal-codes', 'la-poste-senegal-po-box', 'upu-senegal-addressing-2015', 'artp-senegal-national-addressing-2015', 'geosenegal-basegeo', 'geosenegal-basegeo-license', 'geosenegal-urban-buildings-2019', 'dgid-senegal-nicad', 'senegal-data-protection-law-2008-12', 'osm-senegal', 'hot-osm-west-africa'],
   TG: ['societe-postes-togo', 'hot-osm-west-africa'],
   BJ: ['la-poste-benin', 'hot-osm-west-africa'],
-  LR: ['mopt-liberia-postal-services', 'hot-osm-west-africa'],
+  LR: ['upu-liberia-addressing-2017', 'mopt-liberia-postal-services', 'mopt-liberia-service-charter-2025', 'mopt-liberia-digital-postal-address-contract-2022', 'lisgis-liberia-census-2022-geography', 'lla-liberia-land-administration', 'liberia-data-governance-policy-2026-draft', 'osm-liberia', 'hot-osm-west-africa'],
   SL: ['salpost-sierra-leone', 'hot-osm-west-africa'],
   GM: ['gambia-post-services', 'hot-osm-west-africa'],
   GW: ['hot-osm-west-africa'],

@@ -3574,24 +3574,32 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official GAMPOST portal; use as current postal-operator evidence while direct public postcode search remains limited.'],
   },
   {
-    id: 'mopt-liberia-postal-services',
-    countryCodes: ['LR'],
-    label: 'Liberia Ministry of Posts and Telecommunications',
-    authority: 'government',
-    trustTier: 'official',
-    availability: 'web-search',
-    depth: 'locality',
-    url: 'https://mopt.gov.lr/about-us/',
-    sourceNames: [
-      'liberia ministry of posts and telecommunications',
-      'mopt liberia',
-      'liberia postal services',
-      'liberia postmaster general',
-      'liberia post office',
-    ],
-    openSourceIds: ['mopt-liberia-postal-services'],
-    requiresCredential: false,
-    notes: ['Official Liberia postal authority page describing the ministry mandate to provide postal services nationwide and linking current postal-service resources.'],
+    id: 'upu-liberia-addressing-2017', countryCodes: ['LR'], label: 'UPU Liberia addressing sheet (August 2017)', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/lbrEn.pdf', sourceNames: ['upu liberia addressing 2017', 'liberia postcode format'], openSourceIds: ['upu-liberia-addressing-2017'], requiresCredential: false,
+    notes: ['Dated sheet places four digits to the left of locality and separates street and P.O. Box examples.', 'It is format evidence, not a current complete assignment register, postcode geometry, public address row or building relation.'],
+  },
+  {
+    id: 'mopt-liberia-postal-services', countryCodes: ['LR'], label: 'Liberia Ministry of Posts and Telecommunications', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://mopt.gov.lr/about-us/', sourceNames: ['liberia ministry of posts and telecommunications', 'mopt liberia', 'liberia postal services', 'liberia postmaster general', 'liberia post office'], openSourceIds: ['mopt-liberia-postal-services'], requiresCredential: false,
+    notes: ['Current government postal authority and nationwide service mandate.', 'The authority page is not a complete postcode register, assignment response, boundary geometry, customer-address database or building relation.'],
+  },
+  {
+    id: 'mopt-liberia-service-charter-2025', countryCodes: ['LR'], label: 'Liberia MoPT Service Delivery Charter 2025-2027', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'delivery-point', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://mopt.gov.lr/wp-content/uploads/2025/03/FINAL-Updated-Service-Delivery-Charter-SDC.pdf', sourceNames: ['liberia mopt service delivery charter', 'liberia regional post offices'], openSourceIds: ['mopt-liberia-service-charter-2025'], requiresCredential: false,
+    notes: ['Current service and regional-office context plus customer confidentiality commitments.', 'Service codes, offices, contacts and examples are not postcode assignments, catchments, public customer rows or building links.'],
+  },
+  {
+    id: 'mopt-liberia-digital-postal-address-contract-2022', countryCodes: ['LR'], label: 'Liberia National Digital Postal Address contract', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://mopt.gov.lr/wp-content/uploads/2022/06/National-Digital-Postal-Address-Contract.pdf', sourceNames: ['liberia national digital postal address contract', 'liberia digital postal address'], openSourceIds: ['mopt-liberia-digital-postal-address-contract-2022'], requiresCredential: true,
+    notes: ['Contract metadata is project evidence only; exact amendments, deliverables, acceptance, current status, ownership, privacy and reuse rights require review.', 'A contract listing does not prove a deployed public national register, postcode assignment, geometry, building relation or complete coverage.'],
+  },
+  {
+    id: 'lisgis-liberia-census-2022-geography', countryCodes: ['LR'], label: 'LISGIS Liberia Census 2022 geography', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.lisgis.gov.lr/document/LiberiaCensus2022Report.pdf', sourceNames: ['lisgis liberia census 2022 geography', 'liberia counties districts census'], openSourceIds: ['lisgis-liberia-census-2022-geography'], requiresCredential: true,
+    notes: ['Versioned statistical and administrative context only; exact artifact, edition, identifiers, CRS, digest, validity and reuse rights must be pinned.', 'Structure coordinates and household estimates are restricted and never postcode, public civic-address or exact-building evidence.'],
+  },
+  {
+    id: 'lla-liberia-land-administration', countryCodes: ['LR'], label: 'Liberia Land Authority land administration and LIS', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://lla.gov.lr/index.php/about-us/organizational-arrangements/land-administration-department', sourceNames: ['liberia land authority cadastre', 'liberia land information system'], openSourceIds: ['lla-liberia-land-administration'], requiresCredential: true,
+    notes: ['Controlled cadastre, land register, parcels, geodetic reference and developing Land Information System require exact product and terms.', 'They do not establish postcode assignment, postal geometry, civic address, building relation or authority to publish holders, deeds, interests or valuations.'],
+  },
+  {
+    id: 'liberia-data-governance-policy-2026-draft', countryCodes: ['LR'], label: 'Liberia draft Data Governance Policy 2026', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://mopt.gov.lr/wp-content/uploads/2022/06/2026-Liberia-Data-Governance-Policy-REVISED-CIPESA-1.pdf', sourceNames: ['liberia data governance policy 2026 draft', 'liberia personal data protection status'], openSourceIds: ['liberia-data-governance-policy-2026-draft'], requiresCredential: false,
+    notes: ['Official draft states comprehensive personal-data legislation is still emerging; enactment and policy status must be rechecked at release.', 'It supplies no postcode or geometry authority, and absence of a comprehensive act never authorizes publication of person-linked address or location data.'],
   },
   {
     id: 'guinee-poste',

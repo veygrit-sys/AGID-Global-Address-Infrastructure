@@ -1,0 +1,32 @@
+{
+  "country_code": "LR",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "synthetic_postcode_value": "9999",
+    "values_are_assignment_evidence": false,
+    "collision_requires_replacement_before_promotion": true,
+    "coordinates_are_upstream_observations": false,
+    "identifiers_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "lr-four-digit-shape-no-official-geometry",
+      "input": { "postcode": "9999", "country": "LR" },
+      "expected": { "normalized_postcode": "9999", "geometry_type": "none", "must_not_assert": ["current_ministry_assignment", "official_postcode_polygon", "administrative_identity", "deliverability", "real_address", "real_building"] }
+    },
+    {
+      "fixture_id": "lr-invalid-shapes-rejected",
+      "input": { "postcodes": ["999", "99999", "LR-9999", "99-99"] },
+      "expected": { "normalized_postcode": null, "geometry_type": "none", "must_not_assert": ["current_ministry_assignment", "automatic_normalization", "official_postcode_polygon", "deliverability"] }
+    },
+    {
+      "fixture_id": "lr-explicit-synthetic-address-building-link",
+      "input": { "postcode": "9999", "synthetic_address_point": true, "synthetic_explicit_building_relation": true },
+      "expected": { "resolved_level": "building", "must_not_assert": ["real_address", "real_building", "current_ministry_assignment", "postal_containment_building_link", "recipient_or_phone", "owner_or_land_holder"] }
+    }
+  ]
+}

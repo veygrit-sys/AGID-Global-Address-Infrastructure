@@ -532,6 +532,7 @@ export {
   normalizeMadagascarPostalCode,
   normalizeMauritiusPostalCode,
   normalizeMozambiquePostalCode,
+  normalizeLiberiaPostalCode,
   NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM,
 } from './postalContextCountryPolicy';
 

@@ -1,0 +1,85 @@
+{
+  "schema_version": "agid-postal-lr-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-lr",
+    "country_code": "LR",
+    "country_name": "Liberia",
+    "maturity": "M1_metadata",
+    "integration_role": "external-country-pack-consumed-by-agid"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_upstream_rows": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_land_records": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "canonical_postcode_format": "NNNN",
+    "format_rule": "The UPU Liberia addressing sheet dated August 2017 places four digits to the left of the locality name and separately shows street and P.O. Box examples. Leading zeroes, if present in an authoritative assignment, remain strings.",
+    "authority_rule": "The Ministry of Posts and Telecommunications is the government postal authority and Postmaster General. Its mandate, services, office list and service-delivery documents establish institutional and network context, not a complete postcode assignment register or postal geometry.",
+    "assignment_rule": "A production assignment requires an exact ministry-authorized row or response with four-digit code, locality or post-office identity, delivery type, edition, observed-at, valid-time, digest and field-level reuse rights. UPU examples, code shape, a ministry address, service code, regional office or third-party search result are insufficient.",
+    "geometry_rule": "No reviewed official source supplies canonical boundary coordinates for every four-digit code. Default geometry is none. A post-office point, county, district, census area, parcel, buffer, Voronoi partition, interpolation, model result or AGID cell union is never an official postcode polygon.",
+    "administrative_rule": "LISGIS 2022 census counties, districts, clans and enumeration areas are versioned statistical or administrative context. They require an exact artifact, identifiers, CRS, digest, validity and reuse terms and do not establish postal assignment or postal boundaries.",
+    "address_rule": "A four-digit postcode and locality or post office provide routing context only. Street, house number, community, landmark, P.O. Box, recipient, telephone, entrance and unit require separate source-linked evidence. UPU and service-charter examples are not reusable customer rows.",
+    "building_rule": "Exact building display requires a rights-cleared civic-address point, matching normalized components, an explicit stable address-to-building relation and separately permitted building geometry. Postcode, locality, office, census-structure point, parcel containment, proximity, text match and model score are insufficient.",
+    "land_rule": "Liberia Land Authority cadastral, land-register and Land Information System evidence is a controlled land layer. A parcel, deed, land interest or valuation is neither postcode assignment nor an automatic civic-address or building relation, and holder fields remain excluded from public artifacts.",
+    "privacy_rule": "The 2025-2027 service charter promises customer privacy and confidentiality, while the reviewed 2026 draft Data Governance Policy states that comprehensive personal-data legislation is still emerging. Public packs therefore exclude recipients, senders, telephone numbers, residents, occupants, owners, land holders, correspondence, complaint records and query histories regardless of legislative stage.",
+    "realtime_rule": "Live ministry or licensed-provider observations become bounded normalized receipts with URL, terms version, response digest, observed-at, valid-time and parser version. There is no invisible fallback, scraping mirror or model output that can override a pinned authoritative assignment.",
+    "model_rule": "Models may rank candidate localities, detect conflicts, compress indexes or propose derived surfaces. They never confer official postcode assignment, boundary, administrative identity, civic address, building identity, privacy permission or deliverability authority.",
+    "hosting_rule": "Cloudflare and Hugging Face may host only digest-pinned, rights-cleared, minimized, non-personal public artifacts. Customer, contact, census-structure, land-right, civic-address, building and query evidence remains controlled unless exact field-level terms authorize publication.",
+    "agid_rule": "A Liberia AGID cell is an independent spatial index and versioned crosswalk target. It is not a ministry postcode assignment, official postal polygon, county or district boundary, land parcel, civic address, building identity or proof of delivery entitlement."
+  },
+  "required_artifacts": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "fixtures/liberia-synthetic.json",
+    "release-manifest.json",
+    "assignment-observations.parquet",
+    "derived-candidates.pmtiles",
+    "agid-crosswalk.parquet",
+    "validation-report.json"
+  ],
+  "validation_rules": [
+    { "id": "strict-four-digit-shape", "pass": "Every canonical value is exactly four digits and is never padded, truncated or parsed as a number." },
+    { "id": "current-authority", "pass": "Every promoted assignment pins an exact ministry-authorized row or response, identity, edition, digest, delivery type and valid-time." },
+    { "id": "assignment-versus-geometry", "pass": "UPU syntax and ministry network evidence remain separate from boundary-coordinate authority." },
+    { "id": "versioned-admin-crosswalk", "pass": "Any derived administrative crosswalk pins the exact LISGIS edition, identifiers, CRS, time, many-to-many relation and reuse rights." },
+    { "id": "explicit-address-building-link", "pass": "Exact building output has a rights-cleared civic-address point and explicit address-building relation." },
+    { "id": "privacy-land-and-licence", "pass": "No customer, contact, census-structure, holder, owner, correspondence, complaint or query data is public and every field has approved rights." },
+    { "id": "synthetic-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Sources, syntax, institutions, licences and blockers inventoried." },
+      { "id": "M1_metadata", "definition": "Contract, source profile and synthetic conformance fixtures reviewable." },
+      { "id": "M2_assignment", "definition": "A complete rights-cleared current four-digit assignment table passes authority, validity and digest gates." },
+      { "id": "M3_geometry_and_address", "definition": "Derived boundary crosswalks and public civic-address evidence pass CRS, time, ambiguity, privacy and licence gates." },
+      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity and quality gates." }
+    ],
+    "hard_blockers": [
+      "four-digit-shape-or-upu-example-presented-as-current-ministry-assignment",
+      "ministry-office-service-code-or-contact-presented-as-postcode-assignment",
+      "county-district-census-area-office-point-buffer-voronoi-model-or-agid-presented-as-official-postal-polygon",
+      "digital-postal-address-contract-listing-presented-as-deployed-public-address-register",
+      "census-structure-point-presented-as-public-civic-address-or-building",
+      "parcel-land-interest-postcode-locality-nearest-containment-or-text-match-presented-as-exact-building",
+      "recipient-sender-phone-resident-owner-holder-correspondence-complaint-or-query-data-published",
+      "odbl-community-data-promoted-as-official-ministry-or-cadastral-authority",
+      "unreviewed-source-or-licence-republished-on-public-hosting",
+      "missing-assignment-geometry-admin-time-privacy-or-licence-lineage"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "complete_current_assignment_register_without-authoritative-release",
+    "official_full-code_polygon",
+    "postal_and_administrative_equivalence",
+    "deployed_national_public_civic_address_database",
+    "recipient_or_land-right_identity",
+    "exact_building_without_explicit_link"
+  ]
+}

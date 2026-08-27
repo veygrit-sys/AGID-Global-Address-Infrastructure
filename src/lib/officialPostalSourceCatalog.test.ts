@@ -1042,6 +1042,19 @@ test('Zambia catalog separates dated five-digit context, national-addressing sta
   assert.match(sources.get('dpc-zambia-location-data-guidance')?.notes.join(' ') ?? '', /location data.*personal data.*purpose-limited.*gated/i);
 });
 
+test('Liberia catalog separates format, authority, services, digital-address project, census geography, land and draft privacy policy', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('LR').map(source => [source.id, source]));
+  assert.equal(sources.get('upu-liberia-addressing-2017')?.validationReadiness, 'metadata-only');
+  assert.match(sources.get('upu-liberia-addressing-2017')?.notes.join(' ') ?? '', /four digits.*left.*locality.*not.*assignment.*geometry/i);
+  assert.equal(sources.get('mopt-liberia-postal-services')?.sourceRole, 'context-only');
+  assert.match(sources.get('mopt-liberia-service-charter-2025')?.notes.join(' ') ?? '', /regional-office.*confidentiality.*not.*postcode.*catchment/i);
+  assert.equal(sources.get('mopt-liberia-digital-postal-address-contract-2022')?.availability, 'commercial-or-restricted');
+  assert.match(sources.get('mopt-liberia-digital-postal-address-contract-2022')?.notes.join(' ') ?? '', /contract.*does not prove.*deployed public.*register.*building.*coverage/i);
+  assert.equal(sources.get('lisgis-liberia-census-2022-geography')?.depth, 'geo-only');
+  assert.equal(sources.get('lla-liberia-land-administration')?.requiresCredential, true);
+  assert.equal(sources.get('liberia-data-governance-policy-2026-draft')?.sourceRole, 'legal-framework-only');
+});
+
 test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
   assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');
