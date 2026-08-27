@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
+import { parse } from 'yaml';
 
 import { AFRICA_OPEN_GEO_SOURCES, getAfricaOpenSourceIds } from './africaOpenGeoSources';
 import { getOfficialPostalSourcesForCountry } from '../lib/officialPostalSourceCatalog';
@@ -49,4 +50,10 @@ test('Morocco address metadata encodes typed five-digit sectors and explicit bui
   assert.equal(format.addressRules.postalCode.usage, 'required');
   assert.deepEqual(format.addressRules.regionalHierarchy, ['region', 'provinceOrPrefecture', 'commune', 'localityOrDistrict', 'typedFiveDigitPostcode', 'officialHomeDeliverySectorOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding']);
   for (const id of EXPECTED) assert.ok(format.openSourceIds.includes(id));
+});
+
+test('Morocco JSON and YAML address profiles remain semantically identical', () => {
+  const json = JSON.parse(readFileSync(resolve(root, 'src/data/address_formats/africa/northern_africa/MA.json'), 'utf8'));
+  const yaml = parse(readFileSync(resolve(root, 'src/data/address_formats/africa/northern_africa/MA.yaml'), 'utf8'));
+  assert.deepEqual(yaml, json);
 });
