@@ -46,6 +46,7 @@ import {
   normalizeKenyaPostalCode,
   normalizeZambiaPostalCode,
   normalizeSenegalPostalCode,
+  normalizeTanzaniaPostalCode,
   normalizeSeychellesPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
@@ -324,6 +325,13 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeSenegalPostalCode('9997'), null);
   assert.equal(normalizeSenegalPostalCode('099997'), null);
   assert.equal(normalizePostalContextPostalCode('sn', '09 997'), '09997');
+  assert.equal(normalizeTanzaniaPostalCode('１１１０１'), '11101');
+  assert.equal(normalizeTanzaniaPostalCode('11 101'), '11101');
+  assert.equal(normalizeTanzaniaPostalCode('TZ-11101'), null);
+  assert.equal(normalizeTanzaniaPostalCode('PO Box 11101'), null);
+  assert.equal(normalizeTanzaniaPostalCode('1110'), null);
+  assert.equal(normalizeTanzaniaPostalCode('111010'), null);
+  assert.equal(normalizePostalContextPostalCode('tz', '11 101'), '11101');
   assert.equal(normalizeSeychellesPostalCode('0000'), null);
   assert.equal(normalizeSeychellesPostalCode('1234'), null);
   assert.equal(normalizeSeychellesPostalCode('SC-SYN-NATIONAL-ADDRESS-99999'), null);
@@ -1079,6 +1087,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('SO'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.SO.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.SO.postalCodeFormat, /AA NNNNN.*optional.*non-universal.*authoritative evidence/i);
+  assert.equal(isPostalContextCountryCode('TZ'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.TZ.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.TZ.postalCodeFormat, /NNNNN.*ward\/shehia.*post office.*landmark.*temporary event.*category.*assignment evidence/i);
   assert.equal(isPostalContextCountryCode('IN'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IN.fullCodeGeometrySemantics, 'delivery-network-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IN.postalCodeFormat, 'NNNNNN');

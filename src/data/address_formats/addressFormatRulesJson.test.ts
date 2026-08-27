@@ -1720,6 +1720,10 @@ test('East Africa address JSON files expose addressRules metadata and English de
   assert.equal(loadFormat('SO').postalCode?.api, 'https://moct.gov.so/en/posta/');
   assert.match(loadFormat('SO').postalCode?.source ?? '', /MOCT.*May 2025 revival.*National Postal Policy.*BN03010.*NIRA.*OSM Somalia/i);
   assert.deepEqual(loadRules('SO').regionalHierarchy, ['federalOrTerritorialScope', 'federalMemberStateOrAdministration', 'region', 'district', 'cityOrMunicipality', 'localityOrNeighbourhood', 'roadAndPremise', 'typedObservedPostcodeOrNoCode', 'poBoxSeparate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitRightsClearedCivicAddress', 'explicitAddressLinkedBuilding', 'agidCell']);
+  assert.equal(loadFormat('TZ').postalCode?.api, 'https://www.tcra.go.tz/services/postcodes');
+  assert.match(loadFormat('TZ').postalCode?.source ?? '', /TCRA National Addressing.*National Postcode Allocation Plan, July 2026.*syntax.*current assignment.*polygon/i);
+  assert.match(loadRules('TZ').postalCode?.label ?? '', /5 digits.*TCRA category.*current assignment/i);
+  assert.deepEqual(loadRules('TZ').regionalHierarchy, ['postcodeZone', 'region', 'districtOrCbd', 'wardOrShehia', 'villageMtaaHamlet', 'typedPostcodeCategory', 'civicAddress', 'building', 'agidCell']);
   assert.match(loadRules('KE').postalCode?.label ?? '', /5 digits.*delivery post office.*P\.O\. Box.*MPost.*NASK.*separate/i);
   assert.equal(loadFormat('KE').postalCode?.api, 'https://posta.co.ke/services/services/');
   assert.match(loadFormat('KE').postalCode?.source ?? '', /Postal Corporation of Kenya.*Customer Service Charter 2022.*UPU Kenya.*NASK.*Survey of Kenya.*Ardhisasa.*ODPC/i);

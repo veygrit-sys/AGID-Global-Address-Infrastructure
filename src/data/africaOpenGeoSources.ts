@@ -59,6 +59,15 @@ export type AfricaOpenGeoSourceId =
   | 'somalia-nira-principles'
   | 'somalia-nca-privacy'
   | 'osm-somalia'
+  | 'tcra-tanzania-postcodes'
+  | 'tcra-tanzania-postcode-plan-2026'
+  | 'tcra-tanzania-addressing'
+  | 'tanzania-postal-regulations-2018'
+  | 'nbs-tanzania-wards-2022'
+  | 'tcra-tanzania-napa'
+  | 'pdpc-tanzania-act-2022'
+  | 'pdpc-tanzania-enforcement-2026'
+  | 'osm-tanzania'
   | 'south-sudan-nca-postal-sector'
   | 'malawi-postcodes-macra'
   | 'posta-uganda-physical-address'
@@ -709,6 +718,51 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   'osm-somalia': {
     id: 'osm-somalia', name: 'OpenStreetMap Somalia project', url: 'https://wiki.openstreetmap.org/wiki/Somalia', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
     notes: 'Community roads, localities and buildings are candidate context only. OSM does not establish official Somali postcode assignments, jurisdiction, cadastre, delivery entitlement or exact address-to-building links.',
+  },
+  'tcra-tanzania-postcodes': {
+    id: 'tcra-tanzania-postcodes', name: 'TCRA Tanzania postcode search', url: 'https://www.tcra.go.tz/services/postcodes', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'TCRA public lookup; bulk extraction and redistribution rights are not inferred',
+    notes: 'Official current lookup publishes region, district, postcode-for text and five-digit code. Rows are reference observations, not a blanket reusable bulk release, category proof, building relation or polygon.',
+  },
+  'tcra-tanzania-postcode-plan-2026': {
+    id: 'tcra-tanzania-postcode-plan-2026', name: 'TCRA National Postcode Allocation Plan July 2026', url: 'https://tcra.go.tz/publications/guidebooks', kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'Official plan publication; database and redistribution rights remain source-specific',
+    notes: 'Current official plan version metadata. Tanzania uses five digits across administrative wards, post offices, big mailers, landmarks and temporary events, so syntax alone cannot identify an area or current assignment.',
+  },
+  'tcra-tanzania-addressing': {
+    id: 'tcra-tanzania-addressing', name: 'TCRA National Addressing and Postcode service', url: 'https://address.tcra.go.tz/services/postcode', kind: 'address', coverage: 'country', usage: 'primary',
+    license: 'TCRA public reference; address-file and bulk reuse rights are not inferred',
+    notes: 'Official system semantics define six postcode zones plus Zanzibar, the digit hierarchy, five postcode categories and address examples. Landmark/event coordinates are not automatically polygons, and P.O. Box remains separate from the physical address.',
+  },
+  'tanzania-postal-regulations-2018': {
+    id: 'tanzania-postal-regulations-2018', name: 'Tanzania Electronic and Postal Communications (Postal) Regulations 2018', url: 'https://www.tcra.go.tz/download/sw-1619086897-The%20Electronic%20and%20Postal%20Communications%20%28Postal%29%20Regulations%2C%202018.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official legislation publication',
+    notes: 'Regulation 28 places the national address database and address/postcode map under TCRA management and makes TCRA the sole disseminator of address files. Public postcode access does not grant unrestricted address-file redistribution.',
+  },
+  'nbs-tanzania-wards-2022': {
+    id: 'nbs-tanzania-wards-2022', name: 'NBS Tanzania 2022 Census ward/shehia boundaries', url: 'https://microdata.nbs.go.tz/index.php/catalog/49', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'NBS terms: statistical/scientific research only; no redistribution or sale without written agreement',
+    notes: 'Official v0.1 ward-area polygons use GCS Arc 1960 and are continually improved. They are administrative/census geometry, not TCRA postcode polygons; redistribution, exact ward assignment crosswalk, edition, CRS transformation and Zanzibar/shehia scope must be approved.',
+  },
+  'tcra-tanzania-napa': {
+    id: 'tcra-tanzania-napa', name: 'Tanzania National Physical Addressing system (NaPA)', url: 'https://testnapa.mawasiliano.go.tz/', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Controlled operational/test interface; no bulk address or building reuse right inferred',
+    notes: 'NaPA exposes address-code and postcode search concepts. LGAs allocate and register residential addresses and house numbers; only an explicit rights-cleared stable address-to-building relation can support exact building display.',
+  },
+  'pdpc-tanzania-act-2022': {
+    id: 'pdpc-tanzania-act-2022', name: 'Tanzania Personal Data Protection Act 2022', url: 'https://www.pdpc.go.tz/media/media/THE_PERSONAL_DATA_PROTECTION_ACT.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official legislation publication',
+    notes: 'The Act treats address information as personal data and governs collection, processing, disclosure, security and transfers. It supplies governance, not postal, address or geometry data.',
+  },
+  'pdpc-tanzania-enforcement-2026': {
+    id: 'pdpc-tanzania-enforcement-2026', name: 'Tanzania PDPC full-enforcement notice 2026', url: 'https://www.pdpc.go.tz/media/media/PUBLIC_NOTICE_MARCH_2026.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official regulator notice',
+    notes: 'PDPC announced full enforcement from 9 April 2026, including controller/processor registration and compliance. Precise addresses, residents, owners, occupants, deliveries and query logs remain controlled.',
+  },
+  'osm-tanzania': {
+    id: 'osm-tanzania', name: 'OpenStreetMap Tanzania community mapping', url: 'https://wiki.openstreetmap.org/wiki/Tanzania', kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Community roads, names, addresses and buildings are useful candidate context but are not TCRA assignments, NBS/OCGS boundaries, LGA address registrations, cadastre or exact address-building authority.',
   },
   'south-sudan-nca-postal-sector': {
     id: 'south-sudan-nca-postal-sector',
@@ -1626,7 +1680,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   CV: ['correios-cabo-verde', 'correios-cabo-verde-contact-identifiers', 'correios-cabo-verde-cip', 'upu-cabo-verde-addressing-2014', 'upu-cabo-verde-postcode-length-2026', 'ingt-cabo-verde-idecv', 'ingt-cabo-verde-admin-feature-service', 'ingt-cabo-verde-cadastre', 'osm-cabo-verde', 'hot-osm-west-africa'],
   KM: ['snpsf-comores-poste', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
   KE: ['posta-kenya', 'posta-kenya-customer-service-charter-2022', 'posta-kenya-properties-2026', 'upu-kenya-addressing-2004', 'ca-kenya-national-addressing-system', 'kenya-national-addressing-policy-2023', 'survey-of-kenya-mapping-policy-2021', 'ardhisasa-kenya', 'odpc-kenya-address-location-privacy', 'osm-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
-  TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'tcra-tanzania-addressing', 'tanzania-postal-regulations-2018', 'nbs-tanzania-wards-2022', 'tcra-tanzania-napa', 'pdpc-tanzania-act-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   RW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SO: ['somalia-moct-posta', 'somalia-moct-postal-revival-2025', 'somalia-national-postal-policy-2026', 'somalia-moct-digital-addressing', 'somalia-sobs-address-observation', 'somalia-sobs-cbca-jurisdiction', 'somalia-snbs-gis', 'somalia-nira-principles', 'somalia-nca-privacy', 'osm-somalia', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],

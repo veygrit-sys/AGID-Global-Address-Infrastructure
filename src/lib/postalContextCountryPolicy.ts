@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -295,6 +295,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   SO: {
     countryCode: 'SO',
     postalCodeFormat: 'AA NNNNN observed syntax (optional/non-universal; assignment and geographic semantics require authoritative evidence)',
+    fullCodeGeometrySemantics: 'area-or-non-area',
+  },
+  TZ: {
+    countryCode: 'TZ',
+    postalCodeFormat: 'NNNNN (administrative ward/shehia, post office, big mailer, landmark or temporary event; category and assignment evidence required)',
     fullCodeGeometrySemantics: 'area-or-non-area',
   },
   IN: {
@@ -789,6 +794,14 @@ export function normalizeSomaliaPostalCode(value: unknown) {
     .replace(/\s+/g, '');
   const match = /^([A-Z]{2})(\d{5})$/.exec(normalized);
   return match ? `${match[1]} ${match[2]}` : null;
+}
+
+/** Syntax-only normalizer; five digits do not identify a category, live assignment or polygon. */
+export function normalizeTanzaniaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^\d{5}$/.test(normalized) ? normalized : null;
 }
 
 export function normalizeIndiaPostalCode(value: unknown) {
@@ -1364,6 +1377,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'SN') return normalizeSenegalPostalCode(value);
   if (normalizedCountry === 'SC') return normalizeSeychellesPostalCode(value);
   if (normalizedCountry === 'SO') return normalizeSomaliaPostalCode(value);
+  if (normalizedCountry === 'TZ') return normalizeTanzaniaPostalCode(value);
   if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'PK') return normalizePakistanPostalCode(value);
   if (normalizedCountry === 'BD') return normalizeBangladeshPostalCode(value);

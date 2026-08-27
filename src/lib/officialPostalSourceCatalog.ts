@@ -5847,18 +5847,36 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official privacy framework covers privacy by design, security, impact assessment, breach duties and cross-border data flows for personal and location-linked data.'],
   },
   {
-    id: 'tcra-tanzania-postcode',
-    countryCodes: ['TZ'],
-    label: 'Tanzania postcode service',
-    authority: 'government',
-    trustTier: 'authoritative',
-    availability: 'public-api',
-    depth: 'postcode',
-    url: 'https://www.tcra.go.tz/services/postcode',
-    sourceNames: ['tcra postcode', 'tanzania postcode', 'posta tanzania', 'tanzania posts corporation'],
-    openSourceIds: [],
-    requiresCredential: false,
-    notes: ['Official Tanzania Communications Regulatory Authority postcode service.'],
+    id: 'tcra-tanzania-postcodes', countryCodes: ['TZ'], label: 'TCRA Tanzania postcode search', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.tcra.go.tz/services/postcodes', sourceNames: ['tcra postcode search', 'tanzania postcode search'], openSourceIds: ['tcra-tanzania-postcodes'], requiresCredential: false,
+    notes: ['Official current lookup publishes region, district, postcode-for text and five-digit code.', 'A permitted dated result is reference evidence only; public search does not establish blanket bulk reuse, category, delivery entitlement, building relation or polygon.'],
+  },
+  {
+    id: 'tcra-tanzania-postcode-plan-2026', countryCodes: ['TZ'], label: 'TCRA National Postcode Allocation Plan July 2026', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://tcra.go.tz/publications/guidebooks', sourceNames: ['tanzania postcode allocation plan 2026', 'tcra national postcode plan'], openSourceIds: ['tcra-tanzania-postcode-plan-2026'], requiresCredential: false,
+    notes: ['Current official plan version metadata; the plan distinguishes allocated, assigned and reserved values.', 'Five digits may identify an administrative ward, post office, big mailer, landmark or temporary event, so syntax and hierarchy do not prove an area or current assignment.'],
+  },
+  {
+    id: 'tcra-tanzania-addressing', countryCodes: ['TZ'], label: 'TCRA National Addressing and Postcode service', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://address.tcra.go.tz/services/postcode', sourceNames: ['tcra national addressing postcode', 'tanzania napa postcode map'], openSourceIds: ['tcra-tanzania-addressing'], requiresCredential: false,
+    notes: ['Official semantics cover six mainland zones plus Zanzibar, five-digit hierarchy, five postcode categories and physical-address examples.', 'Landmark/event coordinates do not automatically define polygons; P.O. Box, civic address, house number and building remain separate typed objects.'],
+  },
+  {
+    id: 'tanzania-postal-regulations-2018', countryCodes: ['TZ'], label: 'Tanzania Postal Regulations 2018', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.tcra.go.tz/download/sw-1619086897-The%20Electronic%20and%20Postal%20Communications%20%28Postal%29%20Regulations%2C%202018.pdf', sourceNames: ['tanzania postal regulations 2018', 'regulation 28 national address database'], openSourceIds: ['tanzania-postal-regulations-2018'], requiresCredential: false,
+    notes: ['Regulation 28 places the national address database and address/postcode map under TCRA management and makes TCRA the sole disseminator of address files.', 'Public access to appropriate postcodes is not a blanket address-file, database or geometry redistribution licence.'],
+  },
+  {
+    id: 'nbs-tanzania-wards-2022', countryCodes: ['TZ'], label: 'NBS Tanzania 2022 Census ward/shehia boundaries', authority: 'government', trustTier: 'authoritative', availability: 'licensed-bulk-data', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://microdata.nbs.go.tz/index.php/catalog/49', sourceNames: ['nbs tanzania wards 2022', 'tanzania census ward shapefile'], openSourceIds: ['nbs-tanzania-wards-2022'], requiresCredential: false,
+    notes: ['Official v0.1 census ward polygons use GCS Arc 1960 and are described as continually improved administrative geography.', 'Terms restrict use to statistical/scientific research and prohibit redistribution or sale without written agreement; the layer is not a TCRA postcode polygon and requires an exact versioned assignment crosswalk.'],
+  },
+  {
+    id: 'tcra-tanzania-napa', countryCodes: ['TZ'], label: 'Tanzania National Physical Addressing system', authority: 'government', trustTier: 'authoritative', availability: 'auth-required-api', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://testnapa.mawasiliano.go.tz/', sourceNames: ['tanzania napa', 'national physical addressing tanzania'], openSourceIds: ['tcra-tanzania-napa'], requiresCredential: true,
+    notes: ['Operational/test interface and TCRA FAQs establish address-code search and LGA responsibility for assigning and registering residential addresses and house numbers.', 'No production bulk address/building release, stable public crosswalk, redistribution right or exact-building entitlement is inferred.'],
+  },
+  {
+    id: 'pdpc-tanzania-act-2022', countryCodes: ['TZ'], label: 'Tanzania Personal Data Protection Act 2022', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.pdpc.go.tz/media/media/THE_PERSONAL_DATA_PROTECTION_ACT.pdf', sourceNames: ['tanzania personal data protection act 2022', 'pdpc tanzania act'], openSourceIds: ['pdpc-tanzania-act-2022'], requiresCredential: false,
+    notes: ['Official law treats address information as personal data and governs purpose, processing, security, disclosure and transfers.', 'It provides governance, not postal assignment, address, geometry or building data.'],
+  },
+  {
+    id: 'pdpc-tanzania-enforcement-2026', countryCodes: ['TZ'], label: 'Tanzania PDPC full-enforcement notice 2026', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.pdpc.go.tz/media/media/PUBLIC_NOTICE_MARCH_2026.pdf', sourceNames: ['tanzania pdpc enforcement 2026', 'pdpc public notice march 2026'], openSourceIds: ['pdpc-tanzania-enforcement-2026'], requiresCredential: false,
+    notes: ['PDPC announced full enforcement from 9 April 2026 and registration/compliance duties for controllers and processors.', 'Precise addresses, residents, owners, occupants, deliveries and query logs stay in controlled infrastructure under an approved lawful basis.'],
   },
   {
     id: 'rwanda-national-post-office',

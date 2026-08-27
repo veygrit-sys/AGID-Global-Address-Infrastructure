@@ -71,7 +71,7 @@ test('priority African countries map to national and regional open geospatial so
   const expectedSourceIdsByCountry: Record<string, AfricaOpenGeoSourceId[]> = {
     NG: ['nipost-postcode', 'hot-osm-west-africa'],
     KE: ['rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
-    TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'nbs-tanzania-wards-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     UG: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     ZA: ['ngi-south-africa', 'sapo-postcodes', 'postafind-za'],
     MZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],

@@ -5,20 +5,28 @@ native:
   addressFormat: |-
     {{organization}}
     {{houseNumber}} {{street}}
-    {{city}} {{postcode}}
+    {{postcode}} {{city}}
+    {{district}}
+    {{region}}
   ordering: small-to-big
   fields:
     - key: organization
       label: Kampuni
       placeholder: ""
     - key: houseNumber
-      label: SLP/Namba ya Nyumba
-      placeholder: SLP 1234
+      label: Namba ya Nyumba / mstari wa SLP
+      placeholder: Nyumba 12 au SLP 1234
     - key: street
       label: Mtaa
       placeholder: Mtaa wa Samora
     - key: city
-      label: Mji/Mkoa
+      label: Kata/Shehia au eneo
+      placeholder: Kivukoni
+    - key: district
+      label: Wilaya
+      placeholder: Ilala
+    - key: region
+      label: Mkoa
       placeholder: Dar es Salaam
     - key: postcode
       label: Namba ya Posta
@@ -30,20 +38,28 @@ domestic:
     addressFormat: |-
       {{organization}}
       {{houseNumber}} {{street}}
-      {{city}} {{postcode}}
+      {{postcode}} {{city}}
+      {{district}}
+      {{region}}
     ordering: small-to-big
     fields:
       - key: organization
         label: Company
         placeholder: ""
       - key: houseNumber
-        label: PO Box/House No.
-        placeholder: PO Box 1234
+        label: House number / separate P.O. Box line
+        placeholder: House 12 or P.O. Box 1234
       - key: street
         label: Street
         placeholder: Samora Ave
       - key: city
-        label: City/Region
+        label: Ward/Shehia or locality
+        placeholder: Kivukoni
+      - key: district
+        label: District
+        placeholder: Ilala
+      - key: region
+        label: Region
         placeholder: Dar es Salaam
       - key: postcode
         label: Postal Code
@@ -54,7 +70,9 @@ english:
   addressFormat: |-
     {{organization}}
     {{houseNumber}} {{street}}
-    {{city}} {{postcode}}
+    {{postcode}} {{city}}
+    {{district}}
+    {{region}}
     TANZANIA
   ordering: small-to-big
   fields:
@@ -62,13 +80,19 @@ english:
       label: Company
       placeholder: ""
     - key: houseNumber
-      label: PO Box/House No.
-      placeholder: PO Box 1234
+      label: House number / separate P.O. Box line
+      placeholder: House 12 or P.O. Box 1234
     - key: street
       label: Street
       placeholder: Samora Ave
     - key: city
-      label: City/Region
+      label: Ward/Shehia or locality
+      placeholder: Kivukoni
+    - key: district
+      label: District
+      placeholder: Ilala
+    - key: region
+      label: Region
       placeholder: Dar es Salaam
     - key: postcode
       label: Postal Code
@@ -77,8 +101,8 @@ english:
 postalCode:
   format: NNNNN
   regex: ^\d{5}$
-  api: null
-  source: Postal metadata from AGID East Africa regional table; open OSS source not configured
+  api: https://www.tcra.go.tz/services/postcodes
+  source: TCRA National Addressing and Postcode service and National Postcode Allocation Plan, July 2026; syntax does not prove a current assignment or polygon
 addressRules:
   languages:
     - code: sw
@@ -102,13 +126,29 @@ addressRules:
     - region
     - country
   regionalHierarchy:
+    - postcodeZone
     - region
-    - district
+    - districtOrCbd
+    - wardOrShehia
+    - villageMtaaHamlet
+    - typedPostcodeCategory
+    - civicAddress
+    - building
+    - agidCell
   postalCode:
-    label: 5 digits required
+    label: 5 digits; TCRA category and current assignment required
     required: true
     usage: required
   openSourceIds:
+    - tcra-tanzania-postcodes
+    - tcra-tanzania-postcode-plan-2026
+    - tcra-tanzania-addressing
+    - tanzania-postal-regulations-2018
+    - nbs-tanzania-wards-2022
+    - tcra-tanzania-napa
+    - pdpc-tanzania-act-2022
+    - pdpc-tanzania-enforcement-2026
+    - osm-tanzania
     - rcmrd-geoportal
     - hot-osm-east-southern-africa
     - osm-nominatim
@@ -138,6 +178,15 @@ addressRules:
     - gbif-occurrence
     - rcmrd-gmes-africa-geoportal
 openSourceIds:
+  - tcra-tanzania-postcodes
+  - tcra-tanzania-postcode-plan-2026
+  - tcra-tanzania-addressing
+  - tanzania-postal-regulations-2018
+  - nbs-tanzania-wards-2022
+  - tcra-tanzania-napa
+  - pdpc-tanzania-act-2022
+  - pdpc-tanzania-enforcement-2026
+  - osm-tanzania
   - rcmrd-geoportal
   - hot-osm-east-southern-africa
   - osm-nominatim
