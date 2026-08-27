@@ -1,0 +1,90 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-na",
+    "country_code": "NA",
+    "country_name": "Namibia",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/na/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "contract_files": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "README.md",
+    "fixtures/namibia-synthetic.json"
+  ],
+  "authority_model": {
+    "rule": "Postal assignment, delivery-office identity, administrative geography, civic address, cadastre, building geometry and AGID are independent evidence axes.",
+    "required_fields": ["assignment_authority", "geometry_authority", "source_ids", "source_release", "method_id", "observed_at", "valid_from", "valid_to"],
+    "assignment_authority_values": ["official_postal_operator", "official_civic_address_authority", "official_land_registry", "derived_spatial_assignment", "virtual_assignment", "synthetic_fixture_assignment", "none"],
+    "geometry_authority_values": ["official_administrative_geometry", "official_cadastral_geometry", "official_civic_address_geometry", "official_building_geometry", "community_geometry", "derived_geometry", "virtual_geometry", "synthetic_fixture_geometry", "none"]
+  },
+  "postal_system": {
+    "canonical_postcode_format": "NNNNN",
+    "canonical_postcode_regex": "^\\d{2}0\\d{2}$",
+    "phase": "NamPost Phase 1",
+    "hierarchy": ["postal_region", "postal_area", "delivery_post_office"],
+    "third_character_rule": "The third character is zero in Phase 1 and is reserved as a future service-type indicator.",
+    "assignment_rule": "A current NamPost office/code observation may establish delivery-network context only for its pinned version; syntax alone never proves assignment.",
+    "geometry_rule": "NamPost expressly states that Phase 1 codes do not cover administrative or geographic areas. Full-code default geometry is none; Voronoi, buffers, administrative joins, AGID cells and learned surfaces remain derived or virtual candidates and never official NamPost geometry.",
+    "address_rule": "UPU address-line semantics distinguish PO Box, Private Bag, Poste Restante, urban physical addresses, rural six-digit delivery-point identifiers and internal building routing. These are separate identifiers and do not create public current address rows.",
+    "building_rule": "A building may be displayed only after a rights-cleared civic address point and an explicit address-to-building relation agree; postcode, nearest feature, parcel containment, text similarity or model score alone is insufficient.",
+    "cadastre_rule": "Surveyor-General cadastral parcels, title plans and owners remain separate from postal assignment, civic-address assignment and building relations.",
+    "privacy_rule": "Article 13, the Access to Information Act personal-information rules, current Data Protection Bill status, provider terms and purpose/security review apply. Recipients, residents, owners, occupants, PO Box holders, Private Bag holders, staff contacts, instructions and query trails are not public artifacts.",
+    "realtime_rule": "Live NamPost or other provider observations enter only as bounded receipts with source/terms version, observed_at, normalized fields and retention policy; no unverified live fallback or training mirror is served.",
+    "compression_rule": "Use a compact code-to-office index and AGID cell-cover candidate index. Compression cannot convert a non-geographic delivery code into an area or discard authority, time, ambiguity and exception metadata.",
+    "hosting_rule": "Cloudflare and Hugging Face may host digest-pinned, rights-cleared, non-personal public artifacts. Contract-restricted, personal, cadastral-title and query data remain isolated in controlled infrastructure.",
+    "agid_rule": "AGID is an independent spatial index and crosswalk. An AGID cell or cell union is not a NamPost code, administrative boundary, parcel, address or building."
+  },
+  "exception_classes": [
+    {"id": "delivery-office-code", "rule": "Keep the five-digit code non-geographic; a public office point is office context, not a catchment."},
+    {"id": "po-box-private-bag-poste-restante", "rule": "Keep delivery identifiers non-spatial and never publish holder or recipient data."},
+    {"id": "physical-address", "rule": "Require a source-backed delivery point, street/local area or rural identifier; never infer it from postcode."},
+    {"id": "multi-unit-building", "rule": "Building and internal routing may be represented only at the authorized public level; units and occupants remain restricted."},
+    {"id": "admin-or-census-boundary", "rule": "Label region/constituency/statistical geometry as context, not postal geometry."},
+    {"id": "parcel-or-title", "rule": "Parcel and title context cannot supply a postal assignment, civic address, building link, owner or occupant."},
+    {"id": "nearest-or-learned-candidate", "rule": "A model may rank or propose candidates but cannot promote an exact address, building or official polygon."}
+  ],
+  "quality_gates": [
+    {"id": "phase1-format", "scope": "postal-codes", "metric": "five_digit_third_zero_ratio", "minimum": 1.0},
+    {"id": "assignment-freshness", "scope": "postal-observations", "pass": "Every code/office observation has a pinned NamPost page or artifact digest and observation time."},
+    {"id": "no-postal-area", "scope": "phase1-full-codes", "pass": "No Phase 1 code is published with canonical Polygon or MultiPolygon geometry."},
+    {"id": "authority-separation", "scope": "all", "pass": "Postal, administrative, cadastral, address, building and AGID authority are stored separately."},
+    {"id": "exact-address-building-link", "scope": "promoted-buildings", "pass": "Explicit rights-cleared address-building relation and matching normalized components are present."},
+    {"id": "privacy-and-licence", "scope": "public-artifacts", "pass": "No personal, staff-contact, title-holder, subscriber, recipient, occupant or query data is published and all field-level rights are approved."},
+    {"id": "synthetic-never-promotes", "scope": "fixtures", "pass": "Synthetic fixtures validate behavior but never satisfy production gates."}
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Sources, semantics, licences and blockers inventoried."},
+      {"id": "M1_metadata", "definition": "Contract, source profile and synthetic conformance fixtures reviewable."},
+      {"id": "M2_experimental", "definition": "Rights-cleared observations reproduce a digest-pinned experimental pack."},
+      {"id": "M3_candidate", "definition": "Independent holdout, ambiguity, privacy, freshness and correction gates pass."},
+      {"id": "M4_stable", "definition": "Two consecutive refreshes pass and rollback is monitored."}
+    ],
+    "hard_blockers": [
+      "phase1-code-presented-as-postal-polygon",
+      "political-region-or-constituency-presented-as-postal-catchment",
+      "office-point-buffer-or-voronoi-presented-as-official",
+      "live-page-or-pdf-mirrored-without-redistribution-rights",
+      "po-box-private-bag-holder-or-recipient-published",
+      "parcel-owner-resident-occupant-or-query-trail-published",
+      "nearest-text-containment-or-model-score-presented-as-exact-building",
+      "agid-cell-presented-as-nampost-or-cadastral-authority",
+      "missing-assignment-geometry-time-or-licence-lineage"
+    ]
+  },
+  "non_guarantees": ["deliverability", "official_postal_polygon", "recipient_identity", "po_box_or_private_bag_holder", "resident_owner_or_occupant", "exact_address_or_building_without-explicit-link", "survey_or-title-certification"]
+}

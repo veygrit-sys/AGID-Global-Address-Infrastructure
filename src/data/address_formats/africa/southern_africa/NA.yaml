@@ -1,129 +1,87 @@
 countryCode: NA
 name: Namibia
 native:
-  name: Namibia
+  name: English
   addressFormat: |-
     {{recipient}}
-    {{street}}
-    {{city}}
+    {{organization}}
+    {{internalRouting}}
+    {{deliveryPoint}}
+    {{subLocality}}
+    {{locality}}
+    {{deliveryPostOffice}}
     {{postcode}}
   ordering: small-to-big
   fields:
-    - key: recipient
-      label: Full Name
-      placeholder: John Smith
-      required: true
-      type: text
-    - key: street
-      label: Street Address / PO Box
-      placeholder: PO Box 123
-      required: true
-      type: text
-    - key: city
-      label: City / Town
-      placeholder: Windhoek
-      required: true
-      type: text
-    - key: postcode
-      label: Postal Code
-      placeholder: "10001"
-      required: false
-      type: text
+    - { key: recipient, label: Full Name, placeholder: Synthetic Recipient, required: true, type: text }
+    - { key: organization, label: Organization / Unit, placeholder: Synthetic Organization / Department, type: text }
+    - { key: internalRouting, label: Building / Complex / Floor / Unit, placeholder: Synthetic Building / internal routing, type: text }
+    - { key: deliveryPoint, label: Delivery Point, placeholder: PO Box / Private Bag / number and street / local area, required: true, type: text }
+    - { key: subLocality, label: Sub-locality, placeholder: Synthetic Sub-locality, type: text }
+    - { key: locality, label: Locality / Village, placeholder: Synthetic Locality, type: text }
+    - { key: deliveryPostOffice, label: Delivery Post Office / Postal Area, placeholder: Synthetic Delivery Office, required: true, type: text }
+    - { key: postcode, label: Postcode, placeholder: "99099", required: true, type: text }
 english:
+  name: International English
   addressFormat: |-
     {{recipient}}
-    {{street}}
-    {{city}}
+    {{organization}}
+    {{internalRouting}}
+    {{deliveryPoint}}
+    {{subLocality}}
+    {{locality}}
+    {{deliveryPostOffice}}
     {{postcode}}
-    Namibia
+    NAMIBIA
   ordering: small-to-big
   fields:
-    - key: recipient
-      label: Full Name
-      placeholder: John Smith
-      required: true
-      type: text
-    - key: street
-      label: Street Address / PO Box
-      placeholder: PO Box 123
-      required: true
-      type: text
-    - key: city
-      label: City / Town
-      placeholder: Windhoek
-      required: true
-      type: text
-    - key: postcode
-      label: Postal Code
-      placeholder: "10001"
-      required: false
-      type: text
+    - { key: recipient, label: Full Name, placeholder: Synthetic Recipient, required: true, type: text }
+    - { key: organization, label: Organization / Unit, placeholder: Synthetic Organization / Department, type: text }
+    - { key: internalRouting, label: Building / Complex / Floor / Unit, placeholder: Synthetic Building / internal routing, type: text }
+    - { key: deliveryPoint, label: Delivery Point, placeholder: PO Box / Private Bag / number and street / local area, required: true, type: text }
+    - { key: subLocality, label: Sub-locality, placeholder: Synthetic Sub-locality, type: text }
+    - { key: locality, label: Locality / Village, placeholder: Synthetic Locality, type: text }
+    - { key: deliveryPostOffice, label: Delivery Post Office / Postal Area, placeholder: Synthetic Delivery Office, required: true, type: text }
+    - { key: postcode, label: Postcode, placeholder: "99099", required: true, type: text }
 postalCode:
-  format: NNNNN
-  regex: ^\d{5}$
+  format: NNNNN Phase 1; third digit zero
+  regex: ^\d{2}0\d{2}$
   api: https://www.nampost.com.na/postal/postal-codes
-  source: NamPost postal codes
+  source: NamPost current five-digit delivery-network directory; Phase 1 codes explicitly do not cover administrative or geographic areas
 addressRules:
   languages:
-    - code: en
-      name: English
+    - { code: en, name: English }
   deliveryLanguages:
-    - code: en
-      name: English
-  nativeOrder:
-    - name
-    - street
-    - houseNumber
-    - postcode
-    - city
-    - region
-    - country
-  englishOrder:
-    - name
-    - street
-    - houseNumber
-    - postcode
-    - city
-    - region
-    - country
+    - { code: en, name: English }
+  nativeOrder: [name, organization, organizationUnit, buildingOrComplex, floor, unit, deliveryPoint, streetOrLocalArea, subLocality, localityOrVillage, deliveryPostOfficeOrPostalArea, postcode, country]
+  englishOrder: [name, organization, organizationUnit, buildingOrComplex, floor, unit, deliveryPoint, streetOrLocalArea, subLocality, localityOrVillage, deliveryPostOfficeOrPostalArea, postcode, country]
   regionalHierarchy:
     - region
     - constituency
+    - localAuthorityOrSettlement
+    - localityOrVillage
+    - postalRegion
+    - postalArea
+    - deliveryPostOffice
+    - phase1FiveDigitDeliveryNetworkCodeWithNoCanonicalPostalGeometry
+    - poBoxPrivateBagPosteRestanteOrPhysicalDeliveryPoint
+    - explicitRightsClearedCivicAddressPoint
+    - explicitAddressLinkedBuilding
+    - agidCell
   postalCode:
-    label: 5 digits used
-    required: false
-    usage: used
-  openSourceIds:
-    - nampost-postal-codes
-    - rcmrd-geoportal
-    - hot-osm-east-southern-africa
-    - osm-nominatim
-    - osm-overpass
-    - openaddresses
-    - geonames-postal
-    - geonames-gazetteer
-    - geoboundaries
-    - upu-addressing
-    - hot-osm-africa
-    - openstreetmap-wiki-africa
-    - humdata-africa
-    - openaerialmap
-    - digital-earth-africa-dem
-    - digital-earth-africa-coastlines
-    - digital-earth-africa-waterbodies
-    - digital-earth-africa-wofs
-    - digital-earth-africa-fractional-cover
-    - digital-earth-africa-geomad
-    - fao-wapor
-    - esa-worldcover
-    - gebco-bathymetry
-    - gmrt-topography
-    - global-mangrove-watch
-    - allen-coral-atlas
-    - protected-planet-wdpa
-    - gbif-occurrence
-    - rcmrd-gmes-africa-geoportal
+    label: 5 digits; third digit is zero in Phase 1; code identifies delivery infrastructure and not an area
+    required: true
+    usage: required
 openSourceIds:
+  - nampost-postal-codes
+  - nampost-post-offices
+  - upu-namibia-addressing
+  - nsa-namibia-geo-portal
+  - mawlr-namibia-survey-mapping
+  - namibia-constitution-article-13
+  - namibia-access-to-information-act-2022
+  - namibia-data-protection-status-2026
+  - osm-namibia
   - rcmrd-geoportal
   - hot-osm-east-southern-africa
   - osm-nominatim

@@ -70,6 +70,7 @@ test('African countries map to geodata, address, and postal-code validation sour
 test('priority African countries map to national and regional open geospatial sources', () => {
   const expectedSourceIdsByCountry: Record<string, AfricaOpenGeoSourceId[]> = {
     NG: ['nipost-postcode', 'nipost-national-digital-postcode-2026', 'nipost-addressing-standard-2017', 'upu-nigeria-addressing-2022', 'npc-nigeria-ead-2023', 'fcta-nigeria-agis', 'ndpc-nigeria-data-protection-act-2023', 'ndpc-nigeria-gaid-2025', 'osm-nigeria', 'hot-osm-west-africa'],
+    NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     KE: ['rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
     TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'nbs-tanzania-wards-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     UG: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],

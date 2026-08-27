@@ -5858,13 +5858,43 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     label: 'NamPost postal codes',
     authority: 'postal-operator',
     trustTier: 'authoritative',
-    availability: 'public-api',
+    availability: 'web-search',
     depth: 'postcode',
+    sourceRole: 'postal-reference-data',
+    validationReadiness: 'reference-eligible',
     url: 'https://www.nampost.com.na/postal/postal-codes',
     sourceNames: ['nampost', 'nam post', 'nampost postal codes', 'namibia post'],
     openSourceIds: ['nampost-postal-codes'],
     requiresCredential: false,
-    notes: ['Official NamPost public postal-code directory grouped by political region and locality.'],
+    notes: ['Official current five-digit Phase 1 directory: the third digit is zero and the hierarchy identifies postal region, postal area and delivery Post Office.', 'NamPost expressly says these codes describe sorting/delivery infrastructure and do not cover administrative or geographic areas; a public table is not a documented API, reusable bulk licence, postal polygon, civic-address row or building relation.'],
+  },
+  {
+    id: 'nampost-post-offices', countryCodes: ['NA'], label: 'NamPost Post Office Finder', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.nampost.com.na/contact-us/post-offices', sourceNames: ['nampost post offices', 'namibia post office finder'], openSourceIds: ['nampost-post-offices'], requiresCredential: false,
+    notes: ['Official operational directory can validate delivery-office identity and a pinned public location observation.', 'It does not publish office catchments, national civic addresses, customer addresses, postcode polygons or building assignments; staff and personal contact fields remain excluded.'],
+  },
+  {
+    id: 'upu-namibia-addressing', countryCodes: ['NA'], label: 'UPU Namibia postal addressing sheet', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/NAMEn.pdf', sourceNames: ['upu namibia addressing', 'namibia postal address format'], openSourceIds: ['upu-namibia-addressing'], requiresCredential: false,
+    notes: ['Dated format semantics distinguish five-digit postcode, PO Box, Private Bag, Poste Restante, urban/rural physical delivery points, informal addressing and internal building routing.', 'Examples do not establish current assignments, public address records, geography, coordinates, building footprints or exact address-building relations.'],
+  },
+  {
+    id: 'nsa-namibia-geo-portal', countryCodes: ['NA'], label: 'Namibia Statistics Agency Geo Portal', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://nsa.org.na/client/namibia-geo-portal/', sourceNames: ['namibia statistics agency geo portal', 'nsa namibia gis'], openSourceIds: ['nsa-namibia-geo-portal'], requiresCredential: false,
+    notes: ['Official portal supports discovery and exchange of map-based geographic information.', 'A pinned region, constituency, census or statistical layer is administrative context only, not NamPost assignment, postal geometry, a civic address, parcel, building or delivery entitlement.'],
+  },
+  {
+    id: 'mawlr-namibia-survey-mapping', countryCodes: ['NA'], label: 'Namibia Directorate of Survey and Mapping', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://mawlr.gov.na/directorate-of-survey-and-mapping', sourceNames: ['namibia surveyor general', 'namibia directorate survey mapping', 'namibia cadastre'], openSourceIds: ['mawlr-namibia-survey-mapping'], requiresCredential: true,
+    notes: ['Official directorate maintains cadastral datasets, survey records, topographic and GIS/cartographic databases.', 'Dataset-specific access and reuse rights are required; parcel, title, map or footprint does not prove NamPost assignment, postal catchment, civic-address link, owner, resident or occupant.'],
+  },
+  {
+    id: 'namibia-constitution-article-13', countryCodes: ['NA'], label: 'Constitution of Namibia Article 13 Privacy', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.gov.na/documents/146489/641903/Namibia_Constitution.pdf/d2d4c4cd-3f19-ab0b-8bdb-8d5a5da3ee79', sourceNames: ['namibia constitution article 13 privacy'], openSourceIds: ['namibia-constitution-article-13'], requiresCredential: false,
+    notes: ['Constitutional privacy baseline covers homes, correspondence and communications.', 'It is governance only and does not authorize publication of precise private addresses, recipients, residents, owners, occupants, delivery instructions or query trails.'],
+  },
+  {
+    id: 'namibia-access-to-information-act-2022', countryCodes: ['NA'], label: 'Namibia Access to Information Act 2022', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://namiblii.org/akn/na/act/2022/8/eng%402022-12-28', sourceNames: ['namibia access to information act 2022', 'namibia ati personal information'], openSourceIds: ['namibia-access-to-information-act-2022'], requiresCredential: false,
+    notes: ['The Act defines personal information to include an individual address and protects third-party personal information.', 'It supplies disclosure and privacy governance only, not postal, cadastral, civic-address or building data and not publication permission.'],
+  },
+  {
+    id: 'namibia-data-protection-status-2026', countryCodes: ['NA'], label: 'Namibia Data Protection Bill status 2026', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.parliament.na/wp-content/uploads/2026/03/Question-Paper-No.-7.pdf', sourceNames: ['namibia data protection bill 2026', 'namibia no data protection act'], openSourceIds: ['namibia-data-protection-status-2026'], requiresCredential: false,
+    notes: ['Current parliamentary material records the absence of a Data Protection Act while Bill work continues.', 'That status is not permission to publish personal location data; constitutional, ATI, contractual, security and purpose-limitation review remains required.'],
   },
   {
     id: 'seychelles-postal-regulator-nas', countryCodes: ['SC'], label: 'Seychelles Postal Regulator National Addressing System', authority: 'government', trustTier: 'authoritative', availability: 'no-normal-postcode', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://seychellespostalregulator.com/pages/national-addressing-system', sourceNames: ['seychelles postal regulator', 'national addressing system seychelles', 'seychelles nas', 's42 seychelles'], openSourceIds: ['seychelles-postal-regulator-nas'], requiresCredential: false,

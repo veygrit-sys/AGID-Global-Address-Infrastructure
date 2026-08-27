@@ -72,6 +72,14 @@ export type AfricaOpenGeoSourceId =
   | 'malawi-postcodes-macra'
   | 'posta-uganda-physical-address'
   | 'nampost-postal-codes'
+  | 'nampost-post-offices'
+  | 'upu-namibia-addressing'
+  | 'nsa-namibia-geo-portal'
+  | 'mawlr-namibia-survey-mapping'
+  | 'namibia-constitution-article-13'
+  | 'namibia-access-to-information-act-2022'
+  | 'namibia-data-protection-status-2026'
+  | 'osm-namibia'
   | 'seychelles-postal-regulator-nas'
   | 'seychelles-statehouse-nas-2024'
   | 'seychelles-finance-nas-2025'
@@ -814,7 +822,44 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official NamPost postal-code directory with public postcode listings grouped by political region.',
+    license: 'Public reference; exact bulk extraction, caching, derivative and redistribution rights are unresolved',
+    notes: 'Official current five-digit Phase 1 directory and hierarchy. NamPost expressly says the codes concern sorting/delivery infrastructure, not administrative or geographic areas; the third digit is currently zero. A listed office/code pair is not a catchment, postal polygon, address point, building relation or bulk-redistribution licence.',
+  },
+  'nampost-post-offices': {
+    id: 'nampost-post-offices', name: 'NamPost Post Office Finder', url: 'https://www.nampost.com.na/contact-us/post-offices', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Public operational directory; exact reuse, caching and redistribution terms require review',
+    notes: 'Official office type, public location/contact and postcode reference. It can validate a delivery-office identity or a pinned public observation, but it does not publish an office catchment, national civic-address registry, customer address, building assignment or postal polygon. Personal and staff contact fields are excluded from public packs.',
+  },
+  'upu-namibia-addressing': {
+    id: 'upu-namibia-addressing', name: 'UPU Namibia postal addressing sheet', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/NAMEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated five-digit placement and address-line semantics distinguish PO Box, Private Bag, Poste Restante, urban physical address, rural six-digit delivery-point identifier, informal address and internal building routing. Examples are not current assignments, public address rows, postal areas, coordinates or exact address-to-building links.',
+  },
+  'nsa-namibia-geo-portal': {
+    id: 'nsa-namibia-geo-portal', name: 'Namibia Statistics Agency Geo Portal', url: 'https://nsa.org.na/client/namibia-geo-portal/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Dataset-specific portal terms, vintage, access route and redistribution rights required',
+    notes: 'Official discovery/exchange portal for Namibian map-based geographic information. Region, constituency, census or statistical geography is context only and is not NamPost assignment, a postal catchment, civic address, parcel, building or delivery entitlement.',
+  },
+  'mawlr-namibia-survey-mapping': {
+    id: 'mawlr-namibia-survey-mapping', name: 'Namibia Directorate of Survey and Mapping', url: 'https://mawlr.gov.na/directorate-of-survey-and-mapping', kind: 'geocoding', coverage: 'country', usage: 'reference',
+    license: 'Official service metadata; exact product, access, copyright, personal-data and redistribution terms required',
+    notes: 'The Directorate maintains cadastral datasets, survey records, topographic and GIS/cartographic databases. A parcel, title plan, map or building footprint is independent context and cannot prove a NamPost code, postal polygon, civic-address assignment, resident, owner, occupant or exact address-building relation.',
+  },
+  'namibia-constitution-article-13': {
+    id: 'namibia-constitution-article-13', name: 'Constitution of Namibia Article 13 Privacy', url: 'https://www.gov.na/documents/146489/641903/Namibia_Constitution.pdf/d2d4c4cd-3f19-ab0b-8bdb-8d5a5da3ee79', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official constitutional privacy baseline for homes, correspondence and communications. It is governance context only and does not grant a right to publish precise private addresses, recipients, residents, owners, occupants, delivery instructions or query trails.',
+  },
+  'namibia-access-to-information-act-2022': {
+    id: 'namibia-access-to-information-act-2022', name: 'Namibia Access to Information Act 2022', url: 'https://namiblii.org/akn/na/act/2022/8/eng%402022-12-28', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The enacted framework defines personal information to include an individual address and protects third-party personal information. It supplies disclosure/privacy governance, not postal, cadastral, address or building data and not permission to publish residents or precise private-address links.',
+  },
+  'namibia-data-protection-status-2026': {
+    id: 'namibia-data-protection-status-2026', name: 'Namibia Data Protection Bill status 2026', url: 'https://www.parliament.na/wp-content/uploads/2026/03/Question-Paper-No.-7.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current parliamentary material records the absence of a Data Protection Act while the Bill remains under development. Absence of a comprehensive Act is not permission to publish personal location data; constitutional, ATI, contractual, security and purpose-limitation review still applies.',
+  },
+  'osm-namibia': {
+    id: 'osm-namibia', name: 'OpenStreetMap Namibia community mapping', url: 'https://wiki.openstreetmap.org/wiki/Namibia', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and building footprints are candidate context only. OSM cannot establish a NamPost assignment, official postal catchment, cadastre, deliverability or an exact address-to-building link.',
   },
   'seychelles-postal-regulator-nas': {
     id: 'seychelles-postal-regulator-nas', name: 'Seychelles Postal Regulator National Addressing System', url: 'https://seychellespostalregulator.com/pages/national-addressing-system', kind: 'address', coverage: 'country', usage: 'primary',
@@ -1786,7 +1831,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   BW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  NA: ['nampost-postal-codes', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SC: ['seychelles-postal-regulator-nas', 'seychelles-statehouse-nas-2024', 'seychelles-finance-nas-2025', 'seychelles-statehouse-nas-bill-2026', 'seychelles-postal-regulator-operators', 'seychelles-nbs-gis', 'seychelles-lands-webgis', 'seychelles-webgis-disclaimer', 'seychelles-land-registration-act', 'seychelles-data-protection-act-2023', 'osm-seychelles', 'osm-seychelles-building-import', 'rcmrd-gmes-africa-geoportal'],
   SZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
