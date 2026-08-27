@@ -958,6 +958,18 @@ test('Ethiopia catalog separates operator observation, dated four-digit semantic
   assert.match(sources.get('ethiopia-addis-land-registration-edas')?.notes.join(' ') ?? '', /land-registration.*no reusable address rows.*crosswalk/i);
 });
 
+test('Cabo Verde catalog separates four-digit postcodes, extended contact identifiers, private CIP, and INGT geometry', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('CV').map(source => [source.id, source]));
+  assert.equal(sources.get('correios-cabo-verde')?.trustTier, 'authoritative');
+  assert.match(sources.get('correios-cabo-verde')?.notes.join(' ') ?? '', /four-digit.*locality.*not.*bulk.*polygon/i);
+  assert.match(sources.get('correios-cabo-verde-contact-identifiers')?.notes.join(' ') ?? '', /NNNN-NNN.*does not define.*relationship.*CIP.*geometry/i);
+  assert.equal(sources.get('correios-cabo-verde-cip')?.requiresCredential, true);
+  assert.equal(sources.get('correios-cabo-verde-cip')?.depth, 'address');
+  assert.match(sources.get('upu-cabo-verde-postcode-length-2026')?.notes.join(' ') ?? '', /August 2026.*four digits.*does not publish assignments.*geometry/i);
+  assert.equal(sources.get('ingt-cabo-verde-admin-feature-service')?.depth, 'geo-only');
+  assert.equal(sources.get('ingt-cabo-verde-cadastre')?.depth, 'building');
+});
+
 test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
   assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');

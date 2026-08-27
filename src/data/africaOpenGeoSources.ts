@@ -50,6 +50,14 @@ export type AfricaOpenGeoSourceId =
   | 'nipost-postcode'
   | 'la-poste-cote-divoire'
   | 'correios-cabo-verde'
+  | 'correios-cabo-verde-contact-identifiers'
+  | 'correios-cabo-verde-cip'
+  | 'upu-cabo-verde-addressing-2014'
+  | 'upu-cabo-verde-postcode-length-2026'
+  | 'ingt-cabo-verde-idecv'
+  | 'ingt-cabo-verde-admin-feature-service'
+  | 'ingt-cabo-verde-cadastre'
+  | 'osm-cabo-verde'
   | 'la-poste-benin'
   | 'la-poste-burkina'
   | 'gambia-post-services'
@@ -600,12 +608,93 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   },
   'correios-cabo-verde': {
     id: 'correios-cabo-verde',
-    name: 'Correios de Cabo Verde postcode reference',
+    name: 'Correios de Cabo Verde four-digit postcode guidance',
     url: 'https://correios.cv/faq',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Correios de Cabo Verde postcode reference and customer guidance, including public postcode examples and postcode-search instructions.',
+    license: 'Correios website copyright and exact reuse terms must be pinned',
+    notes: 'Official operator guidance states a four-digit postcode followed by the locality or zone and gives locality examples; it is not a bulk assignment release, polygon source, complete history or redistribution licence.',
+  },
+  'correios-cabo-verde-contact-identifiers': {
+    id: 'correios-cabo-verde-contact-identifiers',
+    name: 'Correios de Cabo Verde contact-location identifiers',
+    url: 'https://www.correios.cv/contactos',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Correios website all-rights-reserved notice; observation-only unless permission is pinned',
+    notes: 'The operator contact page publishes NNNN-NNN values labelled Codigo Postal for branches. It does not document a nationwide extended-code schema, mapping to the four-digit UPU postcode, CIP mapping, geometry, bulk API or reuse right.',
+  },
+  'correios-cabo-verde-cip': {
+    id: 'correios-cabo-verde-cip',
+    name: 'Correios de Cabo Verde CIP user portal',
+    url: 'https://www.correios.cv/cip',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Authenticated personal or company account data; no bulk redistribution',
+    notes: 'The operator describes CIP as a numeric domiciliary postal identifier for a person or company associated with a georeference. It is separate from a public four-digit postcode table and may expose personal or business location data.',
+  },
+  'upu-cabo-verde-addressing-2014': {
+    id: 'upu-cabo-verde-addressing-2014',
+    name: 'UPU Cabo Verde addressing sheet (April 2014)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/CPVEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'Dated four-digit format and island, commune, commune-district and post-office digit semantics only; not a current complete assignment table, polygon, address database or building relation.',
+  },
+  'upu-cabo-verde-postcode-length-2026': {
+    id: 'upu-cabo-verde-postcode-length-2026',
+    name: 'UPU Universal POST*CODE general addressing issues (August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; Universal POST*CODE data is separately licensed',
+    notes: 'The August 2026 UPU length table lists Cabo Verde as four digits. It establishes current length context only, not assignments, geometry, a CIP mapping or redistribution rights.',
+  },
+  'ingt-cabo-verde-idecv': {
+    id: 'ingt-cabo-verde-idecv',
+    name: 'INGT Cabo Verde Spatial Data Infrastructure (IDE-CV)',
+    url: 'https://ingt.gov.cv/ingt/Servi%C3%A7os/idecv/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Dataset-specific owner, access and reuse terms',
+    notes: 'Official OGC-oriented metadata, viewer and geoservice infrastructure. Catalog visibility and public query capability do not make every layer open or postal authority.',
+  },
+  'ingt-cabo-verde-admin-feature-service': {
+    id: 'ingt-cabo-verde-admin-feature-service',
+    name: 'INGT Cabo Verde administrative division feature service',
+    url: 'https://ingtgeo.gov.cv/arcgisingt/rest/services/SDI/Divisao_Administrativa_CaboVerde/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'INGT copyright; exact layer reuse and redistribution terms must be pinned',
+    notes: 'Official 2010 cartography at 1:5000 for island, municipality, parish, zone, city, town, place and neighbourhood context. These layers are administrative or toponymic, not postcode polygons.',
+  },
+  'ingt-cabo-verde-cadastre': {
+    id: 'ingt-cabo-verde-cadastre',
+    name: 'INGT Cabo Verde property cadastre programme',
+    url: 'https://ingt.gov.cv/ingt/Servi%C3%A7os/cadastro-predial/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Public access subject to personal-data law and exact artifact terms',
+    notes: 'Official cadastral programme for physical, economic and legal property identity. Programme access language does not publish a nationwide reusable parcel-building-address-CIP crosswalk or authorize disclosure of owners.',
+  },
+  'osm-cabo-verde': {
+    id: 'osm-cabo-verde',
+    name: 'OpenStreetMap Cabo Verde community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/Cabo_Verde',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community roads, places, addresses and buildings retained in a separate attributed partition; not Correios, UPU, INGT, cadastral or exact CIP-building authority.',
   },
   'la-poste-benin': {
     id: 'la-poste-benin',
@@ -1187,7 +1276,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   SL: ['salpost-sierra-leone', 'hot-osm-west-africa'],
   GM: ['gambia-post-services', 'hot-osm-west-africa'],
   GW: ['hot-osm-west-africa'],
-  CV: ['correios-cabo-verde', 'hot-osm-west-africa'],
+  CV: ['correios-cabo-verde', 'correios-cabo-verde-contact-identifiers', 'correios-cabo-verde-cip', 'upu-cabo-verde-addressing-2014', 'upu-cabo-verde-postcode-length-2026', 'ingt-cabo-verde-idecv', 'ingt-cabo-verde-admin-feature-service', 'ingt-cabo-verde-cadastre', 'osm-cabo-verde', 'hot-osm-west-africa'],
   KM: ['snpsf-comores-poste', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
   KE: ['posta-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
   TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],

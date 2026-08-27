@@ -3508,18 +3508,28 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ["Official Cote d'Ivoire postal operator portal; use as current postal-network evidence while direct public postcode lookup remains limited."],
   },
   {
-    id: 'correios-cabo-verde',
-    countryCodes: ['CV'],
-    label: 'Correios de Cabo Verde postcode reference',
-    authority: 'postal-operator',
-    trustTier: 'authoritative',
-    availability: 'web-search',
-    depth: 'postcode',
-    url: 'https://correios.cv/faq',
-    sourceNames: ['correios de cabo verde', 'correios.cv', 'codigo postal cabo verde', 'pesquisar codigos postais cabo verde'],
-    openSourceIds: ['correios-cabo-verde'],
-    requiresCredential: false,
-    notes: ['Official Cabo Verde postal operator FAQ and postcode guidance, including public postcode examples and postcode-search instructions.'],
+    id: 'correios-cabo-verde', countryCodes: ['CV'], label: 'Correios de Cabo Verde four-digit postcode guidance', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://correios.cv/faq', sourceNames: ['correios de cabo verde', 'correios.cv', 'codigo postal cabo verde', 'pesquisar codigos postais cabo verde'], openSourceIds: ['correios-cabo-verde'], requiresCredential: false, notes: ['Official operator guidance states a four-digit postcode followed by the locality or zone and gives locality examples.', 'The page is not a bulk assignment release, official polygon, complete history, stable public API or redistribution licence.'],
+  },
+  {
+    id: 'correios-cabo-verde-contact-identifiers', countryCodes: ['CV'], label: 'Correios de Cabo Verde contact-location identifiers', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.correios.cv/contactos', sourceNames: ['cabo verde branch contact postal identifiers', 'correios cabo verde nnnn-nnn'], openSourceIds: ['correios-cabo-verde-contact-identifiers'], requiresCredential: false, notes: ['The operator contact page publishes NNNN-NNN values labelled Codigo Postal for branch locations.', 'It does not define a nationwide extended-code schema, relationship to the four-digit UPU postcode, CIP mapping, postal geometry, bulk API or redistribution right.'],
+  },
+  {
+    id: 'correios-cabo-verde-cip', countryCodes: ['CV'], label: 'Correios de Cabo Verde CIP user portal', authority: 'postal-operator', trustTier: 'authoritative', availability: 'auth-required-api', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.correios.cv/cip', sourceNames: ['cabo verde cip', 'codigo de identificacao postal', 'correios cabo verde user portal'], openSourceIds: ['correios-cabo-verde-cip'], requiresCredential: true, notes: ['Correios describes CIP as a numeric identifier for a person or company that becomes its postal domicile and is associated with a georeference.', 'The authenticated identifier is separate from a public postcode table and requires purpose, consent or authority, minimisation, access control, retention and exact reuse terms.'],
+  },
+  {
+    id: 'upu-cabo-verde-addressing-2014', countryCodes: ['CV'], label: 'UPU Cabo Verde addressing sheet (April 2014)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/CPVEn.pdf', sourceNames: ['upu cabo verde addressing 2014', 'cabo verde four digit postcode'], openSourceIds: ['upu-cabo-verde-addressing-2014'], requiresCredential: false, notes: ['Dated four-digit format and island, commune, commune-district and post-office digit semantics only.', 'It is not a current complete assignment table, postal polygon, reusable address database, CIP mapping or building relation.'],
+  },
+  {
+    id: 'upu-cabo-verde-postcode-length-2026', countryCodes: ['CV'], label: 'UPU Cabo Verde postcode length (August 2026)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf', sourceNames: ['upu cabo verde postcode length 2026', 'universal postcode cabo verde'], openSourceIds: ['upu-cabo-verde-postcode-length-2026'], requiresCredential: false, notes: ['The August 2026 Universal POST*CODE general issues table lists Cabo Verde postcode length as four digits.', 'The table does not publish assignments, geometry, an extended-identifier or CIP mapping, a complete history or redistribution rights.'],
+  },
+  {
+    id: 'ingt-cabo-verde-idecv', countryCodes: ['CV'], label: 'INGT Cabo Verde Spatial Data Infrastructure (IDE-CV)', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ingt.gov.cv/ingt/Servi%C3%A7os/idecv/', sourceNames: ['ide cv', 'ingt cabo verde spatial data infrastructure'], openSourceIds: ['ingt-cabo-verde-idecv'], requiresCredential: false, notes: ['Official OGC-oriented metadata, viewer and geoservice infrastructure for public and private sector geographic resources.', 'Each artifact requires its exact owner, access class, licence, version, CRS, coverage and digest; catalog visibility is not postal authority or blanket republication permission.'],
+  },
+  {
+    id: 'ingt-cabo-verde-admin-feature-service', countryCodes: ['CV'], label: 'INGT Cabo Verde administrative division feature service', authority: 'government', trustTier: 'authoritative', availability: 'public-api', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ingtgeo.gov.cv/arcgisingt/rest/services/SDI/Divisao_Administrativa_CaboVerde/FeatureServer', sourceNames: ['ingt cabo verde administrative division', 'divisao administrativa cabo verde feature service'], openSourceIds: ['ingt-cabo-verde-admin-feature-service'], requiresCredential: false, notes: ['Official service describes 2010 cartography at 1:5000 with island, municipality, parish, zone, city, town, place and neighbourhood layers.', 'Public query capability is administrative and toponymic context, not a postcode assignment, official postcode polygon, address-building relation or automatic redistribution licence.'],
+  },
+  {
+    id: 'ingt-cabo-verde-cadastre', countryCodes: ['CV'], label: 'INGT Cabo Verde property cadastre programme', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ingt.gov.cv/ingt/Servi%C3%A7os/cadastro-predial/', sourceNames: ['cabo verde cadastro predial', 'ingt property cadastre'], openSourceIds: ['ingt-cabo-verde-cadastre'], requiresCredential: false, notes: ['Official programme covers physical, economic and legal identity of rural and urban properties and states access remains subject to personal-data law.', 'Programme context does not publish a nationwide reusable parcel-building-address-CIP crosswalk, current feature release, owner data right or postcode geometry.'],
   },
   {
     id: 'la-poste-benin',

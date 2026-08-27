@@ -1657,6 +1657,8 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadFormat('GM').postalCode?.api, 'https://gambiapost.gm/');
   assert.equal(loadFormat('CI').postalCode?.api, 'https://www.laposte.ci/');
   assert.equal(loadFormat('CV').postalCode?.api, 'https://correios.cv/faq');
+  assert.match(loadFormat('CV').postalCode?.source ?? '', /Correios de Cabo Verde.*UPU August 2026.*CIP.*INGT IDE-CV/i);
+  assert.match(loadRules('CV').postalCode?.label ?? '', /4 digits.*canonical UPU.*NNNN-NNN.*CIP.*separate/i);
   assert.equal(loadFormat('GN').postalCode?.api, 'https://www.laposte.gn/');
   assert.equal(loadFormat('LR').postalCode?.source, 'Liberia Ministry of Posts and Telecommunications official postal service information');
   assert.equal(loadFormat('ML').postalCode?.api, 'https://laposte.ml/');
@@ -1679,7 +1681,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadFormat('UG').postalCode?.api, 'https://ugapost.co.ug/our-services/physical-address/');
   assert.equal(loadFormat('ZW').postalCode?.api, 'https://www.zimpost.co.zw/');
   assert.deepEqual(loadRules('ML').regionalHierarchy, ['region', 'circle']);
-  assert.deepEqual(loadRules('CV').regionalHierarchy, ['island', 'municipality', 'parish']);
+  assert.deepEqual(loadRules('CV').regionalHierarchy, ['island', 'municipality', 'parish', 'localityOrZone', 'typedFourDigitPostcode', 'operatorPublishedExtendedIdentifier', 'privateCIPOrNoCIP', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitRightsClearedAddress', 'explicitRightsClearedBuildingOrParcel']);
 });
 
 test('East Africa address JSON files expose addressRules metadata and English delivery languages', () => {
@@ -1832,6 +1834,10 @@ test('All African country JSON files expose registered postal API or open-source
   assert.ok(loadFormat('ET').openSourceIds?.includes('upu-ethiopia-addressing-2002'));
   assert.ok(loadFormat('ET').openSourceIds?.includes('ethiopia-ssgi-edas'));
   assert.ok(loadFormat('ET').openSourceIds?.includes('ethiopia-nsdi-geoportal'));
+  assert.ok(loadFormat('CV').openSourceIds?.includes('correios-cabo-verde'));
+  assert.ok(loadFormat('CV').openSourceIds?.includes('correios-cabo-verde-cip'));
+  assert.ok(loadFormat('CV').openSourceIds?.includes('upu-cabo-verde-postcode-length-2026'));
+  assert.ok(loadFormat('CV').openSourceIds?.includes('ingt-cabo-verde-admin-feature-service'));
   assert.ok(loadFormat('MW').openSourceIds?.includes('malawi-postcodes-macra'));
   assert.ok(loadFormat('MZ').openSourceIds?.includes('correios-mocambique-codigos-postais'));
   assert.ok(loadFormat('NA').openSourceIds?.includes('nampost-postal-codes'));
