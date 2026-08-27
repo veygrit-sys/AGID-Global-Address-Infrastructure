@@ -6050,16 +6050,42 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'paositra-malagasy',
     countryCodes: ['MG'],
-    label: 'Paositra Malagasy',
+    label: 'Paositra Malagasy current operator website',
     authority: 'postal-operator',
     trustTier: 'official',
     availability: 'web-search',
     depth: 'postcode',
-    url: 'https://www.paositramalagasy.mg/cds',
-    sourceNames: ['paositra malagasy', 'madagascar post'],
-    openSourceIds: [],
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
+    url: 'https://www.paositramalagasy.mg/',
+    sourceNames: ['paositra malagasy', 'madagascar post', '101 antananarivo'],
+    openSourceIds: ['paositra-malagasy'],
     requiresCredential: false,
-    notes: ['Official Madagascar postal operator; use for postal-network evidence until postcode bulk data is connected.'],
+    notes: ['Current official operator site describes postal services and publishes its own BP 555, 101 ANTANANARIVO contact address.', 'A self-address and service website are not a complete current assignment register, postcode boundary release, public civic-address database, building relation or bulk-data licence.'],
+  },
+  {
+    id: 'paositra-malagasy-agencies', countryCodes: ['MG'], label: 'Paositra Malagasy agency network', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'locality', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.paositramalagasy.mg/nos_agence', sourceNames: ['paositra malagasy agencies', 'madagascar post offices'], openSourceIds: ['paositra-malagasy-agencies'], requiresCredential: false,
+    notes: ['Official office identity and service-network context only; no national assignment table, catchment, civic-address registry, building, subscriber or box-holder authority.'],
+  },
+  {
+    id: 'upu-madagascar-addressing-2011', countryCodes: ['MG'], label: 'UPU Madagascar addressing sheet (August 2011)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/MDGEn.pdf', sourceNames: ['upu madagascar addressing 2011', 'madagascar three digit postcode'], openSourceIds: ['upu-madagascar-addressing-2011'], requiresCredential: false,
+    notes: ['Documents three digits before the postal town, dated historical province and department/Fivondronana semantics, plus home and B.P. examples.', 'Examples and dated coding semantics are not current assignments, current administrative equivalence, reusable addresses, postal geometry or address-building relations.'],
+  },
+  {
+    id: 'openstat-madagascar-postcodes-2021', countryCodes: ['MG'], label: 'OpenStat Madagascar postcode candidates (2021)', authority: 'community', trustTier: 'open-reference', availability: 'bulk-open-data', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'metadata-only', url: 'https://www.openstat-madagascar.mg/bdd/show/1/donnees-sur-les-codes-postaux-a-madagascar', sourceNames: ['openstat madagascar postcodes', 'maidi madagascar postal codes'], openSourceIds: ['openstat-madagascar-postcodes-2021'], requiresCredential: false,
+    notes: ['Exact artifact is published under CC BY 4.0 but described as manually collected online and possibly missing communes.', 'It is an attributed candidate and discrepancy source, not Paositra Malagasy assignment authority, completeness, geometry, deliverability or building evidence.'],
+  },
+  {
+    id: 'un-salb-madagascar-ftm', countryCodes: ['MG'], label: 'UN SALB Madagascar administrative boundaries and FTM authority record', authority: 'official-derived-open-source', trustTier: 'official-derived', availability: 'bulk-open-data', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://salb.un.org/en/data/mdg', sourceNames: ['un salb madagascar', 'ftm madagascar boundaries'], openSourceIds: ['un-salb-madagascar-ftm'], requiresCredential: false,
+    notes: ['Versioned validated administrative polygons and national geospatial authority identification; exact edition, validity, terms, CRS and digest apply.', 'Administrative geometry is not postcode assignment, postal geometry, historical/current equivalence, civic address or building authority.'],
+  },
+  {
+    id: 'matsf-madagascar-geospatial-land', countryCodes: ['MG'], label: 'Madagascar territorial planning and land ministry', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.matsf.gov.mg/', sourceNames: ['matsf madagascar', 'madagascar land ministry'], openSourceIds: ['matsf-madagascar-geospatial-land'], requiresCredential: true,
+    notes: ['Official territorial, geospatial, planning and land context; dataset- and product-specific owner, access, licence, edition, CRS and digest apply.', 'Portal visibility does not establish postcode authority, automatic address or building linkage, title holder, resident or occupant data permission.'],
+  },
+  {
+    id: 'madagascar-data-protection-2014-038', countryCodes: ['MG'], label: 'Madagascar Law 2014-038 and CMIL framework', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://digital.gov.mg/en/2022/07/05/loi-n-2014-038-sur-la-protection-des-donnees-a-caractere-personnel/', sourceNames: ['madagascar law 2014-038 personal data', 'cmil madagascar'], openSourceIds: ['madagascar-data-protection-2014-038'], requiresCredential: false,
+    notes: ['Requires legitimate specified purpose, proportionality, accuracy, security and bounded retention under CMIL oversight.', 'It supplies no postal or geometry authority and does not permit publishing person-linked precise addresses, recipients, holders, residents, owners, occupants or query histories.'],
   },
   {
     id: 'mauritius-post-postcode',

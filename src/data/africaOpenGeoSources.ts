@@ -49,6 +49,14 @@ export type AfricaOpenGeoSourceId =
   | 'osm-ethiopia'
   | 'mcpt-djibouti-poste'
   | 'snpsf-comores-poste'
+  | 'paositra-malagasy'
+  | 'paositra-malagasy-agencies'
+  | 'upu-madagascar-addressing-2011'
+  | 'openstat-madagascar-postcodes-2021'
+  | 'un-salb-madagascar-ftm'
+  | 'matsf-madagascar-geospatial-land'
+  | 'madagascar-data-protection-2014-038'
+  | 'osm-madagascar'
   | 'somalia-moct-posta'
   | 'somalia-moct-postal-revival-2025'
   | 'somalia-national-postal-policy-2026'
@@ -702,6 +710,44 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Official SNPSF postal-services portal covering Comoros postal products, tracking, EMS, mandates, postal guides, and customer contact channels.',
+  },
+  'paositra-malagasy': {
+    id: 'paositra-malagasy', name: 'Paositra Malagasy current operator website', url: 'https://www.paositramalagasy.mg/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'Public copyrighted reference; bulk extraction, caching, derivative and redistribution rights require written review',
+    notes: 'Current national operator website describes postal services and publishes its own BP 555, 101 ANTANANARIVO contact address. It exposes no reviewed complete current postcode register, canonical boundary coordinates, civic-address registry, building relation or blanket data licence.',
+  },
+  'paositra-malagasy-agencies': {
+    id: 'paositra-malagasy-agencies', name: 'Paositra Malagasy agency network', url: 'https://www.paositramalagasy.mg/nos_agence', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Public operational directory; exact reuse, caching and redistribution terms require review',
+    notes: 'Official agency identity and network context only. An agency name or point is not a postcode assignment, delivery catchment, civic address, building footprint, subscriber record or entitlement.',
+  },
+  'upu-madagascar-addressing-2011': {
+    id: 'upu-madagascar-addressing-2011', name: 'UPU Madagascar postal addressing sheet (August 2011)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/MDGEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated format places three digits to the left of the postal town and describes a historical province digit plus department/Fivondronana digits, with separate home and B.P. examples. Examples and dated semantics are not current assignments, current administrative equivalence, reusable addresses, geometry or building links.',
+  },
+  'openstat-madagascar-postcodes-2021': {
+    id: 'openstat-madagascar-postcodes-2021', name: 'OpenStat Madagascar manually collected postcode candidates (2021)', url: 'https://www.openstat-madagascar.mg/bdd/show/1/donnees-sur-les-codes-postaux-a-madagascar', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY 4.0 for the exact published artifact',
+    notes: 'Publisher states that rows were manually collected online and some communes may be missing. Under the exact artifact\'s CC BY 4.0 terms, it is an attributed candidate and discrepancy source, not Paositra Malagasy authority, completeness, deliverability, postal geometry or building evidence.',
+  },
+  'un-salb-madagascar-ftm': {
+    id: 'un-salb-madagascar-ftm', name: 'UN SALB Madagascar validated administrative boundaries and FTM authority record', url: 'https://salb.un.org/en/data/mdg', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'UN SALB artifact-specific terms, attribution, edition, validity and digest apply',
+    notes: 'UN SALB identifies FTM as the national geospatial authority and publishes validated, temporally versioned administrative polygons. Administrative validity is not postal assignment, postcode geometry, historical/current identity equivalence, civic address or building authority.',
+  },
+  'matsf-madagascar-geospatial-land': {
+    id: 'matsf-madagascar-geospatial-land', name: 'Madagascar territorial planning and land ministry', url: 'https://www.matsf.gov.mg/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Product-specific access, ownership, licence, edition, CRS and redistribution review required',
+    notes: 'Official territorial, geospatial, urban-planning and land governance context. Portal or procedure visibility is not a reusable dataset, postcode assignment or polygon, automatic civic address, exact building relation, title-holder, resident or occupant evidence.',
+  },
+  'madagascar-data-protection-2014-038': {
+    id: 'madagascar-data-protection-2014-038', name: 'Madagascar Law 2014-038 and CMIL personal-data framework', url: 'https://digital.gov.mg/en/2022/07/05/loi-n-2014-038-sur-la-protection-des-donnees-a-caractere-personnel/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official law requires legitimate specified purpose, proportionality, accuracy, security and bounded retention under CMIL oversight. Person-linked precise addresses, recipients, holders, residents, owners, occupants and query histories remain controlled and are not public-pack content.',
+  },
+  'osm-madagascar': {
+    id: 'osm-madagascar', name: 'OpenStreetMap Madagascar community mapping', url: 'https://wiki.openstreetmap.org/wiki/Madagascar', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, settlements, addresses and buildings are candidate context only. They do not establish a Paositra Malagasy assignment or polygon, cadastre, deliverability or exact address-to-building relation without explicit common evidence.',
   },
   'somalia-moct-posta': {
     id: 'somalia-moct-posta',
@@ -1847,6 +1893,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   GW: ['hot-osm-west-africa'],
   CV: ['correios-cabo-verde', 'correios-cabo-verde-contact-identifiers', 'correios-cabo-verde-cip', 'upu-cabo-verde-addressing-2014', 'upu-cabo-verde-postcode-length-2026', 'ingt-cabo-verde-idecv', 'ingt-cabo-verde-admin-feature-service', 'ingt-cabo-verde-cadastre', 'osm-cabo-verde', 'hot-osm-west-africa'],
   KM: ['snpsf-comores-poste', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
+  MG: ['paositra-malagasy', 'paositra-malagasy-agencies', 'upu-madagascar-addressing-2011', 'openstat-madagascar-postcodes-2021', 'un-salb-madagascar-ftm', 'matsf-madagascar-geospatial-land', 'madagascar-data-protection-2014-038', 'osm-madagascar', 'hot-osm-east-southern-africa'],
   KE: ['posta-kenya', 'posta-kenya-customer-service-charter-2022', 'posta-kenya-properties-2026', 'upu-kenya-addressing-2004', 'ca-kenya-national-addressing-system', 'kenya-national-addressing-policy-2023', 'survey-of-kenya-mapping-policy-2021', 'ardhisasa-kenya', 'odpc-kenya-address-location-privacy', 'osm-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
   TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'tcra-tanzania-addressing', 'tanzania-postal-regulations-2018', 'nbs-tanzania-wards-2022', 'tcra-tanzania-napa', 'pdpc-tanzania-act-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

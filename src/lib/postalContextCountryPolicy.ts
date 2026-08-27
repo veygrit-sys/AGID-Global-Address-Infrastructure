@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -321,6 +321,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'NE',
     postalCodeFormat: 'NNNN current Niger Poste locality/post-office routing code (first digit 1-8 in the current official directory; assignment evidence required; P.O. Box is separate)',
     fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  MG: {
+    countryCode: 'MG',
+    postalCodeFormat: 'NNN dated UPU province/department routing syntax (current Paositra Malagasy assignment evidence required; B.P. and current administration are separate)',
+    fullCodeGeometrySemantics: 'routing-locality-first',
   },
   IN: {
     countryCode: 'IN',
@@ -873,6 +878,19 @@ export function normalizeNigerPostalCode(value: unknown) {
     .normalize('NFKC')
     .replace(/\s+/g, '');
   return /^[1-8]\d{3}$/.test(normalized) ? normalized : null;
+}
+
+/**
+ * Syntax-only normalizer for the dated UPU three-digit method. The first
+ * digit historically represented one of six provinces and the final two a
+ * department/Fivondronana. Syntax proves neither a current Paositra Malagasy
+ * assignment nor current administrative identity, geometry or deliverability.
+ */
+export function normalizeMadagascarPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^[1-6]\d{2}$/.test(normalized) ? normalized : null;
 }
 
 export function normalizeIndiaPostalCode(value: unknown) {
@@ -1453,6 +1471,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'NG') return normalizeNigeriaPostalCode(value);
   if (normalizedCountry === 'NA') return normalizeNamibiaPostalCode(value);
   if (normalizedCountry === 'NE') return normalizeNigerPostalCode(value);
+  if (normalizedCountry === 'MG') return normalizeMadagascarPostalCode(value);
   if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'PK') return normalizePakistanPostalCode(value);
   if (normalizedCountry === 'BD') return normalizeBangladeshPostalCode(value);
