@@ -970,6 +970,20 @@ test('Cabo Verde catalog separates four-digit postcodes, extended contact identi
   assert.equal(sources.get('ingt-cabo-verde-cadastre')?.depth, 'building');
 });
 
+test('Senegal catalog separates current postcode observation, BP, dated addressing, BaseGeo, NICAD and privacy', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('SN').map(source => [source.id, source]));
+  assert.equal(sources.get('la-poste-senegal-codes')?.trustTier, 'authoritative');
+  assert.equal(sources.get('la-poste-senegal-codes')?.validationReadiness, 'reference-eligible');
+  assert.match(sources.get('la-poste-senegal-po-box')?.notes.join(' ') ?? '', /nominative BP.*separates.*home address.*not.*postcode.*building/i);
+  assert.match(sources.get('upu-senegal-addressing-2015')?.notes.join(' ') ?? '', /five-digit.*delivery office.*BP.*not.*current.*polygon/i);
+  assert.match(sources.get('artp-senegal-national-addressing-2015')?.notes.join(' ') ?? '', /Dated.*numbering gaps.*single national system.*not prove current/i);
+  assert.equal(sources.get('geosenegal-basegeo')?.availability, 'licensed-bulk-data');
+  assert.match(sources.get('geosenegal-basegeo-license')?.notes.join(' ') ?? '', /attribution.*prior Senegal agreement.*annual.*deletion/i);
+  assert.equal(sources.get('geosenegal-urban-buildings-2019')?.depth, 'building');
+  assert.match(sources.get('dgid-senegal-nicad')?.notes.join(' ') ?? '', /16-character parcel.*not.*postcode.*building identifier.*owner/i);
+  assert.match(sources.get('senegal-data-protection-law-2008-12')?.notes.join(' ') ?? '', /identifying personal data.*Transfers.*conditional/i);
+});
+
 test('Kenya catalog separates delivery-office codes, P.O. boxes, NASK, mapping, land and privacy authority', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('KE').map(source => [source.id, source]));
   assert.equal(sources.get('posta-kenya')?.trustTier, 'authoritative');

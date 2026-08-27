@@ -9,134 +9,142 @@ native:
   ordering: small-to-big
   fields:
     - key: recipient
-      label: Nom Complet
-      placeholder: Moussa Diop
+      label: Nom complet
+      placeholder: Nom du destinataire
       required: true
       type: text
     - key: street
-      label: Adresse
-      placeholder: 12 Rue de Dakar
+      label: Appartement, résidence, bâtiment, numéro et voie ou BP
+      placeholder: Adresse géographique ou BP
       required: true
       type: text
     - key: postcode
-      label: Code Postal
-      placeholder: "12500"
+      label: Code postal à cinq chiffres
+      placeholder: "00000"
       required: false
       type: text
     - key: city
-      label: Ville
-      placeholder: Dakar
+      label: Bureau de poste distributeur
+      placeholder: Bureau distributeur
       required: true
       type: text
 english:
   name: International English
   addressFormat: |-
-    {{organization}}
+    {{recipient}}
     {{street}}
     {{postcode}} {{city}}
     SENEGAL
   ordering: small-to-big
   fields:
-    - key: organization
-      label: Company/Organization
-      placeholder: ""
+    - key: recipient
+      label: Full name
+      placeholder: Recipient name
+      required: true
+      type: text
     - key: street
-      label: Street Address
-      placeholder: 12 Rue de Dakar
+      label: Apartment, residence, building, premises and street or P.O. Box
+      placeholder: Geographic address or P.O. Box
+      required: true
+      type: text
     - key: postcode
-      label: Postal Code
-      placeholder: "12500"
+      label: Five-digit postcode
+      placeholder: "00000"
+      required: false
+      type: text
     - key: city
-      label: City/Town
-      placeholder: Dakar
+      label: Delivery post office
+      placeholder: Delivery office
+      required: true
+      type: text
 international:
   fr:
     name: Français (International)
     addressFormat: |-
-      {{organization}}
+      {{recipient}}
       {{street}}
       {{postcode}} {{city}}
       SÉNÉGAL
     ordering: small-to-big
     fields:
-      - key: organization
-        label: Société/Organisation
-        placeholder: ""
+      - key: recipient
+        label: Nom complet
+        placeholder: Nom du destinataire
+        required: true
+        type: text
       - key: street
-        label: Adresse
-        placeholder: 12 Rue de Dakar
+        label: Appartement, résidence, bâtiment, numéro et voie ou BP
+        placeholder: Adresse géographique ou BP
+        required: true
+        type: text
       - key: postcode
-        label: Code Postal
-        placeholder: "12500"
+        label: Code postal à cinq chiffres
+        placeholder: "00000"
+        required: false
+        type: text
       - key: city
-        label: Ville
-        placeholder: Dakar
+        label: Bureau de poste distributeur
+        placeholder: Bureau distributeur
+        required: true
+        type: text
 postalCode:
-  format: NNNNN
+  format: NNNNN before delivery post office (assignment evidence-gated)
   regex: ^\d{5}$
-  api: https://www.laposte.sn/code-postal-senegal/
-  source: La Poste Senegal code postal
+  api: https://www.laposte.sn/services/code-postal-senegal/
+  source: La Poste Senegal current postcode and office locator / UPU Senegal February 2015 / ARTP national-addressing workshop 2015 / ANAT BaseGeo and licence / DGID NICAD / Senegal Data Protection Law 2008-12
 addressRules:
   languages:
     - code: fr
       name: French
   nativeOrder:
-    - region
-    - department
-    - commune
-    - locality
-    - street
-    - houseNumber
+    - recipient
+    - organization
+    - apartmentOrResidence
+    - buildingPremisesAndStreet
+    - poBoxSeparate
+    - postcode
+    - deliveryPostOffice
     - country
   englishOrder:
-    - region
-    - department
-    - commune
-    - locality
-    - street
-    - houseNumber
+    - recipient
+    - organization
+    - apartmentOrResidence
+    - buildingPremisesAndStreet
+    - poBoxSeparate
+    - postcode
+    - deliveryPostOffice
     - country
   regionalHierarchy:
     - region
     - department
+    - arrondissement
+    - communeOrLocality
+    - apartmentResidenceBuildingPremisesAndStreet
+    - poBoxSeparate
+    - typedFiveDigitPostcode
+    - deliveryPostOffice
+    - officialPostalSurfaceOrNoCanonicalGeometry
+    - explicitRightsClearedCivicAddress
+    - explicitNICADParcelSeparate
+    - explicitRightsClearedAddressLinkedBuilding
   postalCode:
-    label: 5 digits used
+    label: Five digits before the delivery post office; validate current La Poste assignment and keep BP separate
     required: false
-    usage: used
+    usage: delivery routing and office context; not a parcel identifier, building identifier or official polygon
   deliveryLanguages:
     - code: fr
       name: French
-  openSourceIds:
-    - la-poste-senegal-codes
-    - hot-osm-west-africa
-    - osm-nominatim
-    - osm-overpass
-    - openaddresses
-    - geonames-postal
-    - geonames-gazetteer
-    - geoboundaries
-    - upu-addressing
-    - hot-osm-africa
-    - openstreetmap-wiki-africa
-    - humdata-africa
-    - openaerialmap
-    - digital-earth-africa-dem
-    - digital-earth-africa-coastlines
-    - digital-earth-africa-waterbodies
-    - digital-earth-africa-wofs
-    - digital-earth-africa-fractional-cover
-    - digital-earth-africa-geomad
-    - fao-wapor
-    - esa-worldcover
-    - gebco-bathymetry
-    - gmrt-topography
-    - global-mangrove-watch
-    - allen-coral-atlas
-    - protected-planet-wdpa
-    - gbif-occurrence
-    - rcmrd-gmes-africa-geoportal
 openSourceIds:
   - la-poste-senegal-codes
+  - la-poste-senegal-po-box
+  - upu-senegal-addressing-2015
+  - artp-senegal-national-addressing-2015
+  - geosenegal-basegeo
+  - geosenegal-basegeo-license
+  - geosenegal-urban-buildings-2019
+  - dgid-senegal-nicad
+  - senegal-data-protection-law-2008-12
+  - osm-senegal
   - hot-osm-west-africa
   - osm-nominatim
   - osm-overpass

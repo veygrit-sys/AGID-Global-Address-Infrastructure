@@ -434,6 +434,7 @@ export {
   normalizeCaboVerdePostalCode,
   normalizeKenyaPostalCode,
   normalizeZambiaPostalCode,
+  normalizeSenegalPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,

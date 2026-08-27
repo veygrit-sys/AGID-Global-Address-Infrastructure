@@ -3608,18 +3608,31 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official Guinea postal operator portal; use as current postal-network evidence while direct public postcode lookup remains limited.'],
   },
   {
-    id: 'la-poste-senegal-codes',
-    countryCodes: ['SN'],
-    label: 'La Poste Senegal postcode directory',
-    authority: 'postal-operator',
-    trustTier: 'authoritative',
-    availability: 'public-api',
-    depth: 'postcode',
-    url: 'https://www.laposte.sn/code-postal-senegal/',
-    sourceNames: ['la poste senegal', 'laposte.sn', 'code postal senegal', 'code postal du senegal'],
-    openSourceIds: ['la-poste-senegal-codes'],
-    requiresCredential: false,
-    notes: ['Official La Poste Senegal postcode directory for five-digit code, locality, and nearby post-office lookup.'],
+    id: 'la-poste-senegal-codes', countryCodes: ['SN'], label: 'La Poste Senegal postcode and office locator', authority: 'postal-operator', trustTier: 'authoritative', availability: 'public-api', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.laposte.sn/services/code-postal-senegal/', sourceNames: ['la poste senegal', 'laposte.sn', 'code postal senegal', 'code postal du senegal'], openSourceIds: ['la-poste-senegal-codes'], requiresCredential: false, notes: ['Current operator locator returns five-digit code, nearest post office and distance for a user-supplied position or address.', 'A permitted successful response is a dated assignment and office observation, not a complete reusable directory, catchment, customer-address release, stable bulk API or delivery entitlement.'],
+  },
+  {
+    id: 'la-poste-senegal-po-box', countryCodes: ['SN'], label: 'La Poste Senegal P.O. Box service', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'delivery-point', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.laposte.sn/services/boite-postale/', sourceNames: ['la poste senegal boite postale', 'senegal bp'], openSourceIds: ['la-poste-senegal-po-box'], requiresCredential: false, notes: ['Defines a nominative BP number at a selected post office and separates the postal address from the subscriber home address.', 'Subscriber, holder, key and confidentiality records are private and BP is not a postcode, residence or building.'],
+  },
+  {
+    id: 'upu-senegal-addressing-2015', countryCodes: ['SN'], label: 'UPU Senegal addressing sheet (February 2015)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/senFr.pdf', sourceNames: ['upu senegal addressing 2015', 'senegal five digit postcode'], openSourceIds: ['upu-senegal-addressing-2015'], requiresCredential: false, notes: ['Documents dated five-digit syntax, placement before delivery office, routing components and geographic and BP examples.', 'It is not a current complete assignment table, postcode polygon, customer-address release, building relation or blanket reuse permission.'],
+  },
+  {
+    id: 'artp-senegal-national-addressing-2015', countryCodes: ['SN'], label: 'ARTP national addressing workshop report (2015)', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://artp.sn/sites/default/files/documents/rapport_synthese_atelier_adressage_version_finale.pdf', sourceNames: ['artp senegal national addressing 2015', 'senegal addressing workshop'], openSourceIds: ['artp-senegal-national-addressing-2015'], requiresCredential: false, notes: ['Dated report describes five-digit codes, street and villa numbering gaps, non-exhaustive addressing and the need for a single national system.', 'Historical findings do not prove current incompleteness, assignment, geometry, public address rows or building links.'],
+  },
+  {
+    id: 'geosenegal-basegeo', countryCodes: ['SN'], label: 'ANAT BaseGeo Senegal', authority: 'government', trustTier: 'authoritative', availability: 'licensed-bulk-data', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.geosenegal.gouv.sn/-base-de-donnees-geographiques-.html', sourceNames: ['anat basegeo senegal', 'geo senegal'], openSourceIds: ['geosenegal-basegeo'], requiresCredential: false, notes: ['Official multi-scale topography includes administrative, transport, toponym and selected building context under a contractual licence.', 'Scale, coverage and edition vary and no layer is thereby a La Poste assignment, postcode catchment, civic-address row or cadastral relation.'],
+  },
+  {
+    id: 'geosenegal-basegeo-license', countryCodes: ['SN'], label: 'BaseGeo Senegal data-use licence', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.geosenegal.gouv.sn/conditions-d-utilisation.html', sourceNames: ['basegeo senegal licence', 'anat geodata licence'], openSourceIds: ['geosenegal-basegeo-license'], requiresCredential: false, notes: ['Conditional agreement requires ANAT attribution and downstream terms, prior Senegal agreement for commercial derived products, annual renewal and deletion after termination.', 'Exact acceptance, purpose, artifact edition, permitted distribution and digests must be recorded.'],
+  },
+  {
+    id: 'geosenegal-urban-buildings-2019', countryCodes: ['SN'], label: 'Geo Senegal city building datasets (2019)', authority: 'government', trustTier: 'authoritative', availability: 'licensed-bulk-data', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.geosenegal.gouv.sn/-terra-.html', sourceNames: ['geo senegal bati 2019', 'senegal urban buildings'], openSourceIds: ['geosenegal-urban-buildings-2019'], requiresCredential: false, notes: ['City-specific 2019 building layers exist for Dakar and selected cities under the BaseGeo licence.', 'A footprint is not nationwide coverage, current occupancy, a postcode assignment, a civic address relation or NICAD parcel.'],
+  },
+  {
+    id: 'dgid-senegal-nicad', countryCodes: ['SN'], label: 'DGID Senegal NICAD parcel identification', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.dgid.sn/wp-content/uploads/2023/02/NICAD.pdf', sourceNames: ['dgid senegal nicad', 'numero identification cadastral senegal'], openSourceIds: ['dgid-senegal-nicad'], requiresCredential: false, notes: ['NICAD is a 16-character parcel identifier managed by DGID with administrative and cadastral section and parcel components.', 'It is not a postcode, postal polygon, building identifier or public owner-address relation; underlying parcel and person records remain controlled.'],
+  },
+  {
+    id: 'senegal-data-protection-law-2008-12', countryCodes: ['SN'], label: 'Senegal Personal Data Protection Law No. 2008-12', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.archives.sn/docs/codes/loi-protection-donnees-a-caractere-personnel', sourceNames: ['senegal data protection law 2008-12', 'loi donnees personnelles senegal'], openSourceIds: ['senegal-data-protection-law-2008-12'], requiresCredential: false, notes: ['Governs collection, processing, transmission, storage and use of directly or indirectly identifying personal data, including declaration or authorization regimes.', 'Transfers to third countries are conditional; the law supplies governance, not postcode, address or geometry data.'],
   },
   {
     id: 'societe-postes-togo',

@@ -1667,7 +1667,10 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.ok(loadFormat('LR').openSourceIds?.includes('mopt-liberia-postal-services'));
   assert.ok(loadRules('LR').openSourceIds?.includes('mopt-liberia-postal-services'));
   assert.equal(loadFormat('SL').postalCode?.api, 'https://salpost.gov.sl/');
-  assert.equal(loadFormat('SN').postalCode?.api, 'https://www.laposte.sn/code-postal-senegal/');
+  assert.equal(loadFormat('SN').postalCode?.api, 'https://www.laposte.sn/services/code-postal-senegal/');
+  assert.match(loadFormat('SN').postalCode?.source ?? '', /La Poste Senegal.*UPU Senegal February 2015.*ARTP.*ANAT BaseGeo.*DGID NICAD.*Data Protection Law 2008-12/i);
+  assert.match(loadRules('SN').postalCode?.label ?? '', /Five digits.*delivery post office.*validate current La Poste.*BP separate/i);
+  assert.deepEqual(loadRules('SN').regionalHierarchy, ['region', 'department', 'arrondissement', 'communeOrLocality', 'apartmentResidenceBuildingPremisesAndStreet', 'poBoxSeparate', 'typedFiveDigitPostcode', 'deliveryPostOffice', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitRightsClearedCivicAddress', 'explicitNICADParcelSeparate', 'explicitRightsClearedAddressLinkedBuilding']);
   assert.equal(loadFormat('TG').postalCode?.api, 'https://www.laposte.tg/bureaux-poste');
   assert.equal(loadFormat('KM').postalCode?.api, 'https://www.snpsf.com/poste');
   assert.equal(loadFormat('ET').postalCode?.api, 'https://ethio.post/branches/');
