@@ -1076,6 +1076,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('SC'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.SC.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.SC.postalCodeFormat, /No currently assigned postcode.*0000 placeholder invalid.*pending authoritative release/i);
+  assert.equal(isPostalContextCountryCode('SO'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.SO.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.SO.postalCodeFormat, /AA NNNNN.*optional.*non-universal.*authoritative evidence/i);
   assert.equal(isPostalContextCountryCode('IN'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IN.fullCodeGeometrySemantics, 'delivery-network-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IN.postalCodeFormat, 'NNNNNN');

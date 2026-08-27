@@ -145,7 +145,7 @@ const EXTENDED_COUNTRY_SPECS = [
   extendedSpec('MU', 'Mauritius', 'mus', 'africa', 'required', '^\\d{5}$'),
   extendedSpec('RW', 'Rwanda', 'rwa', 'africa', 'optional', '^\\d{5}$'),
   extendedSpec('SC', 'Seychelles', 'syc', 'africa', 'not-used', null),
-  extendedSpec('SO', 'Somalia', 'som', 'africa', 'optional', '^\\d{5}$'),
+  extendedSpec('SO', 'Somalia', 'som', 'africa', 'optional', '^[A-Z]{2} \\d{5}$'),
   extendedSpec('SS', 'South Sudan', 'ssd', 'africa', 'not-used', null),
   extendedSpec('TZ', 'United Republic of Tanzania', 'tza', 'africa', 'required', '^\\d{5}$'),
   extendedSpec('UG', 'Uganda', 'uga', 'africa', 'required', '^\\d{5}$'),

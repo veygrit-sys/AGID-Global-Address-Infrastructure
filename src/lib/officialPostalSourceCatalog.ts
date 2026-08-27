@@ -5705,7 +5705,44 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     ],
     openSourceIds: ['somalia-moct-posta'],
     requiresCredential: false,
-    notes: ['Official Somalia ministry postal-service department page documenting the national postal service; pair with current MOCT postal-exchange announcements for live operational evidence while public postcode tooling remains limited.'],
+    validationReadiness: 'metadata-only',
+    notes: ['Official ministry postal department page records the 2013 relaunch context.', 'It does not publish a current nationwide postcode assignment table, code semantics, address registry or postal geometry.'],
+  },
+  {
+    id: 'somalia-moct-postal-revival-2025', countryCodes: ['SO'], label: 'Somalia MOCT National Postal Service revival 2025', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'delivery-point', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://moct.gov.so/en/inauguration-of-the-national-postal-service-revival-at-aden-adde-international-airport-led-by-minister-mohamed-soomaali/', sourceNames: ['somalia postal revival 2025', 'aden adde postal office', 'somali national postal service may 2025'], openSourceIds: ['somalia-moct-postal-revival-2025'], requiresCredential: false,
+    notes: ['Official ministry report says sending and receiving mail resumed in May 2025 and describes the airport office.', 'Service resumption does not establish a public postcode assignment register, delivery entitlement, catchment polygon or building link.'],
+  },
+  {
+    id: 'somalia-national-postal-policy-2026', countryCodes: ['SO'], label: 'Somalia Cabinet National Postal Policy 2025-2030 approval', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://sonna.so/en/article/somali-cabinet-commends-army-victory-in-kudhaa-approves-maritime-agreements-and-national-postal-policy', sourceNames: ['somalia national postal policy', 'national postal policy 2025 2030', 'somali cabinet postal policy'], openSourceIds: ['somalia-national-postal-policy-2026'], requiresCredential: false,
+    notes: ['Official national news agency reports Cabinet approval on 22 January 2026.', 'Approval and modernization objectives do not prove commencement, assignment rows, public reuse rights or postcode geometry.'],
+  },
+  {
+    id: 'somalia-moct-digital-addressing', countryCodes: ['SO'], label: 'Somalia MOCT digital addressing programme', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://moct.gov.so/en/pillars/', sourceNames: ['somalia digital addressing', 'somalia address system', 'moct pillars postal'], openSourceIds: ['somalia-moct-digital-addressing'], requiresCredential: false,
+    notes: ['Current ministry pillars include setting up an address system and operationalising Mogadishu post offices.', 'A programme objective is not a complete operational nationwide address, premise or building assignment release.'],
+  },
+  {
+    id: 'somalia-sobs-address-observation', countryCodes: ['SO'], label: 'Somali Bureau of Standards public address observation', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://sobs.gov.so/contact-us/', sourceNames: ['sobs bn03010', 'somalia bn 03010', 'somali bureau standards address'], openSourceIds: ['somalia-sobs-address-observation'], requiresCredential: false,
+    notes: ['An official public organisation contact page pairs P.O. Box 67 with BN03010, supporting an observed AA plus five-digit shape.', 'One observation does not prove nationwide allocation, mandatory use, code semantics, P.O. Box equivalence, a reusable directory or any geometry.'],
+  },
+  {
+    id: 'somalia-sobs-cbca-jurisdiction', countryCodes: ['SO'], label: 'Somali Bureau of Standards CBCA jurisdiction context', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://sobs.gov.so/wp-content/uploads/2023/08/CBCA.pdf', sourceNames: ['somalia sobs cbca', 'somalia entry points jurisdiction'], openSourceIds: ['somalia-sobs-cbca-jurisdiction'], requiresCredential: false,
+    notes: ['Official conformity document demonstrates that territorial and operational scopes can differ and must be declared per artifact.', 'Its entry points and exclusions are not postal assignments, administrative boundaries or a licence to merge separately governed datasets.'],
+  },
+  {
+    id: 'somalia-snbs-gis', countryCodes: ['SO'], label: 'Somalia National Bureau of Statistics cartography and GIS', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://nbs.gov.so/directorate-of-information-communication-technology/', sourceNames: ['somalia nbs gis', 'somalia statistical cartography', 'snbs mapping'], openSourceIds: ['somalia-snbs-gis'], requiresCredential: true,
+    notes: ['Official statistical cartography and GIS capability may support administrative and enumeration context.', 'Enumeration areas, service points and administrative maps are not postcode polygons, civic-address assignments or exact address-building relations.'],
+  },
+  {
+    id: 'somalia-nira-principles', countryCodes: ['SO'], label: 'Somalia NIRA identity and data-sovereignty principles', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://nira.gov.so/nira-principles', sourceNames: ['somalia nira principles', 'somalia national identification number', 'somalia data sovereignty'], openSourceIds: ['somalia-nira-principles'], requiresCredential: true,
+    notes: ['The 11-digit National Identification Number identifies a person and must never be treated as a postcode, civic address or building identifier.', 'NIRA states identity data is stored and processed in authority-managed in-country data centres; identity or recipient data is not a public postal artifact.'],
+  },
+  {
+    id: 'somalia-nca-privacy', countryCodes: ['SO'], label: 'Somalia NCA site privacy policy', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://nca.gov.so/privacy-policy', sourceNames: ['somalia nca privacy policy', 'nca somalia privacy'], openSourceIds: ['somalia-nca-privacy'], requiresCredential: false,
+    notes: ['The authority site notice documents minimisation, security and data-subject controls for its processing.', 'It is site-specific evidence, not represented here as a comprehensive national data-protection statute or blanket permission to publish precise locations.'],
+  },
+  {
+    id: 'osm-somalia', countryCodes: ['SO'], label: 'OpenStreetMap Somalia project', authority: 'community', trustTier: 'community', availability: 'bulk-open-data', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://wiki.openstreetmap.org/wiki/Somalia', sourceNames: ['openstreetmap somalia', 'osm somalia', 'wiki project somalia'], openSourceIds: ['osm-somalia'], requiresCredential: false,
+    notes: ['ODbL community roads, localities and buildings remain a separately attributed candidate partition.', 'OSM does not establish official postcode assignment, jurisdiction, cadastre, delivery entitlement or an exact address-to-building link.'],
   },
   {
     id: 'south-sudan-nca-postal-sector',

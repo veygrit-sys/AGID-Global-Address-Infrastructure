@@ -1715,7 +1715,11 @@ test('East Africa address JSON files expose addressRules metadata and English de
     { code: 'ar', name: 'Arabic' },
     { code: 'en', name: 'English' },
   ]);
-  assert.equal(loadRules('SO').postalCode?.label, 'Somalia alpha-2 plus 3 digits used');
+  assert.match(loadRules('SO').postalCode?.label ?? '', /AA plus five digits.*optional.*non-universal.*P\.O\. Box.*separate/i);
+  assert.equal(loadFormat('SO').postalCode?.regex, '^[A-Z]{2}\\s?\\d{5}$');
+  assert.equal(loadFormat('SO').postalCode?.api, 'https://moct.gov.so/en/posta/');
+  assert.match(loadFormat('SO').postalCode?.source ?? '', /MOCT.*May 2025 revival.*National Postal Policy.*BN03010.*NIRA.*OSM Somalia/i);
+  assert.deepEqual(loadRules('SO').regionalHierarchy, ['federalOrTerritorialScope', 'federalMemberStateOrAdministration', 'region', 'district', 'cityOrMunicipality', 'localityOrNeighbourhood', 'roadAndPremise', 'typedObservedPostcodeOrNoCode', 'poBoxSeparate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitRightsClearedCivicAddress', 'explicitAddressLinkedBuilding', 'agidCell']);
   assert.match(loadRules('KE').postalCode?.label ?? '', /5 digits.*delivery post office.*P\.O\. Box.*MPost.*NASK.*separate/i);
   assert.equal(loadFormat('KE').postalCode?.api, 'https://posta.co.ke/services/services/');
   assert.match(loadFormat('KE').postalCode?.source ?? '', /Postal Corporation of Kenya.*Customer Service Charter 2022.*UPU Kenya.*NASK.*Survey of Kenya.*Ardhisasa.*ODPC/i);
@@ -1856,6 +1860,11 @@ test('All African country JSON files expose registered postal API or open-source
   assert.ok(loadFormat('SC').openSourceIds?.includes('seychelles-postal-regulator-nas'));
   assert.ok(loadFormat('SC').openSourceIds?.includes('seychelles-data-protection-act-2023'));
   assert.ok(loadFormat('SO').openSourceIds?.includes('somalia-moct-posta'));
+  assert.ok(loadFormat('SO').openSourceIds?.includes('somalia-moct-postal-revival-2025'));
+  assert.ok(loadFormat('SO').openSourceIds?.includes('somalia-sobs-address-observation'));
+  assert.ok(loadFormat('SO').openSourceIds?.includes('somalia-snbs-gis'));
+  assert.ok(loadFormat('SO').openSourceIds?.includes('somalia-nira-principles'));
+  assert.ok(loadFormat('SO').openSourceIds?.includes('osm-somalia'));
   assert.ok(loadFormat('SS').openSourceIds?.includes('south-sudan-nca-postal-sector'));
   assert.ok(loadFormat('UG').openSourceIds?.includes('posta-uganda-physical-address'));
   assert.ok(loadFormat('ZM').openSourceIds?.includes('zampost'));

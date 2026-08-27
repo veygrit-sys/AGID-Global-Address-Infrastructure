@@ -75,6 +75,7 @@ test('priority African countries map to national and regional open geospatial so
     UG: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     ZA: ['ngi-south-africa', 'sapo-postcodes', 'postafind-za'],
     MZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    SO: ['somalia-moct-postal-revival-2025', 'somalia-sobs-address-observation', 'somalia-snbs-gis', 'osm-somalia', 'hot-osm-east-southern-africa'],
   };
 
   for (const [countryCode, expectedSourceIds] of Object.entries(expectedSourceIdsByCountry)) {

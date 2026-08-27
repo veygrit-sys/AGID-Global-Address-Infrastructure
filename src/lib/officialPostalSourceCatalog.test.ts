@@ -999,6 +999,21 @@ test('Seychelles catalog separates no-postcode transition, NAS, operators, stati
   assert.match(sources.get('seychelles-data-protection-act-2023')?.notes.join(' ') ?? '', /privacy by design.*cross-border/i);
 });
 
+test('Somalia catalog separates postal revival, observed code shape, addressing programme, jurisdiction, GIS, identity and ODbL', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('SO').map(source => [source.id, source]));
+  assert.equal(sources.get('somalia-moct-postal-revival-2025')?.trustTier, 'authoritative');
+  assert.match(sources.get('somalia-moct-postal-revival-2025')?.notes.join(' ') ?? '', /resumed in May 2025.*does not establish.*postcode assignment.*polygon.*building/i);
+  assert.equal(sources.get('somalia-national-postal-policy-2026')?.sourceRole, 'legal-framework-only');
+  assert.match(sources.get('somalia-national-postal-policy-2026')?.notes.join(' ') ?? '', /22 January 2026.*do(?:es)? not prove.*assignment.*geometry/i);
+  assert.equal(sources.get('somalia-sobs-address-observation')?.validationReadiness, 'reference-eligible');
+  assert.match(sources.get('somalia-sobs-address-observation')?.notes.join(' ') ?? '', /BN03010.*AA plus five-digit.*does not prove nationwide.*P\.O\. Box.*geometry/i);
+  assert.equal(sources.get('somalia-snbs-gis')?.availability, 'commercial-or-restricted');
+  assert.equal(sources.get('somalia-nira-principles')?.requiresCredential, true);
+  assert.match(sources.get('somalia-nira-principles')?.notes.join(' ') ?? '', /11-digit.*never.*postcode.*civic address.*building.*in-country/i);
+  assert.equal(sources.get('somalia-nca-privacy')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('osm-somalia')?.trustTier, 'community');
+});
+
 test('Kenya catalog separates delivery-office codes, P.O. boxes, NASK, mapping, land and privacy authority', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('KE').map(source => [source.id, source]));
   assert.equal(sources.get('posta-kenya')?.trustTier, 'authoritative');

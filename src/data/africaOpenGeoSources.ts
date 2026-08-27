@@ -50,6 +50,15 @@ export type AfricaOpenGeoSourceId =
   | 'mcpt-djibouti-poste'
   | 'snpsf-comores-poste'
   | 'somalia-moct-posta'
+  | 'somalia-moct-postal-revival-2025'
+  | 'somalia-national-postal-policy-2026'
+  | 'somalia-moct-digital-addressing'
+  | 'somalia-sobs-address-observation'
+  | 'somalia-sobs-cbca-jurisdiction'
+  | 'somalia-snbs-gis'
+  | 'somalia-nira-principles'
+  | 'somalia-nca-privacy'
+  | 'osm-somalia'
   | 'south-sudan-nca-postal-sector'
   | 'malawi-postcodes-macra'
   | 'posta-uganda-physical-address'
@@ -664,6 +673,42 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Official Somalia Ministry of Communications and Technology postal-service department page; use with current MOCT postal-exchange updates as the primary official postal reference while public postcode tooling remains limited.',
+  },
+  'somalia-moct-postal-revival-2025': {
+    id: 'somalia-moct-postal-revival-2025', name: 'Somalia MOCT National Postal Service revival 2025', url: 'https://moct.gov.so/en/inauguration-of-the-national-postal-service-revival-at-aden-adde-international-airport-led-by-minister-mohamed-soomaali/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official July 2025 ministry report says sending and receiving mail resumed in May 2025. Operational service evidence is not a postcode assignment table, delivery catchment or polygon release.',
+  },
+  'somalia-national-postal-policy-2026': {
+    id: 'somalia-national-postal-policy-2026', name: 'Somalia Cabinet National Postal Policy 2025-2030 approval', url: 'https://sonna.so/en/article/somali-cabinet-commends-army-victory-in-kudhaa-approves-maritime-agreements-and-national-postal-policy', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official national news agency reports Cabinet approval in January 2026. Policy approval does not prove an effective public assignment register or postcode geometry.',
+  },
+  'somalia-moct-digital-addressing': {
+    id: 'somalia-moct-digital-addressing', name: 'Somalia MOCT digital addressing programme', url: 'https://moct.gov.so/en/pillars/', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'Current ministry pillars include setting up an address system and operationalising post offices. Programme status is not a complete nationwide civic-address or building registry.',
+  },
+  'somalia-sobs-address-observation': {
+    id: 'somalia-sobs-address-observation', name: 'Somali Bureau of Standards official contact address observation', url: 'https://sobs.gov.so/contact-us/', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    notes: 'Official organisation contact page publicly displays P.O. Box 67 with BN03010. It validates an observed AA plus five-digit shape only, not nationwide assignment, code semantics, subscriber data or geometry.',
+  },
+  'somalia-sobs-cbca-jurisdiction': {
+    id: 'somalia-sobs-cbca-jurisdiction', name: 'Somali Bureau of Standards CBCA jurisdiction context', url: 'https://sobs.gov.so/wp-content/uploads/2023/08/CBCA.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official conformity document demonstrates that operational territorial scopes and entry points must remain explicit. It is not postal or address assignment evidence.',
+  },
+  'somalia-snbs-gis': {
+    id: 'somalia-snbs-gis', name: 'Somalia National Bureau of Statistics cartography and GIS', url: 'https://nbs.gov.so/directorate-of-information-communication-technology/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official statistical cartography and GIS capability provides contextual mapping only; enumeration areas, administrative units and service points are not postal polygons or address-building links.',
+  },
+  'somalia-nira-principles': {
+    id: 'somalia-nira-principles', name: 'Somalia NIRA identity and data-sovereignty principles', url: 'https://nira.gov.so/nira-principles', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 11-digit National Identification Number identifies a person, not a postcode or address. Identity data remains controlled and subject to stated in-country data-sovereignty principles.',
+  },
+  'somalia-nca-privacy': {
+    id: 'somalia-nca-privacy', name: 'Somalia NCA privacy policy', url: 'https://nca.gov.so/privacy-policy', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Public authority site privacy notice supports minimisation, security and data-subject controls for site processing; it is not represented as a comprehensive national privacy statute.',
+  },
+  'osm-somalia': {
+    id: 'osm-somalia', name: 'OpenStreetMap Somalia project', url: 'https://wiki.openstreetmap.org/wiki/Somalia', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, localities and buildings are candidate context only. OSM does not establish official Somali postcode assignments, jurisdiction, cadastre, delivery entitlement or exact address-to-building links.',
   },
   'south-sudan-nca-postal-sector': {
     id: 'south-sudan-nca-postal-sector',
@@ -1584,7 +1629,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   RW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  SO: ['somalia-moct-posta', 'rcmrd-gmes-africa-geoportal'],
+  SO: ['somalia-moct-posta', 'somalia-moct-postal-revival-2025', 'somalia-national-postal-policy-2026', 'somalia-moct-digital-addressing', 'somalia-sobs-address-observation', 'somalia-sobs-cbca-jurisdiction', 'somalia-snbs-gis', 'somalia-nira-principles', 'somalia-nca-privacy', 'osm-somalia', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
   SS: ['south-sudan-nca-postal-sector', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ET: ['ethiopost-branches', 'ethiopost-delivery-address-form', 'upu-ethiopia-addressing-2002', 'ethiopia-ssgi-edas', 'ethiopia-nsdi-geoportal', 'ethiopia-bishoftu-address-book', 'ethiopia-addis-land-registration-edas', 'osm-ethiopia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   DJ: ['mcpt-djibouti-poste', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

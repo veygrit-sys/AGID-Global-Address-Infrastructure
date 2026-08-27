@@ -313,7 +313,7 @@ const REMAINING_AFRICAN_SHIPPING_PROFILES = {
   }),
   SO: profile('SO', ['so', 'ar', 'en'], ['so'], 'so', {
     so: 'Soomaaliya', ar: 'الصومال', en: 'Somalia',
-  }, 'Somalia', 'Somali Postal Service', '^[A-Z]{2} \\d{3,5}$', {
+  }, 'Somalia', 'Somali Postal Service', '^[A-Z]{2} \\d{5}$', {
     script: 'multiscript',
     postcodeUniversal: false,
     layout: 'po-box-oriented',

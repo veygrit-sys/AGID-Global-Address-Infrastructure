@@ -513,6 +513,7 @@ export {
   normalizeNetherlandsPostalCode,
   normalizeSingaporePostalCode,
   normalizeUnitedKingdomPostalCode,
+  normalizeSomaliaPostalCode,
 } from './postalContextCountryPolicy';
 
 export function validatePostalContextRuntimePack(
