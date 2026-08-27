@@ -985,6 +985,19 @@ test('Kenya catalog separates delivery-office codes, P.O. boxes, NASK, mapping, 
   assert.match(sources.get('odpc-kenya-address-location-privacy')?.notes.join(' ') ?? '', /address.*location.*personal data.*property.*sensitive/i);
 });
 
+test('Zambia catalog separates dated five-digit context, national-addressing status, cadastre, land and privacy', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('ZM').map(source => [source.id, source]));
+  assert.equal(sources.get('zampost')?.trustTier, 'authoritative');
+  assert.equal(sources.get('zampost-locations')?.validationReadiness, 'reference-eligible');
+  assert.match(sources.get('upu-zambia-addressing-2013')?.notes.join(' ') ?? '', /five-digit.*P.O. Box.*private bag.*not.*current.*polygon/i);
+  assert.match(sources.get('zicta-zambia-national-addressing-postcode')?.notes.join(' ') ?? '', /project.*every property.*no nationwide operational/i);
+  assert.match(sources.get('zambia-parliament-addressing-statement-2013')?.notes.join(' ') ?? '', /10101.*proposal.*not representative.*phased/i);
+  assert.equal(sources.get('znsdi-zambia-policy-2026')?.depth, 'geo-only');
+  assert.equal(sources.get('znsdi-zambia-cadastre-lots')?.depth, 'building');
+  assert.equal(sources.get('zilas-zambia')?.requiresCredential, true);
+  assert.match(sources.get('dpc-zambia-location-data-guidance')?.notes.join(' ') ?? '', /location data.*personal data.*purpose-limited.*gated/i);
+});
+
 test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
   assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');

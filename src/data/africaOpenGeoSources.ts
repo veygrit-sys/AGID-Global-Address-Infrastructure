@@ -116,6 +116,17 @@ export type AfricaOpenGeoSourceId =
   | 'tristan-post-office'
   | 'biot-gov'
   | 'zampost'
+  | 'zampost-locations'
+  | 'upu-zambia-addressing-2013'
+  | 'zicta-zambia-national-addressing-postcode'
+  | 'zambia-parliament-addressing-statement-2013'
+  | 'zambia-ecommerce-strategy-2023'
+  | 'znsdi-zambia-policy-2026'
+  | 'znsdi-zambia-cadastre-lots'
+  | 'zilas-zambia'
+  | 'zambia-data-protection-act-2021'
+  | 'dpc-zambia-location-data-guidance'
+  | 'osm-zambia'
   | 'zimpost';
 
 export interface AfricaOpenGeoSource {
@@ -1251,8 +1262,119 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     url: 'https://www.zampost.com.zm/',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    license: 'ZAMPOST website copyright; exact observation and redistribution terms must be pinned',
+    notes: 'Official postal-operator and service context. The portal does not expose a rights-cleared complete current postcode assignment table, official postcode polygons, public address database, building crosswalk or stable bulk API.',
+  },
+  'zampost-locations': {
+    id: 'zampost-locations',
+    name: 'ZAMPOST locations and service-centre search',
+    url: 'https://www.zampost.com.zm/index.php/locations',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Interactive operator directory; no bulk reuse right inferred',
+    notes: 'The operator page supports search by city, province or postal code and distinguishes post offices, agency services and smart post boxes. A permitted successful result is a dated network observation only, not a complete assignment release, service boundary or delivery entitlement.',
+  },
+  'upu-zambia-addressing-2013': {
+    id: 'upu-zambia-addressing-2013',
+    name: 'UPU Zambia addressing sheet (January 2013)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/zmbEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Official ZAMPOST operator portal and branch/service locator used as current postcode and postal-network evidence for Zambia.',
+    license: 'UPU publication terms; Universal POST*CODE database rights are separate',
+    notes: 'Dated five-digit formatting, routing hierarchy and examples for street, rural delivery, P.O. Box, private bag, Postnet agency and poste restante. It is not a current complete assignment database, postal geometry, customer-address release or blanket reuse right.',
+  },
+  'zicta-zambia-national-addressing-postcode': {
+    id: 'zicta-zambia-national-addressing-postcode',
+    name: 'ZICTA National Addressing and Postcode Project',
+    url: 'https://www.zicta.zm/services/postal-courier-regulation/projects',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government project description; operational dataset terms remain source-specific',
+    notes: 'The current regulator page describes a project with councils to give each property a deliverable address. It does not publish a nationwide operational address row set, stable property identifier, postcode directory, geometry artifact, public API or redistribution licence.',
+  },
+  'zambia-parliament-addressing-statement-2013': {
+    id: 'zambia-parliament-addressing-statement-2013',
+    name: 'Zambia National Assembly postal addressing statement (2013)',
+    url: 'https://www.parliament.gov.zm/node/609',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official parliamentary record; no operational database reuse right inferred',
+    notes: 'The ministerial statement says 10101 was a proposal not representative of a particular location and describes a phased street, property-number, national-database and GIS project. It is dated legal and implementation context, not proof of current assignments or completion.',
+  },
+  'zambia-ecommerce-strategy-2023': {
+    id: 'zambia-ecommerce-strategy-2023',
+    name: 'Zambia National E-Commerce Strategy 2023',
+    url: 'https://www.mcti.gov.zm/wp-content/uploads/2024/01/National-E-Commerce-Strategy-2023.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government strategy publication; resulting address database terms are separate',
+    notes: 'The strategy calls for street naming, property addresses, digital addresses and development of a national postcode. Planned outputs and targets do not prove current nationwide operational assignments, public rows, polygons or building links.',
+  },
+  'znsdi-zambia-policy-2026': {
+    id: 'znsdi-zambia-policy-2026',
+    name: 'Zambia National Spatial Data Infrastructure Policy 2026',
+    url: 'https://www.szi.gov.zm/wp-content/uploads/2026/06/NSDI_Policy.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government policy; every geospatial dataset retains custodian-specific access and reuse terms',
+    notes: 'The policy establishes custodian-led geodetic, topographic, administrative, parcel and imagery governance and protects sensitive data and sovereignty. Policy openness and portal software do not make every layer open, postal or an address-building crosswalk.',
+  },
+  'znsdi-zambia-cadastre-lots': {
+    id: 'znsdi-zambia-cadastre-lots',
+    name: 'ZNSDI / ZILMIS cadastral lots feature service',
+    url: 'https://map.gov.zm/arcgis/rest/services/NSDI_Vector/CadasterNew/MapServer/0',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Dataset-specific; service metadata exposes no blanket redistribution licence',
+    notes: 'The official service exposes polygon lots, plot identifiers, survey references and land-use fields. A queryable parcel is not a postcode polygon, public title record, building footprint or explicit national-address relation and requires exact permission, version, CRS, fields and privacy review.',
+  },
+  'zilas-zambia': {
+    id: 'zilas-zambia',
+    name: 'Zambia Integrated Lands Administration System',
+    url: 'https://www.mlnr.gov.zm/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Controlled government land services; access, property and reuse rights are service-specific',
+    notes: 'The Ministry exposes land registration, survey, deeds and ZILAS service context. Portal access does not provide a reusable nationwide parcel-owner-title-address-postcode crosswalk or authorize publication of controlled records.',
+  },
+  'zambia-data-protection-act-2021': {
+    id: 'zambia-data-protection-act-2021',
+    name: 'Zambia Data Protection Act No. 3 of 2021',
+    url: 'https://www.parliament.gov.zm/sites/default/files/documents/acts/Act%20No.%203%20The%20Data%20Protection%20Act%202021_0.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Zambian law and official parliamentary publication',
+    notes: 'Personal-data processing requires lawful, explicit and limited purposes, accuracy, retention and security controls; cross-border transfers are conditional. The Act is governance evidence, not postal or geometry data.',
+  },
+  'dpc-zambia-location-data-guidance': {
+    id: 'dpc-zambia-location-data-guidance',
+    name: 'Zambia Data Protection Commission location-data guidance',
+    url: 'https://www.dataprotection.gov.zm/faq/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official regulatory guidance',
+    notes: 'The Commission identifies location data as personal data and requires lawful, transparent, purpose-limited, minimized, accurate, retained and secured processing. Precise address, household, query and property relations therefore remain gated.',
+  },
+  'osm-zambia': {
+    id: 'osm-zambia',
+    name: 'OpenStreetMap Zambia community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/WikiProject_Zambia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community roads, localities, addresses and buildings remain a separately attributed ODbL partition. They are not ZAMPOST assignments, ZICTA national addresses, ZNSDI cadastre or exact delivery-building authority.',
   },
   zimpost: {
     id: 'zimpost',
@@ -1388,7 +1510,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   DJ: ['mcpt-djibouti-poste', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MZ: ['correios-mocambique-codigos-postais', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MW: ['malawi-postcodes-macra', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ZM: ['zampost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   BW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   NA: ['nampost-postal-codes', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

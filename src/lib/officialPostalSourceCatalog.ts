@@ -5799,18 +5799,37 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official Rwandan postal operator; use as official postal-network source where postcodes are limited.'],
   },
   {
-    id: 'zampost',
-    countryCodes: ['ZM'],
-    label: 'Zambia Postal Services Corporation',
-    authority: 'postal-operator',
-    trustTier: 'official',
-    availability: 'web-search',
-    depth: 'postcode',
-    url: 'https://www.zampost.com.zm/',
-    sourceNames: ['zampost', 'zambia postal services corporation'],
-    openSourceIds: ['zampost'],
-    requiresCredential: false,
-    notes: ['Official Zambia postal operator; pair with UPU postcode data when machine-readable local data is not available.'],
+    id: 'zampost', countryCodes: ['ZM'], label: 'Zambia Postal Services Corporation', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.zampost.com.zm/', sourceNames: ['zampost', 'zambia postal services corporation'], openSourceIds: ['zampost'], requiresCredential: false, notes: ['Official operator and postal-service context.', 'No rights-cleared complete current postcode assignment table, official postal polygon, public address database, building crosswalk or stable bulk API is asserted.'],
+  },
+  {
+    id: 'zampost-locations', countryCodes: ['ZM'], label: 'ZAMPOST locations and service-centre search', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'locality', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.zampost.com.zm/index.php/locations', sourceNames: ['zampost locations', 'zambia post offices'], openSourceIds: ['zampost-locations'], requiresCredential: false, notes: ['Search accepts city, province or postal-code text and distinguishes post offices, agency services and smart post boxes.', 'A permitted successful result is a dated network observation, not a complete postcode assignment release, service boundary, bulk API or delivery entitlement.'],
+  },
+  {
+    id: 'upu-zambia-addressing-2013', countryCodes: ['ZM'], label: 'UPU Zambia addressing sheet (January 2013)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/zmbEn.pdf', sourceNames: ['upu zambia addressing 2013', 'zambia five digit postcode'], openSourceIds: ['upu-zambia-addressing-2013'], requiresCredential: false, notes: ['Dated five-digit format, routing hierarchy and address examples for street, rural, P.O. Box, private bag, Postnet and poste restante.', 'It is not a current complete assignment table, postcode polygon, customer-address release, building relation or blanket reuse permission.'],
+  },
+  {
+    id: 'zicta-zambia-national-addressing-postcode', countryCodes: ['ZM'], label: 'ZICTA National Addressing and Postcode Project', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.zicta.zm/services/postal-courier-regulation/projects', sourceNames: ['zicta national addressing postcode', 'zambia national addressing project'], openSourceIds: ['zicta-zambia-national-addressing-postcode'], requiresCredential: false, notes: ['The current regulator page describes a council-partnered project intended to address every property.', 'It exposes no nationwide operational row release, stable property identifier, postcode directory, geometry artifact, public API, address-building crosswalk or reuse licence.'],
+  },
+  {
+    id: 'zambia-parliament-addressing-statement-2013', countryCodes: ['ZM'], label: 'Zambia National Assembly postal addressing statement (2013)', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.parliament.gov.zm/node/609', sourceNames: ['zambia parliament postal addressing 2013', 'zambia 10101 statement'], openSourceIds: ['zambia-parliament-addressing-statement-2013'], requiresCredential: false, notes: ['The ministerial statement says 10101 was a proposal not representative of a location and describes a phased street, property-number, national-database and GIS project.', 'It is dated legal and implementation context, not proof of current assignment, nationwide completion or geometry.'],
+  },
+  {
+    id: 'zambia-ecommerce-strategy-2023', countryCodes: ['ZM'], label: 'Zambia National E-Commerce Strategy 2023', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.mcti.gov.zm/wp-content/uploads/2024/01/National-E-Commerce-Strategy-2023.pdf', sourceNames: ['zambia national ecommerce strategy 2023', 'zambia digital addresses'], openSourceIds: ['zambia-ecommerce-strategy-2023'], requiresCredential: false, notes: ['Calls for street naming, physical property addresses, digital addresses and a national postcode.', 'Planned outputs and targets do not prove current nationwide assignments, public rows, official polygons or exact building relations.'],
+  },
+  {
+    id: 'znsdi-zambia-policy-2026', countryCodes: ['ZM'], label: 'Zambia National Spatial Data Infrastructure Policy 2026', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.szi.gov.zm/wp-content/uploads/2026/06/NSDI_Policy.pdf', sourceNames: ['zambia nsdi policy 2026', 'znsdi'], openSourceIds: ['znsdi-zambia-policy-2026'], requiresCredential: false, notes: ['Establishes custodian-led governance for geodetic, topographic, administrative, parcel and imagery datasets and protects sensitive data and sovereignty.', 'Policy and open-source portal software do not make each government layer openly reusable, postal or an address-building relation.'],
+  },
+  {
+    id: 'znsdi-zambia-cadastre-lots', countryCodes: ['ZM'], label: 'ZNSDI / ZILMIS cadastral lots feature service', authority: 'government', trustTier: 'authoritative', availability: 'public-api', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://map.gov.zm/arcgis/rest/services/NSDI_Vector/CadasterNew/MapServer/0', sourceNames: ['znsdi cadastral lots', 'zilmis lots'], openSourceIds: ['znsdi-zambia-cadastre-lots'], requiresCredential: false, notes: ['The official feature service exposes parcel polygons and identifiers but no blanket redistribution licence in service metadata.', 'A parcel is not a postcode polygon, building footprint, public title record or explicit national-address relation.'],
+  },
+  {
+    id: 'zilas-zambia', countryCodes: ['ZM'], label: 'Zambia Integrated Lands Administration System', authority: 'government', trustTier: 'authoritative', availability: 'auth-required-api', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.mlnr.gov.zm/', sourceNames: ['zilas zambia', 'zambia integrated lands administration system'], openSourceIds: ['zilas-zambia'], requiresCredential: true, notes: ['Official land registration, survey and deeds service context.', 'Portal access does not provide a reusable nationwide parcel-owner-title-address-postcode crosswalk or authorize controlled-record publication.'],
+  },
+  {
+    id: 'zambia-data-protection-act-2021', countryCodes: ['ZM'], label: 'Zambia Data Protection Act No. 3 of 2021', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.parliament.gov.zm/sites/default/files/documents/acts/Act%20No.%203%20The%20Data%20Protection%20Act%202021_0.pdf', sourceNames: ['zambia data protection act 2021'], openSourceIds: ['zambia-data-protection-act-2021'], requiresCredential: false, notes: ['Requires lawful, explicit and limited purposes, accuracy, retention and security controls for personal data and conditions cross-border transfers.', 'The Act is governance evidence, not postal, address or geometry data.'],
+  },
+  {
+    id: 'dpc-zambia-location-data-guidance', countryCodes: ['ZM'], label: 'Zambia Data Protection Commission location-data guidance', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.dataprotection.gov.zm/faq/', sourceNames: ['zambia data protection commission location data', 'dpc zambia privacy'], openSourceIds: ['dpc-zambia-location-data-guidance'], requiresCredential: false, notes: ['Official guidance identifies location data as personal data and requires lawful, transparent, purpose-limited, minimized, accurate, retained and secured processing.', 'Precise address, household, query, property and delivery relations remain gated.'],
   },
   {
     id: 'zimpost',

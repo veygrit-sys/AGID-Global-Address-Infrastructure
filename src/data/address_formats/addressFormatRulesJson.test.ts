@@ -1759,6 +1759,10 @@ test('Southern Africa and Indian Ocean address JSON files expose delivery langua
     { code: 'fr', name: 'French' },
     { code: 'crs', name: 'Seychellois Creole' },
   ]);
+  assert.match(loadRules('ZM').postalCode?.label ?? '', /Five-digit.*verify current ZAMPOST\/ZICTA.*P.O. Box.*Private Bag.*separate/i);
+  assert.equal(loadFormat('ZM').postalCode?.api, 'https://www.zampost.com.zm/index.php/locations');
+  assert.match(loadFormat('ZM').postalCode?.source ?? '', /ZAMPOST.*UPU Zambia.*ZICTA.*Parliament 2013.*E-Commerce Strategy 2023.*ZNSDI 2026.*ZILAS.*Data Protection Act 2021/i);
+  assert.deepEqual(loadRules('ZM').regionalHierarchy, ['province', 'district', 'wardOrLocality', 'streetAndPropertyNumber', 'postOfficeOrDeliveryLocality', 'typedFiveDigitPostcodeOrUnverified', 'poBoxPrivateBagPostnetOrPosteRestanteSeparate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitNationalAddressOrNoOperationalAddress', 'explicitRightsClearedBuildingOrParcel']);
 });
 
 test('African address JSON files link to reusable open geodata and postal sources', () => {

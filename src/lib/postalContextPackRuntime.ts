@@ -433,6 +433,7 @@ export {
   normalizeEthiopiaPostalCode,
   normalizeCaboVerdePostalCode,
   normalizeKenyaPostalCode,
+  normalizeZambiaPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,
