@@ -3799,16 +3799,46 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'nipost-postcode',
     countryCodes: ['NG'],
-    label: 'Nigerian Postal Service Postcode Finder',
+    label: 'NIPOST Numeric Postcode and Mail Services',
     authority: 'postal-operator',
     trustTier: 'official',
-    availability: 'public-api',
+    availability: 'web-search',
     depth: 'postcode',
-    url: 'https://nipost.gov.ng/postcode-finder/',
-    sourceNames: ['nipost', 'nipost postcode finder', 'nigerian postal service', 'nigerian postal service postcode finder'],
+    sourceRole: 'postal-reference-data',
+    validationReadiness: 'reference-eligible',
+    url: 'https://nipost.gov.ng/Mails/',
+    sourceNames: ['nipost', 'nipost numeric postcode', 'nigerian postal service', 'nigerian postal service postcode finder'],
     openSourceIds: ['nipost-postcode'],
     requiresCredential: false,
-    notes: ['Official NIPOST postcode finder for Nigerian state, city, and postcode lookup.'],
+    notes: ['Official current mail-service reference confirms a numeric postcode system, while the finder page does not expose a documented public API or reusable nationwide registry.', 'A syntax or lookup observation does not prove an exclusive postal surface, exact civic address, building relation or redistribution right.'],
+  },
+  {
+    id: 'nipost-national-digital-postcode-2026', countryCodes: ['NG'], label: 'NIPOST National Digital Alphanumeric Postcode 2026', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'building', sourceRole: 'postal-reference-data', validationReadiness: 'metadata-only', url: 'https://www.postcode.gov.ng/', sourceNames: ['nipost national digital postcode', 'nigeria 11 character postcode', 'postcode.gov.ng'], openSourceIds: ['nipost-national-digital-postcode-2026'], requiresCredential: false,
+    notes: ['Official site schedules nationwide launch for 1 October 2026 and documents State/LGA/District/Area/Building segments.', 'Before the effective date and absent a current assignment response, an 11-character string is prelaunch syntax only; no public developer API, bulk release, licence or geometry artifact is inferred.'],
+  },
+  {
+    id: 'nipost-addressing-standard-2017', countryCodes: ['NG'], label: 'Nigerian National Addressing Standard and Guidelines July 2017', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://nipost.gov.ng/wp-content/uploads/2024/09/NIGERIAN-NATIONAL-ADDRESSING-STANDARD-AND-GUIDELINES.pdf', sourceNames: ['nigerian national addressing standard', 'nipost addressing guidelines 2017'], openSourceIds: ['nipost-addressing-standard-2017'], requiresCredential: false,
+    notes: ['Official methodology covers street naming, house/property numbering, address components, postcode logic and building-identification fields.', 'It is not a current public address/building registry, assignment table, postal geometry release or blanket reuse licence.'],
+  },
+  {
+    id: 'upu-nigeria-addressing-2022', countryCodes: ['NG'], label: 'UPU Nigeria postal addressing sheet', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ngaEn.pdf', sourceNames: ['upu nigeria addressing', 'nigeria postal addressing sheet'], openSourceIds: ['upu-nigeria-addressing-2022'], requiresCredential: false,
+    notes: ['Dated six-digit placement and street, organisation, P.O. Box and poste-restante semantics are format context only.', 'Examples do not establish a current assignment registry, exclusive catchment, public address rows, buildings or geometry.'],
+  },
+  {
+    id: 'npc-nigeria-ead-2023', countryCodes: ['NG'], label: 'Nigeria NPC Enumeration Area Demarcation', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://nationalpopulation.gov.ng/EAD', sourceNames: ['nigeria npc ead', 'enumeration area demarcation nigeria'], openSourceIds: ['npc-nigeria-ead-2023'], requiresCredential: true,
+    notes: ['NPC describes census/statistical administrative, building and road products available to users at a cost and subject to confidentiality.', 'EA, ward, locality, LGA or building layers are not NIPOST postal geometry, current code assignments, civic-address records or exact address-to-building links.'],
+  },
+  {
+    id: 'fcta-nigeria-agis', countryCodes: ['NG'], label: 'FCT Abuja Geographic Information Systems', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://fcta.gov.ng/ova_dep/abuja-geographic-information-systems/', sourceNames: ['fct agis', 'abuja geographic information systems'], openSourceIds: ['fcta-nigeria-agis'], requiresCredential: true,
+    notes: ['FCT land registry, cadastre, street naming and house numbering are jurisdiction-specific controlled context.', 'A parcel or property is not a national postcode, official NIPOST polygon or exact address-building link without an explicit authorized relation.'],
+  },
+  {
+    id: 'ndpc-nigeria-data-protection-act-2023', countryCodes: ['NG'], label: 'Nigeria Data Protection Act 2023', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://ndpc.gov.ng/download/nigeria-data-protection-act-2023', sourceNames: ['nigeria data protection act 2023', 'ndpc act'], openSourceIds: ['ndpc-nigeria-data-protection-act-2023'], requiresCredential: false,
+    notes: ['Official law governs lawful, fair, accountable and secure processing and cross-border transfers.', 'It is governance only and does not authorize publication of precise private addresses, building codes, residents, owners, occupants or query trails.'],
+  },
+  {
+    id: 'ndpc-nigeria-gaid-2025', countryCodes: ['NG'], label: 'NDPC General Application and Implementation Directive 2025', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://ndpc.gov.ng/wp-content/uploads/2025/03/NDP-ACT-GAID-2025-MARCH-20TH.pdf', sourceNames: ['ndpc gaid 2025', 'nigeria data protection implementation directive'], openSourceIds: ['ndpc-nigeria-gaid-2025'], requiresCredential: false,
+    notes: ['Implementation guidance covers lawful basis, DPIA, security, retention, processor arrangements and cross-border processing.', 'It supplies legal metadata only, not postal, address, cadastral or building data.'],
   },
   {
     id: 'ghanapostgps',

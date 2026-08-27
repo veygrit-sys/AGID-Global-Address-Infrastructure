@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -306,6 +306,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'TN',
     postalCodeFormat: 'NNNN (La Poste delivery office, delivery centre or locality assignment; current assignment evidence required)',
     fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  NG: {
+    countryCode: 'NG',
+    postalCodeFormat: 'NNNNNN current numeric district/delivery code; 11-character State/LGA/District/Area/Building code from 2026-10-01 only with effective assignment evidence',
+    fullCodeGeometrySemantics: 'area-or-non-area',
   },
   IN: {
     countryCode: 'IN',
@@ -815,6 +820,25 @@ export function normalizeTunisiaPostalCode(value: unknown) {
     .normalize('NFKC')
     .replace(/\s+/g, '');
   return /^\d{4}$/.test(normalized) ? normalized : null;
+}
+
+/** Scheduled nationwide effective instant: 2026-10-01 00:00 in Nigeria (UTC+01:00). */
+export const NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM = '2026-10-01T00:00:00+01:00';
+
+/**
+ * Syntax-only normalizer for Nigeria's current six-digit code and scheduled
+ * eleven-character digital code. It does not prove assignment, effective date,
+ * geographic authority, deliverability or a building relation.
+ */
+export function normalizeNigeriaPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .toUpperCase()
+    .replace(/[\s-]+/g, '');
+  if (/^\d{6}$/.test(normalized)) return normalized;
+  return /^[A-Z0-9]{11}$/.test(normalized) && /[A-Z]/.test(normalized) && /\d/.test(normalized)
+    ? normalized
+    : null;
 }
 
 export function normalizeIndiaPostalCode(value: unknown) {
@@ -1392,6 +1416,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'SO') return normalizeSomaliaPostalCode(value);
   if (normalizedCountry === 'TZ') return normalizeTanzaniaPostalCode(value);
   if (normalizedCountry === 'TN') return normalizeTunisiaPostalCode(value);
+  if (normalizedCountry === 'NG') return normalizeNigeriaPostalCode(value);
   if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'PK') return normalizePakistanPostalCode(value);
   if (normalizedCountry === 'BD') return normalizeBangladeshPostalCode(value);

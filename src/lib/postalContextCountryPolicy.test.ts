@@ -48,6 +48,7 @@ import {
   normalizeSenegalPostalCode,
   normalizeTanzaniaPostalCode,
   normalizeTunisiaPostalCode,
+  normalizeNigeriaPostalCode,
   normalizeSeychellesPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
@@ -340,6 +341,14 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeTunisiaPostalCode('996'), null);
   assert.equal(normalizeTunisiaPostalCode('00996'), null);
   assert.equal(normalizePostalContextPostalCode('tn', '09 96'), '0996');
+  assert.equal(normalizeNigeriaPostalCode('９９９９９６'), '999996');
+  assert.equal(normalizeNigeriaPostalCode('999 996'), '999996');
+  assert.equal(normalizeNigeriaPostalCode('fc 02-a09 db 09'), 'FC02A09DB09');
+  assert.equal(normalizeNigeriaPostalCode('NG-999996'), null);
+  assert.equal(normalizeNigeriaPostalCode('P.O. Box 999996'), null);
+  assert.equal(normalizeNigeriaPostalCode('FC02A09DB0'), null);
+  assert.equal(normalizeNigeriaPostalCode('FC02A09DB099'), null);
+  assert.equal(normalizePostalContextPostalCode('ng', 'fc02 a09-db09'), 'FC02A09DB09');
   assert.equal(normalizeSeychellesPostalCode('0000'), null);
   assert.equal(normalizeSeychellesPostalCode('1234'), null);
   assert.equal(normalizeSeychellesPostalCode('SC-SYN-NATIONAL-ADDRESS-99999'), null);

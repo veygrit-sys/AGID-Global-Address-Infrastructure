@@ -1630,7 +1630,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
     assert.ok(rules.englishOrder.length > 0, `${countryCode} should define englishOrder`);
   }
 
-  assert.deepEqual(loadRules('NG').englishOrder, ['houseNumber', 'street', 'city', 'state', 'country']);
+  assert.deepEqual(loadRules('NG').englishOrder, ['name', 'organization', 'building', 'floor', 'unit', 'houseNumber', 'street', 'districtOrArea', 'locality', 'postcode', 'lga', 'stateOrFct', 'country']);
   assert.deepEqual(loadRules('CI').languages, [{ code: 'fr', name: 'French' }]);
   assert.deepEqual(loadRules('GW').languages, [{ code: 'pt', name: 'Portuguese' }]);
   assert.deepEqual(Object.fromEntries(expectedCountries.map(countryCode => [
@@ -1653,7 +1653,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
     GW: ['pt'],
     CV: ['pt'],
   });
-  assert.equal(loadRules('NG').postalCode?.label, '6 digits required');
+  assert.match(loadRules('NG').postalCode?.label ?? '', /6 digits current.*11-character.*2026-10-01.*P\.O\. Box\/PMB.*separate/i);
   assert.equal(loadRules('GM').postalCode?.label, '3 digits used');
   assert.equal(loadRules('CI').postalCode?.label, '5 digits used');
   assert.equal(loadFormat('GH').postalCode?.api, 'https://www.ghanapostgps.com/');
@@ -1668,7 +1668,9 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadFormat('LR').postalCode?.source, 'Liberia Ministry of Posts and Telecommunications official postal service information');
   assert.equal(loadFormat('ML').postalCode?.api, 'https://laposte.ml/');
   assert.equal(loadFormat('NE').postalCode?.api, 'https://nigerposte.ne/');
-  assert.equal(loadFormat('NG').postalCode?.api, 'https://nipost.gov.ng/postcode-finder/');
+  assert.equal(loadFormat('NG').postalCode?.api, 'https://www.postcode.gov.ng/');
+  assert.match(loadFormat('NG').postalCode?.source ?? '', /NIPOST current numeric.*scheduled National Digital Alphanumeric.*syntax never proves.*polygon.*building/i);
+  assert.deepEqual(loadRules('NG').regionalHierarchy, ['stateOrFct', 'lga', 'wardOrRegistrationArea', 'districtOrLocality', 'currentNumericSixDigitAssignment', 'futureDigitalElevenCharacterAssignmentAfterEffectiveDate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding', 'agidCell']);
   assert.ok(loadFormat('LR').openSourceIds?.includes('mopt-liberia-postal-services'));
   assert.ok(loadRules('LR').openSourceIds?.includes('mopt-liberia-postal-services'));
   assert.equal(loadFormat('SL').postalCode?.api, 'https://salpost.gov.sl/');

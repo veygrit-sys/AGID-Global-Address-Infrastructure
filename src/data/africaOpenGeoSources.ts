@@ -86,6 +86,14 @@ export type AfricaOpenGeoSourceId =
   | 'osm-seychelles-building-import'
   | 'ghanapostgps'
   | 'nipost-postcode'
+  | 'nipost-national-digital-postcode-2026'
+  | 'nipost-addressing-standard-2017'
+  | 'upu-nigeria-addressing-2022'
+  | 'npc-nigeria-ead-2023'
+  | 'fcta-nigeria-agis'
+  | 'ndpc-nigeria-data-protection-act-2023'
+  | 'ndpc-nigeria-gaid-2025'
+  | 'osm-nigeria'
   | 'la-poste-cote-divoire'
   | 'correios-cabo-verde'
   | 'correios-cabo-verde-contact-identifiers'
@@ -867,12 +875,49 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   },
   'nipost-postcode': {
     id: 'nipost-postcode',
-    name: 'Nigerian Postal Service Postcode Finder',
-    url: 'https://nipost.gov.ng/postcode-finder/',
+    name: 'NIPOST Numeric Postcode and Mail Services',
+    url: 'https://nipost.gov.ng/Mails/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'NIPOST postcode finder and national addressing reference for Nigerian state, city, street, and postcode validation.',
+    license: 'Public NIPOST reference; no bulk extraction or redistribution rights inferred',
+    notes: 'The current NIPOST mails page describes the numeric postcode system for mail processing and delivery. The postcode-finder page exposes no stable documented public API or reusable nationwide assignment table, address corpus, building relation or polygon.',
+  },
+  'nipost-national-digital-postcode-2026': {
+    id: 'nipost-national-digital-postcode-2026', name: 'NIPOST National Digital Alphanumeric Postcode', url: 'https://www.postcode.gov.ng/', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'NIPOST site is all rights reserved; developer and data redistribution terms are not yet published',
+    notes: 'Official site schedules nationwide launch for 1 October 2026 and describes an 11-character State/LGA/District/Area/Building hierarchy. Before that effective date, and without a current official assignment response, a syntax-shaped value is prelaunch metadata only; the site says the developer portal is still forthcoming.',
+  },
+  'nipost-addressing-standard-2017': {
+    id: 'nipost-addressing-standard-2017', name: 'Nigerian National Addressing Standard and Guidelines July 2017', url: 'https://nipost.gov.ng/wp-content/uploads/2024/09/NIGERIAN-NATIONAL-ADDRESSING-STANDARD-AND-GUIDELINES.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official standard covers street naming, property numbering, address components, the six-digit postcode system and building-identification methodology. It is not a current public address/building database, postcode assignment table, geometry release or reuse licence.',
+  },
+  'upu-nigeria-addressing-2022': {
+    id: 'upu-nigeria-addressing-2022', name: 'UPU Nigeria postal addressing sheet', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ngaEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated UPU semantics place six digits with locality and distinguish street addresses, organisations, P.O. Boxes and poste restante. Examples do not prove current assignments, exclusive areas, public address rows, buildings or geometry.',
+  },
+  'npc-nigeria-ead-2023': {
+    id: 'npc-nigeria-ead-2023', name: 'Nigeria National Population Commission Enumeration Area Demarcation', url: 'https://nationalpopulation.gov.ng/EAD', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'NPC states EAD products are available to researchers/users at a cost; exact contract, confidentiality and redistribution terms required',
+    notes: 'EA, supervisory area, locality, ward/registration area, LGA, building and road layers are census/statistical context. They are not NIPOST postal geometry, current digital-code assignments, civic-address records or automatic address-to-building links.',
+  },
+  'fcta-nigeria-agis': {
+    id: 'fcta-nigeria-agis', name: 'FCT Abuja Geographic Information Systems', url: 'https://fcta.gov.ng/ova_dep/abuja-geographic-information-systems/', kind: 'geocoding', coverage: 'territory', usage: 'reference',
+    license: 'FCT land/cadastral system; exact service, contract, fields, privacy and redistribution rights required',
+    notes: 'AGIS supports FCT land registry, cadastre, street naming and house numbering only within its jurisdiction. A parcel or property record is not a national NIPOST assignment, postcode polygon or exact civic-address-to-building relation unless explicitly linked by an authorized source.',
+  },
+  'ndpc-nigeria-data-protection-act-2023': {
+    id: 'ndpc-nigeria-data-protection-act-2023', name: 'Nigeria Data Protection Act 2023', url: 'https://ndpc.gov.ng/download/nigeria-data-protection-act-2023', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official data-protection law governs lawful, fair, accountable and secure processing and cross-border transfer safeguards. It supplies governance only, not permission to publish precise private addresses, building codes, residents, owners, occupants or query trails.',
+  },
+  'ndpc-nigeria-gaid-2025': {
+    id: 'ndpc-nigeria-gaid-2025', name: 'NDPC General Application and Implementation Directive 2025', url: 'https://ndpc.gov.ng/wp-content/uploads/2025/03/NDP-ACT-GAID-2025-MARCH-20TH.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current implementation guidance covers lawful basis, DPIA, security, data processing agreements, retention and cross-border processing. It is legal metadata, not a postal, address, cadastral or building dataset.',
+  },
+  'osm-nigeria': {
+    id: 'osm-nigeria', name: 'OpenStreetMap Nigeria community mapping', url: 'https://wiki.openstreetmap.org/wiki/Nigeria', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and building footprints are candidate context only. OSM does not establish NIPOST assignment, postal authority, cadastre, delivery entitlement or an exact address-to-building link.',
   },
   'la-poste-cote-divoire': {
     id: 'la-poste-cote-divoire',
@@ -1710,7 +1755,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   LY: ['libya-post-services'],
   MA: ['upu-morocco-postcode-manual', 'poste-maroc-codepostal', 'morocco-open-data-postal', 'morocco-open-data-license', 'ancfcc-morocco-cartography', 'datahub-postal'],
   MR: ['mauripost'],
-  NG: ['nipost-postcode', 'hot-osm-west-africa'],
+  NG: ['nipost-postcode', 'nipost-national-digital-postcode-2026', 'nipost-addressing-standard-2017', 'upu-nigeria-addressing-2022', 'npc-nigeria-ead-2023', 'fcta-nigeria-agis', 'ndpc-nigeria-data-protection-act-2023', 'ndpc-nigeria-gaid-2025', 'osm-nigeria', 'hot-osm-west-africa'],
   SD: ['sudapost'],
   TN: ['la-poste-tunisienne-codes', 'upu-tunisia-addressing-2014', 'tunisian-open-data-national-license', 'tunisian-open-data-delegations-2025', 'tunisian-open-data-governorates-2025', 'otc-tunisia-cadastral-geoportal', 'inpdp-tunisia-law-2004-63', 'la-poste-tunisienne-privacy', 'osm-tunisia'],
   GH: ['ghanapostgps', 'hot-osm-west-africa'],

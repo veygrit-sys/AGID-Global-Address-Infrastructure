@@ -16,7 +16,12 @@ import {
   hasDefinitivePostalContextAssertionQuality,
   postalContextAssertionAllowedForUse,
 } from './postalContextAssertionPolicy';
-import { classifyMoroccoPostalCode, normalizePostalContextPostalCode } from './postalContextCountryPolicy';
+import {
+  NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM,
+  classifyMoroccoPostalCode,
+  normalizeNigeriaPostalCode,
+  normalizePostalContextPostalCode,
+} from './postalContextCountryPolicy';
 import {
   resolvePostalContext,
   type PostalContextResolutionCandidate,
@@ -516,6 +521,8 @@ export {
   normalizeSomaliaPostalCode,
   normalizeTanzaniaPostalCode,
   normalizeTunisiaPostalCode,
+  normalizeNigeriaPostalCode,
+  NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM,
 } from './postalContextCountryPolicy';
 
 export function validatePostalContextRuntimePack(
@@ -556,6 +563,18 @@ export function validatePostalContextRuntimePack(
   for (const node of pack.graph.nodes) {
     if (!isPublicPackNode(node)) errors.push(`non-public-node-in-public-pack:${node.id}`);
     if (node.id.startsWith('runtime:')) errors.push(`reserved-runtime-node-id:${node.id}`);
+    if (pack.graph.release.countryCode === 'NG'
+      && node.kind === 'postal_feature'
+      && node.postalCode
+      && normalizeNigeriaPostalCode(node.postalCode)?.length === 11) {
+      const effectiveFrom = Date.parse(NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM);
+      for (const assertion of pack.graph.assertions) {
+        if (assertion.fromNodeId !== node.id && assertion.toNodeId !== node.id) continue;
+        if (Date.parse(assertion.validTime.from) < effectiveFrom) {
+          errors.push(`nigeria-digital-postcode-before-effective-date:${node.id}:${assertion.id}`);
+        }
+      }
+    }
   }
   for (const assertion of pack.graph.assertions) {
     if (assertion.id.startsWith('runtime:')) errors.push(`reserved-runtime-assertion-id:${assertion.id}`);
