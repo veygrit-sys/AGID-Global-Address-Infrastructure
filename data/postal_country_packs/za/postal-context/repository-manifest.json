@@ -12,48 +12,103 @@
     "contains_personal_data": false,
     "contains_production_geometry": false,
     "fixtures_are_synthetic": true,
-    "publication_claim": "contract-seed-only"
+    "publication_claim": "contract-seed-only",
+    "contains_upstream_rows": false
   },
   "postal_system": {
     "full_code_name": "South Africa four-digit postcode",
     "full_code_format": "NNNN",
     "full_code_default_geometry": "typed_area_point_or_none",
-    "assignment_rule": "The UPU South Africa addressing sheet defines four digits below the delivery locality or post-office name. For a physical address the code identifies a delivery locality; for rural and postal-delivery-service addresses it identifies the Post Office. A code and locality pair are text assignment evidence, not automatic polygon membership.",
+    "assignment_rule": "The dated UPU South Africa sheet defines four digits; for a physical address the code identifies a delivery locality, while for rural and postal-delivery-service addresses it identifies the Post Office. SAPO currently publishes downloadable domestic-code Excel and TXT artifacts; only an exact digest-pinned row, file edition, capture time and delivery type can establish an assignment, and it is not automatic polygon evidence.",
     "delivery_type_rule": "Every assignment records physical, rural, PO Box, Private Bag or separately documented special delivery semantics. Street and box codes may differ and are never collapsed merely because the locality label matches.",
     "geometry_rule": "Canonical geometry is an official rights-cleared postal surface only where an exact source defines one. Otherwise the code has an official office point, delivery-locality reference or no canonical geometry. Locality, suburb, municipality, ward, census geography, nearest-office partition, address interpolation, Voronoi cell and model output stay derived, uncertainty-bearing and non-canonical.",
     "address_rule": "House or delivery-point number, street or village, building or complex details and delivery locality form physical or rural address evidence. PO Box and Private Bag are separate postal delivery endpoints. None of these alone identifies a resident, recipient, occupant or exact building footprint.",
     "building_rule": "Exact building display requires a rights-cleared authoritative building feature and a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address. A postal code, locality, parcel, aerial image, topographic feature, containment, overlap, text similarity or nearest-building result creates candidates only.",
-    "administration_rule": "Stats SA, municipal or NGI geographies provide separately versioned administrative or mapping context. Province, district, municipality, ward, main place, subplace and enumeration area are not postal delivery areas unless SAPO explicitly establishes the relation.",
-    "licence_rule": "Website visibility, search output, viewer access, the Spatial Data Infrastructure Act or government custodianship never by themselves grant bulk extraction or repository redistribution. Every artifact pins the exact owner, product licence, access method, attribution, derivative rights, retention, edition, coverage, schema, CRS and digest.",
-    "privacy_rule": "PO Box or Private Bag holders, recipients, contacts, correspondence, shipment history, residence, occupants, owners, tenants, title, rights and user queries are excluded from public artifacts.",
+    "administration_rule": "Stats SA Census 2022 geography and the separately versioned MDB 2024/2025 ward cycle provide administrative or statistical context. Province, municipality, ward, main place, subplace and enumeration area are not postal delivery areas unless SAPO explicitly establishes a relation.",
+    "licence_rule": "SAPO makes domestic-code Excel and TXT artifacts publicly downloadable, but its website terms allow ordinary copying for personal non-commercial use and require prior written permission for commercial use. Website visibility, search output, viewer access, the Spatial Data Infrastructure Act or custodianship never by themselves grant repository redistribution. Every artifact pins owner, exact terms, written permission where needed, edition, schema, CRS and digest.",
+    "privacy_rule": "POPIA treats an identifiable person or juristic person physical address and location information as personal information and requires lawful purpose, minimisation, accuracy, security and bounded retention. Public artifacts exclude holders, recipients, contacts, correspondence, shipment history, residences, occupants, owners, tenants, titles, rights and user query histories.",
     "crs_rule": "Every spatial artifact retains its source CRS, axis order, epoch and accuracy. Hartebeesthoek94, Lo zones or a product-specific projected CRS are never relabelled WGS84. EPSG:4326 output requires a reviewed, versioned transform and accuracy statement.",
     "territory_rule": "The repository uses ISO code ZA and source-stated Republic of South Africa coverage. Postal and geospatial coverage do not decide sovereignty, municipal jurisdiction or service obligations; borders, islands, enclaves, informal settlements and gaps are not model-filled as official.",
-    "freshness_rule": "SAPO codes and delivery types, post offices, civic addresses, buildings, administrative boundaries, geodetic products and licences refresh independently. Mixed-edition joins fail closed unless valid-time, known-time and the explicit relationship overlap."
+    "freshness_rule": "SAPO codes and delivery types, post offices, civic addresses, buildings, administrative boundaries, geodetic products and licences refresh independently. Mixed-edition joins fail closed unless valid-time, known-time and the explicit relationship overlap.",
+    "cadastre_rule": "Chief Surveyor-General parcel, servitude, sectional-title and surveyed-right records are cadastral or land-right evidence. A parcel or title plan is neither postcode evidence nor an exact civic-address-to-building relation, and holder or rights data remain controlled.",
+    "hosting_rule": "Cloudflare and Hugging Face public deployments may contain only digest-pinned, rights-cleared, minimized, non-personal partitions. SAPO non-commercial material, controlled CSG records, personal address data and query histories remain private or validation-only unless explicit terms authorize the exact use.",
+    "agid_rule": "A ZA AGID cell is an independent spatial index and crosswalk target. It never becomes SAPO assignment evidence, a postal polygon, a civic address, a building identity, a parcel right or proof of delivery entitlement."
   },
   "integration": {
     "agid_country_code": "ZA",
-    "coordinate_flow": "coordinate -> exact permitted civic-address point or postal-office point -> typed postcode candidate -> delivery locality -> administrative context -> explicit address-building relation -> ZA AGID cell",
+    "coordinate_flow": "coordinate -> exact permitted civic-address point or postal-office point -> typed postcode candidate -> delivery locality -> versioned administrative context -> explicit address-building relation -> independent ZA AGID cell",
     "postcode_flow": "canonical four digits plus delivery type -> pinned SAPO assignment -> official area, office point, locality reference or no canonical geometry -> optional derived surface -> explicit civic-address/building relation -> AGID cells",
     "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
   },
   "quality_gates": [
-    { "id": "canonical-postcode", "pass": "Exactly four digits remain text; prefixes, punctuation and shorter or longer values are rejected." },
-    { "id": "delivery-type-separation", "pass": "Physical, rural, PO Box and Private Bag assignments remain typed; identical locality text never merges them." },
-    { "id": "postal-geometry-authority", "pass": "Only an exact rights-cleared postal authority surface is canonical; office and locality points stay points." },
-    { "id": "derived-surface", "pass": "Method, inputs, uncertainty, exclusions, topology, version, time and digest are recorded; output stays derived and non-canonical." },
-    { "id": "explicit-building-link", "pass": "Exact building output has an authoritative relation or reviewed crosswalk; containment and proximity alone never pass." },
-    { "id": "product-specific-crs", "pass": "Source CRS, zone, axis order, epoch and reviewed transform are pinned per product." },
-    { "id": "licence-and-access", "pass": "Exact product licence, access, attribution, derivative, retention and redistribution conditions are pinned." },
-    { "id": "privacy", "pass": "No delivery-endpoint holder, recipient, correspondence, resident, occupant, owner, title or query data is published." },
-    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+    {
+      "id": "canonical-postcode",
+      "pass": "Exactly four digits remain text; prefixes, punctuation and shorter or longer values are rejected."
+    },
+    {
+      "id": "delivery-type-separation",
+      "pass": "Physical, rural, PO Box and Private Bag assignments remain typed; identical locality text never merges them."
+    },
+    {
+      "id": "postal-geometry-authority",
+      "pass": "Only an exact rights-cleared postal authority surface is canonical; office and locality points stay points."
+    },
+    {
+      "id": "derived-surface",
+      "pass": "Method, inputs, uncertainty, exclusions, topology, version, time and digest are recorded; output stays derived and non-canonical."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has an authoritative relation or reviewed crosswalk; containment and proximity alone never pass."
+    },
+    {
+      "id": "product-specific-crs",
+      "pass": "Source CRS, zone, axis order, epoch and reviewed transform are pinned per product."
+    },
+    {
+      "id": "licence-and-access",
+      "pass": "Exact product licence, access, attribution, derivative, retention and redistribution conditions are pinned."
+    },
+    {
+      "id": "privacy",
+      "pass": "No delivery-endpoint holder, recipient, correspondence, resident, occupant, owner, title or query data is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    },
+    {
+      "id": "sapo-download-and-terms",
+      "pass": "Exact SAPO Excel or TXT digest, capture time, row schema, delivery type and written reuse authority are pinned before production publication."
+    },
+    {
+      "id": "popia-and-public-hosting",
+      "pass": "Physical-address and location data are purpose-limited and minimized; public Cloudflare or Hugging Face partitions contain no person-linked or restricted rows."
+    },
+    {
+      "id": "agid-separation",
+      "pass": "AGID remains an independent spatial index and never supplies postal, address, building, parcel or delivery authority."
+    }
   ],
   "promotion": {
     "current_stage": "M1_metadata",
     "stages": [
-      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
-      { "id": "M2_assignment", "definition": "A complete rights-cleared SAPO code, locality and delivery-type artifact passes coverage, freshness, licence and digest gates." },
-      { "id": "M3_geometry_and_address", "definition": "Official or derived geometry and public civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates." },
-      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates." }
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "A complete rights-cleared SAPO code, locality and delivery-type artifact passes coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived geometry and public civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
     ],
     "hard_blockers": [
       "four-digit-code-office-point-locality-or-administrative-boundary-presented-as-official-postal-polygon",
@@ -65,7 +120,11 @@
       "website-search-viewer-sdi-law-or-custodianship-presented-as-redistribution-right",
       "holder-recipient-contact-correspondence-resident-occupant-owner-title-right-or-query-data-published",
       "source-crs-published-as-wgs84-without-reviewed-transform",
-      "postcode-or-delivery-point-stored-as-number-or-inferred-from-location"
+      "postcode-or-delivery-point-stored-as-number-or-inferred-from-location",
+      "publicly-downloadable-sapo-table-presented-as-commercial-or-repository-redistribution-permission",
+      "cadastral-parcel-sectional-title-or-holder-record-presented-as-postcode-polygon-or-exact-building-link",
+      "popia-protected-physical-address-location-holder-or-query-data-published",
+      "agid-cell-presented-as-sapo-assignment-postal-boundary-building-or-delivery-entitlement"
     ]
   },
   "required_runtime_environment": [

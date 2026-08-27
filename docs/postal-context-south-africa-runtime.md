@@ -4,6 +4,8 @@ South Africa is a typed delivery-network case, not a uniform postcode-polygon ca
 
 This is an M1 metadata and synthetic-runtime release. It contains no current SAPO rows, real addresses, PO Box or Private Bag holders, production office points, administrative polygons, civic addresses, building features or personal data.
 
+SAPO currently exposes downloadable domestic postal-code Excel and TXT artifacts. They are the preferred current assignment inputs, but SAPO website terms permit ordinary copying only for personal, non-commercial use and require prior written permission for commercial use. AGID therefore stores only source metadata until the exact file digest, capture time, row schema, delivery type and suitable written reuse authority are pinned.
+
 ## Evidence layers
 
 1. The UPU/SAPO country sheet establishes format and physical/rural/postal-delivery semantics, not a current assignment table or geometry.
@@ -12,12 +14,15 @@ This is an M1 metadata and synthetic-runtime release. It contains no current SAP
 4. NGI mapping, geodetic control, imagery and topography are separate evidence. Stats SA and municipal boundaries are administrative or statistical context, not postal areas.
 5. Any polygon generated from permitted points, addresses, roads or administrative units is derived, non-canonical, uncertainty-bearing and versioned. Missing official geometry remains a gap.
 6. Exact building display requires separately licensed geometry plus a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address.
+7. CSG parcels, erven, sectional-title plans and surveyed rights are cadastral evidence, not postcode polygons or automatic building links.
+8. POPIA protects identifiable physical-address and location information; holders, recipients, owners, occupants and query histories remain outside public artifacts.
+9. OSM address and building candidates remain in a separately attributed ODbL partition and never become SAPO or cadastral authority.
 
 ## Resolution flow
 
 `coordinate -> exact permitted civic-address point or postal-office point -> typed four-digit postcode candidate -> delivery locality -> administrative context -> explicit address-building relation -> ZA AGID cell`
 
-AGID reports its grid cell as an independent spatial index. It never relabels a cell, municipality, ward, main place, nearest-office partition, Voronoi cell or model result as canonical postal geometry.
+AGID reports its grid cell as an independent spatial index. It never relabels a cell, municipality, ward, main place, nearest-office partition, Voronoi cell or model result as canonical postal geometry. Stats SA Census 2022 and the MDB 2024/2025 ward cycle remain versioned administrative context; exact gazette, edition and valid time are required.
 
 ## Licence, privacy, and CRS
 

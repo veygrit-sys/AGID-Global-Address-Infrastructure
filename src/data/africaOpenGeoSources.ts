@@ -205,6 +205,12 @@ export type AfricaOpenGeoSourceId =
   | 'esa-egypt-geoportal'
   | 'egy-list'
   | 'sapo-postcodes'
+  | 'sapo-website-terms'
+  | 'stats-sa-census-2022-geography'
+  | 'mdb-south-africa-wards-2025'
+  | 'csg-south-africa-cadastre'
+  | 'south-africa-popia-2013'
+  | 'osm-south-africa'
   | 'postafind-za'
   | 'british-overseas-postal-reference'
   | 'saint-helena-postal'
@@ -1700,12 +1706,40 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   'sapo-postcodes': {
     id: 'sapo-postcodes',
     name: 'South African Post Office Postal Codes',
-    url: 'https://www.postoffice.co.za/',
+    url: 'https://www.postoffice.co.za/Tools/postalcodes.html',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    license: 'Exact SAPO product permission and terms must be pinned',
-    notes: 'Official postcode and delivery type validation reference; an exact product licence is required, and search output is not geometry or bulk reuse permission.',
+    license: 'Public download; personal non-commercial website use unless SAPO grants prior written permission for broader use',
+    notes: 'Official downloadable domestic Excel and TXT postcode tables; exact file digest, capture time, delivery type and written reuse authority are required, and a row is not geometry, a building link or bulk redistribution permission.',
+  },
+  'sapo-website-terms': {
+    id: 'sapo-website-terms', name: 'South African Post Office website terms', url: 'https://www.postoffice.co.za/Legal/termsconditions.html', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Visible content is ordinarily reusable only for personal non-commercial use; commercial use needs prior written permission, and the terms are not postal assignment or geometry evidence.',
+  },
+  'stats-sa-census-2022-geography': {
+    id: 'stats-sa-census-2022-geography', name: 'Statistics South Africa Census 2022 geography', url: 'https://census.statssa.gov.za/assets/documents/2022/Census_2022_Municipal_factsheet-Web.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact downloadable release terms, edition, identifiers and CRS must be pinned',
+    notes: 'Census 2022 municipal and statistical geography is versioned administrative context, not a SAPO assignment, postcode polygon, civic address or building relation.',
+  },
+  'mdb-south-africa-wards-2025': {
+    id: 'mdb-south-africa-wards-2025', name: 'Municipal Demarcation Board 2024/2025 ward cycle', url: 'https://www.demarcation.org.za/ward-delimitation-2024-2026/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact final gazette, downloadable artifact terms, edition and valid time must be pinned',
+    notes: 'The revised ward cycle was handed to the IEC in December 2025, with exact final gazettes and outstanding areas requiring version control; a ward is not a postcode or delivery catchment.',
+  },
+  'csg-south-africa-cadastre': {
+    id: 'csg-south-africa-cadastre', name: 'Chief Surveyor-General cadastral spatial information', url: 'https://csg.dlrrd.gov.za/spatial.htm', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled or product-specific access, cost and redistribution terms apply',
+    notes: 'Parcels, erven, servitudes, plans and surveyed rights are cadastral context, not postcode polygons, civic-address points, exact buildings or authority to publish holders.',
+  },
+  'south-africa-popia-2013': {
+    id: 'south-africa-popia-2013', name: 'Protection of Personal Information Act 4 of 2013', url: 'https://www.gov.za/documents/protection-personal-information-act', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'POPIA includes identifiable physical address and location information as personal information and requires lawful purpose, minimisation, accuracy and security; it supplies no postcode or geometry authority.',
+  },
+  'osm-south-africa': {
+    id: 'osm-south-africa', name: 'OpenStreetMap South Africa community mapping', url: 'https://wiki.openstreetmap.org/wiki/South_Africa', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed share-alike partition required',
+    notes: 'Community roads, addresses and buildings are candidate context only and do not establish SAPO assignment, canonical postcode geometry, cadastral rights, deliverability or an exact address-building relation.',
   },
   'postafind-za': {
     id: 'postafind-za',
@@ -2025,7 +2059,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SC: ['seychelles-postal-regulator-nas', 'seychelles-statehouse-nas-2024', 'seychelles-finance-nas-2025', 'seychelles-statehouse-nas-bill-2026', 'seychelles-postal-regulator-operators', 'seychelles-nbs-gis', 'seychelles-lands-webgis', 'seychelles-webgis-disclaimer', 'seychelles-land-registration-act', 'seychelles-data-protection-act-2023', 'osm-seychelles', 'osm-seychelles-building-import', 'rcmrd-gmes-africa-geoportal'],
   SZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ZA: ['upu-south-africa-postal-addressing', 'sapo-postcodes', 'postafind-za', 'ngi-south-africa', 'stats-sa-geography', 'sasdi-south-africa', 'nspdr-south-africa-terms', 'hot-osm-east-southern-africa'],
+  ZA: ['upu-south-africa-postal-addressing', 'sapo-postcodes', 'sapo-website-terms', 'postafind-za', 'ngi-south-africa', 'stats-sa-geography', 'stats-sa-census-2022-geography', 'mdb-south-africa-wards-2025', 'csg-south-africa-cadastre', 'sasdi-south-africa', 'nspdr-south-africa-terms', 'south-africa-popia-2013', 'osm-south-africa', 'hot-osm-east-southern-africa'],
 };
 
 export function getAfricaOpenSourceIds(countryCode: string): AfricaOpenGeoSourceId[] {

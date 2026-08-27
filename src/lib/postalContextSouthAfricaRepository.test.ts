@@ -67,6 +67,11 @@ test('South Africa seed separates delivery types, geometry, buildings, licensing
   assert.match(manifest.postal_system.building_rule, /rights-cleared.*source-defined stable relation.*crosswalk.*candidates only/i);
   assert.match(manifest.postal_system.licence_rule, /website visibility.*Spatial Data Infrastructure Act.*never.*redistribution/i);
   assert.match(manifest.postal_system.crs_rule, /source CRS.*Hartebeesthoek94.*Lo zones.*never relabelled WGS84.*reviewed/i);
+  assert.match(manifest.postal_system.assignment_rule, /downloadable.*Excel.*TXT.*digest-pinned.*delivery type.*not.*polygon/i);
+  assert.match(manifest.postal_system.cadastre_rule, /Surveyor-General.*parcel.*sectional-title.*neither postcode.*building.*holder/i);
+  assert.match(manifest.postal_system.privacy_rule, /POPIA.*physical address.*location information.*personal information.*minimisation.*query/i);
+  assert.match(manifest.postal_system.hosting_rule, /Cloudflare.*Hugging Face.*rights-cleared.*non-personal.*SAPO.*CSG/i);
+  assert.match(manifest.postal_system.agid_rule, /independent spatial index.*never.*SAPO.*postal polygon.*building.*delivery/i);
   assert.equal(manifest.promotion.current_stage, 'M1_metadata');
   for (const blocker of [
     'four-digit-code-office-point-locality-or-administrative-boundary-presented-as-official-postal-polygon',
@@ -91,6 +96,12 @@ test('South Africa source policy keeps postal, mapping, administration, legal, a
   assert.match(sources.get('stats-sa-geography')?.geometry_authority ?? '', /statistical_geometry_only/i);
   assert.equal(sources.get('sasdi-south-africa')?.geometry_authority, 'none');
   assert.equal(sources.get('nspdr-south-africa-terms')?.redistribution_class, 'R4_validation_only');
+  assert.equal(sources.get('sapo-website-terms')?.assignment_authority, 'none');
+  assert.match(sources.get('stats-sa-census-2022-geography')?.geometry_authority ?? '', /statistical_geometry_only/i);
+  assert.match(sources.get('mdb-south-africa-wards-2025')?.geometry_authority ?? '', /ward_geometry_only/i);
+  assert.equal(sources.get('csg-south-africa-cadastre')?.redistribution_class, 'R3_controlled_approval_or_contract');
+  assert.equal(sources.get('south-africa-popia-2013')?.assignment_authority, 'none');
+  assert.equal(sources.get('osm-south-africa')?.redistribution_class, 'R5_odbl_separate_partition');
   for (const partition of [
     'four-digit-postal-assignment',
     'postal-office-point',
@@ -99,6 +110,8 @@ test('South Africa source policy keeps postal, mapping, administration, legal, a
     'physical-address-and-building',
     'administrative-context',
     'private-and-restricted',
+    'cadastral-and-land',
+    'community-odbl',
   ]) assert.ok(profile.artifact_partitions.some(candidate => candidate.id === partition));
 });
 

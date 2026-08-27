@@ -7929,11 +7929,15 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     availability: 'web-search',
     depth: 'postcode',
     validationReadiness: 'metadata-only',
-    url: 'https://www.postoffice.co.za/',
-    sourceNames: ['south african post office postal codes', 'sapo postcodes'],
+    url: 'https://www.postoffice.co.za/Tools/postalcodes.html',
+    sourceNames: ['south african post office postal codes', 'sapo postcodes', 'sapo domestic postal codes excel txt'],
     openSourceIds: ['sapo-postcodes'],
     requiresCredential: false,
-    notes: ['A pinned SAPO record may validate code, locality or post office and delivery type.', 'Website access is not a bulk licence, geometry, exact building relation or holder evidence.'],
+    notes: ['SAPO publishes downloadable domestic Excel and TXT tables; a pinned row may validate code, locality or post office and delivery type.', 'Website terms limit ordinary reuse to personal non-commercial use; exact digest and suitable written permission are required before broader publication, and rows are not geometry, building or holder evidence.'],
+  },
+  {
+    id: 'sapo-website-terms', countryCodes: ['ZA'], label: 'South African Post Office website terms', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.postoffice.co.za/Legal/termsconditions.html', sourceNames: ['sapo website terms', 'south african post office terms'], openSourceIds: ['sapo-website-terms'], requiresCredential: false,
+    notes: ['Visible website content is ordinarily reusable only for personal non-commercial use; commercial use requires prior written permission.', 'The terms grant no postal assignment, geometry or automatic public-repository authority.'],
   },
   {
     id: 'postafind-za',
@@ -7979,6 +7983,22 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     openSourceIds: ['stats-sa-geography'],
     requiresCredential: false,
     notes: ['Official statistical geography is administrative context only.', 'Exact current artifact, licence, validity and CRS must be pinned; census boundaries are not postal areas.'],
+  },
+  {
+    id: 'stats-sa-census-2022-geography', countryCodes: ['ZA'], label: 'Statistics South Africa Census 2022 geography', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://census.statssa.gov.za/assets/documents/2022/Census_2022_Municipal_factsheet-Web.pdf', sourceNames: ['stats sa census 2022 geography'], openSourceIds: ['stats-sa-census-2022-geography'], requiresCredential: false,
+    notes: ['Versioned Census 2022 municipal and statistical context only; exact artifact, licence, identifiers, CRS and digest must be pinned.', 'It is not SAPO assignment, postcode geometry, civic address or building evidence.'],
+  },
+  {
+    id: 'mdb-south-africa-wards-2025', countryCodes: ['ZA'], label: 'Municipal Demarcation Board 2024/2025 ward cycle', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.demarcation.org.za/ward-delimitation-2024-2026/', sourceNames: ['mdb south africa wards 2025', 'municipal demarcation board ward cycle'], openSourceIds: ['mdb-south-africa-wards-2025'], requiresCredential: false,
+    notes: ['Final gazette, artifact edition, valid time and outstanding-area status must be pinned.', 'Ward geometry is administrative and never a SAPO postcode or delivery catchment.'],
+  },
+  {
+    id: 'csg-south-africa-cadastre', countryCodes: ['ZA'], label: 'Chief Surveyor-General cadastral spatial information', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://csg.dlrrd.gov.za/spatial.htm', sourceNames: ['chief surveyor general south africa cadastre', 'csg spatial data'], openSourceIds: ['csg-south-africa-cadastre'], requiresCredential: true,
+    notes: ['Controlled parcels, erven, servitudes, plans and surveyed-right context; exact access, cost, licence and schema apply.', 'A cadastral feature is not postcode authority, a civic-address point, an exact building relation or authority to publish holders.'],
+  },
+  {
+    id: 'south-africa-popia-2013', countryCodes: ['ZA'], label: 'Protection of Personal Information Act 4 of 2013', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.gov.za/documents/protection-personal-information-act', sourceNames: ['south africa popia 2013', 'protection of personal information act'], openSourceIds: ['south-africa-popia-2013'], requiresCredential: false,
+    notes: ['Identifiable physical-address and location information is personal information subject to lawful-purpose, minimisation, quality, security and retention controls.', 'POPIA supplies no postcode, geometry, building, parcel or delivery authority.'],
   },
   {
     id: 'sasdi-south-africa',

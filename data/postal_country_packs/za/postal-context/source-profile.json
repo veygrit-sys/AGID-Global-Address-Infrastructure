@@ -3,112 +3,333 @@
   "country_code": "ZA",
   "artifact_scope": "metadata-only-contract-seed",
   "redistribution_classes": [
-    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
-    { "id": "R1_public_reference", "meaning": "Public official pages, standards, laws, services or viewers retained as references; access does not imply row or redistribution rights." },
-    { "id": "R2_source_specific_reuse", "meaning": "An exact artifact whose dataset-specific licence permits recorded public fields and derivatives, with owner, edition, coverage, schema, CRS, validity, attribution and digest pinned." },
-    { "id": "R3_controlled_approval_or_contract", "meaning": "Registered, licensed, request-delivered or restricted material used and redistributed only as specifically permitted." },
-    { "id": "R4_validation_only", "meaning": "Personal, holder, correspondence, unclear-license, search-only or non-redistributable evidence may detect discrepancies but cannot become public output." }
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata and non-production fixtures only."
+    },
+    {
+      "id": "R1_public_reference",
+      "meaning": "Public official pages, standards, laws, services or viewers retained as references; access does not imply row or redistribution rights."
+    },
+    {
+      "id": "R2_source_specific_reuse",
+      "meaning": "An exact artifact whose dataset-specific licence permits recorded public fields and derivatives, with owner, edition, coverage, schema, CRS, validity, attribution and digest pinned."
+    },
+    {
+      "id": "R3_controlled_approval_or_contract",
+      "meaning": "Registered, licensed, request-delivered or restricted material used and redistributed only as specifically permitted."
+    },
+    {
+      "id": "R4_validation_only",
+      "meaning": "Personal, holder, correspondence, unclear-license, search-only or non-redistributable evidence may detect discrepancies but cannot become public output."
+    },
+    {
+      "id": "R5_odbl_separate_partition",
+      "meaning": "ODbL community data retained in a separately attributed, share-alike partition and never promoted to official authority."
+    }
   ],
   "sources": [
     {
       "source_id": "upu-south-africa-postal-addressing",
       "provider": "Universal Postal Union with South African Post Office",
       "source_url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/zafEn.pdf",
-      "role": ["official-postal-address-format", "four-digit-code-semantics", "delivery-type-separation"],
+      "role": [
+        "official-postal-address-format",
+        "four-digit-code-semantics",
+        "delivery-type-separation"
+      ],
       "production_scope": "The country sheet defines four digits and distinguishes physical, rural and postal-delivery-service addresses. It supplies no current national assignment table, office dataset, catchment or polygon.",
       "assignment_authority": "official_postal_system_semantics_only",
       "geometry_authority": "none",
       "validation_readiness": "metadata_only_not_assignment_evidence",
       "redistribution_class": "R1_public_reference",
       "bundled_here": false,
-      "prohibited_claims": ["format-sheet-is-current-code-database", "postcode-is-always-area", "sample-address-is-production-row"]
+      "prohibited_claims": [
+        "format-sheet-is-current-code-database",
+        "postcode-is-always-area",
+        "sample-address-is-production-row"
+      ]
     },
     {
       "source_id": "sapo-postcodes",
       "provider": "South African Post Office",
-      "source_url": "https://www.postoffice.co.za/",
-      "role": ["official-postal-operator", "postcode-and-delivery-locality-validation"],
-      "production_scope": "A pinned SAPO-controlled record may validate its four-digit code, delivery locality, post office and delivery type at capture time. Completeness, historical validity, geometry and redistribution require separate proof.",
+      "source_url": "https://www.postoffice.co.za/Tools/postalcodes.html",
+      "role": [
+        "official-postal-operator",
+        "downloadable-domestic-code-excel-and-text",
+        "postcode-and-delivery-locality-validation"
+      ],
+      "production_scope": "SAPO publishes domestic postal-code Excel and TXT artifacts. A digest-pinned row may validate its code, locality or post office and delivery type at capture time, but website terms limit ordinary reuse to personal non-commercial use; completeness, history, geometry and broader redistribution require explicit proof.",
       "assignment_authority": "official_postal_assignment_when_exact_record_is_pinned",
       "geometry_authority": "none_unless_exact_product_explicitly_defines_geometry",
-      "validation_readiness": "record_capture_coverage_and_licence_required",
+      "validation_readiness": "exact_file_digest_delivery_type_and_written_reuse_authority_required",
       "redistribution_class": "R4_validation_only",
       "bundled_here": false,
-      "prohibited_claims": ["website-is-bulk-redistribution-licence", "code-is-polygon", "postcode-proves-building-or-holder"]
+      "prohibited_claims": [
+        "website-is-bulk-redistribution-licence",
+        "code-is-polygon",
+        "postcode-proves-building-or-holder"
+      ]
+    },
+    {
+      "source_id": "sapo-website-terms",
+      "provider": "South African Post Office",
+      "source_url": "https://www.postoffice.co.za/Legal/termsconditions.html",
+      "role": [
+        "website-reuse-terms",
+        "commercial-permission-gate"
+      ],
+      "production_scope": "Visible website content may ordinarily be copied only for personal non-commercial use; commercial use requires prior written permission. These terms are a reuse gate, not postal assignment or geometry evidence.",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "validation_readiness": "legal_framework_only",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "prohibited_claims": [
+        "downloadability-is-commercial-permission",
+        "website-terms-are-postal-assignment",
+        "personal-use-right-authorizes-public-repository"
+      ]
+    },
+    {
+      "source_id": "stats-sa-census-2022-geography",
+      "provider": "Statistics South Africa",
+      "source_url": "https://census.statssa.gov.za/assets/documents/2022/Census_2022_Municipal_factsheet-Web.pdf",
+      "role": [
+        "census-2022-geography",
+        "municipal-context"
+      ],
+      "production_scope": "Census 2022 geography and its source-stated municipal boundary edition provide statistical context only. Exact downloadable artifact, licence, identifiers, CRS and digest must be pinned.",
+      "assignment_authority": "official_administrative_context_only",
+      "geometry_authority": "official_statistical_geometry_only_when_exact_artifact_is_licensed_and_pinned",
+      "validation_readiness": "metadata_only_until_exact_artifact_and_licence_pinned",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "prohibited_claims": [
+        "census-geography-is-postal-area",
+        "municipality-proves-postcode",
+        "household-record-is-public-address"
+      ]
+    },
+    {
+      "source_id": "mdb-south-africa-wards-2025",
+      "provider": "Municipal Demarcation Board",
+      "source_url": "https://www.demarcation.org.za/ward-delimitation-2024-2026/",
+      "role": [
+        "official-ward-delimitation",
+        "versioned-administrative-context"
+      ],
+      "production_scope": "The 2024/2025 ward cycle handed revised final wards to the IEC in December 2025, with stated outstanding or litigated areas handled by exact gazette and valid time. Ward data are not postal assignments or postcode surfaces.",
+      "assignment_authority": "official_administrative_context_only",
+      "geometry_authority": "official_ward_geometry_only_when_exact_gazette_or_artifact_is_pinned",
+      "validation_readiness": "metadata_only_until_final_gazette_and_artifact_pinned",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "prohibited_claims": [
+        "ward-is-postcode-area",
+        "draft-or-outstanding-ward-is-final",
+        "ward-containment-proves-delivery-locality"
+      ]
+    },
+    {
+      "source_id": "csg-south-africa-cadastre",
+      "provider": "Chief Surveyor-General",
+      "source_url": "https://csg.dlrrd.gov.za/spatial.htm",
+      "role": [
+        "cadastral-parcels",
+        "surveyed-real-rights",
+        "street-and-servitude-context"
+      ],
+      "production_scope": "CSG spatial data describe parcels, erven, servitudes, general plans, holdings and administrative boundaries. Exact access, cost, licence and schema apply; cadastral containment does not identify a postcode, civic address, building footprint, owner or occupant.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_cadastral_geometry_only_for_exact_controlled_artifact",
+      "validation_readiness": "controlled_product_review_required",
+      "redistribution_class": "R3_controlled_approval_or_contract",
+      "bundled_here": false,
+      "prohibited_claims": [
+        "parcel-is-postcode-polygon",
+        "sectional-title-plan-is-building-address-link",
+        "cadastral-record-authorizes-holder-publication"
+      ]
+    },
+    {
+      "source_id": "south-africa-popia-2013",
+      "provider": "Government of South Africa",
+      "source_url": "https://www.gov.za/documents/protection-personal-information-act",
+      "role": [
+        "personal-data-legal-framework",
+        "physical-address-and-location-protection"
+      ],
+      "production_scope": "POPIA governs physical-address and location information linked to identifiable natural or juristic persons. It supplies no postal, geometry, building or cadastral authority.",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "validation_readiness": "legal_framework_only",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "prohibited_claims": [
+        "public-address-is-never-personal-information",
+        "law-is-postal-authority",
+        "location-query-history-may-be-public"
+      ]
+    },
+    {
+      "source_id": "osm-south-africa",
+      "provider": "OpenStreetMap contributors",
+      "source_url": "https://wiki.openstreetmap.org/wiki/South_Africa",
+      "role": [
+        "community-address-candidates",
+        "community-building-candidates"
+      ],
+      "production_scope": "ODbL community roads, addresses and buildings remain a separately attributed share-alike partition. They do not establish SAPO assignment, canonical postcode geometry, cadastral rights, deliverability or an exact address-building relation.",
+      "assignment_authority": "community_candidate_only",
+      "geometry_authority": "community_candidate_only",
+      "validation_readiness": "candidate_only",
+      "redistribution_class": "R5_odbl_separate_partition",
+      "bundled_here": false,
+      "prohibited_claims": [
+        "osm-is-sapo-authority",
+        "community-building-is-cadastral-title",
+        "nearest-address-is-exact-building-link"
+      ]
     },
     {
       "source_id": "postafind-za",
       "provider": "PostaFind",
       "source_url": "https://pcf.postafind.co.za/search",
-      "role": ["third-party-postcode-search", "discrepancy-detection"],
+      "role": [
+        "third-party-postcode-search",
+        "discrepancy-detection"
+      ],
       "production_scope": "Search results are fallback validation evidence only unless provenance, SAPO authority, coverage, terms, edition and redistribution rights are pinned.",
       "assignment_authority": "third_party_candidate_only",
       "geometry_authority": "none",
       "validation_readiness": "validation_only",
       "redistribution_class": "R4_validation_only",
       "bundled_here": false,
-      "prohibited_claims": ["third-party-search-is-sapo-authority", "search-result-may-be-bulk-republished", "locality-result-is-polygon"]
+      "prohibited_claims": [
+        "third-party-search-is-sapo-authority",
+        "search-result-may-be-bulk-republished",
+        "locality-result-is-polygon"
+      ]
     },
     {
       "source_id": "ngi-south-africa",
       "provider": "Chief Directorate: National Geospatial Information",
       "source_url": "https://ngi.dlrrd.gov.za/",
-      "role": ["national-mapping-authority", "geodetic-control", "topographic-and-aerial-context"],
+      "role": [
+        "national-mapping-authority",
+        "geodetic-control",
+        "topographic-and-aerial-context"
+      ],
       "production_scope": "NGI establishes national mapping, geodetic control, aerial imagery and topographic context. Each exact product retains its own access, licence, CRS, edition and digest; the authority page is not feature data.",
       "assignment_authority": "official_geospatial_governance_only",
       "geometry_authority": "none_until_exact_product_is_licensed_and_pinned",
       "validation_readiness": "metadata_only",
       "redistribution_class": "R1_public_reference",
       "bundled_here": false,
-      "prohibited_claims": ["mapping-authority-page-is-postal-area", "aerial-or-topographic-feature-is-address-building-link", "viewer-access-grants-reuse"]
+      "prohibited_claims": [
+        "mapping-authority-page-is-postal-area",
+        "aerial-or-topographic-feature-is-address-building-link",
+        "viewer-access-grants-reuse"
+      ]
     },
     {
       "source_id": "stats-sa-geography",
       "provider": "Statistics South Africa",
       "source_url": "https://apps.statssa.gov.za/census01/html/Geography_Metadata.htm",
-      "role": ["official-statistical-geography", "administrative-context"],
+      "role": [
+        "official-statistical-geography",
+        "administrative-context"
+      ],
       "production_scope": "Pinned Stats SA geography can supply its stated province, municipality and census hierarchy. Exact edition and licence must be reviewed; statistical boundaries do not establish postal delivery areas.",
       "assignment_authority": "official_administrative_context_only",
       "geometry_authority": "official_statistical_geometry_only_when_exact_artifact_is_licensed_and_pinned",
       "validation_readiness": "metadata_only_until_current_artifact_and_licence_pinned",
       "redistribution_class": "R1_public_reference",
       "bundled_here": false,
-      "prohibited_claims": ["census-geography-is-postal-area", "administrative-containment-proves-postcode", "historic-boundary-is-current"]
+      "prohibited_claims": [
+        "census-geography-is-postal-area",
+        "administrative-containment-proves-postcode",
+        "historic-boundary-is-current"
+      ]
     },
     {
       "source_id": "sasdi-south-africa",
       "provider": "South African Government",
       "source_url": "https://www.gov.za/documents/acts/spatial-data-infrastructure-act-54-2003-04-feb-2004",
-      "role": ["spatial-data-governance", "metadata-and-custodianship-framework"],
+      "role": [
+        "spatial-data-governance",
+        "metadata-and-custodianship-framework"
+      ],
       "production_scope": "The Spatial Data Infrastructure Act governs sharing, standards, metadata and custodianship. It is legal metadata, not a dataset licence, postal assignment or geometry artifact.",
       "assignment_authority": "none",
       "geometry_authority": "none",
       "validation_readiness": "legal_framework_only",
       "redistribution_class": "R1_public_reference",
       "bundled_here": false,
-      "prohibited_claims": ["sdi-act-opens-every-dataset", "custodianship-is-redistribution-licence", "law-validates-postcode-or-building"]
+      "prohibited_claims": [
+        "sdi-act-opens-every-dataset",
+        "custodianship-is-redistribution-licence",
+        "law-validates-postcode-or-building"
+      ]
     },
     {
       "source_id": "nspdr-south-africa-terms",
       "provider": "Department of Land Reform and Rural Development",
       "source_url": "https://nspdr.dlrrd.gov.za/",
-      "role": ["spatial-repository-access-boundary", "portal-disclaimer"],
+      "role": [
+        "spatial-repository-access-boundary",
+        "portal-disclaimer"
+      ],
       "production_scope": "The NSPDR portal documents credential and disclaimer boundaries. Portal visibility or searchability does not supply a reusable postal, address or building artifact.",
       "assignment_authority": "none",
       "geometry_authority": "none",
       "validation_readiness": "legal_review_required",
       "redistribution_class": "R4_validation_only",
       "bundled_here": false,
-      "prohibited_claims": ["portal-access-is-public-redistribution-right", "viewer-layer-is-postal-geometry", "disclaimer-validates-feature"]
+      "prohibited_claims": [
+        "portal-access-is-public-redistribution-right",
+        "viewer-layer-is-postal-geometry",
+        "disclaimer-validates-feature"
+      ]
     }
   ],
   "artifact_partitions": [
-    { "id": "four-digit-postal-assignment", "contents": "Pinned SAPO code, delivery locality or office, delivery type, validity and lineage; no inferred polygon." },
-    { "id": "postal-office-point", "contents": "Permitted exact office points separate from postal delivery surfaces and civic addresses." },
-    { "id": "street-rural-and-postal-delivery", "contents": "Physical, rural, PO Box and Private Bag evidence retained as distinct typed records." },
-    { "id": "derived-postal-surface", "contents": "Optional versioned, uncertainty-bearing, non-canonical surfaces derived only from rights-cleared inputs." },
-    { "id": "physical-address-and-building", "contents": "Civic address points and exact rights-cleared building joins kept separate from postal endpoints." },
-    { "id": "administrative-context", "contents": "Separately licensed province, municipality and statistical geography with source CRS and edition." },
-    { "id": "private-and-restricted", "contents": "Endpoint holders, recipients, contacts, correspondence, residents, occupants, owners, title and query evidence excluded from public artifacts." }
+    {
+      "id": "four-digit-postal-assignment",
+      "contents": "Pinned SAPO code, delivery locality or office, delivery type, validity and lineage; no inferred polygon."
+    },
+    {
+      "id": "postal-office-point",
+      "contents": "Permitted exact office points separate from postal delivery surfaces and civic addresses."
+    },
+    {
+      "id": "street-rural-and-postal-delivery",
+      "contents": "Physical, rural, PO Box and Private Bag evidence retained as distinct typed records."
+    },
+    {
+      "id": "derived-postal-surface",
+      "contents": "Optional versioned, uncertainty-bearing, non-canonical surfaces derived only from rights-cleared inputs."
+    },
+    {
+      "id": "physical-address-and-building",
+      "contents": "Civic address points and exact rights-cleared building joins kept separate from postal endpoints."
+    },
+    {
+      "id": "administrative-context",
+      "contents": "Separately licensed province, municipality and statistical geography with source CRS and edition."
+    },
+    {
+      "id": "private-and-restricted",
+      "contents": "Endpoint holders, recipients, contacts, correspondence, residents, occupants, owners, title and query evidence excluded from public artifacts."
+    },
+    {
+      "id": "cadastral-and-land",
+      "contents": "Controlled parcel, surveyed-right and sectional-title context kept separate from postcode, address, building and holder claims."
+    },
+    {
+      "id": "community-odbl",
+      "contents": "ODbL address and building candidates retained in a separate attributed share-alike partition."
+    }
   ]
 }

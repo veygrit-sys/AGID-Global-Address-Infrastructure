@@ -1053,6 +1053,11 @@ test('South Africa catalog separates delivery semantics, SAPO assignment, fallba
   assert.equal(sources.get('stats-sa-geography')?.depth, 'geo-only');
   assert.equal(sources.get('sasdi-south-africa')?.sourceRole, 'legal-framework-only');
   assert.equal(sources.get('nspdr-south-africa-terms')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('sapo-website-terms')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('stats-sa-census-2022-geography')?.depth, 'geo-only');
+  assert.equal(sources.get('mdb-south-africa-wards-2025')?.trustTier, 'authoritative');
+  assert.equal(sources.get('csg-south-africa-cadastre')?.availability, 'commercial-or-restricted');
+  assert.equal(sources.get('south-africa-popia-2013')?.sourceRole, 'legal-framework-only');
 });
 
 test('Oman catalog separates routing-code semantics, office points, website terms, civic numbering, administration, and geodetic governance', () => {
