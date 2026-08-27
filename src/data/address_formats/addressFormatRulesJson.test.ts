@@ -1669,6 +1669,9 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadFormat('TG').postalCode?.api, 'https://www.laposte.tg/bureaux-poste');
   assert.equal(loadFormat('KM').postalCode?.api, 'https://www.snpsf.com/poste');
   assert.equal(loadFormat('ET').postalCode?.api, 'https://ethio.post/branches/');
+  assert.match(loadFormat('ET').postalCode?.source ?? '', /Ethiopost.*UPU Ethiopia 2002.*SSGI eDAS.*Ethio-NSDI/i);
+  assert.match(loadRules('ET').postalCode?.label ?? '', /4 digits.*text.*do not establish a polygon.*eDAS building.*explicit/i);
+  assert.deepEqual(loadRules('ET').regionalHierarchy, ['region', 'zone', 'woredaOrSubCity', 'kebeleOrNeighborhood', 'typedFourDigitPostalObject', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitEDASAddress', 'explicitEDASBuildingOrParcelFeature', 'exactRightsClearedBuilding']);
   assert.equal(loadFormat('MW').postalCode?.api, 'https://macra.mw/post-codes/');
   assert.equal(loadFormat('MZ').postalCode?.api, 'https://www.correios.co.mz/?cod=11&pagina=codigo');
   assert.equal(loadFormat('NA').postalCode?.api, 'https://www.nampost.com.na/postal/postal-codes');
@@ -1826,6 +1829,9 @@ test('All African country JSON files expose registered postal API or open-source
   assert.ok(loadFormat('KE').openSourceIds?.includes('rcmrd-geoportal'));
   assert.ok(loadFormat('NG').openSourceIds?.includes('nipost-postcode'));
   assert.ok(loadFormat('ET').openSourceIds?.includes('ethiopost-branches'));
+  assert.ok(loadFormat('ET').openSourceIds?.includes('upu-ethiopia-addressing-2002'));
+  assert.ok(loadFormat('ET').openSourceIds?.includes('ethiopia-ssgi-edas'));
+  assert.ok(loadFormat('ET').openSourceIds?.includes('ethiopia-nsdi-geoportal'));
   assert.ok(loadFormat('MW').openSourceIds?.includes('malawi-postcodes-macra'));
   assert.ok(loadFormat('MZ').openSourceIds?.includes('correios-mocambique-codigos-postais'));
   assert.ok(loadFormat('NA').openSourceIds?.includes('nampost-postal-codes'));

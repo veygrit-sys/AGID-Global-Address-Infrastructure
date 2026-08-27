@@ -31,6 +31,13 @@ export type AfricaOpenGeoSourceId =
   | 'kenya-open-data'
   | 'posta-kenya'
   | 'ethiopost-branches'
+  | 'ethiopost-delivery-address-form'
+  | 'upu-ethiopia-addressing-2002'
+  | 'ethiopia-ssgi-edas'
+  | 'ethiopia-nsdi-geoportal'
+  | 'ethiopia-bishoftu-address-book'
+  | 'ethiopia-addis-land-registration-edas'
+  | 'osm-ethiopia'
   | 'mcpt-djibouti-poste'
   | 'snpsf-comores-poste'
   | 'somalia-moct-posta'
@@ -423,8 +430,74 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     url: 'https://ethio.post/branches/',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    license: 'Exact Ethiopost website, observation and reuse terms must be pinned',
+    notes: 'Official branch, region, service and available location observation; a pinned result does not itself publish a complete four-digit assignment table, postal perimeter, history, bulk API or redistribution right.',
+  },
+  'ethiopost-delivery-address-form': {
+    id: 'ethiopost-delivery-address-form',
+    name: 'Ethiopost pickup and delivery address form',
+    url: 'https://ethio.post/delivery/',
+    kind: 'address',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Official Ethiopost branch locator and postal-service directory used as current operator evidence while a dedicated public postcode search remains limited.',
+    notes: 'Current operator input schema exposes sub-city, woreda, house number, city, province and ZIP/postal-code fields; an input form and its examples are not assignment rows, geometry, deliverability evidence or reuse permission.',
+  },
+  'upu-ethiopia-addressing-2002': {
+    id: 'upu-ethiopia-addressing-2002',
+    name: 'UPU Ethiopia addressing sheet (July 2002)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ethEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'Dated four-digit format, left-of-locality position and region/central-office/delivery-office coding semantics only; it is not a current assignment release, polygon source, complete history, reusable address database or building link.',
+  },
+  'ethiopia-ssgi-edas': {
+    id: 'ethiopia-ssgi-edas',
+    name: 'SSGI Ethiopian Digital Addressing System (eDAS)',
+    url: 'https://ssgi.gov.et/platform-and-application-development/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official national digital-address programme for buildings, parcels, neighbourhoods and physical locations, rolling out city by city; programme pages do not expose a nationwide row-level dataset, stable public API, licence, release digest or postal-code geometry.',
+  },
+  'ethiopia-nsdi-geoportal': {
+    id: 'ethiopia-nsdi-geoportal',
+    name: 'Ethiopia NSDI Geoportal',
+    url: 'https://ethionsdi.gov.et/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official SSGI metadata, map and OGC-service portal; each dataset may be public or access-controlled and needs its exact owner, licence, version, CRS and digest. Catalog visibility is not postal authority or blanket redistribution permission.',
+  },
+  'ethiopia-bishoftu-address-book': {
+    id: 'ethiopia-bishoftu-address-book',
+    name: 'SSGI Bishoftu Digital Addressing System address book',
+    url: 'https://www.ethionsdi.gov.et/uploaded/documents/Bishoftu_AddressBook.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official city-specific eDAS publication describing unique addresses for buildings, parcels and neighbourhoods; it is not nationwide coverage, a four-digit postal assignment file, an automatically reusable row dataset or unrestricted building geometry.',
+  },
+  'ethiopia-addis-land-registration-edas': {
+    id: 'ethiopia-addis-land-registration-edas',
+    name: 'SSGI and Addis Ababa land-registration eDAS cooperation',
+    url: 'https://ssgi.gov.et/ssgi-signed-mou-with-addis-ababa-city-land-acquisition-and-registration-agency/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official institutional context linking digital addressing and the city land-registration agency; the cooperation announcement supplies no address rows, parcel/building crosswalk, public licence, postal assignment or automatic exact-building relation.',
+  },
+  'osm-ethiopia': {
+    id: 'osm-ethiopia',
+    name: 'OpenStreetMap Ethiopia community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/Ethiopia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community road, place, address and building context retained in a separate attributed partition; it is not Ethiopost, SSGI, land-registry or exact address-building authority.',
   },
   'mcpt-djibouti-poste': {
     id: 'mcpt-djibouti-poste',
@@ -1122,7 +1195,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   RW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SO: ['somalia-moct-posta', 'rcmrd-gmes-africa-geoportal'],
   SS: ['south-sudan-nca-postal-sector', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ET: ['ethiopost-branches', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  ET: ['ethiopost-branches', 'ethiopost-delivery-address-form', 'upu-ethiopia-addressing-2002', 'ethiopia-ssgi-edas', 'ethiopia-nsdi-geoportal', 'ethiopia-bishoftu-address-book', 'ethiopia-addis-land-registration-edas', 'osm-ethiopia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   DJ: ['mcpt-djibouti-poste', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MZ: ['correios-mocambique-codigos-postais', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MW: ['malawi-postcodes-macra', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

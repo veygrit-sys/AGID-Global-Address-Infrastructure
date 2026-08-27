@@ -945,6 +945,19 @@ test('Egypt catalog separates seven-digit semantics, lookup, operator, statistic
   assert.equal(sources.get('egy-list')?.authority, 'community');
 });
 
+test('Ethiopia catalog separates operator observation, dated four-digit semantics, eDAS address identity, NSDI geometry, and land-registration context', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('ET').map(source => [source.id, source]));
+  assert.equal(sources.get('ethiopost-branches')?.trustTier, 'authoritative');
+  assert.match(sources.get('ethiopost-branches')?.notes.join(' ') ?? '', /branch.*region.*services.*not.*complete four-digit.*polygon.*bulk/i);
+  assert.equal(sources.get('ethiopost-delivery-address-form')?.depth, 'address');
+  assert.match(sources.get('upu-ethiopia-addressing-2002')?.notes.join(' ') ?? '', /four-digit.*region.*central-office.*delivery-office.*not.*current.*polygon/i);
+  assert.equal(sources.get('ethiopia-ssgi-edas')?.depth, 'address');
+  assert.match(sources.get('ethiopia-ssgi-edas')?.notes.join(' ') ?? '', /buildings.*parcels.*neighbourhoods.*not.*nationwide row-level.*postcode/i);
+  assert.equal(sources.get('ethiopia-nsdi-geoportal')?.depth, 'geo-only');
+  assert.equal(sources.get('ethiopia-bishoftu-address-book')?.depth, 'building');
+  assert.match(sources.get('ethiopia-addis-land-registration-edas')?.notes.join(' ') ?? '', /land-registration.*no reusable address rows.*crosswalk/i);
+});
+
 test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
   assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');

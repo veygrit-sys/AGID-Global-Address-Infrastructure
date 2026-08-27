@@ -5579,14 +5579,34 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     countryCodes: ['ET'],
     label: 'Ethiopost branch locator',
     authority: 'postal-operator',
-    trustTier: 'official',
+    trustTier: 'authoritative',
     availability: 'web-search',
     depth: 'locality',
+    sourceRole: 'postal-reference-data',
+    validationReadiness: 'reference-eligible',
     url: 'https://ethio.post/branches/',
     sourceNames: ['ethiopost', 'ethio.post', 'ethiopia post', 'ethiopost branch locator'],
     openSourceIds: ['ethiopost-branches'],
     requiresCredential: false,
-    notes: ['Official Ethiopost branch locator and service directory; use as current postal-operator evidence while a dedicated public postcode search endpoint remains limited.'],
+    notes: ['A pinned branch observation may validate its stated region, branch identity, services and available location at observed_at.', 'The locator does not itself publish a complete four-digit assignment release, postal polygon, full history, bulk API or redistribution licence.'],
+  },
+  {
+    id: 'ethiopost-delivery-address-form', countryCodes: ['ET'], label: 'Ethiopost pickup and delivery address form', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ethio.post/delivery/', sourceNames: ['ethiopost delivery address form', 'ethiopost pickup form'], openSourceIds: ['ethiopost-delivery-address-form'], requiresCredential: false, notes: ['Current operator input schema exposes sub-city, woreda, house number, city, province and ZIP/postal-code fields.', 'Input fields and examples are not assignment rows, postal geometry, deliverability evidence, reusable addresses or building links.'],
+  },
+  {
+    id: 'upu-ethiopia-addressing-2002', countryCodes: ['ET'], label: 'UPU Ethiopia addressing sheet (July 2002)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ethEn.pdf', sourceNames: ['upu ethiopia addressing 2002', 'ethiopia four digit postcode'], openSourceIds: ['upu-ethiopia-addressing-2002'], requiresCredential: false, notes: ['Dated four-digit format, left-of-locality position and region/central-office/delivery-office coding semantics only.', 'It is not a current assignment table, official polygon, complete history, reusable address database or blanket republication permission.'],
+  },
+  {
+    id: 'ethiopia-ssgi-edas', countryCodes: ['ET'], label: 'SSGI Ethiopian Digital Addressing System (eDAS)', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ssgi.gov.et/platform-and-application-development/', sourceNames: ['ethiopia ssgi edas', 'ethiopian digital addressing system'], openSourceIds: ['ethiopia-ssgi-edas'], requiresCredential: false, notes: ['Official city-by-city national programme for unique addresses tied to buildings, parcels, neighbourhoods and physical locations.', 'Programme descriptions do not expose a nationwide row-level release, stable public API, licence, digest, postcode assignment or automatic address-building crosswalk.'],
+  },
+  {
+    id: 'ethiopia-nsdi-geoportal', countryCodes: ['ET'], label: 'Ethiopia NSDI Geoportal', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ethionsdi.gov.et/', sourceNames: ['ethiopia nsdi geoportal', 'ethio nsdi', 'ssgi geoportal'], openSourceIds: ['ethiopia-nsdi-geoportal'], requiresCredential: false, notes: ['Official metadata, visualization, download and OGC-service portal with public and access-controlled datasets.', 'Each exact artifact needs owner, licence, version, coverage, CRS and digest; catalog visibility is not postal authority, a building relation or blanket redistribution permission.'],
+  },
+  {
+    id: 'ethiopia-bishoftu-address-book', countryCodes: ['ET'], label: 'SSGI Bishoftu Digital Addressing System address book', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.ethionsdi.gov.et/uploaded/documents/Bishoftu_AddressBook.pdf', sourceNames: ['bishoftu address book', 'bishoftu digital addressing system'], openSourceIds: ['ethiopia-bishoftu-address-book'], requiresCredential: false, notes: ['Official city-specific eDAS publication describing unique addresses for buildings, parcels and neighbourhoods.', 'It is not nationwide coverage, a four-digit postcode assignment release, an automatically reusable address table or unrestricted building geometry.'],
+  },
+  {
+    id: 'ethiopia-addis-land-registration-edas', countryCodes: ['ET'], label: 'SSGI and Addis Ababa land-registration eDAS cooperation', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ssgi.gov.et/ssgi-signed-mou-with-addis-ababa-city-land-acquisition-and-registration-agency/', sourceNames: ['addis ababa land registration edas', 'ssgi addis digital address mou'], openSourceIds: ['ethiopia-addis-land-registration-edas'], requiresCredential: false, notes: ['Official institutional relationship between digital addressing and the city land-registration agency.', 'The announcement supplies no reusable address rows, parcel/building crosswalk, public licence, postal assignment or exact building relation.'],
   },
   {
     id: 'mcpt-djibouti-poste',
