@@ -3670,16 +3670,18 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'algerie-poste',
     countryCodes: ['DZ'],
-    label: 'Algerie Poste postal offices and postcodes',
+    label: 'Algérie Poste postal establishment directory',
     authority: 'postal-operator',
-    trustTier: 'official',
+    trustTier: 'authoritative',
     availability: 'web-search',
     depth: 'postcode',
+    sourceRole: 'postal-reference-data',
+    validationReadiness: 'reference-eligible',
     url: 'https://www.poste.dz/customer/bureaux_postaux',
-    sourceNames: ['algerie poste', 'algerie-poste', 'poste.dz', 'bureaux postaux'],
+    sourceNames: ['algerie poste', 'algérie poste', 'algerie-poste', 'poste.dz', 'bureaux postaux'],
     openSourceIds: ['algerie-poste'],
     requiresCredential: false,
-    notes: ['Official Algeria Post office lookup; use as official web evidence for code/locality checks.'],
+    notes: ['A pinned successful observation may validate its stated five-digit code, postal establishment and address at observed_at.', 'The directory is not a documented bulk API, official polygon release, complete history or redistribution licence.'],
   },
   {
     id: 'upu-egypt-postal-addressing-2023',
@@ -5480,6 +5482,27 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     openSourceIds: ['ancfcc-morocco-cartography'],
     requiresCredential: false,
     notes: ['Official topographic, administrative, city-plan, cadastral and geodetic product authority.', 'Exact order or permission, edition, coverage, CRS and digest are required; map or cadastral access is not postal geometry, an explicit address-building link or public redistribution permission.'],
+  },
+  {
+    id: 'algerie-poste-mobile-offices', countryCodes: ['DZ'], label: 'Algérie Poste mobile postal establishments', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.poste.dz/customer/bureaux_postaux_itinerant', sourceNames: ['algerie poste mobile offices', 'bureaux postaux itinerants algerie'], openSourceIds: ['algerie-poste-mobile-offices'], requiresCredential: false, notes: ['A pinned result may validate the stated mobile postal object and code.', 'It proves code semantics can be non-area; no stable route, polygon, bulk right or complete history is supplied.'],
+  },
+  {
+    id: 'algerie-poste-privacy', countryCodes: ['DZ'], label: 'Algérie Poste privacy policy', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.poste.dz/page/confidentialite', sourceNames: ['algerie poste privacy', 'algérie poste confidentialité'], openSourceIds: ['algerie-poste-privacy'], requiresCredential: false, notes: ['Official access-log and personal-data processing context for realtime queries.', 'The page is not a data licence, assignment source, address dataset or geometry authority.'],
+  },
+  {
+    id: 'upu-algeria-addressing-2002', countryCodes: ['DZ'], label: 'UPU Algeria addressing sheet (July 2002)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/dzaEn.pdf', sourceNames: ['upu algeria addressing 2002', 'dza addressing sheet'], openSourceIds: ['upu-algeria-addressing-2002'], requiresCredential: false, notes: ['Dated five-digit format and delivery-area/wilaya coding context only.', 'It is not a current assignment table, geometry file, complete history, address dataset or blanket republication permission.'],
+  },
+  {
+    id: 'algeria-postal-addressing-regulation-2019', countryCodes: ['DZ'], label: 'Algeria Executive Decree 19-258 postal addressing regulation', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.mpt.gov.dz/wp-content/uploads/2023/11/Decret-executif-n%C2%B0-19-258.fr_.pdf', sourceNames: ['algeria decree 19-258 postal address', 'réglementation adressage postal algérie'], openSourceIds: ['algeria-postal-addressing-regulation-2019'], requiresCredential: false, notes: ['Official six-line address structure ending with five-digit postcode and commune.', 'Legal formatting context is not reusable address rows, assignment, geometry or building evidence.'],
+  },
+  {
+    id: 'algeria-national-address-referential', countryCodes: ['DZ'], label: 'Algeria National Addressing Referential', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://interieur.gov.dz/2024/10/13/referentiel-national-dadressage-2/', sourceNames: ['algeria national addressing referential', 'référentiel national adressage algérie'], openSourceIds: ['algeria-national-address-referential'], requiresCredential: false, notes: ['Official project and rollout context for geospatial address databases.', 'The article does not expose a public nationwide dataset, API, schema, licence, release, coordinates or building relations.'],
+  },
+  {
+    id: 'algeria-local-authorities-directory', countryCodes: ['DZ'], label: 'Algeria Ministry of Interior local authorities directory', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'locality', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.interieur.gov.dz/index.php/fr/component/annuaires/annuairecommunes.html', sourceNames: ['algeria communes directory', 'annuaire communes dairas wilayas'], openSourceIds: ['algeria-local-authorities-directory'], requiresCredential: false, notes: ['Official commune, daïra and wilaya identity context.', 'Directory access is not bulk reuse permission, postal assignment, postal geometry, exact address or building data.'],
+  },
+  {
+    id: 'inct-algeria-digital-geodata', countryCodes: ['DZ'], label: 'INCT Algeria digital geographic information', authority: 'commercial-or-restricted', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.inct.mdn.dz/source/act-dn.php', sourceNames: ['inct algeria digital geodata', 'algeria topographic database'], openSourceIds: ['inct-algeria-digital-geodata'], requiresCredential: true, notes: ['Official topographic, administrative, toponymic and construction-capable GIS products are commercialised.', 'Exact contract, edition, CRS and permission are required; products are not postal authority or an automatic address-building relation.'],
   },
   {
     id: 'libya-post-services',

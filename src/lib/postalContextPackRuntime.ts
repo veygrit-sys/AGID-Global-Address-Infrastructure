@@ -429,6 +429,7 @@ export {
   normalizeSouthAfricaPostalCode,
   normalizeEgyptPostalCode,
   normalizeMoroccoPostalCode,
+  normalizeAlgeriaPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,

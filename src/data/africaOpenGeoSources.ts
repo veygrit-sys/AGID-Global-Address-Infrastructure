@@ -54,6 +54,14 @@ export type AfricaOpenGeoSourceId =
   | 'niger-poste'
   | 'salpost-sierra-leone'
   | 'algerie-poste'
+  | 'algerie-poste-mobile-offices'
+  | 'algerie-poste-privacy'
+  | 'upu-algeria-addressing-2002'
+  | 'algeria-postal-addressing-regulation-2019'
+  | 'algeria-national-address-referential'
+  | 'algeria-local-authorities-directory'
+  | 'inct-algeria-digital-geodata'
+  | 'osm-algeria'
   | 'libya-post-services'
   | 'upu-morocco-postcode-manual'
   | 'poste-maroc-codepostal'
@@ -618,12 +626,89 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   },
   'algerie-poste': {
     id: 'algerie-poste',
-    name: 'Algerie Poste postal office directory',
+    name: 'Algérie Poste postal establishment directory',
     url: 'https://www.poste.dz/customer/bureaux_postaux',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    license: 'Exact Algérie Poste web and observation terms must be pinned',
+    notes: 'Official wilaya-filtered establishment, five-digit code, address and hours observations; one pinned result supports only its stated postal object, not bulk reuse, complete history, geometry or redistribution.',
+  },
+  'algerie-poste-mobile-offices': {
+    id: 'algerie-poste-mobile-offices',
+    name: 'Algérie Poste mobile postal establishments',
+    url: 'https://www.poste.dz/customer/bureaux_postaux_itinerant',
+    kind: 'postal-code',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Official Algeria Post postal-office and postcode lookup by wilaya for code and locality confirmation.',
+    license: 'Exact Algérie Poste web and observation terms must be pinned',
+    notes: 'Official mobile-establishment and five-digit-code reference showing that a postal code can identify a non-area service object; it does not publish a stable route or polygon.',
+  },
+  'algerie-poste-privacy': {
+    id: 'algerie-poste-privacy',
+    name: 'Algérie Poste privacy policy',
+    url: 'https://www.poste.dz/page/confidentialite',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official access-log and personal-data processing context; it is not a data licence, assignment source, address dataset or geometry authority.',
+  },
+  'upu-algeria-addressing-2002': {
+    id: 'upu-algeria-addressing-2002',
+    name: 'UPU Algeria addressing sheet (July 2002)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/dzaEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'Dated five-digit address-format and delivery-area/wilaya coding context only; it is not a current assignment table, polygon source, complete history or reusable postal database.',
+  },
+  'algeria-postal-addressing-regulation-2019': {
+    id: 'algeria-postal-addressing-regulation-2019',
+    name: 'Algeria Executive Decree 19-258 postal addressing regulation',
+    url: 'https://www.mpt.gov.dz/wp-content/uploads/2023/11/Decret-executif-n%C2%B0-19-258.fr_.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official six-line address structure ending in five-digit postcode and commune; legal formatting context is not reusable address rows, current assignments, geometry or building linkage.',
+  },
+  'algeria-national-address-referential': {
+    id: 'algeria-national-address-referential',
+    name: 'Algeria National Addressing Referential',
+    url: 'https://interieur.gov.dz/2024/10/13/referentiel-national-dadressage-2/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official institutional and rollout context for geospatial address databases; the article is not a public nationwide row dataset, API, schema, licence, geometry release or building relation.',
+  },
+  'algeria-local-authorities-directory': {
+    id: 'algeria-local-authorities-directory',
+    name: 'Algeria Ministry of Interior local authorities directory',
+    url: 'https://www.interieur.gov.dz/index.php/fr/component/annuaires/annuairecommunes.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official commune, daïra and wilaya identity context; directory access does not establish bulk reuse, postal assignment, postal geometry, address rows or buildings.',
+  },
+  'inct-algeria-digital-geodata': {
+    id: 'inct-algeria-digital-geodata',
+    name: 'INCT Algeria digital geographic information',
+    url: 'https://www.inct.mdn.dz/source/act-dn.php',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Commercial or product-specific permission required',
+    notes: 'Official topographic, administrative, toponymic and construction-capable GIS product context that INCT states it commercialises; it is not open postal geometry, an address-building link or blanket redistribution permission.',
+  },
+  'osm-algeria': {
+    id: 'osm-algeria',
+    name: 'OpenStreetMap Algeria community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/Algeria',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community road, address, building and postcode discrepancy context; it is not Algérie Poste, government, cadastral or exact address-building authority.',
   },
   'upu-morocco-postcode-manual': {
     id: 'upu-morocco-postcode-manual',
@@ -1008,7 +1093,7 @@ const BASE_OPEN_SOURCE_IDS: AfricaOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeoSourceId[]>> = {
-  DZ: ['algerie-poste'],
+  DZ: ['algerie-poste', 'algerie-poste-mobile-offices', 'algerie-poste-privacy', 'upu-algeria-addressing-2002', 'algeria-postal-addressing-regulation-2019', 'algeria-national-address-referential', 'algeria-local-authorities-directory', 'inct-algeria-digital-geodata', 'osm-algeria'],
   EG: ['upu-egypt-postal-addressing-2023', 'egypt-post-new-postcode-guide', 'egypt-post', 'capmas-egypt-gis', 'esa-egypt-geoportal', 'egy-list', 'datahub-postal'],
   LY: ['libya-post-services'],
   MA: ['upu-morocco-postcode-manual', 'poste-maroc-codepostal', 'morocco-open-data-postal', 'morocco-open-data-license', 'ancfcc-morocco-cartography', 'datahub-postal'],

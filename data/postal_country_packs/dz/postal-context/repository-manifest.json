@@ -1,0 +1,124 @@
+{
+  "schema_version": "agid-postal-dz-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-dz",
+    "country_code": "DZ",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Algeria five-digit postcode",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "area_or_non_area_postal_object",
+    "assignment_rule": "Algérie Poste publishes a wilaya-filtered directory that associates a five-digit code with a named postal establishment and address, and a separate directory includes mobile postal establishments. A successful release-pinned operator observation may validate only the stated postal object at observed_at. Syntax, the dated UPU coding explanation, an address string, an administrative name, a coordinate or this fixture does not establish a current nationwide assignment.",
+    "historical_semantics_rule": "The UPU Algeria addressing sheet dated July 2002 describes five digits and delivery-area plus wilaya coding context, including special handling for Algiers. It is historical format context, not a current allocation table, polygon release, complete history or redistribution licence.",
+    "geometry_rule": "No rights-cleared nationwide official postcode polygon release is bundled or identified. A code can refer to a delivery-area concept, fixed postal establishment, mobile postal establishment, P.O. box, route, organization, point or unknown object; it is not a polygon by syntax. A permitted official surface must explicitly bind the same code, object type, edition and validity. Administrative boundaries, office addresses, INCT products, buffers, Voronoi cells, routes and learned surfaces remain separate context or derived non-canonical review geometry.",
+    "address_rule": "The 2019 postal-addressing regulation defines a structured six-line address ending with the five-digit postcode and commune name. Recipient, building or street number, street type and name, geographic point, delivery point, locality, special-service reference, postcode, commune, daïra and wilaya remain separately typed. A format rule is not a reusable address row.",
+    "postal_object_rule": "Store geometry and postal object type independently as delivery_area, postal_establishment, mobile_postal_establishment, point, route, po_box, organization, polygon, multipolygon, unknown or derived_review_surface.",
+    "building_rule": "Exact building display requires rights-cleared authoritative building geometry and a source-defined stable explicit relation or reviewed crosswalk to the exact civic address or delivery point. Postcode, commune, daïra, wilaya, directory address, cadastral or topographic containment, nearest building, proximity, interpolation or model output creates candidates only.",
+    "administration_rule": "Commune, daïra and wilaya identifiers and geometry remain administrative context with their own edition and validity. The Ministry of Interior directory and territorial organization do not make an administrative boundary a postal polygon or establish a postal assignment.",
+    "national_address_rule": "The Ministry of Interior describes a National Addressing Referential and geospatial address-database digitisation. Project and platform descriptions prove institutional context only; without an exact public dataset, schema, licence, release and digest they provide no production address, building, coordinate or redistribution evidence.",
+    "licence_rule": "Public directory, FAQ, regulation, ministry page, map preview or government authorship is not bulk extraction, caching or redistribution permission. Algérie Poste observations, UPU publications, Ministry of Interior context, INCT commercial products and ODbL community content remain separate rights and provenance partitions.",
+    "realtime_and_model_rule": "Realtime operator lookup can improve freshness only for minimized permitted single observations with purpose, terms and rate policy, selected fields, observed_at, request and response digests, and source version. Timeout, empty output or blocked access is unknown. Deterministic and learned methods may normalize, index, compress with error bounds, detect drift and create explicitly derived review surfaces; they cannot invent assignments, official boundaries, addresses, buildings, occupants or delivery entitlement.",
+    "privacy_rule": "Recipient, account, correspondence, query logs, precise private address, household, resident, occupant, owner, tenant, title and security-sensitive building information stay private, minimized, access-controlled and retention-limited. Algérie Poste website access data is handled under its own privacy policy.",
+    "temporal_rule": "Postal objects, establishment addresses, mobile routes, administrative divisions, national-address records, buildings, source terms, derived surfaces and AGID crosswalks change independently. Store observed_at, retrieved_at, valid_from, valid_to, edition, source version, digest and supersession; do not present the July 2002 UPU sheet as current assignment evidence.",
+    "agid_rule": "AGID remains an independent spatial index. Versioned crosswalks may relate permitted postal observations, administrative context, explicit civic-address and building relations, and derived review surfaces to DZ cells without relabelling AGID as canonical Algerian postal or administrative geometry.",
+    "hosting_rule": "Cloudflare may serve metadata and rights-cleared indexes; Hugging Face may hold only rights-cleared versioned Parquet, GeoParquet or PMTiles shards with attribution and digests. Production readers pin a Hub commit and verify shard digests. Restricted, commercial, personal and precise household material stays private, gated or external."
+  },
+  "integration": {
+    "agid_country_code": "DZ",
+    "coordinate_flow": "coordinate -> explicit official postal surface or derived review surface -> postal object -> commune/daira/wilaya context -> explicit civic-address point -> explicit address-linked building -> DZ AGID cell",
+    "postcode_flow": "canonical five digits -> pinned Algérie Poste postal-object observation -> official surface or no canonical geometry -> administrative and address context -> explicit building relation -> DZ AGID cells",
+    "building_output_gate": "rights-cleared authoritative building geometry plus a source-defined stable explicit civic-address or delivery-point relation"
+  },
+  "quality_gates": [
+    {
+      "id": "canonical-postcode",
+      "pass": "Exactly five digits are preserved as text, including leading zeroes; prefixes, punctuation and other lengths are rejected."
+    },
+    {
+      "id": "assignment-versus-geometry",
+      "pass": "A pinned operator observation establishes only its stated postal object; assignment and geometry authority are independent."
+    },
+    {
+      "id": "typed-postal-object",
+      "pass": "Delivery areas, fixed and mobile postal establishments, points, routes, P.O. boxes, organizations and unknown objects are not coerced to polygons."
+    },
+    {
+      "id": "derived-review-surface",
+      "pass": "Inputs, method, uncertainty, exclusions, topology, time, version and digests are recorded and the result remains derived and non-canonical."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has separately permitted geometry and an explicit stable civic-address relation; containment, text and proximity alone never pass."
+    },
+    {
+      "id": "licence-and-provenance",
+      "pass": "Exact source terms, permission, attribution, selected fields, edition, CRS, validity and digests authorize every production artifact."
+    },
+    {
+      "id": "privacy-and-hosting",
+      "pass": "Personal, query, restricted, commercial and security-sensitive data are excluded from public GitHub, Hugging Face and Cloudflare artifacts."
+    },
+    {
+      "id": "synthetic-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production assignment, geometry, address or building evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts, source policy and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "A complete permitted release-pinned assignment passes authority, coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived geometry and public civic-address artifacts pass object-type, authority, uncertainty, privacy, CRS, validity and reuse gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass stable-identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "five-digit-syntax-directory-row-or-historical-upu-semantics-presented-as-current-nationwide-assignment",
+      "postal-establishment-mobile-office-point-route-po-box-or-organization-presented-as-postal-polygon",
+      "commune-daira-wilaya-inct-or-cadastral-geometry-presented-as-official-postal-polygon",
+      "derived-buffer-voronoi-route-or-model-surface-presented-as-unmodified-official-geometry",
+      "postcode-address-text-coordinate-containment-overlap-or-proximity-presented-as-exact-building-link",
+      "public-directory-faq-regulation-viewer-government-authorship-or-commercial-access-presented-as-redistribution-right",
+      "upu-2002-publication-presented-as-current-assignment-dataset-or-republished-without-permission",
+      "timeout-empty-or-blocked-response-treated-as-no-assignment",
+      "recipient-account-correspondence-query-household-resident-owner-title-or-security-sensitive-data-published",
+      "hugging-face-or-cloudflare-artifact-published-without-compatible-rights-attribution-pinned-version-and-digests",
+      "synthetic-fixture-promoted-as-real-algerian-address-assignment-geometry-or-building"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_DZ_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_DZ_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_DZ_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_DZ_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-address-building-administrative-cadastral-or-personal-rows",
+    "all-five-digit-codes-have-polygons",
+    "postal-establishment-or-mobile-office-code-is-area",
+    "administrative-or-topographic-boundary-is-postal-geometry",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link"
+  ]
+}
