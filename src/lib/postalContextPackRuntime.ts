@@ -515,6 +515,7 @@ export {
   normalizeUnitedKingdomPostalCode,
   normalizeSomaliaPostalCode,
   normalizeTanzaniaPostalCode,
+  normalizeTunisiaPostalCode,
 } from './postalContextCountryPolicy';
 
 export function validatePostalContextRuntimePack(

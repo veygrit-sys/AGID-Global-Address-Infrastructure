@@ -5574,13 +5574,43 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     label: 'La Poste Tunisienne postcode search',
     authority: 'postal-operator',
     trustTier: 'authoritative',
-    availability: 'public-api',
+    availability: 'web-search',
     depth: 'postcode',
-    url: 'https://www.laposte.tn/codes.php',
-    sourceNames: ['la poste tunisienne', 'laposte.tn', 'poste tunisienne'],
+    sourceRole: 'postal-reference-data',
+    validationReadiness: 'reference-eligible',
+    url: 'https://www.poste.tn/codes.php',
+    sourceNames: ['la poste tunisienne', 'poste.tn', 'poste tunisienne'],
     openSourceIds: ['la-poste-tunisienne-codes'],
     requiresCredential: false,
-    notes: ['Official Tunisian Post postcode search.'],
+    notes: ['Official search by governorate, delegation and locality may validate a minimized dated assignment observation.', 'It is not represented as a public bulk API, complete reusable registry, delivery catchment, address-to-building relation or polygon.'],
+  },
+  {
+    id: 'upu-tunisia-addressing-2014', countryCodes: ['TN'], label: 'UPU Tunisia postal addressing sheet April 2014', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/tunEn.pdf', sourceNames: ['upu tunisia addressing 2014', 'tunisia postal addressing sheet'], openSourceIds: ['upu-tunisia-addressing-2014'], requiresCredential: false,
+    notes: ['Dated addressing semantics place four digits before the post office, delivery centre or locality and keep entrance, staircase, building and letter-box details separate.', 'Examples do not establish current assignment, public address rows, delivery catchments or geometry.'],
+  },
+  {
+    id: 'tunisian-open-data-national-license', countryCodes: ['TN'], label: 'Tunisia national open-data licence framework', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://data.gov.tn/fr/licences/licence-nationale/', sourceNames: ['tunisia national open data licence', 'licence nationale donnees publiques tunisie'], openSourceIds: ['tunisian-open-data-national-license'], requiresCredential: false,
+    notes: ['Framework-level attribution and reuse principles do not replace each resource licence.', 'A resource marked licence not specified remains blocked from bundling until exact rights are pinned.'],
+  },
+  {
+    id: 'tunisian-open-data-delegations-2025', countryCodes: ['TN'], label: 'Tunisia delegations GeoJSON metadata 2025', authority: 'official-open-data', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://catalog.data.gov.tn/fr/dataset/a04051fe-0b5c-4ff1-bc7d-59dfc2732866/resource/01b6fc4a-e490-451c-b932-96e63b4aa7e6', sourceNames: ['tunisia delegations geojson 2025', 'decoupage administratif tunisie delegations'], openSourceIds: ['tunisian-open-data-delegations-2025'], requiresCredential: false,
+    notes: ['Official-portal administrative geometry metadata, with resource licence not specified.', 'Delegation boundaries are not La Poste postcode polygons; exact rights, producer, edition, CRS, fields and digest must be resolved before use.'],
+  },
+  {
+    id: 'tunisian-open-data-governorates-2025', countryCodes: ['TN'], label: 'Tunisia governorates GeoJSON 2025', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://catalog.data.gov.tn/fr/dataset/49344be7-06aa-45f9-bc5d-4a1d37b42f06/resource/492e157e-a8a8-4741-b2e9-c059ddacfc93', sourceNames: ['tunisia governorates geojson 2025', 'liste gouvernorats tunisie geojson'], openSourceIds: ['tunisian-open-data-governorates-2025'], requiresCredential: false,
+    notes: ['Resource metadata states CC BY, but exact artifact, attribution, edition and digest remain mandatory.', 'Governorates are coarse administrative context, not four-digit delivery areas, addresses or buildings.'],
+  },
+  {
+    id: 'otc-tunisia-cadastral-geoportal', countryCodes: ['TN'], label: 'Tunisia OTC cadastral geoportal', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.otc.nat.tn/geoportail', sourceNames: ['otc tunisia cadastral geoportal', 'office topographie cadastre tunisie'], openSourceIds: ['otc-tunisia-cadastral-geoportal'], requiresCredential: false,
+    notes: ['Official cadastral context is a separate parcel/title domain and is not a postcode, civic-address identifier or exact address-to-building relation.', 'Portal access does not create blanket bulk reuse or owner/occupant publication rights.'],
+  },
+  {
+    id: 'inpdp-tunisia-law-2004-63', countryCodes: ['TN'], label: 'Tunisia Organic Law No. 2004-63 on personal data', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.inpdp.tn/ressources/loi_2004.pdf', sourceNames: ['tunisia organic law 2004-63', 'inpdp personal data law'], openSourceIds: ['inpdp-tunisia-law-2004-63'], requiresCredential: false,
+    notes: ['Official law governs identifiable-person data and foreign transfers; Articles 50-52 require safeguards and INPDP authorization.', 'It supplies governance only, not postal, address, building or geometry data.'],
+  },
+  {
+    id: 'la-poste-tunisienne-privacy', countryCodes: ['TN'], label: 'La Poste Tunisienne personal-data charter', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.poste.tn/page.php?code_menu=155', sourceNames: ['la poste tunisienne privacy charter', 'charte protection donnees poste tunisie'], openSourceIds: ['la-poste-tunisienne-privacy'], requiresCredential: false,
+    notes: ['Current charter identifies postal addresses and geolocation as controlled personal-data categories and covers minimisation, retention, security and foreign transfers.', 'It is not permission to mirror addresses or export precise lookup logs.'],
   },
   {
     id: 'sudapost',

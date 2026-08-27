@@ -1601,7 +1601,11 @@ test('North Africa address JSON files expose addressRules metadata and postal da
     { code: 'ar', name: 'Arabic' },
     { code: 'fr', name: 'French' },
   ]);
-  assert.equal(loadRules('TN').postalCode?.label, '4 digits required');
+  assert.equal(loadRules('TN').postalCode?.label, '4 digits; current La Poste assignment required; no automatic polygon or building');
+  assert.deepEqual(loadRules('TN').regionalHierarchy, ['governorate', 'delegation', 'communeOrLocality', 'deliveryOfficeOrCentre', 'officialFourDigitAssignment', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding', 'agidCell']);
+  assert.ok(loadFormat('TN').openSourceIds?.includes('tunisian-open-data-delegations-2025'));
+  assert.ok(loadFormat('TN').openSourceIds?.includes('otc-tunisia-cadastral-geoportal'));
+  assert.ok(loadFormat('TN').openSourceIds?.includes('inpdp-tunisia-law-2004-63'));
   assert.equal(loadRules('MR').postalCode?.label, '5 digits used');
   assert.equal(loadFormat('EG').postalCode?.api, 'https://www.egyptpost.org/');
   assert.match(loadFormat('EG').postalCode?.source ?? '', /UPU Egypt.*Egypt Post.*CAPMAS.*Survey Authority/i);
@@ -1613,7 +1617,8 @@ test('North Africa address JSON files expose addressRules metadata and postal da
   assert.equal(loadFormat('MA').postalCode?.api, 'https://www.codepostal.ma/search.aspx');
   assert.equal(loadFormat('MR').postalCode?.api, 'https://www.mauripost.mr/');
   assert.equal(loadFormat('SD').postalCode?.api, 'https://sudapost.sd/wp/');
-  assert.equal(loadFormat('TN').postalCode?.api, 'https://www.laposte.tn/codes.php');
+  assert.equal(loadFormat('TN').postalCode?.api, 'https://www.poste.tn/codes.php');
+  assert.match(loadFormat('TN').postalCode?.source ?? '', /La Poste.*UPU.*four-digit syntax.*not.*assignment.*catchment.*building/i);
 });
 
 test('West Africa address JSON files expose addressRules metadata', () => {

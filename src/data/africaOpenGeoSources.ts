@@ -132,6 +132,14 @@ export type AfricaOpenGeoSourceId =
   | 'ancfcc-morocco-cartography'
   | 'mauripost'
   | 'la-poste-tunisienne-codes'
+  | 'upu-tunisia-addressing-2014'
+  | 'tunisian-open-data-national-license'
+  | 'tunisian-open-data-delegations-2025'
+  | 'tunisian-open-data-governorates-2025'
+  | 'otc-tunisia-cadastral-geoportal'
+  | 'inpdp-tunisia-law-2004-63'
+  | 'la-poste-tunisienne-privacy'
+  | 'osm-tunisia'
   | 'sudapost'
   | 'correios-mocambique-codigos-postais'
   | 'upu-south-africa-postal-addressing'
@@ -1214,11 +1222,52 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   'la-poste-tunisienne-codes': {
     id: 'la-poste-tunisienne-codes',
     name: 'La Poste Tunisienne postcode search',
-    url: 'https://www.laposte.tn/codes.php',
+    url: 'https://www.poste.tn/codes.php',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Tunisian Post postcode search for locality and four-digit postal-code lookup.',
+    license: 'Public interactive lookup; bulk extraction, mirroring and redistribution rights are not inferred',
+    notes: 'Official search accepts governorate, delegation and locality criteria and returns four-digit postcode context. A dated permitted result may validate an assignment observation; it is not a bulk release, delivery catchment, address-to-building relation or polygon.',
+  },
+  'upu-tunisia-addressing-2014': {
+    id: 'upu-tunisia-addressing-2014', name: 'UPU Tunisia postal addressing sheet (April 2014)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/tunEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU reference publication; no national assignment database or geometry redistribution right',
+    notes: 'Dated official addressing guidance places four digits before the delivery office, delivery centre or locality and models building, entrance, staircase and letter-box details as separate address components. Examples are not current production rows or polygon evidence.',
+  },
+  'tunisian-open-data-national-license': {
+    id: 'tunisian-open-data-national-license', name: 'Tunisia national open-data licence framework', url: 'https://data.gov.tn/fr/licences/licence-nationale/', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'National open-data licence framework under Government Decree 2021-3; dataset-specific licence still required',
+    notes: 'The framework describes attribution and reuse principles. Portal visibility or the framework alone does not cure a dataset whose resource metadata says licence not specified or supply postal/address/building authority.',
+  },
+  'tunisian-open-data-delegations-2025': {
+    id: 'tunisian-open-data-delegations-2025', name: 'Tunisia administrative delegations GeoJSON metadata 2025', url: 'https://catalog.data.gov.tn/fr/dataset/a04051fe-0b5c-4ff1-bc7d-59dfc2732866/resource/01b6fc4a-e490-451c-b932-96e63b4aa7e6', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'Resource metadata says licence not specified; no bundling until exact terms are pinned',
+    notes: 'Official-portal delegation geometry metadata updated 11 March 2025. Delegations are administrative context, not La Poste catchments; exact producer authority, fields, CRS, edition, licence and digest are promotion blockers.',
+  },
+  'tunisian-open-data-governorates-2025': {
+    id: 'tunisian-open-data-governorates-2025', name: 'Tunisia governorates GeoJSON 2025', url: 'https://catalog.data.gov.tn/fr/dataset/49344be7-06aa-45f9-bc5d-4a1d37b42f06/resource/492e157e-a8a8-4741-b2e9-c059ddacfc93', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'CC BY as stated by resource metadata; exact attribution, artifact, edition and digest required',
+    notes: 'Official open-data portal governorate geometry updated 7 March 2025 is coarse administrative context only. It does not define four-digit postcode delivery areas, civic addresses, parcels or buildings.',
+  },
+  'otc-tunisia-cadastral-geoportal': {
+    id: 'otc-tunisia-cadastral-geoportal', name: 'Office de la Topographie et du Cadastre geoportal', url: 'https://www.otc.nat.tn/geoportail', kind: 'geocoding', coverage: 'country', usage: 'reference',
+    license: 'Cadastral portal access; no blanket public bulk or redistribution permission inferred',
+    notes: 'Official cadastral information context remains a separate parcel/title domain. A parcel, map search result or footprint is not a postcode or La Poste assignment, civic-address identifier, address-to-building link, owner or occupant publication permission.',
+  },
+  'inpdp-tunisia-law-2004-63': {
+    id: 'inpdp-tunisia-law-2004-63', name: 'INPDP Organic Law No. 2004-63', url: 'https://www.inpdp.tn/ressources/loi_2004.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official legislation publication',
+    notes: 'The official personal-data law governs identifiable natural-person data, transparency, purpose and controls. Articles 50-52 regulate foreign transfers and require INPDP authorization; it supplies no postal, address or geometry data.',
+  },
+  'la-poste-tunisienne-privacy': {
+    id: 'la-poste-tunisienne-privacy', name: 'La Poste Tunisienne personal-data charter', url: 'https://www.poste.tn/page.php?code_menu=155', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official operator privacy notice',
+    notes: 'Current operator charter covers postal addresses and geolocation, minimisation, retention, recipients, security and foreign-transfer authorization. It does not authorize scraping, address publication or query-log export.',
+  },
+  'osm-tunisia': {
+    id: 'osm-tunisia', name: 'OpenStreetMap Tunisia community mapping', url: 'https://wiki.openstreetmap.org/wiki/Tunisia', kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Community Arabic/French names, roads, addresses and buildings are candidate context only and retain ODbL lineage. They are not La Poste assignments, official administrative or cadastral geometry, or an exact address-to-building authority.',
   },
   'libya-post-services': {
     id: 'libya-post-services',
@@ -1663,7 +1712,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   MR: ['mauripost'],
   NG: ['nipost-postcode', 'hot-osm-west-africa'],
   SD: ['sudapost'],
-  TN: ['la-poste-tunisienne-codes'],
+  TN: ['la-poste-tunisienne-codes', 'upu-tunisia-addressing-2014', 'tunisian-open-data-national-license', 'tunisian-open-data-delegations-2025', 'tunisian-open-data-governorates-2025', 'otc-tunisia-cadastral-geoportal', 'inpdp-tunisia-law-2004-63', 'la-poste-tunisienne-privacy', 'osm-tunisia'],
   GH: ['ghanapostgps', 'hot-osm-west-africa'],
   CI: ['la-poste-cote-divoire', 'hot-osm-west-africa'],
   BF: ['la-poste-burkina', 'hot-osm-west-africa'],
