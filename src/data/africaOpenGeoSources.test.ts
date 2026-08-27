@@ -78,7 +78,7 @@ test('priority African countries map to national and regional open geospatial so
     TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'nbs-tanzania-wards-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     UG: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     ZA: ['ngi-south-africa', 'sapo-postcodes', 'postafind-za'],
-    MZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    MZ: ['incm-mozambique-cep-2024', 'incm-mozambique-postal-law-2016', 'incm-mozambique-corre-universal-2024', 'incm-mozambique-postal-operators', 'mozambique-correios-dissolution-2021', 'correios-mocambique-codigos-postais', 'incm-mozambique-cep-rollout-2019-2022', 'ine-mozambique-admin-cartography', 'fnds-mozambique-land-cadastre', 'intic-mozambique-data-protection-status-2026', 'osm-mozambique', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     SO: ['somalia-moct-postal-revival-2025', 'somalia-sobs-address-observation', 'somalia-snbs-gis', 'osm-somalia', 'hot-osm-east-southern-africa'],
   };
 

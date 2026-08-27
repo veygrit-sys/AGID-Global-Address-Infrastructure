@@ -182,6 +182,16 @@ export type AfricaOpenGeoSourceId =
   | 'osm-tunisia'
   | 'sudapost'
   | 'correios-mocambique-codigos-postais'
+  | 'incm-mozambique-cep-2024'
+  | 'incm-mozambique-postal-law-2016'
+  | 'incm-mozambique-corre-universal-2024'
+  | 'incm-mozambique-postal-operators'
+  | 'mozambique-correios-dissolution-2021'
+  | 'incm-mozambique-cep-rollout-2019-2022'
+  | 'ine-mozambique-admin-cartography'
+  | 'fnds-mozambique-land-cadastre'
+  | 'intic-mozambique-data-protection-status-2026'
+  | 'osm-mozambique'
   | 'upu-south-africa-postal-addressing'
   | 'stats-sa-geography'
   | 'sasdi-south-africa'
@@ -1524,14 +1534,54 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     usage: 'reference',
     notes: 'Official Sudan Post site with operator, service, and network information used as current postal-reference evidence.',
   },
+  'incm-mozambique-cep-2024': {
+    id: 'incm-mozambique-cep-2024', name: 'INCM revised Mozambique Postal Addressing Code (Decreto 74/2024)', url: 'https://www.incm.gov.mz/wp-content/uploads/2025/10/CEP-Revisto.pdf', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'Official public decree; exact table extraction and redistribution terms must be reviewed and pinned',
+    notes: 'The current CEP has eight digits grouped as five and three, with general territorial and urban variants plus capital-city rules; it is assignment-reference evidence, not canonical postal boundary coordinates or building authority.',
+  },
+  'incm-mozambique-postal-law-2016': {
+    id: 'incm-mozambique-postal-law-2016', name: 'Mozambique Postal Law 1/2016 and INCM remit', url: 'https://www.incm.gov.mz/atribuicoes/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Postal Law 1/2016 establishes INCM as regulator; this legal framework is not a current CEP assignment table or geometry source.',
+  },
+  'incm-mozambique-corre-universal-2024': {
+    id: 'incm-mozambique-corre-universal-2024', name: 'INCM universal postal operator licence to CORRE (2024)', url: 'https://www.incm.gov.mz/2024/10/14/incm-entrega-licenca-ao-operador-postal-universal/', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'INCM licensed CORRE as the universal postal operator in 2024; operator status is not an exact current assignment register or postcode polygon.',
+  },
+  'incm-mozambique-postal-operators': {
+    id: 'incm-mozambique-postal-operators', name: 'INCM licensed postal operators', url: 'https://www.incm.gov.mz/operadores-do-sector-postal/', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'The licensed operator and facility register provides network context, not a delivery catchment, customer record or postcode polygon.',
+  },
+  'mozambique-correios-dissolution-2021': {
+    id: 'mozambique-correios-dissolution-2021', name: 'Decreto 32/2021 dissolving Correios de Moçambique E.P.', url: 'https://www.inm.gov.mz/pt-br/content/conselho-de-ministros-suplemento-n%C2%BA-1-de-310521-pag-684-1-2-br-n%C2%BA-103-boletim-da-rep%C3%BAblica-i', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Correios de Moçambique E.P. was extinguished in 2021; its legacy materials are not current operator or current CEP assignment evidence.',
+  },
   'correios-mocambique-codigos-postais': {
-    id: 'correios-mocambique-codigos-postais',
-    name: 'Correios de Mocambique codigos postais',
-    url: 'https://www.correios.co.mz/?cod=11&pagina=codigo',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Official Correios de Mocambique postal-code directory and customer guidance for postcode and locality validation.',
+    id: 'correios-mocambique-codigos-postais', name: 'Historical Correios de Moçambique four-digit postal-code directory', url: 'https://www.correios.co.mz/?cod=11&pagina=codigo', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Historical public lookup; no reviewed bulk redistribution or geometry grant',
+    notes: 'Historical four-digit directory retained only for legacy interpretation; it is not current CEP assignment or geometry evidence.',
+  },
+  'incm-mozambique-cep-rollout-2019-2022': {
+    id: 'incm-mozambique-cep-rollout-2019-2022', name: 'INCM 2019 CEP introduction and 2022 pilot report', url: 'https://www.incm.gov.mz/wp-content/uploads/2025/10/Relatorio-de-Regulacao-das-Comunicacoes-2022-PT.pdf', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'The six-digit 2019 method is revoked; reported pilot georeferenced doors are not a current national building-address release.',
+  },
+  'ine-mozambique-admin-cartography': {
+    id: 'ine-mozambique-admin-cartography', name: 'INE Mozambique administrative cartography', url: 'https://ine.gov.mz/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact edition, CRS, identifiers and reuse terms must be pinned',
+    notes: 'Versioned administrative province, district, administrative-post and locality context by exact edition; it is not postal assignment, canonical CEP geometry or building authority.',
+  },
+  'fnds-mozambique-land-cadastre': {
+    id: 'fnds-mozambique-land-cadastre', name: 'FNDS Terra Segura land and community delimitation context', url: 'https://www.fnds.gov.mz/index.php/pt/nossos-projectos/listagem-de-projectos/ordenamento-e-reassentamento', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled or restricted land, parcel and holder data; no public-pack redistribution',
+    notes: 'Land, parcel, DUAT and holder information is controlled or restricted context, not postcode authority or automatic public building evidence.',
+  },
+  'intic-mozambique-data-protection-status-2026': {
+    id: 'intic-mozambique-data-protection-status-2026', name: 'INTIC Mozambique personal-data legislation status (2026)', url: 'https://intic.gov.mz/proposta-de-lei-de-proteccao-de-dados-pessoais-segue-para-debate-na-assembleia-da-republica/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'In 2026 the standalone bill remained in the legislative process while constitutional and sector safeguards already govern personal location data; recipients and query histories stay outside public packs.',
+  },
+  'osm-mozambique': {
+    id: 'osm-mozambique', name: 'OpenStreetMap Mozambique community mapping', url: 'https://wiki.openstreetmap.org/wiki/Mozambique', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and buildings are candidate context only and do not establish INCM assignment, canonical CEP geometry, deliverability or an exact address-to-building relation.',
   },
   'upu-south-africa-postal-addressing': {
     id: 'upu-south-africa-postal-addressing',
@@ -1966,7 +2016,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   SS: ['south-sudan-nca-postal-sector', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ET: ['ethiopost-branches', 'ethiopost-delivery-address-form', 'upu-ethiopia-addressing-2002', 'ethiopia-ssgi-edas', 'ethiopia-nsdi-geoportal', 'ethiopia-bishoftu-address-book', 'ethiopia-addis-land-registration-edas', 'osm-ethiopia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   DJ: ['mcpt-djibouti-poste', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  MZ: ['correios-mocambique-codigos-postais', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  MZ: ['incm-mozambique-cep-2024', 'incm-mozambique-postal-law-2016', 'incm-mozambique-corre-universal-2024', 'incm-mozambique-postal-operators', 'mozambique-correios-dissolution-2021', 'correios-mocambique-codigos-postais', 'incm-mozambique-cep-rollout-2019-2022', 'ine-mozambique-admin-cartography', 'fnds-mozambique-land-cadastre', 'intic-mozambique-data-protection-status-2026', 'osm-mozambique', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MW: ['malawi-postcodes-macra', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

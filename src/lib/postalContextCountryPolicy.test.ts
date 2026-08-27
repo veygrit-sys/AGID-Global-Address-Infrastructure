@@ -1122,6 +1122,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('MU'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MU.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.MU.postalCodeFormat, /NNNNN.*main island.*RNNNN.*Rodrigues.*ANNNN.*Agalega.*assignment evidence.*geometry.*administration.*separate/i);
+  assert.equal(isPostalContextCountryCode('MZ'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MZ.fullCodeGeometrySemantics, 'postal-area-first');
+  assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.MZ.postalCodeFormat, /NNNNN-NNN.*74\/2024.*eight-digit.*territorial.*urban.*capital.*legacy four-digit.*NNNN-NN.*not current.*assignment.*geometry.*separate/i);
   assert.equal(isPostalContextCountryCode('ID'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.ID.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.ID.postalCodeFormat, 'NNNNN');

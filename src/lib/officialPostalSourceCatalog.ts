@@ -5675,18 +5675,44 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official Sudan Post site; use as current postal-operator evidence until a stable public postcode search endpoint is confirmed.'],
   },
   {
-    id: 'correios-mocambique-codigos-postais',
-    countryCodes: ['MZ'],
-    label: 'Correios de Mocambique codigos postais',
-    authority: 'postal-operator',
-    trustTier: 'official',
-    availability: 'web-search',
-    depth: 'postcode',
-    url: 'https://www.correios.co.mz/?cod=11&pagina=codigo',
-    sourceNames: ['correios de mocambique', 'correios mocambique', 'correios.co.mz', 'codigos postais mocambique'],
-    openSourceIds: ['correios-mocambique-codigos-postais'],
-    requiresCredential: false,
-    notes: ['Official Correios de Mocambique postal-code directory; use as current postcode and locality evidence from the national postal operator.'],
+    id: 'incm-mozambique-cep-2024', countryCodes: ['MZ'], label: 'INCM revised Mozambique Postal Addressing Code (Decreto 74/2024)', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.incm.gov.mz/wp-content/uploads/2025/10/CEP-Revisto.pdf', sourceNames: ['incm mozambique cep 2024', 'decreto 74/2024', 'cep revisto mocambique'], openSourceIds: ['incm-mozambique-cep-2024'], requiresCredential: false,
+    notes: ['Current eight-digit CEP assignment table and structural rules; promotion requires an exact digest-pinned decree row, variant, edition and valid time.', 'The decree does not publish canonical full-code boundary coordinates or address-linked building evidence.'],
+  },
+  {
+    id: 'incm-mozambique-postal-law-2016', countryCodes: ['MZ'], label: 'Mozambique Postal Law 1/2016 and INCM remit', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.incm.gov.mz/atribuicoes/', sourceNames: ['mozambique postal law 1/2016', 'incm postal regulator'], openSourceIds: ['incm-mozambique-postal-law-2016'], requiresCredential: false,
+    notes: ['Establishes INCM postal-regulatory authority; it is not an assignment register or geometry source.'],
+  },
+  {
+    id: 'incm-mozambique-corre-universal-2024', countryCodes: ['MZ'], label: 'INCM universal postal operator licence to CORRE (2024)', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'locality', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.incm.gov.mz/2024/10/14/incm-entrega-licenca-ao-operador-postal-universal/', sourceNames: ['corre universal postal operator mozambique', 'incm corre 2024'], openSourceIds: ['incm-mozambique-corre-universal-2024'], requiresCredential: false,
+    notes: ['Current universal-operator status, not an exact assignment table, postal polygon or customer-address source.'],
+  },
+  {
+    id: 'incm-mozambique-postal-operators', countryCodes: ['MZ'], label: 'INCM licensed postal operators', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'locality', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.incm.gov.mz/operadores-do-sector-postal/', sourceNames: ['incm licensed postal operators mozambique'], openSourceIds: ['incm-mozambique-postal-operators'], requiresCredential: false,
+    notes: ['Operator and facility context only; it is not delivery-catchment, customer, assignment or polygon authority.'],
+  },
+  {
+    id: 'mozambique-correios-dissolution-2021', countryCodes: ['MZ'], label: 'Decreto 32/2021 dissolving Correios de Moçambique E.P.', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.inm.gov.mz/pt-br/content/conselho-de-ministros-suplemento-n%C2%BA-1-de-310521-pag-684-1-2-br-n%C2%BA-103-boletim-da-rep%C3%BAblica-i', sourceNames: ['decreto 32/2021 correios mocambique dissolution'], openSourceIds: ['mozambique-correios-dissolution-2021'], requiresCredential: false,
+    notes: ['Legal operator-transition evidence only; legacy Correios material is not a current CEP assignment or geometry source.'],
+  },
+  {
+    id: 'correios-mocambique-codigos-postais', countryCodes: ['MZ'], label: 'Historical Correios de Moçambique four-digit postal-code directory', authority: 'postal-operator', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.correios.co.mz/?cod=11&pagina=codigo', sourceNames: ['correios de mocambique', 'correios mocambique', 'correios.co.mz', 'codigos postais mocambique'], openSourceIds: ['correios-mocambique-codigos-postais'], requiresCredential: false,
+    notes: ['Historical four-digit legacy interpretation only; not current assignment, current operator, postal geometry or automatic migration evidence.'],
+  },
+  {
+    id: 'incm-mozambique-cep-rollout-2019-2022', countryCodes: ['MZ'], label: 'INCM 2019 CEP introduction and 2022 pilot report', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.incm.gov.mz/wp-content/uploads/2025/10/Relatorio-de-Regulacao-das-Comunicacoes-2022-PT.pdf', sourceNames: ['incm mozambique cep rollout 2019 2022', 'decreto 28/2019 cep'], openSourceIds: ['incm-mozambique-cep-rollout-2019-2022'], requiresCredential: false,
+    notes: ['Revoked six-digit system and limited pilot-door context only; not a current nationwide assignment, address or building release.'],
+  },
+  {
+    id: 'ine-mozambique-admin-cartography', countryCodes: ['MZ'], label: 'INE Mozambique administrative cartography', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://ine.gov.mz/', sourceNames: ['ine mozambique administrative cartography'], openSourceIds: ['ine-mozambique-admin-cartography'], requiresCredential: false,
+    notes: ['Versioned administrative context only; an exact edition, identifiers, valid time and CRS are required before derived crosswalks.', 'Administrative geography is not canonical CEP geometry or building authority.'],
+  },
+  {
+    id: 'fnds-mozambique-land-cadastre', countryCodes: ['MZ'], label: 'FNDS Terra Segura land and community delimitation context', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.fnds.gov.mz/index.php/pt/nossos-projectos/listagem-de-projectos/ordenamento-e-reassentamento', sourceNames: ['fnds terra segura mozambique land cadastre'], openSourceIds: ['fnds-mozambique-land-cadastre'], requiresCredential: true,
+    notes: ['Controlled land, parcel, DUAT and holder context; it is not postcode authority or an automatic public address-to-building relation.'],
+  },
+  {
+    id: 'intic-mozambique-data-protection-status-2026', countryCodes: ['MZ'], label: 'INTIC Mozambique personal-data legislation status (2026)', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://intic.gov.mz/proposta-de-lei-de-proteccao-de-dados-pessoais-segue-para-debate-na-assembleia-da-republica/', sourceNames: ['intic mozambique data protection bill 2026'], openSourceIds: ['intic-mozambique-data-protection-status-2026'], requiresCredential: false,
+    notes: ['The standalone bill remained in the legislative process in 2026; constitutional and sector privacy safeguards still require minimization, security and purpose controls.', 'The source supplies no postcode or geometry authority and recipients, holders, residents and query histories are excluded from public packs.'],
   },
   {
     id: 'ethiopost-branches',

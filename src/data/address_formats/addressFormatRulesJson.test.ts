@@ -1685,7 +1685,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.match(loadRules('ET').postalCode?.label ?? '', /4 digits.*text.*do not establish a polygon.*eDAS building.*explicit/i);
   assert.deepEqual(loadRules('ET').regionalHierarchy, ['region', 'zone', 'woredaOrSubCity', 'kebeleOrNeighborhood', 'typedFourDigitPostalObject', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitEDASAddress', 'explicitEDASBuildingOrParcelFeature', 'exactRightsClearedBuilding']);
   assert.equal(loadFormat('MW').postalCode?.api, 'https://macra.mw/post-codes/');
-  assert.equal(loadFormat('MZ').postalCode?.api, 'https://www.correios.co.mz/?cod=11&pagina=codigo');
+  assert.equal(loadFormat('MZ').postalCode?.api, 'https://www.incm.gov.mz/documentos-do-sector-postal/');
   assert.equal(loadFormat('NA').postalCode?.api, 'https://www.nampost.com.na/postal/postal-codes');
   assert.equal(loadFormat('SC').postalCode?.api, 'https://seychellespostalregulator.com/pages/national-addressing-system');
   assert.equal(loadFormat('SC').postalCode?.regex, null);

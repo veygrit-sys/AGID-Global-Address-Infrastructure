@@ -24,6 +24,7 @@ import {
   normalizeNigerPostalCode,
   normalizeMadagascarPostalCode,
   normalizeMauritiusPostalCode,
+  normalizeMozambiquePostalCode,
   normalizePostalContextPostalCode,
 } from './postalContextCountryPolicy';
 import {
@@ -530,6 +531,7 @@ export {
   normalizeNigerPostalCode,
   normalizeMadagascarPostalCode,
   normalizeMauritiusPostalCode,
+  normalizeMozambiquePostalCode,
   NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM,
 } from './postalContextCountryPolicy';
 

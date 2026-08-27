@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -331,6 +331,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'MU',
     postalCodeFormat: 'NNNNN main island district/locality/sub-locality code or RNNNN Rodrigues / ANNNN Agalega (current assignment evidence required; geometry and administration are separate)',
     fullCodeGeometrySemantics: 'routing-locality-first',
+  },
+  MZ: {
+    countryCode: 'MZ',
+    postalCodeFormat: 'NNNNN-NNN current Decreto 74/2024 eight-digit CEP (general territorial/urban variants and capital specificity; legacy four-digit and NNNN-NN values are not current; assignment and geometry evidence remain separate)',
+    fullCodeGeometrySemantics: 'postal-area-first',
   },
   IN: {
     countryCode: 'IN',
@@ -909,6 +914,18 @@ export function normalizeMauritiusPostalCode(value: unknown) {
     .toUpperCase()
     .replace(/\s+/g, '');
   return /^(?:[1-9]\d{4}|[AR]\d{4})$/.test(normalized) ? normalized : null;
+}
+
+/**
+ * Syntax-only normalizer for Mozambique's current Decreto 74/2024 eight-digit
+ * CEP. The shape alone proves no current table assignment, postal polygon,
+ * deliverability, civic address, building relation or land right.
+ */
+export function normalizeMozambiquePostalCode(value: unknown) {
+  const digits = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/[\s-]+/g, '');
+  return /^\d{8}$/.test(digits) ? `${digits.slice(0, 5)}-${digits.slice(5)}` : null;
 }
 
 export function normalizeIndiaPostalCode(value: unknown) {
@@ -1491,6 +1508,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'NE') return normalizeNigerPostalCode(value);
   if (normalizedCountry === 'MG') return normalizeMadagascarPostalCode(value);
   if (normalizedCountry === 'MU') return normalizeMauritiusPostalCode(value);
+  if (normalizedCountry === 'MZ') return normalizeMozambiquePostalCode(value);
   if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'PK') return normalizePakistanPostalCode(value);
   if (normalizedCountry === 'BD') return normalizeBangladeshPostalCode(value);
