@@ -1667,7 +1667,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadFormat('GN').postalCode?.api, 'https://www.laposte.gn/');
   assert.equal(loadFormat('LR').postalCode?.source, 'Liberia Ministry of Posts and Telecommunications official postal service information');
   assert.equal(loadFormat('ML').postalCode?.api, 'https://laposte.ml/');
-  assert.equal(loadFormat('NE').postalCode?.api, 'https://nigerposte.ne/');
+  assert.equal(loadFormat('NE').postalCode?.api, 'https://nigerposte.ne/code-postal/');
   assert.equal(loadFormat('NG').postalCode?.api, 'https://www.postcode.gov.ng/');
   assert.match(loadFormat('NG').postalCode?.source ?? '', /NIPOST current numeric.*scheduled National Digital Alphanumeric.*syntax never proves.*polygon.*building/i);
   assert.deepEqual(loadRules('NG').regionalHierarchy, ['stateOrFct', 'lga', 'wardOrRegistrationArea', 'districtOrLocality', 'currentNumericSixDigitAssignment', 'futureDigitalElevenCharacterAssignmentAfterEffectiveDate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding', 'agidCell']);

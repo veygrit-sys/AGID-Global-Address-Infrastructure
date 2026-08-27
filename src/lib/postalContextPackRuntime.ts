@@ -21,6 +21,7 @@ import {
   classifyMoroccoPostalCode,
   normalizeNigeriaPostalCode,
   normalizeNamibiaPostalCode,
+  normalizeNigerPostalCode,
   normalizePostalContextPostalCode,
 } from './postalContextCountryPolicy';
 import {
@@ -524,6 +525,7 @@ export {
   normalizeTunisiaPostalCode,
   normalizeNigeriaPostalCode,
   normalizeNamibiaPostalCode,
+  normalizeNigerPostalCode,
   NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM,
 } from './postalContextCountryPolicy';
 

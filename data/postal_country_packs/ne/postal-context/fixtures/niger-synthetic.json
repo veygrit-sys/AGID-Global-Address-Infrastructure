@@ -1,0 +1,57 @@
+{
+  "schema_version": "agid-postal-ne-synthetic-fixtures-v0.1",
+  "fixture_set_id": "niger-like-contract-cases-v0.1",
+  "country_code": "NE",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postcode_value": "8999",
+    "postcode_matches_current_shape": true,
+    "first_digit_is_current_region_range": true,
+    "synthetic_value_not_assignment_evidence": true,
+    "collision_requires_replacement_before_promotion": true,
+    "coordinates_are_upstream_observations": false,
+    "identifiers_are_assignment_evidence": false,
+    "rule": "No value in this fixture is a real Niger Poste assignment, address, land record, person, building or production geometry."
+  },
+  "fixtures": [
+    {
+      "fixture_id": "ne-syn-routing-code",
+      "exception_class": "locality-post-office-routing-code",
+      "synthetic_address": { "postal_region": "NE-SYN-REGION", "locality": "NE-SYN-LOCALITY", "post_office": "NE-SYN-OFFICE", "postcode": "8999" },
+      "evidence": [{ "source_id": "synthetic-niger-poste-like", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "postal_geometry_type": "none", "must_not_assert": ["official-niger-poste-assignment", "directory-row-is-postcode-polygon", "region-locality-or-office-point-is-postal-catchment", "deliverability"] }
+    },
+    {
+      "fixture_id": "ne-syn-explicit-address-building",
+      "exception_class": "physical-address",
+      "synthetic_address": { "delivery_point": "99", "street": "Synthetic Delivery Road", "quarter": "Synthetic Quarter", "locality": "Synthetic Locality", "building": "NE-SYN-BUILDING" },
+      "evidence": [{ "source_id": "synthetic-civic-address", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }, { "source_id": "synthetic-building-link", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "resolved_level": "building", "must_not_assert": ["postcode-proves-address", "nearest-land-text-or-model-proves-building", "resident-owner-or-occupant", "production-geometry"] }
+    },
+    {
+      "fixture_id": "ne-syn-po-box",
+      "exception_class": "po-box",
+      "synthetic_address": { "delivery_identifier": "BP NE-SYN-999", "post_office": "NE-SYN-OFFICE", "postcode": "8999" },
+      "evidence": [{ "source_id": "synthetic-niger-poste-like", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "geometry_type": "none", "must_not_assert": ["holder-or-recipient", "building", "entrance", "postcode-area", "deliverability"] }
+    },
+    {
+      "fixture_id": "ne-syn-admin-land-agid-separation",
+      "exception_class": "admin-or-land-boundary",
+      "synthetic_address": { "region": "NE-SYN-REGION", "department": "NE-SYN-DEPARTMENT", "land_unit": "NE-SYN-LAND", "agid": "NE0000000000" },
+      "evidence": [{ "source_id": "synthetic-admin", "assignment_authority": "none", "geometry_authority": "synthetic_fixture_geometry" }, { "source_id": "synthetic-land", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["admin-boundary-is-postcode-polygon", "land-is-postal-address-or-building", "agid-is-niger-poste-land-address-or-building", "owner-or-occupant"] }
+    },
+    {
+      "fixture_id": "ne-syn-learned-candidate",
+      "exception_class": "nearest-or-learned-candidate",
+      "synthetic_address": { "postcode_candidates": ["8999", "7999"] },
+      "evidence": [{ "source_id": "synthetic-model", "assignment_authority": "derived_spatial_assignment", "geometry_authority": "derived_geometry" }],
+      "expected": { "status": "ambiguous", "must_not_assert": ["model-is-official-authority", "nearest-is-exact", "derived-surface-is-official-postcode-polygon", "single-selected-building"] }
+    }
+  ]
+}

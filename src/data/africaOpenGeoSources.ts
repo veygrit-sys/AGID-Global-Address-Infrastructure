@@ -130,6 +130,11 @@ export type AfricaOpenGeoSourceId =
   | 'societe-postes-togo'
   | 'la-poste-mali'
   | 'niger-poste'
+  | 'niger-poste-agencies'
+  | 'upu-niger-addressing-2005'
+  | 'ignniger-national-geography'
+  | 'hapdp-niger-data-protection-2022'
+  | 'osm-niger'
   | 'salpost-sierra-leone'
   | 'algerie-poste'
   | 'algerie-poste-mobile-offices'
@@ -1158,12 +1163,36 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   },
   'niger-poste': {
     id: 'niger-poste',
-    name: 'Niger Poste official portal',
-    url: 'https://nigerposte.ne/',
+    name: 'Niger Poste official postal code directory',
+    url: 'https://nigerposte.ne/code-postal/',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'reference',
-    notes: 'Official Niger Poste portal with product pages for agencies, postal boxes, and code-postal services; use as current postal-reference evidence.',
+    usage: 'primary',
+    license: 'Public copyrighted reference; bulk extraction, caching, derivative and redistribution rights require written review',
+    notes: 'Current official four-digit code-to-locality and region directory. The first digit corresponds to one of eight regions in the dated UPU method and the remaining digits identify a post office. A row may validate a pinned routing assignment, but the page publishes no boundary coordinates, address registry, building relation or blanket redistribution licence.',
+  },
+  'niger-poste-agencies': {
+    id: 'niger-poste-agencies', name: 'Niger Poste agency network', url: 'https://nigerposte.ne/agences/', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Public operational directory; exact reuse, caching and redistribution terms require review',
+    notes: 'Official agency names grouped by region support office-identity checks only. They do not define code catchments, civic addresses, building footprints, subscribers, box holders or delivery entitlement.',
+  },
+  'upu-niger-addressing-2005': {
+    id: 'upu-niger-addressing-2005', name: 'UPU Niger postal addressing sheet (March 2005)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nerEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated four-digit placement and coding method: first digit region, remaining digits post office, code to the left of locality, with a P.O. Box example. Its 2005 statement that delivery was P.O.-Box-only must not override current Niger Poste services; examples are not live assignments, reusable addresses, geometry or building links.',
+  },
+  'ignniger-national-geography': {
+    id: 'ignniger-national-geography', name: 'Institut Géographique National du Niger', url: 'https://ignniger.org/domaines-de-competences-de-lign-n.html', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Official product metadata; geographic information is commercialized and each product requires access, licence, vintage, CRS and redistribution review',
+    notes: 'IGN.N is the national cartographic, geodetic, topographic and spatial-database authority and lists administrative, departmental, cadastral and digital products. A licensed geometry supplies administrative or land context only and cannot prove a Niger Poste assignment, postcode polygon, civic address, building relation, owner or occupant.',
+  },
+  'hapdp-niger-data-protection-2022': {
+    id: 'hapdp-niger-data-protection-2022', name: 'Niger HAPDP personal-data legal framework', url: 'https://www.hapdp.ne/legislation-nationale', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'HAPDP publishes the consolidated Law 2022-59 and subsequent amendments and requires purpose, proportionality, security and bounded retention. Precise addresses, recipients, box holders, residents, owners, occupants and query histories that identify a person remain controlled and are not public-pack content.',
+  },
+  'osm-niger': {
+    id: 'osm-niger', name: 'OpenStreetMap Niger community mapping', url: 'https://wiki.openstreetmap.org/wiki/Niger', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, settlements, addresses and buildings are candidate context only. They do not establish an official Niger Poste row or polygon, cadastre, deliverability or an exact address-to-building relation without explicit common evidence.',
   },
   'salpost-sierra-leone': {
     id: 'salpost-sierra-leone',
@@ -1808,7 +1837,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   BF: ['la-poste-burkina', 'hot-osm-west-africa'],
   GN: ['guinee-poste', 'hot-osm-west-africa'],
   ML: ['la-poste-mali', 'hot-osm-west-africa'],
-  NE: ['niger-poste', 'hot-osm-west-africa'],
+  NE: ['niger-poste', 'niger-poste-agencies', 'upu-niger-addressing-2005', 'ignniger-national-geography', 'hapdp-niger-data-protection-2022', 'osm-niger', 'hot-osm-west-africa'],
   SN: ['la-poste-senegal-codes', 'la-poste-senegal-po-box', 'upu-senegal-addressing-2015', 'artp-senegal-national-addressing-2015', 'geosenegal-basegeo', 'geosenegal-basegeo-license', 'geosenegal-urban-buildings-2019', 'dgid-senegal-nicad', 'senegal-data-protection-law-2008-12', 'osm-senegal', 'hot-osm-west-africa'],
   TG: ['societe-postes-togo', 'hot-osm-west-africa'],
   BJ: ['la-poste-benin', 'hot-osm-west-africa'],

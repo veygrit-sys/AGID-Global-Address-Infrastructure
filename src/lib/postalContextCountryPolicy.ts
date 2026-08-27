@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -315,6 +315,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   NA: {
     countryCode: 'NA',
     postalCodeFormat: 'NNNNN Phase 1 delivery-network code (third digit 0; P.O. Box, Private Bag and physical delivery point are separate)',
+    fullCodeGeometrySemantics: 'delivery-network-first',
+  },
+  NE: {
+    countryCode: 'NE',
+    postalCodeFormat: 'NNNN current Niger Poste locality/post-office routing code (first digit 1-8 in the current official directory; assignment evidence required; P.O. Box is separate)',
     fullCodeGeometrySemantics: 'delivery-network-first',
   },
   IN: {
@@ -856,6 +861,18 @@ export function normalizeNamibiaPostalCode(value: unknown) {
     .normalize('NFKC')
     .replace(/\s+/g, '');
   return /^\d{2}0\d{2}$/.test(normalized) ? normalized : null;
+}
+
+/**
+ * Current-directory syntax normalizer. Niger Poste publishes four digits and
+ * the dated UPU coding method uses the first digit for one of eight regions.
+ * Normalization does not prove a current row, catchment, address or building.
+ */
+export function normalizeNigerPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^[1-8]\d{3}$/.test(normalized) ? normalized : null;
 }
 
 export function normalizeIndiaPostalCode(value: unknown) {
@@ -1435,6 +1452,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'TN') return normalizeTunisiaPostalCode(value);
   if (normalizedCountry === 'NG') return normalizeNigeriaPostalCode(value);
   if (normalizedCountry === 'NA') return normalizeNamibiaPostalCode(value);
+  if (normalizedCountry === 'NE') return normalizeNigerPostalCode(value);
   if (normalizedCountry === 'IN') return normalizeIndiaPostalCode(value);
   if (normalizedCountry === 'PK') return normalizePakistanPostalCode(value);
   if (normalizedCountry === 'BD') return normalizeBangladeshPostalCode(value);

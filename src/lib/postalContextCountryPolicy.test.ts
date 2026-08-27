@@ -1113,6 +1113,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('NA'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NA.fullCodeGeometrySemantics, 'delivery-network-first');
   assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.NA.postalCodeFormat, /NNNNN.*third digit 0.*P\.O\. Box.*Private Bag.*separate/i);
+  assert.equal(isPostalContextCountryCode('NE'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NE.fullCodeGeometrySemantics, 'delivery-network-first');
+  assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.NE.postalCodeFormat, /NNNN.*first digit 1-8.*official directory.*assignment evidence.*P\.O\. Box.*separate/i);
   assert.equal(isPostalContextCountryCode('ID'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.ID.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.ID.postalCodeFormat, 'NNNNN');
