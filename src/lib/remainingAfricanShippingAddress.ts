@@ -306,8 +306,9 @@ const REMAINING_AFRICAN_SHIPPING_PROFILES = {
   }),
   SC: profile('SC', ['en', 'fr', 'crs'], ['crs'], 'en', {
     en: 'Seychelles', fr: 'Seychelles', crs: 'Sesel',
-  }, 'Seychelles', 'Seychelles Postal Services', '^\\d{4}$', {
+  }, 'Seychelles', 'Seychelles Postal Services', null, {
     postcodeUniversal: false,
+    preferInternationalRenderer: true,
     layout: 'po-box-oriented',
   }),
   SO: profile('SO', ['so', 'ar', 'en'], ['so'], 'so', {

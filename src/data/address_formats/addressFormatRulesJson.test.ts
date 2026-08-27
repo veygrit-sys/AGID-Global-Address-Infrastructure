@@ -1680,7 +1680,9 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadFormat('MW').postalCode?.api, 'https://macra.mw/post-codes/');
   assert.equal(loadFormat('MZ').postalCode?.api, 'https://www.correios.co.mz/?cod=11&pagina=codigo');
   assert.equal(loadFormat('NA').postalCode?.api, 'https://www.nampost.com.na/postal/postal-codes');
-  assert.equal(loadFormat('SC').postalCode?.api, 'https://www.seychelles-post.com/poboxdirectory.php');
+  assert.equal(loadFormat('SC').postalCode?.api, 'https://seychellespostalregulator.com/pages/national-addressing-system');
+  assert.equal(loadFormat('SC').postalCode?.regex, null);
+  assert.equal(loadRules('SC').postalCode, null);
   assert.equal(loadFormat('UG').postalCode?.api, 'https://ugapost.co.ug/our-services/physical-address/');
   assert.equal(loadFormat('ZW').postalCode?.api, 'https://www.zimpost.co.zw/');
   assert.deepEqual(loadRules('ML').regionalHierarchy, ['region', 'circle']);
@@ -1719,7 +1721,7 @@ test('East Africa address JSON files expose addressRules metadata and English de
   assert.match(loadFormat('KE').postalCode?.source ?? '', /Postal Corporation of Kenya.*Customer Service Charter 2022.*UPU Kenya.*NASK.*Survey of Kenya.*Ardhisasa.*ODPC/i);
   assert.deepEqual(loadRules('KE').regionalHierarchy, ['county', 'subCountyOrConstituency', 'wardOrLocality', 'deliveryPostOffice', 'typedFiveDigitPostcode', 'poBoxMPostOrENjiwaSeparate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitNASKAddressOrNoNASKAddress', 'explicitRightsClearedBuildingOrParcel']);
   assert.deepEqual(loadRules('RW').regionalHierarchy, ['province', 'district']);
-  assert.deepEqual(loadRules('SC').regionalHierarchy, ['island', 'district']);
+  assert.deepEqual(loadRules('SC').regionalHierarchy, ['island', 'district', 'subdistrict', 'authoritativeNationalAddress', 'explicitAddressLinkedBuilding', 'agidCell']);
 });
 
 test('Southern Africa and Indian Ocean address JSON files expose delivery languages', () => {
@@ -1851,7 +1853,8 @@ test('All African country JSON files expose registered postal API or open-source
   assert.ok(loadFormat('MW').openSourceIds?.includes('malawi-postcodes-macra'));
   assert.ok(loadFormat('MZ').openSourceIds?.includes('correios-mocambique-codigos-postais'));
   assert.ok(loadFormat('NA').openSourceIds?.includes('nampost-postal-codes'));
-  assert.ok(loadFormat('SC').openSourceIds?.includes('seychelles-post-po-box-directory'));
+  assert.ok(loadFormat('SC').openSourceIds?.includes('seychelles-postal-regulator-nas'));
+  assert.ok(loadFormat('SC').openSourceIds?.includes('seychelles-data-protection-act-2023'));
   assert.ok(loadFormat('SO').openSourceIds?.includes('somalia-moct-posta'));
   assert.ok(loadFormat('SS').openSourceIds?.includes('south-sudan-nca-postal-sector'));
   assert.ok(loadFormat('UG').openSourceIds?.includes('posta-uganda-physical-address'));

@@ -40,6 +40,9 @@ test('covers the French delivery-language profile set and regional aliases', () 
   assert.equal(isFrenchShippingCountry('FR-COR'), true);
   assert.equal(getFrenchShippingProfile('CA_QC')?.countryCode, 'CA');
   assert.equal(getFrenchShippingProfile('BE-WAL')?.countryCode, 'BE');
+  assert.equal(getFrenchShippingProfile('SC')?.postcodePattern, null);
+  assert.equal(getFrenchShippingProfile('SC')?.postcodeRequired, false);
+  assert.equal(getFrenchShippingProfile('SC')?.evidenceAuthority, 'Seychelles Postal Regulator National Addressing System');
 });
 
 test('France domestic French preserves official delivery names and omits country', () => {

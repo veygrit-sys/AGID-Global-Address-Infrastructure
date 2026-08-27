@@ -59,6 +59,8 @@ test('publishes 32 explicit remaining-Africa profiles with conservative evidence
   assert.equal(supportsRemainingAfricanDomesticLanguage('ET', 'am-ET'), true);
   assert.equal(supportsRemainingAfricanDomesticLanguage('ET', 'fr'), false);
   assert.equal(prefersRemainingAfricanInternationalRenderer('MZ'), true);
+  assert.equal(getRemainingAfricanShippingProfile('SC')?.postcodePattern, null);
+  assert.equal(prefersRemainingAfricanInternationalRenderer('SC'), true);
   assert.equal(prefersRemainingAfricanInternationalRenderer('ZA'), false);
 });
 

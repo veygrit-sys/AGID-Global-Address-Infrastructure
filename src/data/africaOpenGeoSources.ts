@@ -54,7 +54,18 @@ export type AfricaOpenGeoSourceId =
   | 'malawi-postcodes-macra'
   | 'posta-uganda-physical-address'
   | 'nampost-postal-codes'
-  | 'seychelles-post-po-box-directory'
+  | 'seychelles-postal-regulator-nas'
+  | 'seychelles-statehouse-nas-2024'
+  | 'seychelles-finance-nas-2025'
+  | 'seychelles-statehouse-nas-bill-2026'
+  | 'seychelles-postal-regulator-operators'
+  | 'seychelles-nbs-gis'
+  | 'seychelles-lands-webgis'
+  | 'seychelles-webgis-disclaimer'
+  | 'seychelles-land-registration-act'
+  | 'seychelles-data-protection-act-2023'
+  | 'osm-seychelles'
+  | 'osm-seychelles-building-import'
   | 'ghanapostgps'
   | 'nipost-postcode'
   | 'la-poste-cote-divoire'
@@ -690,14 +701,53 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     usage: 'primary',
     notes: 'Official NamPost postal-code directory with public postcode listings grouped by political region.',
   },
-  'seychelles-post-po-box-directory': {
-    id: 'seychelles-post-po-box-directory',
-    name: 'Seychelles Post P.O. Box directory',
-    url: 'https://www.seychelles-post.com/poboxdirectory.php',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Official Seychelles Postal Services directory search and postal-service reference for P.O. Box routing and operator contact details.',
+  'seychelles-postal-regulator-nas': {
+    id: 'seychelles-postal-regulator-nas', name: 'Seychelles Postal Regulator National Addressing System', url: 'https://seychellespostalregulator.com/pages/national-addressing-system', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Current regulator page marks the S42-aligned national addressing and postcode system as coming soon. It does not publish an authoritative postcode assignment table, national address directory or postcode geometry.',
+  },
+  'seychelles-statehouse-nas-2024': {
+    id: 'seychelles-statehouse-nas-2024', name: 'Seychelles Cabinet National Addressing System decision 2024', url: 'https://www.statehouse.gov.sc/index.php/cabinet-decisions/6201/cabinet-business-thursday-25th-july-2024', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Cabinet approved S42 implementation and a postcode proposition with a Beau Vallon pilot and planned March 2025 rollout; a plan or target does not prove completed national assignments.',
+  },
+  'seychelles-finance-nas-2025': {
+    id: 'seychelles-finance-nas-2025', name: 'Seychelles National Address System update 2025', url: 'https://www.finance.gov.sc/blog/2025/04/17/postal-courier-shipment-and-national-address-system-update-2024/', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'Official update says Beau Vallon building-address work was underway and described a future Mahé, Praslin and La Digue objective; it is rollout evidence, not a complete current address or postcode database.',
+  },
+  'seychelles-statehouse-nas-bill-2026': {
+    id: 'seychelles-statehouse-nas-bill-2026', name: 'Seychelles National Addressing System Bill Cabinet approval 2026', url: 'https://statehouse.gov.sc/news/6905/vice-president-pillay-outlines-cabinet-decisions-on-public-safety-system-reform-and-service-delivery', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official April 2026 briefing says 0000 is a placeholder rather than a proper postcode and describes a place-linked system. Cabinet approval of a Bill is not enactment, commencement or proof of an assigned code.',
+  },
+  'seychelles-postal-regulator-operators': {
+    id: 'seychelles-postal-regulator-operators', name: 'Seychelles Postal Regulator operator register', url: 'https://seychellespostalregulator.com/pages/postal-and-courier-operators', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Official regulator identifies Seychelles Postal Services and licensed courier context; operator status does not establish a reusable P.O. Box subscriber directory, postcode or delivery catchment.',
+  },
+  'seychelles-nbs-gis': {
+    id: 'seychelles-nbs-gis', name: 'Seychelles National Bureau of Statistics GIS', url: 'https://www.nbs.gov.sc/statistics/gis', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    notes: 'Official census GIS maintains enumeration-area frames using household and facility locations. Statistical areas and confidential household frames are not postal areas or public exact-address/building links.',
+  },
+  'seychelles-lands-webgis': {
+    id: 'seychelles-lands-webgis', name: 'Seychelles Department of Lands WebGIS', url: 'https://www.lh.gov.sc/webgis', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    notes: 'Government WebGIS describes parcel, planning and geographic layers, but public maps are informational, partner raw-data access is controlled and exact artifact rights and lineage must be pinned.',
+  },
+  'seychelles-webgis-disclaimer': {
+    id: 'seychelles-webgis-disclaimer', name: 'Seychelles WebGIS disclaimer', url: 'https://www.webgis.gov.sc/mobile/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official disclaimer says map data are informational, not live, do not replace licensed surveys and are not official court documents; WebGIS display is not postal or cadastral title authority.',
+  },
+  'seychelles-land-registration-act': {
+    id: 'seychelles-land-registration-act', name: 'Seychelles Land Registration Act', url: 'https://seylii.org/akn/sc/act/1965/25/eng%402014-12-01/source', kind: 'standard', coverage: 'country', usage: 'reference', license: 'CC BY 4.0 legal text reproduction',
+    notes: 'Legal land-registration context for parcels and interests. A parcel identifier or WebGIS parcel does not equal a postcode, national address, building identifier, owner or occupant record.',
+  },
+  'seychelles-data-protection-act-2023': {
+    id: 'seychelles-data-protection-act-2023', name: 'Seychelles Data Protection Act 2023', url: 'https://seylii.org/akn/sc/act/2023/24/eng%402023-12-22/source.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official privacy framework includes safe custody, privacy by design, security, records, impact assessment and cross-border data-flow duties for personal and location-linked data.',
+  },
+  'osm-seychelles': {
+    id: 'osm-seychelles', name: 'OpenStreetMap WikiProject Seychelles', url: 'https://wiki.openstreetmap.org/wiki/WikiProject_Seychelles', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
+    notes: 'Community road, locality and building context only; it is not authoritative NAS assignment, postal coverage, cadastral title or exact occupant evidence.',
+  },
+  'osm-seychelles-building-import': {
+    id: 'osm-seychelles-building-import', name: 'OpenStreetMap Seychelles building import 2018', url: 'https://wiki.openstreetmap.org/wiki/Seychelles_Building_Import', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
+    notes: 'Dated one-time 2018 import of about 31,000 government/NBS-derived building outlines, mainly on Mahé, Praslin and La Digue. A footprint is not a current national address, postcode, parcel-title or occupant link.',
   },
   ghanapostgps: {
     id: 'ghanapostgps',
@@ -1545,7 +1595,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   BW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   NA: ['nampost-postal-codes', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  SC: ['seychelles-post-po-box-directory', 'rcmrd-gmes-africa-geoportal'],
+  SC: ['seychelles-postal-regulator-nas', 'seychelles-statehouse-nas-2024', 'seychelles-finance-nas-2025', 'seychelles-statehouse-nas-bill-2026', 'seychelles-postal-regulator-operators', 'seychelles-nbs-gis', 'seychelles-lands-webgis', 'seychelles-webgis-disclaimer', 'seychelles-land-registration-act', 'seychelles-data-protection-act-2023', 'osm-seychelles', 'osm-seychelles-building-import', 'rcmrd-gmes-africa-geoportal'],
   SZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZA: ['upu-south-africa-postal-addressing', 'sapo-postcodes', 'postafind-za', 'ngi-south-africa', 'stats-sa-geography', 'sasdi-south-africa', 'nspdr-south-africa-terms', 'hot-osm-east-southern-africa'],
 };

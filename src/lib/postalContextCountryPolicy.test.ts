@@ -46,6 +46,7 @@ import {
   normalizeKenyaPostalCode,
   normalizeZambiaPostalCode,
   normalizeSenegalPostalCode,
+  normalizeSeychellesPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,
@@ -323,6 +324,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeSenegalPostalCode('9997'), null);
   assert.equal(normalizeSenegalPostalCode('099997'), null);
   assert.equal(normalizePostalContextPostalCode('sn', '09 997'), '09997');
+  assert.equal(normalizeSeychellesPostalCode('0000'), null);
+  assert.equal(normalizeSeychellesPostalCode('1234'), null);
+  assert.equal(normalizeSeychellesPostalCode('SC-SYN-NATIONAL-ADDRESS-99999'), null);
+  assert.equal(normalizeSeychellesPostalCode('P.O. Box 123'), null);
+  assert.equal(normalizePostalContextPostalCode('sc', '0000'), null);
   assert.equal(normalizeIndiaPostalCode('１０００００'), '100000');
   assert.equal(normalizeIndiaPostalCode('100 000'), '100000');
   assert.equal(normalizeIndiaPostalCode('IN-100000'), null);
@@ -1067,6 +1073,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('MA'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MA.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MA.postalCodeFormat, 'NNNNN');
+  assert.equal(isPostalContextCountryCode('SC'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.SC.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.SC.postalCodeFormat, /No currently assigned postcode.*0000 placeholder invalid.*pending authoritative release/i);
   assert.equal(isPostalContextCountryCode('IN'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IN.fullCodeGeometrySemantics, 'delivery-network-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.IN.postalCodeFormat, 'NNNNNN');

@@ -633,7 +633,7 @@ export const NO_POSTAL_COUNTRIES: CountryContext[] = [
     history: 'Small population sorted directly by district name at the national sorting hub.'
   },
   { 
-    code: 'SY', 
+    code: 'SC',
     name: 'Seychelles', 
     region: 'Africa', 
     lat: -4.6796, 

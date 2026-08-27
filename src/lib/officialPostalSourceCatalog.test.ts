@@ -984,6 +984,21 @@ test('Senegal catalog separates current postcode observation, BP, dated addressi
   assert.match(sources.get('senegal-data-protection-law-2008-12')?.notes.join(' ') ?? '', /identifying personal data.*Transfers.*conditional/i);
 });
 
+test('Seychelles catalog separates no-postcode transition, NAS, operators, statistics, WebGIS, cadastre and privacy', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('SC').map(source => [source.id, source]));
+  assert.equal(sources.get('seychelles-postal-regulator-nas')?.availability, 'no-normal-postcode');
+  assert.match(sources.get('seychelles-postal-regulator-nas')?.notes.join(' ') ?? '', /coming soon.*No complete authoritative assignment.*postcode geometry/i);
+  assert.match(sources.get('seychelles-statehouse-nas-2024')?.notes.join(' ') ?? '', /pilot.*does not prove operational.*assignments/i);
+  assert.equal(sources.get('seychelles-finance-nas-2025')?.depth, 'building');
+  assert.match(sources.get('seychelles-statehouse-nas-bill-2026')?.notes.join(' ') ?? '', /0000.*placeholder.*not enactment.*assignment evidence/i);
+  assert.equal(sources.get('seychelles-postal-regulator-operators')?.depth, 'delivery-point');
+  assert.equal(sources.get('seychelles-nbs-gis')?.availability, 'commercial-or-restricted');
+  assert.equal(sources.get('seychelles-lands-webgis')?.requiresCredential, true);
+  assert.equal(sources.get('seychelles-webgis-disclaimer')?.sourceRole, 'legal-framework-only');
+  assert.match(sources.get('seychelles-land-registration-act')?.notes.join(' ') ?? '', /parcel identifier.*not.*postcode.*national address.*building/i);
+  assert.match(sources.get('seychelles-data-protection-act-2023')?.notes.join(' ') ?? '', /privacy by design.*cross-border/i);
+});
+
 test('Kenya catalog separates delivery-office codes, P.O. boxes, NASK, mapping, land and privacy authority', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('KE').map(source => [source.id, source]));
   assert.equal(sources.get('posta-kenya')?.trustTier, 'authoritative');

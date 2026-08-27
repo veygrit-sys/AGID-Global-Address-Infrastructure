@@ -435,6 +435,7 @@ export {
   normalizeKenyaPostalCode,
   normalizeZambiaPostalCode,
   normalizeSenegalPostalCode,
+  normalizeSeychellesPostalCode,
   normalizeIndiaPostalCode,
   normalizePakistanPostalCode,
   normalizeBangladeshPostalCode,

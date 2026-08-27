@@ -3328,65 +3328,136 @@
             "countryCode": "SC",
             "name": "Seychelles",
             "native": {
-              "name": "Seychelles",
-              "addressFormat": "{{recipient}}\n{{street}}\n{{city}}\nSeychelles",
+              "name": "Sesel",
+              "addressFormat": "{{recipient}}\n{{organization}}\n{{nationalAddressId}}\n{{houseNumber}} {{street}}\n{{poBox}}\n{{district}}\n{{island}}\nSEYCHELLES",
               "ordering": "small-to-big",
               "fields": [
                 {
                   "key": "recipient",
                   "label": "Full Name",
-                  "placeholder": "John Doe",
+                  "placeholder": "Recipient name",
                   "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "organization",
+                  "label": "Organization",
+                  "placeholder": "Organization name",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "nationalAddressId",
+                  "label": "National Address ID",
+                  "placeholder": "Use only an authoritative NAS assignment",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "houseNumber",
+                  "label": "House / Building Number",
+                  "placeholder": "Assigned building number",
+                  "required": false,
                   "type": "text"
                 },
                 {
                   "key": "street",
-                  "label": "Street Address / PO Box",
-                  "placeholder": "PO Box 123",
+                  "label": "Road / Locality",
+                  "placeholder": "Road or locality",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "poBox",
+                  "label": "P.O. Box",
+                  "placeholder": "P.O. Box number",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "district",
+                  "label": "District",
+                  "placeholder": "District",
                   "required": true,
                   "type": "text"
                 },
                 {
-                  "key": "city",
-                  "label": "Island / District",
-                  "placeholder": "Victoria",
+                  "key": "island",
+                  "label": "Island",
+                  "placeholder": "Island",
                   "required": true,
                   "type": "text"
                 }
               ]
             },
             "english": {
-              "addressFormat": "{{recipient}}\n{{street}}\n{{city}}\nSeychelles",
+              "name": "International English",
+              "addressFormat": "{{recipient}}\n{{organization}}\n{{nationalAddressId}}\n{{houseNumber}} {{street}}\n{{poBox}}\n{{district}}\n{{island}}\nSEYCHELLES",
               "ordering": "small-to-big",
               "fields": [
                 {
                   "key": "recipient",
                   "label": "Full Name",
-                  "placeholder": "John Doe",
+                  "placeholder": "Recipient name",
                   "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "organization",
+                  "label": "Organization",
+                  "placeholder": "Organization name",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "nationalAddressId",
+                  "label": "National Address ID",
+                  "placeholder": "Use only an authoritative NAS assignment",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "houseNumber",
+                  "label": "House / Building Number",
+                  "placeholder": "Assigned building number",
+                  "required": false,
                   "type": "text"
                 },
                 {
                   "key": "street",
-                  "label": "Street Address / PO Box",
-                  "placeholder": "PO Box 123",
+                  "label": "Road / Locality",
+                  "placeholder": "Road or locality",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "poBox",
+                  "label": "P.O. Box",
+                  "placeholder": "P.O. Box number",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "district",
+                  "label": "District",
+                  "placeholder": "District",
                   "required": true,
                   "type": "text"
                 },
                 {
-                  "key": "city",
-                  "label": "Island / District",
-                  "placeholder": "Victoria",
+                  "key": "island",
+                  "label": "Island",
+                  "placeholder": "Island",
                   "required": true,
                   "type": "text"
                 }
               ]
             },
             "postalCode": {
-              "format": "NNNN",
-              "regex": "^\\d{4}$",
-              "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "format": null,
+              "regex": null,
+              "api": "https://seychellespostalregulator.com/pages/national-addressing-system",
+              "source": "Seychelles Postal Regulator National Addressing System (transition; 0000 is not an assigned postcode)"
             },
             "addressRules": {
               "languages": [
@@ -3404,32 +3475,36 @@
                 }
               ],
               "nativeOrder": [
-                "name",
-                "street",
+                "recipient",
+                "organization",
+                "nationalAddressId",
                 "houseNumber",
-                "postcode",
-                "city",
-                "region",
+                "street",
+                "poBox",
+                "district",
+                "island",
                 "country"
               ],
               "englishOrder": [
-                "name",
-                "street",
+                "recipient",
+                "organization",
+                "nationalAddressId",
                 "houseNumber",
-                "postcode",
-                "city",
-                "region",
+                "street",
+                "poBox",
+                "district",
+                "island",
                 "country"
               ],
               "regionalHierarchy": [
                 "island",
-                "district"
+                "district",
+                "subdistrict",
+                "authoritativeNationalAddress",
+                "explicitAddressLinkedBuilding",
+                "agidCell"
               ],
-              "postalCode": {
-                "label": "4 digits used",
-                "required": false,
-                "usage": "used"
-              },
+              "postalCode": null,
               "deliveryLanguages": [
                 {
                   "code": "en",
@@ -3443,9 +3518,61 @@
                   "code": "crs",
                   "name": "Seychellois Creole"
                 }
+              ],
+              "openSourceIds": [
+                "seychelles-postal-regulator-nas",
+                "seychelles-statehouse-nas-2024",
+                "seychelles-finance-nas-2025",
+                "seychelles-statehouse-nas-bill-2026",
+                "seychelles-postal-regulator-operators",
+                "seychelles-nbs-gis",
+                "seychelles-lands-webgis",
+                "seychelles-webgis-disclaimer",
+                "seychelles-land-registration-act",
+                "seychelles-data-protection-act-2023",
+                "osm-seychelles",
+                "osm-seychelles-building-import",
+                "osm-nominatim",
+                "osm-overpass",
+                "openaddresses",
+                "geonames-postal",
+                "geonames-gazetteer",
+                "geoboundaries",
+                "upu-addressing",
+                "hot-osm-africa",
+                "openstreetmap-wiki-africa",
+                "humdata-africa",
+                "openaerialmap",
+                "digital-earth-africa-dem",
+                "digital-earth-africa-coastlines",
+                "digital-earth-africa-waterbodies",
+                "digital-earth-africa-wofs",
+                "digital-earth-africa-fractional-cover",
+                "digital-earth-africa-geomad",
+                "fao-wapor",
+                "esa-worldcover",
+                "gebco-bathymetry",
+                "gmrt-topography",
+                "global-mangrove-watch",
+                "allen-coral-atlas",
+                "protected-planet-wdpa",
+                "gbif-occurrence",
+                "rcmrd-gmes-africa-geoportal"
               ]
             },
             "openSourceIds": [
+              "seychelles-postal-regulator-nas",
+              "seychelles-statehouse-nas-2024",
+              "seychelles-finance-nas-2025",
+              "seychelles-statehouse-nas-bill-2026",
+              "seychelles-postal-regulator-operators",
+              "seychelles-nbs-gis",
+              "seychelles-lands-webgis",
+              "seychelles-webgis-disclaimer",
+              "seychelles-land-registration-act",
+              "seychelles-data-protection-act-2023",
+              "osm-seychelles",
+              "osm-seychelles-building-import",
               "osm-nominatim",
               "osm-overpass",
               "openaddresses",

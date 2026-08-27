@@ -5770,18 +5770,44 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official NamPost public postal-code directory grouped by political region and locality.'],
   },
   {
-    id: 'seychelles-post-po-box-directory',
-    countryCodes: ['SC'],
-    label: 'Seychelles Post P.O. Box directory',
-    authority: 'postal-operator',
-    trustTier: 'official',
-    availability: 'web-search',
-    depth: 'locality',
-    url: 'https://www.seychelles-post.com/poboxdirectory.php',
-    sourceNames: ['seychelles post', 'seychelles postal services', 'p.o. box directory', 'poboxdirectory'],
-    openSourceIds: ['seychelles-post-po-box-directory'],
-    requiresCredential: false,
-    notes: ['Official Seychelles Postal Services directory search and service portal for P.O. Box routing and operator reference.'],
+    id: 'seychelles-postal-regulator-nas', countryCodes: ['SC'], label: 'Seychelles Postal Regulator National Addressing System', authority: 'government', trustTier: 'authoritative', availability: 'no-normal-postcode', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://seychellespostalregulator.com/pages/national-addressing-system', sourceNames: ['seychelles postal regulator', 'national addressing system seychelles', 'seychelles nas', 's42 seychelles'], openSourceIds: ['seychelles-postal-regulator-nas'], requiresCredential: false,
+    notes: ['Current regulator page marks the S42-aligned national addressing and postcode system as coming soon.', 'No complete authoritative assignment table, public production directory, postcode syntax or postcode geometry is published there.'],
+  },
+  {
+    id: 'seychelles-statehouse-nas-2024', countryCodes: ['SC'], label: 'Seychelles Cabinet National Addressing System decision 2024', authority: 'government', trustTier: 'authoritative', availability: 'no-normal-postcode', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.statehouse.gov.sc/index.php/cabinet-decisions/6201/cabinet-business-thursday-25th-july-2024', sourceNames: ['seychelles cabinet nas 2024', 's42 postcode proposition', 'beau vallon nas pilot'], openSourceIds: ['seychelles-statehouse-nas-2024'], requiresCredential: false,
+    notes: ['Cabinet approved S42 implementation and a postcode proposition with pilot and rollout targets.', 'A decision, target date or pilot plan does not prove operational national address or postcode assignments.'],
+  },
+  {
+    id: 'seychelles-finance-nas-2025', countryCodes: ['SC'], label: 'Seychelles National Address System rollout update 2025', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'building', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.finance.gov.sc/blog/2025/04/17/postal-courier-shipment-and-national-address-system-update-2024/', sourceNames: ['seychelles nas update 2025', 'beau vallon digital address', 'ministry finance national address system'], openSourceIds: ['seychelles-finance-nas-2025'], requiresCredential: false,
+    notes: ['Official update says Beau Vallon building-address work was underway and describes future Mahé, Praslin and La Digue coverage.', 'Progress reporting is not a reusable complete current building-address or postcode database.'],
+  },
+  {
+    id: 'seychelles-statehouse-nas-bill-2026', countryCodes: ['SC'], label: 'Seychelles National Addressing System Bill Cabinet approval 2026', authority: 'government', trustTier: 'authoritative', availability: 'no-normal-postcode', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://statehouse.gov.sc/news/6905/vice-president-pillay-outlines-cabinet-decisions-on-public-safety-system-reform-and-service-delivery', sourceNames: ['seychelles national addressing system bill 2026', 'seychelles 0000 postcode placeholder', 'national addressing department'], openSourceIds: ['seychelles-statehouse-nas-bill-2026'], requiresCredential: false,
+    notes: ['Official April 2026 briefing says 0000 is a placeholder rather than a proper postcode and describes a place-linked address system.', 'Cabinet approval of a Bill is not enactment, commencement or assignment evidence.'],
+  },
+  {
+    id: 'seychelles-postal-regulator-operators', countryCodes: ['SC'], label: 'Seychelles Postal Regulator operator register', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'delivery-point', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://seychellespostalregulator.com/pages/postal-and-courier-operators', sourceNames: ['seychelles postal services', 'seychelles postal regulator operators', 'seychelles courier operators'], openSourceIds: ['seychelles-postal-regulator-operators'], requiresCredential: false,
+    notes: ['Official regulator identifies Seychelles Postal Services and postal/courier operator context.', 'Operator status does not expose P.O. Box subscribers, delivery entitlement, postcode assignments or catchment polygons.'],
+  },
+  {
+    id: 'seychelles-nbs-gis', countryCodes: ['SC'], label: 'Seychelles National Bureau of Statistics GIS', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.nbs.gov.sc/statistics/gis', sourceNames: ['seychelles nbs gis', 'seychelles enumeration areas', 'national bureau statistics gis'], openSourceIds: ['seychelles-nbs-gis'], requiresCredential: true,
+    notes: ['Official census GIS maintains enumeration-area frames using household counts and facility locations.', 'Enumeration areas and confidential household frames are not postal areas or public exact-address/building relations.'],
+  },
+  {
+    id: 'seychelles-lands-webgis', countryCodes: ['SC'], label: 'Seychelles Department of Lands WebGIS', authority: 'government', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.lh.gov.sc/webgis', sourceNames: ['seychelles lands webgis', 'centre for gis seychelles', 'department lands webgis'], openSourceIds: ['seychelles-lands-webgis'], requiresCredential: true,
+    notes: ['Government portal describes cadastral, planning and geospatial layers; partner API and raw-data access are controlled.', 'A visible map, parcel search or footprint is not a postcode polygon, title record or exact national-address link.'],
+  },
+  {
+    id: 'seychelles-webgis-disclaimer', countryCodes: ['SC'], label: 'Seychelles WebGIS disclaimer', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://www.webgis.gov.sc/mobile/', sourceNames: ['seychelles webgis disclaimer', 'mhilt webgis terms'], openSourceIds: ['seychelles-webgis-disclaimer'], requiresCredential: false,
+    notes: ['Official disclaimer says map data are informational, not live, do not replace licensed surveys and are not official court documents.'],
+  },
+  {
+    id: 'seychelles-land-registration-act', countryCodes: ['SC'], label: 'Seychelles Land Registration Act', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://seylii.org/akn/sc/act/1965/25/eng%402014-12-01/source', sourceNames: ['seychelles land registration act', 'chapter 107 seychelles'], openSourceIds: ['seychelles-land-registration-act'], requiresCredential: false,
+    notes: ['Legal parcel and interest context only; a parcel identifier is not a postcode, national address, building identifier or owner/occupant publication permission.'],
+  },
+  {
+    id: 'seychelles-data-protection-act-2023', countryCodes: ['SC'], label: 'Seychelles Data Protection Act 2023', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://seylii.org/akn/sc/act/2023/24/eng%402023-12-22/source.pdf', sourceNames: ['seychelles data protection act 2023', 'act 24 of 2023 seychelles'], openSourceIds: ['seychelles-data-protection-act-2023'], requiresCredential: false,
+    notes: ['Official privacy framework covers privacy by design, security, impact assessment, breach duties and cross-border data flows for personal and location-linked data.'],
   },
   {
     id: 'tcra-tanzania-postcode',
