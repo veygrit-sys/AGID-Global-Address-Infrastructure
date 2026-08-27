@@ -79,6 +79,15 @@ export type AmericasOpenGeoSourceId =
   | 'inec-panama-territorial-coding'
   | 'ign-panama-dpa-2025'
   | 'osm-panama'
+  | 'barbados-postal-code-search'
+  | 'barbados-postal-addressing'
+  | 'barbados-bps-terms'
+  | 'upu-barbados-addressing-2014'
+  | 'barbados-bbid-launch-2024'
+  | 'barbados-bbid-webmap'
+  | 'barbados-lands-surveys-locality-parish'
+  | 'barbados-lands-surveys-map-products'
+  | 'osm-barbados'
   | 'correos-cr-postal'
   | 'upu-costa-rica-addressing-2009'
   | 'upu-costa-rica-address-policy-case-study'
@@ -653,6 +662,51 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     id: 'osm-panama', name: 'OpenStreetMap Panama', url: 'https://wiki.openstreetmap.org/wiki/Panama',
     kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
     notes: 'Community roads, addresses and buildings stay in a separate ODbL provenance partition and are not Correos, COTEL, INEC, IGN, ANATI, cadastral, owner, occupant, delivery-entitlement or exact address-building authority.',
+  },
+  'barbados-postal-code-search': {
+    id: 'barbados-postal-code-search', name: 'Barbados Postal Service postcode search', url: 'https://bps.gov.bb/find-a-postal-code/',
+    kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Public interactive lookup; BPS website copyright, automation, cache and redistribution terms apply',
+    notes: 'The official operator searches by neighbourhood or district and can validate a single time-bound result. A response is not a bulk assignment catalogue, polygon release, building relation, person record or delivery entitlement.',
+  },
+  'barbados-postal-addressing': {
+    id: 'barbados-postal-addressing', name: 'Barbados Postal Service addressing guide', url: 'https://bps.gov.bb/how-to-address-a-letter/',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'BPS website terms; examples and page content are not a reusable address corpus',
+    notes: 'The current operator guide places the parish and integral BB plus five-digit postcode in a complete mailing address. Its examples establish formatting only and are not current reusable assignments, building records or occupant data.',
+  },
+  'barbados-bps-terms': {
+    id: 'barbados-bps-terms', name: 'Barbados Postal Service website terms', url: 'https://bps.gov.bb/terms-conditions/',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'BPS copyright and website terms',
+    notes: 'BPS states that website design, text, graphics, software and other material are copyrighted and restricts electronic copies of protected material. Public search visibility is not a bulk-data, caching, API automation or redistribution licence.',
+  },
+  'upu-barbados-addressing-2014': {
+    id: 'upu-barbados-addressing-2014', name: 'UPU Barbados addressing sheet, November 2014', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/brbEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'UPU publication terms; not a bulk postcode, address or geometry licence',
+    notes: 'The November 2014 sheet defines five digits after the locality preceded by BB and separates addressee, premises, road, sub-locality, locality and country. It predates the 2024 BBID-linked update and is not a current assignment table, polygon release or address-building relation.',
+  },
+  'barbados-bbid-launch-2024': {
+    id: 'barbados-bbid-launch-2024', name: 'Government of Barbados BBID and updated postcode launch, December 2024', url: 'https://gisbarbados.gov.bb/blog/new-bbid-updated-postal-code-at-heart-of-digital-innovation/',
+    kind: 'standard', coverage: 'country', usage: 'reference', license: 'BGIS publication terms; underlying BBID and postal records require separate permission',
+    notes: 'The official launch describes a six-character building identifier, removes its parish identifier, and appends the remaining five characters to the old postcode for an updated building-unique code. The announcement is semantics and transition evidence, not a data or geometry redistribution licence.',
+  },
+  'barbados-bbid-webmap': {
+    id: 'barbados-bbid-webmap', name: 'Lands and Surveys Barbados Building ID Web Map', url: 'https://bbid.gov.bb/',
+    kind: 'address', coverage: 'country', usage: 'primary', license: 'Public ArcGIS Query; item and building layer licence metadata are empty, so bulk reuse and redistribution are not granted',
+    notes: 'The official public building layer exposes BuildingID, ShortPosta and LongPostal on building polygons and allows Query. A pinned feature may validate one explicit building-postcode observation; empty licence metadata and public access do not authorize bulk scraping, offline mirroring or republication.',
+  },
+  'barbados-lands-surveys-locality-parish': {
+    id: 'barbados-lands-surveys-locality-parish', name: 'Lands and Surveys BBID locality and parish reference layers', url: 'https://www.arcgis.com/home/item.html?id=9d274d6f2ca24fb5991f2bb97e31f96c',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Reference purposes only; parish data separately states Government of Barbados copyright and all rights reserved',
+    notes: 'Official locality and parish context is labelled for reference purposes only and not as an absolute legal representation. It cannot replace BPS assignments, infer a LongPostal suffix, prove deliverability or create an address-to-building relation.',
+  },
+  'barbados-lands-surveys-map-products': {
+    id: 'barbados-lands-surveys-map-products', name: 'Barbados Lands and Surveys digital map products', url: 'https://landsandsurveys.gov.bb/pages/MapProducts.html',
+    kind: 'cadastre', coverage: 'country', usage: 'reference', license: 'Paid or permissioned products; exact order and terms required',
+    notes: 'Lands and Surveys offers paid Digimap roads, buildings, building footprints, structures, coastline, parishes and placenames. Product availability is not an open licence, postal assignment, BBID crosswalk, public address register or permission to republish.',
+  },
+  'osm-barbados': {
+    id: 'osm-barbados', name: 'OpenStreetMap Barbados', url: 'https://wiki.openstreetmap.org/wiki/Barbados',
+    kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, addresses and buildings stay in a separately attributed ODbL partition and are not BPS, UPU, BGIS, Lands and Surveys, BBID, owner, occupant, delivery-entitlement or exact official building-postcode authority.',
   },
   'correos-mexico': {
     id: 'correos-mexico', name: 'Correos de México national postcode catalog', url: 'https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx',
@@ -1887,6 +1941,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSou
   DO: ['inposdom-postcode-search', 'upu-dominican-republic-addressing-2005', 'one-dominican-territorial-division-2021', 'iderd-dominican-geoservices', 'ign-dominican-cartographic-base', 'registro-inmobiliario-dominican-cadastre', 'osm-dominican-republic'],
   HT: ['office-postes-haiti-postcode-search', 'upu-haiti-addressing-2017', 'ihsi-haiti-territorial-codes', 'ihsi-haiti-admin-2024', 'cnigs-haiti-reference-geodata', 'osm-haiti'],
   PA: ['correos-panama-postal-system-2026', 'panama-postal-code-api-2026', 'upu-panama-addressing-2015', 'inec-panama-territorial-coding', 'ign-panama-dpa-2025', 'osm-panama'],
+  BB: ['barbados-postal-code-search', 'barbados-postal-addressing', 'barbados-bps-terms', 'upu-barbados-addressing-2014', 'barbados-bbid-launch-2024', 'barbados-bbid-webmap', 'barbados-lands-surveys-locality-parish', 'barbados-lands-surveys-map-products', 'osm-barbados'],
   CU: ['correos-cuba-postal', 'upu-cuba-addressing-2004', 'upu-cuba-postcode-data', 'mincom-cuba-postal-law', 'iderc-cuba-geoportal', 'onei-cuba-dpa', 'geocuba-cartography', 'osm-cuba'],
   MX: ['correos-mexico', 'sepomex-postal-polygons-2025', 'mexico-postal-service-law', 'upu-mexico-addressing-2017', 'inegi-mexico-geo-key-service', 'inegi-mexico-geostatistical-framework-2025', 'inegi-mexico-address-standard-2024', 'inegi-mexico-denue-2025', 'osm-mexico'],
   CR: ['correos-cr-postal', 'upu-costa-rica-addressing-2009', 'upu-costa-rica-address-policy-case-study', 'inec-cr-geographic-classification', 'inec-cr-uged-2024', 'snit-cr', 'snit-cr-terms', 'osm-costa-rica'],

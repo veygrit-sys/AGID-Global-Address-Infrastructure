@@ -2259,3 +2259,14 @@ test('Panama address metadata separates the 2026 geolocated code, grid cells, ad
   for (const id of ['correos-panama-postal-system-2026','panama-postal-code-api-2026','upu-panama-addressing-2015','inec-panama-territorial-coding','ign-panama-dpa-2025','osm-panama']) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
 
 });
+
+test('Barbados address metadata separates legacy areas, updated BBID-linked codes, buildings, privacy and AGID', () => {
+  const format = loadFormat('BB'); const rules = loadRules('BB');
+  assert.match(format.postalCode?.format ?? '', /BBNNNNN.*BBNNNNN-AAAAA.*building-linked/i); assert.equal(format.postalCode?.regex, '^BB\\d{5}(?:-[A-Z0-9]{5})?$');
+  assert.equal(new RegExp(format.postalCode?.regex ?? '').test('BB99999'), true); assert.equal(new RegExp(format.postalCode?.regex ?? '').test('BB99999-Z9Z9Z'), true); assert.equal(new RegExp(format.postalCode?.regex ?? '').test('99999'), false);
+  assert.match(format.postalCode?.source ?? '', /Barbados Postal Service.*UPU.*11\/2014.*BBID.*12\/2024.*Lands and Surveys/i);
+  assert.equal(rules.postalCode?.required, true); assert.match(rules.postalCode?.usage ?? '', /legacy area.*building-linked.*parish character.*Do not synthesize.*ShortPosta.*LongPostal.*not bulk redistribution.*Building display.*AGID remains an independent/i);
+  assert.deepEqual(rules.regionalHierarchy, ['region', 'city']);
+  for (const key of ['recipient','attention','organization','buildingName','unit','houseNumber','street','sublocality','locality','parish','postOffice','poBox','bbid','postcode']) assert.ok(format.native?.fields.some(item => item.key === key), key);
+  for (const id of ["barbados-postal-code-search","barbados-postal-addressing","barbados-bps-terms","upu-barbados-addressing-2014","barbados-bbid-launch-2024","barbados-bbid-webmap","barbados-lands-surveys-locality-parish","barbados-lands-surveys-map-products","osm-barbados"]) { assert.ok(format.openSourceIds?.includes(id), id); assert.ok(rules.openSourceIds?.includes(id), id); }
+});

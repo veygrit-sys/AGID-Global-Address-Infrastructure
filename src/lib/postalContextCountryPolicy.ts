@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -86,6 +86,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
     countryCode: 'PA',
     postalCodeFormat: 'XXXXX-XXXXX or 8-character grid',
     fullCodeGeometrySemantics: 'delivery-point-first',
+  },
+  BB: {
+    countryCode: 'BB',
+    postalCodeFormat: 'BBNNNNN or BBNNNNN-AAAAA',
+    fullCodeGeometrySemantics: 'area-or-non-area',
   },
   NI: {
     countryCode: 'NI',
@@ -964,6 +969,18 @@ export function normalizePanamaPostalCode(value: unknown) {
   return null;
 }
 
+export function normalizeBarbadosPostalCode(value: unknown) {
+  const compact = String(value ?? '')
+    .normalize('NFKC')
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, '');
+  if (/^BB\d{5}$/.test(compact)) return compact;
+  if (/^BB\d{5}-[A-Z0-9]{5}$/.test(compact)) return compact;
+  if (/^BB\d{5}[A-Z0-9]{5}$/.test(compact)) return compact.slice(0, 7) + '-' + compact.slice(7);
+  return null;
+}
+
 export function normalizeNicaraguaPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -1208,6 +1225,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'DO') return normalizeDominicanRepublicPostalCode(value);
   if (normalizedCountry === 'HT') return normalizeHaitiPostalCode(value);
   if (normalizedCountry === 'PA') return normalizePanamaPostalCode(value);
+  if (normalizedCountry === 'BB') return normalizeBarbadosPostalCode(value);
   if (normalizedCountry === 'NI') return normalizeNicaraguaPostalCode(value);
   if (normalizedCountry === 'BR') return normalizeBrazilPostalCode(value);
   if (normalizedCountry === 'VE') return normalizeVenezuelaPostalCode(value);

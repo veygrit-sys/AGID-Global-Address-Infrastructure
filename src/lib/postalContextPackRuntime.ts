@@ -465,6 +465,7 @@ export {
   normalizeDominicanRepublicPostalCode,
   normalizeHaitiPostalCode,
   normalizePanamaPostalCode,
+  normalizeBarbadosPostalCode,
   normalizeNicaraguaPostalCode,
   normalizeBrazilPostalCode,
   normalizeVenezuelaPostalCode,

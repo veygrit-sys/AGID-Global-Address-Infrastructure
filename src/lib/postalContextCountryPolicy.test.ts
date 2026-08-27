@@ -76,6 +76,7 @@ import {
   normalizeDominicanRepublicPostalCode,
   normalizeHaitiPostalCode,
   normalizePanamaPostalCode,
+  normalizeBarbadosPostalCode,
   normalizeNicaraguaPostalCode,
   normalizeBrazilPostalCode,
   normalizeVenezuelaPostalCode,
@@ -629,6 +630,13 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizePanamaPostalCode('Z9ZZZ-ZZZZ'), null);
   assert.equal(normalizePanamaPostalCode('Z9ZZZ/ZZZZZ'), null);
   assert.equal(normalizePostalContextPostalCode('pa', ' z9zzz-zzzzz '), 'Z9ZZZ-ZZZZZ');
+  assert.equal(normalizeBarbadosPostalCode('ｂｂ９９９９９'), 'BB99999');
+  assert.equal(normalizeBarbadosPostalCode('bb 99999 - z9z9z'), 'BB99999-Z9Z9Z');
+  assert.equal(normalizeBarbadosPostalCode('bb99999z9z9z'), 'BB99999-Z9Z9Z');
+  assert.equal(normalizeBarbadosPostalCode('99999'), null);
+  assert.equal(normalizeBarbadosPostalCode('BB99999-Z9Z9'), null);
+  assert.equal(normalizeBarbadosPostalCode('BB99999/Z9Z9Z'), null);
+  assert.equal(normalizePostalContextPostalCode('bb', ' bb99999z9z9z '), 'BB99999-Z9Z9Z');
   assert.equal(normalizeNicaraguaPostalCode('９９９９９'), '99999');
   assert.equal(normalizeNicaraguaPostalCode('99 999'), '99999');
   assert.equal(normalizeNicaraguaPostalCode('99-999'), null);
@@ -747,6 +755,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('PA'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.PA.fullCodeGeometrySemantics, 'delivery-point-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.PA.postalCodeFormat, 'XXXXX-XXXXX or 8-character grid');
+  assert.equal(isPostalContextCountryCode('BB'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BB.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BB.postalCodeFormat, 'BBNNNNN or BBNNNNN-AAAAA');
   assert.equal(isPostalContextCountryCode('NI'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NI.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NI.postalCodeFormat, 'NNNNN');
