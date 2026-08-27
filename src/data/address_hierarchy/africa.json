@@ -2340,7 +2340,7 @@
             "name": "Kenya",
             "native": {
               "name": "English",
-              "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}} {{postcode}}",
+              "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{postcode}}\n{{city}}",
               "ordering": "small-to-big",
               "fields": [
                 {
@@ -2355,26 +2355,26 @@
                 },
                 {
                   "key": "street",
-                  "label": "Street/PO Box",
+                  "label": "Street/Estate/Building or P.O. Box line",
                   "placeholder": "Kenyatta Ave"
                 },
                 {
-                  "key": "city",
-                  "label": "City/Town",
-                  "placeholder": "Nairobi"
-                },
-                {
                   "key": "postcode",
-                  "label": "Postal Code",
+                  "label": "Delivery Post Office Code",
                   "placeholder": "00100",
                   "required": true
+                },
+                {
+                  "key": "city",
+                  "label": "Delivery Post Office / Town",
+                  "placeholder": "Nairobi"
                 }
               ]
             },
             "domestic": {
               "sw": {
                 "name": "Kiswahili",
-                "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}} {{postcode}}",
+                "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{postcode}}\n{{city}}",
                 "ordering": "small-to-big",
                 "fields": [
                   {
@@ -2384,31 +2384,31 @@
                   },
                   {
                     "key": "houseNumber",
-                    "label": "Nambari ya Nyumba",
+                    "label": "Nambari ya Nyumba/Kiwanja",
                     "placeholder": "123"
                   },
                   {
                     "key": "street",
-                    "label": "Mtaa/S.L.P",
+                    "label": "Mtaa/Jengo au mstari wa S.L.P",
                     "placeholder": "Barabara ya Kenyatta"
                   },
                   {
-                    "key": "city",
-                    "label": "Mji",
-                    "placeholder": "Nairobi"
-                  },
-                  {
                     "key": "postcode",
-                    "label": "Nambari ya Posta",
+                    "label": "Msimbo wa Ofisi ya Posta",
                     "placeholder": "00100",
                     "required": true
+                  },
+                  {
+                    "key": "city",
+                    "label": "Ofisi ya Posta / Mji",
+                    "placeholder": "Nairobi"
                   }
                 ]
               }
             },
             "english": {
               "name": "International English",
-              "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}} {{postcode}}\nKENYA",
+              "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{postcode}}\n{{city}}\nKENYA",
               "ordering": "small-to-big",
               "fields": [
                 {
@@ -2423,27 +2423,27 @@
                 },
                 {
                   "key": "street",
-                  "label": "Street/PO Box",
+                  "label": "Street/Estate/Building or P.O. Box line",
                   "placeholder": "Kenyatta Ave"
                 },
                 {
-                  "key": "city",
-                  "label": "City/Town",
-                  "placeholder": "Nairobi"
-                },
-                {
                   "key": "postcode",
-                  "label": "Postal Code",
+                  "label": "Delivery Post Office Code",
                   "placeholder": "00100",
                   "required": true
+                },
+                {
+                  "key": "city",
+                  "label": "Delivery Post Office / Town",
+                  "placeholder": "Nairobi"
                 }
               ]
             },
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "api": "https://posta.co.ke/services/services/",
+              "source": "Postal Corporation of Kenya mail services and Customer Service Charter 2022 / UPU Kenya addressing sheet 2004 / Communications Authority NASK and National Addressing Policy 2023 / Survey of Kenya / Ardhisasa / ODPC"
             },
             "addressRules": {
               "languages": [
@@ -2458,33 +2458,58 @@
               ],
               "nativeOrder": [
                 "name",
-                "houseNumber",
+                "organization",
+                "poBoxOrVirtualAddress",
+                "deliveryPostOffice",
+                "typedFiveDigitPostcode",
                 "street",
-                "postcode",
-                "city",
+                "estateOrBuilding",
+                "houseFloorRoom",
+                "cityOrTown",
                 "county",
                 "country"
               ],
               "englishOrder": [
                 "name",
-                "houseNumber",
+                "organization",
+                "poBoxOrVirtualAddress",
+                "deliveryPostOffice",
+                "typedFiveDigitPostcode",
                 "street",
-                "postcode",
-                "city",
+                "estateOrBuilding",
+                "houseFloorRoom",
+                "cityOrTown",
                 "county",
                 "country"
               ],
               "regionalHierarchy": [
                 "county",
-                "cityOrTown"
+                "subCountyOrConstituency",
+                "wardOrLocality",
+                "deliveryPostOffice",
+                "typedFiveDigitPostcode",
+                "poBoxMPostOrENjiwaSeparate",
+                "officialPostalSurfaceOrNoCanonicalGeometry",
+                "explicitNASKAddressOrNoNASKAddress",
+                "explicitRightsClearedBuildingOrParcel"
               ],
               "postalCode": {
-                "label": "5 digits required",
+                "label": "5 digits identify a delivery post office; P.O. Box, MPost/e-Njiwa and NASK address remain separate",
                 "required": true,
-                "usage": "required"
+                "usage": "required for postcode-addressed Posta mail; not a building identifier or postal polygon"
               }
             },
             "openSourceIds": [
+              "posta-kenya",
+              "posta-kenya-customer-service-charter-2022",
+              "posta-kenya-properties-2026",
+              "upu-kenya-addressing-2004",
+              "ca-kenya-national-addressing-system",
+              "kenya-national-addressing-policy-2023",
+              "survey-of-kenya-mapping-policy-2021",
+              "ardhisasa-kenya",
+              "odpc-kenya-address-location-privacy",
+              "osm-kenya",
               "rcmrd-geoportal",
               "kenya-open-data",
               "hot-osm-east-southern-africa",

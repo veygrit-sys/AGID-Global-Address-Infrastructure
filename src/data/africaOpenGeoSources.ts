@@ -30,6 +30,15 @@ export type AfricaOpenGeoSourceId =
   | 'rcmrd-geoportal'
   | 'kenya-open-data'
   | 'posta-kenya'
+  | 'posta-kenya-customer-service-charter-2022'
+  | 'posta-kenya-properties-2026'
+  | 'upu-kenya-addressing-2004'
+  | 'ca-kenya-national-addressing-system'
+  | 'kenya-national-addressing-policy-2023'
+  | 'survey-of-kenya-mapping-policy-2021'
+  | 'ardhisasa-kenya'
+  | 'odpc-kenya-address-location-privacy'
+  | 'osm-kenya'
   | 'ethiopost-branches'
   | 'ethiopost-delivery-address-form'
   | 'upu-ethiopia-addressing-2002'
@@ -425,12 +434,103 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   },
   'posta-kenya': {
     id: 'posta-kenya',
-    name: 'Postal Corporation of Kenya post offices',
-    url: 'https://posta.co.ke/post-offices/',
+    name: 'Postal Corporation of Kenya postcode and mail-service guidance',
+    url: 'https://posta.co.ke/services/services/',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    license: 'Posta Kenya website copyright and exact observation or reuse terms must be pinned',
+    notes: 'The official operator defines a five-digit postcode as an identifier for an individual post office within a postal region. It does not define a postcode catchment polygon, civic address, building, delivery entitlement, complete history, stable bulk API or reuse licence.',
+  },
+  'posta-kenya-customer-service-charter-2022': {
+    id: 'posta-kenya-customer-service-charter-2022',
+    name: 'Posta Kenya Customer Service Charter 2022',
+    url: 'https://posta.co.ke/wp-content/uploads/2023/08/CUSTOMER-SERVICE-CHARTER-2022sep-6th-2022.pdf',
+    kind: 'address',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Official Postal Corporation of Kenya office locator and postal-service directory used as current postcode and post-office evidence.',
+    license: 'Posta Kenya publication terms; no address-row redistribution permission inferred',
+    notes: 'Official examples keep P.O. Box number, five-digit post-office code and post-office name as separate fields; EMS geographic addressing adds street, estate or building, house, floor, room and telephone. Examples and form requirements are not reusable customer rows, official postcode polygons or address-building crosswalks.',
+  },
+  'posta-kenya-properties-2026': {
+    id: 'posta-kenya-properties-2026',
+    name: 'Posta Kenya property and post-office list (February 2026)',
+    url: 'https://posta.co.ke/wp-content/uploads/2026/02/The-following-is-the-list-of-Postal-Corporation-of-Kenya-properties-that-was-omitted-from-Clause-1-of-the-Terms-of-Reference-TORs.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Tender publication context; exact table reuse and redistribution terms must be pinned',
+    notes: 'The official 2026 tender addendum lists operator properties with postcodes, office names, regions, counties and constituencies. It may support a pinned office observation but is not asserted to be a complete current assignment table, service-area geometry, address database, building crosswalk or open-data licence.',
+  },
+  'upu-kenya-addressing-2004': {
+    id: 'upu-kenya-addressing-2004',
+    name: 'UPU Kenya addressing sheet (September 2004)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kenEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; Universal POST*CODE data is separately licensed',
+    notes: 'Dated five-digit format, delivery-post-office position and postal-region, regional-distribution-centre and delivery-office coding semantics only. It is not a current complete assignment table, postal polygon, address row release, building relation or blanket reuse right.',
+  },
+  'ca-kenya-national-addressing-system': {
+    id: 'ca-kenya-national-addressing-system',
+    name: 'Communications Authority of Kenya National Addressing System status',
+    url: 'https://www.ca.go.ke/kenya-moves-towards-national-addressing-system-stakeholders-support-bill',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government publication; exact future address dataset terms remain dataset-specific',
+    notes: 'The June 2026 official status describes a proposed geographically tied address for every dwelling while the National Addressing Bill 2025 remains before Parliament. It does not expose an operational nationwide row release, public API, geometry, property link or redistribution licence.',
+  },
+  'kenya-national-addressing-policy-2023': {
+    id: 'kenya-national-addressing-policy-2023',
+    name: 'Kenya National Addressing Policy (March 2023)',
+    url: 'https://ict.go.ke/sites/default/files/2024-09/National%20Addressing%20Policy%20-%20March%202023.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government policy publication; no operational address database reuse right inferred',
+    notes: 'The policy defines addressable objects, child addresses, geocoding, GIS, geospatial referencing and a proposed unique alphanumeric NASK address. Policy definitions and planned governance do not prove a current assignment, postcode polygon, public address row or exact building crosswalk.',
+  },
+  'survey-of-kenya-mapping-policy-2021': {
+    id: 'survey-of-kenya-mapping-policy-2021',
+    name: 'Survey of Kenya mapping and cadastral authority context',
+    url: 'https://lands.go.ke/wp-content/uploads/2021/10/Draft-National-Land-Surveying-and-Mapping-Policy-2021.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Draft policy context; exact map, boundary and cadastral artifact rights are dataset-specific',
+    notes: 'The official draft identifies Survey of Kenya as the government surveying and mapping authority maintaining geodetic control and property-boundary plans. This authority context is not a postcode assignment, postal surface, public address-building relation or reuse licence.',
+  },
+  'ardhisasa-kenya': {
+    id: 'ardhisasa-kenya',
+    name: 'Kenya Ardhisasa land-information platform',
+    url: 'https://ardhisasa.lands.go.ke/home',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government land information with service-specific access, privacy and reuse controls',
+    notes: 'The Ministry and National Land Commission platform supports property search, registration, survey and mapping workflows. Portal availability does not publish a reusable national parcel-building-address-postcode crosswalk, owner data, title data or postal geometry.',
+  },
+  'odpc-kenya-address-location-privacy': {
+    id: 'odpc-kenya-address-location-privacy',
+    name: 'Kenya ODPC address, location and property privacy guidance',
+    url: 'https://www.odpc.go.ke/faqs/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Kenyan data-protection law and official guidance',
+    notes: 'ODPC identifies physical and postal address and location as personal data and property details as sensitive personal data. Precise address, household, phone, MPost, parcel, title, owner and query data therefore require a lawful purpose, minimisation, access control, retention and disclosure review.',
+  },
+  'osm-kenya': {
+    id: 'osm-kenya',
+    name: 'OpenStreetMap Kenya community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/OSM_Kenya',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community roads, places, addresses and buildings remain in a separate attributed ODbL partition. They are not Posta Kenya assignments, NASK addresses, Survey of Kenya boundaries, cadastral relations or exact delivery-building authority.',
   },
   'ethiopost-branches': {
     id: 'ethiopost-branches',
@@ -1278,7 +1378,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   GW: ['hot-osm-west-africa'],
   CV: ['correios-cabo-verde', 'correios-cabo-verde-contact-identifiers', 'correios-cabo-verde-cip', 'upu-cabo-verde-addressing-2014', 'upu-cabo-verde-postcode-length-2026', 'ingt-cabo-verde-idecv', 'ingt-cabo-verde-admin-feature-service', 'ingt-cabo-verde-cadastre', 'osm-cabo-verde', 'hot-osm-west-africa'],
   KM: ['snpsf-comores-poste', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
-  KE: ['posta-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
+  KE: ['posta-kenya', 'posta-kenya-customer-service-charter-2022', 'posta-kenya-properties-2026', 'upu-kenya-addressing-2004', 'ca-kenya-national-addressing-system', 'kenya-national-addressing-policy-2023', 'survey-of-kenya-mapping-policy-2021', 'ardhisasa-kenya', 'odpc-kenya-address-location-privacy', 'osm-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
   TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   RW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],

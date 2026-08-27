@@ -1711,7 +1711,10 @@ test('East Africa address JSON files expose addressRules metadata and English de
     { code: 'en', name: 'English' },
   ]);
   assert.equal(loadRules('SO').postalCode?.label, 'Somalia alpha-2 plus 3 digits used');
-  assert.equal(loadRules('KE').postalCode?.label, '5 digits required');
+  assert.match(loadRules('KE').postalCode?.label ?? '', /5 digits.*delivery post office.*P\.O\. Box.*MPost.*NASK.*separate/i);
+  assert.equal(loadFormat('KE').postalCode?.api, 'https://posta.co.ke/services/services/');
+  assert.match(loadFormat('KE').postalCode?.source ?? '', /Postal Corporation of Kenya.*Customer Service Charter 2022.*UPU Kenya.*NASK.*Survey of Kenya.*Ardhisasa.*ODPC/i);
+  assert.deepEqual(loadRules('KE').regionalHierarchy, ['county', 'subCountyOrConstituency', 'wardOrLocality', 'deliveryPostOffice', 'typedFiveDigitPostcode', 'poBoxMPostOrENjiwaSeparate', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitNASKAddressOrNoNASKAddress', 'explicitRightsClearedBuildingOrParcel']);
   assert.deepEqual(loadRules('RW').regionalHierarchy, ['province', 'district']);
   assert.deepEqual(loadRules('SC').regionalHierarchy, ['island', 'district']);
 });

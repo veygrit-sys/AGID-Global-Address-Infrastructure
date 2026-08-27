@@ -970,6 +970,21 @@ test('Cabo Verde catalog separates four-digit postcodes, extended contact identi
   assert.equal(sources.get('ingt-cabo-verde-cadastre')?.depth, 'building');
 });
 
+test('Kenya catalog separates delivery-office codes, P.O. boxes, NASK, mapping, land and privacy authority', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('KE').map(source => [source.id, source]));
+  assert.equal(sources.get('posta-kenya')?.trustTier, 'authoritative');
+  assert.match(sources.get('posta-kenya')?.notes.join(' ') ?? '', /five-digit.*individual post office.*not.*catchment polygon.*building/i);
+  assert.equal(sources.get('posta-kenya-customer-service-charter-2022')?.depth, 'address');
+  assert.match(sources.get('posta-kenya-customer-service-charter-2022')?.notes.join(' ') ?? '', /P\.O\. Box.*post-office code.*separate.*estate.*building.*not reusable/i);
+  assert.equal(sources.get('posta-kenya-properties-2026')?.validationReadiness, 'reference-eligible');
+  assert.match(sources.get('upu-kenya-addressing-2004')?.notes.join(' ') ?? '', /five-digit.*delivery-post-office.*not.*current.*polygon/i);
+  assert.match(sources.get('ca-kenya-national-addressing-system')?.notes.join(' ') ?? '', /June 2026.*proposed.*Bill 2025.*no operational nationwide/i);
+  assert.equal(sources.get('kenya-national-addressing-policy-2023')?.sourceRole, 'legal-framework-only');
+  assert.equal(sources.get('survey-of-kenya-mapping-policy-2021')?.depth, 'geo-only');
+  assert.equal(sources.get('ardhisasa-kenya')?.requiresCredential, true);
+  assert.match(sources.get('odpc-kenya-address-location-privacy')?.notes.join(' ') ?? '', /address.*location.*personal data.*property.*sensitive/i);
+});
+
 test('South Africa catalog separates delivery semantics, SAPO assignment, fallback, geography, and legal frameworks', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('ZA').map(source => [source.id, source]));
   assert.equal(sources.get('upu-south-africa-postal-addressing')?.authority, 'postal-operator');
