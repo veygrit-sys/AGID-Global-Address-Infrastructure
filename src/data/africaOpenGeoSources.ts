@@ -57,6 +57,17 @@ export type AfricaOpenGeoSourceId =
   | 'matsf-madagascar-geospatial-land'
   | 'madagascar-data-protection-2014-038'
   | 'osm-madagascar'
+  | 'mauritius-post-postcode'
+  | 'upu-mauritius-postcode-rollout-2014'
+  | 'mauritius-open-data-mainland-postcodes'
+  | 'mauritius-open-data-rodrigues-postcodes'
+  | 'mauritius-open-data-agalega-postcodes'
+  | 'mauritius-open-data-post-offices'
+  | 'mauritius-open-data-districts'
+  | 'stats-mauritius-census-2022-admin'
+  | 'mauritius-cadastral-survey-act-dcdb'
+  | 'mauritius-data-protection-act-2017'
+  | 'osm-mauritius'
   | 'somalia-moct-posta'
   | 'somalia-moct-postal-revival-2025'
   | 'somalia-national-postal-policy-2026'
@@ -748,6 +759,58 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     id: 'osm-madagascar', name: 'OpenStreetMap Madagascar community mapping', url: 'https://wiki.openstreetmap.org/wiki/Madagascar', kind: 'address', coverage: 'country', usage: 'fallback',
     license: 'ODbL; separate attributed partition required',
     notes: 'Community roads, settlements, addresses and buildings are candidate context only. They do not establish a Paositra Malagasy assignment or polygon, cadastre, deliverability or exact address-to-building relation without explicit common evidence.',
+  },
+  'mauritius-post-postcode': {
+    id: 'mauritius-post-postcode', name: 'Mauritius Post current postcode finder', url: 'https://www.mauritiuspost.mu/find-your-post-code/', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'Public interactive lookup; no reviewed bulk redistribution licence or canonical boundary grant',
+    notes: 'Current Mauritius Post postcode finder is operator evidence for a normalized query result, not a reviewed bulk assignment release, canonical postcode boundary or address-linked building authority.',
+  },
+  'upu-mauritius-postcode-rollout-2014': {
+    id: 'upu-mauritius-postcode-rollout-2014', name: 'UPU Mauritius five-digit postcode rollout report (2014)', url: 'https://www.upu.int/UPU/media/upu/publications/Union%20Postale/2014/union_postale_3_2014_en.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 2014 rollout report covers Mauritius, Rodrigues and Agalega, but it is not a current assignment table or postcode geometry release.',
+  },
+  'mauritius-open-data-mainland-postcodes': {
+    id: 'mauritius-open-data-mainland-postcodes', name: 'Open Data Mauritius main-island post office codes', url: 'https://data.govmu.org/dataset/mauritius-post-office-codes', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Each pinned locality, sublocality, street and code record is an official assignment-reference row for the main-island partition, not a canonical postcode boundary or address-linked building relation.',
+  },
+  'mauritius-open-data-rodrigues-postcodes': {
+    id: 'mauritius-open-data-rodrigues-postcodes', name: 'Open Data Mauritius Rodrigues post office codes', url: 'https://data.govmu.org/dataset/rodrigues-post-office-codes', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Each pinned locality and R-prefixed code record is an official assignment-reference row for the Rodrigues partition, not a canonical postcode boundary or address-linked building relation.',
+  },
+  'mauritius-open-data-agalega-postcodes': {
+    id: 'mauritius-open-data-agalega-postcodes', name: 'Open Data Mauritius Agalega post office codes', url: 'https://data.govmu.org/dataset/agalega-post-office-codes', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Each pinned locality and A-prefixed code record is an official assignment-reference row for the Agalega partition, not a canonical postcode boundary or address-linked building relation.',
+  },
+  'mauritius-open-data-post-offices': {
+    id: 'mauritius-open-data-post-offices', name: 'Open Data Mauritius post-office facilities and addresses', url: 'https://data.govmu.org/dataset/list-post-offices-and-addresses-mauritius', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Facility identity and facility-address data only: a facility is not a delivery catchment, customer record or postcode polygon.',
+  },
+  'mauritius-open-data-districts': {
+    id: 'mauritius-open-data-districts', name: 'Open Data Mauritius geographical districts', url: 'https://data.govmu.org/dataset/mauritius-districts', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Geographical district boundaries only. A geographical district is not an administrative entity or postal boundary and must remain a versioned non-postal layer.',
+  },
+  'stats-mauritius-census-2022-admin': {
+    id: 'stats-mauritius-census-2022-admin', name: 'Statistics Mauritius 2022 administrative atlas', url: 'https://statsmauritius.govmu.org/Documents/Census_and_Surveys/Census2022/HPC_AR_Vol4_Atlas_Yr22-041225.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'The 2022 atlas describes municipal wards and VCA units and records boundaries changed since 2011; these statistical and administrative contexts are not postal assignments or postcode polygons.',
+  },
+  'mauritius-cadastral-survey-act-dcdb': {
+    id: 'mauritius-cadastral-survey-act-dcdb', name: 'Mauritius Cadastral Survey Act 2011 and DCDB', url: 'https://housing.govmu.org/Documents/Acts/surv11.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled cadastral access; confidentiality and product-specific reuse terms apply',
+    notes: 'The controlled DCDB concerns parcel geometry, PIN and street address; its access and confidentiality rules do not make it postcode authority or an open address-to-building relation.',
+  },
+  'mauritius-data-protection-act-2017': {
+    id: 'mauritius-data-protection-act-2017', name: 'Mauritius Data Protection Act 2017', url: 'https://dataprotection.govmu.org/Pages/The%20Law/Data-Protection-Act-2017.aspx', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Personal and location data require a lawful specified purpose, security, accuracy and bounded retention; person-linked addresses and query histories are not public-pack content.',
+  },
+  'osm-mauritius': {
+    id: 'osm-mauritius', name: 'OpenStreetMap Mauritius community mapping', url: 'https://wiki.openstreetmap.org/wiki/Mauritius', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and buildings are candidate context only and do not establish Mauritius Post assignment, canonical postcode geometry, cadastre, deliverability or an exact address-to-building relation.',
   },
   'somalia-moct-posta': {
     id: 'somalia-moct-posta',
@@ -1894,6 +1957,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   CV: ['correios-cabo-verde', 'correios-cabo-verde-contact-identifiers', 'correios-cabo-verde-cip', 'upu-cabo-verde-addressing-2014', 'upu-cabo-verde-postcode-length-2026', 'ingt-cabo-verde-idecv', 'ingt-cabo-verde-admin-feature-service', 'ingt-cabo-verde-cadastre', 'osm-cabo-verde', 'hot-osm-west-africa'],
   KM: ['snpsf-comores-poste', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
   MG: ['paositra-malagasy', 'paositra-malagasy-agencies', 'upu-madagascar-addressing-2011', 'openstat-madagascar-postcodes-2021', 'un-salb-madagascar-ftm', 'matsf-madagascar-geospatial-land', 'madagascar-data-protection-2014-038', 'osm-madagascar', 'hot-osm-east-southern-africa'],
+  MU: ['mauritius-post-postcode', 'upu-mauritius-postcode-rollout-2014', 'mauritius-open-data-mainland-postcodes', 'mauritius-open-data-rodrigues-postcodes', 'mauritius-open-data-agalega-postcodes', 'mauritius-open-data-post-offices', 'mauritius-open-data-districts', 'stats-mauritius-census-2022-admin', 'mauritius-cadastral-survey-act-dcdb', 'mauritius-data-protection-act-2017', 'osm-mauritius', 'hot-osm-east-southern-africa'],
   KE: ['posta-kenya', 'posta-kenya-customer-service-charter-2022', 'posta-kenya-properties-2026', 'upu-kenya-addressing-2004', 'ca-kenya-national-addressing-system', 'kenya-national-addressing-policy-2023', 'survey-of-kenya-mapping-policy-2021', 'ardhisasa-kenya', 'odpc-kenya-address-location-privacy', 'osm-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
   TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'tcra-tanzania-addressing', 'tanzania-postal-regulations-2018', 'nbs-tanzania-wards-2022', 'tcra-tanzania-napa', 'pdpc-tanzania-act-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

@@ -6088,18 +6088,44 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Requires legitimate specified purpose, proportionality, accuracy, security and bounded retention under CMIL oversight.', 'It supplies no postal or geometry authority and does not permit publishing person-linked precise addresses, recipients, holders, residents, owners, occupants or query histories.'],
   },
   {
-    id: 'mauritius-post-postcode',
-    countryCodes: ['MU'],
-    label: 'Mauritius Post postcode finder',
-    authority: 'postal-operator',
-    trustTier: 'authoritative',
-    availability: 'public-api',
-    depth: 'postcode',
-    url: 'https://www.mauritiuspost.mu/',
-    sourceNames: ['mauritius post', 'postcode finder'],
-    openSourceIds: [],
-    requiresCredential: false,
-    notes: ['Official Mauritius Post website exposes a postcode finder.'],
+    id: 'mauritius-post-postcode', countryCodes: ['MU'], label: 'Mauritius Post current postcode finder', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://www.mauritiuspost.mu/find-your-post-code/', sourceNames: ['mauritius post postcode finder', 'mauritius post'], openSourceIds: ['mauritius-post-postcode'], requiresCredential: false,
+    notes: ['Current official interactive lookup can support a normalized, timestamped assignment receipt.', 'It is not a reviewed bulk snapshot, canonical postcode boundary, public civic-address database or address-to-building authority.'],
+  },
+  {
+    id: 'upu-mauritius-postcode-rollout-2014', countryCodes: ['MU'], label: 'UPU Mauritius five-digit postcode rollout report (2014)', authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://www.upu.int/UPU/media/upu/publications/Union%20Postale/2014/union_postale_3_2014_en.pdf', sourceNames: ['upu mauritius postcode rollout 2014'], openSourceIds: ['upu-mauritius-postcode-rollout-2014'], requiresCredential: false,
+    notes: ['Dated rollout context for Mauritius, Rodrigues and Agalega; not a current assignment register, canonical postal geometry or address-building source.'],
+  },
+  {
+    id: 'mauritius-open-data-mainland-postcodes', countryCodes: ['MU'], label: 'Open Data Mauritius main-island post office codes', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://data.govmu.org/dataset/mauritius-post-office-codes', sourceNames: ['mauritius open data mainland postcodes'], openSourceIds: ['mauritius-open-data-mainland-postcodes'], requiresCredential: false,
+    notes: ['CC BY-SA 4.0 assignment-reference rows for the exact pinned main-island artifact; preserve source revision, digest, territory, attribution and share-alike duties.', 'Rows are not canonical postcode boundaries or address-linked buildings and require current operator reconciliation.'],
+  },
+  {
+    id: 'mauritius-open-data-rodrigues-postcodes', countryCodes: ['MU'], label: 'Open Data Mauritius Rodrigues post office codes', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://data.govmu.org/dataset/rodrigues-post-office-codes', sourceNames: ['mauritius open data rodrigues postcodes'], openSourceIds: ['mauritius-open-data-rodrigues-postcodes'], requiresCredential: false,
+    notes: ['CC BY-SA 4.0 assignment-reference rows for the exact pinned Rodrigues artifact; preserve the R prefix, revision, digest, territory, attribution and share-alike duties.', 'Rows are not canonical postcode boundaries or address-linked buildings and require current operator reconciliation.'],
+  },
+  {
+    id: 'mauritius-open-data-agalega-postcodes', countryCodes: ['MU'], label: 'Open Data Mauritius Agalega post office codes', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible', url: 'https://data.govmu.org/dataset/agalega-post-office-codes', sourceNames: ['mauritius open data agalega postcodes'], openSourceIds: ['mauritius-open-data-agalega-postcodes'], requiresCredential: false,
+    notes: ['CC BY-SA 4.0 assignment-reference rows for the exact pinned Agalega artifact; preserve the A prefix, revision, digest, territory, attribution and share-alike duties.', 'Rows are not canonical postcode boundaries or address-linked buildings and require current operator reconciliation.'],
+  },
+  {
+    id: 'mauritius-open-data-post-offices', countryCodes: ['MU'], label: 'Open Data Mauritius post-office facilities and addresses', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'address', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://data.govmu.org/dataset/list-post-offices-and-addresses-mauritius', sourceNames: ['mauritius open data post offices'], openSourceIds: ['mauritius-open-data-post-offices'], requiresCredential: false,
+    notes: ['CC BY-SA 4.0 facility identity and facility-address context only; a post office is not its catchment, customer record, postcode polygon or subscriber relation.'],
+  },
+  {
+    id: 'mauritius-open-data-districts', countryCodes: ['MU'], label: 'Open Data Mauritius geographical districts', authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://data.govmu.org/dataset/mauritius-districts', sourceNames: ['mauritius open data geographical districts'], openSourceIds: ['mauritius-open-data-districts'], requiresCredential: false,
+    notes: ['Versioned geographical district context only; districts are neither administrative entities nor postal assignment or boundary authority.'],
+  },
+  {
+    id: 'stats-mauritius-census-2022-admin', countryCodes: ['MU'], label: 'Statistics Mauritius 2022 administrative atlas', authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://statsmauritius.govmu.org/Documents/Census_and_Surveys/Census2022/HPC_AR_Vol4_Atlas_Yr22-041225.pdf', sourceNames: ['statistics mauritius census 2022 atlas'], openSourceIds: ['stats-mauritius-census-2022-admin'], requiresCredential: false,
+    notes: ['Versioned ward, VCA and council context whose boundaries changed from 2011; not postcode assignment or postal geometry.'],
+  },
+  {
+    id: 'mauritius-cadastral-survey-act-dcdb', countryCodes: ['MU'], label: 'Mauritius Cadastral Survey Act 2011 and DCDB', authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only', url: 'https://housing.govmu.org/Documents/Acts/surv11.pdf', sourceNames: ['mauritius cadastral survey act dcdb'], openSourceIds: ['mauritius-cadastral-survey-act-dcdb'], requiresCredential: true,
+    notes: ['Controlled cadastral parcel, PIN and street-address framework; product access, confidentiality, licence and purpose limits apply.', 'It is not postcode assignment or an automatic public address-to-building, owner, resident or occupant source.'],
+  },
+  {
+    id: 'mauritius-data-protection-act-2017', countryCodes: ['MU'], label: 'Mauritius Data Protection Act 2017', authority: 'government', trustTier: 'authoritative', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only', url: 'https://dataprotection.govmu.org/Pages/The%20Law/Data-Protection-Act-2017.aspx', sourceNames: ['mauritius data protection act 2017'], openSourceIds: ['mauritius-data-protection-act-2017'], requiresCredential: false,
+    notes: ['Lawful specified purpose, accuracy, security, retention and data-subject rights govern person-linked addresses, precise location and query histories.', 'The law supplies no postcode, geometry or building authority.'],
   },
   {
     id: 'botswanapost',

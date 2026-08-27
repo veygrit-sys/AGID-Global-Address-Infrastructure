@@ -1,0 +1,137 @@
+{
+  "schema_version": "agid-postal-mu-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-mu",
+    "country_code": "MU",
+    "country_name": "Mauritius",
+    "maturity": "M1_metadata",
+    "integration_role": "external-country-pack-consumed-by-agid"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_upstream_rows": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_land_records": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "canonical_postcode_format": "NNNNN | RNNNN | ANNNN",
+    "shape_rule": "The main island uses five digits whose first digit identifies one of nine geographical districts; Rodrigues uses R plus four digits and Agalega uses A plus four digits. Shape alone is not assignment evidence.",
+    "assignment_rule": "Production assignment authority requires a digest-pinned current Mauritius Post result or an exact Open Data Mauritius territory row from the mainland, Rodrigues or Agalega partition with source version, observed_at, valid-time and field-level rights. A valid shape, UPU rollout article or post-office address is insufficient.",
+    "territory_rule": "Main-island, Rodrigues and Agalega code families remain explicit. A numeric district, statistical region, municipal ward, Village Council Area or Rodrigues local region must not be substituted for the postal territory or a current assignment.",
+    "geometry_rule": "No reviewed Mauritius Post or Open Data Mauritius postcode artifact publishes canonical full-code boundary coordinates. Default full-code geometry is none; district, ward, VCA, locality, post-office point, buffer, Voronoi surface, model output and AGID cover are never an official postcode polygon.",
+    "address_rule": "The reviewed address form places the five-character postcode after the locality. Building, unit, house number, street and sub-locality remain separate components, and a P.O. Box or post-office identity does not establish a residential premise.",
+    "open_data_rule": "The mainland, Rodrigues and Agalega postcode tables are separate CC BY-SA 4.0 artifacts. Exact artifact digest, attribution, share-alike obligations, schema, date and territory coverage must be preserved; a row supplies assignment context but no boundary or building relation.",
+    "administrative_rule": "Statistics Mauritius states that the nine geographical districts are not administrative entities and that 2022 Municipal Ward and Village Council Area boundaries differ from 2011. Every crosswalk is versioned, time-scoped and non-postal.",
+    "office_rule": "Government open-data post-office addresses and points identify facilities only. A facility point or its postcode is not a delivery catchment, customer address, P.O. Box holder record, postal polygon or building assignment.",
+    "building_rule": "Building display requires a rights-cleared civic address point, matching normalized components, an explicit address-to-building relation and independently licensed building geometry. Postcode, sub-locality, office point, census building count, cadastral parcel, nearest feature, containment and model score are insufficient.",
+    "land_rule": "The Cadastral Survey Act 2011 establishes a controlled digital cadastral database with parcel geometry, identifiers and street-address particulars, subject to access and confidentiality. It does not by itself prove a postcode polygon, public civic address, building relation, owner, resident or occupant.",
+    "privacy_rule": "Mauritius Data Protection Act 2017 controls personal and location data through lawful purpose, transparency, accuracy, security, retention and data-subject rights. Person-linked precise addresses, recipients, box holders, owners, residents, occupants and query histories are not public artifacts.",
+    "realtime_rule": "Live finder or CKAN API observations become bounded normalized receipts with source URL, terms version, artifact digest, observed_at, valid-time, territory and parser version; there is no invisible unverified live fallback or training mirror.",
+    "model_rule": "Learned models may rank candidates, detect drift, compress indexes or propose derived surfaces. They never confer official assignment, polygon, administrative identity, address, building or deliverability authority.",
+    "compression_rule": "A minimal perfect hash and Parquet, FlatGeobuf or PMTiles candidate layers are allowed only while exact five-character strings, leading letters, territory, validity, authority, lineage, uncertainty and correction paths remain recoverable.",
+    "hosting_rule": "Cloudflare and Hugging Face may host only digest-pinned, rights-cleared, CC BY-SA-compliant, minimized and non-personal public artifacts. Restricted cadastral, address or building evidence remains on controlled infrastructure.",
+    "agid_rule": "AGID is an independent spatial index and versioned crosswalk. An AGID cell or cell union is not a Mauritius Post assignment or polygon, administrative boundary, cadastral parcel, civic address or building."
+  },
+  "required_artifacts": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "fixtures/mauritius-synthetic.json",
+    "release-manifest.json",
+    "assignment-observations.parquet",
+    "derived-candidates.pmtiles",
+    "agid-crosswalk.parquet",
+    "validation-report.json"
+  ],
+  "validation_rules": [
+    {
+      "id": "current-row",
+      "scope": "official-assignments",
+      "pass": "Every promoted row has a current Mauritius Post or exact official open-data artifact, approved rights, digest, observation time, valid-time and explicit territory."
+    },
+    {
+      "id": "five-character-shape",
+      "scope": "codes",
+      "pass": "Every normalized code is five digits or A/R plus four digits; syntax never substitutes for assignment evidence."
+    },
+    {
+      "id": "territory-separation",
+      "scope": "assignments",
+      "pass": "Main island, Rodrigues and Agalega families and their artifact lineage remain explicit."
+    },
+    {
+      "id": "no-invented-postal-area",
+      "scope": "full-codes",
+      "pass": "No code is published with canonical Polygon or MultiPolygon geometry without issuer-authorized boundary evidence."
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Postal, administrative, statistical, office, cadastral, address, building and AGID authority are stored separately."
+    },
+    {
+      "id": "exact-address-building-link",
+      "scope": "promoted-buildings",
+      "pass": "Explicit rights-cleared address-building relation and matching normalized components are present."
+    },
+    {
+      "id": "privacy-and-licence",
+      "scope": "public-artifacts",
+      "pass": "No personal, title-holder, subscriber, recipient, occupant or query data is published and every field has approved rights."
+    },
+    {
+      "id": "synthetic-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Sources, semantics, licences and blockers inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contract, source profile and synthetic conformance fixtures reviewable."
+      },
+      {
+        "id": "M2_experimental",
+        "definition": "Rights-cleared observations reproduce a digest-pinned experimental pack."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Independent holdout, ambiguity, privacy, freshness and correction gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two consecutive refreshes pass and rollback is monitored."
+      }
+    ],
+    "hard_blockers": [
+      "five-character-syntax-presented-as-current-assignment",
+      "mainland-rodrigues-or-agalega-artifacts-merged-without-territory-lineage",
+      "upu-rollout-article-or-post-office-address-presented-as-assignment-row",
+      "district-ward-vca-local-region-or-office-point-presented-as-postcode-polygon",
+      "buffer-voronoi-model-or-agid-cover-presented-as-official",
+      "cc-by-sa-artifact-republished-without-attribution-share-alike-digest-or-date",
+      "cadastral-address-or-owner-data-presented-as-public-postal-data",
+      "po-box-holder-recipient-owner-resident-occupant-or-query-trail-published",
+      "postcode-sublocality-nearest-containment-or-model-score-presented-as-exact-building",
+      "missing-assignment-geometry-time-territory-administrative-or-licence-lineage"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "complete_current_postcode_register_without_refresh",
+    "official_postcode_polygon",
+    "postal_and_administrative_equivalence",
+    "recipient_identity_or_po_box_holder",
+    "resident_owner_or_occupant",
+    "exact_address_or_building_without_explicit_link",
+    "land_or_title_certification"
+  ]
+}

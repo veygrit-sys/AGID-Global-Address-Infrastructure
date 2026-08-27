@@ -23,6 +23,7 @@ import {
   normalizeNamibiaPostalCode,
   normalizeNigerPostalCode,
   normalizeMadagascarPostalCode,
+  normalizeMauritiusPostalCode,
   normalizePostalContextPostalCode,
 } from './postalContextCountryPolicy';
 import {
@@ -528,6 +529,7 @@ export {
   normalizeNamibiaPostalCode,
   normalizeNigerPostalCode,
   normalizeMadagascarPostalCode,
+  normalizeMauritiusPostalCode,
   NIGERIA_DIGITAL_POSTCODE_EFFECTIVE_FROM,
 } from './postalContextCountryPolicy';
 
