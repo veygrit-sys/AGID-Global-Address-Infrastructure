@@ -231,6 +231,26 @@ published. The next read-only review is 2026-09-04 after the pending-country
 pass; the next pending country is BN. Earlier countries are unchanged and no
 second country was started in this BH run.
 
+## Brunei: historical booklet and current operator attestation
+
+The 2026-08-28 BN run retained the existing M2_source_attested target and
+defined its previously missing national current-assignment criterion. The
+[source review](postal-context-brunei-m2.md) verified the 2026 PosBru transition
+and obtained the public SKN-linked 52-page historical booklet, SHA-256 pinned.
+Its 551 rows separate 438 locality, 94 government-organization and 19 branch
+records. District-heading counts differ and one branch serial is missing;
+no row, polygon, address or building relation was inferred or repaired.
+
+Eleven references were verified. The old post.gov.bn host failed resolution;
+the current PosBru site works. DEPS positive reuse terms are site-specific,
+not a postal or SKN licence. The booklet's 2018 metadata is not superseded by
+a 2026 HTTP modification timestamp. Exact postal reuse rights, current source
+attestation, approved immutable artifacts and real AGID checks remain missing.
+
+BN stays M1 / blocked. All prior country holds are unchanged. Next read-only
+review is 2026-09-04 after the pending-country pass; the next pending country
+is **BT (Bhutan)**. No second country was started in this BN run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

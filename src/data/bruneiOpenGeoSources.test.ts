@@ -15,7 +15,7 @@ test('Brunei registry separates booklet, routing semantics, house numbering, map
     assert.equal(ASIA_OPEN_GEO_SOURCES[id].id, id);
     assert.equal(ASIA_OPEN_GEO_SOURCES[id].url.startsWith('http'), true);
   }
-  assert.equal(ASIA_OPEN_GEO_SOURCES['brunei-post-postcode-booklet'].usage, 'primary');
+  assert.equal(ASIA_OPEN_GEO_SOURCES['brunei-post-postcode-booklet'].usage, 'reference');
   assert.match(ASIA_OPEN_GEO_SOURCES['brunei-post-postcode-booklet'].notes, /dated booklet.*Mukim.*Kampong.*six-character.*assignment.*not a polygon.*house.*building.*licence/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['upu-brunei-addressing'].notes, /six alphanumeric.*district.*Mukim.*village.*delivery-point.*Simpang.*Jalan.*P\.O\. box.*not geographic boundaries.*building identities/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['brunei-survey-house-numbering'].notes, /house.*building.*unit.*site plan.*land title.*TOL.*identity.*fee.*not a public address register.*building geometry.*owner.*licence/i);
@@ -29,7 +29,7 @@ test('Brunei registry separates booklet, routing semantics, house numbering, map
 test('Brunei official catalog exposes matching authority and readiness boundaries', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('BN').map(source => [source.id, source]));
   assert.equal(sources.get('brunei-post-postcode-booklet')?.authority, 'postal-operator');
-  assert.equal(sources.get('brunei-post-postcode-booklet')?.validationReadiness, 'reference-eligible');
+  assert.equal(sources.get('brunei-post-postcode-booklet')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('upu-brunei-addressing')?.authority, 'intergovernmental-postal-standard');
   assert.equal(sources.get('brunei-survey-house-numbering')?.depth, 'address');
   assert.equal(sources.get('brunei-survey-digital-map-products')?.depth, 'building');
@@ -38,8 +38,8 @@ test('Brunei official catalog exposes matching authority and readiness boundarie
   assert.equal(sources.get('brunei-deps-bpp-2021')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('brunei-land-registration-framework')?.sourceRole, 'legal-framework-only');
   const classification = classifyPostalSourceTrust({ countryCode: 'BN', source: 'Brunei Postal Services Postcode Booklet' });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.ok(classification.matches.some(source => source.id === 'brunei-post-postcode-booklet'));
 });
 
 test('Brunei address metadata encodes compact six-character routing and exact building gate', () => {

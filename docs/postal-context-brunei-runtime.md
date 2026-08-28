@@ -32,3 +32,11 @@ AGID_POSTAL_CONTEXT_BN_LKG_DESCRIPTOR_DIGEST
 ```
 
 The standard endpoints accept `countryCode=BN` or `/api/postal/BN/{postcode}`. Geometry remains opt-in and preserves official, derived and non-spatial evidence classes.
+
+## M2 review and current operator
+
+The [2026-08-28 source-attestation review](postal-context-brunei-m2.md) confirms
+the PosBru transition effective 1 January 2026. The 2018 Postal Services booklet
+on the public SKN guide is historical, not current validated allocation data.
+Reference URLs, operator authority and passing synthetic tests do not enable
+a real BN descriptor. M2 remains blocked; source rows and PDFs are not bundled.

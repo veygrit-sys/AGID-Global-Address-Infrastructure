@@ -206,6 +206,11 @@ export type AsiaOpenGeoSourceId =
   | 'philippines-lra-land-registration'
   | 'phlpost'
   | 'post-gov-bn'
+  | 'brunei-posbru-current-operator'
+  | 'brunei-aiti-postal-licence'
+  | 'brunei-mtic-posbru-transition'
+  | 'brunei-skn-postcode-booklet'
+  | 'brunei-deps-terms'
   | 'brunei-post-postcode-booklet'
   | 'upu-brunei-addressing'
   | 'brunei-survey-house-numbering'
@@ -2078,8 +2083,33 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.post.gov.bn/SitePages/Postcodes.aspx',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Brunei official postcode reference.',
+    usage: 'reference',
+    notes: 'Legacy Postal Services postcode reference; current postal operations moved to PosBru in January 2026. This URL is not a current validated dataset.',
+  },
+  'brunei-posbru-current-operator': {
+    id: 'brunei-posbru-current-operator', name: "PosBru current postal operator and transition", url: 'https://www.posbru.com.bn/about/',
+    kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Current successor to Postal Services from 1 January 2026, corroborated by MTIC and the AITI public-postal licence register. The public website is service metadata, not a complete postcode allocation, postal polygon, civic-address dataset or reuse licence.",
+  },
+  'brunei-aiti-postal-licence': {
+    id: 'brunei-aiti-postal-licence', name: "AITI public postal licence register", url: 'https://www.aiti.gov.bn/licences/postal-licence/',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "Lists PosBru public postal licence effective 1 January 2026 for 15 years. Operator authority and effective date are not postcode data or blanket redistribution rights.",
+  },
+  'brunei-mtic-posbru-transition': {
+    id: 'brunei-mtic-posbru-transition', name: "MTIC PosBru transition announcement", url: 'https://www.mtic.gov.bn/Lists/News/NewDisplay.aspx?ID=318',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "10 December 2025 ministry announcement transfers postal operations to PosBru effective 1 January 2026. It does not republish current routing rows or grant data reuse rights.",
+  },
+  'brunei-skn-postcode-booklet': {
+    id: 'brunei-skn-postcode-booklet', name: "SKN public mirror of the Postal Services second-edition booklet", url: 'https://www.skn.gov.bn/Help/Buku_Poskod_Edisi_ke2.pdf',
+    kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Public SKN user guide links a 52-page 2018 booklet containing separate organization, locality and postal-branch tables. Current validity, reuse rights and equality with the unreachable Postal Services original remain unverified; 2026 HTTP modification is not an allocation edition.",
+  },
+  'brunei-deps-terms': {
+    id: 'brunei-deps-terms', name: "DEPS site terms of use", url: 'https://deps.mofe.gov.bn/terms-of-use/',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "Clause 2.1 permits covered-site content reuse with attribution, change notice and no endorsement, subject to privacy, third-party rights and the other site terms. It is not a cross-government postal, SKN or Survey data licence.",
   },
   'brunei-post-postcode-booklet': {
     id: 'brunei-post-postcode-booklet',
@@ -2087,7 +2117,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.post.gov.bn/Documents/Buku%20Poskod%20Edisi%20ke%202%20%28Kemaskini%2026122018%29.pdf',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
+    usage: 'reference',
     notes: 'Official dated booklet lists Mukim, Kampong and six-character postcode rows and shows addressing examples. A pinned row is assignment and routing evidence, not a polygon, delivery entitlement, exact house or building relation, complete current history or blanket redistribution licence.',
   },
   'upu-brunei-addressing': {
@@ -2105,7 +2135,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.survey.gov.bn/permohonan-maklumat-peralamatan/',
     kind: 'address',
     coverage: 'country',
-    usage: 'primary',
+    usage: 'reference',
     notes: 'Official house, building and unit address-information and verification applications require site plan, land title or TOL, applicant identity and a fee. An exact authorized result can support a civic address, but application access is not a public address register, building geometry, owner relation or redistribution licence.',
   },
   'brunei-survey-digital-map-products': {
@@ -3645,7 +3675,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   AM: ['haypost-am', 'haypost-address-reference', 'armenia-real-estate-address-register', 'armenia-national-geoportal-buildings', 'cadastre-armenia', 'armstat-geodata', 'geonames-armenia'],
   AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
   BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
-  BN: ['brunei-post-postcode-booklet', 'upu-brunei-addressing', 'brunei-survey-house-numbering', 'brunei-survey-digital-map-products', 'brunei-survey-geoportal', 'brunei-survey-geoportal-user-guide', 'brunei-deps-bpp-2021', 'brunei-land-registration-framework', 'post-gov-bn'],
+  BN: ['brunei-posbru-current-operator', 'brunei-aiti-postal-licence', 'brunei-mtic-posbru-transition', 'brunei-skn-postcode-booklet', 'brunei-deps-terms', 'brunei-post-postcode-booklet', 'upu-brunei-addressing', 'brunei-survey-house-numbering', 'brunei-survey-digital-map-products', 'brunei-survey-geoportal', 'brunei-survey-geoportal-user-guide', 'brunei-deps-bpp-2021', 'brunei-land-registration-framework', 'post-gov-bn'],
   BT: ['bhutan-post-postcode-finder', 'bhutan-post-domestic-footprint', 'upu-bhutan-addressing', 'bhutan-nlcs-geoportal', 'bhutan-nlcs-map-products', 'bhutan-nlcs-cadastral-information', 'bhutan-nsb-phcb-2017', 'bhutan-esakor-land-building-transactions', 'bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
   CN: ['china-postal-code', 'upu-china-addressing-2013', 'china-postal-and-address-code-response-2025', 'china-universal-delivery-address-code-gbt41832', 'china-address-geocode-gbt39609', 'china-geographical-names-regulation-2022', 'tianditu-china', 'china-geospatial-platform-management-2019', 'china-real-estate-query-rules-2024', 'osm-china'],
   GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],
