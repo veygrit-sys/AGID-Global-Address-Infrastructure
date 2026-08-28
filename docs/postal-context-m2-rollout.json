@@ -828,11 +828,86 @@
       "addressFormat": "src/data/address_formats/asia/south_asia/BT.json",
       "manifest": "data/postal_country_packs/bt/postal-context/repository-manifest.json",
       "declaredStage": "M1_metadata",
-      "m2Definition": null,
-      "status": "pending",
-      "attempts": 0,
-      "lastAttempt": null,
-      "blocker": null,
+      "m2Definition": {
+        "id": "M2_source_attested",
+        "definition": "A complete rights-cleared Bhutan routing-assignment snapshot for a source-attested current national edition covers the provider's entire Dzongkhag search scope, with Dzongkhag, Gewog, post-office and five-character postal-code fields kept at their stated grain; exact source lineage, row identity, duplicates and exceptions, coverage reconciliation, validity, source and terms SHA-256, reproducible transformation, approved immutable artifacts and real AGID lookup verification are required. Postal polygons and exact civic-address/building relations are separate optional layers, never inferred from office names, codes or administrative labels."
+      },
+      "status": "blocked",
+      "attempts": 1,
+      "lastAttempt": {
+        "at": "2026-08-28T09:48:48.967Z",
+        "result": "source-preflight-blocked",
+        "report": "reports/postal-context-m2/bt-source-review-2026-08-28.json",
+        "reportDigest": "sha256:1e5d533de7d95462531e4dbe7287d9ca9235bf4b3588a77cbdc9fdb50cda7d49",
+        "engineeringReport": "reports/postal-context-m2/bt-checks-2026-08-28.json",
+        "summary": "All 20 public district searches inspected: 76 rows, 38 distinct codes/office tuples, 38 excess duplicate rows and 56 missing opening row tags. Six references verified; legacy PDF HTTP 404. National current edition, exact reuse rights, immutable artifacts and real AGID verification remain absent.",
+        "engineeringReportDigest": "sha256:879daa339bc4636f4a053bdce1b9efcceadc729cb75398097172cd61c49a618d"
+      },
+      "blocker": {
+        "code": "current-national-edition-rights-and-publication-unverified",
+        "reason": "The live public locator produced 76 rows but only 38 distinct five-digit codes and office tuples. All 38 tuples repeat twice; 56 opening row tags are missing. All 20 form options were queried, but current national coverage, stable identity, version and validity are not attested. Public access and format syntax do not clear redistribution, retained snapshots, immutable publication or real AGID runtime gates.",
+        "observedAt": "2026-08-28T09:48:48.967Z",
+        "retryAfter": "2026-09-04T09:48:48.967Z",
+        "requiresExplicitApproval": false,
+        "evidence": {
+          "report": "reports/postal-context-m2/bt-source-review-2026-08-28.json",
+          "reportDigest": "sha256:1e5d533de7d95462531e4dbe7287d9ca9235bf4b3588a77cbdc9fdb50cda7d49",
+          "formUrl": "https://bhutanpost.bt/postcode/",
+          "formDigest": "sha256:f2a94909ed3ba871b249124dc0fb1fbd428b37cb74959ab3437d25f286c7c74d",
+          "orderedResponseManifestDigest": "sha256:0085b5bf6e539d93767bc0a7d7fde6a30f04b588bd3729c297fabcc767ee1c2d",
+          "observedDistricts": 20,
+          "observedRows": 76,
+          "distinctPostcodes": 38,
+          "excessDuplicateRows": 38,
+          "missingOpeningRowTags": 56,
+          "verifiedReferenceDocuments": [
+            {
+              "id": "bhutan-post-downloads-rights-notice",
+              "url": "https://bhutanpost.bt/downloads/",
+              "digest": "sha256:a2d2ea591f5cf402a527d1f476c69930b18f8427e89be80915d821af6c499573"
+            },
+            {
+              "id": "upu-bhutan-addressing",
+              "url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/btnEn.pdf",
+              "digest": "sha256:b878c01e760fb749f91c3e36aedc0a0e5f65a3437adf20dbed87f1f99bfb2be9"
+            },
+            {
+              "id": "bhutan-nlcs-map-products",
+              "url": "https://www.nlcs.gov.bt/dz/?page_id=203",
+              "digest": "sha256:090622ad69da41d30d5927ec8e0cde81d7bcc99ae33639fa1992b11219ae313a"
+            },
+            {
+              "id": "bhutan-nlcs-geoportal",
+              "url": "https://www.nlcs.gov.bt/dz/?page_id=38",
+              "digest": "sha256:228cf8fa3ed8c8a711f4d57d5487cb35d227f1df063f80d749a3016f83812d3f"
+            },
+            {
+              "id": "bhutan-nlcs-cadastral-information",
+              "url": "https://web.nlcs.gov.bt/cadastral-information-division/",
+              "digest": "sha256:dd48ad2165ef499dc341d53c4110d7bc9b5e15e9f0de7125a5250960b41bde78"
+            },
+            {
+              "id": "bhutan-esakor-public-faq",
+              "url": "https://esakor.nlcs.gov.bt/faq_eSakor",
+              "digest": "sha256:3edb1c5d8aa41618f72a1d45f38c9fd74cc84099290aa4668fc4ccb04e4fb87d"
+            }
+          ],
+          "failedReferenceChecks": [
+            {
+              "id": "bhutan-post-legacy-postcodes-pdf",
+              "url": "https://bhutanpost.bt/documents/postcodes.pdf",
+              "status": "http-error",
+              "httpStatus": 404
+            }
+          ],
+          "interpretation": "Response hashes and aggregate profiles are evidence of a read-only review, not publicly released assignment data. No row, source PDF, geometry or personal/property information is in AGID Git."
+        },
+        "unblockCondition": "Obtain a current provider-attested complete national routing-assignment edition and exact reuse terms; reconcile duplicates, structural exceptions and scope, retain permitted source snapshots outside AGID Git, reproduce typed transforms, publish to an approved immutable artifact destination and verify actual AGID descriptor/loader/API lookups. Geometry and civic/building links stay independent.",
+        "authorityGates": [
+          "No account, NDI/eSakor transaction, private address, Thram/owner/plot query, paid map, use agreement, new repository/public destination or production deployment without explicit approval."
+        ],
+        "retryPolicy": "Read-only source/rights review after all pending countries; the retry date is not permission to accept contracts or publish data."
+      },
       "evidence": null
     },
     {

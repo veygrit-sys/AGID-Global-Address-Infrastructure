@@ -31,3 +31,10 @@ AGID_POSTAL_CONTEXT_BT_LKG_DESCRIPTOR_DIGEST
 ```
 
 The standard endpoints accept `countryCode=BT` or `/api/postal/BT/{postcode}`. Geometry remains opt-in and preserves official, derived and non-spatial evidence classes.
+
+## 2026-08-28 M2 source review
+
+BT remains M1 / blocked. The live public locator yielded 76 rows but only
+38 distinct code/office tuples, with duplicate rows and malformed row tags.
+See the [source review](postal-context-bhutan-m2.md) for exact hashes, coverage and rights gates.
+No real-data runtime descriptor or production geometry was enabled.

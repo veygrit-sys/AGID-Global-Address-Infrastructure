@@ -29,7 +29,7 @@ test('Bhutan open geo registry separates locator, routing semantics, maps, censu
 test('Bhutan official catalog exposes matching authority and readiness boundaries', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('BT').map(source => [source.id, source]));
   assert.equal(sources.get('bhutan-post-postcode-finder')?.authority, 'postal-operator');
-  assert.equal(sources.get('bhutan-post-postcode-finder')?.validationReadiness, 'reference-eligible');
+  assert.equal(sources.get('bhutan-post-postcode-finder')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('bhutan-post-domestic-footprint')?.depth, 'geo-only');
   assert.equal(sources.get('upu-bhutan-addressing')?.authority, 'intergovernmental-postal-standard');
   assert.equal(sources.get('bhutan-nlcs-geoportal')?.validationReadiness, 'metadata-only');
@@ -38,8 +38,8 @@ test('Bhutan official catalog exposes matching authority and readiness boundarie
   assert.equal(sources.get('bhutan-nsb-phcb-2017')?.requiresCredential, true);
   assert.equal(sources.get('bhutan-esakor-land-building-transactions')?.availability, 'auth-required-api');
   const classification = classifyPostalSourceTrust({ countryCode: 'BT', source: 'Bhutan Post Postcode Finder' });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
 });
 
 test('Bhutan address metadata encodes five-digit routing, evidence separation, and building gate', () => {

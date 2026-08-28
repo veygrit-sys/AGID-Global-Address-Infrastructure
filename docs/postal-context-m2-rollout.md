@@ -40,7 +40,7 @@ differences. Do not redefine M2 globally to make a country pass.
   validation and an AGID runtime verification record.
 
 Visit pending countries across all regions before retrying due blockers.
-Never poll the same unavailable source on every hourly wakeup. Prefer a
+Never poll the same unavailable source on every heartbeat wakeup. Prefer a
 seven-day retry for unchanged source/licence blockers. Mark permission blockers
 with `requiresExplicitApproval: true`; do not retry without new authority. They
 remain excluded from automatic retry even after `retryAfter`; that date is a
@@ -250,6 +250,28 @@ attestation, approved immutable artifacts and real AGID checks remain missing.
 BN stays M1 / blocked. All prior country holds are unchanged. Next read-only
 review is 2026-09-04 after the pending-country pass; the next pending country
 is **BT (Bhutan)**. No second country was started in this BN run.
+
+## Bhutan: live district locator and duplicate-source review
+
+The 2026-08-28 BT run retained M2_source_attested and defined its missing
+current national assignment criterion. The [source review](postal-context-bhutan-m2.md)
+queried all 20 public Dzongkhag options: 76 rows, 38 distinct postal codes
+and office tuples, each tuple appearing twice. Fifty-six opening row tags
+are missing. No missing fields or invalid code syntax were observed, but
+these checks do not prove a current, complete national allocation edition.
+
+Six reference documents were verified; the legacy postcode PDF returned 404.
+The form and one repeated district had unchanged hashes. The multi-request
+retrieval is not atomic and exact reuse rights remain unverified. NLCS map
+access, cadastral descriptions and eSakor FAQs remain non-postal context.
+No source row, polygon, address, building relation or private record was
+published. Catalog identity alone no longer grants BT validation authority.
+
+BT remains M1 / blocked. Approved immutable data artifacts, current source
+attestation, exact rights and real AGID checks are still required. Next
+read-only review is 2026-09-04 after the pending-country pass. Prior country
+holds are unchanged; the next pending country is **CN (China)**. No second
+country was started in this run.
 
 ## Git, privacy and authority boundaries
 
