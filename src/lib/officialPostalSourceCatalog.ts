@@ -5322,7 +5322,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     trustTier: 'authoritative',
     availability: 'web-search',
     depth: 'postcode',
-    validationReadiness: 'reference-eligible',
+    validationReadiness: 'metadata-only',
     url: 'https://www.moc.gov.kw/en/important-links?tab=2',
     sourceNames: ['kuwait ministry postal codes', 'kuwait post', 'moc kuwait postal codes'],
     openSourceIds: ['kuwait-post'],

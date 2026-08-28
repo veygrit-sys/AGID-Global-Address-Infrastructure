@@ -33,3 +33,11 @@ AGID_POSTAL_CONTEXT_KW_LKG_DESCRIPTOR_DIGEST
 ```
 
 The standard endpoints accept `countryCode=KW` or `/api/postal/KW/{postcode}`. Geometry remains opt-in and preserves official, derived and non-spatial assignment evidence.
+
+## M2 evidence review
+
+The [2026-08-28 source and partial-assignment review](postal-context-kuwait-m2.md)
+keeps Kuwait at M1 / blocked. Its M2 criterion is complete licensed block and
+P.O. box assignments, not geometry. Partial public UI observations do not
+constitute national coverage or a production release; the Ministry catalog
+remains metadata-only for validation until release evidence is complete.

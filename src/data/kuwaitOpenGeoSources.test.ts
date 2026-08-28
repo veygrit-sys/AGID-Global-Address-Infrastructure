@@ -30,7 +30,7 @@ test('Kuwait registry separates block and P.O. box assignment, PACI address, bui
 test('Kuwait official catalog exposes matching authority and readiness boundaries', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('KW').map(source => [source.id, source]));
   assert.equal(sources.get('kuwait-post')?.authority, 'government');
-  assert.equal(sources.get('kuwait-post')?.validationReadiness, 'reference-eligible');
+  assert.equal(sources.get('kuwait-post')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('upu-kuwait-addressing')?.authority, 'intergovernmental-postal-standard');
   assert.equal(sources.get('paci-kuwait-finder')?.depth, 'address');
   assert.equal(sources.get('paci-kuwait-address-services')?.requiresCredential, true);

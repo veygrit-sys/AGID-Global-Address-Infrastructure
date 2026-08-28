@@ -565,6 +565,34 @@ all pending countries and 2026-09-04T16:07:01.229Z.
 Earlier country entries are unchanged. Next pending country: **KW (Kuwait)**;
 no second country was started.
 
+## Kuwait review - 2026-08-28
+
+KW remains **M1_metadata / blocked**. Its existing **M2_assignment** requires
+complete rights-cleared current block and P.O. box tables, not a polygon. The
+original criterion, twelve hard blockers and five-digit format are unchanged.
+
+The [KW review](postal-context-kuwait-m2.md) verifies seven primary references.
+The public Ministry UI advertises 4,262 P.O. box and 1,396 block observations.
+Only first/last pages were inspected: 28 sampled rows, eight with four-digit
+codes. Values are not zero-padded or repaired; sample rates are not national
+quality estimates. Initial HTML has empty loading placeholders, not data rows.
+The DOM capture hash is not a verified network data artifact or atomic snapshot.
+
+Bulk reuse/redistribution rights remain unverified; the privacy-policy target
+is Under Development. The visually reviewed UPU sheet is printed 07/2002, not
+a current assignment directory. Municipality metadata failed to load; this
+does not prove data absence. No private PACI queries or CSB terms acceptance
+were performed. The Ministry catalog now remains metadata-only for validation;
+a source name/ID/URL alone cannot assert a strong current assignment.
+
+Complete current both-class data, primary reconciliation of malformed samples,
+exact rights, approved immutable publication and real AGID loader/API evidence
+are still required. No source cells, geometry, addresses/buildings, new
+destination, paid operation or deployment was published/performed. Public-only
+retry follows all pending countries and 2026-09-04T16:38:41.187Z.
+Earlier country entries are unchanged. Next pending country: **KZ (Kazakhstan)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
