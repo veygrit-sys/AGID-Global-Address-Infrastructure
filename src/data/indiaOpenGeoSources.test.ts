@@ -35,7 +35,7 @@ test('India official catalog exposes matching source authority boundaries', () =
   assert.equal(sources.get('india-post-regulations-2024')?.authority, 'postal-operator');
   assert.equal(sources.get('india-post-regulations-2024')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('data-gov-in-pincode')?.authority, 'official-open-data');
-  assert.equal(sources.get('data-gov-in-pincode')?.availability, 'bulk-open-data');
+  assert.equal(sources.get('data-gov-in-pincode')?.availability, 'web-search');
   assert.equal(sources.get('data-gov-in-pincode-boundary')?.depth, 'postcode');
   assert.equal(sources.get('data-gov-in-pincode-boundary')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('data-gov-in-godl')?.sourceRole, 'legal-framework-only');

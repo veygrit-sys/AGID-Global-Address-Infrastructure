@@ -371,6 +371,28 @@ Recheck public references after the pending-country pass and
 Earlier countries are unchanged. Next pending country: **IN (India)**;
 no second country was started.
 
+## India review — 2026-08-28
+
+IN remains **M1_metadata / blocked** with the existing complete
+**M2_assignment** definition and all 13 blockers unchanged. The official
+directory resource and catalogue returned HTTP 200 but displayed sandbox,
+empty-result or placeholder evidence. A title or GODL footer does not prove
+current data. The substantive GODL text and official Swagger were verified;
+the API requires a key and a keyless catalogue request returned 400. No
+credential was used and no current assignment rows were obtained: data-quality
+rates are unmeasured, not zero-percent errors.
+
+The 2025 official boundary announcement and live DIGIPIN explanation remain
+references, not current geometry, office assignments or building relations.
+The shared source catalogue records web-reference availability for the PIN
+directory/boundary sources while retaining their authority and metadata-only
+readiness. See the [IN review](postal-context-india-m2.md) and aggregate receipts.
+
+Public references may be rechecked after all pending countries and
+2026-09-04T12:52:54.980Z; authentication and publication still require
+explicit approval. Earlier country entries are unchanged. Next pending
+country: **IQ (Iraq)**; no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
