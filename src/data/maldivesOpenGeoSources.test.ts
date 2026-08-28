@@ -24,12 +24,12 @@ test('Maldives registry separates postcode, dated syntax, national map, island A
 
 test('Maldives official catalog exposes matching authority and access boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('MV').map(source=>[source.id,source]));
-  assert.equal(sources.get('maldives-post')?.authority,'postal-operator'); assert.equal(sources.get('maldives-post')?.validationReadiness,'reference-eligible');
+  assert.equal(sources.get('maldives-post')?.authority,'postal-operator'); assert.equal(sources.get('maldives-post')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('upu-maldives-addressing-2004')?.authority,'intergovernmental-postal-standard'); assert.equal(sources.get('mlsa-maldives')?.requiresCredential,true);
   assert.equal(sources.get('onemap-maldives')?.availability,'web-search'); assert.equal(sources.get('maldives-onemap-island-api-2024')?.availability,'public-api');
   assert.equal(sources.get('maldives-geomatics-land-survey-standard-2025')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('maldives-land-registration-survey-guideline-2020')?.depth,'legal-framework');
   assert.equal(sources.get('maldives-bureau-statistics-gis-maps')?.depth,'geo-only'); assert.equal(sources.get('maldives-census-island-atoll-2022')?.depth,'locality');
-  const classification=classifyPostalSourceTrust({countryCode:'MV',source:'Maldives Post Postcode Finder'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'MV',source:'Maldives Post Postcode Finder'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak');
 });
 
 test('Maldives address metadata encodes five digits, island hierarchy, non-area objects, and exact building gate',()=>{
