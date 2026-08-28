@@ -707,3 +707,11 @@ Preserved the M2_source_attested target and all eleven blockers; added its expli
 [MN review](postal-context-mongolia-m2.md) and [source receipts](../reports/postal-context-m2/mn-source-review-2026-08-28.json) separate dated documents from reusable assignments. NSO selectors preserve different regional keys sharing a label and incompatible indicator units. Official portal names/URLs alone no longer confer strong address validation. No licensed production assignment/geometry dataset, building relations, fixed data artifacts or real AGID verification were completed.
 
 Revisit public references after all pending countries and `2026-09-04T19:47:14.790Z`; controlled services and publication remain approval-gated. Other 251 entries are unchanged. Next pending country: **MO**; no second country was started.
+
+## Macao (MO): no-postcode M1 contract, M2 blocked — 2026-08-28
+
+The base had no MO manifest or M2 definition. Added the country-specific M2_scoped_address_context target and nine explicit blockers without changing MO identity or other countries. CTT FAQ 17 in three languages confirms no local postcode system; 000000 is only an online-form workaround. Postal code and official postal geometry stay null/none. Gazette evidence binds the 2026-06-01 DSCC/DSSCU authority transition and mapping reproduction permission/possible-fee requirement.
+
+[MO review](postal-context-macao-m2.md) and [source receipts](../reports/postal-context-m2/mo-source-review-2026-08-28.json) distinguish six verified policy/legal/migration references, four unresolved HTML shells and three acquisition failures. Identical DSSCU routes and identical data-portal/terms routes are transport evidence only. Big5 Gazette decoding, UTF-8 CTT content and Portuguese HTML entities are checked explicitly. No current rights-cleared address dataset, production geometry, civic/building relations, fixed data artifact or real AGID verification exists. Generic MO runtime remains disabled and source names/URLs cannot confer strong address trust.
+
+Revisit public references after all pending countries and `2026-09-04T20:16:33.259Z`; controlled access, mapping reproduction, purchases and publication remain approval-gated. No fees or extra cloud charges incurred. Other 251 entries are unchanged. Next pending country: **MV**; no second country was started.

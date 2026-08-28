@@ -17,6 +17,13 @@ export type AsiaOpenGeoSourceId =
   | 'landsd-hk'
   | 'csdi-hk'
   | 'osm-hong-kong'
+  | 'ctt-macao-no-postcode'
+  | 'dsscu-macao'
+  | 'macao-dsscu-regulation-2026'
+  | 'macao-mapping-reproduction-2026'
+  | 'macao-data-portal'
+  | 'macao-data-terms'
+  | 'dscc-macao-migration-notice'
   | 'dscc-macao'
   | 'geoguide-macao'
   | 'osm-macau'
@@ -611,6 +618,13 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'High-density Hong Kong OSM building, POI, road, and local-name data for address fallback and validation.',
   },
+  'ctt-macao-no-postcode': { id: 'ctt-macao-no-postcode', name: 'Macao CTT no-postcode policy', url: 'https://www.ctt.gov.mo/MacauPost/Contents/faq.aspx?lang=en-us', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'CTT policy only; 000000 is a form placeholder, not an assignment.' },
+  'dsscu-macao': { id: 'dsscu-macao', name: 'Macao DSSCU mapping and doorplate authority', url: 'https://www.dsscu.gov.mo/', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Current publisher discovery; retrieved SPA shell contains no reviewed data or terms.' },
+  'macao-dsscu-regulation-2026': { id: 'macao-dsscu-regulation-2026', name: 'Macao DSSCU Administrative Regulation 16/2026', url: 'https://bo.dsaj.gov.mo/bo/i/2026/21/regadm16_cn.asp', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Authority transition from 2026-06-01, including DSCC and municipal naming/doorplate responsibilities; no data reuse grant.' },
+  'macao-mapping-reproduction-2026': { id: 'macao-mapping-reproduction-2026', name: 'Macao mapping reproduction Order 102/2026', url: 'https://bo.dsaj.gov.mo/bo/i/2026/21/despce_cn.asp?printer=1', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Mapping-product publication/reproduction requires DSSCU permission and may incur fees. No permission requested or obtained.' },
+  'macao-data-portal': { id: 'macao-data-portal', name: 'Macao Government Open Data portal', url: 'https://data.gov.mo/', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Discovery only; HTTP 200 shell does not verify a dataset, licence or API availability.' },
+  'macao-data-terms': { id: 'macao-data-terms', name: 'Macao Government Open Data terms reference', url: 'https://data.gov.mo/UseClause', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Terms body not present in retrieved shell; exact dataset conditions remain unresolved.' },
+  'dscc-macao-migration-notice': { id: 'dscc-macao-migration-notice', name: 'Macao DSCC domain migration notice', url: 'https://www.dscc.gov.mo/redirect/redirect.html', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Verified HTTPS notice points to DSSCU, not a dataset, licence or transferred source row.' },
   'dscc-macao': {
     id: 'dscc-macao',
     name: 'Cartography and Cadastre Bureau Macao',
@@ -618,7 +632,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Macao cartography and cadastre source for cadastral data, administrative boundaries, roads, buildings, and geospatial services.',
+    notes: 'Legacy DSCC identifier retained. Regulation 16/2026 transfers mapping and municipal naming/doorplate functions to DSSCU from 2026-06-01. Current product rights and source-specific geometry remain unverified; no cadastral or personal data redistribution.',
   },
   'geoguide-macao': {
     id: 'geoguide-macao',
@@ -627,7 +641,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'geocoding',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Macao public map search and GIS service for local place, road, building, and public-data lookup.',
+    notes: 'Macao legacy public map discovery; current HTTPS acquisition failed. Viewer status does not establish a working public API, rights-cleared building/doorplate data or postal geometry.',
   },
   'osm-macau': {
     id: 'osm-macau',
@@ -3783,7 +3797,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   LK: ["slpost","survey-department-sri-lanka","data-gov-lk","slpost-postcode-search","sri-lanka-nsdi-boundaries","sri-lanka-nsdi-data-classification","sri-lanka-nsdi-boundary-service","sri-lanka-data-protection","osm-sri-lanka"],
   MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
   MN: ['crc-mongolia-postcode-2025', 'crc-mongolia-postal-directory-2024', 'zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],
-  MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
+  MO: ['dscc-macao', 'geoguide-macao', 'osm-macau', 'ctt-macao-no-postcode', 'dsscu-macao', 'macao-dsscu-regulation-2026', 'macao-mapping-reproduction-2026', 'macao-data-portal', 'macao-data-terms', 'dscc-macao-migration-notice'],
   MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
   MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],
   NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],

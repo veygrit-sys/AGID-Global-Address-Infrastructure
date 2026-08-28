@@ -366,7 +366,7 @@ test('Macau address metadata exposes DSCC, Macao GeoGuide, and OSM Macau sources
     assert.match(source.url, /^https?:\/\//, `${sourceId} should expose a testable URL`);
   }
 
-  assert.equal(format.postalCode?.source, 'CTT / DSCC / Macao GeoGuide (No postal codes used)');
+  assert.equal(format.postalCode?.source, 'CTT no-postcode policy / DSSCU from 2026-06-01 / legacy DSCC and Macao GeoGuide (No postal codes used; 000000 is only a form placeholder)');
 });
 
 test('Mongolia address metadata separates five-digit zones, nine-digit building codes, government grids, and AGID', () => {
