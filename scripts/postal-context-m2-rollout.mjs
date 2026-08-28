@@ -44,6 +44,7 @@ export function validateLedger(ledger) {
     if (!REGION_ORDER.includes(country.region) || !STATES.has(country.status)) throw new Error('invalid-country-state');
     if (country.status === 'in_progress') active++;
     if (country.status === 'blocked' && (!country.blocker?.reason || !instant(country.blocker.retryAfter))) throw new Error(`invalid-blocker:${country.countryCode}`);
+    if (country.status === 'blocked' && country.blocker.requiresExplicitApproval !== undefined && typeof country.blocker.requiresExplicitApproval !== 'boolean') throw new Error(`invalid-approval-gate:${country.countryCode}`);
     if (country.status === 'm2_verified') {
       const errors = promotionErrors(country);
       if (errors.length) throw new Error(`unproven-m2:${country.countryCode}:${errors.join(',')}`);
@@ -60,7 +61,7 @@ export function nextCountry(ledger, now = new Date().toISOString()) {
   // Finish the current country; then visit all untouched countries before retrying blockers.
   return countries.find(c => c.status === 'in_progress')
     ?? countries.find(c => c.status === 'pending')
-    ?? countries.filter(c => c.status === 'blocked' && Date.parse(c.blocker.retryAfter) <= Date.parse(now))
+    ?? countries.filter(c => c.status === 'blocked' && c.blocker.requiresExplicitApproval !== true && Date.parse(c.blocker.retryAfter) <= Date.parse(now))
       .sort((a, b) => Date.parse(a.blocker.retryAfter) - Date.parse(b.blocker.retryAfter) || compareCountries(a, b))[0]
     ?? null;
 }

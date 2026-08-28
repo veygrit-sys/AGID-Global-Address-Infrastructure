@@ -41,8 +41,11 @@ differences. Do not redefine M2 globally to make a country pass.
 
 Visit pending countries across all regions before retrying due blockers.
 Never poll the same unavailable source on every hourly wakeup. Prefer a
-seven-day retry for unchanged source/licence blockers; do not retry permission
-failures without new authority. Do not stop the whole rollout because one
+seven-day retry for unchanged source/licence blockers. Mark permission blockers
+with `requiresExplicitApproval: true`; do not retry without new authority. They
+remain excluded from automatic retry even after `retryAfter`; that date is a
+review reminder, not permission. Explicit user approval can resume the country
+earlier by clearing the gate and setting `in_progress`. Do not stop the whole rollout because one
 country lacks an obtainable source. When all countries are either completed
 or waiting for future review, report the next review date without claiming
 completion. Pause the heartbeat only after every in-scope country has genuine
@@ -88,7 +91,7 @@ assignment file.
 The committed intake report contains counts, source/terms digests and validation
 results only. The source archive, source locality rows and normalized JSONL
 exist only in memory during this intake. No source snapshot or deployed pack
-has been published by this step, so Japan remains M1 / `in_progress`.
+had been published by that intake step; Japan remained M1 / `in_progress`.
 
 The next Japan step is now implemented: the [scoped real-source runtime](postal-context-japan-m2-runtime.md)
 builds a non-synthetic, digest-pinned Chiyoda pack and checks all 485 selected
@@ -102,6 +105,13 @@ source/rights evidence there, publish immutable artifacts, verify remote digests
 and replay before reviewing Japan's experimental M2 criterion. Do not repeat
 the same approval request or build merely because the heartbeat wakes up.
 Nationwide intake is not nationwide runtime, address or building coverage.
+
+The 2026-08-28 heartbeat found no new publication authority. Japan is now
+`blocked` / `M1_metadata`, with the previous intake/runtime evidence preserved.
+The seven-day review date does not grant permission or trigger a rebuild.
+No new source data was downloaded and no repository or public artifact was
+created during this hold review. The next run selects AE (United Arab Emirates)
+from pending Asia entries; no second country was started in this run.
 
 ## Git, privacy and authority boundaries
 

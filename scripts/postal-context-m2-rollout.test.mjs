@@ -47,3 +47,18 @@ test('inventory is deterministic, covers registered profiles, and does not promo
   assert.ok(result.countries.every(c => c.status === 'pending'));
   assert.deepEqual(inventory(process.cwd(), result), result);
 });
+
+test('an approval blocker never becomes authorized merely because its review date passes', () => {
+  const jp = { ...item('JP', 'asia', 'blocked'), blocker: { reason: 'needs explicit public repository approval', retryAfter: '2026-09-04T00:00:00Z', requiresExplicitApproval: true } };
+  assert.equal(nextCountry(ledger([jp]), '2026-09-05T00:00:00Z'), null);
+  assert.equal(nextCountry(ledger([jp]), '2030-01-01T00:00:00Z'), null);
+  assert.equal(nextCountry(ledger([jp, item('AE', 'asia')]), '2026-09-05T00:00:00Z').countryCode, 'AE');
+  const resumed = { ...jp, status: 'in_progress', blocker: null };
+  assert.equal(nextCountry(ledger([resumed, item('AE', 'asia')]), '2026-08-28T00:00:00Z').countryCode, 'JP');
+});
+test('approval flags fail closed on malformed values and do not disable ordinary due retries', () => {
+  const jp = { ...item('JP', 'asia', 'blocked'), blocker: { reason: 'temporary source outage', retryAfter: '2026-09-04T00:00:00Z', requiresExplicitApproval: false } };
+  assert.equal(nextCountry(ledger([jp]), '2026-09-05T00:00:00Z').countryCode, 'JP');
+  const invalid = { ...jp, blocker: { ...jp.blocker, requiresExplicitApproval: 'true' } };
+  assert.throws(() => validateLedger(ledger([invalid])), /invalid-approval-gate:JP/);
+});
