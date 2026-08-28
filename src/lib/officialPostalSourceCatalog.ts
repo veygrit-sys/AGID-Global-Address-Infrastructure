@@ -4210,6 +4210,409 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     id: 'ocha-afghanistan-admin-boundaries-2026', countryCodes: ['AF'], label: 'OCHA Afghanistan COD-AB 2026', authority: 'official-derived-open-source', trustTier: 'official-derived', availability: 'bulk-open-data', depth: 'geo-only', validationReadiness: 'metadata-only', url: 'https://data.humdata.org/dataset/cod-ab-afg', sourceNames: ['ocha afghanistan cod ab','afghanistan administrative boundaries agcho nsia'], openSourceIds: ['ocha-afghanistan-admin-boundaries-2026'], requiresCredential: false, notes: ['Version 03 administrative boundaries sourced from AGCHO and NSIA under CC BY 3.0 IGO.','The 401 humanitarian-use districts differ from 457 designated districts lacking boundaries; administrative P-codes never create postal assignment or geometry.'],
   },
   {
+    "id": "slpost",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka Post postcode explanation",
+    "authority": "postal-operator",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://slpost.gov.lk/si/information/postcodes/",
+    "sourceNames": [
+      "slpost",
+      "slpost",
+      "Sri Lanka Post",
+      "Sri Lanka Post Code Search"
+    ],
+    "openSourceIds": [
+      "slpost"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Five-digit postal sorting/delivery syntax, introduced in 1997; same-name places need context. Explanatory page, not a data edition or machine API.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "slpost-en",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka Post English postcode explanation",
+    "authority": "postal-operator",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://slpost.gov.lk/information/postcodes/",
+    "sourceNames": [
+      "slpost-en"
+    ],
+    "openSourceIds": [
+      "slpost"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "English operator explanation of five-digit syntax and ambiguous place names. Directory purchase mentioned, not initiated; historical price is not a current offer.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "slpost-postcode-search",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka Post public postcode search",
+    "authority": "postal-operator",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://slpost.gov.lk/postcode_new/",
+    "sourceNames": [
+      "slpost-postcode-search"
+    ],
+    "openSourceIds": [
+      "slpost-postcode-search"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Initial public HTML selectors, not a current editioned national assignment dataset or bulk reuse licence.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "survey-department-sri-lanka",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Survey Department of Sri Lanka",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "unknown",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://www.survey.gov.lk/",
+    "sourceNames": [
+      "survey-department-sri-lanka"
+    ],
+    "openSourceIds": [
+      "survey-department-sri-lanka"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Public retrieval unverified; failure is not proof of data absence.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "data-gov-lk",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka Open Data Portal",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "unknown",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://data.gov.lk/",
+    "sourceNames": [
+      "data-gov-lk"
+    ],
+    "openSourceIds": [
+      "data-gov-lk"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Public retrieval unverified; failure is not proof of data absence.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "sri-lanka-nsdi-boundaries",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI boundary reference",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://nsdi.gov.lk/boundaries",
+    "sourceNames": [
+      "sri-lanka-nsdi-boundaries"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundaries"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Boundary category and WMS discovery reference, not a postal boundary dataset or reuse licence.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "sri-lanka-nsdi-data-classification",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI data classification",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "legal-framework",
+    "sourceRole": "legal-framework-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://nsdi.gov.lk/what-are-classifications-data",
+    "sourceNames": [
+      "sri-lanka-nsdi-data-classification"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-data-classification"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Shareable/non-shareable classification and metadata/access-policy requirements; not blanket permission. Site footer reserves rights.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "sri-lanka-nsdi-boundary-service",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI administrative boundary metadata",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "public-api",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer?f=pjson",
+    "sourceNames": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Administrative metadata only; no features, postal relation, civic/building proof or redistribution rights verified.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "nsdi-admin-3",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI Gram Niladhari Divisions",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "public-api",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer/3?f=pjson",
+    "sourceNames": [
+      "nsdi-admin-3"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Administrative metadata only; no features, postal relation, civic/building proof or redistribution rights verified.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "nsdi-admin-4",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI Divisional Secretariat Boundary",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "public-api",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer/4?f=pjson",
+    "sourceNames": [
+      "nsdi-admin-4"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Administrative metadata only; no features, postal relation, civic/building proof or redistribution rights verified.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "nsdi-admin-5",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI District Boundary",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "public-api",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer/5?f=pjson",
+    "sourceNames": [
+      "nsdi-admin-5"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Administrative metadata only; no features, postal relation, civic/building proof or redistribution rights verified.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "nsdi-admin-6",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI Province Boundary",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "public-api",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer/6?f=pjson",
+    "sourceNames": [
+      "nsdi-admin-6"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Administrative metadata only; no features, postal relation, civic/building proof or redistribution rights verified.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "nsdi-admin-7",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI Country Boundary",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "public-api",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer/7?f=pjson",
+    "sourceNames": [
+      "nsdi-admin-7"
+    ],
+    "openSourceIds": [
+      "sri-lanka-nsdi-boundary-service"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Administrative metadata only; no features, postal relation, civic/building proof or redistribution rights verified.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "nsdi-survey-profile",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka NSDI Survey Department profile",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://www.nsdi.gov.lk/survey-department-sri-lanka",
+    "sourceNames": [
+      "nsdi-survey-profile"
+    ],
+    "openSourceIds": [
+      "survey-department-sri-lanka"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Agency survey, cadastral and mapping remit. Mentioned building/topographic products are not public civic/building relations or current coverage.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "data-policy-draft",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka national data sharing policy draft",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "unknown",
+    "depth": "legal-framework",
+    "sourceRole": "legal-framework-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://data.gov.lk/national-data-sharing-policy-draft",
+    "sourceNames": [
+      "data-policy-draft"
+    ],
+    "openSourceIds": [
+      "data-gov-lk"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Public retrieval unverified; failure is not proof of data absence.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
+    "id": "sri-lanka-data-protection",
+    "countryCodes": [
+      "LK"
+    ],
+    "label": "Sri Lanka Data Protection Authority",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "legal-framework",
+    "sourceRole": "legal-framework-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://www.dpa.gov.lk/index.php",
+    "sourceNames": [
+      "sri-lanka-data-protection"
+    ],
+    "openSourceIds": [
+      "sri-lanka-data-protection"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Authority references the 2022 Act and 2025 amendment. A homepage news date does not establish current commencement or legal applicability; no legal-status or licence clearance.",
+      "Reference metadata cannot provide postal validation authority. No private/customer/officer-contact/owner/title data is acquired."
+    ]
+  },
+  {
     id: 'libanpost', countryCodes: ['LB'], label: 'LibanPost official postal service', authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'metadata-only', url: 'https://www.libanpost.com/english/individuals', sourceNames: ['libanpost','lebanon post','lebanon postcode'], openSourceIds: ['libanpost'], requiresCredential: false, notes: ['Official postal and P.O. Box service reference; the reviewed page is not a current assignment dataset.','A source name or URL alone cannot prove a strong assignment; exact dated rights-cleared records are required, without inferred polygons, addresses, buildings or delivery entitlement.'],
   },
   {

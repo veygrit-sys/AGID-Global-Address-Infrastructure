@@ -135,6 +135,11 @@ export type AsiaOpenGeoSourceId =
   | 'laos-electronic-data-law'
   | 'osm-laos'
   | 'slpost'
+  | 'slpost-postcode-search'
+  | 'sri-lanka-nsdi-boundaries'
+  | 'sri-lanka-nsdi-data-classification'
+  | 'sri-lanka-nsdi-boundary-service'
+  | 'sri-lanka-data-protection'
   | 'survey-department-sri-lanka'
   | 'data-gov-lk'
   | 'osm-sri-lanka'
@@ -1602,32 +1607,77 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     id: 'osm-laos', name: 'OpenStreetMap Laos', url: 'https://wiki.openstreetmap.org/wiki/Laos', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
     notes: 'Laos OSM roads, places, names, POI, fallback address tags and buildings; never Lao Postal Service assignment, canonical postal geometry, exact legal civic address or delivery proof.',
   },
-  slpost: {
-    id: 'slpost',
-    name: 'Sri Lanka Post Code Search',
-    url: 'https://slpost.gov.lk/si/information/postcodes/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Sri Lanka Post postcode search for locality validation.',
+  'slpost': {
+    "id": "slpost",
+    "name": "Sri Lanka Post postcode explanation",
+    "url": "https://slpost.gov.lk/si/information/postcodes/",
+    "kind": "postal-code",
+    "coverage": "country",
+    "usage": "reference",
+    "notes": "Five-digit operator syntax and sorting explanation, not a machine API or current rights-cleared assignment release. Same-name places require source identity; do not infer geometry or civic/building relations."
   },
   'survey-department-sri-lanka': {
-    id: 'survey-department-sri-lanka',
-    name: 'Survey Department of Sri Lanka',
-    url: 'https://www.survey.gov.lk/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Sri Lanka official survey department for national maps, topographic data, and authoritative geospatial reference.',
+    "id": "survey-department-sri-lanka",
+    "name": "Survey Department of Sri Lanka",
+    "url": "https://www.survey.gov.lk/",
+    "kind": "admin-boundary",
+    "coverage": "country",
+    "usage": "reference",
+    "notes": "National survey, cadastral and mapping reference. Root retrieval returned 406; NSDI agency profile is not exact geometry rights, postal assignment or a civic/building dataset."
   },
   'data-gov-lk': {
-    id: 'data-gov-lk',
-    name: 'Sri Lanka Open Data Portal',
-    url: 'https://data.gov.lk/',
-    kind: 'gazetteer',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Government open-data portal for Sri Lanka datasets and validation references.',
+    "id": "data-gov-lk",
+    "name": "Sri Lanka Open Data Portal",
+    "url": "https://data.gov.lk/",
+    "kind": "gazetteer",
+    "coverage": "country",
+    "usage": "reference",
+    "notes": "Discovery reference only; live portal and draft policy retrieval unverified. A portal or draft does not grant per-dataset reuse rights."
+  },
+  'slpost-postcode-search': {
+    "id": "slpost-postcode-search",
+    "name": "Sri Lanka Post public postcode search",
+    "url": "https://slpost.gov.lk/postcode_new/",
+    "kind": "postal-code",
+    "notes": "Public initial HTML options only; not a machine API, current national assignment release or bulk reuse permission. Preserve leading zeros, bind by form name and never infer postal areas, civic numbers or buildings.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-nsdi-boundaries': {
+    "id": "sri-lanka-nsdi-boundaries",
+    "name": "Sri Lanka NSDI boundary reference",
+    "url": "https://nsdi.gov.lk/boundaries",
+    "kind": "admin-boundary",
+    "notes": "Administrative boundary discovery only. No postal crosswalk, exact geometry rights or real features verified.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-nsdi-data-classification': {
+    "id": "sri-lanka-nsdi-data-classification",
+    "name": "Sri Lanka NSDI data classification",
+    "url": "https://nsdi.gov.lk/what-are-classifications-data",
+    "kind": "standard",
+    "notes": "Shareable/non-shareable classification and access policy context; not blanket redistribution permission.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-nsdi-boundary-service': {
+    "id": "sri-lanka-nsdi-boundary-service",
+    "name": "Sri Lanka NSDI administrative boundary metadata",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer?f=pjson",
+    "kind": "admin-boundary",
+    "notes": "Administrative layer schemas only; GN/DS/census codes are not postcodes. GN schema includes officer name/phone: no feature or private-record queries; blank copyright grants no licence.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-data-protection': {
+    "id": "sri-lanka-data-protection",
+    "name": "Sri Lanka Data Protection Authority",
+    "url": "https://www.dpa.gov.lk/index.php",
+    "kind": "standard",
+    "notes": "Legal-review reference for 2022 Act and 2025 amendment; current commencement/applicability unverified. No licence or private-record permission.",
+    "coverage": "country",
+    "usage": "reference"
   },
   'osm-sri-lanka': {
     id: 'osm-sri-lanka',
@@ -3726,7 +3776,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   KH: ['cambodia-post', 'mptc-cambodia-prakas-77-2025', 'upu-cambodia-addressing-2018', 'ncdd-cambodia-gazetteer', 'mlmupc-cambodia-cadastral-services', 'mlmupc-cambodia-building-services', 'odc-cambodia-postal-codes', 'osm-cambodia'],
   KZ: ["post-kz","qazpost-open-api","upu-kazakhstan-addressing-2025","kazakhstan-postal-index-rules-2026","kazakhstan-post-law","kazakhstan-addressing-rules-2026","kazakhstan-address-register","kazakhstan-nsdi","kazakhstan-nsdi-use-rules-2023","kazakhstan-public-cadastral-map","kazakhstan-real-estate-rights-register","osm-kazakhstan"],
   LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
-  LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
+  LK: ["slpost","survey-department-sri-lanka","data-gov-lk","slpost-postcode-search","sri-lanka-nsdi-boundaries","sri-lanka-nsdi-data-classification","sri-lanka-nsdi-boundary-service","sri-lanka-data-protection","osm-sri-lanka"],
   MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
   MN: ['zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],

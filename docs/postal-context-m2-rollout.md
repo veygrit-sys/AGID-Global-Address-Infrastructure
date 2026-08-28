@@ -683,3 +683,11 @@ in-scope changes. Verify GitHub's exact branch SHA before removing that run's
 temporary worktree, data and local branch. Never delete unpublished work or
 existing user changes. Each report names the country, actual maturity,
 remaining blockers, tests, branch, commit URL and next country/action.
+
+## Sri Lanka (LK): M1 contract, M2 blocked — 2026-08-28
+
+LK had no country contract or M2 definition at base `5cbcaf70ee94dfd5b854ac99f8b30735cde17ab8`. Added its own assignment/independent-geometry criterion, preserving all other countries. Thirteen official reference bodies/sections were verified and three retrieval failures retained. Each initial postal HTML selector has 2,111 candidates including 5 leading-zero codes; these are not national coverage or current licensed assignments. Five NSDI administrative schemas are not postal polygons. GN officer-contact fields are detected without requesting any feature values.
+
+[LK review](postal-context-sri-lanka-m2.md) and [source receipt](../reports/postal-context-m2/lk-source-review-2026-08-28.json) record provenance, hashes, quality limits and privacy/publication gates. LK remains disabled in the generic Postal Context runtime. No source rows, real geometry, civic/building relations, immutable data artifact or actual LK runtime verification exist. Source metadata cannot upgrade address trust. The legacy lookup-URL field now points to the public HTML search (not a machine API); five-digit syntax, languages and user address fields remain intact.
+
+Revisit public sources only after all pending countries and `2026-09-04T18:49:33.683Z`; no restricted data, purchase, contract, new publishing destination or extra charge is authorized. Engineering/synthetic tests do not count as M2.
