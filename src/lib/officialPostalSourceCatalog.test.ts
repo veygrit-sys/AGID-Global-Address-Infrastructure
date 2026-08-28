@@ -910,8 +910,10 @@ test('Korea catalog separates postcode semantics, official districts, address id
     countryCode: 'KR',
     source: 'Korea Post Postcode API',
   });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  // A source name alone is catalog metadata, not a verified API row.
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
+  assert.equal(sources.get('korea-post-postcode-api')?.trustTier, 'authoritative');
 });
 
 test('Saudi catalog separates National Address semantics, API identifiers, geospatial themes, and cadastre', () => {

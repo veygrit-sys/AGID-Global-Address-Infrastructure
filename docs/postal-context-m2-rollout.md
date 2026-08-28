@@ -540,6 +540,31 @@ Public-only retry is due after all pending countries and 2026-09-04T15:34:04.282
 Earlier country entries are unchanged. Next pending country: **KR (South Korea)**;
 no second country was started.
 
+## South Korea review - 2026-08-28
+
+KR remains **M1_metadata / blocked**. The original assignment-plus-National-
+Basic-District M2 definition and ten hard blockers are preserved. The
+[KR review](postal-context-korea-m2.md) verifies seven primary reference bodies
+and two matching downloads of the public 2026-08-11 PO-box reference ZIP.
+It has 996 observations, 432 codes and 21 excess exact duplicate observations.
+Leading zeros and empty fields are preserved; blank range endpoints are not
+filled with zero. HWP documentation is hashed, not interpreted. These are
+non-area PO-box observations, not validated national assignments or geometry.
+
+The electronic-map catalog lists KOGL Type 1 and explicitly requires application,
+identity confirmation and purpose review. Its PPTX/one catalog row is not an
+obtained current district vector. Two guidance network failures do not prove
+data absence. Six KR source registrations now explicitly remain metadata-only;
+catalog identifiers cannot alone assert strong address/building validation.
+
+Current licensed assignment and official district data, full real-data validation,
+approved immutable publication and actual AGID loader/API evidence are missing.
+No raw source/civic/building records, new destination, private query, contract,
+paid operation or deployment was published/performed. Public-only retry follows
+all pending countries and 2026-09-04T16:07:01.229Z.
+Earlier country entries are unchanged. Next pending country: **KW (Kuwait)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

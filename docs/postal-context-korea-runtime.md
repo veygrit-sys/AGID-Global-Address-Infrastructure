@@ -43,3 +43,10 @@ AGID_POSTAL_CONTEXT_KR_LKG_DESCRIPTOR_DIGEST
 ```
 
 The synthetic test pack exercises postcode normalization, opt-in postal geometry, coordinate resolution, bbox intersection, explicit Juso-style address-to-building linkage and AGID output. Synthetic evidence is never promotion-eligible.
+
+## 2026-08-28 source review
+
+The [KR M2 review](postal-context-korea-m2.md) records a current public PO-box
+reference ZIP, aggregate quality checks and exact digests, separately from the
+missing current National Basic District geometry. M1 and the original M2
+criterion remain unchanged. Catalog metadata is not strong runtime evidence.
