@@ -443,6 +443,30 @@ data artifacts and real AGID loader/API verification remain missing. No paid
 operation or new destination was used. Earlier country entries are unchanged.
 Next pending country: **JO (Jordan)**; no second country was started.
 
+## Jordan review - 2026-08-28
+
+JO remains **M1_metadata / blocked**, with its missing M2 stage individually
+defined as **M2_licensed_assignment**. All seven existing hard blockers remain.
+The [JO review](postal-context-jordan-m2.md) records one unique dated CSV behind
+two resource IDs and a repeat: 240 office rows, 30 non-five-digit cells (12.5%),
+zero duplicate governorate/name/code candidate keys and one repeated valid-code
+occurrence. Office rows are not current assignments, polygons or buildings.
+
+The Arabic licence v1.0 and visibly unofficial English translation were hashed
+and reviewed. Conditional reuse is not categorically forbidden, but the item
+licence URL points to Instagram and portal terms pages are placeholders. The
+UPU 09/2004 sheet remains syntax-only. Policy sections 104/131 call for street
+addressing; the unsupported carrier-route-sorting attribution was corrected.
+Operator access returned 403; bounded publisher discovery returned 400, not
+an empty national inventory. No private rows or new destination were published.
+
+Current full assignments, exact rights/validity, fixed data publication approval
+and actual AGID loader/API evidence remain unresolved. Public references may
+be rechecked after all pending countries and 2026-09-04T14:11:12.752Z.
+No restricted access or publication is authorized by that date. Earlier country
+entries are unchanged. Next pending country: **KG (Kyrgyzstan)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

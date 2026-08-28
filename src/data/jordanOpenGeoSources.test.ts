@@ -12,7 +12,7 @@ test('Jordan registry separates postcode, dated syntax, policy, offices, licence
   const ids=getAsiaOpenSourceIds('JO'); for(const id of EXPECTED){assert.ok(ids.includes(id));assert.equal(ASIA_OPEN_GEO_SOURCES[id].id,id);assert.equal(ASIA_OPEN_GEO_SOURCES[id].url.startsWith('http'),true);}
   assert.match(ASIA_OPEN_GEO_SOURCES.jordanpost.notes,/five-digit routing assignment.*not a canonical polygon.*civic address.*building.*licence/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['upu-jordan-addressing-2004'].notes,/September 2004.*five digits.*not current assignment rows.*geometry/i);
-  assert.match(ASIA_OPEN_GEO_SOURCES['modee-jordan-postal-policy-2025'].notes,/incomplete physical addressing.*carrier-route sorting.*not.*postcode polygon.*building/i);
+  assert.match(ASIA_OPEN_GEO_SOURCES['modee-jordan-postal-policy-2025'].notes,/completion of physical street\/building addressing.*not supported.*not.*postcode polygon.*building/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['jordan-post-offices-open-data-2023'].notes,/post-office rows.*not postal polygons.*civic-address.*buildings.*exact artifact.*digest/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['jordan-open-government-data-license-v1'].notes,/exact artifact carries the license.*Arabic prevails/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['rjgc-jordan-eservices'].notes,/account.*application.*payment.*product-specific.*not.*postal relation/i);
@@ -24,12 +24,12 @@ test('Jordan registry separates postcode, dated syntax, policy, offices, licence
 
 test('Jordan official catalog exposes matching authority and access boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('JO').map(source=>[source.id,source]));
-  assert.equal(sources.get('jordanpost')?.authority,'postal-operator'); assert.equal(sources.get('jordanpost')?.validationReadiness,'reference-eligible');
+  assert.equal(sources.get('jordanpost')?.authority,'postal-operator'); assert.equal(sources.get('jordanpost')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('upu-jordan-addressing-2004')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('modee-jordan-postal-policy-2025')?.depth,'legal-framework');
   assert.equal(sources.get('jordan-post-offices-open-data-2023')?.availability,'bulk-open-data'); assert.equal(sources.get('jordan-open-government-data-license-v1')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('rjgc-jordan')?.requiresCredential,true); assert.equal(sources.get('rjgc-gam-building-mou')?.availability,'commercial-or-restricted');
   assert.equal(sources.get('dls-jordan-village-codes-2022')?.depth,'locality'); assert.equal(sources.get('gam-jordan-streets-2019')?.depth,'street'); assert.equal(sources.get('jordan-digital-mailbox-pilot-2026')?.validationReadiness,'metadata-only');
-  const classification=classifyPostalSourceTrust({countryCode:'JO',source:'Jordan Post'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'JO',source:'Jordan Post'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak'); assert.equal(sources.get('jordan-post-offices-open-data-2023')?.validationReadiness,'metadata-only');
 });
 
 test('Jordan address metadata encodes five digits, routing hierarchy, non-area objects, explicit buildings, and AGID separation',()=>{
