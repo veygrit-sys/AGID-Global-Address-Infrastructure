@@ -20,11 +20,11 @@ test('Afghanistan registry separates operator, live map, UPU, policy, administra
 
 test('Afghanistan official catalog exposes matching authority, transition, map, and licence boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('AF').map(source=>[source.id,source]));
-  assert.equal(sources.get('afghan-post')?.authority,'postal-operator'); assert.equal(sources.get('afghan-post')?.validationReadiness,'reference-eligible');
-  assert.equal(sources.get('afghan-postal-code-system')?.depth,'address'); assert.equal(sources.get('afghan-postal-code-system')?.validationReadiness,'reference-eligible');
+  assert.equal(sources.get('afghan-post')?.authority,'postal-operator'); assert.equal(sources.get('afghan-post')?.validationReadiness,'metadata-only');
+  assert.equal(sources.get('afghan-postal-code-system')?.depth,'address'); assert.equal(sources.get('afghan-postal-code-system')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('upu-afghanistan-addressing-2025')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('afghan-post-policy')?.depth,'legal-framework');
   assert.equal(sources.get('ocha-afghanistan-admin-boundaries-2026')?.availability,'bulk-open-data'); assert.equal(sources.get('ocha-afghanistan-admin-boundaries-2026')?.trustTier,'official-derived');
-  const classification=classifyPostalSourceTrust({countryCode:'AF',source:'Afghan Post'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'AF',source:'Afghan Post'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak');
 });
 
 test('Afghanistan address metadata encodes current six digits, postal geometry gates, explicit buildings, and AGID separation',()=>{

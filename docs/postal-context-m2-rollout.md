@@ -134,6 +134,24 @@ authentication, contractual acceptance or public destination still needs
 explicit authority. Japan's approval hold is unchanged. The next country is
 **AF (Afghanistan)**; no second country was started in this AE run.
 
+## Afghanistan: live area preflight
+
+The 2026-08-28 AF run formalized the existing country M2 requirements as
+a machine-readable stage without relaxing rights, temporal, geometry or
+privacy conditions. The [source review](postal-context-afghanistan-m2.md)
+verified one public postal-area response with a matching six-digit code:
+MultiPolygon, one polygon/ring and 126 positions. No raw response was kept.
+
+The report records three verified reference documents and three direct
+operator-site access failures. A live polygon and a document hash do not
+replace licensed, retained, editioned source data. AF remains M1 / blocked.
+Full CRS/topology, real-data AGID checks and immutable publication are
+still required. Source webpages are no longer eligible validation datasets.
+
+Next read-only review is 2026-09-04 after all pending countries. JP and AE
+holds are unchanged. The next pending country is AM; no second country
+was started during this AF run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

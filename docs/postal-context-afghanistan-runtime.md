@@ -47,3 +47,11 @@ Geometry is returned only when explicitly requested. Every result keeps assignme
 ## Promotion
 
 M2 or later requires exact rights-reviewed Afghan Post artifacts, immutable digests, current assignment validity, independently licensed geometry, CRS/topology checks, temporal coverage, privacy review and reproducible provenance. Real postcode rows, addresses and production geometry belong in the independent `agid-postal-af` data repository, not this AGID application repository.
+
+## M2 rollout review
+
+The [2026-08-28 preflight](postal-context-afghanistan-m2.md) formalizes the
+M2 stage and verifies one live area response without retaining its body.
+Rights, source edition/validity, full geometry checks, real AGID validation
+and immutable publication remain blocked. Existing runtime examples are still
+synthetic; the source-page catalog is metadata-only, not assignment evidence.
