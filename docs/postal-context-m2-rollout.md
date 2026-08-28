@@ -292,6 +292,24 @@ immutable artifacts and real AGID verification remain unresolved. Recheck
 2026-09-04 after pending countries. All prior country entries are unchanged.
 Next pending country: **GE (Georgia)**; no second country was started.
 
+## Georgia review — 2026-08-28
+
+GE remains M1 / blocked; its existing M2_experimental definition is unchanged.
+The old postcode URL serves the homepage. The current public form returned 64
+cards, including 50 initially hidden cards, across three display groups and 11
+distinct codes; 46 code strings begin with zero. No rows or geometry are retained.
+
+Four references and the NSDI terms were verified. The catalogue has 159 unique
+metadata IDs across 217 theme occurrences, not 217 separate datasets. Address
+Layer (92) and Named Streets (35) declare CC BY-NC-ND 4.0; Registered Building
+(80) declares CC BY-NC 4.0. These conditions are present and differ, not an
+unqualified open licence. See [GE review](postal-context-georgia-m2.md).
+
+A current permitted scoped postal snapshot, exact planned-use rights, immutable
+publication and real AGID validation remain unresolved. Recheck 2026-09-04 after
+the pending pass. Earlier countries are unchanged. Next is **HK (Hong Kong)**;
+no second country was started in this run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

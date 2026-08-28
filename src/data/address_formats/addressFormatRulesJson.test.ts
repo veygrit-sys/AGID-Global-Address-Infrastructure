@@ -1483,7 +1483,7 @@ test('Caucasus address JSON files expose addressRules metadata and postal data s
   assert.equal(loadFormat('AZ').postalCode?.regex, '^AZ\\d{4}$');
   assert.match(loadFormat('AZ').postalCode?.source ?? '', /Azərpoçt.*Address Register.*cadastre/i);
   assert.deepEqual(loadRules('AZ').regionalHierarchy, ['regionOrAutonomousRepublic', 'districtOrCity', 'locality', 'street', 'premise']);
-  assert.match(loadFormat('GE').postalCode?.api ?? '', /gpost\.ge.*zipcodes/i);
+  assert.equal(loadFormat('GE').postalCode?.api, 'https://www.gpost.ge/help/postal-codes');
   assert.match(loadFormat('GE').postalCode?.source ?? '', /Georgian Post.*NAPR Address Registry.*NSDI/i);
   assert.deepEqual(loadRules('GE').regionalHierarchy, [
     'regionOrAutonomousRepublic',

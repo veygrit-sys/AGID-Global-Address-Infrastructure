@@ -62,7 +62,7 @@ test('Georgia address metadata uses official sources and a building-aware hierar
 
   assert.equal(profile.postalCode.format, 'NNNN');
   assert.equal(profile.postalCode.regex, '^\\d{4}$');
-  assert.match(profile.postalCode.api, /gpost\.ge.*zipcodes/i);
+  assert.equal(profile.postalCode.api, 'https://www.gpost.ge/help/postal-codes');
   assert.match(profile.postalCode.source, /Georgian Post.*NAPR Address Registry.*NSDI/i);
   assert.deepEqual(profile.addressRules.regionalHierarchy, [
     'regionOrAutonomousRepublic',

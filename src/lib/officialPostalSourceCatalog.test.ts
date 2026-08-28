@@ -345,8 +345,9 @@ test('separates Georgia operator, address, building, parcel, administrative, and
     countryCode: 'GE',
     source: 'Georgian Post Postcode Finder',
   });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
+  assert.equal(byId.get('georgian-post-postcode-finder')?.validationReadiness, 'metadata-only');
   const addressOnly = classifyPostalSourceTrust({
     countryCode: 'GE',
     source: 'NAPR Georgia Address Registry',

@@ -3341,7 +3341,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'georgian-post-postcode-finder': {
     id: 'georgian-post-postcode-finder',
     name: 'Georgian Post Postcode Finder',
-    url: 'https://www.gpost.ge/?group=3&letter=I&site-lang=en&site-path=help%2Fzipcodes%2F',
+    url: 'https://www.gpost.ge/help/postal-codes',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',

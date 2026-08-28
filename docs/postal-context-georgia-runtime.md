@@ -74,3 +74,10 @@ NSDI features, real addresses, personal data or production geometry. Georgia
 remains `unconfigured` until a separately released M2+ descriptor passes
 integrity, access-licence, freshness, topology, ambiguity, privacy, coverage,
 territorial-policy and correction gates.
+
+The [2026-08-28 M2 source review](postal-context-georgia-m2.md) preserves the
+experimental target. The current public postcode form replaces the legacy
+homepage URL. Query receipts remain metadata-only until exact rights and
+release evidence are cleared. NSDI address/street resources declare NC-ND
+conditions; registered buildings declare NC conditions. These distinct rights
+never grant postal assignment, exact building identity or publication approval.
