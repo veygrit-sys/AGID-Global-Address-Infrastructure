@@ -759,3 +759,16 @@ Four reference bodies were byte-verified; two PSGC requests returned 403 without
 [Country review](postal-context-philippines-m2.md), [source report](../reports/postal-context-m2/ph-source-review-2026-08-28.json) and [engineering checks](../reports/postal-context-m2/ph-checks-2026-08-28.json) provide evidence and reproduction. No approved immutable data artifact or real-data AGID loader/API proof exists. Retry public review after `2026-09-04T22:27:15.802Z` and the pending-country pass. Restricted sources, contracts, new publication destinations and additional costs need separate approval.
 
 After PH: 252 profiles, 217 pending, 35 blocked, 0 in progress, 0 evidence-verified M2. Next: **PK**. Other 251 entries are unchanged; no second country started.
+
+## 2026-08-28 PK: typed offices and amendment discrepancies
+
+- Base: `aa740c2183408587071b51d19c6efe7f247a4a0c`; latest GitHub ledger and preceding PH reports were byte/hash verified.
+- M2_assignment unchanged; PK is blocked, not data-complete. HTML: 2,298 delivery and 832 non-delivery rows, with 5 and 11 shared-code groups respectively. Fifteen repeated headers are not records.
+- Nine official observations were captured and hashed. A 2024-named PDF contains a 2022 notice; five codes in the 2023 notice were absent from the HTML. No arithmetic branch generation, truncation, deduplication or office-class inference.
+- Current completeness, full amendment effectivity, exact reuse permission, a pinned public data release and real AGID verification remain missing. No production geometry or buildings inferred.
+- Sources: `reports/postal-context-m2/pk-source-review-2026-08-28.json`; engineering: `reports/postal-context-m2/pk-checks-2026-08-28.json`; detail: [Pakistan M2 review](postal-context-pakistan-m2.md).
+- Retry after `2026-09-04T22:55:37.259Z` and all pending countries. Next country is selected by the status command; no second country worked in this run.
+
+Validation: 2,083 passing JavaScript executions across overlapping groups, plus 11 Python tests; typecheck and post-metadata 31-test recheck passed. Three pre-existing baseline failures (KM duplicate source IDs, missing EH/HM YAML, BY YAML structure) remain unchanged and are not included in the green count.
+
+After PK: 252 profiles, 216 pending, 36 blocked, 0 in progress, 0 evidence-verified M2. Next: **PS**.

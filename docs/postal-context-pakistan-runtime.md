@@ -31,3 +31,9 @@ AGID_POSTAL_CONTEXT_PK_LKG_DESCRIPTOR_DIGEST
 ```
 
 The standard endpoints accept `countryCode=PK` or `/api/postal/PK/{postcode}`. Geometry remains opt-in and preserves official, derived and non-spatial evidence classes.
+
+## M2 audit
+
+The 2026-08-28 source audit remains blocked. Typed-office HTML counts, PDF/notice dates,
+shared-code exceptions, missing amendment reconciliation and rights gates are documented in
+[the Pakistan M2 review](postal-context-pakistan-m2.md). No production descriptor is activated.
