@@ -492,6 +492,31 @@ published. Public references may be reviewed after all pending countries and
 approval. Earlier entries are unchanged. Next pending country: **KH (Cambodia)**;
 no second country was started.
 
+## Cambodia review - 2026-08-28
+
+KH remains **M1_metadata / blocked**. The missing M2 name now preserves the
+original licensed geometry, CRS/topology, administrative/civic-building and
+privacy/licence requirements; all nine blockers remain unchanged. The
+[KH review](postal-context-cambodia-m2.md) profiles all six CSV resources as
+three byte-identical language pairs: 1,887 active source observations.
+District tables have 791 blank padding records and one duplicate postal code.
+A transcription conflict is confirmed against primary Prakas physical page 26;
+other administrative/postal differences, including 38 commune-to-district
+prefix mismatches, remain diagnostics. No source value is automatically fixed.
+
+Actual bytes, SHA-256, CKAN version/dates and repeat checks are pinned. Three
+publisher size fields are stale. Prakas has 59 image-only pages; selected
+full-page review is not full-row reconciliation. The UPU sheet was recovered
+and visually verified as 11/2018; it remains a dated format reference only.
+
+Full primary reconciliation, exact rights (including the ODC commercial-scope
+and CC-grant ambiguity), independently licensed geometry, publication approval
+and actual AGID pack/loader/API evidence remain missing. No raw dataset,
+geometry, civic/building link, new destination or paid service was published.
+Public reference retry is due after all pending countries and 2026-09-04T15:05:07.471Z.
+Earlier country entries are unchanged. Next pending country: **KP**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

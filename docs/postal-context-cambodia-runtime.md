@@ -27,3 +27,12 @@ AGID is an independent spatial index connected only by a versioned crosswalk. AG
 ## Promotion
 
 M2 or later requires exact current typed Prakas artifacts or verified transformations, immutable digests, explicit validity, independently licensed point/area geometry, CRS and topology checks, administrative crosswalk review, civic-address and building-link review, privacy and licence review, and reproducible provenance. Real rows, addresses and production geometry belong in the independent agid-postal-kh data repository, not this AGID application repository.
+
+## M2 source audit
+
+The [2026-08-28 source audit](postal-context-cambodia-m2.md) names the existing
+M2 geometry/crosswalk/privacy contract without relaxing any hard blocker.
+The full transformed tables remain source observations, not a current validated
+release: one district transcription conflict is confirmed against Prakas page 26.
+Cambodia Post and the MPTC source remain authoritative in origin but are
+metadata-only for the runtime trust gate until a verified release is loaded.
