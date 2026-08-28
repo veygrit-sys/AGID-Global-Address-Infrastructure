@@ -3454,16 +3454,82 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'makani-dubai',
     countryCodes: ['AE'],
-    label: 'Dubai Makani / UAE official geodata',
+    label: 'Dubai Municipality Makani entrance-location reference',
     authority: 'government',
     trustTier: 'official',
-    availability: 'public-api',
+    availability: 'web-search',
     depth: 'geo-only',
-    url: 'https://www.makani.ae/',
-    sourceNames: ['makani', 'dubai makani'],
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
+    url: 'https://www.dm.gov.ae/open-data2/open-data-for-makani/',
+    sourceNames: ['makani', 'dubai makani', 'https://www.makani.ae/'],
     openSourceIds: ['makani-dubai-open-data'],
     requiresCredential: false,
-    notes: ['Use official geodata and local address systems where no normal postcode is used.'],
+    notes: ['Dubai entrance locators are not postal catchments or verified building identities. Public reference access does not establish a current API or UAE-wide coverage.', 'Reuse is conditional; AGID transformations and redistribution rights remain unreviewed.'],
+  },
+  {
+    id: 'emirates-post-po-box',
+    countryCodes: ['AE'],
+    label: 'Emirates Post branch-scoped PO Box service reference',
+    authority: 'postal-operator',
+    trustTier: 'official',
+    availability: 'web-search',
+    depth: 'address',
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
+    url: 'https://www.emiratespost.ae/faq',
+    sourceNames: ['emirates post po box', 'emirates post faq'],
+    openSourceIds: ['emirates-post-po-box'],
+    requiresCredential: false,
+    notes: ['Service documentation is not a current box-assignment dataset. PO Box identity requires its operator and branch; no subscriber or recipient records are public evidence.'],
+  },
+  {
+    id: 'dmt-onwani-addressing',
+    countryCodes: ['AE'],
+    label: 'Abu Dhabi DMT Onwani addressing reference',
+    authority: 'government',
+    trustTier: 'official',
+    availability: 'web-search',
+    depth: 'address',
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
+    url: 'https://pages.dmt.gov.ae/en/onwani',
+    sourceNames: ['dmt onwani', 'onwani addressing'],
+    openSourceIds: ['dmt-onwani-addressing'],
+    requiresCredential: false,
+    notes: ['Onwani includes postal codes within Abu Dhabi addressing. The public page is not an editioned assignment export, geometry or a licence to republish address data.'],
+  },
+  {
+    id: 'dmt-onwani-terms',
+    countryCodes: ['AE'],
+    label: 'Abu Dhabi DMT website terms and privacy notice',
+    authority: 'government',
+    trustTier: 'official',
+    availability: 'web-search',
+    depth: 'legal-framework',
+    sourceRole: 'legal-framework-only',
+    validationReadiness: 'metadata-only',
+    url: 'https://www.dmt.gov.ae/en/Terms-and-Conditions',
+    sourceNames: ['dmt onwani terms', 'dmt terms and conditions'],
+    openSourceIds: ['dmt-onwani-terms'],
+    requiresCredential: false,
+    notes: ['A general website privacy notice does not clear dataset-specific transformation and redistribution rights.'],
+  },
+  {
+    id: 'upu-uae-addressing-2014',
+    countryCodes: ['AE'],
+    label: 'UPU United Arab Emirates addressing guide (09/2014)',
+    authority: 'intergovernmental-postal-standard',
+    trustTier: 'official',
+    availability: 'web-search',
+    depth: 'address',
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/areEn.pdf',
+    sourceNames: ['upu uae addressing 2014'],
+    openSourceIds: ['upu-uae-addressing-2014'],
+    requiresCredential: false,
+    notes: ['Historical PO Box addressing reference, not a current dataset or evidence that municipal postal codes do not exist. Do not override current Onwani documentation.'],
   },
   {
     id: 'antarctic-research-stations',
@@ -8439,8 +8505,21 @@ export function classifyPostalSourceTrust(input: {
         sourceAppliesToCountry(profile, countryCode) && explicitSourceIds.has(normalizeTextKey(profile.id))
       ))
     : [];
-  const matches = sortProfiles(exactMatches.length
-    ? exactMatches
+  // A known document must not inherit validation authority from a broad alias
+  // such as "UPU". Explicit IDs still take precedence over URL/name evidence.
+  const exactUrlMatches = input.url ? OFFICIAL_POSTAL_SOURCE_CATALOG.filter(profile => (
+    sourceAppliesToCountry(profile, countryCode) && profile.url === clean(input.url)
+  )) : [];
+  const identityKeys = [input.source, ...(input.sourceIds ?? [])].map(normalizeTextKey).filter(Boolean);
+  const exactNameMatches = OFFICIAL_POSTAL_SOURCE_CATALOG.filter(profile => (
+    sourceAppliesToCountry(profile, countryCode) &&
+    [profile.id, profile.label, ...profile.sourceNames, ...profile.openSourceIds]
+      .some(value => identityKeys.includes(normalizeTextKey(value)))
+  ));
+  const preciseMatches = exactMatches.length ? exactMatches
+    : exactUrlMatches.length ? exactUrlMatches : exactNameMatches;
+  const matches = sortProfiles(preciseMatches.length
+    ? preciseMatches
     : OFFICIAL_POSTAL_SOURCE_CATALOG.filter(profile => (
         sourceAppliesToCountry(profile, countryCode) && profileMatchesText(profile, textKeys)
       )));
@@ -8451,7 +8530,7 @@ export function classifyPostalSourceTrust(input: {
       return {
         tier: 'weak',
         strength: 'weak',
-        reason: 'Source matches an official legal framework, not a postal-reference dataset; it cannot support postal lookup or address validation.',
+        reason: 'Source matches an official legal framework or context-only reference, not a postal-reference dataset; it cannot support postal lookup or address validation.',
         matches,
       };
     }

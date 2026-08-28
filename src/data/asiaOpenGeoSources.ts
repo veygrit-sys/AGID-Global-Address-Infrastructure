@@ -293,6 +293,10 @@ export type AsiaOpenGeoSourceId =
   | 'saudi-gis-national-platform'
   | 'osm-saudi-arabia'
   | 'makani-dubai-open-data'
+  | 'emirates-post-po-box'
+  | 'dmt-onwani-addressing'
+  | 'dmt-onwani-terms'
+  | 'upu-uae-addressing-2014'
   | 'osm-uae'
   | 'qatar-gis-geoportal'
   | 'osm-qatar'
@@ -411,7 +415,7 @@ export interface AsiaOpenGeoSource {
     | 'land-cover'
     | 'protected-area'
     | 'biodiversity';
-  coverage: 'global' | 'asia' | 'country';
+  coverage: 'global' | 'asia' | 'country' | 'subnational';
   usage: 'primary' | 'fallback' | 'validation' | 'reference';
   license?: string;
   notes: string;
@@ -2800,9 +2804,46 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     name: 'Dubai Makani Open Data',
     url: 'https://www.dm.gov.ae/open-data2/open-data-for-makani/',
     kind: 'geocoding',
+    coverage: 'subnational',
+    usage: 'reference',
+    license: 'Conditional Dubai Municipality Makani reuse policy; not unrestricted OSS',
+    notes: 'Dubai entrance-location reference only. No verified current API, national coverage, postal polygon or building-name relation; transformation and redistribution clearance is pending.',
+  },
+  'emirates-post-po-box': {
+    id: 'emirates-post-po-box',
+    name: 'Emirates Post branch-scoped PO Box service reference',
+    url: 'https://www.emiratespost.ae/faq',
+    kind: 'standard',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Dubai Makani smart geo-tagging open data for precise building/location addressing in the UAE.',
+    usage: 'reference',
+    notes: 'Service documentation is not a current box-assignment dataset. PO Box identity requires its operator and branch; no subscriber or recipient records are public evidence.',
+  },
+  'dmt-onwani-addressing': {
+    id: 'dmt-onwani-addressing',
+    name: 'Abu Dhabi DMT Onwani addressing reference',
+    url: 'https://pages.dmt.gov.ae/en/onwani',
+    kind: 'address',
+    coverage: 'subnational',
+    usage: 'reference',
+    notes: 'Onwani includes postal codes within Abu Dhabi addressing. The public page is not an editioned assignment export, geometry or a licence to republish address data.',
+  },
+  'dmt-onwani-terms': {
+    id: 'dmt-onwani-terms',
+    name: 'Abu Dhabi DMT website terms and privacy notice',
+    url: 'https://www.dmt.gov.ae/en/Terms-and-Conditions',
+    kind: 'standard',
+    coverage: 'subnational',
+    usage: 'reference',
+    notes: 'A general website privacy notice does not clear dataset-specific transformation and redistribution rights.',
+  },
+  'upu-uae-addressing-2014': {
+    id: 'upu-uae-addressing-2014',
+    name: 'UPU United Arab Emirates addressing guide (09/2014)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/areEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Historical PO Box addressing reference, not a current dataset or evidence that municipal postal codes do not exist. Do not override current Onwani documentation.',
   },
   'osm-uae': {
     id: 'osm-uae',
@@ -3620,7 +3661,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'big-indonesia-village-boundaries',
     'big-indonesia-rbi-buildings',
   ],
-  AE: ['makani-dubai-open-data', 'osm-uae'],
+  AE: ['makani-dubai-open-data', 'emirates-post-po-box', 'dmt-onwani-addressing', 'dmt-onwani-terms', 'upu-uae-addressing-2014', 'osm-uae'],
   BH: ['bahrain-post-services-directory', 'upu-bahrain-addressing', 'iga-bahrain-address-services', 'bahrain-open-data-terms', 'bahrain-open-data-geographic-locations', 'bahrain-municipal-geographic-explorer', 'slrb-bahrain-cadastre', 'bahrain-open-data', 'osm-bahrain'],
   IL: ['israel-post', 'israel-post-mail-guide-2020', 'israel-post-terms', 'upu-israel-addressing-2022', 'govmap-israel', 'population-authority-israel-street-list', 'cbs-israel-geography', 'data-gov-il', 'data-gov-il-terms-2025', 'osm-israel'],
   IN: [

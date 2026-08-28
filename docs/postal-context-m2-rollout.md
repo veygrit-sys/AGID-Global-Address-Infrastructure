@@ -113,6 +113,27 @@ No new source data was downloaded and no repository or public artifact was
 created during this hold review. The next run selects AE (United Arab Emirates)
 from pending Asia entries; no second country was started in this run.
 
+## United Arab Emirates: source contract review
+
+The 2026-08-28 AE run reviewed the previously missing country-specific M2
+definition. The [AE contract and review](postal-context-united-arab-emirates-m2.md)
+separate branch-scoped PO Boxes, Dubai entrance locators and Abu Dhabi Onwani
+postal codes. It is not correct to label all AE addressing as no-postcode.
+Reference metadata now stays outside postal-validation eligibility, including
+exact historical-document matches that must not inherit generic UPU authority.
+
+The [reference probe report](../reports/postal-context-m2/ae-reference-review-2026-08-28.json)
+contains document hashes and actual access failures, not source-data records.
+AE remains **M1_metadata / blocked**, with zero retained data snapshots or
+published artifacts. Its M2 criterion requires a rights-cleared real scoped
+dataset, reproducible transformation, immutable public evidence and
+namespace-aware AGID checks. No country-only AE runtime was enabled.
+
+Next read-only review is 2026-09-04, after the pending-country pass. Any new
+authentication, contractual acceptance or public destination still needs
+explicit authority. Japan's approval hold is unchanged. The next country is
+**AF (Afghanistan)**; no second country was started in this AE run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
