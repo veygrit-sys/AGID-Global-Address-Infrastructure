@@ -152,6 +152,22 @@ Next read-only review is 2026-09-04 after all pending countries. JP and AE
 holds are unchanged. The next pending country is AM; no second country
 was started during this AF run.
 
+## Armenia: office-directory and rights preflight
+
+The 2026-08-28 AM run retained its original experimental M2 definition.
+The [source and quality review](postal-context-armenia-m2.md) verified eight
+official references and inspected a pinned nine-page HayPost directory:
+428 rows, 427 distinct codes, one repeated-code group and four unresolved
+same-baseline extraction rows. No office address became a civic-address
+assertion and no polygon or building link was inferred.
+
+AM remains M1 / blocked. Current assignment edition, reuse rights, complete
+row identity, approved immutable artifacts and real-data AGID validation
+are still required. Reference URLs now stay outside validation eligibility.
+The next read-only review is 2026-09-04 after the pending-country pass.
+JP, AE and AF are unchanged; the next pending country is AZ.
+No second country was started in this AM run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

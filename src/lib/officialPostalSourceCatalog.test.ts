@@ -232,8 +232,8 @@ test('separates Armenia postal, address-register, building, and cadastral-map au
     countryCode: 'AM',
     source: 'HayPost postal index and post-office directory',
   });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
 });
 
 test('separates Andorra postal, government-address, topographic-building, and parish authority', () => {

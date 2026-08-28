@@ -65,3 +65,10 @@ sources and private registry fields stay outside the AGID repository.
 Environment slots use `AGID_POSTAL_CONTEXT_AM_*`. Until a separately attested
 M2+ descriptor exists, Armenia remains `unconfigured`; synthetic packs are tests
 only.
+
+## M2 audit
+
+The [2026-08-28 review](postal-context-armenia-m2.md) inspected the public
+post-office directory but did not establish a current reusable data release.
+AM remains M1 / blocked. Document-only sources are not validation-eligible.
+Office-address fields must never label all points sharing a postcode.

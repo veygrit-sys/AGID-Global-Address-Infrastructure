@@ -33,3 +33,9 @@ identity outside that policy.
 
 The fixtures are synthetic runtime conformance data and cannot promote a real
 release. See `repository-manifest.json` and `source-profile.json` for gates.
+
+## M2 preflight
+
+See [the review](../../../../docs/postal-context-armenia-m2.md) and
+m2-source-review.json for the 2026-08-28 directory/rights audit.
+AM remains M1 / blocked; no raw rows, real runtime pack or geometry are bundled.
