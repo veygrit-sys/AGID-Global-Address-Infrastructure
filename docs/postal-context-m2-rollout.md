@@ -772,3 +772,19 @@ After PH: 252 profiles, 217 pending, 35 blocked, 0 in progress, 0 evidence-verif
 Validation: 2,083 passing JavaScript executions across overlapping groups, plus 11 Python tests; typecheck and post-metadata 31-test recheck passed. Three pre-existing baseline failures (KM duplicate source IDs, missing EH/HM YAML, BY YAML structure) remain unchanged and are not included in the green count.
 
 After PK: 252 profiles, 216 pending, 36 blocked, 0 in progress, 0 evidence-verified M2. Next: **PS**.
+
+## 2026-08-28 PS: P3 areas, P7 input and incomplete polygon transfer
+
+PS had no manifest or explicit M2 definition. Primary MTDE/UPU evidence now defines `M2_official_p3_postal_areas`: a current complete rights-cleared P3 list/polygon release, immutable publication and real PS AGID verification. Source identity and territory are unchanged. P7 delivery points and exact civic-address/building relations are separate layers.
+
+The full 2021 P3 list has 755 locality relations / 603 codes / 16 district labels / 93 shared-code groups. No identical rows or malformed P3 strings; 534 blank coverage fields remain unknown. Six complete source bodies were SHA-256 verified. The catalog describes polygons, but both full CSV transfers failed (retry received 98,304 HTTP bytes versus the declared 11,291,622-byte body). Partial data and samples do not establish geometry or completeness. P7 was not downloaded.
+
+M2 remains blocked: complete polygons, current validity, exact publisher-selected CC BY version/attribution, CRS/topology, explicit joins and an approved immutable real-data AGID release are missing. The generic licence index is not a denial of reuse, nor proof of a particular version. TLS checks were never disabled.
+
+AGID PS metadata no longer declares postal codes unused; P3 and P7 syntax are accepted, with all eight P7 characters accommodated. English/Arabic component input was tested locally with synthetic codes; house/building fields stayed empty. No production PS Postal Context pack was enabled.
+
+[PS contract and reproduction](../data/postal_country_packs/ps/postal-context/README.md), [source report](../reports/postal-context-m2/ps-source-review-2026-08-28.json) and [engineering checks](../reports/postal-context-m2/ps-checks-2026-08-28.json). Recheck after `2026-09-04T23:32:29.552Z` and the pending-country first pass; new destinations, contracts or charges still need approval.
+
+After PS: 252 profiles, 215 pending, 37 blocked, 0 in progress, 0 evidence-verified M2; 117 manifests / 85 explicit M2 definitions. Next: **QA**. Other 251 ledger entries unchanged; no second country started.
+
+PS validation totals: 2,020 passing JavaScript executions across overlapping groups (503 unique test files), plus 12 Python tests. Typecheck, source-replay digest verification and diff audit passed. Three unchanged baseline failures remain: KM duplicated source IDs, absent EH/HM YAML, and malformed BY YAML. English/Arabic local component QA passed; full application, mobile layout and real PS spatial API remain untested.

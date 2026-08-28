@@ -142,6 +142,8 @@ function fixedValueFromRegex(regex: string | null) {
 
 function slotCountFromRegex(regex: string | null) {
   if (!regex) return undefined;
+  // PS: P3/P7 are alternatives, not concatenated digit groups; include the P.
+  if (regex === '^P(?:[0-9]{3}|[0-9]{7})$') return 8;
   let total = 0;
   for (const match of regex.matchAll(/(?:\\d|\[0-9\]|\[A-Z\]|\[A-Z0-9\])\{(\d+)(?:,\d+)?\}/gi)) {
     total += Number(match[1]);

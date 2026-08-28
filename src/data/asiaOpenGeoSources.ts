@@ -2814,7 +2814,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Palestine open-data postal-code dataset for P3/P7 postal zones and delivery validation.',
+    notes: 'MTDE catalog separates P3 postal-area lists/polygons and P7 delivery-point coordinates. Reviewed resources are dated 2021; current validity, exact CC BY version, CRS and complete geometry need verification. Samples, P7 suffixes and locality names do not establish exact house numbers or building relations.',
   },
   'palestine-post': {
     id: 'palestine-post',
@@ -2823,7 +2823,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Palestine postal-service reference for postal-code and delivery metadata.',
+    notes: 'Palestine Post / MTDE official postal reference. P3 postal areas and P7 final delivery points remain distinct; public lookup is not a complete current polygon artifact or building/address relation.',
   },
   'osm-palestine': {
     id: 'osm-palestine',

@@ -1,0 +1,113 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-ps",
+    "country_code": "PS",
+    "country_name": "Palestine",
+    "seed_location": "data/postal_country_packs/ps/postal-context",
+    "maturity": "M1_metadata",
+    "external_repository_created": false
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "publication_claim": "reviewed-metadata-and-source-aggregate-not-data-release"
+  },
+  "contract_files": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "m2-source-review.json",
+    "README.md"
+  ],
+  "postal_system": {
+    "p3": {
+      "format": "P plus three digits",
+      "authority": "postal area / zone",
+      "geometry": "official polygon or multipolygon only from a complete permitted source artifact"
+    },
+    "p7": {
+      "format": "P plus seven digits",
+      "authority": "final delivery point",
+      "geometry": "point when explicitly supplied; not polygon or building footprint"
+    },
+    "normalization_rule": "Retain literal P and all digits, including leading zeroes. Never pad a P3 area to P7, strip a P7 suffix to imply point containment, or accept placeholder XXXX as an assignment.",
+    "assignment_rule": "One P3 code can relate to multiple localities. Preserve row-level source identity and ambiguity; names are not stable unique keys.",
+    "geometry_rule": "The MTDE catalog lists official P3 boundaries. No complete polygon artifact was retrieved in this review; missing geometry remains none. Never generate an official area from town labels, P7 points, Voronoi, administrative overlap or AGID cells.",
+    "address_rule": "P7 final-point suffix is not a street number. Display a house number or building only from separate rights-cleared civic-address/building records with an explicit source identifier relation.",
+    "licence_rule": "Publisher cc-by metadata links a generic licence index with multiple versions. Do not silently assign CC-BY-4.0; confirm exact applicable version, attribution, artifact scope and derivative rights.",
+    "crs_rule": "Catalog says longitude/latitude order but does not establish a CRS/datum/accuracy statement. Do not assume EPSG:4326. Require reviewed CRS and topology before geometry output.",
+    "freshness_rule": "2021 resource and catalog timestamps are not current assignment validity. Keep retrieval time, source edition, valid-time and known-time separate.",
+    "territory_rule": "Keep repository PS / Palestine / فلسطين identity and exact source-stated coverage. Postal coverage and missing regions are not sovereignty or boundary determinations.",
+    "privacy_rule": "No recipients, customers, owners, residents, contacts, units, tracking or land-rights records in public artifacts."
+  },
+  "exception_classes": [
+    "p3_area_vs_p7_delivery_point",
+    "p7_suffix_not_house_number",
+    "xxxx_and_px_not_assignments",
+    "one_code_multiple_localities",
+    "same_name_not_same_identifier",
+    "blank_coverage_not_zero_area",
+    "partial_transfer_not_dataset",
+    "sample_not_national_coverage",
+    "unknown_crs_not_wgs84",
+    "generic_cc_by_not_pinned_version",
+    "download_date_not_valid_from"
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "target_stage": "M2_official_p3_postal_areas",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Reviewed source, rights and authority-separation contract with AGID address-format integration and reproducible aggregate checks."
+      },
+      {
+        "id": "M2_official_p3_postal_areas",
+        "definition": "A current, complete, rights-cleared PS P3 postal-area release links the official code/locality assignment list to actual official polygon or multipolygon records by explicit source identifiers. Pin publisher, coverage, edition and validity, retrieval time, SHA-256, exact licence version and attribution, CRS/datum/axis order, reproducible transformation, geometry/topology and code-join validation, and exception handling. Publish approved immutable digest-pinned artifacts and verify the real PS AGID loader/API. P7 delivery-point codes and coordinates stay a separate authority layer; a P3 polygon, P7 suffix, locality name, administrative overlap or nearest feature cannot supply a house number or building without a separately permitted explicit address/building relation. Preserve PS identity and source-stated territorial coverage. A sample, catalog entry, partial download, historical list, reference document or synthetic test alone cannot achieve M2."
+      },
+      {
+        "id": "M3_explicit_p7_context",
+        "definition": "Separately rights-cleared current P7 delivery-point records with validated explicit P3 relations and permitted coordinates; no building or house-number inference."
+      },
+      {
+        "id": "M4_explicit_address_building",
+        "definition": "Rights-cleared civic address and building geometry linked by explicit stable source relations, with ambiguity, privacy and temporal validation."
+      }
+    ],
+    "data_completion_verified": false,
+    "hard_blockers": [
+      "Complete official P3 polygon bytes and validated code/locality joins are unavailable from these attempts.",
+      "2021 source dates do not establish present-day completeness or current assignment/geometry validity.",
+      "The publisher says cc-by and links a generic multi-version index; the exact selected version and artifact-specific attribution need confirmation.",
+      "CRS/datum, geometry quality and authoritative coverage must be confirmed from complete source data.",
+      "No approved immutable normalized data artifact or real PS AGID descriptor/API verification has been completed."
+    ],
+    "source_review": "data/postal_country_packs/ps/postal-context/m2-source-review.json"
+  },
+  "agid_integration": {
+    "current_scope": "PS address form accepts canonical P3 and P7 syntax and explains their different authority. Source catalog is metadata only. No production PS Postal Context descriptor is enabled.",
+    "enablement_gate": "Complete permitted immutable P3 artifact, a PS runtime descriptor and actual loader/API tests are required; metadata tests do not satisfy this.",
+    "geometry_output": "none until verified; official / derived / virtual remain distinct",
+    "building_output_gate": "explicit independently permitted address/building relation required"
+  },
+  "non_goals": [
+    "new-repository-or-public-destination",
+    "extra-paid-service-or-huggingface-charge",
+    "production-deployment",
+    "raw-source-rows-in-agid-git",
+    "synthetic-or-partial-data-as-m2"
+  ],
+  "m2_review": {
+    "status": "blocked",
+    "country_m2_achieved": false,
+    "reviewed_at": "2026-08-28T23:32:29.552Z",
+    "source_report": "reports/postal-context-m2/ps-source-review-2026-08-28.json",
+    "source_report_digest": "sha256:0fecbb24e812fb51b4dfca87c7846fe5962c6527cfe719283b80bdf4ebfc7625",
+    "engineering_report": "reports/postal-context-m2/ps-checks-2026-08-28.json",
+    "next_review_after": "2026-09-04T23:32:29.552Z"
+  }
+}
