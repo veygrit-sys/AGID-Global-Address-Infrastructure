@@ -273,6 +273,25 @@ read-only review is 2026-09-04 after the pending-country pass. Prior country
 holds are unchanged; the next pending country is **CN (China)**. No second
 country was started in this run.
 
+## China review — 2026-08-28
+
+CN remains M1 / blocked. The missing named M2 criterion now preserves the
+existing requirement for independently licensed assignment geometry and
+separate address/building review. No official polygon is fabricated.
+
+A bounded public outlet API sample yielded 20 rows, 17 distinct six-digit
+codes and three codes shared by different office labels. The reported
+directory total of 54,631 is not national postal coverage. Four official
+references were checked; Tianditu API documentation timed out from this host.
+The old China Post link is a 2015 legal article republished in 2018, not an
+assignment dataset; its catalog role now prevents strong validation by name
+alone. See [CN review](postal-context-china-m2.md) and the source/check reports.
+
+Current national assignments, exact reuse rights, geometric relations, approved
+immutable artifacts and real AGID verification remain unresolved. Recheck
+2026-09-04 after pending countries. All prior country entries are unchanged.
+Next pending country: **GE (Georgia)**; no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

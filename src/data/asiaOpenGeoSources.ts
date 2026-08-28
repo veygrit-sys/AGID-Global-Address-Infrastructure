@@ -708,8 +708,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     notes: 'Japan OSM community data for buildings, shops, POI, roads, and fallback address tags.',
   },
   'china-postal-code': {
-    id: 'china-postal-code', name: 'China Post postal-code authority and lookup framework', url: 'https://www.chinapost.com.cn/cn/report/1813/134220-1.htm', kind: 'postal-code', coverage: 'country', usage: 'primary',
-    notes: 'The postal enterprise compiles codes under State Post Bureau rules and provides free postcode lookup at postal outlets. Operator authority does not publish a current bulk assignment, address or geometry corpus and does not make a six-digit code a polygon or building.',
+    id: 'china-postal-code', name: 'China Post universal-service supervision reference', url: 'https://www.chinapost.com.cn/cn/report/1813/134220-1.htm', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The linked article republishes 2015 universal-service supervision measures on 2018-10-22. Operator identity does not publish a current bulk assignment, polygon or building relation. The separate live outlet directory remains a bounded source-review sample, not national postal coverage.',
   },
   'upu-china-addressing-2013': {
     id: 'upu-china-addressing-2013', name: 'UPU China addressing sheet 09/2013', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/chnEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',

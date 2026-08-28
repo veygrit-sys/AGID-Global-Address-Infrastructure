@@ -33,3 +33,5 @@ AGID is an independent spatial index connected only by a versioned crosswalk. AG
 ## Promotion
 
 M2 or later requires exact current typed assignment artifacts, immutable digests, explicit validity and jurisdiction, independently licensed point or area geometry, CRS and topology checks, standard-address and building-link review, privacy and licence review, technical jurisdiction separation and reproducible provenance. Real rows, addresses and production geometry belong in the independent agid-postal-cn data repository, not this AGID application repository.
+
+The 2026-08-28 [CN M2 review](postal-context-china-m2.md) makes this target explicit without weakening it. The live outlet API sample is not an assignment or geometry release; CN stays M1 / blocked. The supervision article and Tianditu context cannot alone make a postal source strongly validated. No real CN runtime descriptor is enabled.

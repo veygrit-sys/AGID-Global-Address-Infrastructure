@@ -1,0 +1,63 @@
+{
+  "schema_version": "agid-postal-cn-m2-source-review-v0.1",
+  "country_code": "CN",
+  "m2_definition": {
+    "id": "M2_source_attested",
+    "definition": "A source-attested current national China Post six-digit routing-assignment edition with typed assignment objects, exact technical jurisdiction, stable identities, validity and exceptions; independently licensed point or area geometry with explicit assignment relations, reviewed CRS and topology; separate standard-address and civic/building-link review; exact source and terms SHA-256, reproducible transformations and coverage validation, approved immutable published artifacts and real AGID descriptor/loader/API verification. Outlet locations, formatting examples, a universal delivery address code, map access, synthetic tests or a directory total cannot satisfy this criterion."
+  },
+  "definition_review": {
+    "previous_named_definition": null,
+    "basis": "The CN manifest had no named M2 target. The existing China runtime promotion paragraph explicitly requires current typed assignments, independently licensed point/area geometry, CRS/topology, standard-address/building-link review, privacy, rights, jurisdiction and provenance. Those country-specific requirements are retained, not replaced by an assignment-only target.",
+    "existing_runtime_promotion_paragraph_preserved": true,
+    "independently_licensed_assignment_geometry_required": true,
+    "official_polygon_required": false,
+    "geometry_absence_rule": "Keep geometry none and M2 unmet when this target's geometric relation is absent. Never manufacture an official boundary to satisfy the target. Any derived/virtual layer must remain separately labelled and cannot masquerade as an official assignment relation.",
+    "building_display_rule": "A review is required; actual house numbers/buildings remain absent unless independently sourced explicit civic/building relations are licensed and verified."
+  },
+  "locator_probe": {
+    "page_url": "https://iframe.chinapost.com.cn/jsp/type/institutionalsite/SiteSearchJTApi.jsp?community=ChinaPostJT",
+    "search_url": "https://iframe.chinapost.com.cn/api/institutionalsite/findlist.do",
+    "method": "POST",
+    "community": "ChinaPostJT",
+    "action": "list",
+    "page_size": 10,
+    "reviewed_pages": [1, 2],
+    "repeat_page": 1,
+    "expected_mime": "text/json",
+    "purpose": "Bounded read-only unfiltered public outlet lookup, matching the visible page's request. Two pages plus one first-page repeat, not nationwide harvesting or personal/customer search.",
+    "page_markers": ["邮政网点查询", "const state={page:1,size:10,total:0}", "fetch('/api/institutionalsite/findlist.do'", "method: 'POST'", "act:'list'", "data.list", "item.zipcode", "item.address"],
+    "row_string_fields": ["province", "cities", "county", "sitename", "sitenameSuffix", "zipcode", "address", "flagjr", "phone", "yytime", "ztstop", "hfstart", "rowColor", "todayTime", "opentime"],
+    "row_integer_fields": ["state", "isjqzt", "isjqzt2"],
+    "row_boolean_array_field": "dayFlags",
+    "response_fields": ["code", "success", "page", "size", "total", "list"],
+    "success_code": 0,
+    "grain": "A displayed postal service outlet row, not a postal-region, delivery-address or building record. No stable outlet ID or assignment edition was observed.",
+    "persist_source_rows": false,
+    "allow_authentication": false,
+    "allow_cookies": false,
+    "allow_redirects_on_post": false,
+    "allow_private_or_named_queries": false,
+    "source_rights_cleared": false
+  },
+  "reference_probes": [
+    {"id":"china-post-home-rights-notice","url":"https://www.chinapost.com.cn/","mime":"text/html","markers":["中国邮政集团有限公司","版权所有"],"edition":"live portal and copyright notice, not an assignment edition or dataset reuse grant"},
+    {"id":"china-postal-code","url":"https://www.chinapost.com.cn/cn/report/1813/134220-1.htm","mime":"text/html","markers":["邮政普遍服务监督管理办法","2015","2018-10-22"],"edition":"2015 supervision measures, republished 2018-10-22; not an allocation database or postcode lookup response"},
+    {"id":"china-postal-and-address-code-response-2025","url":"https://www.spb.gov.cn/gjyzj/c200041/202510/745c2008e015403eb27fd9726f6bea07.shtml","mime":"text/html","markers":["四级六码","通用寄递地址编码","动态维护数据库","2025年6月19日"],"edition":"reply dated 2025-06-19, published 2025-10-11; describes maintained GIS and inter-operator sharing, not public bulk rights"},
+    {"id":"china-geospatial-platform-management-2019","url":"https://www.ngcc.cn/xwzx/bnyw/202401/t20240110_2222.html","mime":"text/html","markers":["地理信息公共服务平台管理办法","2021-01-15","在线服务实行无偿使用制度"],"edition":"NGCC news report dated 2021-01-15; legacy source ID retained, no 2019 publication inferred"},
+    {"id":"tianditu-search-api-reference","url":"https://lbs.tianditu.gov.cn/server/search2.html","mime":"text/html","markers":["tk","服务"],"edition":"public API documentation only; no key, quota, account or data access requested"}
+  ],
+  "rights_review": {
+    "postal_basis": "The reviewed public outlet page and successful unauthenticated responses do not establish permission to retain, transform or redistribute a complete assignment/geometry dataset. The operator portal carries a copyright notice; no exact source/output reuse grant was established. This is an unresolved grant, not a legal conclusion that all postal facts are prohibited.",
+    "spb_basis": "A dynamically maintained GIS and sharing with UPU members, described in the 2025 reply, do not establish a public endpoint, open licence or current downloadable national edition.",
+    "geometry_basis": "NGCC's 2021 news report describes free online services and periodic updates, not a licence for a particular reusable postal geometry, address or building dataset. Tianditu documentation access failures are environment observations, not proof of global unavailability.",
+    "source_rights_for_m2_cleared": false,
+    "public_destination_approved": false,
+    "authority_gates": "No login, API key request, CAPTCHA bypass, private address/owner/land-title query, paid product, agreement, new repository/public destination or deployment without explicit approval. CN/HK/MO/TW identities remain technically separate."
+  },
+  "limits": {"max_response_bytes":4194304,"max_string_characters":2000,"max_reported_total":10000000,"timeout_ms":25000},
+  "review_artifacts": {
+    "source_report":"reports/postal-context-m2/cn-source-review-2026-08-28.json",
+    "engineering_report":"reports/postal-context-m2/cn-checks-2026-08-28.json",
+    "review_document":"docs/postal-context-china-m2.md"
+  }
+}
