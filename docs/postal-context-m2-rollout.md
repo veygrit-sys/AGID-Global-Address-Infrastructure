@@ -739,3 +739,13 @@ Added the missing Nepal-specific M2_federal_assignment_context criterion at M1. 
 [NP review](postal-context-nepal-m2.md), [source receipts](../reports/postal-context-m2/np-source-review-2026-08-28.json) and [engineering checks](../reports/postal-context-m2/np-checks-2026-08-28.json) distinguish eight verified reference/table bodies, one viewer shell and two acquisition failures. Historical UPU 06/2012 and purpose-limited survey terms are not current assignment or open-redistribution grants.
 
 Reuse rights, source edition/effective validity, approved immutable data publication and actual AGID data verification remain outstanding. No raw rows, private data, geometry or civic/building relations were published. Public-only review follows all pending countries and 2026-09-04T21:30:32.413Z; contracts, paid operations and new publication destinations still require approval. Other 251 entries remain unchanged. Next pending country: **OM**; no second country started.
+
+## OM — 2026-08-28: regional POIs reviewed, M2 still blocked
+
+Preserved `M2_office_assignment`: a complete rights-cleared office/code artifact. The Al Dakhiliyah open-data listing and its linked licence permit scoped reuse, but its 12-record workbook has no postal-code column. FID is not a postcode. One XY pair is shared by two records; NAMEAR is missing once and TOWN twice. No deduplication, imputation, CRS assumption or geometry generation was performed. File metadata is from 2024-05-02 despite the listing reference period 2024–2025; current office validity is unverified.
+
+Nine documents/workbook responses were byte/hash-verified and one old policy URL failed acquisition. UPU January 2026 semantics, the two distinct open-data licences and legal restrictions were reviewed separately. Oman Post directory harvesting was not performed. No current national assignment artifact, immutable data release or real AGID loader/API proof exists; synthetic runtime tests do not satisfy M2.
+
+[Source review](../reports/postal-context-m2/om-source-review-2026-08-28.json) and [engineering checks](../reports/postal-context-m2/om-checks-2026-08-28.json) contain provenance, validation and limitations. [Oman details](postal-context-oman-m2.md) provide reproduction and unblock conditions. Retry public sources after `2026-09-04T21:59:53.131Z` and after the pending-country pass. Additional permission is required for restricted sources, contracts or a new publishing destination.
+
+After OM: 252 profiles, 218 pending, 34 blocked, 0 in progress, 0 evidence-verified M2. Next: **PH**. No second country was started.
