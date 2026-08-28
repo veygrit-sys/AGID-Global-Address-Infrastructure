@@ -90,11 +90,18 @@ results only. The source archive, source locality rows and normalized JSONL
 exist only in memory during this intake. No source snapshot or deployed pack
 has been published by this step, so Japan remains M1 / `in_progress`.
 
-Next: build scoped, non-synthetic Postal Context graph/descriptor artifacts;
-exercise the pinned loader and API; establish an approved durable country-data
-artifact location and retained source/terms evidence; verify remote digests;
-only then review Japan's experimental M2 promotion. Nationwide code-existence
-validation is not nationwide address, geometry or building coverage.
+The next Japan step is now implemented: the [scoped real-source runtime](postal-context-japan-m2-runtime.md)
+builds a non-synthetic, digest-pinned Chiyoda pack and checks all 485 selected
+postcodes through the shared loader, with actual AGID v1 HTTP API checks.
+Source exceptions/flags are retained and geometry/building information is not
+invented. The [validation report](../reports/postal-context-m2/jp-chiyoda-runtime-2026-08-28.json)
+remains explicitly publication-pending. No country maturity has been promoted.
+
+Next: obtain approval for the separate public country repository, retain the
+source/rights evidence there, publish immutable artifacts, verify remote digests
+and replay before reviewing Japan's experimental M2 criterion. Do not repeat
+the same approval request or build merely because the heartbeat wakes up.
+Nationwide intake is not nationwide runtime, address or building coverage.
 
 ## Git, privacy and authority boundaries
 
