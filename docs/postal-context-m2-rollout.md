@@ -330,6 +330,24 @@ The 2026-09-04 reminder does not authorize new publication or automatic retries.
 All previous entries are unchanged. Next pending country: **ID (Indonesia)**;
 no second country was started during this run.
 
+## Indonesia review — 2026-08-28
+
+ID remains M1 / blocked; the pre-existing complete M2_assignment criterion is
+unchanged. Two bounded official queries produced 1 and 20 rows with no missing
+or invalid codes; the 20-row repeat matched bytes and normalized tuples. No
+rows, coordinates, geometry or civic/building relations are published.
+
+The public SDI label conflicts with private=true, isopen=false, null licence
+and rejected review metadata. The publisher request returned 403. The source
+catalog now describes web-search metadata, not confirmed bulk-open-data access.
+See [ID review](postal-context-indonesia-m2.md) and its aggregate source report.
+
+Current complete assignments, explicit reuse rights, retained snapshots,
+approved fixed artifacts and actual AGID loader/API checks remain missing.
+Recheck on 2026-09-04 after the pending-country pass; no restricted resources,
+paid services or new destinations are authorized. Earlier entries are
+unchanged. Next pending country: **IL (Israel)**; no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
