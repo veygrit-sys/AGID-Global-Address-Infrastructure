@@ -4789,16 +4789,16 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   },
   {
     id: 'pos-malaysia-postcode-finder', countryCodes: ['MY'], label: 'Pos Malaysia Postcode Finder',
-    authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible',
+    authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'metadata-only',
     url: 'https://www.pos.com.my/postal-services/quick-access/?postcode-finder',
     sourceNames: ['pos malaysia', 'pos malaysia postcode finder', 'malaysia postcode finder'], openSourceIds: ['pos-malaysia-postcode-finder', 'pos-malaysia'], requiresCredential: false,
-    notes: ['Official five-digit postcode and locality lookup.', 'Pinned results are assignments, not canonical polygons, civic addresses, buildings, history or blanket reuse rights.'],
+    notes: ['2026-08-28: legacy URL returns HTTP 200 soft 404, not current assignments.', 'Pinned results are assignments, not canonical polygons, civic addresses, buildings, history or blanket reuse rights.'],
   },
   {
     id: 'upu-malaysia-addressing', countryCodes: ['MY'], label: 'UPU Malaysia Addressing Sheet',
     authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', validationReadiness: 'metadata-only',
     url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mysEn.pdf',
-    sourceNames: ['upu malaysia addressing', 'upu malaysia five digit postcode'], openSourceIds: ['upu-malaysia-addressing'], requiresCredential: false,
+    sourceNames: ['upu malaysia addressing', 'upu malaysia five digit postcode', 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mysEn.pdf'], openSourceIds: ['upu-malaysia-addressing'], requiresCredential: false,
     notes: ['Defines five-digit placement, address-line order and non-area postal-service formats.', 'The 2010 sheet is not current allocation data, geometry or a civic-address registry.'],
   },
   {
@@ -4806,7 +4806,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     authority: 'government', trustTier: 'authoritative', availability: 'auth-required-api', depth: 'postcode', validationReadiness: 'metadata-only',
     url: 'https://jombelajar.mygdx.gov.my/en/landing-page/listCatalog/256063c2-dbf9-4765-8d84-47a60db3c742?theme=third-theme',
     sourceNames: ['mygdx malaysian postcode', 'malaysian poscode mygdx'], openSourceIds: ['malaysia-mygdx-postcode-catalog'], requiresCredential: true,
-    notes: ['Catalog identifies postcode and locality data sourced from Pos Malaysia.', 'Provider approval and exact API-output rights are required.'],
+    notes: ['JomBelajar catalog names Pos Malaysia data; a production endpoint and current responses are not verified.', 'Provider approval and exact API-output rights are required.'],
   },
   {
     id: 'malaysia-mygeo-fundamental-data-2026', countryCodes: ['MY'], label: 'MyGeoportal Fundamental Data List 2026',
@@ -4838,10 +4838,16 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   },
   {
     id: 'malaysia-mygeoname', countryCodes: ['MY'], label: 'MyGeoName geographical names portal',
-    authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'locality', validationReadiness: 'reference-eligible',
+    authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'locality', validationReadiness: 'metadata-only',
     url: 'https://mygeoname.mygeoportal.gov.my/index.jsp?lang=en',
     sourceNames: ['mygeoname', 'malaysia geographical names'], openSourceIds: ['malaysia-mygeoname'], requiresCredential: false,
     notes: ['Official place-name reference with an explicit non-legal-evidence disclaimer.', 'Names do not establish postcode assignment, geometry, civic address or building relation.'],
+  },
+  {
+    id: 'malaysia-mcmc-postcodes', countryCodes: ['MY'], label: 'MCMC Postcode Dataset via data.gov.my',
+    authority: 'official-open-data', trustTier: 'official', availability: 'bulk-open-data', depth: 'postcode', validationReadiness: 'metadata-only',
+    url: 'https://data.gov.my/data-catalogue/poskod', sourceNames: ['mcmc postcode dataset', 'data.gov.my poskod'], openSourceIds: ['malaysia-mcmc-postcodes'], requiresCredential: false,
+    notes: ['CC-BY-4.0 dictionary, edition 2026-06; 2932 acquired rows checked in a local observation experiment.', 'Annual updates and missing effective dates; source names or URLs alone do not validate a current address. No geometry, civic/building relations or immutable published AGID artifact.'],
   },
   {
     id: 'vietnam-national-postcode-portal',

@@ -175,6 +175,17 @@ export function postalContextAssertionAllowedForUse({
     || assertion.method === 'nearest'
     || assertion.method === 'virtual_grid') return false;
 
+  // A public dictionary proves only its typed locality-label relation, never
+  // civic, building, spatial or live delivery assignment authority.
+  if (assertion.source.assignmentAuthority === 'official_postal_dictionary') {
+    return (use === 'lookup_context' || use === 'resolution_context')
+      && assertion.source.sourceType === 'official'
+      && assertion.source.geometryAuthority === 'none'
+      && assertion.method === 'source_relation'
+      && assertion.relation === 'admin_within'
+      && lookupContextKindsAreCompatible(assertion, fromNode, toNode);
+  }
+
   if (use === 'lookup_context') {
     return methodSupportsContext(assertion)
       && lookupContextKindsAreCompatible(assertion, fromNode, toNode);

@@ -23,11 +23,11 @@ test('Malaysia registry separates postcode assignment, addressing, exchange appr
 
 test('Malaysia official catalog exposes matching authority and readiness boundaries', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('MY').map(source => [source.id, source]));
-  assert.equal(sources.get('pos-malaysia-postcode-finder')?.authority, 'postal-operator'); assert.equal(sources.get('pos-malaysia-postcode-finder')?.validationReadiness, 'reference-eligible');
+  assert.equal(sources.get('pos-malaysia-postcode-finder')?.authority, 'postal-operator'); assert.equal(sources.get('pos-malaysia-postcode-finder')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('upu-malaysia-addressing')?.authority, 'intergovernmental-postal-standard'); assert.equal(sources.get('malaysia-mygdx-postcode-catalog')?.availability, 'auth-required-api');
   assert.equal(sources.get('malaysia-mygeo-fundamental-data-2026')?.depth, 'geo-only'); assert.equal(sources.get('malaysia-mygos-data-services')?.requiresCredential, true); assert.equal(sources.get('malaysia-mygeo-upi')?.depth, 'locality');
-  assert.equal(sources.get('malaysia-mygdi-licensing-2024')?.sourceRole, 'legal-framework-only'); assert.equal(sources.get('malaysia-mygeoname')?.validationReadiness, 'reference-eligible');
-  const classification = classifyPostalSourceTrust({ countryCode: 'MY', source: 'Pos Malaysia Postcode Finder' }); assert.equal(classification.strength, 'strong'); assert.equal(classification.tier, 'authoritative');
+  assert.equal(sources.get('malaysia-mygdi-licensing-2024')?.sourceRole, 'legal-framework-only'); assert.equal(sources.get('malaysia-mygeoname')?.validationReadiness, 'metadata-only');
+  const classification = classifyPostalSourceTrust({ countryCode: 'MY', source: 'Pos Malaysia Postcode Finder' }); assert.equal(classification.strength, 'weak'); assert.equal(classification.tier, 'weak');
 });
 
 test('Malaysia address metadata encodes five digits, non-area delivery objects, UPI separation, and exact building gate', () => {

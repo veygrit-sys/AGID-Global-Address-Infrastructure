@@ -170,6 +170,7 @@ export type PostalContextDigest = `sha256:${string}`;
 
 export type PostalContextAssignmentAuthority =
   | 'official_postal_operator'
+  | 'official_postal_dictionary'
   | 'official_address_registry'
   | 'official_municipal_civic_address'
   | 'official_land_registry'

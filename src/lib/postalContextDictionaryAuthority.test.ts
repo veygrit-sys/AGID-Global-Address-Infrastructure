@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import {test} from 'node:test';
+import {postalContextAssertionAllowedForUse,type PostalContextAssertionUse} from './postalContextAssertionPolicy';
+import type {PostalContextAssertion,PostalContextNode} from './postalContextGraph';
+const from:PostalContextNode={id:'from',kind:'postal_feature',featureKind:'unknown',geometryType:'none'},to:PostalContextNode={id:'to',kind:'locality',featureKind:'locality',geometryType:'none'};
+const a:PostalContextAssertion={id:'synthetic-policy-check',fromNodeId:'from',toNodeId:'to',relation:'admin_within',validTime:{from:'2026-08-28T00:00:00Z'},knownTime:{from:'2026-08-28T00:00:00Z'},source:{sourceId:'synthetic-dictionary-policy-only',sourceType:'official',assignmentAuthority:'official_postal_dictionary',geometryAuthority:'none',sourceVersion:'synthetic',sourceDate:'2026-08-28',licenseId:'synthetic',digest:`sha256:${'a'.repeat(64)}`},method:'source_relation',quality:{status:'verified'}};
+const check=(use:PostalContextAssertionUse,assertion=a,fromNode=from,toNode=to)=>postalContextAssertionAllowedForUse({assertion,fromNode,toNode,use});
+test('dictionary authority permits only direct nonspatial postal/locality/admin context',()=>{assert.equal(check('lookup_context'),true);assert.equal(check('resolution_context'),true);for(const use of ['address_record_root','postal_assignment','spatial_postal','building_identity','navigation_entrance'] as const)assert.equal(check(use),false);});
+test('dictionary labels cannot be promoted through civic, building, geometry or arbitrary methods',()=>{
+ for(const kind of ['building','address_record','address_point','unit','parcel','recipient'] as const)assert.equal(check('resolution_context',a,{...from,kind}),false);
+ for(const method of ['explicit_assignment','nearest','geometry_contains','official_crosswalk','derived'] as const)assert.equal(check('lookup_context',{...a,method}),false);
+ assert.equal(check('lookup_context',{...a,source:{...a.source,sourceType:'open'}}),false);assert.equal(check('lookup_context',{...a,source:{...a.source,geometryAuthority:'official_mapping_geometry'}}),false);assert.equal(check('lookup_context',{...a,quality:{status:'candidate'}}),false);assert.equal(check('lookup_context',{...a,relation:'postal_assigned'}),false);
+});
+test('existing direct postal and synthetic authorities retain their original lookup behavior',()=>{for(const assignmentAuthority of ['official_postal_operator','synthetic_fixture_assignment'] as const)assert.equal(check('lookup_context',{...a,source:{...a.source,assignmentAuthority}}),true);assert.equal(check('lookup_context',{...a,source:{...a.source,assignmentAuthority:'none'}}),false);});

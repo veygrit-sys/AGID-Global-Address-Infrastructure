@@ -62,7 +62,7 @@ const METHODS = new Set([
 ]);
 const SOURCE_TYPES = new Set(['official', 'open', 'commercial', 'derived', 'virtual', 'synthetic']);
 const ASSIGNMENT_AUTHORITIES = new Set([
-  'official_postal_operator', 'official_address_registry',
+  'official_postal_operator', 'official_postal_dictionary', 'official_address_registry',
   'official_municipal_civic_address', 'official_land_registry',
   'derived_spatial_assignment', 'virtual_assignment', 'synthetic_fixture_assignment', 'none',
 ]);

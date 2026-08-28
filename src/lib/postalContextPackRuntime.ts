@@ -605,6 +605,9 @@ export function validatePostalContextRuntimePack(
     }
     if (!feature.source.digest) errors.push(`geometry-source-digest-required:${feature.id}`);
     if (!feature.source.licenseId) errors.push(`geometry-source-license-required:${feature.id}`);
+    if (feature.source.assignmentAuthority === 'official_postal_dictionary') {
+      errors.push(`dictionary-cannot-authorize-geometry:${feature.id}`);
+    }
     if (pack.graph.release.countryCode === 'MA'
       && feature.role === 'postal_area'
       && node.postalCode
