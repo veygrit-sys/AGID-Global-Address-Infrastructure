@@ -122,6 +122,14 @@ export type AsiaOpenGeoSourceId =
   | 'survey-bangladesh'
   | 'osm-bangladesh'
   | 'hot-osm-bangladesh'
+  | 'nepalpost-legacy-pdf'
+  | 'nepal-digital-data-directive-pdf'
+  | 'nepal-gpo-federal-postcodes'
+  | 'nepal-jhapa-postcodes'
+  | 'nepal-rasuwa-federal-notice'
+  | 'nepal-federal-postcodes-pdf'
+  | 'nepal-upu-addressing-2012'
+  | 'nepal-digital-data-directive'
   | 'postalservice-np'
   | 'national-geoportal-nepal'
   | 'survey-department-nepal'
@@ -1468,14 +1476,46 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'HOT/OSM humanitarian mapping reference for flood-prone, coastal, rural, and disaster-response address context in Bangladesh.',
   },
+  'nepalpost-legacy-pdf': { id: 'nepalpost-legacy-pdf', name: "Nepal Post historical code PDF", url: "https://giwmscdnone.gov.np/media/app/public/4/posts/1672221109_65.pdf", kind: 'postal-code', coverage: 'country', usage: 'reference', notes: "Embedded in the legacy Nepal Post page; acquisition exceeded the fixed 4 MiB bound. Body, complete contents and reuse terms are unverified." },
+  'nepal-digital-data-directive-pdf': { id: 'nepal-digital-data-directive-pdf', name: "Nepal Digital Data Directive 2069 PDF", url: "https://giwmscdnone.gov.np/media/pdf_upload/downloads-20210602055447-8g7tq-Digital-Data-2069_xarejqg.pdf", kind: 'standard', coverage: 'country', usage: 'reference', notes: "Historical directive PDF; reviewed purpose, transfer, attribution and agreement provisions, not a current postal-data or geometry reuse grant." },
+  'nepal-gpo-federal-postcodes': {
+    id: 'nepal-gpo-federal-postcodes', name: "Nepal GPO federal local-unit and ward table",
+    url: "https://gpo.gov.np/pages/postal-code-1259614658/", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Five-digit office/local-unit and seven-digit ward table; current public HTML structurally profiled, reuse rights and effective edition unverified. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-jhapa-postcodes': {
+    id: 'nepal-jhapa-postcodes', name: "Nepal Jhapa district postcode reference",
+    url: "https://jhapa.nepalpost.gov.np/pages/postal-codes-of-jhapa-district-17/", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "District postal page; direct acquisition failed. Search excerpts are not verified rows or rights. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-rasuwa-federal-notice': {
+    id: 'nepal-rasuwa-federal-notice', name: "Nepal Rasuwa federal postcode notice",
+    url: "https://rasuwa.nepalpost.gov.np/content/20/a-new-postal-code-that-has-changed/", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Dated notice links a federal code PDF; notice date, PDF creation date and assignment validity remain distinct. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-federal-postcodes-pdf': {
+    id: 'nepal-federal-postcodes-pdf', name: "Nepal federal office and ward code PDF",
+    url: "https://giwmscdnone.gov.np/media/files/postal%20code_ywg9tx8_lntcpor.pdf", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Linked by official Rasuwa notice; first page visually confirms separate office and ward columns. No complete PDF-row parity or reuse licence verified. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-upu-addressing-2012': {
+    id: 'nepal-upu-addressing-2012', name: "UPU Nepal addressing sheet 2012",
+    url: "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nplEn.pdf", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Printed June 2012 five-digit format is a historical reference; 2020 PDF metadata is not a federal code edition. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-digital-data-directive': {
+    id: 'nepal-digital-data-directive', name: "Nepal Digital Data Distribution Use and Regulation Directive 2069",
+    url: "https://www.dos.gov.np/content/5/distritor--use-and-regulation-directory-2069/", kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "Historical directive and organisation agreement distinguish purpose-limited data from attributed value-added work; current product applicability and permissions need review. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
   'postalservice-np': {
     id: 'postalservice-np',
     name: 'Nepal Postal Service Postcode',
     url: 'https://nepalpost.gov.np/content/1716/1716-postal-codes-of-nepal/',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Nepal Post official postal-codes reference page under the current nepalpost.gov.np domain.',
+    usage: 'reference',
+    notes: "Legacy landing page and oversized embedded PDF are not the current federal assignment release. Metadata only; no source-name validation authority.",
   },
   'national-geoportal-nepal': {
     id: 'national-geoportal-nepal',
@@ -1483,8 +1523,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://nationalgeoportal.gov.np/',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Nepal national spatial data platform for basemaps, map layers, and administrative geospatial validation.',
+    usage: 'reference',
+    notes: "Acquired HTML is a viewer shell, not a feature dataset, postal crosswalk or data reuse grant. Metadata only; no source-name validation authority.",
   },
   'survey-department-nepal': {
     id: 'survey-department-nepal',
@@ -1492,8 +1532,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://dos.gov.np/',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Nepal official survey department reference for topographic and administrative geography.',
+    usage: 'reference',
+    notes: "Official mapping source; country/source/layer/edition and product rights required. No postal boundary or building relation follows from the agency name. Metadata only; no source-name validation authority.",
   },
   'cambodia-post': {
     id: 'cambodia-post',
@@ -3800,7 +3840,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau', 'ctt-macao-no-postcode', 'dsscu-macao', 'macao-dsscu-regulation-2026', 'macao-mapping-reproduction-2026', 'macao-data-portal', 'macao-data-terms', 'dscc-macao-migration-notice'],
   MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
   MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],
-  NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
+  NP: ["postalservice-np","nepal-gpo-federal-postcodes","nepal-jhapa-postcodes","nepal-rasuwa-federal-notice","nepal-federal-postcodes-pdf","nepal-upu-addressing-2012","national-geoportal-nepal","survey-department-nepal","nepal-digital-data-directive","osm-nepal","hot-osm-nepal","nepalpost-legacy-pdf","nepal-digital-data-directive-pdf"],
   PH: ['phlpost-zip-code-locator', 'upu-philippines-addressing', 'psa-philippine-standard-geographic-code', 'geoportal-philippines-data-inventory', 'geoportal-philippines-download-policy', 'namria-topographic-mapping', 'psa-popcen-cbms-geotagging', 'philippines-lra-land-registration', 'phlpost'],
   PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
   JO: ['jordanpost', 'upu-jordan-addressing-2004', 'modee-jordan-postal-policy-2025', 'trc-jordan-postal-sector', 'jordan-post-offices-open-data-2023', 'jordan-open-government-data-license-v1', 'rjgc-jordan', 'rjgc-jordan-eservices', 'rjgc-gam-building-mou', 'dls-jordan-village-codes-2022', 'gam-jordan-streets-2019', 'jordan-digital-mailbox-pilot-2026', 'osm-jordan'],

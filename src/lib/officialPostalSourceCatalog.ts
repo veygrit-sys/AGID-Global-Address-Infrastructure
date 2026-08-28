@@ -4850,6 +4850,296 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['CC-BY-4.0 dictionary, edition 2026-06; 2932 acquired rows checked in a local observation experiment.', 'Annual updates and missing effective dates; source names or URLs alone do not validate a current address. No geometry, civic/building relations or immutable published AGID artifact.'],
   },
   {
+    "id": "postalservice-np",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal Post legacy postcode reference",
+    "authority": "postal-operator",
+    "trustTier": "authoritative",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "postal-reference-data",
+    "validationReadiness": "metadata-only",
+    "url": "https://nepalpost.gov.np/content/1716/1716-postal-codes-of-nepal/",
+    "sourceNames": [
+      "https://nepalpost.gov.np/content/1716/1716-postal-codes-of-nepal/",
+      "Nepal Post",
+      "Nepal Postal Service Postcode",
+      "Nepal Postal Service",
+      "https://giwmscdnone.gov.np/media/app/public/4/posts/1672221109_65.pdf"
+    ],
+    "openSourceIds": [
+      "postalservice-np"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Legacy landing page and oversized embedded PDF are not the current federal assignment release.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepal-gpo-federal-postcodes",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal GPO federal local-unit and ward table",
+    "authority": "postal-operator",
+    "trustTier": "authoritative",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "postal-reference-data",
+    "validationReadiness": "metadata-only",
+    "url": "https://gpo.gov.np/pages/postal-code-1259614658/",
+    "sourceNames": [
+      "https://gpo.gov.np/pages/postal-code-1259614658/",
+      "Nepal GPO",
+      "General Post Office Nepal"
+    ],
+    "openSourceIds": [
+      "nepal-gpo-federal-postcodes"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Five-digit office/local-unit and seven-digit ward table; current public HTML structurally profiled, reuse rights and effective edition unverified.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepal-jhapa-postcodes",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal Jhapa district postcode reference",
+    "authority": "postal-operator",
+    "trustTier": "authoritative",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "postal-reference-data",
+    "validationReadiness": "metadata-only",
+    "url": "https://jhapa.nepalpost.gov.np/pages/postal-codes-of-jhapa-district-17/",
+    "sourceNames": [
+      "https://jhapa.nepalpost.gov.np/pages/postal-codes-of-jhapa-district-17/",
+      "Jhapa Nepal Post"
+    ],
+    "openSourceIds": [
+      "nepal-jhapa-postcodes"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "District postal page; direct acquisition failed. Search excerpts are not verified rows or rights.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepal-rasuwa-federal-notice",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal Rasuwa federal postcode notice",
+    "authority": "postal-operator",
+    "trustTier": "authoritative",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "postal-reference-data",
+    "validationReadiness": "metadata-only",
+    "url": "https://rasuwa.nepalpost.gov.np/content/20/a-new-postal-code-that-has-changed/",
+    "sourceNames": [
+      "https://rasuwa.nepalpost.gov.np/content/20/a-new-postal-code-that-has-changed/",
+      "Rasuwa Nepal Post"
+    ],
+    "openSourceIds": [
+      "nepal-rasuwa-federal-notice"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Dated notice links a federal code PDF; notice date, PDF creation date and assignment validity remain distinct.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepal-federal-postcodes-pdf",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal federal office and ward code PDF",
+    "authority": "postal-operator",
+    "trustTier": "authoritative",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "postal-reference-data",
+    "validationReadiness": "metadata-only",
+    "url": "https://giwmscdnone.gov.np/media/files/postal%20code_ywg9tx8_lntcpor.pdf",
+    "sourceNames": [
+      "https://giwmscdnone.gov.np/media/files/postal%20code_ywg9tx8_lntcpor.pdf",
+      "Nepal federal code PDF"
+    ],
+    "openSourceIds": [
+      "nepal-federal-postcodes-pdf"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Linked by official Rasuwa notice; first page visually confirms separate office and ward columns. No complete PDF-row parity or reuse licence verified.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepal-upu-addressing-2012",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "UPU Nepal addressing sheet 2012",
+    "authority": "intergovernmental-postal-standard",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "address",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nplEn.pdf",
+    "sourceNames": [
+      "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nplEn.pdf",
+      "UPU Nepal addressing",
+      "UPU Nepal postcode"
+    ],
+    "openSourceIds": [
+      "nepal-upu-addressing-2012"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Printed June 2012 five-digit format is a historical reference; 2020 PDF metadata is not a federal code edition.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "national-geoportal-nepal",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "National Geoportal Nepal",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://nationalgeoportal.gov.np/",
+    "sourceNames": [
+      "https://nationalgeoportal.gov.np/",
+      "Nepal National Geoportal"
+    ],
+    "openSourceIds": [
+      "national-geoportal-nepal"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Acquired HTML is a viewer shell, not a feature dataset, postal crosswalk or data reuse grant.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "survey-department-nepal",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Survey Department Nepal",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "geo-only",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://dos.gov.np/",
+    "sourceNames": [
+      "https://dos.gov.np/",
+      "Nepal Department of Survey"
+    ],
+    "openSourceIds": [
+      "survey-department-nepal"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Official mapping source; country/source/layer/edition and product rights required. No postal boundary or building relation follows from the agency name.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepal-digital-data-directive",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal Digital Data Distribution Use and Regulation Directive 2069",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "legal-framework",
+    "sourceRole": "legal-framework-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://www.dos.gov.np/content/5/distritor--use-and-regulation-directory-2069/",
+    "sourceNames": [
+      "https://www.dos.gov.np/content/5/distritor--use-and-regulation-directory-2069/",
+      "Nepal digital data directive 2069",
+      "https://giwmscdnone.gov.np/media/pdf_upload/downloads-20210602055447-8g7tq-Digital-Data-2069_xarejqg.pdf"
+    ],
+    "openSourceIds": [
+      "nepal-digital-data-directive"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Historical directive and organisation agreement distinguish purpose-limited data from attributed value-added work; current product applicability and permissions need review.",
+      "Reference identity alone cannot validate postal assignments, civic numbers or buildings."
+    ]
+  },
+  {
+    "id": "nepalpost-legacy-pdf",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal Post historical code PDF",
+    "authority": "postal-operator",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "postcode",
+    "sourceRole": "context-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://giwmscdnone.gov.np/media/app/public/4/posts/1672221109_65.pdf",
+    "sourceNames": [
+      "https://giwmscdnone.gov.np/media/app/public/4/posts/1672221109_65.pdf",
+      "Nepal Post historical PDF"
+    ],
+    "openSourceIds": [
+      "nepalpost-legacy-pdf"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Embedded in the legacy Nepal Post page; acquisition exceeded the fixed 4 MiB bound. Body, complete contents and reuse terms are unverified."
+    ]
+  },
+  {
+    "id": "nepal-digital-data-directive-pdf",
+    "countryCodes": [
+      "NP"
+    ],
+    "label": "Nepal Digital Data Directive 2069 PDF",
+    "authority": "government",
+    "trustTier": "official",
+    "availability": "web-search",
+    "depth": "legal-framework",
+    "sourceRole": "legal-framework-only",
+    "validationReadiness": "metadata-only",
+    "url": "https://giwmscdnone.gov.np/media/pdf_upload/downloads-20210602055447-8g7tq-Digital-Data-2069_xarejqg.pdf",
+    "sourceNames": [
+      "https://giwmscdnone.gov.np/media/pdf_upload/downloads-20210602055447-8g7tq-Digital-Data-2069_xarejqg.pdf",
+      "Nepal Digital Data Directive PDF"
+    ],
+    "openSourceIds": [
+      "nepal-digital-data-directive-pdf"
+    ],
+    "requiresCredential": false,
+    "notes": [
+      "Historical directive PDF; reviewed purpose, transfer, attribution and agreement provisions, not a current postal-data or geometry reuse grant."
+    ]
+  },
+  {
     id: 'vietnam-national-postcode-portal',
     countryCodes: ['VN'],
     label: 'Vietnam National Postcode Portal',
