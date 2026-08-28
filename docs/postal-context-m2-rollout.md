@@ -417,6 +417,32 @@ missing. Recheck public references after all pending countries and
 Earlier country entries are unchanged. Next pending country: **IR (Iran)**;
 no second country was started.
 
+## Iran review - 2026-08-28
+
+IR remains **M1_metadata / blocked**. Its missing M2 stage is now individually
+defined as **M2_licensed_assignment**, preserving all nine original blockers,
+ten-digit non-area objects, five-digit forwarding context, non-postcode postal
+services, operational GNAF/certificate rights and temporal/jurisdiction rules.
+
+Four public postal entry requests timed out. NSDI redirected to its government
+host and returned 502; the dated UPU PDF URL redirected through the homepage
+and returned 404. No current reference bytes or source-document hashes were
+retained. Search-extracted 10/2023 format text is cached context only, not a
+fresh PDF or visual verification. These observations prove neither national
+data absence nor a reuse ban. See the [IR review](postal-context-iran-m2.md).
+
+No current assignment rows were acquired; quality rates are unmeasured, not
+zero-percent errors. Iran Post keeps its postal-operator authority, but its
+catalog readiness is metadata-only: a source label cannot establish a current
+assignment. No geometry or address/building relation was generated.
+
+Recheck public references after all pending countries and
+2026-09-04T13:42:05.876Z; restricted access/publication still require approval.
+Current licensed assignments, reproducible full-data checks, approved fixed
+data artifacts and real AGID loader/API verification remain missing. No paid
+operation or new destination was used. Earlier country entries are unchanged.
+Next pending country: **JO (Jordan)**; no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

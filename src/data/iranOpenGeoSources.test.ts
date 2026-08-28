@@ -33,8 +33,9 @@ test('Iran catalog exposes authority, operational, format, rights, privacy, and 
   assert.equal(sources.get('iran-nsdi')?.depth, 'geo-only');
   assert.equal(sources.get('iran-open-data')?.trustTier, 'community');
   const classification = classifyPostalSourceTrust({ countryCode: 'IR', source: 'Iran Post' });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
+  assert.equal(sources.get('iran-post')?.validationReadiness, 'metadata-only');
 });
 
 test('Iran address metadata encodes ten digits, P.O. exceptions, GNAF, buildings, time, jurisdiction, and AGID', () => {
