@@ -14,7 +14,7 @@ Neither code is automatically a polygon. The current code can be strong object-a
 
 QazPost Open API service 26 supports search by address, new postcode or address-registration code and requires a bearer token. A pinned response can support a dated code-to-address-object relation only under its exact schema, terms, privacy, retention, rate and display rights. Interactive or API access is not authority to harvest or republish a national address or geometry corpus.
 
-The Digital Address Register establishes registered-address existence. Its 16-digit RKA is a separate identifier generated for a real-estate address; it is not a postcode, AGID cell, cadastral identifier, footprint or ownership record. Building-level display requires a rights-cleared address identity, a stable reviewed relation to a building identifier and separately permitted point or footprint geometry. An address, postcode, RKA, cadastral parcel, rights-register result or OSM footprint alone cannot reveal a resident or establish the complete relation.
+The Digital Address Register establishes registered-address existence. Its 16-character RKA is a separate identifier generated for a real-estate address; it is not a postcode, AGID cell, cadastral identifier, footprint or ownership record. Building-level display requires a rights-cleared address identity, a stable reviewed relation to a building identifier and separately permitted point or footprint geometry. An address, postcode, RKA, cadastral parcel, rights-register result or OSM footprint alone cannot reveal a resident or establish the complete relation.
 
 ## NSDI, cadastre, rights and time
 
@@ -31,3 +31,11 @@ AGID is an independent spatial index connected only by a versioned crosswalk. AG
 ## Promotion
 
 M2 or later requires current typed assignment artifacts, immutable digests, explicit current-versus-legacy validity, independently licensed point or area geometry, CRS and topology checks, RKA and building-link review, privacy and licence review, temporal and jurisdiction coverage and reproducible provenance. Real rows, addresses and production geometry belong in the independent agid-postal-kz data repository, not this AGID application repository.
+
+## M2 evidence review
+
+The [2026-08-28 review](postal-context-kazakhstan-m2.md) formalizes the existing
+Promotion conditions as `M2_typed_assignment_geometry`; maturity remains
+`M1_metadata / blocked`. It binds current legal text and public API documentation
+without importing example addresses or claiming live assignments. RKA is described
+as 16 characters; no RKA alphabet or new postcode validator is inferred.

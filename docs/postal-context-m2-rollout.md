@@ -593,6 +593,32 @@ retry follows all pending countries and 2026-09-04T16:38:41.187Z.
 Earlier country entries are unchanged. Next pending country: **KZ (Kazakhstan)**;
 no second country was started.
 
+## Kazakhstan review - 2026-08-28
+
+KZ remains **M1_metadata / blocked**. The existing runtime Promotion conditions
+are now formalized as **M2_typed_assignment_geometry**: typed current assignments
+plus independently licensed point or area geometry, validity, CRS/topology,
+RKA/building-link, privacy and jurisdiction review. All ten hard blockers remain;
+a postal polygon or automatic exact building relation is not presumed.
+
+The [KZ review](postal-context-kazakhstan-m2.md) verifies seven primary reference
+bodies, distinguishes three HTML app shells and records one TLS-verification
+failure. Three legal articles are digest-bound with separately reviewed effective
+dates. The visually reviewed UPU sheet is printed 07/2025. Service-26 public
+documentation requires a bearer token and shows two null-coordinate examples;
+these are not live assignment rows or national quality metrics. Its malformed
+schematic is not evidence of malformed live responses. RKA descriptive metadata
+was corrected from 16 digits to 16 characters; postcode validators are unchanged.
+
+All eleven KZ official discovery references are metadata-only for validation.
+Current complete licensed assignments, independent licensed geometry, explicit
+links, approved immutable publication and actual AGID release verification remain
+missing. No source records, addresses/buildings, private queries, paid operations,
+new destinations or deployment were performed/published. Public-only retry follows
+all pending countries and 2026-09-04T17:08:16.042Z.
+Earlier country entries are unchanged. Next pending country: **LA (Laos)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

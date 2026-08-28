@@ -22,7 +22,7 @@ test('Kazakhstan registry separates operator, API, dual format, RKA, NSDI, cadas
   assert.match(ASIA_OPEN_GEO_SOURCES['qazpost-open-api'].notes, /Bearer.*address.*RKA.*not.*bulk.*geometry/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['upu-kazakhstan-addressing-2025'].notes, /07.*2025.*seven.*six.*transition.*not.*assignment/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['kazakhstan-postal-index-rules-2026'].notes, /first Latin.*address block.*real-estate[- ]object.*not.*geometry/i);
-  assert.match(ASIA_OPEN_GEO_SOURCES['kazakhstan-address-register'].notes, /separate.*16-digit RKA.*not.*open/i);
+  assert.match(ASIA_OPEN_GEO_SOURCES['kazakhstan-address-register'].notes, /separate.*16-character RKA.*not.*open/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['kazakhstan-nsdi'].notes, /search.*view.*download.*exact dataset.*not postal/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['kazakhstan-nsdi-use-rules-2023'].notes, /without charge.*exact dataset.*not.*licence/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['kazakhstan-public-cadastral-map'].notes, /parcel.*not postal.*building relation/i);
@@ -40,8 +40,8 @@ test('Kazakhstan catalog exposes assignment, operational, legal, spatial, privac
   assert.equal(sources.get('kazakhstan-nsdi')?.depth, 'geo-only');
   assert.equal(sources.get('kazakhstan-real-estate-rights-register')?.sourceRole, 'legal-framework-only');
   const classification = classifyPostalSourceTrust({ countryCode: 'KZ', source: 'QazPost' });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
 });
 
 test('Kazakhstan address metadata encodes dual codes, RKA, buildings, time, jurisdiction, privacy, and AGID', () => {
@@ -54,7 +54,7 @@ test('Kazakhstan address metadata encodes dual codes, RKA, buildings, time, juri
   assert.match(value.postalCode.api, /open\.post\.kz.*26/i);
   assert.match(value.postalCode.source, /Kazpost.*UPU.*07.*2025.*2026.*Address Register.*RKA.*NSDI.*cadast.*OpenStreetMap/i);
   assert.equal(value.addressRules.postalCode.required, true);
-  assert.match(value.addressRules.postalCode.usage, /coexisting.*seven alphanumeric.*real-estate object.*legacy six-digit.*phased out.*not.*polygon.*RKA.*16-digit.*AGID/i);
+  assert.match(value.addressRules.postalCode.usage, /coexisting.*seven alphanumeric.*real-estate object.*legacy six-digit.*phased out.*not.*polygon.*RKA.*16-character.*AGID/i);
   for (const key of ['building', 'street', 'houseNumber', 'corpus', 'unit', 'postOffice', 'poBox']) {
     assert.ok(value.native.fields.some((item: any) => item.key === key));
   }

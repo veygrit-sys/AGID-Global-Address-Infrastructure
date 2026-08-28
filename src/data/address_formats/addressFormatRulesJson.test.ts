@@ -2221,7 +2221,7 @@ test('Kazakhstan address metadata separates dual codes, RKA, buildings, NSDI, ti
   assert.equal(new RegExp(format.postalCode?.regex ?? '').test('X99-X9X9'), false);
   assert.match(format.postalCode?.source ?? '', /Kazpost.*UPU.*07.*2025.*2026.*Address Register.*RKA.*NSDI.*cadast.*OpenStreetMap/i);
   assert.equal(rules.postalCode?.required, true);
-  assert.match(rules.postalCode?.usage ?? '', /coexisting.*seven alphanumeric.*real-estate object.*legacy six-digit.*phased out.*not.*polygon.*RKA.*16-digit.*AGID/i);
+  assert.match(rules.postalCode?.usage ?? '', /coexisting.*seven alphanumeric.*real-estate object.*legacy six-digit.*phased out.*not.*polygon.*RKA.*16-character.*AGID/i);
   for (const key of ['building', 'houseNumber', 'corpus', 'unit', 'postOffice', 'poBox']) {
     assert.ok(format.native?.fields.some(item => item.key === key), key);
   }

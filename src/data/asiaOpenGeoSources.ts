@@ -3428,11 +3428,11 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'kazakhstan-addressing-rules-2026': {
     id: 'kazakhstan-addressing-rules-2026', name: 'Kazakhstan real-estate addressing rules 2026', url: 'https://adilet.zan.kz/rus/docs/V2600038643', kind: 'standard', coverage: 'country', usage: 'reference',
-    notes: 'Defines Digital Address Register registration and the separate 16-digit RKA. RKA is not a postcode, AGID cell, cadastral identifier, footprint, owner or blanket-public record.',
+    notes: 'Defines Digital Address Register registration and the separate 16-character RKA. RKA is not a postcode, AGID cell, cadastral identifier, footprint, owner or blanket-public record.',
   },
   'kazakhstan-address-register': {
     id: 'kazakhstan-address-register', name: 'Kazakhstan address certificate and RKA service', url: 'https://www.gov.kz/services/3690?lang=en', kind: 'address', coverage: 'country', usage: 'reference',
-    notes: 'A separate 16-digit RKA and an authenticated government response may establish response-specific registered-address evidence. The service is not an open national address or building corpus and needs lawful purpose, privacy and display rights.',
+    notes: 'A separate 16-character RKA and an authenticated government response may establish response-specific registered-address evidence. The service is not an open national address or building corpus and needs lawful purpose, privacy and display rights.',
   },
   'kazakhstan-nsdi-use-rules-2023': {
     id: 'kazakhstan-nsdi-use-rules-2023', name: 'Kazakhstan NSDI use rules', url: 'https://adilet.zan.kz/rus/docs/V2300032134', kind: 'standard', coverage: 'country', usage: 'reference',
