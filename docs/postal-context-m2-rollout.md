@@ -210,6 +210,27 @@ Prior country holds are unchanged. Next read-only review is 2026-09-04 after
 the pending-country pass; the next pending country is BH. No second country
 was started during this BD run.
 
+## Bahrain: landmark context and open-data licence review
+
+The 2026-08-28 BH run kept its complete M2_assignment definition. The
+[source review](postal-context-bahrain-m2.md) inspected all 27 public-landmark
+rows (20 distinct block labels, no explicit postcode relation). Metadata before
+and after retrieval matched. Point records and their metadata envelope are
+not postal polygons; repeated blocks and numbered counters are not stable IDs.
+
+Five reference documents and the embedded portal terms were verified. The
+portal-linked government open-data licence v1.0 (20 May 2025) positively covers
+eligible government open datasets outside the portal too. Earlier blanket
+portal-only wording was corrected without granting access to controlled records.
+The postal directory remained unavailable in bounded Node/native-TLS checks.
+
+BH remains M1 / blocked: a complete current postcode-block assignment artifact,
+its exact applicable rights, retained snapshots, immutable publication and real
+AGID checks are missing. No source rows, geometry or subscriber data were
+published. The next read-only review is 2026-09-04 after the pending-country
+pass; the next pending country is BN. Earlier countries are unchanged and no
+second country was started in this BH run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

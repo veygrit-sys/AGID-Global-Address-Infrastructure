@@ -28,14 +28,14 @@ test('Bahrain seed separates postcode-block assignment, P.O. box delivery, geome
   assert.match(value.postal_system.geometry_rule, /No reviewed.*canonical national.*polygon.*rights-cleared block.*derived.*never.*official/i);
   assert.match(value.postal_system.address_rule, /Governorate.*locality.*block.*road.*building.*unit.*postcode.*P.O. box.*does not.*person.*footprint/i);
   assert.match(value.postal_system.building_rule, /iGA address certificate.*rights-cleared building geometry.*stable relation.*candidates only/i);
-  assert.match(value.postal_system.licence_rule, /Open Data Portal.*royalty-free.*attribution.*transformation.*disclaimer.*sublicence.*removal.*do not cover/i);
+  assert.match(value.postal_system.licence_rule, /Open Data Portal.*government websites.*attribution.*transformation.*disclaimer.*sublicence.*removal.*do not automatically cover/i);
   assert.match(value.postal_system.privacy_rule, /CPR.*recipients.*subscribers.*tracking.*owners.*occupants.*deeds.*excluded/i);
   assert.equal(value.promotion.current_stage, 'M1_metadata');
   for (const blocker of [
     'upu-or-service-directory-presented-as-complete-current-postcode-directory',
     'postcode-block-syntax-or-equal-digits-presented-as-canonical-polygon',
     'po-box-presented-as-home-subscriber-catchment-or-building',
-    'portal-terms-applied-to-non-portal-artifact',
+    'portal-terms-applied-without-covered-site-and-dataset-evidence',
   ]) assert.ok(value.promotion.hard_blockers.includes(blocker));
 });
 

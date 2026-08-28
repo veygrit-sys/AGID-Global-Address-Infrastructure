@@ -2889,8 +2889,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.bahrainpost.gov.bh/en/images/pdf/services-directory-eng.pdf',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Official Bahrain Post office addresses demonstrate current three- and four-digit locality postcodes. Directory examples are not a complete postcode-block assignment release, canonical boundary, delivery entitlement or bulk redistribution grant.',
+    usage: 'reference',
+    notes: 'Bahrain Post directory reference concerns three- and four-digit locality postcodes; current document bytes were not obtained in the 2026-08-28 review. Directory examples are not a complete postcode-block assignment release, canonical boundary, delivery entitlement or bulk redistribution grant.',
   },
   'upu-bahrain-addressing': {
     id: 'upu-bahrain-addressing',
@@ -2907,7 +2907,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.iga.gov.bh/en/category/building-and-establishment-address-services',
     kind: 'address',
     coverage: 'country',
-    usage: 'primary',
+    usage: 'reference',
     notes: 'Official iGA services issue, modify and delete building address certificates and numbers. A certificate or registered building number is strong civic-address evidence, but not an unrestricted footprint; CPR, owners, occupants, deeds, applications and contact data are excluded.',
   },
   'bahrain-open-data-terms': {
@@ -2918,7 +2918,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'reference',
     license: 'Bahrain Open Data Portal Terms of Use',
-    notes: 'Portal datasets permit royalty-free copying, distribution, adaptation and applications subject to source/date attribution, transformation notice, prescribed disclaimer, sublicence propagation and removal on iGA request. These terms apply only to exact portal datasets, not every government webpage or viewer.',
+    notes: 'Portal datasets permit royalty-free copying, distribution, adaptation and applications subject to source/date attribution, transformation notice, prescribed disclaimer, sublicence propagation and removal on iGA request. These portal terms cover this site and linked iGA-owned sites. The linked government licence v1.0 (20 May 2025) also covers officially published open datasets on other government sites, not every webpage, viewer or controlled record.',
   },
   'bahrain-open-data-geographic-locations': {
     id: 'bahrain-open-data-geographic-locations',
@@ -2926,9 +2926,9 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.data.gov.bh/explore/dataset/geographical-locations-of-landmarks/api/',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    license: 'Bahrain Open Data Portal Terms of Use',
-    notes: 'Official API datasets expose selected public-place points with block and governorate context under portal terms. Point rows can validate labels and block membership but are not a complete address register, block polygon, building footprint or postcode boundary.',
+    usage: 'reference',
+    license: 'Bahrain Open Government Data License v1.0 and applicable portal terms',
+    notes: 'The inspected public-place points contain 27 rows and 20 distinct block labels, with no explicit postcode field. Their labels and coordinates are not a complete address register, block polygon, building footprint or postcode boundary. The metadata bbox is an envelope; null licence fields do not negate the portal-linked government licence.',
   },
   'bahrain-municipal-geographic-explorer': {
     id: 'bahrain-municipal-geographic-explorer',

@@ -17,12 +17,12 @@ test('Bahrain registry separates postal/block, iGA address, portal licence, poin
     assert.ok(ids.includes(source.id));
     assert.equal(source.url.startsWith('http'), true);
   }
-  assert.equal(ASIA_OPEN_GEO_SOURCES['bahrain-post-services-directory'].usage, 'primary');
+  assert.equal(ASIA_OPEN_GEO_SOURCES['bahrain-post-services-directory'].usage, 'reference');
   assert.match(ASIA_OPEN_GEO_SOURCES['bahrain-post-services-directory'].notes, /three-.*four-digit.*not.*complete.*assignment.*boundary.*bulk/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['upu-bahrain-addressing'].notes, /three or four.*1XX.*12XX.*P.O. box.*not.*allocation.*polygon.*building/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['iga-bahrain-address-services'].notes, /address certificates.*strong.*evidence.*not.*footprint.*CPR.*excluded/i);
-  assert.match(ASIA_OPEN_GEO_SOURCES['bahrain-open-data-terms'].notes, /royalty-free.*attribution.*transformation.*disclaimer.*sublicence.*removal.*only.*portal/i);
-  assert.match(ASIA_OPEN_GEO_SOURCES['bahrain-open-data-geographic-locations'].notes, /points.*block.*not.*complete.*register.*polygon.*footprint/i);
+  assert.match(ASIA_OPEN_GEO_SOURCES['bahrain-open-data-terms'].notes, /royalty-free.*attribution.*transformation.*disclaimer.*sublicence.*removal.*portal terms cover.*linked iGA.*other government sites/i);
+  assert.match(ASIA_OPEN_GEO_SOURCES['bahrain-open-data-geographic-locations'].notes, /points.*27 rows.*20 distinct block.*no explicit postcode.*not.*complete.*register.*polygon.*footprint/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['bahrain-municipal-geographic-explorer'].notes, /viewer.*not.*vector licence.*postcode.*legal survey/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['slrb-bahrain-cadastre'].notes, /cadastral.*paid.*parcel.*not.*postal block.*building.*owner.*never public/i);
 });

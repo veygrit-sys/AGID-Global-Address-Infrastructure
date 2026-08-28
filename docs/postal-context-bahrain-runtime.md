@@ -9,7 +9,7 @@ This is an M1 metadata and synthetic-runtime release. It contains no current nat
 1. Bahrain Post office addresses and the UPU sheet establish current syntax, display position, valid range and home/P.O.-box examples. They are not a complete allocation history or polygon release.
 2. A P.O. box remains non-spatial delivery-receptacle evidence. It never becomes a home, subscriber, catchment, address point or building.
 3. iGA building-address certificates and unit/establishment numbers are authoritative civic identifiers. Controlled certificate, CPR, owner, occupant, deed and application data remain outside public artifacts.
-4. Bahrain Open Data Portal datasets can be reused only with the exact portal terms, including source and download-date attribution, transformation notice, prescribed disclaimer, sublicence propagation and removal handling.
+4. The portal terms and linked Bahrain Open Government Data License v1.0 (20 May 2025) require source/date attribution, transformation notice, prescribed disclaimer, sublicence propagation and removal handling. The government licence also covers eligible government open datasets on other government websites, not every government document or controlled record.
 5. Public-place point datasets can validate block labels and coordinates, but they do not supply complete block boundaries, postcode polygons or building footprints.
 6. The municipal geographic explorer is a viewer, not a blanket vector licence or legal/postal boundary source.
 7. SLRB parcels are cadastral geometry. A parcel is not a postal block, building or address link, and title/ownership information is excluded.
@@ -32,3 +32,11 @@ AGID_POSTAL_CONTEXT_BH_LKG_DESCRIPTOR_DIGEST
 ```
 
 The standard endpoints accept `countryCode=BH` or `/api/postal/BH/{postcode}`. Geometry remains opt-in and preserves official, derived and non-spatial evidence classes.
+
+## M2 source review
+
+The [2026-08-28 review](postal-context-bahrain-m2.md) inspected 27 real public
+landmarks but found no postcode-block assignment field. Reference source IDs,
+URLs and labels are context-only or legal-framework-only, not address validation.
+A metadata bbox cannot become a postal polygon. Synthetic loader/API tests are
+engineering checks; no real descriptor or M2 data release was enabled.
