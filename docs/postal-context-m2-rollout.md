@@ -393,6 +393,30 @@ Public references may be rechecked after all pending countries and
 explicit approval. Earlier country entries are unchanged. Next pending
 country: **IQ (Iraq)**; no second country was started.
 
+## Iraq review - 2026-08-28
+
+IQ remains **M1_metadata / blocked**. Its missing M2 stage is now individually
+defined as **M2_licensed_assignment**, preserving all nine prior blockers,
+five-digit non-area objects, unverified migration candidates and jurisdiction
+boundaries. Six references passed; the Iraq Post homepage returned 403.
+
+The public NOGP API works without credentials and declares conditional CC BY
+4.0 with individual-file terms. Discovery totals are 41 datasets and 88 files,
+not postal coverage. Three postal-keyword searches returned no matches;
+this is not proof of national data absence. Two public ArcGIS metadata items
+have null licence/access-information fields. Neither a 2019 office map nor
+the 2025 StoryMap proves current assignments, reusable polygons or buildings.
+See the [IQ review](postal-context-iraq-m2.md) and aggregate receipts.
+
+No current assignment rows were acquired; quality rates are unmeasured.
+The Windows TLS adapter retains normal certificate checks. No private data,
+paid operation or new publication destination was used. Current rights-cleared
+source data, fixed publication and actual AGID loader/API evidence remain
+missing. Recheck public references after all pending countries and
+2026-09-04T13:19:11.991Z; restricted access/publication still require approval.
+Earlier country entries are unchanged. Next pending country: **IR (Iran)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
