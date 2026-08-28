@@ -24,12 +24,12 @@ test('Myanmar registry separates postal assignment, UPU syntax, administration, 
 
 test('Myanmar official catalog exposes matching authority, readiness, and restricted-use boundaries', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('MM').map(source => [source.id, source]));
-  assert.equal(sources.get('myanmar-post-postcode-lookup')?.authority, 'postal-operator'); assert.equal(sources.get('myanmar-post-postcode-lookup')?.validationReadiness, 'reference-eligible');
+  assert.equal(sources.get('myanmar-post-postcode-lookup')?.authority, 'postal-operator'); assert.equal(sources.get('myanmar-post-postcode-lookup')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('upu-myanmar-addressing-2022')?.authority, 'intergovernmental-postal-standard'); assert.equal(sources.get('myanmar-survey-department')?.depth, 'geo-only');
   assert.equal(sources.get('myanmar-one-map-geodatabase-2024')?.requiresCredential, true); assert.equal(sources.get('mimu-place-codes-v9-6-2025')?.depth, 'locality');
   assert.equal(sources.get('mimu-geospatial-data')?.availability, 'commercial-or-restricted'); assert.equal(sources.get('mimu-terms-and-conditions')?.sourceRole, 'legal-framework-only');
   assert.equal(sources.get('ycdc-land-building-services')?.depth, 'building'); assert.equal(sources.get('ycdc-land-building-services')?.requiresCredential, true);
-  const classification = classifyPostalSourceTrust({ countryCode: 'MM', source: 'Myanmar Post Postcode Lookup' }); assert.equal(classification.strength, 'strong'); assert.equal(classification.tier, 'authoritative');
+  const classification = classifyPostalSourceTrust({ countryCode: 'MM', source: 'Myanmar Post Postcode Lookup' }); assert.equal(classification.strength, 'weak'); assert.equal(classification.tier, 'weak');
 });
 
 test('Myanmar address metadata encodes seven digits, PCode separation, rural and postal objects, and exact building gate', () => {

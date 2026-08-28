@@ -691,3 +691,11 @@ LK had no country contract or M2 definition at base `5cbcaf70ee94dfd5b854ac99f8b
 [LK review](postal-context-sri-lanka-m2.md) and [source receipt](../reports/postal-context-m2/lk-source-review-2026-08-28.json) record provenance, hashes, quality limits and privacy/publication gates. LK remains disabled in the generic Postal Context runtime. No source rows, real geometry, civic/building relations, immutable data artifact or actual LK runtime verification exist. Source metadata cannot upgrade address trust. The legacy lookup-URL field now points to the public HTML search (not a machine API); five-digit syntax, languages and user address fields remain intact.
 
 Revisit public sources only after all pending countries and `2026-09-04T18:49:33.683Z`; no restricted data, purchase, contract, new publishing destination or extra charge is authorized. Engineering/synthetic tests do not count as M2.
+
+## Myanmar (MM): permission-gated M1, M2 blocked — 2026-08-28
+
+Preserved the existing M2_source_attested target and all twelve hard blockers; added explicit real-data, rights, geometry, immutable-publication and AGID verification requirements. Seven initial references were byte-verified offline and three acquisition failures retained. UPU 11/2022 remains a syntax reference. MIMU v9.7 (January 2026) listing statistics are administrative metadata, not postal assignments or validated rows. Its old v9.6 source ID remains stable.
+
+[MM review](postal-context-myanmar-m2.md) and [source receipt](../reports/postal-context-m2/mm-source-review-2026-08-28.json) document the dedicated MIMU terms and the stop on further automated requests. Written provider permission and explicit user approval are required; the review reminder `2026-09-04T19:19:35.082Z` is not permission and does not trigger automatic MM retry. YCDC remains local controlled service context. No production source rows, geometry, civic/building relations or fixed data artifacts were published; existing seven-digit synthetic runtime remains unchanged.
+
+Other 251 entries are unchanged. Next pending country: **MN**; no second country was started.

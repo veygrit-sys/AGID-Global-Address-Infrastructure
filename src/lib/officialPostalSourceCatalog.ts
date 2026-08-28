@@ -4719,9 +4719,9 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   },
   {
     id: 'myanmar-post-postcode-lookup', countryCodes: ['MM'], label: 'Myanmar Post Postcode Lookup',
-    authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'reference-eligible',
+    authority: 'postal-operator', trustTier: 'authoritative', availability: 'web-search', depth: 'postcode', validationReadiness: 'metadata-only',
     url: 'https://www.myanmarpost.com.mm/postcode?tab=information', sourceNames: ['myanmar post', 'myanmar post postcode lookup', 'myanmar postcode'], openSourceIds: ['myanmar-post-postcode-lookup'], requiresCredential: false,
-    notes: ['Official current seven-digit postcode lookup for Quarter and Village Tract.', 'Pinned results are assignments, not canonical polygons, addresses, buildings, complete history or blanket reuse rights.'],
+    notes: ['Official current seven-digit postcode lookup for Quarter and Village Tract.', 'An exact permitted current result is required; this URL/name alone proves no assignment, polygon, civic address, building, history or reuse rights.'],
   },
   {
     id: 'myanmar-national-portal-post-services', countryCodes: ['MM'], label: 'Myanmar National Portal postal services',
@@ -4732,7 +4732,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'upu-myanmar-addressing-2022', countryCodes: ['MM'], label: 'UPU Myanmar Addressing Sheet 2022',
     authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'address', validationReadiness: 'metadata-only',
-    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mmrEn.pdf', sourceNames: ['upu myanmar addressing', 'upu myanmar seven digit postcode'], openSourceIds: ['upu-myanmar-addressing-2022'], requiresCredential: false,
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mmrEn.pdf', sourceNames: ['upu myanmar addressing', 'upu myanmar seven digit postcode', 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mmrEn.pdf'], openSourceIds: ['upu-myanmar-addressing-2022'], requiresCredential: false,
     notes: ['Defines seven-digit Quarter and Village Tract syntax and home, rural, P.O. Box and building address formats.', 'The 2022 sheet is not current allocations, geometry or a civic-address registry.'],
   },
   {
@@ -4748,7 +4748,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     notes: ['Official inter-agency geospatial platform context.', 'Platform visibility is not public data, postal authority, civic-address data or a reuse licence.'],
   },
   {
-    id: 'mimu-place-codes-v9-6-2025', countryCodes: ['MM'], label: 'MIMU Place Codes v9.6',
+    id: 'mimu-place-codes-v9-6-2025', countryCodes: ['MM'], label: 'MIMU Place Codes (v9.7 listed January 2026)',
     authority: 'official-open-data', trustTier: 'official', availability: 'commercial-or-restricted', depth: 'locality', validationReadiness: 'metadata-only',
     url: 'https://www.themimu.info/place-codes', sourceNames: ['mimu place codes', 'mimu pcodes'], openSourceIds: ['mimu-place-codes-v9-6-2025'], requiresCredential: true,
     notes: ['Administrative identifiers for multiple hierarchy levels.', 'MIMU PCodes are not Myanmar Post postcodes; source terms and written permissions govern geospatial use.'],
@@ -4762,14 +4762,20 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'mimu-terms-and-conditions', countryCodes: ['MM'], label: 'MIMU data terms and conditions',
     authority: 'official-open-data', trustTier: 'official', availability: 'web-search', depth: 'legal-framework', sourceRole: 'legal-framework-only', validationReadiness: 'metadata-only',
-    url: 'https://www.themimu.info/about-us', sourceNames: ['mimu terms and conditions', 'mimu data terms'], openSourceIds: ['mimu-terms-and-conditions'], requiresCredential: false,
-    notes: ['Records attribution, non-sale, non-commercial and permission controls.', 'The terms page is a legal gate, not postal, address or geometry data.'],
+    url: 'https://www.themimu.info/mimu-terms-conditions', sourceNames: ['mimu terms and conditions', 'mimu data terms'], openSourceIds: ['mimu-terms-and-conditions'], requiresCredential: false,
+    notes: ['Records attribution, non-sale, non-commercial and permission controls.', 'The terms page is a legal gate, not postal, address or geometry data. Automated collection and embedding are disabled pending scope-specific written permission and user approval.'],
   },
   {
     id: 'ycdc-land-building-services', countryCodes: ['MM'], label: 'YCDC land and building services',
     authority: 'government', trustTier: 'authoritative', availability: 'commercial-or-restricted', depth: 'building', validationReadiness: 'metadata-only',
     url: 'https://myanmar.gov.mm/yangon-city-development-council', sourceNames: ['ycdc land building services', 'yangon city development committee building'], openSourceIds: ['ycdc-land-building-services'], requiresCredential: true,
     notes: ['Local controlled land, building and property-service context.', 'Private forms and tax evidence are validation-only, not a national public address registry or reusable address-building relation.'],
+  },
+  {
+    id: 'mimu-about-reference', countryCodes: ['MM'], label: 'MIMU agency background reference',
+    authority: 'official-open-data', trustTier: 'official', availability: 'web-search', depth: 'locality', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://www.themimu.info/about-us', sourceNames: ['mimu about reference'], openSourceIds: [], requiresCredential: false,
+    notes: ['Former terms URL is an agency background page, not the dedicated terms or assignment data. No data-reuse or automated-collection permission is established.'],
   },
   {
     id: 'pos-malaysia-postcode-finder', countryCodes: ['MY'], label: 'Pos Malaysia Postcode Finder',

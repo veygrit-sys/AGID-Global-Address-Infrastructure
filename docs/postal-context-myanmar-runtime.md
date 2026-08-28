@@ -31,3 +31,13 @@ AGID_POSTAL_CONTEXT_MM_LKG_DESCRIPTOR_DIGEST
 ~~~
 
 The standard endpoints accept countryCode=MM or /api/postal/MM/{postcode}. Geometry remains opt-in and preserves official, administrative-join, derived and non-spatial evidence classes.
+
+## M2 evidence review
+
+The [Myanmar M2 review](postal-context-myanmar-m2.md) retains M1_metadata. The existing
+M2_source_attested target now has explicit real-data, rights, immutable-artifact and AGID
+verification gates; synthetic runtime coverage does not satisfy them. MIMU source IDs remain
+stable while the observed listing is v9.7 (January 2026), not proof of acquired rows.
+MIMU network collection is permission-gated; no workbook, macro, feature data or private YCDC
+form is fetched. Operator URL/name-only trust remains metadata-only until exact current
+permitted assignment evidence is verified. Existing seven-digit normalization and fixtures remain unchanged.
