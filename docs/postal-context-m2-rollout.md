@@ -619,6 +619,31 @@ all pending countries and 2026-09-04T17:08:16.042Z.
 Earlier country entries are unchanged. Next pending country: **LA (Laos)**;
 no second country was started.
 
+## Laos review - 2026-08-28
+
+LA remains **M1_metadata / blocked**. Its existing runtime Promotion conditions
+are formalized as **M2_assignment_geometry**, with all eight hard blockers
+unchanged. Point, route or area geometry needs independent rights and a proven
+postal relation; no polygon or exact building link is presumed.
+
+The [LA review](postal-context-laos-m2.md) verifies eight primary reference
+bodies, distinguishes one loading shell and records two retrieval failures.
+The operator displays 18 regional totals summing to 8,172 rows, not distinct
+postcodes. Ten sampled first-region rows have ten distinct texts and one code;
+repeated codes are not duplicate assignments. Laopedia revision 1784 has
+partial lists, missing detail, a repeated village token and an unclosed list;
+none are silently expanded or repaired. NFMS metadata has no verified postal
+join or reuse licence. Current applicable legal status remains unverified.
+
+All seven LA official discovery sources remain metadata-only for validation.
+Complete current licensed assignments, independent licensed geometry, approved
+immutable publication and actual AGID loader/API verification are missing.
+No source cells, census/land records, new destination, paid operation or
+deployment was published/performed. Public-only retry follows all pending
+countries and 2026-09-04T17:43:12.611Z.
+Earlier country entries are unchanged. Next pending country: **LB (Lebanon)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

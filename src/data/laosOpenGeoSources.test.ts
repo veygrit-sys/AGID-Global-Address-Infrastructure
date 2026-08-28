@@ -21,11 +21,11 @@ test('Laos registry separates postcode, law, allocation, administrative geometry
 
 test('Laos official catalog exposes matching authority and access boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('LA').map(source=>[source.id,source]));
-  assert.equal(sources.get('lao-post-postcode')?.authority,'postal-operator'); assert.equal(sources.get('lao-post-postcode')?.validationReadiness,'reference-eligible');
+  assert.equal(sources.get('lao-post-postcode')?.authority,'postal-operator'); assert.equal(sources.get('lao-post-postcode')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('laos-postal-service-law-2013')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('laopedia-laos-postcodes')?.depth,'postcode');
   assert.equal(sources.get('nfms-laos-administrative-boundaries')?.availability,'public-api'); assert.equal(sources.get('lsb-laos-phc-2025')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('laolandreg-laos')?.requiresCredential,true); assert.equal(sources.get('laos-electronic-data-law')?.depth,'legal-framework');
-  const classification=classifyPostalSourceTrust({countryCode:'LA',source:'Lao Postal Service'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'LA',source:'Lao Postal Service'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak');
 });
 
 test('Laos address metadata encodes five digits, delivery hierarchy, non-area objects, explicit buildings, and AGID separation',()=>{

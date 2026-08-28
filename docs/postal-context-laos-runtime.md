@@ -47,3 +47,14 @@ Derived geometry is returned only when explicitly requested. Every result keeps 
 ## Promotion
 
 M2 or later requires exact rights-reviewed source artifacts, immutable digests, current assignment validity, independently licensed geometry, CRS/topology checks, temporal coverage, privacy review and reproducible provenance. Real postcode rows, addresses and production geometry belong in the independent `agid-postal-la` data repository, not this AGID application repository.
+
+## M2 source review - 2026-08-28
+
+The [LA M2 review](postal-context-laos-m2.md) formalizes the existing Promotion
+conditions as `M2_assignment_geometry`, preserving all eight hard blockers. LA
+remains `M1_metadata / blocked`: public UI counts and partial allocation articles
+are not a complete licensed assignment snapshot; administrative layer metadata
+is not postal geometry. Current legal status, exact reuse rights, independent
+geometry, approved immutable publication and actual AGID release verification
+remain unverified. No runtime validator, production pack or building relation is
+promoted. Synthetic loader/API tests are not live-data verification.
