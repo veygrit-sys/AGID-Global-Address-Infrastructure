@@ -310,6 +310,26 @@ publication and real AGID validation remain unresolved. Recheck 2026-09-04 after
 the pending pass. Earlier countries are unchanged. Next is **HK (Hong Kong)**;
 no second country was started in this run.
 
+## Hong Kong review — 2026-08-28
+
+HK now has an individually reviewed M2_scoped_address_context definition and
+remains M1 / blocked. Hongkong Post confirms no local postcode system; official
+postal geometry stays none. The [HK review](postal-context-hong-kong-m2.md)
+separates ALS bilingual address fields, GeoAddress locations and AGID cells.
+
+Six official references passed. Two public-government-building query responses
+contained building/number fields and WGS84 points; both passed the in-memory
+candidate adapter and coordinate-cell roundtrip. Repeat and GeoAddress queries
+matched. Source rows are not retained. Score is not confidence, date is not
+validity, and a location ID is not a unique textual address or postal polygon.
+
+DATA.GOV.HK v1.2 permits conditional commercial/noncommercial reuse; this is
+not a blanket rights-denied finding. Approved immutable publication, retained
+rights-reviewed snapshots and a real no-postcode pack loader/API are missing.
+The 2026-09-04 reminder does not authorize new publication or automatic retries.
+All previous entries are unchanged. Next pending country: **ID (Indonesia)**;
+no second country was started during this run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
