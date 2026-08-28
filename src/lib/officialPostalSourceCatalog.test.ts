@@ -187,8 +187,8 @@ test('separates Azerbaijan postal, address-register, cadastral, and catalog auth
     countryCode: 'AZ',
     source: 'Azerpost postcode and branch search',
   });
-  assert.equal(classification.strength, 'strong');
-  assert.equal(classification.tier, 'authoritative');
+  assert.equal(classification.strength, 'weak');
+  assert.equal(classification.tier, 'weak');
 });
 test('separates Albania postal, address-system, cadastral-building, and geoportal authority', () => {
   const sources = getOfficialPostalSourcesForCountry('AL');

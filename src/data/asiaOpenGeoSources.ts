@@ -3237,7 +3237,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'azerbaijan-open-data': {
     id: 'azerbaijan-open-data',
     name: 'Azerbaijan Open Data Portal',
-    url: 'https://www.opendata.az/',
+    url: 'https://opendata.az/en',
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'validation',

@@ -60,3 +60,11 @@ sources and private registry fields stay outside the AGID repository.
 Environment slots use `AGID_POSTAL_CONTEXT_AZ_*`. Until a separately attested
 M2+ descriptor exists, Azerbaijan remains `unconfigured`; synthetic packs are
 tests only.
+
+## M2 source review
+
+The [2026-08-28 source review](postal-context-azerbaijan-m2.md) profiles the
+public branch directory without retaining its rows. It found record-class,
+coordinate, stable-identity, edition and reuse gaps. Source-reference URLs
+remain context-only for validation; this review does not enable a production
+descriptor or count synthetic API checks as real-data integration.

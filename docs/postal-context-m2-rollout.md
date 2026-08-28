@@ -168,6 +168,27 @@ The next read-only review is 2026-09-04 after the pending-country pass.
 JP, AE and AF are unchanged; the next pending country is AZ.
 No second country was started in this AM run.
 
+## Azerbaijan: public branch-directory quality review
+
+The 2026-08-28 AZ run retained the original experimental M2 definition.
+The [source review](postal-context-azerbaijan-m2.md) inspected the public
+Azərpoçt branch payload: 993 rows, 993 distinct codes, 139 leading-zero codes
+and 6,512 street hints. All record types are empty; presentation IDs equal
+row indexes. Eleven coordinate pairs fail strict decimal parsing, one is
+out of range, and eight street hints lack number strings. Nothing was repaired
+or converted into civic addresses, building links or postal polygons.
+
+Eight official reference probes returned expected content. Official guidance
+defines public address fields, but current export/edition, exact reuse rights
+and immutable artifacts remain unverified. One address-portal fetch failed;
+the live non-www IDDA open-data portal was confirmed. No blanket restriction
+on all AZ public data is inferred. AZ remains M1 / blocked, not M2.
+
+Reference entries are metadata-only/context-only for AGID validation.
+The next read-only review is 2026-09-04 after the pending-country pass.
+JP, AE, AF and AM holds are unchanged. The next pending country is BD;
+no second country was started during this AZ run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

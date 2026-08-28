@@ -30,3 +30,12 @@ bridged, filled, or classified by nearest postcode evidence.
 
 The fixtures are synthetic runtime conformance data and cannot promote a real
 release. See `repository-manifest.json` and `source-profile.json` for gates.
+
+## M2 preflight
+
+See m2-source-review.json and the
+[source/quality review](../../../../docs/postal-context-azerbaijan-m2.md).
+The 2026-08-28 run retained only source-document hashes and branch-data
+aggregate counts. Actual office/street rows, coordinates, source snapshots
+and any postal polygon or building geometry are not bundled. M2 remains
+blocked pending current rights-cleared evidence and approved publication.
