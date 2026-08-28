@@ -517,6 +517,29 @@ Public reference retry is due after all pending countries and 2026-09-04T15:05:0
 Earlier country entries are unchanged. Next pending country: **KP**;
 no second country was started.
 
+## North Korea review - 2026-08-28
+
+KP remains **M0_inventory / blocked**. A missing country-specific M2 definition
+now requires current rights-cleared real administrative/locality context and
+independently licensed geometry, reproducible validation, immutable publication
+and actual AGID loader/API evidence. No code or fixture is counted as M2 data.
+
+The [KP review](postal-context-north-korea-m2.md) pins four verified UPU references.
+The PDF's KP not-required table is **Sep. 2025**; a different table is Aug. 2026.
+A later file date does not update KP's table or prove permanent absence. The
+unsupported three-plus-three format and example were removed from KP JSON/YAML;
+optional manual input and existing country/administrative identities are preserved.
+KP is not added to the production Postal Context runtime. P0 seeds, planning cells
+and virtual codes do not become official postal areas or address/building links.
+
+No current licensed data release, production geometry, civic/building relation or
+approved immutable data artifact was obtained. Missing/duplicate assignment rates
+are unknown, not zero; this is not proof of national data absence. No raw data,
+new destination, private query, contract or paid operation was published/performed.
+Public-only retry is due after all pending countries and 2026-09-04T15:34:04.282Z.
+Earlier country entries are unchanged. Next pending country: **KR (South Korea)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

@@ -164,7 +164,7 @@ export function getPostcodeInputConfig(format: Partial<AddressFormat> | null | u
   const pattern = hasEditablePostcodeTokens(formatPattern) && isSafePostcodePattern(formatPattern)
     ? formatPattern
     : patternFromRegex(postalCode.regex) || formatPattern;
-  if (!hasEditablePostcodeTokens(pattern)) {
+  if (!hasEditablePostcodeTokens(pattern) || !isSafePostcodePattern(pattern)) {
     return NONE_CONFIG;
   }
 
