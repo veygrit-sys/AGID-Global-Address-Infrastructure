@@ -467,6 +467,31 @@ No restricted access or publication is authorized by that date. Earlier country
 entries are unchanged. Next pending country: **KG (Kyrgyzstan)**;
 no second country was started.
 
+## Kyrgyzstan review - 2026-08-28
+
+KG remains **M1_metadata / blocked**. Its missing named M2 stage now retains
+the original independently licensed geometry, CRS/topology, crosswalk and
+civic/building/privacy review requirements; all ten hard blockers are unchanged.
+The [KG review](postal-context-kyrgyzstan-m2.md) profiles the full captured
+directory: 2,059 observations, 2,049 numeric-code rows, 10 mobile markers,
+871 distinct codes and 26 excess duplicate observation keys (1.263%).
+One leading-zero code is preserved. None is promoted to a current assignment.
+
+The repeated literal hash and 2025 publication/modified dates match. Six
+references were verified, including the visually reviewed UPU 03/2019 sheet;
+the UPU designated-operator page returned HTTP 500. Windows native TLS verifies
+the postal site without disabling certificate checks. Portal searches are
+bounded metadata discovery: an index keyword returned 117 results, of which
+20 were inspected; this is not postal coverage or proof of absence.
+
+Exact current validity/reuse rights, independently licensed geometry, fixed
+data publication approval and actual AGID loader/API evidence remain missing.
+No raw row, geometry, civic/building link, paid service or new destination was
+published. Public references may be reviewed after all pending countries and
+2026-09-04T14:37:17.782Z. Restricted access and publication still require
+approval. Earlier entries are unchanged. Next pending country: **KH (Cambodia)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

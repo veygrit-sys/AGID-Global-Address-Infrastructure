@@ -29,3 +29,10 @@ AGID is an independent spatial index connected only by a versioned crosswalk. AG
 ## Promotion
 
 M2 or later requires exact current operator artifacts, explicit typing of numeric codes and mobile postal objects, immutable digests, validity, independently licensed point, route or area geometry, CRS and topology checks, administrative crosswalk review, civic-address and building-link review, privacy and licence review, and reproducible provenance. Real rows, addresses and production geometry belong in the independent agid-postal-kg data repository, not this AGID application repository.
+
+## M2 review - 2026-08-28
+
+See [the source and quality review](postal-context-kyrgyzstan-m2.md). The full
+operator directory was profiled, but its current assignment validity and exact
+reuse rights remain unverified. The original promotion requirements above
+remain in force. Passing synthetic runtime checks is not M2 data completion.
