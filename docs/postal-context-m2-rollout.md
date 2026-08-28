@@ -749,3 +749,13 @@ Nine documents/workbook responses were byte/hash-verified and one old policy URL
 [Source review](../reports/postal-context-m2/om-source-review-2026-08-28.json) and [engineering checks](../reports/postal-context-m2/om-checks-2026-08-28.json) contain provenance, validation and limitations. [Oman details](postal-context-oman-m2.md) provide reproduction and unblock conditions. Retry public sources after `2026-09-04T21:59:53.131Z` and after the pending-country pass. Additional permission is required for restricted sources, contracts or a new publishing destination.
 
 After OM: 252 profiles, 218 pending, 34 blocked, 0 in progress, 0 evidence-verified M2. Next: **PH**. No second country was started.
+
+## PH — 2026-08-28: locator defects and namespace transition, M2 blocked
+
+Preserved `M2_assignment`. The exact live PHLPost HTML snapshot has 1,400 body rows: 440 entirely blank and 960 populated, of which 959 contain four-digit codes (958 distinct). One code cell contains a locality label and one row is duplicated. No imputation, correction, deduplication or administrative/geometry inference occurred. Current national coverage and edition remain unverified.
+
+Four reference bodies were byte-verified; two PSGC requests returned 403 without bypass. Positive public-domain notice, copyright footer and government-work profit/third-party conditions are recorded separately. UPU printed 09/2004 is not its PDF 2020 timestamp. A separate PHLPost seven-character ZIP Code PH announcement is not an allocation/crosswalk and does not replace the four-digit AGID namespace.
+
+[Country review](postal-context-philippines-m2.md), [source report](../reports/postal-context-m2/ph-source-review-2026-08-28.json) and [engineering checks](../reports/postal-context-m2/ph-checks-2026-08-28.json) provide evidence and reproduction. No approved immutable data artifact or real-data AGID loader/API proof exists. Retry public review after `2026-09-04T22:27:15.802Z` and the pending-country pass. Restricted sources, contracts, new publication destinations and additional costs need separate approval.
+
+After PH: 252 profiles, 217 pending, 35 blocked, 0 in progress, 0 evidence-verified M2. Next: **PK**. Other 251 entries are unchanged; no second country started.

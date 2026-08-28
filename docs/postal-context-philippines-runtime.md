@@ -1,6 +1,6 @@
 # Philippines Postal Context runtime
 
-The Philippines uses four-digit ZIP codes. PHLPost publishes a locator table with Region, Province, City/Municipality and ZIP Code fields. The UPU addressing sheet places the code before the locality or province and describes digit-level routing roles. AGID stores the code as a four-character string and never turns locator labels or digit groups into geometry.
+The existing AGID Philippines runtime supports the four-digit PHLPost locator namespace. A separate seven-character ZIP Code PH announcement is not silently mapped into it; see the [M2 source review](postal-context-philippines-m2.md). PHLPost publishes a locator table with Region, Province, City/Municipality and ZIP Code fields. The UPU addressing sheet places the code before the locality or province and describes digit-level routing roles. AGID stores the code as a four-character string and never turns locator labels or digit groups into geometry.
 
 This is an M1 metadata and synthetic-runtime release. It contains no PHLPost rows, real addresses, recipients, tracking data, PSGC data rows, Geoportal or NAMRIA layers, PSA census or CBMS microdata, LRA records, production polygons, buildings, owners, title holders, occupants or other personal data.
 
