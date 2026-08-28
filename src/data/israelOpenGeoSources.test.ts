@@ -23,7 +23,7 @@ test('Israel registry separates operator, seven and nine digits, terms, UPU, gov
 test('Israel official catalog exposes matching authority and licence boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('IL').map(source=>[source.id,source])); for(const id of ['israel-post','israel-post-mail-guide-2020','israel-post-terms','upu-israel-addressing-2022','govmap-israel','population-authority-israel-street-list','cbs-israel-geography','data-gov-il-terms-2025'])assert.ok(sources.has(id));
   assert.equal(sources.get('israel-post')?.trustTier,'authoritative'); assert.equal(sources.get('israel-post')?.availability,'web-search'); assert.equal(sources.get('israel-post-mail-guide-2020')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('israel-post-terms')?.depth,'legal-framework'); assert.equal(sources.get('upu-israel-addressing-2022')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('govmap-israel')?.requiresCredential,true); assert.equal(sources.get('population-authority-israel-street-list')?.availability,'bulk-open-data'); assert.equal(sources.get('cbs-israel-geography')?.availability,'public-api');
-  const classification=classifyPostalSourceTrust({countryCode:'IL',source:'Israel Post'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'IL',source:'Israel Post'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak');
 });
 
 test('Israel address metadata encodes seven digits, non-area geometry gates, explicit buildings, territorial scope, and AGID separation',()=>{

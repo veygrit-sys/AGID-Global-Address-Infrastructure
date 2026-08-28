@@ -348,6 +348,29 @@ Recheck on 2026-09-04 after the pending-country pass; no restricted resources,
 paid services or new destinations are authorized. Earlier entries are
 unchanged. Next pending country: **IL (Israel)**; no second country was started.
 
+## Israel review — 2026-08-28
+
+IL remains **M1_metadata / blocked**. The missing M2 stage is now explicitly
+defined as **M2_licensed_assignment**, formalizing the existing assignment,
+object-type, rights, privacy and territorial rules; all nine hard blockers
+are unchanged. Two official government street API pages yielded 100 row
+observations, with zero per-page missing/invalid fields or duplicate keys;
+the 50-row repeat and metadata matched. Street codes recur across localities,
+so their comparison key includes the locality code. These are not postal
+assignments, house numbers or building relations; no geometry was produced.
+
+Current terms could not be pinned (Israel Post 403; Data.gov.il pages 404),
+although the public data API worked. Empty item licence fields alone are not
+a ban or a grant. The dated UPU PDF was hashed and visually checked only as
+format/routing reference. Israel Post catalog readiness is metadata-only,
+without changing its postal-operator authority. See the [IL review](postal-context-israel-m2.md)
+and aggregate receipts for exact scope, digests and remaining evidence gates.
+
+Recheck public references after the pending-country pass and
+2026-09-04T12:24:05.981Z. No source rows, paid services or new destinations.
+Earlier countries are unchanged. Next pending country: **IN (India)**;
+no second country was started.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
