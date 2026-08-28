@@ -699,3 +699,11 @@ Preserved the existing M2_source_attested target and all twelve hard blockers; a
 [MM review](postal-context-myanmar-m2.md) and [source receipt](../reports/postal-context-m2/mm-source-review-2026-08-28.json) document the dedicated MIMU terms and the stop on further automated requests. Written provider permission and explicit user approval are required; the review reminder `2026-09-04T19:19:35.082Z` is not permission and does not trigger automatic MM retry. YCDC remains local controlled service context. No production source rows, geometry, civic/building relations or fixed data artifacts were published; existing seven-digit synthetic runtime remains unchanged.
 
 Other 251 entries are unchanged. Next pending country: **MN**; no second country was started.
+
+## Mongolia (MN): edition-aware M1, M2 blocked — 2026-08-28
+
+Preserved the M2_source_attested target and all eleven blockers; added its explicit country-specific definition. Thirteen reference documents were byte-verified offline and five acquisition failures recorded. CRC sources conflict on the 2025 count (2721 versus 2720) and standard descriptions. The 2024 directory and UPU 01/2019 were visually reviewed; extended organization examples prevent a blanket nine-digit repeal claim. Five/nine-digit syntax and the synthetic runtime remain intact.
+
+[MN review](postal-context-mongolia-m2.md) and [source receipts](../reports/postal-context-m2/mn-source-review-2026-08-28.json) separate dated documents from reusable assignments. NSO selectors preserve different regional keys sharing a label and incompatible indicator units. Official portal names/URLs alone no longer confer strong address validation. No licensed production assignment/geometry dataset, building relations, fixed data artifacts or real AGID verification were completed.
+
+Revisit public references after all pending countries and `2026-09-04T19:47:14.790Z`; controlled services and publication remain approval-gated. Other 251 entries are unchanged. Next pending country: **MO**; no second country was started.

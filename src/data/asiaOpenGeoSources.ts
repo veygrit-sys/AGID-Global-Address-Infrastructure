@@ -67,6 +67,8 @@ export type AsiaOpenGeoSourceId =
   | 'alamgc-mongolia'
   | 'nsdi-mongolia'
   | 'zipcode-mn'
+  | 'crc-mongolia-postcode-2025'
+  | 'crc-mongolia-postal-directory-2024'
   | 'hot-osm-mongolia'
   | 'osm-mongolia'
   | 'crc-mongolia-unified-postcode-2019'
@@ -1026,8 +1028,10 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official current CRC map, search and list reference for five-digit zones and nine-digit unified codes. An exact result is assignment evidence, not automatically reusable bulk rows, a canonical postcode polygon, a civic-address licence or proof of delivery.',
+    notes: 'Official CRC map, search and list reference for five-digit zones and version-qualified nine-digit unified codes. Current 2025 and 2024 sources conflict with another live CRC count and 2019 standard explanation. An exact result is assignment evidence, not automatically reusable bulk rows, a canonical postcode polygon, a civic-address licence or proof of delivery.',
   },
+  'crc-mongolia-postcode-2025': { id: 'crc-mongolia-postcode-2025', name: 'CRC Mongolia dated 2025 postal explanation', url: 'https://admin.crc.gov.mn/list/shuudan/mn', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Dated reference only. Conflicting live CRC counts and standard descriptions require reconciliation; public document access is not data redistribution, validated assignments or geometry.' },
+  'crc-mongolia-postal-directory-2024': { id: 'crc-mongolia-postal-directory-2024', name: 'CRC Mongolia postal directory 2024', url: 'https://zipcode.mn/page/docs/1.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Dated reference only. Conflicting live CRC counts and standard descriptions require reconciliation; public document access is not data redistribution, validated assignments or geometry.' },
   'crc-mongolia-unified-postcode-2019': {
     id: 'crc-mongolia-unified-postcode-2019',
     name: 'CRC Mongolia unified postal-code introduction and MNS 6775:2019',
@@ -3778,7 +3782,7 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
   LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
   LK: ["slpost","survey-department-sri-lanka","data-gov-lk","slpost-postcode-search","sri-lanka-nsdi-boundaries","sri-lanka-nsdi-data-classification","sri-lanka-nsdi-boundary-service","sri-lanka-data-protection","osm-sri-lanka"],
   MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
-  MN: ['zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],
+  MN: ['crc-mongolia-postcode-2025', 'crc-mongolia-postal-directory-2024', 'zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],
   MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
   MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
   MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],

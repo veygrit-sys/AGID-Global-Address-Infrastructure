@@ -22,11 +22,11 @@ test('Mongolia registry separates current codes, five-nine semantics, address gr
 
 test('Mongolia official catalog exposes authority and access boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('MN').map(source=>[source.id,source]));
-  assert.equal(sources.get('zipcode-mn')?.authority,'government'); assert.equal(sources.get('zipcode-mn')?.validationReadiness,'reference-eligible'); assert.equal(sources.get('zipcode-mn')?.depth,'building');
+  assert.equal(sources.get('zipcode-mn')?.authority,'government'); assert.equal(sources.get('zipcode-mn')?.validationReadiness,'metadata-only'); assert.equal(sources.get('zipcode-mn')?.depth,'postcode');
   assert.equal(sources.get('crc-mongolia-unified-postcode-2019')?.sourceRole,'legal-framework-only'); assert.equal(sources.get('upu-mongolia-addressing')?.authority,'intergovernmental-postal-standard');
   assert.equal(sources.get('alamgc-mongolia')?.requiresCredential,true); assert.equal(sources.get('nsdi-mongolia')?.availability,'commercial-or-restricted'); assert.equal(sources.get('gazar-mongolia-address-system')?.depth,'building');
   assert.equal(sources.get('gazar-mongolia-open-spatial-data')?.availability,'bulk-open-data'); assert.equal(sources.get('nso-mongolia-administrative-units')?.depth,'locality');
-  const classification=classifyPostalSourceTrust({countryCode:'MN',source:'CRC Mongolia zipcode'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'MN',source:'CRC Mongolia zipcode'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak');
 });
 
 test('Mongolia address metadata encodes five and nine digits, typed hierarchy, government-grid separation, and exact building gate',()=>{
