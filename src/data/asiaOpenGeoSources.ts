@@ -1342,11 +1342,11 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'bangladesh-post-postcode-tables': {
     id: 'bangladesh-post-postcode-tables',
     name: 'Bangladesh Post official postcode tables',
-    url: 'https://bdpost.portal.gov.bd/site/page/6aaeabe4-479b-4e5a-a671-e9e5b994bf9a/1000',
+    url: 'https://bdpost.gov.bd/pages/static-pages/6922dc7d933eb65569e10a5f',
     kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Official district tables publish Upazila, English and Bengali post-office names, office classes and four-digit postcodes. GPO, HO, TSO, UPO, SO, EDSO and EDBO labels and rows with no code remain typed. A pinned page row is assignment evidence, not a polygon, delivery point, building, complete current bulk directory or redistribution licence.',
+    coverage: 'subnational',
+    usage: 'reference',
+    notes: 'The Dhaka district reference table has Upazila, English and Bengali post-office name columns; its Bengali column is empty in the inspected edition. Explicit office classes and four-digit postcodes are separate source fields. GPO, HO, TSO, UPO, SO, EDSO and EDBO labels and rows with no code remain typed. A pinned page row is assignment evidence, not a polygon, delivery point, building, complete current bulk directory or redistribution licence.',
   },
   'upu-bangladesh-addressing': {
     id: 'upu-bangladesh-addressing',
@@ -1409,7 +1409,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Bangladesh Post official portal, including postcode-search services, for district and local delivery validation.',
+    notes: 'Legacy Bangladesh Post portal reference only; access and an exact current assignment source require review. A portal URL is not validation of a postcode or local delivery.',
   },
   'survey-bangladesh': {
     id: 'survey-bangladesh',

@@ -10,7 +10,9 @@ const EXPECTED = ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing'
 
 test('Bangladesh registry separates postal, mapping, NSDI, census, and land evidence', () => {
   const ids = getAsiaOpenSourceIds('BD'); for (const id of EXPECTED) { const source = ASIA_OPEN_GEO_SOURCES[id]; assert.ok(ids.includes(source.id)); assert.equal(source.url.startsWith('http'), true); }
-  assert.equal(ASIA_OPEN_GEO_SOURCES['bangladesh-post-postcode-tables'].usage, 'primary');
+  assert.equal(ASIA_OPEN_GEO_SOURCES['bangladesh-post-postcode-tables'].usage, 'reference');
+  assert.equal(ASIA_OPEN_GEO_SOURCES['bangladesh-post-postcode-tables'].coverage, 'subnational');
+  assert.match(ASIA_OPEN_GEO_SOURCES['bangladesh-post-postcode-tables'].notes, /Dhaka district.*Bengali column is empty/);
   assert.match(ASIA_OPEN_GEO_SOURCES['bangladesh-post-postcode-tables'].notes, /Upazila.*Bengali.*office classes.*GPO.*EDBO.*no code.*not.*polygon.*building.*licence/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['upu-bangladesh-addressing'].notes, /four digits.*regional head office.*thana.*secondary post office.*not.*allocation.*polygon.*building/i);
   assert.match(ASIA_OPEN_GEO_SOURCES['survey-of-bangladesh-gis-services'].notes, /national mapping authority.*Building and Structure.*BUTM2010.*not.*open licence.*postal.*address-building/i);

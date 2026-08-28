@@ -31,3 +31,12 @@ AGID_POSTAL_CONTEXT_BD_LKG_DESCRIPTOR_DIGEST
 ```
 
 The standard endpoints accept `countryCode=BD` or `/api/postal/BD/{postcode}`. Geometry remains opt-in and preserves official, derived and non-spatial evidence classes.
+
+## M2 source review
+
+The [2026-08-28 preflight](postal-context-bangladesh-m2.md) records real table
+counts and exceptions without retaining office rows. Current-host HTTPS is
+verified with an opt-in bounded native-curl transport; TLS failures are never
+bypassed. Reference IDs/URLs stay context-only until a complete, current,
+rights-cleared national assignment release and immutable artifacts exist.
+Synthetic loader/API tests remain engineering evidence, not M2 completion.

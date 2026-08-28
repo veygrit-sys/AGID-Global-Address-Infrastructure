@@ -189,6 +189,27 @@ The next read-only review is 2026-09-04 after the pending-country pass.
 JP, AE, AF and AM holds are unchanged. The next pending country is BD;
 no second country was started during this AZ run.
 
+## Bangladesh: typed-office table and TLS preflight
+
+The 2026-08-28 BD run preserved the original complete national M2_assignment
+criterion. The [source review](postal-context-bangladesh-m2.md) inspected
+2,871 rows across Dhaka/Gazipur district pages and an eastern-circle table.
+There are 244 blank code rows and one non-code sentinel. The regional table
+has 475 distinct codes across 2,551 offices; shared codes are not unique office
+identifiers. Missing fields and ambiguous labels are not filled or merged.
+
+Current hosts worked with Windows native TLS verification; the legacy portal
+still failed verification. No TLS bypass, account, paid service or data
+publication was used. Six references were verified and three reference
+fetches failed. Content dates (2022/2025) remain distinct from 2026 site footers.
+
+BD stays M1 / blocked: complete current national coverage, exact reuse rights,
+retained source snapshots, immutable artifacts and real AGID checks remain
+unverified. M2 does not require fabricated polygons or M3/M4 building claims.
+Prior country holds are unchanged. Next read-only review is 2026-09-04 after
+the pending-country pass; the next pending country is BH. No second country
+was started during this BD run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every
