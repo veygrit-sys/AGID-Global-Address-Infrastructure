@@ -22,16 +22,16 @@ test('Lebanon registry separates postal, NAC, UPU, administrative P-code, cadast
 
 test('Lebanon official catalog exposes matching authority and access boundaries',()=>{
   const sources=new Map(getOfficialPostalSourcesForCountry('LB').map(source=>[source.id,source]));
-  assert.equal(sources.get('libanpost')?.authority,'postal-operator'); assert.equal(sources.get('libanpost')?.validationReadiness,'reference-eligible');
+  assert.equal(sources.get('libanpost')?.authority,'postal-operator'); assert.equal(sources.get('libanpost')?.validationReadiness,'metadata-only');
   assert.equal(sources.get('libanpost-address-and-nac')?.depth,'address'); assert.equal(sources.get('upu-lebanon-addressing')?.sourceRole,'legal-framework-only');
   assert.equal(sources.get('upu-lebanon-postcode-formats-2025')?.depth,'postcode'); assert.equal(sources.get('moph-lebanon-administrative-zones')?.availability,'public-api');
   assert.equal(sources.get('lebanon-atlas-admin-boundaries-2026')?.trustTier,'official-derived'); assert.equal(sources.get('dlrc-lebanon-cadastre')?.requiresCredential,true); assert.equal(sources.get('lebanon-law-81-2018-personal-data')?.depth,'legal-framework');
-  const classification=classifyPostalSourceTrust({countryCode:'LB',source:'LibanPost'}); assert.equal(classification.strength,'strong'); assert.equal(classification.tier,'authoritative');
+  const classification=classifyPostalSourceTrust({countryCode:'LB',source:'LibanPost'}); assert.equal(classification.strength,'weak'); assert.equal(classification.tier,'weak');
 });
 
 test('Lebanon address metadata encodes both formats, NAC and P-code separation, explicit buildings, and AGID separation',()=>{
   const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'); const value=JSON.parse(readFileSync(resolve(root,'src/data/address_formats/asia/middle_east/LB.json'),'utf8')) as {native:{fields:Array<{key:string;required:boolean}>};english:{fields:Array<{key:string;required:boolean}>};postalCode:{format:string;regex:string;api:string;source:string};openSourceIds:string[];addressRules:{regionalHierarchy:string[];postalCode:{label:string;required:boolean;usage:string}}};
-  assert.equal(value.postalCode.format,'NNNN or NN NNN NNN'); assert.equal(value.postalCode.regex,'^(?:\\d{4}|\\d{2} \\d{3} \\d{3})$'); assert.match(value.postalCode.api,/libanpost\.com\/AddressDetails\.aspx/i); assert.match(value.postalCode.source,/LibanPost.*UPU.*2025.*MOPH/i);
+  assert.equal(value.postalCode.format,'NNNN or NN NNN NNN'); assert.equal(value.postalCode.regex,'^(?:\\d{4}|\\d{2} \\d{3} \\d{3})$'); assert.match(value.postalCode.api,/libanpost\.com\/AddressDetails\.aspx/i); assert.match(value.postalCode.source,/LibanPost.*UPU.*2026.*MOPH/i);
   assert.equal(value.addressRules.postalCode.label,'4 digits or NN NNN NNN when officially assigned'); assert.equal(value.addressRules.postalCode.required,false); assert.match(value.addressRules.postalCode.usage,/area or non-area.*NAC.*P-code.*not.*official polygon.*building relation/i);
   assert.deepEqual(value.addressRules.regionalHierarchy,['governorate','districtKaza','cityVillageOrArea','streetOrArea','buildingNameNumberFloorApartmentOrBlock','poBoxOrPostalServiceObject','libanPostNacCoordinateDerivedLocationToken','officialFourOrEightDigitPostalAssignment','optionalDerivedPostalAdministrativeJoinSurface','explicitRightsClearedCivicAddress','explicitAddressLinkedBuilding','exactRightsClearedBuildingGeometry','agidIndependentSpatialIndex']);
   assert.equal(value.native.fields.some(field=>field.key==='nacCode'),true); assert.equal(value.english.fields.some(field=>field.key==='poBox'),true); assert.equal(value.native.fields.some(field=>field.key==='buildingId'),true); for(const id of EXPECTED)assert.ok(value.openSourceIds.includes(id));

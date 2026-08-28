@@ -2497,12 +2497,12 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'upu-lebanon-postcode-formats-2025': {
     id: 'upu-lebanon-postcode-formats-2025',
-    name: 'UPU General Addressing Issues Lebanon postcode formats (2025)',
+    name: 'UPU General Addressing Issues Lebanon postcode formats (August 2026 sections)',
     url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
     kind: 'standard',
     coverage: 'country',
     usage: 'reference',
-    notes: 'The September 2025 Universal POST*CODE reference lists Lebanon formats 9999 and 99 999 999. Format evidence does not identify current rows, assignment scope, canonical geometry, addresses, buildings or reuse rights.',
+    notes: 'The reviewed August 2026 Lebanon sections of the Universal POST*CODE reference list Lebanon formats 9999 and 99 999 999. Format evidence does not identify current rows, assignment scope, canonical geometry, addresses, buildings or reuse rights.',
   },
   'moph-lebanon-administrative-zones': {
     id: 'moph-lebanon-administrative-zones',

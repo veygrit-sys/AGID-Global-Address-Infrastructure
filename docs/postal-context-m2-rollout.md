@@ -644,6 +644,30 @@ countries and 2026-09-04T17:43:12.611Z.
 Earlier country entries are unchanged. Next pending country: **LB (Lebanon)**;
 no second country was started.
 
+## Lebanon (LB) — 2026-08-28 public-source review
+
+LB remains **M1_metadata / blocked**, with its existing assignment-plus-independent-geometry
+M2 conditions formalized and all eight hard blockers preserved.
+[Source receipt](../reports/postal-context-m2/lb-source-review-2026-08-28.json),
+[engineering checks](../reports/postal-context-m2/lb-checks-2026-08-28.json) and
+[country review](postal-context-lebanon-m2.md) separate reference evidence from data.
+
+Sixteen bounded public GETs yielded fourteen verified reference bodies and two
+retrieval failures. UPU Lebanon format sections are August 2026; four or eight
+digits remain unchanged, and the spaced eight-digit value has ten characters.
+LibanPost initial form controls are not current assignment rows. Atlas item
+terms and upstream HDX CC BY-IGO metadata concern administrative context, not
+postal authority. Neither advertised administrative counts nor short resource
+hashes are verified feature counts or downloaded SHA-256. No source rows,
+geometry resources, private records, paid operations or deployment were produced.
+
+All eight LB official discovery sources are metadata-only for validation.
+Current licensed postal assignments, independent geometry with an explicit
+crosswalk, approved immutable publication and actual AGID verification remain
+missing. Public-only retry follows all pending countries and 2026-09-04T18:15:15.296Z.
+The other 251 country entries are unchanged. Next pending country: **LK (Sri Lanka)**;
+no second country was started this run.
+
 ## Git, privacy and authority boundaries
 
 Use an isolated worktree from the cumulative remote branch. Preserve every

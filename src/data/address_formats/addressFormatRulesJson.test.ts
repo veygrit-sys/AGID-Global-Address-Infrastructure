@@ -2160,7 +2160,7 @@ test('Lebanon address metadata exposes postal/NAC/P-code, administrative, privac
   }
   assert.equal(format.postalCode?.format, 'NNNN or NN NNN NNN');
   assert.equal(format.postalCode?.regex, '^(?:\\d{4}|\\d{2} \\d{3} \\d{3})$');
-  assert.match(format.postalCode?.source ?? '', /LibanPost.*UPU.*2025.*MOPH/i);
+  assert.match(format.postalCode?.source ?? '', /LibanPost.*UPU.*2026.*MOPH/i);
   assert.match(rules.postalCode?.usage ?? '', /area or non-area.*NAC.*P-code.*not.*official polygon.*building relation/i);
   assert.ok(rules.regionalHierarchy.includes('libanPostNacCoordinateDerivedLocationToken'));
   assert.ok(rules.regionalHierarchy.includes('explicitAddressLinkedBuilding'));

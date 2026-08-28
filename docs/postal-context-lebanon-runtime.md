@@ -6,7 +6,7 @@ Lebanon is implemented as an independent M1 metadata country pack linked to the 
 
 The LB normalizer accepts either exactly four digits or eight digits rendered canonically as `NN NNN NNN` after NFKC normalization. It converts Arabic-Indic and Eastern Arabic-Indic digits, preserves leading zeroes and rejects country prefixes, hyphens and wrong lengths.
 
-LibanPost's operational address workflow exposes governorate, district, area, street, building, floor, block, apartment, P.O. Box or ZIP code, map pin and NAC fields. The UPU Lebanon sheet documents recipient, organisation, building, unit, street or area, city or village and district (kaza) structure. The September 2025 Universal POST*CODE reference lists Lebanon formats `9999` and `99 999 999`. These references do not prove that every code is an area, provide a current bulk assignment table, or grant address or geometry reuse rights.
+LibanPost's operational address workflow exposes governorate, district, area, street, building, floor, block, apartment, P.O. Box or ZIP code, map pin and NAC fields. The UPU Lebanon sheet documents recipient, organisation, building, unit, street or area, city or village and district (kaza) structure. The reviewed August 2026 Lebanon sections of the Universal POST*CODE reference list Lebanon formats `9999` and `99 999 999`. These references do not prove that every code is an area, provide a current bulk assignment table, or grant address or geometry reuse rights.
 
 The runtime keeps these layers distinct:
 
