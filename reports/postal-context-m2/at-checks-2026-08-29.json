@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "AT",
+  "generatedAt": "2026-08-29T09:54:00.000Z",
+  "baseCommit": "d76807eced0757608199cbcde6cc74446b20f480",
+  "m2Achieved": false,
+  "sourceReview": {
+    "path": "reports/postal-context-m2/at-source-review-2026-08-29.json",
+    "referencesReviewed": 15,
+    "contentVerified": 15,
+    "postDirectoryRows": 2515,
+    "postDirectoryAddressableCodes": 2234,
+    "destinationDirectoryRows": 18624,
+    "rtrRows": 2712,
+    "threeWayCodeSetDifferences": 0,
+    "productionPostalAreaGeometryRecords": 0,
+    "scope": "Fifteen exact Post, RTR, BEV and Statistik Austria references; complete current addressable-code reconciliation but no reusable current postal Polygon/MultiPolygon"
+  },
+  "verification": [
+    {"name":"Austria exact-source inspector","command":"node scripts/inspect-postal-context-at-sources.mjs .m2-sources-at reports/postal-context-m2/at-source-review-2026-08-29.json","passed":15,"failed":0},
+    {"name":"Austria source, ledger and rollout contracts","command":"node --test scripts/inspect-postal-context-at-sources.test.mjs scripts/postal-context-m2-at-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs","passed":19,"failed":0},
+    {"name":"Austria repository, runtime, routes, source, catalog and address contracts","command":"node node_modules/tsx/dist/cli.mjs --test <Austria package verification files>","passed":139,"failed":0},
+    {"name":"Postal search area, API routes and client service","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/services/PostalContextService.test.ts src/server/routes/postalContextRoutes.test.ts","passed":23,"failed":0},
+    {"name":"Shared Postal Context runtime","command":"node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-runtime files>","passed":159,"failed":0},
+    {"name":"Address formats and official source catalog","command":"node node_modules/tsx/dist/cli.mjs --test src/data/address_formats/addressFormatRulesJson.test.ts src/lib/officialPostalSourceCatalog.test.ts","passed":122,"failed":0},
+    {"name":"TypeScript","command":"node node_modules/typescript/bin/tsc --noEmit","passed":1,"failed":0}
+  ],
+  "appVisualization": {
+    "officialSearch": "Post and RTR establish 2234 addressable codes; exact operator and destination files contain no geometry",
+    "statisticalSearch": "the public WFS has no postcode feature type and the current regional STATatlas map has no postcode layer",
+    "realSearchToArea": "not verified; no rights-cleared current AT postal-area artifact exists",
+    "sharedExactPostcodeCandidateResolution": "verified by deterministic unit test",
+    "sharedGeometryContract": "only postal-feature Polygon and MultiPolygon accepted; point, route, P.O. box, organization, unknown or text-only lookup produces no drawable area",
+    "sharedMapRendering": "verified fill opacity 0.22, outline opacity 0.95, width 3, bounds calculation, fit update and removal",
+    "sharedApiContract": "explicit geometry=geojson opt-in and unsupported-country failure verified",
+    "austriaRuntime": "metadata and synthetic 000x fixture planning only; synthetic, administrative, statistical-description or address-point geometry is non-promotable",
+    "austriaRealDataEndToEnd": "not verified",
+    "browserE2e": "not run because a real eligible AT area response does not exist; a synthetic display would not satisfy M2",
+    "remainingUiGap": "a real AT area response with geometry authority, basis date and confidence is unavailable"
+  },
+  "authoritySeparation": {
+    "postalAssignment": "Post and RTR establish current four-digit assignments and addressability, not perimeter",
+    "destinationMembership": "operator destination/locality rows retain their own grain and do not become postal geometry",
+    "statisticalGeometry": "a Statistik Austria postcode region would retain official-statistical authority and requires an exact reusable feature release",
+    "derivedGeometry": "requires complete permitted stable address members and remains method- and uncertainty-bearing",
+    "buildingsAndHouseNumbers": "require a separate permitted stable relation and cannot be inferred from postal containment",
+    "agid": "no AT real-data runtime, area response, immutable artifact publication or deployment asserted"
+  },
+  "publication": {"rawSourceDataCommitted":false,"immutableRealDataArtifactPublished":false,"newRepositoryCreated":false,"productionDeploymentPerformed":false,"paidAuthenticatedPermissionedOrContractSourceUsed":false},
+  "environment": {"dependencyRestore":"npm ci --ignore-scripts --prefer-offline succeeded; node_modules is ignored and not committed","npmShimNote":"direct Node invocations were used because the host npm shim and script-local tsx resolution were unavailable","dependencyFilesCommitted":false},
+  "remainingBlocker": "Current reusable AT postcode areas, immutable publication and AT real-data API/app verification are absent. The reviewed priced statistical package requires payment/signed terms, and no complete permitted BEV address relation was acquired."
+}

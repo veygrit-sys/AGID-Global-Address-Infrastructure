@@ -1222,3 +1222,36 @@ rights-cleared assignment and postal-area release appears earlier. After AL:
 252 profiles, 200 pending, 52 blocked, 0 in progress, 0 evidence-verified M2;
 125 manifests / 95 explicit definitions. Next: **AT**. No second country was
 started.
+
+## 2026-08-29 AT: current assignments verified, reusable postcode areas blocked
+
+AT now has
+`M2_current_assignment_and_statistical_or_derived_postal_area_visualization`.
+Fifteen exact Post, RTR, BEV and Statistik Austria references were byte/hash
+verified. The Post postcode directory, Post destination directory and RTR
+current table agree on all 2,234 addressable four-digit codes. The operator
+files and regulator table contain no geometry.
+
+The public Statistik Austria WFS exposes 146 feature types with no postcode
+feature type. The current regional STATatlas configuration exposes 13 layers
+with no postcode layer, although its information text mentions postcode
+regions. The priced regional-package document states a EUR 118 minimum, 40%
+commercial surcharge and signed terms. Nothing was bought or accepted. BEV's
+address-register page confirms quarterly postcode membership context, but no
+complete permitted address relation was acquired or converted into a surface.
+
+No destination locality, district, municipality, address, building, P.O. box,
+organization, field-post record, buffer, Voronoi cell, model or AGID cell was
+promoted to postal geometry. Shared tests verify exact search,
+Polygon/MultiPolygon filtering, fit, opacity-0.22 fill, opacity-0.95 width-3
+outline, clear/re-search and failure states. AT has no eligible real-data
+artifact, API area response or app end-to-end result; authority, basis date and
+confidence are unavailable rather than fabricated.
+
+[AT review](postal-context-austria-m2.md), [source report](../reports/postal-context-m2/at-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit approval, the
+pending-country pass and `2026-09-29T09:27:06.000Z`, unless a public current
+rights-cleared postcode-area or complete member release appears earlier. After
+AT: 252 profiles, 199 pending, 53 blocked, 0 in progress, 0 evidence-verified
+M2; 125 manifests / 95 explicit definitions. Next: **AX**. No second country
+was started.
