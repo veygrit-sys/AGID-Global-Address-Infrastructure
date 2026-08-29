@@ -802,3 +802,15 @@ NPC June 2026 policy permits attributed CC-BY-4.0 reuse for C0 data. Explicit C0
 After QA: 252 profiles, 214 pending, 38 blocked, 0 in progress, 0 evidence-verified M2; 118 manifests / 86 explicit definitions. Next: **SA**. Other 251 country entries and all existing user changes are unchanged.
 
 QA validation: 2025 passing JavaScript executions across overlapping groups, plus a 74-test npm entrypoint replay. Typecheck, exact-byte source replay and difference audit passed. Three baseline failures remain unchanged (KM, EH/HM, BY); no production QA data/API or browser UI deployment is claimed.
+
+## 2026-08-29 SA: SPL facility data, API scope and M2 assignment gap
+
+SA retains its existing `M2_assignment_and_derived_geometry` definition. Twenty-five receipts bind 22 exact documents/data files and three GEOSA PDF acquisition failures. The `04/2025` UPU guide and current SPL page establish five-digit semantics, not assignment rows or boundaries.
+
+Fourteen SPL CSVs contain 14,014 physical records: 381 blank and 13,633 nonblank. The meaningful office subset has 529 facilities (485 five-digit postcodes, 44 other formats); the service file has 8,820 rows with 581 exact duplicates, no orphan service key, and 67 offices without a service row. These are facility/service quality findings, not nationwide assignment or geometry coverage.
+
+The credentialed API terms restrict sublicensing, large display and generic address validation. The geocode documentation also conflicts internally by describing four digits while showing a five-digit sample. No account, contract, paid operation, geocode query, raw row publication or production runtime was used. SA remains M1 / blocked.
+
+[SA review](postal-context-saudi-arabia-m2.md), [source report](../reports/postal-context-m2/sa-source-review-2026-08-29.json), [engineering checks](../reports/postal-context-m2/sa-checks-2026-08-29.json). Recheck after `2026-09-05T00:26:26.437Z` and the pending-country pass; new accounts, contracts, charges, destinations and deployments still require approval.
+
+After SA: 252 profiles, 213 pending, 39 blocked, 0 in progress, 0 evidence-verified M2; 118 manifests / 86 explicit definitions. Next: **SG**. Other 251 country entries and all existing user changes remain unchanged.

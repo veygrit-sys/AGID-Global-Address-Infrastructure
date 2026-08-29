@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "postal-context-sa-engineering-checks/v1",
+  "generatedAt": "2026-08-29T00:55:52.226Z",
+  "countryCode": "SA",
+  "baseCommit": "7f7b5a087adbeade2a18852a6c94a1747727add8",
+  "countryM2Achieved": false,
+  "previousGithubProof": {
+    "branch": "codex/postal-context-m2-rollout",
+    "sha": "7f7b5a087adbeade2a18852a6c94a1747727add8",
+    "previousCountry": "QA",
+    "verification": "Fresh HTTPS remote branch SHA was resolved before creating the isolated SA worktree; SSH authentication was attempted first and unavailable."
+  },
+  "sourceReview": {
+    "report": "reports/postal-context-m2/sa-source-review-2026-08-29.json",
+    "digest": "sha256:9a140235ef32e39a96c0d733aa2095c38336b24c9ebadc61ae2be47ad4d23849",
+    "observations": 25,
+    "contentReviewed": 22,
+    "failedAcquisitions": 3,
+    "csvDatasets": 14,
+    "physicalRecords": 14014,
+    "blankRecords": 381,
+    "nonblankRecords": 13633,
+    "completeByteReplayMatches": true,
+    "replayCommand": "node scripts/inspect-postal-context-sa-sources.mjs --input-dir tmp/sa-all --report tmp/sa-source-review-replay.json",
+    "pdfVisualInspection": "UPU SA 04/2025 physical pages 1-2; review bound to exact complete PDF bytes."
+  },
+  "testing": {
+    "groups": [
+      {
+        "group": "sa-existing",
+        "command": "tsx --test the existing verify:postal-context-saudi-arabia file set",
+        "tests": 139,
+        "passed": 139,
+        "failed": 0,
+        "exitCode": 0
+      },
+      {
+        "group": "sa-source-inspector",
+        "command": "node --test scripts/inspect-postal-context-sa-sources.test.mjs",
+        "tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "exitCode": 0
+      },
+      {
+        "group": "sa-m2-contract",
+        "command": "tsx --test src/lib/postalContextSaudiArabiaM2.test.ts",
+        "tests": 6,
+        "passed": 6,
+        "failed": 0,
+        "exitCode": 0
+      },
+      {
+        "group": "rollout-and-japan-hf",
+        "command": "tsx --test package verify:postal-context-m2 file set",
+        "tests": 31,
+        "passed": 31,
+        "failed": 0,
+        "exitCode": 0
+      },
+      {
+        "group": "shared-runtime",
+        "command": "tsx --test package verify:postal-context-runtime file set",
+        "tests": 136,
+        "passed": 135,
+        "failed": 1,
+        "exitCode": 1,
+        "failedReason": "openApiSpec.test.ts could not load the existing searchQuery dependency because minisearch is declared in package files but absent from the shared node_modules junction."
+      },
+      {
+        "group": "typecheck",
+        "command": "node node_modules/typescript/bin/tsc --noEmit",
+        "tests": 0,
+        "passed": 0,
+        "failed": 97,
+        "exitCode": 2,
+        "failedReason": "Shared dependency snapshot is incomplete: 94 TS2307 missing-module diagnostics. Three additional pre-existing ArrayBufferLike/BufferSource diagnostics are in unchanged files; no diagnostic targets an SA change."
+      }
+    ],
+    "passedExecutions": 315,
+    "failedExecutions": 1,
+    "newAndCountrySpecificPassed": 180
+  },
+  "baselineFailures": {
+    "latestLedgerBaseline": "Three pre-existing address-format failures: KM duplicate source IDs, missing EH/HM YAML, and malformed BY YAML.",
+    "unchangedFromBase": true,
+    "unchangedInputs": [
+      {
+        "file": "src/data/address_formats/addressFormatCommon.test.ts",
+        "digest": "sha256:3344f1eff68e6490362feaea0cbb1f4239e56b2235458cad559fb84fcc7db327"
+      },
+      {
+        "file": "src/data/address_formats/addressFormatYaml.test.ts",
+        "digest": "sha256:edefbe013cec57d242d45f41852dae3bb5c02a73d591f5400317604b3b9943f1"
+      },
+      {
+        "file": "src/data/address_formats/europeAddressQuality.test.ts",
+        "digest": "sha256:4641e07b69226c854389a2d05ba2e718e2868adb59e85113a7ea5caa62e74a0a"
+      },
+      {
+        "file": "src/data/address_formats/africa/eastern_africa/KM.json",
+        "digest": "sha256:626aa74a5f6cc4eec63ced36a4c055fb914c2d4d9e4e2d3779d8eedda0f7e757"
+      },
+      {
+        "file": "src/data/address_formats/europe/eastern_europe/BY.yaml",
+        "digest": "sha256:d7d997c85fc7206d2d9682a8f30d3f0755371088d8751d2e934a11d596d8830f"
+      }
+    ],
+    "filesMissingInBaseAndCurrent": [
+      "src/data/address_formats/africa/disputed_territories/EH.yaml",
+      "src/data/address_formats/antarctica/subantarctic_territories/HM.yaml"
+    ]
+  },
+  "agidVerification": {
+    "saSyntaxRuntimeEnabled": true,
+    "realSaAssignmentDataEnabled": false,
+    "realDataApiVerified": false,
+    "productionGeometryEnabled": false,
+    "buildingRelationVerified": false,
+    "browserUiChanged": false,
+    "browserUiTested": false
+  },
+  "audit": {
+    "changedFileAllowlistCount": 12,
+    "other251CountriesUnchanged": true,
+    "countryIdentityUnchanged": true,
+    "rawSourceBodiesOrAddressFeaturesCommitted": false,
+    "privateDataOrCredentialsCommitted": false,
+    "sourceBodiesTemporaryOnly": true,
+    "newRepositoryOrHosting": false,
+    "paidOperation": false,
+    "contractAccepted": false,
+    "productionDeployment": false,
+    "forcePush": false,
+    "ledgerDigestExcludedReason": "docs/postal-context-m2-rollout.json pins this engineering report digest, so hashing the final ledger inside the report would be circular."
+  },
+  "queue": {
+    "total": 252,
+    "regions": {
+      "asia": 50,
+      "europe": 55,
+      "americas": 57,
+      "africa": 62,
+      "oceania": 28
+    },
+    "states": {
+      "pending": 213,
+      "in_progress": 0,
+      "blocked": 39,
+      "m2_verified": 0
+    },
+    "manifests": 118,
+    "explicitM2Definitions": 86,
+    "next": "SG"
+  },
+  "fileDigests": [
+    {
+      "path": "data/postal_country_packs/sa/postal-context/m2-source-review.json",
+      "bytes": 11608,
+      "digest": "sha256:fe60039321a41bf64d6fcb47c727c8cb7471a8933e57cfca145e2ff2fc1e57bb"
+    },
+    {
+      "path": "data/postal_country_packs/sa/postal-context/repository-manifest.json",
+      "bytes": 11249,
+      "digest": "sha256:b47b7b43ff3abb9ebc8c489d12b3a568ca9b7be0896ddac99d9344da87d0dcf4"
+    },
+    {
+      "path": "data/postal_country_packs/sa/postal-context/source-profile.json",
+      "bytes": 14668,
+      "digest": "sha256:c2ffcedb595ed2d14461ebb1673d901d4d02f596af13922d9ff0dfba71a17ef6"
+    },
+    {
+      "path": "docs/postal-context-m2-rollout.md",
+      "bytes": 62279,
+      "digest": "sha256:0b5fb0aaec7e63f60b5ad76dd2a777278dae90bfbeb7933982c4b99523ef2e12"
+    },
+    {
+      "path": "docs/postal-context-saudi-arabia-m2.md",
+      "bytes": 4020,
+      "digest": "sha256:4d204e3f23a42ef06a5214edbbee7f8b02528bf379ee08bdc4cbcfc8b94850f1"
+    },
+    {
+      "path": "package.json",
+      "bytes": 109829,
+      "digest": "sha256:e87dc9c9238a6404d8f83e6d723b71407a13b127ee7d0a6f5ebf59ac17438b88"
+    },
+    {
+      "path": "reports/postal-context-m2/sa-source-review-2026-08-29.json",
+      "bytes": 58937,
+      "digest": "sha256:9a140235ef32e39a96c0d733aa2095c38336b24c9ebadc61ae2be47ad4d23849"
+    },
+    {
+      "path": "scripts/inspect-postal-context-sa-sources.mjs",
+      "bytes": 15045,
+      "digest": "sha256:71f7f363a977515c88b6faa78f7604ccdff5efa27af38920fe3b47e2ef7f7aa5"
+    },
+    {
+      "path": "scripts/inspect-postal-context-sa-sources.test.mjs",
+      "bytes": 1805,
+      "digest": "sha256:d2fb52348cfb270fefa8846324160d32f15689f852bf3d6fd19aec840c49f297"
+    },
+    {
+      "path": "src/lib/postalContextSaudiArabiaM2.test.ts",
+      "bytes": 6434,
+      "digest": "sha256:c21446410ac809beef0f1b2e040ab9b8d511338fe9f7d37ae52f0de084064afb"
+    }
+  ]
+}
