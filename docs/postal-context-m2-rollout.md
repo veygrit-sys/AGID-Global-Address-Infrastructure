@@ -1290,3 +1290,37 @@ approval, the pending-country pass and `2026-09-29T09:57:47.357Z`, unless a
 newer exact release appears earlier. After AX: 252 profiles, 198 pending, 54
 blocked, 0 in progress, 0 evidence-verified M2; 126 manifests / 96 explicit
 definitions. Next: **BA**. No second country was started.
+
+## 2026-08-29 BA: three operators and point inventories verified, postal areas blocked
+
+BA now has
+`M2_current_three_operator_assignment_and_postal_area_visualization`. Twelve
+exact regulator, UPU, operator and government geospatial references were
+byte/hash verified. RAP identifies three authorized public postal operators.
+The reviewed JP BH Pošta locator has 285 code markers, the BH PostExpress table
+has 468 office rows, and the Pošte Srpske locator has 584 code markers.
+
+These 1,337 observations overlap and are not a national completeness measure.
+They have no common release edition, validity or stable cross-operator row
+identity and contain no postal Polygon/MultiPolygon. The UPU 04/2019 sheet's
+two-digit postal-region and three-digit post-office semantics do not define a
+full-code boundary.
+
+FGU/SDI and RUGIPP administrative, cadastral, address and building evidence
+retains its own authority. No office point, prefix, locality, administrative or
+cadastral area, parcel, building, route, buffer, Voronoi/model surface or AGID
+cell was promoted to postal geometry. House numbers and buildings require a
+separate permitted stable address relation.
+
+Shared tests verify exact search, Polygon/MultiPolygon filtering, fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. BA has no eligible real-data artifact, API area response or app
+end-to-end result, so translucent area visualization remains blocked rather
+than fabricated.
+
+[BA review](postal-context-bosnia-and-herzegovina-m2.md), [source report](../reports/postal-context-m2/ba-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after the pending-country pass
+and `2026-09-05T10:31:04.634Z`, unless a current rights-cleared assignment and
+postal-area release appears earlier. After BA: 252 profiles, 197 pending, 55
+blocked, 0 in progress, 0 evidence-verified M2; 127 manifests / 97 explicit
+definitions. Next: **BE**. No second country was started.
