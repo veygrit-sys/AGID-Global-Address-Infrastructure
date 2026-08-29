@@ -839,3 +839,33 @@ receipt is immutably published and verified through AGID. Recheck after
 `2026-09-05T01:26:58.142Z` and the pending-country pass. Next: **SY**.
 
 After SG: 252 profiles, 212 pending, 40 blocked, 0 in progress, 0 evidence-verified M2; 118 manifests / 86 explicit definitions. No account, purchase, contract, new repository, public data destination or deployment was created.
+
+## 2026-08-29 SY: no-postcode policy, unavailable current data, M2 blocked
+
+SY now has its own `M2_scoped_no_postcode_address_context` definition. The
+exact UPU General Addressing Issues document lists Syria among countries where
+a postcode is not required. Postal code remains null; P.O. boxes, offices,
+routes, administrative boundaries, AGID cells and generated regions are not
+postcodes or official postal polygons.
+
+Four exact UPU references were byte/hash verified: policy, 2025 postal
+entities, member identity and copyright. The entities document names the
+General Postal Establishment and SY-TPRA but supplies no address assignment or
+geometry. Both Syrian Post root URLs timed out without bypass. This is an
+acquisition failure, not proof that current data does not exist.
+
+[SY review](postal-context-syria-m2.md), [source receipts](../reports/postal-context-m2/sy-source-review-2026-08-29.json)
+and [engineering checks](../reports/postal-context-m2/sy-checks-2026-08-29.json)
+record the rights and quality boundary. Zero current real assignment/address
+rows, geometry records, explicit address/building relations or immutable data
+artifacts were validated. The synthetic Postal Forge pack remains planning
+data only. Source documents are not republished.
+
+M2 remains blocked pending current rights-cleared real data, explicit scope,
+edition and validity, approved immutable publication and actual SY AGID
+verification. Recheck after `2026-09-05T02:45:52.403Z` and the pending-country
+pass. Restricted access, contracts, charges, new destinations and deployment
+still require approval. Validation: 294 passing tests plus TypeScript; next:
+**TH**. No second country was started.
+
+After SY: 252 profiles, 211 pending, 41 blocked, 0 in progress, 0 evidence-verified M2; 119 manifests / 87 explicit definitions.
