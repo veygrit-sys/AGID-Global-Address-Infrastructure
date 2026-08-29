@@ -1,0 +1,70 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-th",
+    "country_code": "TH",
+    "country_name": "Thailand",
+    "seed_location": "data/postal_country_packs/th/postal-context",
+    "maturity": "M1_metadata",
+    "external_repository_created": false
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "publication_claim": "reviewed-metadata-contract-not-data-release"
+  },
+  "contract_files": ["repository-manifest.json", "m2-source-review.json", "README.md"],
+  "postal_system": {
+    "status": "five_digit_postcode",
+    "pattern": "^[0-9]{5}$",
+    "official_postal_geometry": "none_verified",
+    "scope": "Thailand Post assignment poster and search metadata; no areal geometry or national current-completeness claim."
+  },
+  "exception_classes": [
+    "subdistrict-exception-not-resolved-by-district-boundary",
+    "village-range-exception-requires-explicit-relation",
+    "road-or-house-range-exception-requires-address-segment-source",
+    "administrative-boundary-not-postal-boundary",
+    "postcode-point-or-office-not-postal-area",
+    "derived-or-virtual-region-never-promotes",
+    "building-from-containment-or-proximity-prohibited",
+    "empty-resource-url-not-data-artifact",
+    "source-metadata-or-synthetic-fixture-not-m2"
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "target_stage": "M2_exception_aware_postal_area_visualization",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Address-format and source inventory only."},
+      {"id": "M1_metadata", "definition": "Reviewed assignment, rights, exception and UI authority contract with exact reference hashes."},
+      {"id": "M2_exception_aware_postal_area_visualization", "definition": "A current complete-for-declared-coverage rights-cleared Thai postcode assignment and exact Polygon/MultiPolygon release resolves subdistrict, village, road and house-range exceptions by explicit permitted relations. Exact retrieval time, edition, validity, CRS, schema, topology, feature identity and SHA-256 reproducibly produce approved immutable artifacts. The real TH loader and API normalize five-digit input and return valid area geometry. The application searches country plus postcode, distinguishes loading/not-found/multiple/API-failure/invalid/non-area states, fits the map, renders a translucent fill and clear boundary, permits clear and repeat search, and displays normalized postcode, geometry type, official/derived/virtual authority, source, basis date and confidence. Points, offices, routes, P.O. boxes, organizations, address points, buildings, learned cells and administrative boundaries are never promoted to postal polygons; house numbers and buildings require separate explicit address relations. Synthetic fixtures or shared UI code alone never establish M2."}
+    ],
+    "hard_blockers": [
+      "current-complete-postcode-area-data-unavailable",
+      "source-reuse-derivative-and-api-rights-unverified",
+      "assignment-exceptions-not-spatially-resolved",
+      "approved-immutable-artifact-unpublished",
+      "real-th-loader-api-and-app-visualization-unverified",
+      "non-area-or-administrative-geometry-promoted-to-postal-polygon",
+      "building-or-house-number-inferred-from-containment-or-proximity"
+    ],
+    "data_completion_verified": false,
+    "source_review": "data/postal_country_packs/th/postal-context/m2-source-review.json"
+  },
+  "agid_integration": {
+    "current_scope": "TH address-format metadata only; no real Postal Context pack, runtime or searchable map area.",
+    "enablement_gate": "Rights-cleared exception-aware area artifact plus real loader/API/app verification is required.",
+    "geometry_rule": "Only source-qualified Polygon/MultiPolygon postal features can drive the translucent search overlay; all other geometry stays typed and cannot be promoted."
+  },
+  "non_goals": [
+    "new-repository-or-public-destination",
+    "paid-source-or-extra-cloud-charge",
+    "production-deployment",
+    "polygon-from-centroid-voronoi-or-administrative-boundary",
+    "personal-customer-cadastral-or-land-rights-distribution"
+  ]
+}

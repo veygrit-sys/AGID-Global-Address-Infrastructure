@@ -869,3 +869,31 @@ still require approval. Validation: 294 passing tests plus TypeScript; next:
 **TH**. No second country was started.
 
 After SY: 252 profiles, 211 pending, 41 blocked, 0 in progress, 0 evidence-verified M2; 119 manifests / 87 explicit definitions.
+
+## 2026-08-29 TH: exception-aware postal areas and app visualization blocked
+
+TH now has `M2_exception_aware_postal_area_visualization`. The exact Thailand
+Post nationwide assignment PDF contains 979 distinct five-digit codes and 219
+exception tokens across its two pages. Subdistrict, village, road and
+house-number conditions make a simple postcode-to-administrative-boundary join
+unsafe. The PDF has no geometry, CRS, topology, stable rows or current-validity
+claim, so no polygon was generated.
+
+Five official public bodies were byte/hash verified. The government catalog
+describes a Zipcode dataset and an Open Data Common label, but its single HTML
+resource URL is empty. The exact data.go.th dataset returned 403 without
+bypass. Reviewed Thailand Post terms do not expressly grant bulk extraction,
+derivative polygon, redistribution or API serving. Raw source bodies remain
+outside Git.
+
+The shared app path requests API geometry after exact postcode search, accepts
+only postal Polygon/MultiPolygon, fits the map, draws opacity-0.22 fill plus a
+clear outline, and fails closed for missing/non-area/API-failure results. TH has
+no eligible runtime artifact, so no real Thai map result exists. The shared
+notice also lacks distinct authority, basis-date and confidence fields.
+
+[TH review](postal-context-thailand-m2.md), [source report](../reports/postal-context-m2/th-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after
+`2026-09-05T03:09:44.464Z` and the pending-country pass. After TH: 252 profiles,
+210 pending, 42 blocked, 0 in progress, 0 evidence-verified M2; 120 manifests /
+88 explicit definitions. Next: **TJ**. No second country was started.
