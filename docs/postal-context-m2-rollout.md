@@ -1076,3 +1076,40 @@ pending-country pass and `2026-09-05T06:40:00.000Z`, unless a public rights-
 cleared immutable area release appears earlier. After UZ: 252 profiles, 204
 pending, 48 blocked, 0 in progress, 0 evidence-verified M2; 124 manifests / 93
 explicit definitions. Next: **VN**. No second country was started.
+
+## 2026-08-29 VN: current assignment notices verified, postal areas blocked
+
+VN now has `M2_current_five_digit_postal_area_visualization`. Seven exact
+official references were byte/hash verified. Vietnam Post dates Decision
+2334/QD-BKHCN to 24 August 2025, while the ministry's 25 November 2025 article
+states 18 November 2024 in its body. The unresolved conflict and absence of an
+attached exact annex prevent a current assignment receipt.
+
+The official portal is text-search-only. Its client calls a cleartext HTTP
+autocomplete endpoint; the equivalent HTTPS path returned 404 in a bounded
+probe. No Polygon/MultiPolygon, GeoJSON, map client or fit path was observed.
+The portal legal page lists the 2017 decision, not Decision 2334. Its linked
+386,841,053-byte, 552-page scanned directory was created and modified in June
+2018. Exact visual checks found routing instructions and district/code tables,
+not polygon coordinates, CRS or topology.
+
+Website source-attribution language establishes no bulk, derivative-polygon,
+persistence, redistribution, immutable-publication or AGID API-serving grant.
+No account, registration, application, contract, payment or controlled source
+was used. No administrative boundary, office or Vpostcode point, buffer,
+Voronoi cell, model, address row or building was promoted to postal geometry.
+Raw source bodies remain outside Git.
+
+Shared tests verify exact search, Polygon/MultiPolygon filtering, fit,
+translucent fill, clear outline, clear/re-search and failure states. VN has no
+eligible current real-data artifact, API area response or app end-to-end
+result, and the shared notice still lacks distinct authority, basis-date and
+confidence fields.
+
+[VN review](postal-context-vietnam-m2.md), [source report](../reports/postal-context-m2/vn-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit approval, the
+pending-country pass and `2026-09-05T07:20:00.000Z`, unless a public rights-
+cleared current annex and postal-area release appears earlier. After VN: 252
+profiles, 203 pending, 49 blocked, 0 in progress, 0 evidence-verified M2; 124
+manifests / 94 explicit definitions. Next: **YE**. No second country was
+started.

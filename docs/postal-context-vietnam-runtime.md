@@ -2,6 +2,8 @@
 
 Vietnam uses five-digit national postcodes. Decision 2334/QD-BKHCN and Vietnam Post's 2025 notice align ward, commune and equivalent-unit assignments to the new two-tier administration. The 2021 UPU sheet remains useful for address-line, rural, building-complex and postal-service semantics, but its district model is historical context after the reform. AGID stores every code as a five-character string so leading zeroes survive.
 
+The M2 target is `M2_current_five_digit_postal_area_visualization`. The 2026-08-29 review found no exact current annex, reusable postal-area Polygon/MultiPolygon release or official search-to-area map path. The portal's linked directory advertises a 2018 Last-Modified date and its legal page lists the 2017 decision. Vietnam therefore remains M1 metadata and M2-blocked.
+
 This is an M1 metadata and synthetic-runtime release. It contains no national-portal or Decision annex rows, real addresses, recipients, senders, Vpostcode queries or accounts, NSO exports, NSDI layers, surveying or mapping products, cadastral records, production polygons, buildings, households, owners, occupants or other personal data.
 
 ## Evidence and geometry
