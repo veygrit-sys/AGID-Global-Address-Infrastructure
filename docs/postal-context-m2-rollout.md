@@ -1146,3 +1146,41 @@ and `2026-09-05T07:54:43.683Z`, unless a public rights-cleared current release
 appears earlier. After YE: 252 profiles, 202 pending, 50 blocked, 0 in
 progress, 0 evidence-verified M2; 125 manifests / 95 explicit definitions.
 Next: **AD**. No second country was started.
+
+## 2026-08-29 AD: road-assigned codes verified, reusable postal areas blocked
+
+AD now has `M2_current_road_assigned_postal_area_visualization`. Ten exact
+official references were byte/hash verified. The UPU sheet establishes
+`ADNNN`, La Poste/Correos and examples `AD501`, `AD700` and `AD500`. UPU's
+2005 article records seven zones and a code assigned to every thoroughfare;
+the road database went to major mailers, Posts and the controlled POST*CODE
+database. This is not a current open assignment or polygon release.
+
+Correos currently states that its paid basic database contains Spain and
+Andorra, but its overlay text does not expressly establish Andorra scope. The
+licence limits use to the contractor's own database/address quality,
+prohibits sublicensing and prohibits an unrelated-user postcode search. No
+contract, payment or controlled data access was used.
+
+Govern/IDE Andorra pages document address search, OpenLS, WMS/WFS and
+topographic/building layers. Address points, user-drawn polygons, buildings
+and parish boundaries retain their own authority and were not promoted to
+full-code postal areas. The website notice limits private/personal use and
+prohibits commercial use; the download portal requires user data and
+conditions acceptance. No conditions were accepted and raw source bodies
+remain outside Git.
+
+Shared tests verify exact search, Polygon/MultiPolygon filtering, fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. AD has no eligible current real-data artifact, API area response or
+app end-to-end result; distinct authority, basis date and confidence are
+unavailable rather than fabricated. Synthetic AD00x fixture geometry does not
+satisfy M2.
+
+[AD review](postal-context-andorra-m2.md), [source report](../reports/postal-context-m2/ad-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit approval, the
+pending-country pass and `2026-09-05T08:18:45.000Z`, unless a public current
+rights-cleared assignment and postal-area release appears earlier. After AD:
+252 profiles, 201 pending, 51 blocked, 0 in progress, 0 evidence-verified M2;
+125 manifests / 95 explicit definitions. Next: **AL**. No second country was
+started.

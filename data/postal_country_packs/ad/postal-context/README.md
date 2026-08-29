@@ -33,4 +33,9 @@ vintage; routing, language, parish names, or proximity never assign AD country
 or AGID identity outside that policy.
 
 The fixtures are synthetic runtime conformance data and cannot promote a real
-release. See `repository-manifest.json` and `source-profile.json` for gates.
+release. The 2026-08-29 M2 review bound ten exact official references and found
+zero eligible current assignment, address or postal-area rows. Correos data and
+overlay access require a paid contract whose public licence prohibits an
+unrelated-user lookup, while Govern pages do not grant reusable bulk/API rights.
+AD remains M1 until the country-specific road-assignment area gate passes. See
+`repository-manifest.json`, `m2-source-review.json` and `source-profile.json`.
