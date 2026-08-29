@@ -897,3 +897,31 @@ and engineering checks record the gate. Recheck after
 `2026-09-05T03:09:44.464Z` and the pending-country pass. After TH: 252 profiles,
 210 pending, 42 blocked, 0 in progress, 0 evidence-verified M2; 120 manifests /
 88 explicit definitions. Next: **TJ**. No second country was started.
+
+## 2026-08-29 TJ: six-digit postal-area visualization blocked
+
+TJ now has `M2_current_six_digit_index_area_visualization`. Three exact public
+references were byte/hash verified: the Tajik Post postcode list, its
+postal-office list and the September 2019 UPU addressing sheet. The index page
+has 258 six-digit occurrences and 188 distinct codes across mixed-grain
+articles; the office table has 88 facility rows and 80 distinct codes. Repeated
+codes cannot be treated as a one-to-one postal area, and the displayed
+`753456` outlier is retained for authoritative confirmation rather than fixed.
+
+None of the references contains Polygon/MultiPolygon geometry, CRS, topology,
+editioned current completeness or an explicit derivative/API reuse grant. The
+Tajik Post footer states all rights reserved. Office points and administrative
+boundaries were not relabelled as postal areas; raw source bodies remain out of
+Git.
+
+The shared app path still verifies exact-code search, geometry opt-in,
+Polygon/MultiPolygon filtering, map fit, translucent opacity-0.22 fill,
+opacity-0.95 width-3 outline, clear/re-search and failure states. TJ has no
+eligible runtime artifact or real area result, and the shared notice still
+lacks distinct authority, basis-date and confidence fields.
+
+[TJ review](postal-context-tajikistan-m2.md), [source report](../reports/postal-context-m2/tj-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after
+`2026-09-05T03:38:36.537Z` and the pending-country pass. After TJ: 252 profiles,
+209 pending, 43 blocked, 0 in progress, 0 evidence-verified M2; 121 manifests /
+89 explicit definitions. Next: **TL**. No second country was started.
