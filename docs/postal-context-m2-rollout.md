@@ -1042,3 +1042,37 @@ pending-country pass and `2026-09-05T05:57:18.791Z`, unless a public
 rights-cleared postal-area release appears earlier. After TW: 252 profiles,
 205 pending, 47 blocked, 0 in progress, 0 evidence-verified M2; 124 manifests /
 92 explicit definitions. Next: **UZ**. No second country was started.
+
+## 2026-08-29 UZ: real operator polygon verified, AGID reuse blocked
+
+UZ now has `M2_current_operator_postal_area_visualization`. Ten exact official
+references were byte/hash verified. The current UzPost office list contains
+1,593 unique six-digit indices, with 1,591 valid office coordinates and two
+malformed longitude strings. The list itself has no geometry field.
+
+The exact detail response for `100000` contains a closed 98-vertex ring with a
+translucent `0.3` fill. The exact current client searches indices, requests the
+detail, constructs a Yandex Polygon, applies server fill/stroke and fits the
+map. This verifies a real operator search-to-area path, but only one detail was
+sampled and it does not establish national completeness, declared delivery-
+area semantics, CRS or a versioned release.
+
+The reviewed public offer governs website/mobile-app use and creates no
+verified bulk, derivative-polygon, persistence, redistribution, immutable-
+publication or AGID API-serving grant. Public GET/CORS capability is not a
+data licence. No registration, contract acceptance, payment or bulk harvest
+was performed. Raw bodies remain outside Git.
+
+No office point, administrative boundary, buffer, Voronoi cell or model was
+promoted to official postal geometry. Shared tests verify exact search,
+Polygon/MultiPolygon filtering, fit, translucent fill, clear outline,
+clear/re-search and failure states. UZ has no eligible immutable artifact or
+real-data AGID runtime/API/app result, and the shared notice still lacks
+distinct authority, basis-date and confidence fields.
+
+[UZ review](postal-context-uzbekistan-m2.md), [source report](../reports/postal-context-m2/uz-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit approval, the
+pending-country pass and `2026-09-05T06:40:00.000Z`, unless a public rights-
+cleared immutable area release appears earlier. After UZ: 252 profiles, 204
+pending, 48 blocked, 0 in progress, 0 evidence-verified M2; 124 manifests / 93
+explicit definitions. Next: **VN**. No second country was started.

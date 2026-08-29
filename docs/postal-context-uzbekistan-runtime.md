@@ -41,4 +41,25 @@ AGID is an independent spatial index connected only by a versioned crosswalk. AG
 
 ## Promotion
 
+## 2026-08-29 M2 source review
+
+The current UzPost application is stronger operational evidence than the M1
+seed originally recorded. Its reviewed JavaScript calls the current office
+list, searches six-digit indices, requests a selected office detail and, when
+`locations.locations` is present, constructs a Yandex Polygon, uses the
+server-provided fill and stroke settings, and fits the map to the returned
+bounds. The exact detail response for `100000` contained a closed 98-vertex
+ring with a `0.3` fill opacity. This confirms a real operator search-to-
+translucent-area path for that observed response.
+
+It does not complete AGID M2. Only one of 1,593 detail records was sampled;
+the list response contains two malformed longitude strings and no geometry;
+the area semantics, CRS, national completeness and release version are not
+declared. The reviewed public offer is a service contract, not a written bulk,
+derivative-polygon, immutable-publication, redistribution or public-API grant.
+No account, registration, contract acceptance or bulk detail harvest was
+performed. Raw responses remain outside Git. UZ stays blocked until rights,
+complete validation, an approved immutable artifact and a real UZ AGID
+runtime/API/app result are all available.
+
 M2 or later requires a current official assignment artifact or pinned UzPost response contract, immutable digests, explicit postal object types, independently licensed point or area geometry, CRS and topology checks, temporal and jurisdiction coverage, building-link and privacy review, and reproducible provenance. Real postal-index rows, addresses and production geometry belong in the independent `agid-postal-uz` data repository, not this AGID application repository.
