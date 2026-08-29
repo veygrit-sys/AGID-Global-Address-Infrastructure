@@ -1113,3 +1113,36 @@ cleared current annex and postal-area release appears earlier. After VN: 252
 profiles, 203 pending, 49 blocked, 0 in progress, 0 evidence-verified M2; 124
 manifests / 94 explicit definitions. Next: **YE**. No second country was
 started.
+
+## 2026-08-29 YE: no-required-postcode policy verified, optional office-code data blocked
+
+YE now has `M2_scoped_optional_office_code_address_context_visualization`.
+Seven exact official references were byte/hash verified. UPU's September 2025
+database lists Yemen among countries that do not require postcodes, and the
+UPU Yemen sheet shows P.O. box delivery without a postcode field. Yemen Post
+separately states that a P.O. box subscriber receives a distinct box number
+and a postal code tied to the post office by area. These claims remain
+separate; the box number is not treated as that code or as geometry.
+
+The reviewed operator pages publish no exact code values, assignments,
+current office or address rows, Polygon/MultiPolygon, CRS, topology or
+complete coverage. The claimed digital office-map link is the literal
+placeholder `#`. UPU copyright and Yemen Post all-rights-reserved notices do
+not grant bulk, derivative, persistence, redistribution, immutable-
+publication or AGID API-serving rights. No registration, application,
+contract, payment or controlled source was used.
+
+No P.O. box, office, administrative boundary, buffer, Voronoi cell, learned
+region or AGID cell was promoted to postal geometry. Raw source bodies remain
+outside Git. Shared tests verify exact search, Polygon/MultiPolygon filtering,
+fit, opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and
+failure states. YE has no eligible real-data artifact, API area response or
+app end-to-end result; a real authority class, basis date and confidence are
+therefore unavailable rather than fabricated.
+
+[YE review](postal-context-yemen-m2.md), [source report](../reports/postal-context-m2/ye-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after the pending-country pass
+and `2026-09-05T07:54:43.683Z`, unless a public rights-cleared current release
+appears earlier. After YE: 252 profiles, 202 pending, 50 blocked, 0 in
+progress, 0 evidence-verified M2; 125 manifests / 95 explicit definitions.
+Next: **AD**. No second country was started.
