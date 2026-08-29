@@ -1364,3 +1364,38 @@ API and commercial-use rights plus a current complete assignment release
 appear earlier. After BE: 252 profiles, 196 pending, 56 blocked, 0 in progress,
 0 evidence-verified M2; 127 manifests / 97 explicit definitions. Next: **BG**.
 No second country was started.
+
+## 2026-08-29 BG: historical assignments and current points verified, postal areas blocked
+
+BG now has
+`M2_current_assignment_and_rights_cleared_postal_area_visualization`. Five
+exact Eurostat GISCO/TERCET references were byte/hash verified: the 2025
+version and file catalogs, EPSG:4326 point GeoJSON, BG-to-NUTS crosswalk and
+methodology V4. Bulgarian Posts' government open-data catalog separately
+identifies a CC0 settlement/postcode dataset, version 2.4 dated 2020-10-27.
+Its exact resource bytes and a current complete 2026 edition were not verified.
+
+The exact GISCO file contains 4,880 distinct valid four-digit BG features, all
+Point and zero Polygon/MultiPolygon. TERCET attributes zero BG records to a
+current Member State postal-code dataset, 101 to address data, 4,359 to GISCO
+2020 and 420 to manual/geocoded input. Eurostat does not guarantee complete
+coverage or exact locations. The point count is therefore not a current
+assignment or area-coverage denominator.
+
+No locality, point, NUTS match, EKATTE or administrative/cadastral area,
+address/building feature, buffer, Voronoi/model surface or AGID cell was
+promoted to postal geometry. Special and non-geographic codes remain non-area.
+House numbers and buildings require separate permitted stable relations.
+
+Shared tests verify exact search, Polygon/MultiPolygon filtering, fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. BG has no eligible real-data area artifact, API area response or app
+end-to-end result, so translucent visualization remains blocked rather than
+fabricated.
+
+[BG review](postal-context-bulgaria-m2.md), [source report](../reports/postal-context-m2/bg-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after the pending-country pass
+and `2026-09-05T11:31:04.000Z`, unless a current complete assignment and
+postal-area/member release appears earlier. After BG: 252 profiles, 195
+pending, 57 blocked, 0 in progress, 0 evidence-verified M2; 127 manifests / 97
+explicit definitions. Next: **BY**. No second country was started.

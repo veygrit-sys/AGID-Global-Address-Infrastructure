@@ -85,6 +85,7 @@ test('Bulgaria source policy separates Posts, GRAO, AGCC, INSPIRE, EKATTE and sp
   const sources = new Map(profile.sources.map(source => [source.source_id, source]));
   const postcodes = sources.get('bulgarian-posts-postcode-reference');
   const offices = sources.get('bulgarian-posts-post-office-directory');
+  const gisco = sources.get('eurostat-gisco-bulgaria-postcode-points-2025');
   const address = sources.get('grao-bulgaria-address-classifier');
   const cadastre = sources.get('agcc-bulgaria-cadastral-map');
   const buildings = sources.get('agcc-bulgaria-inspire-buildings');
@@ -93,11 +94,13 @@ test('Bulgaria source policy separates Posts, GRAO, AGCC, INSPIRE, EKATTE and sp
 
   assert.equal(profile.artifact_scope, 'metadata-only-contract-seed');
   assert.ok(profile.sources.every(source => source.bundled_here === false));
-  assert.equal(postcodes?.assignment_authority, 'official_postal_operator_reference');
+  assert.equal(postcodes?.assignment_authority, 'official_postal_operator_historical_open_data');
   assert.equal(postcodes?.geometry_authority, 'none');
   assert.ok(postcodes?.prohibited_claims.includes('postcode-row-is-polygon'));
   assert.equal(offices?.geometry_authority, 'service_point_only');
   assert.ok(offices?.prohibited_claims.includes('post-office-point-is-postcode-area'));
+  assert.equal(gisco?.geometry_authority, 'postcode_point_only');
+  assert.ok(gisco?.prohibited_claims.includes('gisco-point-is-postcode-polygon'));
   assert.equal(address?.redistribution_class, 'R3_controlled_or_contract');
   assert.ok(address?.prohibited_claims.includes('roadmap-is-production-address-record'));
   assert.equal(cadastre?.geometry_authority, 'source_qualified_cadastral_building_geometry');
@@ -111,6 +114,7 @@ test('Bulgaria source policy separates Posts, GRAO, AGCC, INSPIRE, EKATTE and sp
   assert.ok(administration?.prohibited_claims.includes('administrative-polygon-is-postcode-polygon'));
   assert.ok(profile.artifact_partitions.some(partition => partition.id === 'postal-assignment'));
   assert.ok(profile.artifact_partitions.some(partition => partition.id === 'derived-postcode-surface'));
+  assert.ok(profile.artifact_partitions.some(partition => partition.id === 'postal-point-validation'));
   assert.ok(profile.artifact_partitions.some(partition => partition.id === 'address'));
   assert.ok(profile.artifact_partitions.some(partition => partition.id === 'building'));
   assert.ok(profile.artifact_partitions.some(partition => partition.id === 'administration'));

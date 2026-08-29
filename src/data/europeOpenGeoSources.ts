@@ -3150,11 +3150,12 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'bulgarian-posts-postcode-reference': {
     id: 'bulgarian-posts-postcode-reference',
     name: 'Bulgarian Posts Postcode Reference',
-    url: 'https://www.bgpost.bg/en/',
+    url: 'https://testdata.egov.bg/organisation/dataset/acb135ab-00a2-4aa7-b5e5-49c992385ef5',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official four-digit routing reference retained as a pinned receipt. It supplies no assumed nationwide operator-authored polygon and does not by itself prove current deliverability.',
+    license: 'CC0; dataset version 2.4 dated 2020-10-27',
+    notes: 'Official Bulgarian Posts 2020 locality/postcode release. It is historical assignment evidence, not a current complete register, and supplies no Polygon/MultiPolygon or delivery perimeter.',
   },
   'bulgarian-posts-post-office-directory': {
     id: 'bulgarian-posts-post-office-directory',

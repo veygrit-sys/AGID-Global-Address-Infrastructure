@@ -567,8 +567,8 @@ test('separates Bulgaria postal routing, controlled address, cadastral building,
   const sources = getOfficialPostalSourcesForCountry('BG');
   const byId = new Map(sources.map(source => [source.id, source]));
   assert.equal(byId.get('bulgarian-posts-postcode-reference')?.authority, 'postal-operator');
-  assert.equal(byId.get('bulgarian-posts-postcode-reference')?.availability, 'web-search');
-  assert.match(byId.get('bulgarian-posts-postcode-reference')?.notes.join(' ') ?? '', /four-digit.*pinned.*no nationwide.*polygon.*deliverability/i);
+  assert.equal(byId.get('bulgarian-posts-postcode-reference')?.availability, 'bulk-open-data');
+  assert.match(byId.get('bulgarian-posts-postcode-reference')?.notes.join(' ') ?? '', /version 2.4.*2020-10-27.*CC0.*not a current complete.*no nationwide.*Polygon/i);
   assert.equal(byId.get('bulgarian-posts-post-office-directory')?.depth, 'delivery-point');
   assert.match(byId.get('bulgarian-posts-post-office-directory')?.notes.join(' ') ?? '', /service-point.*not a postcode area.*delivery guarantee.*bulk redistribution/i);
   assert.equal(byId.get('grao-bulgaria-address-classifier')?.availability, 'commercial-or-restricted');

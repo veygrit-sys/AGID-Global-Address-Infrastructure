@@ -26,7 +26,8 @@ test('Bulgaria registry separates routing, service point, address, building, and
 
   const [postcodes, offices, address, cadastre, buildings, ekatte, administration] = sources;
   assert.equal(postcodes.kind, 'postal-code');
-  assert.match(postcodes.notes, /four-digit.*reference.*no.*operator-authored.*polygon.*deliverability/i);
+  assert.match(postcodes.license ?? '', /CC0.*2020-10-27/i);
+  assert.match(postcodes.notes, /Bulgarian Posts.*2020.*historical.*not.*current complete.*no Polygon/i);
   assert.equal(offices.kind, 'geocoding');
   assert.match(offices.notes, /service[- ]point.*not.*postcode area.*delivery/i);
   assert.equal(address.kind, 'address');
@@ -48,7 +49,7 @@ test('Bulgaria official catalog exposes operator reference and controlled addres
   const sources = new Map(getOfficialPostalSourcesForCountry('BG').map(source => [source.id, source]));
 
   assert.equal(sources.get('bulgarian-posts-postcode-reference')?.authority, 'postal-operator');
-  assert.equal(sources.get('bulgarian-posts-postcode-reference')?.availability, 'web-search');
+  assert.equal(sources.get('bulgarian-posts-postcode-reference')?.availability, 'bulk-open-data');
   assert.equal(sources.get('bulgarian-posts-post-office-directory')?.depth, 'delivery-point');
   assert.equal(sources.get('grao-bulgaria-address-classifier')?.availability, 'commercial-or-restricted');
   assert.equal(sources.get('grao-bulgaria-address-classifier')?.requiresCredential, true);

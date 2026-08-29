@@ -13,16 +13,16 @@
     {
       "source_id": "bulgarian-posts-postcode-reference",
       "provider": "Bulgarian Posts PLC",
-      "source_url": "https://www.bgpost.bg/en/",
-      "role": ["official-four-digit-postcode-reference", "postal-locality-and-office-routing", "assignment-validation-receipt"],
-      "production_scope": "Pinned official page, search or transaction receipt retaining the four-digit text, postal locality or office relation, capture/effective time, exact terms, schema and digest. No nationwide operator-authored polygon or bulk redistribution permission is inferred.",
-      "assignment_authority": "official_postal_operator_reference",
+      "source_url": "https://testdata.egov.bg/organisation/dataset/acb135ab-00a2-4aa7-b5e5-49c992385ef5",
+      "role": ["official-2020-four-digit-postcode-locality-release", "postal-locality-assignment-reference", "historical-assignment-validation"],
+      "production_scope": "Bulgarian Posts' government open-data catalog record identifies dataset acb135ab-00a2-4aa7-b5e5-49c992385ef5, version 2.4, dated 2020-10-27 and licensed CC0. It is historical locality assignment evidence, not a current complete 2026 register, operator perimeter or geometry release. Exact resource bytes, schema and digest must still be captured before row use.",
+      "assignment_authority": "official_postal_operator_historical_open_data",
       "geometry_authority": "none",
-      "validation_readiness": "exact-page-or-receipt-time-terms-schema-and-digest-required",
-      "redistribution_class": "R1_public_reference",
+      "validation_readiness": "catalog-metadata-reviewed-exact-resource-bytes-schema-digest-and-current-edition-missing",
+      "redistribution_class": "R2_explicit_public_reuse",
       "bundled_here": false,
-      "promotion_requirements": ["pin-official-page-search-or-receipt-and-capture-time", "retain-four-digit-text-and-routing-semantics", "prove-artifact-specific-output-rights"],
-      "prohibited_claims": ["postcode-reference-is-current-bulk-register", "postcode-row-is-polygon", "postal-locality-is-delivery-perimeter", "reference-proves-deliverability"]
+      "promotion_requirements": ["pin-exact-resource-bytes-schema-and-digest", "obtain-current-complete-assignment-edition-and-special-code-semantics", "retain-four-digit-text-and-routing-semantics"],
+      "prohibited_claims": ["2020-locality-release-is-current-2026-register", "postcode-row-is-polygon", "postal-locality-is-delivery-perimeter", "reference-proves-deliverability"]
     },
     {
       "source_id": "bulgarian-posts-post-office-directory",
@@ -37,6 +37,20 @@
       "bundled_here": false,
       "promotion_requirements": ["pin-office-page-or-receipt-and-capture-time", "retain-service-point-coordinate-semantics", "separate-office-from-area-and-premise-delivery"],
       "prohibited_claims": ["post-office-point-is-postcode-area", "office-location-proves-deliverability", "office-building-is-recipient-building", "directory-is-bulk-redistribution-right"]
+    },
+    {
+      "source_id": "eurostat-gisco-bulgaria-postcode-points-2025",
+      "provider": "European Commission Eurostat GISCO",
+      "source_url": "https://ec.europa.eu/eurostat/web/gisco/geodata/administrative-units/postal-codes",
+      "role": ["official-derived-postcode-point-crosscheck", "NUTS-2024-correspondence", "format-and-location-validation"],
+      "production_scope": "The 2025 GISCO distribution and TERCET V4 methodology provide 4,880 distinct BG postcode Point features. The methodology attributes zero BG records to a current Member State postal-code dataset, 101 to address data, 4,359 to GISCO 2020 data and 420 to manual/geocoded sources. GISCO warns that completeness and exact location are not guaranteed. Every feature remains a point and cannot be promoted to a postcode area.",
+      "assignment_authority": "official_derived_validation_only",
+      "geometry_authority": "postcode_point_only",
+      "validation_readiness": "exact-2025-catalog-files-geojson-tercet-and-methodology-digests-reviewed",
+      "redistribution_class": "R2_explicit_public_reuse",
+      "bundled_here": false,
+      "promotion_requirements": ["retain-cc-by-sa-attribution-and-share-alike", "preserve-point-and-source-method", "never-surface-generate-without-complete-permitted-membership"],
+      "prohibited_claims": ["gisco-point-is-postcode-polygon", "tercet-match-is-current-complete-operator-register", "point-buffer-or-voronoi-is-official-area", "NUTS-match-is-postcode-area"]
     },
     {
       "source_id": "grao-bulgaria-address-classifier",
@@ -110,8 +124,9 @@
     }
   ],
   "artifact_partitions": [
-    { "id": "postal-assignment", "sources": ["bulgarian-posts-postcode-reference"], "public_output": "reference-receipt-or-exact-terms-only" },
+    { "id": "postal-assignment", "sources": ["bulgarian-posts-postcode-reference"], "public_output": "historical-CC0-locality-assignment-only-after-exact-resource-audit; not-current" },
     { "id": "postal-service-point", "sources": ["bulgarian-posts-post-office-directory"], "public_output": "service-point-semantics-only" },
+    { "id": "postal-point-validation", "sources": ["eurostat-gisco-bulgaria-postcode-points-2025"], "public_output": "CC-BY-SA-attributed-point-only; never-area" },
     { "id": "derived-postcode-surface", "sources": [], "public_output": "agid-derived-noncanonical-only-after-membership-rights-and-quality-gates" },
     { "id": "address", "sources": ["grao-bulgaria-address-classifier"], "public_output": "allow-listed-fields-from-actual-authorized-receipt-only" },
     { "id": "building", "sources": ["agcc-bulgaria-cadastral-map", "agcc-bulgaria-inspire-buildings"], "public_output": "exact-licensed-feature-only-after-explicit-identifier-gate" },
