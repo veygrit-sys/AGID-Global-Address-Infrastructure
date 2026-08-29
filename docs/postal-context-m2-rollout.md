@@ -925,3 +925,30 @@ and engineering checks record the gate. Recheck after
 `2026-09-05T03:38:36.537Z` and the pending-country pass. After TJ: 252 profiles,
 209 pending, 43 blocked, 0 in progress, 0 evidence-verified M2; 121 manifests /
 89 explicit definitions. Next: **TL**. No second country was started.
+
+## 2026-08-29 TL: seven-character format corrected, postal areas blocked
+
+TL now has `M2_current_seven_character_delivery_area_visualization`. Five
+exact primary references were byte/hash verified. The August 2026 UPU sheet
+supersedes AGID's five-digit-only metadata: the canonical value is `TL` plus
+five digits. It gives five P.O. box, home and organization delivery examples,
+but no complete current assignment table or postal geometry.
+
+The Correios contact page displays an unlabelled six-digit `535022`; it remains
+an unresolved contact-address token and was not silently corrected or promoted.
+Correios states all rights reserved. The current UPU database page exposes a
+contract, NDA, data-use declaration and rates; no account, contract, payment or
+acceptance was performed. Government plans for delivery to Administrative Post
+level do not make administrative boundaries postcode polygons.
+
+No eligible Polygon/MultiPolygon, immutable artifact, TL runtime/API or real
+app result exists. The shared search path still verifies API geometry opt-in,
+area-only filtering, map fit, opacity-0.22 fill, opacity-0.95 width-3 outline,
+clear/re-search and failure states, while its visible notice still lacks
+distinct authority, basis-date and confidence fields.
+
+[TL review](postal-context-timor-leste-m2.md), [source report](../reports/postal-context-m2/tl-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after
+`2026-09-05T04:04:11.098Z` and the pending-country pass. After TL: 252 profiles,
+208 pending, 44 blocked, 0 in progress, 0 evidence-verified M2; 122 manifests /
+90 explicit definitions. Next: **TM**. No second country was started.

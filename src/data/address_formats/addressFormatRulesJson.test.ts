@@ -429,7 +429,7 @@ test('Southeast Asia address JSON files expose table-derived addressRules metada
     { code: 'zh', name: 'Chinese' },
   ]);
   assert.equal(loadRules('BN').postalCode?.label, '2 letters plus 4 digits required');
-  assert.equal(loadRules('TL').postalCode, null);
+  assert.equal(loadRules('TL').postalCode?.label, 'TL plus 5 digits required');
 });
 
 test('South Asia address JSON files expose table-derived addressRules metadata', () => {
