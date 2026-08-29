@@ -982,3 +982,31 @@ and engineering checks record the gate. Recheck after
 profiles, 207 pending, 45 blocked, 0 in progress, 0 evidence-verified M2; 123
 manifests / 91 explicit definitions. Next: **TR**. No second country was
 started.
+
+## 2026-08-29 TR: real PTT assignments verified, postal areas blocked
+
+TR now has `M2_current_five_digit_delivery_area_visualization`. The current
+public PTT service was followed from its UI/client to bounded real API data. An
+ALTINDAĞ response contains 3,269 street/neighbourhood rows, 8 distinct valid
+five-digit postcodes, 26 neighbourhoods and 3,169 street labels. Its five
+fields contain no Polygon/MultiPolygon, coordinate, boundary, CRS or topology.
+
+PTT's current legal notice requires prior permission and does not establish
+bulk redistribution, derivative-polygon or AGID API-serving rights. The UPU
+sheet confirms five-digit placement plus P.O.-box and poste-restante
+exceptions. TUCBS access follows data-owner permission/Open Data
+classification; no current public postcode-area service receipt was verified.
+
+No address row or administrative boundary was relabelled as a postal area, and
+raw source bodies remain outside Git. Shared tests continue to verify exact
+search, geometry opt-in, Polygon/MultiPolygon filtering, map fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. TR has no eligible runtime artifact or real area result, and the shared
+notice still lacks distinct authority, basis-date and confidence fields.
+
+[TR review](postal-context-turkey-m2.md), [source report](../reports/postal-context-m2/tr-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after
+`2026-09-05T05:06:23.425Z` and the pending-country pass. After TR: 252
+profiles, 206 pending, 46 blocked, 0 in progress, 0 evidence-verified M2; 124
+manifests / 92 explicit definitions. Next: **TW**. No second country was
+started.
