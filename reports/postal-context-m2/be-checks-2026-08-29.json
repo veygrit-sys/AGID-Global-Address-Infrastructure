@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BE",
+  "generatedAt": "2026-08-29T11:13:43.000Z",
+  "baseCommit": "c2e72e056acaef99a1d42639f6b6d2ecc044ed4c",
+  "m2Achieved": false,
+  "sourceReview": {
+    "path": "reports/postal-context-m2/be-source-review-2026-08-29.json",
+    "referencesReviewed": 4,
+    "contentVerified": 4,
+    "postalCantonFeatures": 1268,
+    "distinctSourceValues": 1187,
+    "invalidGeometries": 0,
+    "specialCodeFeatures": 39,
+    "nonFourCharacterSourceValues": ["612", "9"],
+    "currentAssignmentWorkbookRowAuditComplete": false,
+    "productionPostalAreaGeometryRecordsEligibleForPublicAgid": 0,
+    "scope": "Exact bpost geo.be metadata and EPSG:4326 Postal cantons Shapefile plus the current postcode-validation page and linked 2025 legacy workbook. Geometry is valid, but source rights grant internal use, prohibit commercial use, and do not establish public redistribution/API rights; legacy workbook rows were not audited in this environment."
+  },
+  "verification": [
+    {
+      "name": "Belgium exact-source inspector",
+      "command": "node scripts/inspect-postal-context-be-sources.mjs .m2-sources-be reports/postal-context-m2/be-source-review-2026-08-29.json",
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "name": "Belgium source, ledger and rollout contracts",
+      "command": "node --test scripts/inspect-postal-context-be-sources.test.mjs scripts/postal-context-m2-be-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "name": "Belgium repository, runtime, routes, formats and source catalog",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-belgium files>",
+      "passed": 139,
+      "failed": 0
+    },
+    {
+      "name": "Postal search area, API routes and client service",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/services/PostalContextService.test.ts src/server/routes/postalContextRoutes.test.ts",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "name": "Shared Postal Context runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-runtime files>",
+      "passed": 159,
+      "failed": 0
+    },
+    {
+      "name": "TypeScript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "passed": 1,
+      "failed": 0
+    }
+  ],
+  "appVisualization": {
+    "officialSearch": "bpost publishes a valid 1,268-feature Postal cantons polygon layer and a current postcode workbook, but reviewed rights do not permit AGID public/commercial redistribution or API publication.",
+    "realSearchToArea": "not verified and not exercised because no rights-cleared BE artifact may enter the public AGID runtime",
+    "sharedExactPostcodeCandidateResolution": "verified by deterministic unit test",
+    "sharedGeometryContract": "only postal-feature Polygon and MultiPolygon accepted; point, route, P.O. box, organization, unknown or text-only lookup produces no drawable area",
+    "sharedMapRendering": "verified fill opacity 0.22, outline opacity 0.95, width 3, bounds calculation, fit update and removal",
+    "sharedApiContract": "explicit geometry=geojson opt-in and unsupported-country failure verified",
+    "belgiumRuntime": "existing fixture-backed BE code remains synthetic and cannot promote the restricted source to production M2",
+    "belgiumRealDataEndToEnd": "not verified",
+    "browserE2e": "not run because using restricted source data or a synthetic substitute would not satisfy the real-data M2 gate",
+    "remainingUiGap": "written public/commercial redistribution, derivative and API rights plus an approved immutable artifact and real BE loader/API/app path are absent"
+  },
+  "authoritySeparation": {
+    "postalAssignment": "The linked bpost workbook is a separate assignment source; its legacy XLS rows were not audited here and polygon containment does not prove current delivery assignment.",
+    "postalGeometry": "The Postal cantons layer is official-derived geometry extrapolated from address points using administrative limits and roads; it is not an exact building or delivery guarantee.",
+    "administrativeCadastral": "municipal, administrative, cadastral, parcel and building geometry retain their own authority and cannot replace postal-canton geometry.",
+    "buildingsAndHouseNumbers": "require a separate permitted stable address/building relation and cannot be inferred from postal geometry.",
+    "agid": "no BE restricted real-data runtime, area response, immutable artifact publication or deployment asserted."
+  },
+  "publication": {
+    "rawSourceDataCommitted": false,
+    "immutableRealDataArtifactPublished": false,
+    "newRepositoryCreated": false,
+    "productionDeploymentPerformed": false,
+    "paidAuthenticatedPermissionedOrContractSourceUsed": false
+  },
+  "environment": {
+    "dependencyRestore": "npm ci --ignore-scripts --prefer-offline succeeded; node_modules is ignored and not committed",
+    "legacyWorkbookAudit": "artifact_tool could not parse BIFF .xls and Excel COM was unavailable; no alternate spreadsheet library was installed",
+    "dependencyFilesCommitted": false
+  },
+  "remainingBlocker": "Obtain written public redistribution, derivative, API and commercial-use rights for a pinned current bpost Postal cantons artifact, audit the current complete assignment workbook and normalization exceptions, publish an approved immutable artifact, then verify the real BE loader, API and app search-to-translucent-area path."
+}

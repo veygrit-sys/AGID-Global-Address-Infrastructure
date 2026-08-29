@@ -1157,12 +1157,12 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'bpost-belgium-postal-cantons': {
     id: 'bpost-belgium-postal-cantons',
     name: 'bpost / NGI Belgium Postal Cantons',
-    url: 'https://publish.geo.be/geonetwork/srv/search?keyword=postal+code',
+    url: 'https://publish.geo.be/geonetwork/F0ow2Say/api/records/9738c7c0-5255-11ea-8895-34e12d0f0423',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    license: 'Pin the exact geo.be metadata record, downloadable-layer terms and attribution before redistribution',
-    notes: 'Official postal-canton boundaries include ordinary and listed special codes and are updated as needed. Only the exact versioned vector feature is canonical; WMS pixels, municipal boundaries and interpolation are not postal geometry, and containment does not prove deliverability.',
+    license: 'Internal use granted; commercial use strictly forbidden; bpost attribution required for public use. No reviewed public redistribution/API grant.',
+    notes: 'Official vector postal-canton boundaries are authoritative source geometry, but reviewed metadata UUID 9738c7c0-5255-11ea-8895-34e12d0f0423 limits use to internal use and forbids commercial use. Public AGID redistribution/API use is blocked without written permission. The EPSG:4326 artifact has leading-zero exceptions (612 and 9) that require explicit normalization; WMS pixels, municipalities and interpolation never substitute for the vector layer.',
   },
   'bpost-address-validation': {
     id: 'bpost-address-validation',

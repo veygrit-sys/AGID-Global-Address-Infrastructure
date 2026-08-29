@@ -33,8 +33,8 @@ test('Belgium registry separates operator, postal-canton, federal address, regio
   assert.equal(postcode.kind, 'postal-code');
   assert.match(postcode.notes, /four-digit.*leading zeroes.*B-\/BE-.*neither.*polygon.*building/i);
   assert.equal(cantons.kind, 'postal-code');
-  assert.match(cantons.license ?? '', /exact geo.be.*downloadable-layer terms.*attribution.*redistribution/i);
-  assert.match(cantons.notes, /official postal-canton.*special codes.*exact versioned vector.*WMS pixels.*municipal.*containment.*deliverability/i);
+  assert.match(cantons.license ?? '', /internal use.*commercial use strictly forbidden.*attribution.*public redistribution\/API grant/i);
+  assert.match(cantons.notes, /official vector postal-canton.*internal use.*forbids commercial use.*public AGID redistribution\/API.*leading-zero exceptions.*WMS pixels.*municipal.*interpolation/i);
   assert.equal(validation.usage, 'validation');
   assert.match(validation.notes, /validation.*not bundled.*building geometry.*BeSt/i);
   assert.equal(best.kind, 'address');
@@ -59,11 +59,11 @@ test('Belgium registry separates operator, postal-canton, federal address, regio
   assert.match(administration.notes, /region.*province.*arrondissement.*municipality.*context only.*postal cantons/i);
 });
 
-test('Belgium official catalog exposes canonical postal geometry and three-region address-building boundaries', () => {
+test('Belgium official catalog exposes restricted postal geometry and three-region address-building boundaries', () => {
   const sources = new Map(getOfficialPostalSourcesForCountry('BE').map(source => [source.id, source]));
 
   assert.equal(sources.get('bpost-belgium-postcode-reference')?.authority, 'postal-operator');
-  assert.equal(sources.get('bpost-belgium-postal-cantons')?.availability, 'bulk-open-data');
+  assert.equal(sources.get('bpost-belgium-postal-cantons')?.availability, 'commercial-or-restricted');
   assert.equal(sources.get('bpost-belgium-postal-cantons')?.depth, 'postcode');
   assert.equal(sources.get('bosa-belgium-best-address')?.trustTier, 'authoritative');
   assert.equal(sources.get('digitaal-vlaanderen-address-register')?.depth, 'address');

@@ -1324,3 +1324,43 @@ and `2026-09-05T10:31:04.634Z`, unless a current rights-cleared assignment and
 postal-area release appears earlier. After BA: 252 profiles, 197 pending, 55
 blocked, 0 in progress, 0 evidence-verified M2; 127 manifests / 97 explicit
 definitions. Next: **BE**. No second country was started.
+
+## 2026-08-29 BE: valid postal-canton polygons verified, public use blocked
+
+BE now has
+`M2_current_assignment_and_rights_cleared_postal_canton_visualization`.
+Four exact bpost references were byte/hash verified: the geo.be metadata,
+EPSG:4326 Postal cantons archive, current postcode-validation page and its
+linked 2025 legacy workbook. The Shapefile has 1,268 Polygon features, 1,187
+distinct `nouveau_PO` values, 39 special-code features and zero invalid
+geometries. Source values `612` and `9` require explicit leading-zero
+normalization; they were not silently rewritten.
+
+The official metadata describes postal-canton surfaces extrapolated from
+address points with administrative limits and roads. They are official-derived
+postal geometry, not exact delivery, building or house-number guarantees.
+Administrative, cadastral, parcel and building geometry retain separate
+authority. House numbers and buildings require a separate permitted stable
+address/building relation.
+
+The same metadata grants internal use, strictly forbids commercial use and
+does not establish public redistribution, derivative or API rights. Therefore
+the reviewed 14,250,060-byte archive and its extracted files were audited only
+as temporary inputs and are not committed, published or loaded into AGID.
+The linked assignment workbook is BIFF `.xls`; the approved spreadsheet
+runtime could not parse it and Excel COM was unavailable, so row-level current
+assignment completeness remains unverified.
+
+Shared tests verify exact search, Polygon/MultiPolygon filtering, fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. Those tests do not load restricted BE source bytes. A real BE postcode
+search therefore cannot lawfully return or display the translucent postal area
+in the public app yet, and M2 remains blocked rather than fabricated.
+
+[BE review](postal-context-belgium-m2.md), [source report](../reports/postal-context-m2/be-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after the pending-country pass
+and `2026-09-05T10:56:01Z`, unless written public redistribution, derivative,
+API and commercial-use rights plus a current complete assignment release
+appear earlier. After BE: 252 profiles, 196 pending, 56 blocked, 0 in progress,
+0 evidence-verified M2; 127 manifests / 97 explicit definitions. Next: **BG**.
+No second country was started.

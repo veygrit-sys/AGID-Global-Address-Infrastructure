@@ -105,7 +105,7 @@ test('Belgium source policy preserves national and three-region evidence partiti
   assert.equal(postcode?.geometry_authority, 'none');
   assert.ok(postcode?.prohibited_claims.includes('postcode-row-is-polygon'));
   assert.equal(cantons?.geometry_authority, 'official_postal_canton_geometry');
-  assert.equal(cantons?.redistribution_class, 'R2_source_specific_open_terms');
+  assert.equal(cantons?.redistribution_class, 'R4_internal_use_noncommercial_restricted');
   assert.ok(cantons?.prohibited_claims.includes('wms-pixel-is-vector-feature'));
   assert.equal(validation?.geometry_authority, 'none');
   assert.ok(validation?.prohibited_claims.includes('validated-address-is-building-footprint'));
