@@ -1473,3 +1473,40 @@ record 239 passing tests, zero failures and zero TypeScript errors. After CH:
 252 profiles, 193 pending, 58 blocked, 0 in progress, 1 evidence-verified M2;
 127 manifests / 97 explicit definitions. Next: **CY**. No second country was
 started.
+
+## 2026-08-29 CY: current assignments and 2011 statistical polygons compared, current areas blocked
+
+CY now has
+`M2_current_assignment_and_statistical_or_derived_postal_area_visualization`.
+The exact official 2024 Post Code Directory and CYSTAT GML were byte and
+SHA-256 verified. The directory contains 33,541 street rows and 757 community
+rows, forming 1,131 distinct current four-digit assignments with no geometry.
+
+The GML contains 852 statistical distributions, 879 Polygon patches and 845
+four-digit geometry codes in EPSG:3048. It is a 2011 population-distribution
+layer, not a current Cyprus Post perimeter. Only 832 current codes match; 299
+current codes have no matching historical geometry, and 13 historical codes
+are absent from current assignments. The malformed source literal
+`2011-11-31` is retained as a quality exception and was not silently repaired.
+
+No street, community, district, address, building, route, P.O. box, buffer,
+Voronoi/model surface or AGID cell was promoted to postal geometry. House
+numbers and buildings still require separate permitted stable relations. The
+2011 geometry may only be considered later as explicitly historical
+official-statistical context.
+
+Shared tests verify normalized search, Polygon/MultiPolygon filtering, bounds
+fit, translucent fill, visible outline, clear/re-search and error states. CY
+has no production-eligible current artifact, so a real current postcode search
+does not shade the 2011 layer and instead remains an explicit no-verified-area
+outcome.
+
+[CY review](postal-context-cyprus-m2.md), [source report](../reports/postal-context-m2/cy-source-review-2026-08-29.json)
+and [engineering checks](../reports/postal-context-m2/cy-checks-2026-08-29.json)
+record 180 passing tests, zero failures and zero TypeScript errors. Recheck
+after the pending-country pass and `2026-09-29T13:16:00Z`, unless a current
+rights-cleared area/member release appears earlier. Authentication, agreement,
+new publication destination and deployment require explicit approval. After
+CY: 252 profiles, 192 pending, 59 blocked, 0 in progress, 1 evidence-verified
+M2; 127 manifests / 97 explicit definitions. Next: **CZ**. No second country
+was started.
