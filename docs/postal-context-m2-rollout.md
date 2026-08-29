@@ -952,3 +952,33 @@ and engineering checks record the gate. Recheck after
 `2026-09-05T04:04:11.098Z` and the pending-country pass. After TL: 252 profiles,
 208 pending, 44 blocked, 0 in progress, 0 evidence-verified M2; 122 manifests /
 90 explicit definitions. Next: **TM**. No second country was started.
+
+## 2026-08-29 TM: current office indices verified, postal areas blocked
+
+TM now has `M2_current_six_digit_delivery_area_visualization`. Seven exact
+primary references were byte/hash verified. The current public Turkmenpost
+departments API contains 153 unique six-digit office indices across seven
+regions; 137 have office points and 16 do not. It contains no postal
+Polygon/MultiPolygon, boundary field, CRS or delivery-area relation.
+
+The two-page December 2020 UPU sheet confirms six digits and gives home,
+P.O.-box and poste-restante examples, but it is not a current complete
+assignment. The current app states all rights reserved, and no express bulk,
+derivative-polygon, redistribution or API-serving grant was found. UPU's
+licensed product route exposes a contract, NDA, use declaration and rates; no
+authentication, agreement or payment was performed.
+
+Office points, kiosks and Welayat/Etrap boundaries were not buffered,
+Voronoi-partitioned or relabelled as postal areas. No eligible immutable
+artifact, TM runtime/API or real app result exists. Shared tests still verify
+exact-code search, geometry opt-in, area-only filtering, map fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states; the visible notice still lacks distinct authority, basis-date and
+confidence fields.
+
+[TM review](postal-context-turkmenistan-m2.md), [source report](../reports/postal-context-m2/tm-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after
+`2026-09-05T04:32:30.161Z` and the pending-country pass. After TM: 252
+profiles, 207 pending, 45 blocked, 0 in progress, 0 evidence-verified M2; 123
+manifests / 91 explicit definitions. Next: **TR**. No second country was
+started.

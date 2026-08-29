@@ -3732,11 +3732,11 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   turkmenpost: {
     id: 'turkmenpost',
     name: 'Turkmenpost',
-    url: 'https://www.turkmenpost.gov.tm/',
+    url: 'https://post.tm/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Turkmenistan postal-service reference for 6-digit postal-index validation.',
+    notes: 'Current Turkmenistan postal-service reference for 6-digit office-index validation; office points are not postal areas.',
   },
   'osm-turkmenistan': {
     id: 'osm-turkmenistan',
