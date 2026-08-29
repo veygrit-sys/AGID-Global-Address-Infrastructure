@@ -788,3 +788,17 @@ AGID PS metadata no longer declares postal codes unused; P3 and P7 syntax are ac
 After PS: 252 profiles, 215 pending, 37 blocked, 0 in progress, 0 evidence-verified M2; 117 manifests / 85 explicit M2 definitions. Next: **QA**. Other 251 ledger entries unchanged; no second country started.
 
 PS validation totals: 2,020 passing JavaScript executions across overlapping groups (503 unique test files), plus 12 Python tests. Typecheck, source-replay digest verification and diff audit passed. Three unchanged baseline failures remain: KM duplicated source IDs, absent EH/HM YAML, and malformed BY YAML. English/Arabic local component QA passed; full application, mobile layout and real PS spatial API remain untested.
+
+## 2026-08-28 QA: Inwani context, road quality and scoped C0 rights
+
+QA had no manifest/M2 criterion. The reviewed `M2_current_official_inwani_context` requires current complete-for-declared-coverage permitted civic-address data, explicit zone/street/building relations, georeferencing, immutable publication and real QA AGID verification. No normal postcode, postal polygon or building footprint is invented.
+
+Twenty-five acquisition receipts include 19 content-reviewed references/aggregates, four transport-only shells/bundles and two initial failures. Public road counts agree on 12,645 polylines; 285 street values and 12,623 update dates are missing. QARS candidate schema has zone/street/building fields, but neither match scores nor generic Postal fields prove assignments. No individual records or geocoder queries were requested.
+
+NPC June 2026 policy permits attributed CC-BY-4.0 reuse for C0 data. Explicit C0/CC-BY census catalog grants are preserved; their aggregate municipal geometry is not an Inwani address register. Specific QARS/road rights, current address data, a fixed approved artifact and real AGID loader/API evidence remain unverified. QA stays M1 / blocked.
+
+[QA review](postal-context-qatar-m2.md), [source report](../reports/postal-context-m2/qa-source-review-2026-08-28.json), [engineering checks](../reports/postal-context-m2/qa-checks-2026-08-28.json). Recheck after `2026-09-05T00:03:27.720Z` and the pending-country pass. No extra charge, new public destination, contract or deployment was performed.
+
+After QA: 252 profiles, 214 pending, 38 blocked, 0 in progress, 0 evidence-verified M2; 118 manifests / 86 explicit definitions. Next: **SA**. Other 251 country entries and all existing user changes are unchanged.
+
+QA validation: 2025 passing JavaScript executions across overlapping groups, plus a 74-test npm entrypoint replay. Typecheck, exact-byte source replay and difference audit passed. Three baseline failures remain unchanged (KM, EH/HM, BY); no production QA data/API or browser UI deployment is claimed.

@@ -2999,8 +2999,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://geoportal.gisqatar.org.qa/',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Qatar national GIS geoportal for zones, streets, buildings, and administrative spatial validation.',
+    usage: 'validation',
+    notes: 'Official viewer and discovery metadata only. Current QARS/road service rights, coverage and explicit address-building relations are unverified; no postal polygon or exact building inference is permitted.',
   },
   'osm-qatar': {
     id: 'osm-qatar',
