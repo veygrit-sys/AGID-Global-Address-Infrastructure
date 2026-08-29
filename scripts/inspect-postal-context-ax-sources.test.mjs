@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {test} from 'node:test';
+import {profilePaavo,profilePcf,profileReference,sourceDigest,validateAxAuditReport} from './inspect-postal-context-ax-sources.mjs';
+
+const report=JSON.parse(readFileSync(new URL('../reports/postal-context-m2/ax-source-review-2026-08-29.json',import.meta.url),'utf8'));
+
+test('AX review binds twelve exact references and remains blocked',()=>{assert.deepEqual(validateAxAuditReport(report),{references:12,currentCodes:37,statisticalAreas:32,explicitNonAreaCodes:5,countryM2Achieved:false});});
+test('current assignment and statistical geometry join exactly for 32 drawable codes',()=>{assert.equal(report.assignment.distinctCodes,37);assert.equal(report.join.geometryCodesMissingFromPcf,0);assert.equal(report.join.geometryCodesNotNormalPcf,0);assert.equal(report.join.statisticalAreaCoverageCodes,32);});
+test('five non-area assignments receive no invented polygon',()=>{assert.deepEqual(report.join.normalCodesWithoutGeometry,['22110']);assert.deepEqual(report.join.poBoxCodesWithoutGeometry,['22101','22111','22151','22411']);assert.equal(report.postalPolicy.nonAreaCodesReceiveInventedArea,false);});
+test('all Paavo features pass deterministic geometry checks',()=>{assert.equal(report.geometry.polygonFeatures,1);assert.equal(report.geometry.multiPolygonFeatures,31);assert.equal(report.geometry.booleanValidFeatures,32);assert.equal(report.geometry.openRings,0);assert.equal(report.geometry.outOfRangeCoordinates,0);});
+test('PCF fixed-width profiler preserves leading text and type',()=>{const line='PONOT2026082922100MARIEHAMN'.padEnd(102)+'19881001'+'1'+'FI200'+''.padEnd(104);const value=profilePcf(Buffer.from(line+'\n','latin1'));assert.equal(value.profile.records,1);assert.deepEqual(value.profile.normalCodes,['22100']);});
+test('Paavo profiler rejects non-area geometry',()=>{assert.throws(()=>profilePaavo({type:'FeatureCollection',features:[{type:'Feature',properties:{posti_alue:'22100'},geometry:{type:'Point',coordinates:[20,60]}}]}),/unsupported-geometry/);});
+test('reference profiler fails closed on drift and PDF signature',()=>{const bytes=Buffer.from('Postal Code Services');const reference={id:'x',kind:'html',reviewed_bytes:bytes.length,expected_digest:sourceDigest(bytes),markers:['Postal Code Services']};assert.equal(profileReference(bytes,reference).contentVerified,true);assert.throws(()=>profileReference(Buffer.concat([bytes,Buffer.from('x')]),reference),/content-length/);const pdf=Buffer.from('%PDF-test');const pdfReference={id:'p',kind:'reviewed-pdf',reviewed_bytes:pdf.length,expected_digest:sourceDigest(pdf)};assert.equal(profileReference(pdf,pdfReference).contentVerified,true);assert.throws(()=>profileReference(Buffer.from('bad'),{...pdfReference,reviewed_bytes:3,expected_digest:sourceDigest(Buffer.from('bad'))}),/pdf-signature/);});

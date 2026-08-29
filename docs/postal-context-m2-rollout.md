@@ -1255,3 +1255,38 @@ rights-cleared postcode-area or complete member release appears earlier. After
 AT: 252 profiles, 199 pending, 53 blocked, 0 in progress, 0 evidence-verified
 M2; 125 manifests / 95 explicit definitions. Next: **AX**. No second country
 was started.
+
+## 2026-08-29 AX: current assignments and statistical areas verified, publication/app blocked
+
+AX now has
+`M2_current_assignment_and_official_statistical_postal_area_visualization`.
+Twelve exact Posti, Åland Post and Statistics Finland references were
+byte/hash verified. Posti PCF `20260829` contains 37 current Åland records:
+33 normal and four P.O.-box codes. Paavo `pno_2026` contains 32 exact matching
+official-derived statistical postal-code areas.
+
+All 32 features are Polygon/MultiPolygon, all pass Turf validity, their 530
+rings close and no coordinate is out of range. The five assignments without a
+Paavo feature are `22101`, `22110`, `22111`, `22151` and `22411`: four P.O.
+boxes and one postal terminal. They receive no invented polygon. Paavo remains
+official-derived statistical geometry generalized from building postcodes; it
+is not an Åland Post operator delivery perimeter.
+
+Posti terms permit third-party disclosure when the terms and download date
+accompany the data; Statistics Finland uses CC BY 4.0. The reviewed PCF and
+GeoJSON bytes are not committed. No account, payment, contract acceptance,
+new repository, publication destination or deployment was used. AX has no
+approved immutable transformed artifact and no production loader/API/app path.
+
+Shared tests verify exact search, Polygon/MultiPolygon filtering, fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. These tests do not load the reviewed AX bytes. A real postcode search
+therefore cannot yet display the 32 areas or explain the five non-area outcomes
+in the app, and M2 remains blocked.
+
+[AX review](postal-context-aland-islands-m2.md), [source report](../reports/postal-context-m2/ax-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit publication
+approval, the pending-country pass and `2026-09-29T09:57:47.357Z`, unless a
+newer exact release appears earlier. After AX: 252 profiles, 198 pending, 54
+blocked, 0 in progress, 0 evidence-verified M2; 126 manifests / 96 explicit
+definitions. Next: **BA**. No second country was started.
