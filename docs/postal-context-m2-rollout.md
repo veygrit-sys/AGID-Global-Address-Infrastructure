@@ -1399,3 +1399,42 @@ and `2026-09-05T11:31:04.000Z`, unless a current complete assignment and
 postal-area/member release appears earlier. After BG: 252 profiles, 195
 pending, 57 blocked, 0 in progress, 0 evidence-verified M2; 127 manifests / 97
 explicit definitions. Next: **BY**. No second country was started.
+
+## 2026-08-29 BY: official-derived zones documented, current vector and reuse rights blocked
+
+BY now has
+`M2_current_belpost_assignment_and_rights_cleared_nca_postal_zone_visualization`.
+Eight exact public observations totaling 10,226,461 bytes were byte/hash
+verified: NCA's zone methodology and website-use rules, the public map shell
+and client, Belpost's shell and client, and two live read-only Belpost
+responses for postcode `220030`.
+
+NCA states that nationwide postal-code zones entered production in 2020, are
+updated every six months, and derive from Belpost address membership, the
+Address Register, ATE/TE data and mapped land-feature contours. This confirms
+real official-derived postal zones, not a Belpost-authored delivery perimeter.
+The actual current vector layer, edition, schema, source CRS and topology were
+not retrieved. NCA's website-material rules do not establish redistribution,
+derivative or API rights for the map database. Five anonymous map API probes
+returned 404; this observation does not prove that no service exists.
+
+Belpost's live `220030` observation returned 21 autocomplete rows and 89 total
+search matches, with 21 rows on page one and one serving-office row. All
+inspected postcode values were six digit and no Polygon/MultiPolygon geometry
+was present. This one-code observation is not a national completeness measure
+and supplies no release version or effective date.
+
+No public-map view, assignment/address row, office point, administrative or
+cadastral area, address/building feature, buffer, Voronoi/model surface or AGID
+cell was promoted to postal geometry. House numbers and buildings require a
+separate permitted stable relation. Shared tests verify exact search,
+Polygon/MultiPolygon filtering, fit, opacity-0.22 fill, opacity-0.95 width-3
+outline, clear/re-search and failure states, but BY has no eligible real-data
+artifact, API area response or app end-to-end result.
+
+[BY review](postal-context-belarus-m2.md), [source report](../reports/postal-context-m2/by-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after the pending-country pass
+and `2026-09-05T11:50:56.469Z`, unless a current rights-cleared assignment and
+NCA vector release appears earlier. After BY: 252 profiles, 194 pending, 58
+blocked, 0 in progress, 0 evidence-verified M2; 127 manifests / 97 explicit
+definitions. Next: **CH**. No second country was started.
