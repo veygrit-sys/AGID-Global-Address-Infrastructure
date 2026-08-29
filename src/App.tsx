@@ -25,6 +25,7 @@ import { fetchWithRetry } from './lib/utils';
 import { GridCanvasOverlay } from './components/GridCanvasOverlay';
 import { MapControls } from './components/MapControls';
 import { SearchSidebar } from './components/SearchSidebar';
+import { PostalAreaNotice,type PostalAreaNoticeModel } from './components/PostalAreaNotice';
 
 import type { Html5QrcodeScanner } from 'html5-qrcode';
 import { COUNTRIES,CountryInfo } from './constants/countries';
@@ -66,6 +67,13 @@ normalizeAppLanguage,
 } from './lib/languageSettings';
 import { getAgidAddressTabLanguages } from './lib/languageTabs';
 import { markMapOverlayDefaultsMigrated,readMapOverlayModeDefault } from './lib/mapOverlayDefaults';
+import {
+createPostalAreaFeatureCollection,
+postalAreaBounds,
+resolvePostalAreaLookupCandidate,
+syncPostalAreaMapLayer,
+type PostalAreaFeatureCollection,
+} from './lib/postalSearchArea';
 import { applySmartPattern,getPatternForPrefix } from './lib/postalPatterns';
 import { clearAppDatabasePrivateData,type SyncQueueRecord } from './lib/appDatabase';
 import type { HotelCheckInSession } from './lib/addressQrIntake';
@@ -275,6 +283,9 @@ export default function App() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResultFeature[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [postalAreaFeatureCollection, setPostalAreaFeatureCollection] = useState<PostalAreaFeatureCollection | null>(null);
+  const [postalAreaNotice, setPostalAreaNotice] = useState<PostalAreaNoticeModel | null>(null);
+  const postalAreaRequestRef = useRef(0);
   const [showCoordinateSearch, setShowCoordinateSearch] = useState(false);
   const [advancedSearchOptions, setAdvancedSearchOptions] = useState<AdvancedSearchOptions>(DEFAULT_ADVANCED_SEARCH_OPTIONS);
   const [isLocating, setIsLocating] = useState(false);
@@ -922,6 +933,21 @@ export default function App() {
   const [confirmConfig, setConfirmConfig] = useState<{ show: boolean, title: string, message: string, onConfirm: () => void } | null>(null);
 
   const ensureSourceAndLayer = useMapLibreLayerSync(map, mapStyle);
+
+  useEffect(() => {
+    const currentMap = map.current;
+    if (!currentMap) return;
+    const syncLayer = () => {
+      try {
+        syncPostalAreaMapLayer(currentMap, postalAreaFeatureCollection);
+      } catch (error) {
+        console.warn('Postal area layer sync failed:', error);
+      }
+    };
+    syncLayer();
+    currentMap.on('style.load', syncLayer);
+    return () => { currentMap.off('style.load', syncLayer); };
+  }, [isMapLoaded, mapStyle, postalAreaFeatureCollection]);
 
   useEffect(() => {
     markMapOverlayDefaultsMigrated();
@@ -2365,12 +2391,96 @@ export default function App() {
 
     return () => clearTimeout(timer);
   }, [searchQuery, lat, lng, advancedSearchOptions]);
+  const clearPostalArea = React.useCallback(() => {
+    postalAreaRequestRef.current += 1;
+    setPostalAreaFeatureCollection(null);
+    setPostalAreaNotice(null);
+  }, []);
 
-  const selectSearchResult = async (result: any) => {
+  const updatePostalAreaForSearchResult = React.useCallback(async (
+    result: SearchResultFeature,
+    query: string,
+  ) => {
+    const candidate = resolvePostalAreaLookupCandidate(
+      result,
+      query,
+      advancedSearchOptions.countryCodes,
+    );
+    const requestId = ++postalAreaRequestRef.current;
+    setPostalAreaFeatureCollection(null);
+    if (!candidate) {
+      setPostalAreaNotice(null);
+      return;
+    }
+
+    setPostalAreaNotice({
+      status: 'loading',
+      title: 'Postal area / 郵便番号エリア',
+      detail: `${candidate.countryCode} ${candidate.postalCode} の公開ポリゴンを確認しています。`,
+    });
+    try {
+      const { lookupPostalContext } = await import('./services/PostalContextService');
+      const response = await lookupPostalContext({
+        countryCode: candidate.countryCode,
+        postalCode: candidate.postalCode,
+        includeGeometry: true,
+      });
+      if (requestId !== postalAreaRequestRef.current) return;
+      if (!response.ok || !response.data) {
+        setPostalAreaNotice({
+          status: 'unavailable',
+          title: 'Postal area unavailable',
+          detail: '公開済みの郵便区域を取得できませんでした。点・建物データから面を推測していません。',
+        });
+        return;
+      }
+
+      const collection = createPostalAreaFeatureCollection(response.data);
+      if (!collection.features.length) {
+        setPostalAreaNotice({
+          status: 'unavailable',
+          title: 'Postal area unavailable',
+          detail: 'この郵便番号には公開済みのPolygon/MultiPolygonがありません。点・建物データを郵便区域として表示していません。',
+        });
+        return;
+      }
+
+      const currentMap = map.current;
+      if (currentMap) syncPostalAreaMapLayer(currentMap, collection);
+      setPostalAreaFeatureCollection(collection);
+      const sourceIds = Array.from(new Set(collection.features.map(feature => feature.properties.sourceId)));
+      const geometryTypes = Array.from(new Set(collection.features.map(feature => feature.geometry.type)));
+      setPostalAreaNotice({
+        status: 'visible',
+        title: 'Postal area / 郵便番号エリア',
+        detail: `${candidate.countryCode} ${response.data.normalizedPostalCode ?? candidate.postalCode} · ${geometryTypes.join(' + ')} · ${collection.features.length} area · ${sourceIds.slice(0, 2).join(', ')}`,
+      });
+      const bounds = postalAreaBounds(collection);
+      if (bounds && currentMap) {
+        currentMap.fitBounds(bounds, {
+          padding: 64,
+          maxZoom: 16,
+          duration: 1200,
+          essential: true,
+        });
+      }
+    } catch (error) {
+      if (requestId !== postalAreaRequestRef.current) return;
+      console.warn('Postal area lookup failed:', error);
+      setPostalAreaNotice({
+        status: 'unavailable',
+        title: 'Postal area unavailable',
+        detail: 'Postal Context APIへ接続できませんでした。推定ポリゴンは表示していません。',
+      });
+    }
+  }, [advancedSearchOptions.countryCodes]);
+
+  const selectSearchResult = async (result: SearchResultFeature) => {
     if (!map.current) return;
     setIsAgidPinnedToGps(false);
     const newLat = parseFloat(result.lat);
     const newLng = parseFloat(result.lon);
+    void updatePostalAreaForSearchResult(result, searchQuery);
     const display_name = result.display_name;
 
     addToHistory(display_name);
@@ -2394,6 +2504,7 @@ export default function App() {
   };
 
   const performSearch = async (query: string) => {
+    clearPostalArea();
     if (!query.trim() || !map.current) return;
 
     addToHistory(query);
@@ -2528,6 +2639,7 @@ export default function App() {
 
         if (results.length > 0) {
           const first = results[0];
+          void updatePostalAreaForSearchResult(first, query);
           const newLat = parseFloat(first.lat);
           const newLng = parseFloat(first.lon);
 
@@ -4722,6 +4834,11 @@ export default function App() {
         selectOrigin={selectOrigin}
         selectDestination={selectDestination}
         mapRef={map}
+      />
+
+      <PostalAreaNotice
+        model={postalAreaNotice}
+        onDismiss={clearPostalArea}
       />
 
       {routingMode === 'driving' && carNavigationDestination && (

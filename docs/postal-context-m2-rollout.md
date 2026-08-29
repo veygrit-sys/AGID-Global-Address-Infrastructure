@@ -814,3 +814,28 @@ The credentialed API terms restrict sublicensing, large display and generic addr
 [SA review](postal-context-saudi-arabia-m2.md), [source report](../reports/postal-context-m2/sa-source-review-2026-08-29.json), [engineering checks](../reports/postal-context-m2/sa-checks-2026-08-29.json). Recheck after `2026-09-05T00:26:26.437Z` and the pending-country pass; new accounts, contracts, charges, destinations and deployments still require approval.
 
 After SA: 252 profiles, 213 pending, 39 blocked, 0 in progress, 0 evidence-verified M2; 118 manifests / 86 explicit definitions. Next: **SG**. Other 251 country entries and all existing user changes remain unchanged.
+
+## 2026-08-29 SG: point-first public preview and rights gate
+
+SG retains its existing `M2_experimental` point-first definition. Eleven exact
+references were byte-bound and reviewed. The public SLA dwelling-page preview
+contains 1,420 private-residential property points and 1,416 distinct valid
+six-digit codes, but is a narrow preview with four missing postcodes, 71 rows
+sharing coordinates and no verified national completeness. It is not a fixed
+current assignment artifact and no source rows are committed.
+
+The reviewed SingPost national database terms require a paid, non-transferable
+internal-use subscription and restrict copying, publication and derivatives.
+OneMap and data.gov.sg API use requires registration, token or acceptance;
+none was authorized or invoked. No official postal polygon source was found.
+Address points and building footprints therefore remain separate from postal
+geometry, and no polygon was generated for SG.
+
+[SG source report](../reports/postal-context-m2/sg-source-review-2026-08-29.json)
+and [engineering checks](../reports/postal-context-m2/sg-checks-2026-08-29.json)
+record the exact digests, rights boundaries and validation. SG remains M1 /
+blocked until a complete rights-cleared real point artifact or authorized API
+receipt is immutably published and verified through AGID. Recheck after
+`2026-09-05T01:26:58.142Z` and the pending-country pass. Next: **SY**.
+
+After SG: 252 profiles, 212 pending, 40 blocked, 0 in progress, 0 evidence-verified M2; 118 manifests / 86 explicit definitions. No account, purchase, contract, new repository, public data destination or deployment was created.
