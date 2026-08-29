@@ -66,22 +66,22 @@ function readJson<T>(name: string): T {
   return JSON.parse(readFileSync(resolve(seedRoot, name), 'utf8')) as T;
 }
 
-test('Switzerland seed remains metadata-only with postcode, entrance, and building identity separated', () => {
+test('Switzerland seed promotes the rights-cleared PLZO derivative while keeping addresses and buildings separate', () => {
   const manifest = readJson<RepositoryManifest>('repository-manifest.json');
 
   assert.equal(manifest.repository.name, 'agid-postal-ch');
   assert.equal(manifest.repository.country_code, 'CH');
-  assert.equal(manifest.repository.maturity, 'M1_metadata');
+  assert.equal(manifest.repository.maturity, 'M2_experimental');
   assert.deepEqual(
     manifest.release_scope,
     {
-      metadata_only: true,
+      metadata_only: false,
       contains_raw_source_data: false,
       contains_real_addresses: false,
       contains_personal_data: false,
-      contains_production_geometry: false,
+      contains_production_geometry: true,
       fixtures_are_synthetic: true,
-      publication_claim: 'contract-seed-only',
+      publication_claim: 'rights-cleared-current-swisstopo-plzo-display-derived-artifact',
     },
   );
   assert.equal(manifest.postal_system.full_code_name, 'NPA4');
@@ -94,7 +94,7 @@ test('Switzerland seed remains metadata-only with postcode, entrance, and buildi
   assert.match(manifest.postal_system.address_rule, /EGAID.*EGID plus EDID/i);
   assert.match(manifest.postal_system.building_rule, /same EGID/i);
   assert.match(manifest.postal_system.territory_rule, /Liechtenstein.*LI/i);
-  assert.equal(manifest.promotion.current_stage, 'M1_metadata');
+  assert.equal(manifest.promotion.current_stage, 'M2_experimental');
   assert.ok(manifest.promotion.hard_blockers.includes('special-postcode-given-invented-polygon'));
   assert.ok(manifest.promotion.hard_blockers.includes('building-proximity-presented-as-same-egid-link'));
   assert.ok(manifest.promotion.hard_blockers.includes('postcode-stored-as-number'));

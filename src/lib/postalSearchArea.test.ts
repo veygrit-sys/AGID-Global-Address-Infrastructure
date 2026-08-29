@@ -39,7 +39,18 @@ function lookup(geometries: PostalContextLookupResponse['geometries']): PostalCo
   };
 }
 
-const source = { sourceId: 'official-postal', licenseId: 'ODL-1.0', digest };
+const source = {
+  sourceId: 'official-postal',
+  sourceType: 'official' as const,
+  assignmentAuthority: 'official_postal_operator' as const,
+  geometryAuthority: 'official_postal_geometry' as const,
+  sourceVersion: '2026-08',
+  sourceDate: '2026-08-01',
+  licenseId: 'ODL-1.0',
+  digest,
+};
+const quality = { status: 'authoritative' as const, confidence: 1, accuracyMeters: 1 };
+const validTime = { from: '2026-08-01T00:00:00.000Z', to: null };
 
 test('postal area lookup is attempted only when the query matches a result postcode', () => {
   const result = {
@@ -75,21 +86,29 @@ test('only postal Polygon and MultiPolygon geometries become map features', () =
       node: { id: 'postal', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'polygon', postalCode: '100-0001' },
       geometry: { type: 'Polygon', coordinates: [[[139, 35], [140, 35], [140, 36], [139, 35]]] },
       source,
+      quality,
+      validTime,
     },
     {
       node: { id: 'postal-point', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'point', postalCode: '100-0001' },
       geometry: { type: 'Point', coordinates: [139.5, 35.5] },
       source,
+      quality,
+      validTime,
     },
     {
       node: { id: 'building', kind: 'building', featureKind: 'building', geometryType: 'polygon' },
       geometry: { type: 'Polygon', coordinates: [[[139.4, 35.4], [139.6, 35.4], [139.6, 35.6], [139.4, 35.4]]] },
       source,
+      quality,
+      validTime,
     },
     {
       node: { id: 'postal-multi', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'multipolygon', postalCode: '100-0001' },
       geometry: { type: 'MultiPolygon', coordinates: [[[[138, 34], [138.5, 34], [138.5, 34.5], [138, 34]]]] },
       source,
+      quality,
+      validTime,
     },
   ]));
   assert.deepEqual(collection.features.map(feature => feature.geometry.type), ['Polygon', 'MultiPolygon']);
@@ -101,6 +120,8 @@ test('point-only lookup has no drawable postal area', () => {
     node: { id: 'postal-point', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'point', postalCode: '100-0001' },
     geometry: { type: 'Point', coordinates: [139.5, 35.5] },
     source,
+    quality,
+    validTime,
   }]));
   assert.equal(collection.features.length, 0);
   assert.equal(postalAreaBounds(collection), null);
@@ -111,6 +132,8 @@ test('map sync installs a translucent fill and a visible outline, then removes b
     node: { id: 'postal', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'polygon', postalCode: '100-0001' },
     geometry: { type: 'Polygon', coordinates: [[[139, 35], [140, 35], [140, 36], [139, 35]]] },
     source,
+    quality,
+    validTime,
   }]));
   const sources = new Map<string, { setData: (value: unknown) => void; data: unknown }>();
   const layers = new Map<string, Record<string, unknown>>();

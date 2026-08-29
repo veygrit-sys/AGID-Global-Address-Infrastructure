@@ -196,7 +196,19 @@ export type PostalContextPublicCoordinateResolution = {
 export type PostalContextPostalGeometryResult = {
   node: PostalContextPublicComponent;
   geometry: PostalContextGeometryFeature['geometry'];
-  source: Pick<PostalContextGeometryFeature['source'], 'sourceId' | 'licenseId' | 'digest'>;
+  source: Pick<
+    PostalContextGeometryFeature['source'],
+    | 'sourceId'
+    | 'sourceType'
+    | 'assignmentAuthority'
+    | 'geometryAuthority'
+    | 'sourceVersion'
+    | 'sourceDate'
+    | 'licenseId'
+    | 'digest'
+  >;
+  quality: PostalContextGeometryFeature['quality'];
+  validTime: PostalContextGeometryFeature['validTime'];
 };
 
 export type PostalContextBboxIntersectionResult = {
@@ -1149,9 +1161,16 @@ export class PostalContextPackRuntime {
             geometry: feature.geometry,
             source: {
               sourceId: feature.source.sourceId,
+              sourceType: feature.source.sourceType,
+              assignmentAuthority: feature.source.assignmentAuthority,
+              geometryAuthority: feature.source.geometryAuthority,
+              sourceVersion: feature.source.sourceVersion,
+              sourceDate: feature.source.sourceDate,
               licenseId: feature.source.licenseId,
               digest: feature.source.digest,
             },
+            quality: feature.quality,
+            validTime: feature.validTime,
           });
         }
         if (geometryLimitExceeded) break;
@@ -1684,9 +1703,16 @@ export class PostalContextPackRuntime {
         geometry: feature.geometry,
         source: {
           sourceId: feature.source.sourceId,
+          sourceType: feature.source.sourceType,
+          assignmentAuthority: feature.source.assignmentAuthority,
+          geometryAuthority: feature.source.geometryAuthority,
+          sourceVersion: feature.source.sourceVersion,
+          sourceDate: feature.source.sourceDate,
           licenseId: feature.source.licenseId,
           digest: feature.source.digest,
         },
+        quality: feature.quality,
+        validTime: feature.validTime,
       });
     }
     return {

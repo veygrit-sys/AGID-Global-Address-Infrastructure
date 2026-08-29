@@ -23,6 +23,10 @@ export type PostalAreaFeatureCollection = {
       licenseId: string;
       sourceDigest: string;
       geometryType: PostalAreaGeometry['type'];
+      provenance: string;
+      sourceDate: string;
+      confidence: number | null;
+      accuracyMeters: number | null;
     };
   }>;
 };
@@ -98,6 +102,10 @@ export function createPostalAreaFeatureCollection(
           licenseId: item.source.licenseId,
           sourceDigest: item.source.digest,
           geometryType: item.geometry.type,
+          provenance: item.quality.status,
+          sourceDate: item.source.sourceDate ?? item.validTime.from.slice(0, 10),
+          confidence: item.quality.confidence ?? null,
+          accuracyMeters: item.quality.accuracyMeters ?? null,
         },
       }];
     }),

@@ -2450,10 +2450,20 @@ export default function App() {
       setPostalAreaFeatureCollection(collection);
       const sourceIds = Array.from(new Set(collection.features.map(feature => feature.properties.sourceId)));
       const geometryTypes = Array.from(new Set(collection.features.map(feature => feature.geometry.type)));
+      const provenance = Array.from(new Set(collection.features.map(feature => feature.properties.provenance)));
+      const sourceDates = Array.from(new Set(collection.features.map(feature => feature.properties.sourceDate)));
+      const confidence = collection.features
+        .map(feature => feature.properties.confidence)
+        .filter((value): value is number => value !== null);
+      const confidenceText = confidence.length
+        ? ` · confidence ${Math.min(...confidence).toFixed(2)}`
+        : '';
       setPostalAreaNotice({
         status: 'visible',
-        title: 'Postal area / 郵便番号エリア',
-        detail: `${candidate.countryCode} ${response.data.normalizedPostalCode ?? candidate.postalCode} · ${geometryTypes.join(' + ')} · ${collection.features.length} area · ${sourceIds.slice(0, 2).join(', ')}`,
+        title: response.data.status === 'ambiguous'
+          ? 'Multiple postal areas / 複数候補'
+          : 'Postal area / 郵便番号エリア',
+        detail: `${candidate.countryCode} ${response.data.normalizedPostalCode ?? candidate.postalCode} · ${geometryTypes.join(' + ')} · ${provenance.join(' + ')} · ${collection.features.length} area · ${sourceIds.slice(0, 2).join(', ')} · as of ${sourceDates.join(' / ')}${confidenceText}`,
       });
       const bounds = postalAreaBounds(collection);
       if (bounds && currentMap) {
