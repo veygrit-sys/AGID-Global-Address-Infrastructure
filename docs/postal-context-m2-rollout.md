@@ -1010,3 +1010,35 @@ and engineering checks record the gate. Recheck after
 profiles, 206 pending, 46 blocked, 0 in progress, 0 evidence-verified M2; 124
 manifests / 92 explicit definitions. Next: **TW**. No second country was
 started.
+
+## 2026-08-29 TW: current controlled assignment and postal areas blocked
+
+TW now has `M2_current_six_digit_delivery_area_visualization`. Ten exact
+official references were byte/hash verified. The government CSV is a 475-byte
+Big5 link catalog with four rows, no assignment records and no postcode or
+geometry fields. Current Chunghwa Post rules state that public raw-file
+distribution stopped; obtaining the address text file requires an external
+account, a company-sealed application and operator approval. None was submitted.
+
+The operator API specification exposes address-to-six-digit string, prefix-to-
+city/area string and address JSON methods, with no Polygon/MultiPolygon,
+coordinate or boundary field. The public authorization covers specified 3+3
+data files but creates no geometry or third-party NLSC rights. NLSC doorplates
+are point features, buildings are separate polygons, and reviewed vector rules
+require eligible applicants, a bound IP and internal use. No postcode-area
+layer or public vector redistribution grant was verified.
+
+No address range, three-digit centre, doorplate, building, parcel,
+administrative boundary, buffer, Voronoi cell or model was relabelled as a
+postal area. Raw source bodies remain outside Git. Shared tests still verify
+exact search, geometry opt-in, Polygon/MultiPolygon filtering, map fit,
+opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and failure
+states. TW has no eligible real-data runtime or area response, and the shared
+notice still lacks distinct authority, basis-date and confidence fields.
+
+[TW review](postal-context-taiwan-m2.md), [source report](../reports/postal-context-m2/tw-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit approval, the
+pending-country pass and `2026-09-05T05:57:18.791Z`, unless a public
+rights-cleared postal-area release appears earlier. After TW: 252 profiles,
+205 pending, 47 blocked, 0 in progress, 0 evidence-verified M2; 124 manifests /
+92 explicit definitions. Next: **UZ**. No second country was started.

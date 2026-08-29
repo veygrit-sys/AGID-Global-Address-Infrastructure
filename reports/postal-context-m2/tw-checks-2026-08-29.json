@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "TW",
+  "generatedAt": "2026-08-29T06:10:30.818Z",
+  "baseCommit": "8b54447e0505d85761566e73f3959767fd231ea0",
+  "m2Achieved": false,
+  "sourceReview": {
+    "path": "reports/postal-context-m2/tw-source-review-2026-08-29.json",
+    "referencesReviewed": 10,
+    "contentVerified": 10,
+    "publicCatalogRowsValidated": 4,
+    "currentPostalAssignmentRowsValidated": 0,
+    "postalAreaGeometryRecords": 0,
+    "scope": "Current government dataset metadata/link catalog, Chunghwa Post authorization/rules/API/downloads, and NLSC doorplate/building/vector-access references; no controlled source access and no postal-area data"
+  },
+  "verification": [
+    {"name":"Taiwan source, ledger digest and rollout contracts","command":"node --test scripts/inspect-postal-context-tw-sources.test.mjs scripts/postal-context-m2-tw-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs","passed":19,"failed":0},
+    {"name":"Taiwan repository, runtime, routes, sources, format and catalogs","command":"node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-taiwan files>","passed":139,"failed":0},
+    {"name":"Postal search area, API routes and client service","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/services/PostalContextService.test.ts src/server/routes/postalContextRoutes.test.ts","passed":23,"failed":0},
+    {"name":"Shared Postal Context runtime","command":"node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-runtime files>","passed":159,"failed":0},
+    {"name":"TypeScript","command":"node node_modules/typescript/bin/tsc --noEmit","passed":1,"failed":0}
+  ],
+  "appVisualization": {
+    "sharedExactPostcodeCandidateResolution": "verified by deterministic unit test",
+    "sharedGeometryContract": "only postal-feature Polygon and MultiPolygon accepted; point-only or text-only lookup produces no drawable area",
+    "sharedMapRendering": "verified fill opacity 0.22, outline opacity 0.95, width 3, bounds calculation, update and removal",
+    "sharedApiContract": "explicit geometry=geojson opt-in and unsupported-country failure verified",
+    "taiwanRuntime": "metadata/synthetic contract exists but no eligible real-data descriptor is configured",
+    "taiwanRealDataEndToEnd": "not verified",
+    "browserE2e": "not run because no eligible Taiwan postal-area artifact exists; a synthetic fixture would not satisfy M2",
+    "remainingUiGap": "distinct authority class, basis date and confidence are not yet rendered by the shared notice"
+  },
+  "authoritySeparation": {
+    "postalSyntax": "Six digits are retained as text; the public CSV is a link catalog and the controlled address file was not accessed",
+    "operatorLookup": "address-to-code string results remain assignment observations, not postal areas",
+    "postalGeometry": "none verified or generated",
+    "doorplates": "NLSC doorplates remain points and controlled address evidence",
+    "buildingsAndParcels": "separate non-postal geometry requiring explicit permitted stable address relations",
+    "administration": "three-digit prefixes and administrative boundaries cannot become six-digit postal areas",
+    "agid": "no TW real-data runtime, area response, artifact publication or deployment asserted"
+  },
+  "publication": {
+    "rawSourceDataCommitted": false,
+    "immutableRealDataArtifactPublished": false,
+    "newRepositoryCreated": false,
+    "productionDeploymentPerformed": false,
+    "paidAuthenticatedPermissionedOrContractSourceUsed": false
+  },
+  "environment": {
+    "dependencyRestore": "npm ci --ignore-scripts --prefer-offline succeeded through the installed npm CLI; node_modules is ignored and not committed",
+    "runtimeInvocation": "Tests were executed directly with node and node_modules/tsx/dist/cli.mjs because the npm script could not resolve the Windows tsx shim",
+    "dependencyFilesCommitted": false
+  },
+  "remainingBlocker": "No current complete-for-declared-coverage Taiwan assignment and permitted postal-area artifact, approved immutable publication, TW real-data runtime/API or real app visualization exists. Current address text access requires account, sealed application and operator approval; public operator methods return strings only, and NLSC points/buildings cannot be relabelled as postal areas."
+}
