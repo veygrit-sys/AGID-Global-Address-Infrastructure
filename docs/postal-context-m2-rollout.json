@@ -3711,7 +3711,7 @@
       "declaredStage": "M1_metadata",
       "m2Definition": {
         "id": "M2_current_belpost_assignment_and_rights_cleared_nca_postal_zone_visualization",
-        "definition": "A current complete Belpost six-digit assignment release and the actual current NCA postal-zone layer must pin edition/effective time, schema, source CRS, topology, special/non-area semantics, SHA-256 and public redistribution/derivative/API rights. An approved immutable artifact must pass the real BY AGID loader, API and app: normalized country/postcode search, loading, no-result, multiple, invalid-geometry and API-failure states, bounds fit, translucent fill, clear outline, provenance, clear and re-search. Public viewer content, assignment/address rows, office points, administrative/cadastral/address/building geometry, buffers, Voronoi/model surfaces and AGID cells never substitute for a postcode area. House numbers and buildings require separate permitted stable relations. Metadata, shared code and synthetic fixtures alone never establish M2."
+        "definition": "A current complete Belpost six-digit assignment release and the actual current NCA postal-zone layer must pin edition/effective time, schema, source CRS, topology, special/non-area semantics, SHA-256 and public redistribution/derivative/API rights; an approved immutable artifact must then pass the real BY loader, API and app postcode search, fit, translucent fill, outline, provenance, no-result, multiple, invalid, failure, clear and re-search paths. Public viewer content, office/address points, administrative/cadastral/address/building geometry, buffers, Voronoi/model surfaces and AGID cells never substitute."
       },
       "status": "blocked",
       "attempts": 1,
@@ -3770,16 +3770,67 @@
       "sourceRegion": "europe",
       "addressFormat": "src/data/address_formats/europe/central_europe/CH.json",
       "manifest": "data/postal_country_packs/ch/postal-context/repository-manifest.json",
-      "declaredStage": "M1_metadata",
+      "declaredStage": "M2_experimental",
       "m2Definition": {
-        "id": "M2_experimental",
-        "definition": "Pinned rights-reviewed snapshots reproduce experimental packs with full lineage."
+        "id": "M2_current_swisstopo_plzo_postal_area_visualization",
+        "definition": "A current pinned swisstopo PLZO release, OGD rights receipt, deterministic CH/LI partition, coordinate transform, bounded display simplification, topology repair log, immutable runtime artifacts and real app search-to-translucent-area verification reproduce the CH pack with full lineage."
       },
-      "status": "pending",
-      "attempts": 0,
-      "lastAttempt": null,
+      "status": "m2_verified",
+      "attempts": 1,
+      "lastAttempt": {
+        "observedAt": "2026-08-29T12:17:58.307Z",
+        "completedAt": "2026-08-29T13:03:14Z",
+        "outcome": "m2_verified",
+        "report": "reports/postal-context-m2/ch-source-review-2026-08-29.json",
+        "reportDigest": "sha256:b2a967c04d31048942c61fbc8af13880e972385d8c3eb49c39c1a655d68dd59e",
+        "engineeringReport": "reports/postal-context-m2/ch-checks-2026-08-29.json",
+        "engineeringReportDigest": "sha256:bda2dcae42bbb9d0bb56afc0c037bb7710fe5db0c56e43018ac84a60f3235cb5"
+      },
       "blocker": null,
-      "evidence": null
+      "evidence": {
+        "criterionId": "M2_current_swisstopo_plzo_postal_area_visualization",
+        "criterionSatisfied": true,
+        "synthetic": false,
+        "scope": "All 4,060 CH domicile-address NPA6 perimeter features in swisstopo PLZO 2026-08-11, aggregated deterministically into 3,177 NPA4 Polygon/MultiPolygon API and app results; 13 LI features are excluded.",
+        "sources": [
+          {
+            "url": "https://data.geo.admin.ch/ch.swisstopo-vd.ortschaftenverzeichnis_plz/ortschaftenverzeichnis_plz/ortschaftenverzeichnis_plz_2056.shp.zip",
+            "digest": "sha256:a58e105be27c1b4f4797ccbb5765861711ada593163059969c49a33489e0a60a",
+            "version": "swisstopo STAC item 2026-08-11T00:00:00Z",
+            "observedAt": "2026-08-29T12:17:58.307Z",
+            "termsUrl": "https://www.swisstopo.admin.ch/en/terms-of-use-free-geodata-and-geoservices",
+            "termsDigest": "sha256:a6794ae926696263069a573991731ea4899a704a7870f766cd73b64229272489",
+            "rightsReviewed": true
+          }
+        ],
+        "artifacts": [
+          {
+            "url": "https://github.com/veygrit-sys/Address-Grid-ID/blob/0205bd986bb39632b88c5b68e53f62caa8693521/data/postal_country_packs/ch/postal-context/m2/graph.json",
+            "digest": "sha256:22cdd16e5cb9444de118e79578d2d5f9f32cb0a535ff6e33d23f30e4b913c064",
+            "bytes": 602072
+          },
+          {
+            "url": "https://github.com/veygrit-sys/Address-Grid-ID/blob/0205bd986bb39632b88c5b68e53f62caa8693521/data/postal_country_packs/ch/postal-context/m2/geometry.json",
+            "digest": "sha256:39df2653a87dca7d9bc25aee4161b19bf6b95fb09bb437050332a4f50f49d70c",
+            "bytes": 16624278
+          },
+          {
+            "url": "https://github.com/veygrit-sys/Address-Grid-ID/blob/0205bd986bb39632b88c5b68e53f62caa8693521/data/postal_country_packs/ch/postal-context/m2/descriptor.json",
+            "digest": "sha256:346306624091007d44eeac14b9d094f03614251b42cfbb78b2984302a335c839",
+            "bytes": 1123
+          }
+        ],
+        "validation": {
+          "passed": 239,
+          "failed": 0,
+          "command": "CH source audit and country suite; verify:postal-context-runtime exact file set; tsc --noEmit",
+          "reportDigest": "sha256:bda2dcae42bbb9d0bb56afc0c037bb7710fe5db0c56e43018ac84a60f3235cb5"
+        },
+        "runtime": {
+          "descriptorDigest": "sha256:346306624091007d44eeac14b9d094f03614251b42cfbb78b2984302a335c839",
+          "verificationCommand": "load pinned CH descriptor; API lookup CH/1000; app GeoJSON conversion; bounds fit; opacity-0.22 fill and width-3 outline; clear/re-search; CH/9490 no-match"
+        }
+      }
     },
     {
       "countryCode": "CY",

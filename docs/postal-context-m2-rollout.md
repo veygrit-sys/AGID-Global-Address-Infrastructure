@@ -1438,3 +1438,38 @@ and `2026-09-05T11:50:56.469Z`, unless a current rights-cleared assignment and
 NCA vector release appears earlier. After BY: 252 profiles, 194 pending, 58
 blocked, 0 in progress, 0 evidence-verified M2; 127 manifests / 97 explicit
 definitions. Next: **CH**. No second country was started.
+
+
+## 2026-08-29 CH: current swisstopo postal areas published and visualized
+
+CH now satisfies
+`M2_current_swisstopo_plzo_postal_area_visualization`. Eight exact
+swisstopo receipts pin the official-directory page, OGD conditions, technical
+documentation, STAC metadata, EPSG:2056 Shapefile and both validation CSVs.
+The source item is dated `2026-08-11`; the Shapefile SHA-256 is
+`a58e105b…e0a60a`. Reviewed OGD conditions allow redistribution,
+processing, enrichment and commercial use with attribution.
+
+All 4,060 Swiss domicile-address NPA6 perimeter features are joined through
+`ZIP_ID`, separated from 13 Liechtenstein features, transformed from LV95,
+checked against all 5,716 official WGS84 CSV rows, simplified within five
+metres and aggregated into 3,177 NPA4 Polygon/MultiPolygon results. The
+published geometry is explicitly `derived` with seven-metre display
+accuracy; it is not a cadastral, delivery, address, house-number or building
+guarantee. Special non-area code classes receive no fabricated surface.
+
+The immutable graph, geometry and descriptor are pinned at commit
+[`0205bd986bb39632b88c5b68e53f62caa8693521`](https://github.com/veygrit-sys/Address-Grid-ID/commit/0205bd986bb39632b88c5b68e53f62caa8693521).
+The real CH pack loads 3,177 nodes and 679,832 positions. API lookup `CH/1000`
+returns a MultiPolygon; the app converts it to GeoJSON, fits bounds, draws a
+0.22-opacity fill with a clear width-3 outline, displays normalized code,
+geometry, provenance, source date and confidence, and passes clear/re-search
+plus loading, no-match, multiple, API-failure and invalid-geometry states.
+`CH/9490` returns no match, preserving LI identity.
+
+[CH review](postal-context-switzerland-m2.md), [source report](../reports/postal-context-m2/ch-source-review-2026-08-29.json)
+and [engineering checks](../reports/postal-context-m2/ch-checks-2026-08-29.json)
+record 239 passing tests, zero failures and zero TypeScript errors. After CH:
+252 profiles, 193 pending, 58 blocked, 0 in progress, 1 evidence-verified M2;
+127 manifests / 97 explicit definitions. Next: **CY**. No second country was
+started.
