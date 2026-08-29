@@ -33,3 +33,11 @@ routes never merge country identity or AGID relations.
 
 The fixtures are synthetic runtime conformance data and cannot promote a real
 release. See `repository-manifest.json` and `source-profile.json` for gates.
+
+The 2026-08-29 M2 review also pins all 14 official postcode pages, the Posta
+Shqiptare Open Data declaration and linked cadastral-assets workbook, the UPU
+format sheet, and ASIG address-service/rights pages. The official pages expose
+535 office rows and 532 distinct codes, but the open workbook is a property
+inventory with no postcode, coordinate or geometry column. Raw HTML, PDF and
+land/property rows stay outside Git. See `m2-source-review.json` and
+`docs/postal-context-albania-m2.md`; AL remains M1 / M2 blocked.

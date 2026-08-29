@@ -1184,3 +1184,41 @@ rights-cleared assignment and postal-area release appears earlier. After AD:
 252 profiles, 201 pending, 51 blocked, 0 in progress, 0 evidence-verified M2;
 125 manifests / 95 explicit definitions. Next: **AL**. No second country was
 started.
+
+## 2026-08-29 AL: office-code tables verified, postal areas blocked
+
+AL now has `M2_current_office_assignment_and_postal_area_visualization`.
+Twenty-two exact Posta Shqiptare, UPU and ASIG references were byte/hash
+verified. Fourteen Posta pages contain 535 rows and 532 distinct four-digit
+codes, including three duplicated codes. The pages do not declare a current
+complete edition, row identity, validity period or address membership and
+contain no geometry.
+
+Posta's reusable open-data page links a 562-row cadastral property inventory.
+The workbook has 333 distinct cadastral-zone values and property identifiers
+but no postcode, coordinate or geometry column. It is not a postal assignment
+or area source, and raw property/land-rights records remain outside Git. The
+UPU sheet confirms the `NNNN` format and examples, not current allocation or
+geometry.
+
+ASIG exposes civic address, road and building services, but these retain
+non-postal authority. Reviewed terms limit use to non-commercial purposes,
+prohibit automated programs and describe tariffs; downloads also require
+registration credentials. No registration, terms acceptance, payment,
+authenticated download or controlled data access was performed.
+
+No office point, cadastral zone, address, road, building, parcel, buffer,
+Voronoi cell, learned region or AGID cell was promoted to postal geometry.
+Shared tests verify normalized exact search, Polygon/MultiPolygon filtering,
+map fit, opacity-0.22 fill, opacity-0.95 width-3 outline, clear/re-search and
+failure states. AL has no eligible real-data artifact, API area response or
+app end-to-end result; authority, basis date and confidence are unavailable
+rather than fabricated. Synthetic AL000x fixtures do not satisfy M2.
+
+[AL review](postal-context-albania-m2.md), [source report](../reports/postal-context-m2/al-source-review-2026-08-29.json)
+and engineering checks record the gate. Recheck after explicit approval, the
+pending-country pass and `2026-09-05T08:52:51.000Z`, unless a public current
+rights-cleared assignment and postal-area release appears earlier. After AL:
+252 profiles, 200 pending, 52 blocked, 0 in progress, 0 evidence-verified M2;
+125 manifests / 95 explicit definitions. Next: **AT**. No second country was
+started.
