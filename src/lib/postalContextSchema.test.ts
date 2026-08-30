@@ -62,6 +62,8 @@ test('JSON Schema preserves authority separation, purpose, and privacy-sensitive
   assert.ok(schema.$defs.source.required.includes('assignmentAuthority'));
   assert.ok(schema.$defs.source.required.includes('geometryAuthority'));
   assert.ok(schema.$defs.source.properties.assignmentAuthority.enum.includes('none'));
+  assert.ok(schema.$defs.source.properties.assignmentAuthority.enum.includes('official_postal_dictionary'));
+  assert.ok(schema.$defs.source.properties.assignmentAuthority.enum.includes('official_postal_mapping_authority'));
   assert.ok(schema.$defs.source.properties.geometryAuthority.enum.includes('none'));
   assert.ok(schema.$defs.assertion.properties.relation.enum.includes('postal_assigned'));
   assert.ok(schema.$defs.assertion.properties.relation.enum.includes('postal_contains'));
