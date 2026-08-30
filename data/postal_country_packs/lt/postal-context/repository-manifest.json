@@ -19,10 +19,10 @@
     "full_code_name": "pašto kodas",
     "full_code_format": "LT-NNNNN",
     "full_code_default_geometry": "address_membership_or_non_area",
-    "assignment_rule": "Lietuvos paštas postcode and address search is the postal assignment authority. It resolves city or settlement, street, house number, postcode, post office, address, and municipality membership; a lookup result is not an official polygon.",
+    "assignment_rule": "Lietuvos paštas public postcode and address search resolves city or settlement, street, house number, postcode, post office, address, and municipality membership; that public lookup is not an official polygon. The current authenticated API separately exposes postcode/address membership and an optional geoArea sequence, but access requires provider configuration and a contract; neither availability for every current code nor public serving and redistribution rights can be inferred from the schema.",
     "endpoint_rule": "Post offices, PO boxes, parcel terminals, large receivers, organizations, and other delivery endpoints remain non-areal unless an independent source explicitly supplies valid geometry.",
     "address_rule": "The Registrų centras Address Register supplies official civic-address points and hierarchy for parcels, buildings, and premises under its published open-data contract. It does not replace Lietuvos paštas as postal assignment authority.",
-    "postal_surface_rule": "A surface may be derived only from a pinned, rights-cleared, complete postal membership and address-point snapshot. It remains derived and noncanonical; gaps and conflicts are preserved rather than filled by administrative boundaries or proximity.",
+    "postal_surface_rule": "A Lietuvos paštas geoArea may be official only after a rights-reviewed complete current response denominator proves its postcode meaning, coverage, validity and serving permission. A surface derived from Registrų centras address points requires separately pinned rights-cleared complete postal membership and address-point snapshots, remains derived and noncanonical, and preserves gaps and conflicts instead of filling them by administrative boundaries, buffers, Voronoi cells or proximity.",
     "building_rule": "Registrų centras NTR building boundaries supply building geometry. A building is exact only through a stable explicit registry identifier relation or reviewed crosswalk; containment and nearest-footprint results remain candidates.",
     "administrative_rule": "Address Register county, municipality, eldership, settlement, and street geometry adds context but cannot create, clip, or replace a Lietuvos paštas postcode assignment.",
     "territory_rule": "All published features remain within Lithuania's LT partition; Latvia, Belarus, Poland, and Russia/Kaliningrad geometry must never be absorbed by border interpolation."
@@ -32,23 +32,68 @@
     "known_time": "Source publication, ingest, correction, and release timestamps retained separately.",
     "history_rule": "Current and historical registry objects remain versioned; a later postcode mapping never rewrites an earlier release."
   },
-  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "geometry_classes": [
+    "polygon",
+    "multipolygon",
+    "point",
+    "route",
+    "po_box",
+    "organization",
+    "unknown"
+  ],
   "quality_gates": [
-    { "id": "operator-assignment", "pass": "Each official assignment points to a pinned Lietuvos paštas lookup receipt or rights-cleared source edition." },
-    { "id": "derived-surface-lineage", "pass": "Each derived surface records member addresses, method, coverage, exclusions, source digest, and noncanonical status." },
-    { "id": "rc-address-link", "pass": "Address identity and point geometry retain registry identifier, hierarchy, lifecycle, CRS, and source release." },
-    { "id": "ntr-building-link", "pass": "An exact building claim has a stable explicit source relation or reviewed crosswalk; nearest and containment are candidates only." },
-    { "id": "privacy", "pass": "No recipient, resident, owner, tenant, customer, phone, private-unit occupant, credential, or protected register subject is published." },
-    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures test behavior but never satisfy production evidence gates." }
+    {
+      "id": "operator-assignment",
+      "pass": "Each official assignment points to a pinned Lietuvos paštas response or rights-cleared source edition whose contract permits AGID processing and public serving."
+    },
+    {
+      "id": "operator-geoarea",
+      "pass": "Every promoted geoArea is Polygon/MultiPolygon-valid, demonstrably a postcode area rather than a delivery-office or route surface, complete for the declared code class, byte-pinned and covered by reuse and redistribution rights."
+    },
+    {
+      "id": "derived-surface-lineage",
+      "pass": "Each derived surface records member addresses, method, coverage, exclusions, source digest, and noncanonical status."
+    },
+    {
+      "id": "rc-address-link",
+      "pass": "Address identity and point geometry retain registry identifier, hierarchy, lifecycle, CRS, and source release."
+    },
+    {
+      "id": "ntr-building-link",
+      "pass": "An exact building claim has a stable explicit source relation or reviewed crosswalk; nearest and containment are candidates only."
+    },
+    {
+      "id": "privacy",
+      "pass": "No recipient, resident, owner, tenant, customer, phone, private-unit occupant, credential, or protected register subject is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures test behavior but never satisfy production evidence gates."
+    }
   ],
   "promotion": {
     "current_stage": "M1_metadata",
     "stages": [
-      { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
-      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
-      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
-      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
-      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights, coverage, and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_lietuvos_pastas_postcode_area_visualization",
+        "definition": "A current complete rights-cleared Lietuvos paštas postcode assignment denominator and its real postcode Polygon/MultiPolygon surfaces are pinned by response edition or retrieval basis, validity, type exceptions, terms, byte length and SHA-256, published as an approved immutable artifact, and loaded through the real LT API/app so a normalized five-digit search fits and renders a translucent area with a clear outline, selected code, geometry kind, official/derived/virtual classification, source, reference date and confidence. Authenticated schema fields, Registrų centras address points, delivery areas, post offices, routes, PO boxes, organizations, administrative boundaries, buildings, buffers, Voronoi cells and synthetic fixtures never satisfy M2 by themselves."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
     ],
     "hard_blockers": [
       "address-lookup-presented-as-official-postcode-boundary",
@@ -60,10 +105,17 @@
       "foreign-border-geometry-absorbed-into-lt",
       "recipient-resident-owner-or-private-unit-data-published",
       "stale-or-unpinned-source-release",
-      "missing-assignment-or-geometry-authority"
+      "missing-assignment-or-geometry-authority",
+      "authenticated-geoarea-without-contract-reuse-or-public-serving-rights"
     ]
   },
   "non_guarantees": [
-    "deliverability", "recipient_identity", "occupancy", "building_identity_from_proximity", "every_postcode_is_a_polygon", "derived_surface_is_an_official_boundary", "legal_boundary_or_survey_certification"
+    "deliverability",
+    "recipient_identity",
+    "occupancy",
+    "building_identity_from_proximity",
+    "every_postcode_is_a_polygon",
+    "derived_surface_is_an_official_boundary",
+    "legal_boundary_or_survey_certification"
   ]
 }

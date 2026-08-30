@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "LT",
+  "observedAt": "2026-08-30T15:28:24.300Z",
+  "completedAt": "2026-08-30T15:54:40.6227302Z",
+  "baseCommit": "9aac5cda21049faf3745a297de2cfd17690d6322",
+  "scope": "Country-specific definition and conservative blocker evidence; no authenticated LT data, real postcode pack, API geometry route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "lithuania-country-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextCountryPolicy.test.ts src/lib/postalContextLithuaniaRepository.test.ts src/lib/postalContextLithuaniaRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts src/server/routes/postalContextLithuaniaRoutes.test.ts src/data/lithuaniaOpenGeoSources.test.ts src/lib/officialPostalSourceCatalog.test.ts",
+      "result": "pass",
+      "tests": 71,
+      "assertion": "operator, authenticated geoArea review, civic-address, building and administrative authorities remain separate; synthetic data never proves production geometry"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "lithuania-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-lt-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "authenticated optional geoArea non-promotion, point/proxy separation, exact report digests and Luxembourg next-country order"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draw, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p <temporary-workspace-resolver-config>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the unchanged repository TypeScript graph passes after adding only explicit paths to the checked-out @agid workspace sources"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 6,
+    "testsPassed": 114,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "operatorPublicPagesByteAndSha256Bound": 3,
+    "anonymousOperatorEndpoint": "401 Unauthorized / WWW-Authenticate Bearer / empty body",
+    "operatorContractOrCredentialsUsed": false,
+    "operatorGeoAreaResponsesAcquired": 0,
+    "publicOfficialPostcodePolygonRecords": 0,
+    "rightsClearedDerivedPostcodePolygonRecords": 0,
+    "addressPointsPromotedToAreas": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realLtRuntimeVerified": false,
+    "realLtApiVerified": false,
+    "realLtAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no contract-authorized rights-cleared real LT Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "The first two country-suite runs exposed stale wording and source-role expectations after the definition refinement; the manifest/source profile were corrected without weakening authority separation, and the final 71-test suite passed.",
+    "The default TypeScript run could not resolve six local @agid workspace packages through the reused dependency junction. A second full-source run with explicit paths to the same checked-out workspace sources passed with no diagnostics.",
+    "The data.gov.lt metadata was verified live, but its WAF blocked an exact local body capture; no fixed-provider-digest claim is made for those pages.",
+    "No real LT postcode Polygon/MultiPolygon can be lawfully exercised without unresolved contract, authentication and public-serving rights, so country runtime, map fit, translucent rendering and browser E2E remain unverified."
+  ],
+  "countryM2Achieved": false
+}
