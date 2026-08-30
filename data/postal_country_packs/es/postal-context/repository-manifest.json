@@ -1,0 +1,80 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-es",
+    "country_code": "ES",
+    "country_name": "Spain",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/es/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "codigo postal",
+    "full_code_format": "NNNNN",
+    "full_code_regex": "^\\d{5}$",
+    "full_code_default_geometry": "official_correos_postal_area_or_none",
+    "full_code_rule": "Preserve exactly five digits including leading zeroes. A code does not identify a recipient, premise, building, entrance, cadastral parcel or delivery guarantee.",
+    "postcode_area_rule": "Use a rights-cleared edition-pinned Correos or CartoCiudad Polygon/MultiPolygon only. The public CartoCiudad WMS is a view service and a query response is not a distributable national artifact.",
+    "address_rule": "Addresses, road names, portal points, kilometre points and cadastral references remain separate permitted source relations and never become postcode-area authority.",
+    "identity_rule": "Keep ES, the separate EA ledger identity, and ES_BAL/ES_CAN address-format variants distinct. A national service footprint does not merge identities or alter source geography.",
+    "facility_rule": "Route, P.O. box, organization, large-recipient and facility codes without area geometry receive no buffer, hull, administrative proxy or AGID-cell surface."
+  },
+  "exception_classes": [
+    {"id":"official_postal_area","rule":"Return only a pinned rights-cleared Correos/CartoCiudad Polygon or MultiPolygon with code, edition, validity, CRS, source, authority and confidence."},
+    {"id":"view_only_wms","rule":"A WMS GetFeatureInfo polygon may prove that an official surface exists, but cannot establish nationwide completeness, fixedness or redistribution authority."},
+    {"id":"centroid_or_point","rule":"A geocoder point or downloadable centroid remains a point and is never expanded into an area."},
+    {"id":"route_box_organization_or_facility","rule":"Show the available non-area geometry and reason, or no verified area; never invent a surface."},
+    {"id":"ea_identity","rule":"Preserve the separate EA country/territory ledger identity and do not absorb it into the ES artifact or completion count."},
+    {"id":"island_address_variant","rule":"ES_BAL and ES_CAN remain ES address-format variants; retain their source CRS and geographic semantics without creating new postal identities."}
+  ],
+  "quality_gates": [
+    {"id":"metadata-rights-and-byte-lineage","scope":"all","pass":"Every source has authority, exact URL, acquisition time, version or explicit absence, rights, byte length, SHA-256 and transformation method."},
+    {"id":"postcode-normalization","scope":"postcode","metric":"normalized_exact_five_digit_string_ratio","minimum":1.0},
+    {"id":"national-denominator","scope":"postcode","pass":"A current complete assignment and area/non-area denominator is edition-pinned and independently reconciled."},
+    {"id":"postal-area-topology","scope":"postal-area","pass":"All Polygon/MultiPolygon geometry is valid, bounded and checked for duplicate codes, gaps, overlaps, slivers, multipart areas and missing assigned codes."},
+    {"id":"authority-separation","scope":"all","pass":"Correos assignment/cartography, CartoCiudad view, address, cadastre, administration, facility routing, territory identity and AGID coverage remain separate."},
+    {"id":"application-path","scope":"production","pass":"A real immutable ES artifact passes loader, API, normalized search, ambiguity, map fit, translucent fill, visible outline, metadata, clear, re-search and all failure states."},
+    {"id":"synthetic-or-live-view-never-promotes","scope":"evidence","pass":"Synthetic fixtures, point geocoding, mutable WMS responses and metadata alone never establish M2."}
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {"id":"M0_inventory","definition":"Source roles and legal blockers are inventoried."},
+      {"id":"M1_metadata","definition":"The country-specific contract, official source receipts and fail-closed review are reproducible."},
+      {"id":"M2_current_correos_postcode_area_visualization","definition":"A current complete rights-reviewed Spain five-digit Correos assignment denominator and postcode-specific official CartoCiudad/Correos Polygon or MultiPolygon release is pinned by edition, validity, schema, CRS, coverage, authority, terms and SHA-256, published as an approved immutable artifact, and passes the real ES AGID loader, API and app path for normalization, ambiguity, geometry validity, map fit, translucent fill, visible outline, provenance, loading, no-result, multiple, API failure, invalid geometry, clear and re-search. Correos assignment and cartography, CartoCiudad view, address, cadastre, administration, facility routing, the separate EA identity, ES island address variants and AGID coverage remain separate; point, route, P.O. box, organization, facility and other non-area classes receive no invented surface. Synthetic fixtures, mutable view responses, point geocoding and metadata alone never establish M2."},
+      {"id":"M3_candidate","definition":"National topology, identity, freshness, privacy and independent holdout gates pass."},
+      {"id":"M4_stable","definition":"Two source refreshes pass and monitored rollback operates."}
+    ],
+    "hard_blockers": [
+      "view-only-wms-presented-as-downloadable-artifact",
+      "correos-contract-or-payment-assumed",
+      "public-search-or-sublicense-right-assumed",
+      "geocoder-point-presented-as-postcode-area",
+      "administrative-or-cadastral-boundary-presented-as-postcode-area",
+      "ea-identity-merged-into-es",
+      "non-area-code-given-invented-surface",
+      "missing-national-denominator-or-topology-audit",
+      "mutable-response-presented-as-immutable-release",
+      "missing-real-es-api-or-app-path"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy_or_ownership",
+    "exact_address_or_building_geometry",
+    "cadastral_or_legal_boundary",
+    "administrative_area_equals_postal_area",
+    "centroid_or_point_equals_postal_area"
+  ]
+}

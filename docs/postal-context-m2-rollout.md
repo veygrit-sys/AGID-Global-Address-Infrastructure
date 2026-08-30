@@ -1610,3 +1610,16 @@ No second country was started.
 - Evidence: [source report](../reports/postal-context-m2/ee-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/ee-checks-2026-08-30.json), and [technical review](postal-context-estonia-m2.md).
 - Recheck: after the pending-country pass and 2026-09-30 unless a corrected immutable release or clear publication grant appears earlier. Agreement, publication or deployment requires explicit approval.
 - Next country: `ES` (Spain).
+
+## Spain (ES) review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_correos_postcode_area_visualization`.
+- Official observation: CartoCiudad candidate geometry for `28013` is null, find returns a Point, and WMS GetFeatureInfo returns one real official EPSG:4326 Polygon with one closed 16-position ring. Ten official bodies were byte- and SHA-256-bound.
+- Rights: CartoCiudad/CNIG say Correos postcode surfaces are view/consultation only and Correos alone distributes the database. The complete database and polygon layer require payment, contract and a restrictive licence that does not permit a public third-party postcode search or sublicensing. No purchase, agreement, authentication or operator download occurred.
+- Quality blockers: no complete current assignment and area/non-area denominator, national polygon count, immutable release, nationwide topology audit or approved published artifact. The real sample Polygon has `productionEligibleRecords: 0`; no point, address, administrative boundary, buffer, proxy or AGID cell became an area.
+- Identity: `EA` remains a separate Africa-queue ledger identity. `ES_BAL` and `ES_CAN` remain ES address-format variants; neither rule changes source identity or territory.
+- App status: shared normalization, Polygon/MultiPolygon filtering, bounds fit, translucent fill, visible outline, loading/no-result/multiple/API-failure/invalid-geometry/clear/re-search tests pass. No real ES artifact loader, API response or app-area visualization exists.
+- Evidence: [source report](../reports/postal-context-m2/es-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/es-checks-2026-08-30.json), and [technical review](postal-context-spain-m2.md).
+- Recheck: after the pending-country pass and `2026-09-30T04:36:12.827Z`, unless a public rights-cleared immutable release appears earlier. Payment, contract, authentication, publication or deployment requires explicit approval.
+- After ES: 252 profiles, 187 pending, 64 blocked, 0 in progress, 1 evidence-verified M2; 128 manifests / 98 explicit definitions.
+- Next country: `FI` (Finland). No second country was started.
