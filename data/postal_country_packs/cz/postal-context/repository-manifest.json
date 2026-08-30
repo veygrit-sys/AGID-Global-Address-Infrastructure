@@ -119,7 +119,7 @@
       "id": "postcode-normalization",
       "scope": "psc",
       "metric": "normalized_exact_five_digit_string_ratio",
-      "minimum": 1.0
+      "minimum": 1
     },
     {
       "id": "authority-separation",
@@ -161,9 +161,9 @@
       "scope": "candidate-release",
       "metrics": {
         "operator_assignment_match_minimum": 0.999,
-        "postcode_classification_ratio_minimum": 1.0,
-        "explicit_building_link_precision_minimum": 1.0,
-        "country_partition_accuracy_minimum": 1.0
+        "postcode_classification_ratio_minimum": 1,
+        "explicit_building_link_precision_minimum": 1,
+        "country_partition_accuracy_minimum": 1
       },
       "requires_independent_holdout": true
     },
@@ -176,11 +176,26 @@
   "promotion": {
     "current_stage": "M1_metadata",
     "stages": [
-      { "id": "M0_inventory", "definition": "Source roles, PSČ classes and legal blockers are inventoried." },
-      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
-      { "id": "M2_experimental", "definition": "Pinned rights-reviewed snapshots reproduce experimental packs with full lineage." },
-      { "id": "M3_candidate", "definition": "Topology, identity, privacy, reference-status, freshness and holdout gates pass." },
-      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, PSČ classes and legal blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_assignment_and_derived_postcode_area_visualization",
+        "definition": "A current rights-reviewed Czech Post PSČ assignment denominator and current postcode-specific Polygon/MultiPolygon, or a complete permitted RÚIAN address-member relation from which a reproducible derived surface is built, is pinned by edition, validity, schema, coverage, authority, rights and SHA-256; special and non-area classes remain explicit, and a real CZ AGID loader, API and app path verifies normalization, geometry, fit, translucent fill, outline, provenance, ambiguity, failure, clear and re-search. Synthetic fixtures and metadata alone never establish M2."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Topology, identity, privacy, reference-status, freshness and holdout gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
     ],
     "hard_blockers": [
       "unpinned-ceska-posta-or-ruian-release",

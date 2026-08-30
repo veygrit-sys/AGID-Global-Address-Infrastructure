@@ -1510,3 +1510,44 @@ new publication destination and deployment require explicit approval. After
 CY: 252 profiles, 192 pending, 59 blocked, 0 in progress, 1 evidence-verified
 M2; 127 manifests / 97 explicit definitions. Next: **CZ**. No second country
 was started.
+
+## 2026-08-30 CZ: current assignments and RÚIAN members verified, postcode areas blocked
+
+CZ now has
+`M2_current_assignment_and_derived_postcode_area_visualization`. Nine exact
+official bodies were byte and SHA-256 verified: four Czech Post customer
+outputs and their certificates plus the nationwide RÚIAN address release dated
+2026-07-31. The operator classification contains 15,666 PSČ values; the RÚIAN
+release contains 3,020,222 address rows and 2,677 distinct PSČ values. Every
+RÚIAN code matched the operator classification and locality list.
+
+Neither source contains postcode Polygon/MultiPolygon geometry. RÚIAN supplies
+3,019,302 complete S-JTSK address definition points, with 920 rows missing
+coordinates across 263 PSČ; every observed RÚIAN PSČ still has at least one
+coordinate-bearing member. The operator denominator also includes 12,989
+facility, organization, P.O. box, transport-hub or contracted-partner codes
+without RÚIAN address rows. These classes and the 27 no-delivery-service codes
+receive no invented surface.
+
+RÚIAN metadata grants CC BY 4.0 reuse with attribution. The Czech Post download
+surface and certificates did not expose an artifact-specific public
+redistribution or derivative-publication grant, so exact operator bodies were
+used for audit only and remain outside Git. No address point, facility,
+organization, locality, administrative boundary, buffer, Voronoi/model surface
+or AGID cell was promoted to postal geometry.
+
+Shared tests verify normalized search, Polygon/MultiPolygon filtering, bounds
+fit, translucent fill, visible outline, clear/re-search and failure states. CZ
+has no pinned derived method, topology/uncertainty/holdout audit, immutable
+artifact or real-data CZ API/app area response, so postcode search cannot yet
+display a semi-transparent CZ area and M2 remains blocked.
+
+[CZ review](postal-context-czechia-m2.md), [source report](../reports/postal-context-m2/cz-source-review-2026-08-30.json)
+and [engineering checks](../reports/postal-context-m2/cz-checks-2026-08-30.json)
+record 111 passing tests, zero failures and zero TypeScript errors. Recheck
+after the pending-country pass and `2026-09-30T01:16:29.738Z`, unless a
+rights-cleared current area/member release appears earlier. Authentication,
+agreement, new publication destination and deployment require explicit
+approval. After CZ: 252 profiles, 191 pending, 60 blocked, 0 in progress, 1
+evidence-verified M2; 127 manifests / 97 explicit definitions. Next: **DE**.
+No second country was started.
