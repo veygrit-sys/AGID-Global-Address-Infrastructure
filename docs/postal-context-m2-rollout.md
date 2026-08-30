@@ -1623,3 +1623,16 @@ No second country was started.
 - Recheck: after the pending-country pass and `2026-09-30T04:36:12.827Z`, unless a public rights-cleared immutable release appears earlier. Payment, contract, authentication, publication or deployment requires explicit approval.
 - After ES: 252 profiles, 187 pending, 64 blocked, 0 in progress, 1 evidence-verified M2; 128 manifests / 98 explicit definitions.
 - Next country: `FI` (Finland). No second country was started.
+
+## Finland (FI) M2 verified - 2026-08-30
+
+- Result: evidence-verified under `M2_current_posti_assignment_and_paavo_statistical_area_visualization`.
+- Assignment: Posti `PCF_20260829` has 3,784 records; the FI runtime publishes all 3,747 non-Åland assignments and excludes all 37 AX rows. Leading zeroes and Posti type classifications are preserved.
+- Geometry: 2,976 current normal assignments join exactly to Statistics Finland Paavo `pno_2026` sea-extended Polygon/MultiPolygon features. Paavo is `derived` statistical display evidence, not a Posti delivery perimeter. Nine current normal and 762 special/endpoint assignments remain explicit non-areas.
+- Rights and lineage: exact official pages, terms, WFS, PCF and Paavo bytes, capture/download date, editions and SHA-256 values are recorded. The transformed artifacts carry the Posti service notice and Statistics Finland CC BY 4.0 attribution. No raw dump, address, person, customer, building or land-right record is committed.
+- Application: `00 100` normalizes to `00100`; the real API returns a Paavo Polygon, the app computes fit bounds and uses fill opacity `0.22` plus outline opacity `0.95`/width `3`. Loading, multiple, API failure, invalid geometry, non-area reasons, clear and re-search are implemented; corporate `00022`, missing-Paavo normal `42720`, and excluded AX `22100` are tested without invented surfaces.
+- Validation: FI suite 149/149, shared runtime 159/159, `tsc --noEmit`, and a second byte-identical build all pass. Browser E2E was replaced by a deterministic real HTTP API plus application GeoJSON/map-layer harness.
+- Artifacts: [graph](https://github.com/veygrit-sys/Address-Grid-ID/blob/4c02ee0513c7ef496662ed33b0963158197b4edf/data/postal_country_packs/fi/postal-context/m2/graph.json), [geometry](https://github.com/veygrit-sys/Address-Grid-ID/blob/4c02ee0513c7ef496662ed33b0963158197b4edf/data/postal_country_packs/fi/postal-context/m2/geometry.json), [descriptor](https://github.com/veygrit-sys/Address-Grid-ID/blob/4c02ee0513c7ef496662ed33b0963158197b4edf/data/postal_country_packs/fi/postal-context/m2/descriptor.json).
+- Evidence: [source report](../reports/postal-context-m2/fi-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/fi-checks-2026-08-30.json), [technical review](postal-context-finland-m2.md), and [source/reuse notice](../data/postal_country_packs/fi/postal-context/M2-SOURCE-NOTICE.md).
+- After FI: 252 profiles, 186 pending, 64 blocked, 0 in progress, 2 evidence-verified M2; 128 manifests / 98 explicit definitions.
+- Next country: `FO` (Faroe Islands). No second country was started.
