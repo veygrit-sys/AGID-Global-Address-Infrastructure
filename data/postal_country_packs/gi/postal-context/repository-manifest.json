@@ -1,0 +1,168 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-gi",
+    "country_code": "GI",
+    "country_name": "Gibraltar",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/gi/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "contains_land_or_cadastre_records": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "generic_country_postcode",
+    "full_code_format": "GX11 1AA",
+    "full_code_regex": "^GX11 1AA$",
+    "full_code_default_geometry": "virtual_country_wide_identifier_no_official_postal_boundary",
+    "assignment_rule": "Royal Gibraltar Post Office is the designated operator. UPU August 2026 lists GX11 1AA as the single postcode for the whole country; this is one generic identifier, not evidence of subdivided postal polygons.",
+    "domestic_exception_rule": "UPU records E/V as a domestic-mail alternative to postcode and country name. E/V is an addressing exception, not a second postcode or an area.",
+    "geometry_rule": "A territory boundary may be displayed only after explicit reuse, derivative, publication and serving rights are established, and must be labelled virtual country-wide context rather than official postal geometry.",
+    "geoportal_rule": "HM Government of Gibraltar publishes WMS/WFS services, but its disclaimer says access does not imply a licence to reproduce or distribute information without prior approval. No feature geometry is acquired or promoted.",
+    "address_rule": "Official Gibraltar Address Register records are address context at address grain. They do not create a postal boundary and are not queried, copied or committed.",
+    "identity_rule": "Keep GI separate from GB and Spain and do not alter or merge the registered territory identity or boundary."
+  },
+  "address_graph": {
+    "node_types": [
+      "generic_country_postcode",
+      "country_or_territory",
+      "postal_address",
+      "po_box",
+      "organization",
+      "official_address_register_entry",
+      "land_parcel",
+      "building",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "part_of",
+      "addresses",
+      "derived_from",
+      "covered_by_agid"
+    ],
+    "cardinality_rules": [
+      "one-generic-postcode-to-country-is-one-current-virtual-identifier",
+      "generic-postcode-to-address-is-zero-one-or-many",
+      "country-boundary-is-not-official-postal-boundary",
+      "address-parcel-or-building-requires-separate-rights-cleared-relations",
+      "agid-crosswalk-does-not-create-postal-authority"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "domestic_ev",
+      "rule": "Preserve E/V as a domestic addressing exception; do not normalize it to a second postcode or Polygon."
+    },
+    {
+      "id": "po_box_or_organization",
+      "rule": "PO Box and organization addresses may use GX11 1AA but receive no address-, building-, box- or route-derived surface."
+    },
+    {
+      "id": "single_generic_code",
+      "rule": "GX11 1AA is a country-wide generic code. Any display surface is virtual context and never an operator-certified delivery zone."
+    },
+    {
+      "id": "territory_boundary_rights",
+      "rule": "Public viewing or WFS availability does not authorize copying, publication or redistribution; keep geometry unavailable until permission is documented."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source and artifact has provider, role, edition, validity, retrieval time, byte count, SHA-256 where obtainable, terms, attribution and permitted-use record."
+    },
+    {
+      "id": "single-code-denominator",
+      "scope": "generic-country-postcode",
+      "pass": "The denominator is exactly one current normalized code GX11 1AA, with E/V retained only as a domestic addressing exception."
+    },
+    {
+      "id": "generic-code-normalization",
+      "scope": "generic-country-postcode",
+      "metric": "normalized_exact_gx11_1aa_ratio",
+      "minimum": 1
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Operator assignment, UPU reference, territory geometry, OAR address rows, parcels/buildings, virtual display and AGID index remain separate."
+    },
+    {
+      "id": "virtual-area-topology",
+      "scope": "candidate-virtual-area",
+      "pass": "Every promoted geometry is a valid non-empty source-linked Polygon/MultiPolygon, rights-cleared and explicitly virtual; it is never called an official postal boundary."
+    },
+    {
+      "id": "api-and-map-path",
+      "scope": "candidate-release",
+      "pass": "Real GI data passes normalization, no-result, API failure, invalid geometry, fit, translucent fill, visible outline, provenance, clear and re-search checks."
+    },
+    {
+      "id": "privacy-and-land-rights",
+      "scope": "public-artifacts",
+      "pass": "No person, recipient, customer, real address, OAR entry, parcel, building, owner, credential or raw restricted row is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production assignment, geometry, rights, artifact or app gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, generic-code semantics, territory scope, rights and missing geometry are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "The country-specific contract and blocked-source evidence are reviewable without raw address, land or restricted data."
+      },
+      {
+        "id": "M2_current_gibraltar_generic_postcode_visualization",
+        "definition": "Current Royal Gibraltar Post Office and UPU evidence establishes GX11 1AA as Gibraltar's single generic country-wide postcode and records the domestic E/V exception. A current rights-cleared Gibraltar territory Polygon/MultiPolygon is pinned by edition, validity, terms, SHA-256 and coverage, published as an approved immutable artifact, explicitly classified virtual rather than an official postal boundary, and passes the real GI loader, API and app search-to-translucent-area path. A government map or WFS without reproduction and distribution permission, address-register rows, parcels, buildings, points, synthetic fixtures and invented delivery zones never satisfy M2."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Coverage, topology, ambiguity, privacy, freshness, correction and independent validation gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two refreshes pass and monitored rollback operates."
+      }
+    ],
+    "hard_blockers": [
+      "generic-country-postcode-presented-as-subdivided-delivery-area",
+      "government-map-or-wfs-access-presented-as-reproduction-right",
+      "territory-boundary-presented-as-official-postal-boundary",
+      "address-register-parcel-or-building-presented-as-postal-geometry",
+      "po-box-organization-or-route-given-an-invented-area",
+      "ev-presented-as-second-postcode",
+      "gi-gb-or-spain-identity-merged",
+      "missing-immutable-rights-cleared-artifact",
+      "synthetic-evidence-promoted-to-production"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_or_occupant_identity",
+    "official-postal-boundary",
+    "sub-country-postal-zone",
+    "territory-boundary-or-sovereignty",
+    "address-or-building-membership",
+    "legal-boundary-or-survey-certification"
+  ]
+}

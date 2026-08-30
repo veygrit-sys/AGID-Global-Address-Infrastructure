@@ -1693,3 +1693,16 @@ No second country was started.
 - Recheck: after the pending-country pass and `2026-09-06T08:18:41.047Z`, unless an unrestricted current release or explicit authority appears earlier. Authentication, agreement, API key, payment, publication, new destination, land-record access, or deployment requires explicit approval.
 - After GG: 252 profiles, 182 pending, 66 blocked, 0 in progress, 4 evidence-verified M2; 130 manifests / 100 explicit definitions.
 - Next country: `GI` (Gibraltar). No second country was started.
+
+## Gibraltar (GI) M2 review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_gibraltar_generic_postcode_visualization`.
+- Postal denominator: UPU Universal DataBase August 2026 lists Gibraltar among countries using one code for the whole country, `GX11 1AA`; current Royal Gibraltar Post Office addresses use the same code. The 2013 UPU country sheet's `E/V` is a domestic addressing exception, not a second postcode. The denominator is 1/1 and official sub-country postal areas are zero.
+- Rights and geometry: the HM Government Geoportal exposes maps/WMS/WFS, but its disclaimer says access does not grant reproduction or distribution authority without prior approval. Five Geoportal/OAR pages were web-verified but deterministic direct capture returned HTTP 403. No feature or address row was queried, and no government map, administrative boundary, point, parcel, building, buffer, AGID cell or synthetic fixture became postal geometry.
+- Classification: a future whole-territory surface can only be `virtual`, never an official postal boundary, and only after explicit derivative, publication and serving rights plus immutable edition/SHA-256 evidence. Organization and PO Box examples receive no invented area.
+- App status: shared Polygon/MultiPolygon filtering, fit, translucent fill, visible outline and clear/re-search checks pass. No rights-cleared GI artifact, real GI API geometry response or semi-transparent app area exists; the attempted browser runtime was blocked by Windows sandbox ACL initialization and no browser E2E is claimed.
+- Validation: GI metadata/source/rights/blocking suite 4/4, shared Postal Context runtime 161/161, shared area UI 23/23, ledger/rollout suite 12/12, and repository-wide `tsc --noEmit` pass. Raw official captures, addresses and land/cadastre rows are not committed.
+- Evidence: [source report](../reports/postal-context-m2/gi-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/gi-checks-2026-08-30.json), and [technical review](postal-context-gibraltar-m2.md).
+- Recheck: after the pending-country pass and `2026-09-06T08:50:00.000Z`, unless explicit rights or an unrestricted current release appears earlier. Authentication, contract/NDA, API key, feature-row access, publication, new destination or deployment requires explicit approval.
+- After GI: 252 profiles, 181 pending, 67 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
+- Next country: `GR` (Greece). No second country was started.
