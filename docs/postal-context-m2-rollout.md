@@ -2013,3 +2013,17 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T22:30:06.794Z; do not contact a provider, register, authenticate, accept terms or a contract, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
 - After RO: 252 profiles, 159 pending, 87 blocked, 0 in progress, 6 evidence-verified M2; 139 manifests / 109 explicit definitions.
 - Next country: RS (Serbia). No second country was started.
+
+## Serbia (RS) M2 review - 2026-08-30
+
+- Target: Serbia (RS), Europe. The source-of-truth status command selected RS with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under M2_current_serbia_postcode_assignment_and_pak_area_visualization. A current complete five-digit assignment/exception denominator, fixed official PAK geometry delivery, explicit compatible rights, full reconciliation, approved immutable artifact and real application path remain mandatory.
+- Operator audit: Pošta defines distinct five-digit postcodes and six-digit PAKs. Its current FAQ says the electronic postcode database cannot be downloaded, WSP is registered access, and the exact 2025 ENP PDF is only a sales-point subset with 689 five-digit occurrences / 686 distinct tokens.
+- Geometry and rights audit: Pošta explicitly says over 113,000 PAKs are georeferenced nationwide and each PAK Polygon covers buildings belonging to part of one street. The exact GIS price PDF lists 90 RSD per PAK spatial-position data unit before VAT. No purchase, fixed delivery or compatible AGID processing/derivation/storage/redistribution/public-serving grant was established.
+- Authority policy: RGZ weekly open street/house-number CSV/GPKG has address/cadastral identifiers but no advertised postcode or PAK field. No ENP sales point/office, RGZ address/street/point, administrative/cadastral/building/parcel object, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted; RS/XK identity remains separate.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No eligible fixed RS artifact exists, so real RS API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime plus RS country contracts 41/41, rollout invariants 8/8, RS ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and full TypeScript 1/1 pass (63 recorded assertions, 0 failures).
+- Evidence: docs/postal-context-serbia-m2.md, reports/postal-context-m2/rs-source-review-2026-08-30.json and reports/postal-context-m2/rs-checks-2026-08-30.json. Fifteen exact official bodies total 1,411,809 bytes and are byte/SHA-256 bound. Raw official bodies, rendered PDF pages, address/PAK rows and geometry are not committed.
+- Retry: after pending countries and 2026-09-06T23:01:37.379Z; do not contact a provider, register, authenticate, accept terms or a contract, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
+- After RS: 252 profiles, 158 pending, 88 blocked, 0 in progress, 6 evidence-verified M2; 139 manifests / 109 explicit definitions.
+- Next country: RU (Russia). No second country was started.

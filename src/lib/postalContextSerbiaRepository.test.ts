@@ -99,10 +99,10 @@ test('Serbia seed separates postcode, PAK, address point, building, parcel, admi
   assert.equal(manifest.postal_system.pak_format, 'NNNNNN');
   assert.match(manifest.postal_system.full_code_default_geometry, /operator_routing_assignment.*derived_address_membership_surface.*point.*non_area/i);
   assert.match(manifest.postal_system.assignment_rule, /Pošta Srbije.*five-digit.*destination post office.*does not establish.*perimeter.*deliverability/i);
-  assert.match(manifest.postal_system.pak_rule, /six-digit.*part of a street.*side.*house-number range.*not automatically a polygon.*building.*resident/i);
+  assert.match(manifest.postal_system.pak_rule, /six-digit.*part of a street.*side.*house-number range.*nationwide PAK polygons.*not automatically a polygon.*building.*resident/i);
   assert.match(manifest.postal_system.lookup_rule, /public PAK lookup.*map display.*not grant bulk extraction.*redistribution/i);
   assert.match(manifest.postal_system.api_rule, /WSP WebAPI.*registered users.*Credentials.*never enter.*endpoint version.*digest/i);
-  assert.match(manifest.postal_system.perimeter_rule, /No nationwide official.*postcode or PAK polygon.*derived.*Street buffers.*nearest offices.*Voronoi/i);
+  assert.match(manifest.postal_system.perimeter_rule, /advertises nationwide PAK polygons.*viewer access.*do not supply a fixed artifact.*five-digit postcode area.*derived.*RGZ points.*buffers.*Voronoi/i);
   assert.match(manifest.postal_system.address_rule, /RGZ Address Register.*unique address codes.*Serbian Open Data License.*postcode and PAK.*separately/i);
   assert.match(manifest.postal_system.building_rule, /source-defined.*common authoritative cadastral identifier.*parcel reference.*candidate/i);
   assert.match(manifest.postal_system.parcel_rule, /parcel is not a building.*PAK.*postcode perimeter.*owners.*title/i);
@@ -113,7 +113,8 @@ test('Serbia seed separates postcode, PAK, address point, building, parcel, admi
   assert.equal(manifest.promotion.current_stage, 'M1_metadata');
   for (const blocker of [
     'post-office-point-presented-as-postcode-polygon',
-    'pak-presented-as-five-digit-postcode-or-universal-polygon',
+    'pak-presented-as-five-digit-postcode-or-pak-code-presented-as-polygon-without-artifact',
+    'public-pak-viewer-or-price-list-presented-as-fixed-artifact-or-public-serving-right',
     'rgz-house-number-point-presented-as-building-footprint',
     'coverage-presented-as-sovereignty-determination',
     'postcode-or-pak-stored-as-number',
@@ -125,8 +126,9 @@ test('Serbia seed separates postcode, PAK, address point, building, parcel, admi
 test('Serbia source policy separates operator, open address, building, cadastral, administrative, and territory authority', () => {
   const profile = readJson<SourceProfile>('source-profile.json');
   const sources = new Map(profile.sources.map(source => [source.source_id, source]));
-  const offices = sources.get('posta-srbije-post-office-list');
+  const offices = sources.get('posta-srbije-enp-sales-point-list');
   const pak = sources.get('posta-srbije-pak-definition');
+  const pakGeometry = sources.get('posta-srbije-pak-gis');
   const lookup = sources.get('posta-srbije-pak-lookup');
   const api = sources.get('posta-srbije-wsp-address-api');
   const address = sources.get('rgz-serbia-address-register-open-data');
@@ -141,6 +143,9 @@ test('Serbia source policy separates operator, open address, building, cadastral
   assert.ok(offices?.prohibited_claims.includes('post-office-point-is-postcode-polygon'));
   assert.equal(pak?.geometry_authority, 'route_or_address_range_not_polygon');
   assert.ok(pak?.prohibited_claims.includes('pak-is-five-digit-postcode'));
+  assert.equal(pakGeometry?.geometry_authority, 'official_pak_polygon_when_exactly_delivered_and_licensed');
+  assert.equal(pakGeometry?.redistribution_class, 'R3_controlled_or_contract');
+  assert.ok(pakGeometry?.prohibited_claims.includes('public-viewer-is-download-or-redistribution-license'));
   assert.equal(lookup?.geometry_authority, 'query_map_reference_only');
   assert.ok(lookup?.prohibited_claims.includes('map-display-is-bulk-geometry-license'));
   assert.equal(api?.assignment_authority, 'official_postal_operator_api');
