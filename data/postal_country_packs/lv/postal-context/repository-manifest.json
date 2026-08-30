@@ -22,7 +22,7 @@
     "assignment_rule": "Latvijas Pasts postcode directories are the postal assignment authority. In Rīga they can enumerate street and house-number membership; elsewhere they can assign localities, municipalities, post offices, or special organizations. A directory row is not an official polygon.",
     "special_code_rule": "Special organization and institution postcodes are non-areal unless an independent source explicitly supplies a valid service geometry.",
     "address_rule": "The VZD State Address Register supplies official civic-address identity, codes, lifecycle, postcode attributes, coordinates, and cadastral relations. It does not replace Latvijas Pasts as postal assignment authority.",
-    "postal_surface_rule": "A surface may be derived only from a pinned, rights-cleared, complete address-membership snapshot. It remains derived and noncanonical, with gaps and conflicts preserved rather than filled by administrative boundaries or proximity.",
+    "postal_surface_rule": "Only a current rights-cleared source Polygon/MultiPolygon, or an expressly authorized reproducible derivation from complete address-membership in a current Latvijas Pasts assignment denominator, may become a postcode surface; every derived surface remains noncanonical. VZD address points, point buffers, hulls, Voronoi/raster cells, administration, localities, roads, parcels and buildings are prohibited proxies.",
     "building_rule": "VZD cadastral building contours supply building geometry. A building is exact only through a stable explicit Address Register or cadastral identifier relation; containment and nearest-footprint results remain candidates.",
     "administrative_rule": "VZD administrative boundaries, villages, and road centerlines add context but cannot create, clip, or replace a Latvijas Pasts postcode assignment.",
     "territory_rule": "All published features must remain within Latvia's LV country partition; adjacent Estonia, Lithuania, Russia, and Belarus geometry must never be absorbed by border interpolation."
@@ -42,34 +42,68 @@
     "unknown"
   ],
   "quality_gates": [
-    { "id": "operator-assignment", "pass": "Each official assignment points to a pinned Latvijas Pasts directory or permitted validation receipt." },
-    { "id": "derived-surface-lineage", "pass": "Every derived surface records member addresses, method, coverage, exclusions, source digest, and noncanonical status." },
-    { "id": "vzd-address-link", "pass": "Address identity and point geometry retain VZD code, lifecycle, coordinate method, CRS, and source release." },
-    { "id": "vzd-building-link", "pass": "An exact building claim has a stable explicit source relation; nearest and containment are candidates only." },
-    { "id": "privacy", "pass": "No recipient, resident, owner, tenant, customer, private unit, phone, credential, or restricted-security record is published." },
-    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures test behavior but never satisfy production evidence gates." }
+    {
+      "id": "operator-assignment-and-rights",
+      "pass": "A current complete Latvijas Pasts assignment denominator and explicit AGID processing, public serving and redistribution rights are pinned by version, date, byte length and SHA-256."
+    },
+    {
+      "id": "postcode-surface",
+      "pass": "Every promoted Polygon/MultiPolygon has authoritative postcode meaning, valid topology, declared code-class coverage and reproducible lineage."
+    },
+    {
+      "id": "point-and-endpoint-separation",
+      "pass": "VZD address points and organization, institution, post-office, PO-box and route records remain non-areal and are never buffered, hulled or tessellated."
+    },
+    {
+      "id": "context-authority",
+      "pass": "Administrative, locality, road, parcel and building geometry stays context-only; an exact building relation requires an explicit stable source link."
+    },
+    {
+      "id": "privacy",
+      "pass": "No recipient, resident, owner, tenant, customer, credential, private-unit occupant, cadastral subject or land-right record is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures test behavior but never satisfy production evidence gates."
+    }
   ],
   "promotion": {
     "current_stage": "M1_metadata",
     "stages": [
-      { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
-      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
-      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
-      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
-      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights, coverage, and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_latvia_postcode_area_visualization",
+        "definition": "A current complete rights-cleared Latvijas Pasts postcode assignment denominator, code-class exceptions and real postcode Polygon/MultiPolygon surfaces are pinned by edition or retrieval basis, effective date, terms, byte length and SHA-256, published as an approved immutable artifact, and loaded through the real LV API/app so a normalized LV-NNNN search fits and renders a translucent area with a clear outline, selected code, geometry kind, official/derived/virtual classification, source, reference date and confidence. Latvijas Pasts tables, VZD address points, organization/institution/post-office/PO-box/route endpoints, administrative or locality polygons, roads, parcels, buildings, point buffers, hulls, Voronoi/raster cells and synthetic fixtures never satisfy M2 by themselves. A derived surface is eligible only from an expressly authorized complete current postal assignment denominator with reproducible lineage, limitations and noncanonical status preserved."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
     ],
     "hard_blockers": [
+      "postal-table-presented-as-postcode-boundary",
       "address-list-presented-as-official-postcode-boundary",
-      "vzd-postcode-attribute-presented-as-postal-operator-validation",
-      "administrative-boundary-presented-as-postcode-boundary",
-      "special-organization-code-presented-as-residential-area",
       "nearest-building-presented-as-exact-link",
-      "syntactically-valid-code-presented-as-current-allocation",
-      "foreign-border-geometry-absorbed-into-lv",
-      "recipient-resident-owner-or-private-unit-data-published",
       "restricted-security-object-published",
+      "address-point-buffer-hull-or-voronoi-presented-as-postcode-boundary",
+      "administrative-locality-road-parcel-or-building-proxy-presented-as-postcode-boundary",
+      "organization-institution-post-office-po-box-or-route-presented-as-area",
+      "vzd-postcode-attribute-presented-as-postal-operator-validation",
+      "foreign-border-geometry-absorbed-into-lv",
       "stale-or-unpinned-source-release",
-      "missing-assignment-or-geometry-authority"
+      "missing-assignment-geometry-or-rights-authority",
+      "synthetic-fixture-presented-as-production-evidence"
     ]
   },
   "non_guarantees": [

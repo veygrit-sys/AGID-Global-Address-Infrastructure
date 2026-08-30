@@ -29,3 +29,13 @@ private-unit data, credentials, and restricted-security objects.
 See `repository-manifest.json`, `source-profile.json`, and
 `fixtures/latvia-synthetic.json` for the promotion contract. The synthetic
 fixtures test runtime behavior only and cannot promote a real release.
+
+## 2026-08-30 M2 review boundary
+
+The current Latvijas Pasts page lists eleven PDF assignment books but no postcode
+Polygon/MultiPolygon product; eight books were byte-pinned and three local
+retrievals returned HTTP 522. VZD's current 2026-08-29 CC BY 4.0 release has
+550,515 active approved postcode-bearing address Points across 693 codes and
+no postcode-area layer. The books and points remain separate authorities and
+no buffer, hull, Voronoi/raster cell, administrative/locality, road, parcel or
+building proxy may promote this M1 seed to M2.

@@ -1859,3 +1859,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T16:08:26.315Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After LU: 252 profiles, 170 pending, 76 blocked, 0 in progress, 6 evidence-verified M2; 135 manifests / 105 explicit definitions.
 - Next country: `LV` (Latvia). No second country was started.
+
+## Latvia (LV) M2 review - 2026-08-30
+
+- Target: Latvia (`LV`), Europe. The source-of-truth status command selected LV with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_latvia_postcode_area_visualization`. A complete rights-cleared Latvijas Pasts denominator, real postcode Polygon/MultiPolygon, approved immutable artifact and real application path remain mandatory.
+- Official assignment audit: the current operator page lists 11 books; 8 current PDFs / 142 pages were byte-pinned and 3 non-browser downloads returned HTTP 522. No complete operator denominator or explicit AGID processing/public-serving/redistribution grant was established.
+- VZD audit: the 2026-08-29 CC BY 4.0 address CSV has 610,513 rows; all 550,515 active rows are approved, valid postcode-bearing Points with coordinates, covering 693 codes. The current nine-layer SHP archive has no postcode-area layer.
+- Geometry: no official or rights-cleared derived postcode polygon was found; no address point, endpoint, administrative/locality, road, parcel or building proxy, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- Application status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear and re-search behavior pass. No real LV polygon artifact exists, so real LV API/map rendering and browser E2E are not claimed.
+- Validation: shared area UI 5/5, LV country contracts 14/14, shared runtime 24/24, rollout invariants 8/8, LV ledger evidence 5/5 and full TypeScript 1/1 pass (57 recorded assertions, 0 failures).
+- Evidence: `docs/postal-context-latvia-m2.md`, `reports/postal-context-m2/lv-source-review-2026-08-30.json`, and `reports/postal-context-m2/lv-checks-2026-08-30.json`; eighteen exact official bodies/distributions are byte/SHA-256 bound. Raw postal books, address CSV, SHP and source bodies are not committed.
+- Retry: after pending countries and `2026-09-06T16:45:28.862Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After LV: 252 profiles, 169 pending, 77 blocked, 0 in progress, 6 evidence-verified M2; 135 manifests / 105 explicit definitions.
+- Next country: `MC` (Monaco). No second country was started.
