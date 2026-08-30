@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "MD",
+  "observedAt": "2026-08-30T17:52:30.260Z",
+  "completedAt": "2026-08-30T18:16:05.1825012Z",
+  "baseCommit": "ad1b351ecbe834126a4ad8081b1934e3458fda5b",
+  "scope": "Country-specific M2 definition, current official source/rights reconciliation, deterministic point/XLSX profiling and conservative blocker evidence; no raw source body, postal data pack, API geometry route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "moldova-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-md-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, exact current Point-only and legacy XLSX evidence, prohibited proxy separation, report digests and Montenegro next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 5,
+    "testsPassed": 43,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialObservations": 8,
+    "exactBodiesOrDistributionsByteAndSha256Bound": 19,
+    "publicOperatorRecords": 1164,
+    "publicOperatorDistinctPostalCodes": 1144,
+    "publicOperatorPointRecords": 1164,
+    "legacyWorkbookCodeBearingRows": 4873,
+    "publicOfficialPostcodePolygonRecords": 0,
+    "rightsClearedDerivedPostcodePolygonRecords": 0,
+    "rawSourceBodiesInGit": 0,
+    "datasetSpecificLegacyLicenceEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realMdRuntimeVerified": false,
+    "realMdApiVerified": false,
+    "realMdAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no official or rights-cleared derived real MD Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "The current public operator map/API is a facility-point product and postcode 2012 street/house rows are membership evidence, not area geometry.",
+    "The three official-government XLSX resources are stale, geometry-free and marked License Not Specified.",
+    "The quality standard broad distribution zones group codes for service quality and are not postcode boundaries.",
+    "No real MD postcode Polygon/MultiPolygon can be exercised; country runtime, API map fit, translucent rendering and browser E2E remain unverified."
+  ],
+  "countryM2Achieved": false
+}

@@ -1887,3 +1887,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T17:24:29.593Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After MC: 252 profiles, 168 pending, 78 blocked, 0 in progress, 6 evidence-verified M2; 135 manifests / 105 explicit definitions.
 - Next country: `MD` (Moldova). No second country was started.
+
+## Moldova (MD) M2 review - 2026-08-30
+
+- Target: Moldova (`MD`), Europe. The source-of-truth status command selected MD with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_moldova_postcode_area_visualization`. A complete current rights-cleared ordinary/exception denominator plus real postcode Polygon/MultiPolygon is mandatory.
+- Current operator audit: the public Poșta Moldovei map/API has 1,164 active facilities, 1,144 distinct postal-code labels, 1,164 valid Points and 0 Polygon/MultiPolygon. `zip_code=2012` returns one facility Point and 26 street/house membership rows, not an area.
+- Government audit: three ASP CKAN workbooks contain 4,873 code-bearing rows and 0 geometry; resources are dated 2015, metadata 2020 and each package says `License Not Specified`. General date.gov.md guidance does not replace dataset-specific terms.
+- Geometry policy: broad quality-standard distribution zones, facility points, membership rows, localities, administration, addresses, buildings, parcels, buffers, hulls, Voronoi/raster cells and synthetic fixtures were not promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, clear and re-search behavior pass. No real eligible MD polygon exists, so real MD API/map rendering and browser E2E are not claimed.
+- Validation: shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, MD ledger evidence 5/5 and full TypeScript 1/1 pass (43 recorded assertions, 0 failures).
+- Evidence: `docs/postal-context-moldova-m2.md`, `reports/postal-context-m2/md-source-review-2026-08-30.json`, and `reports/postal-context-m2/md-checks-2026-08-30.json`; nineteen exact official bodies are byte/SHA-256 bound. Raw APIs, XLSX, PDFs and source bodies are not committed.
+- Retry: after pending countries and `2026-09-06T17:52:30.260Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After MD: 252 profiles, 167 pending, 79 blocked, 0 in progress, 6 evidence-verified M2; 136 manifests / 106 explicit definitions.
+- Next country: `ME` (Montenegro). No second country was started.
