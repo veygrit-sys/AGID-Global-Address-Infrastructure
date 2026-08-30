@@ -1999,3 +1999,17 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T21:59:04.571Z; do not contact a provider, register, authenticate, accept terms, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
 - After PT: 252 profiles, 160 pending, 86 blocked, 0 in progress, 6 evidence-verified M2; 139 manifests / 109 explicit definitions.
 - Next country: RO (Romania). No second country was started.
+
+## Romania (RO) M2 review - 2026-08-30
+
+- Target: Romania (RO), Europe. The source-of-truth status command selected RO with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under M2_current_romania_postcode_assignment_and_authoritative_area_visualization. Explicit compatible rights, a current complete six-digit assignment/exception denominator, a fixed authoritative postcode Polygon/MultiPolygon, complete reconciliation, approved immutable artifact and real application path remain mandatory.
+- Operator audit: seven exact official bodies total 4,689,771 bytes and are byte/SHA-256 bound. The current public database is described as periodically updated and supports address-to-postcode and postcode-to-address POST search. Official structure defines six digits; Infocod is supplied after a written request and updated monthly.
+- Rights and authority: Poșta Română's 2025 organization regulation assigns national postal-nomenclature maintenance to operator functions. ANCOM Decision 810/2024 treats the postcode system as non-physical network infrastructure and places relevant third-party postal-provider access behind a civil contract. No compatible AGID processing, derivation, storage, redistribution or public-serving grant was established.
+- Geometry policy: dated operator evidence says the postcode database then lacked GPS coordinates and distinguishes 47 street-level municipalities from single-code localities elsewhere. No newer fixed authoritative area release was verified. No county/UAT/locality/SIRUTA, RENNS point, ANCPI parcel/building, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No real eligible RO artifact exists, so real RO API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime plus RO country contracts 41/41, rollout invariants 8/8, RO ledger evidence 5/5, changed JavaScript/JSON syntax 6/6 and full TypeScript 1/1 pass (62 recorded assertions, 0 failures).
+- Evidence: docs/postal-context-romania-m2.md, reports/postal-context-m2/ro-source-review-2026-08-30.json and reports/postal-context-m2/ro-checks-2026-08-30.json. Raw official bodies, rendered PDF pages, address rows and geometry are not committed.
+- Retry: after pending countries and 2026-09-06T22:30:06.794Z; do not contact a provider, register, authenticate, accept terms or a contract, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
+- After RO: 252 profiles, 159 pending, 87 blocked, 0 in progress, 6 evidence-verified M2; 139 manifests / 109 explicit definitions.
+- Next country: RS (Serbia). No second country was started.
