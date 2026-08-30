@@ -1804,3 +1804,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T13:34:49.549Z`; do not purchase CAP Professional, register/authenticate, contact a provider, accept terms/contracts, request restricted data/keys, pay, create a destination, publish or deploy without explicit approval.
 - After IT: 252 profiles, 174 pending, 73 blocked, 0 in progress, 5 evidence-verified M2; 133 manifests / 103 explicit definitions.
 - Next country: `JE` (Jersey). No second country was started.
+
+## Jersey (JE) M2 review - 2026-08-30
+
+- Target: Jersey (`JE`), Europe. The source-of-truth status command selected JE with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_jersey_unit_postcode_and_truthful_postal_area_visualization`. Exact unit-postcode geometry and separately labelled broader postal context remain distinct; points, sentinels and administrative proxies never become areas.
+- Current ONSPD audit: May 2026 contains 3,215 live and 459 terminated distinct valid JE codes. All 3,674 rows have `GRIDIND=9`, null eastings/northings, online `LAT=100`/`LONG=0` sentinels and no geometry in the explicit sample. The official guide confirms that Channel Islands postcodes receive no geographic coordinates.
+- Government JSearch audit: 1,914 distinct point records overlap 1,891 live and 19 terminated ONSPD codes, contain four unmatched values including one invalid code and omit 1,324 live codes. The item/layer has blank licence/access fields and the open-data catalogue has zero postcode datasets, so no OGL-J coverage or public-serving right is inferred.
+- Jersey Post and authority: the interactive finder was not queried and supplies no reviewed bulk, redistribution, public API or polygon grant. No point, parish/administration, road, address, building, land parcel, buffer, Voronoi cell or synthetic fixture was promoted; no raw rows were committed.
+- App status: shared Polygon/MultiPolygon validation, fit, translucent fill, visible outline, point-only non-area handling, metadata, clear and re-search checks pass. No rights-cleared real JE artifact, API geometry response, map fit or translucent area exists, so browser E2E is not claimed.
+- Validation: JE evidence 6/6, rollout invariants 8/8, shared area UI 5/5, shared runtime 24/24 and repository-wide `tsc --noEmit` pass (44/44 recorded assertions). PDF text/digests reconcile, but local raster inspection failed with Windows error 206 and is not claimed.
+- Evidence: `docs/postal-context-jersey-m2.md`, `reports/postal-context-m2/je-source-review-2026-08-30.json`, and `reports/postal-context-m2/je-checks-2026-08-30.json`. Raw official captures and postcode/address rows are not committed.
+- Retry: after pending countries and `2026-09-06T14:03:19.968Z`; do not contact a provider, register/authenticate, accept terms/contracts, request data/keys, pay, crawl the finder, create a destination, publish or deploy without explicit approval.
+- After JE: 252 profiles, 173 pending, 74 blocked, 0 in progress, 5 evidence-verified M2; 134 manifests / 104 explicit definitions.
+- Next country: `LI` (Liechtenstein). No second country was started.
