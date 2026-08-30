@@ -1901,3 +1901,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T17:52:30.260Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After MD: 252 profiles, 167 pending, 79 blocked, 0 in progress, 6 evidence-verified M2; 136 manifests / 106 explicit definitions.
 - Next country: `ME` (Montenegro). No second country was started.
+
+## Montenegro (ME) M2 review - 2026-08-30
+
+- Target: Montenegro (`ME`), Europe. The source-of-truth status command selected ME with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_montenegro_postcode_area_visualization`. A complete current rights-cleared five-digit postcode and six-digit PAK/exception denominator, real postcode Polygon/MultiPolygon, approved immutable artifact and real application path remain mandatory.
+- Operator audit: the current office page embeds 164 unique valid latitude/longitude markers and zero polygons; its first rendered page has 12 distinct five-digit office codes, not a complete denominator. The dictionary and Gazette 150 rule define five-digit postcode and six-digit PAK street-part semantics, PO boxes and poste restante but no area product.
+- Rights/catalogue audit: the operator rights page is under construction and no public bulk-processing/redistribution grant was established. Five current Government CKAN searches found zero postal datasets; six `PAK` hits are unrelated substring matches. UZN address, spatial-unit and eID/payment property services are separate non-postal authorities and no protected path was used.
+- Geometry: no facility/address Point, PAK route or street part, municipality, spatial unit, parcel, building, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No real eligible ME polygon exists, so real ME runtime/API/map rendering and browser E2E are not claimed.
+- Validation: shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, ME ledger evidence 5/5 and full TypeScript 1/1 pass (43 recorded assertions, 0 failures). PDF text/digests reconcile; local PNG visual inspection failed with Windows error 206 and is not claimed.
+- Evidence: `docs/postal-context-montenegro-m2.md`, `reports/postal-context-m2/me-source-review-2026-08-30.json`, and `reports/postal-context-m2/me-checks-2026-08-30.json`; seventeen exact official bodies are byte/SHA-256 bound. Raw source bodies, office points, address, cadastral and property rows are not committed.
+- Retry: after pending countries and `2026-09-06T18:22:01.106Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After ME: 252 profiles, 166 pending, 80 blocked, 0 in progress, 6 evidence-verified M2; 136 manifests / 106 explicit definitions.
+- Next country: `MK` (North Macedonia). No second country was started.
