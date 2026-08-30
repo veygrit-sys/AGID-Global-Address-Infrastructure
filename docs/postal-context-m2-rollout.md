@@ -1845,3 +1845,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T15:28:24.300Z`; do not register, authenticate, request credentials, accept a contract or terms, pay, query protected address/building/cadastral/land data, create a destination, publish or deploy without explicit approval.
 - After LT: 252 profiles, 171 pending, 75 blocked, 0 in progress, 6 evidence-verified M2; 134 manifests / 104 explicit definitions.
 - Next country: `LU` (Luxembourg). No second country was started.
+
+## Luxembourg (LU) M2 review - 2026-08-30
+
+- Target: Luxembourg (`LU`), Europe. The source-of-truth status command selected LU with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_luxembourg_postcode_area_visualization`. A complete rights-cleared POST denominator, real postcode Polygon/MultiPolygon, approved immutable artifact and real application path remain mandatory.
+- Official assignment audit: current POST CSV has 9,715 rows / 4,750 codes (275 leading-zero codes); current CACLR has 4,430 codes. The sets differ by 389 POST-only and 69 CACLR-only codes, so omissions and endpoint classes cannot be silently merged.
+- Geometry audit: current BD-Adresses has 179,491 features / 4,200 codes and every geometry is Point; 230 CACLR codes lack an address point and none of POST's 275 leading-zero codes has one. No official or rights-cleared derived postcode polygon was found; no point buffer, hull, Voronoi/raster cell, administrative, parcel or building proxy was generated.
+- Rights: POST files are publicly downloadable, but the legal notice applies copyright and no explicit AGID processing, public-serving or redistribution grant was found. CACLR/BD-Adresses are CC0 but do not supply postcode areas.
+- Application status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear and re-search behavior pass. No real LU polygon artifact exists, so real LU API/map rendering and browser E2E are not claimed.
+- Validation: shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, LU ledger evidence 5/5 and full TypeScript 1/1 pass (43 recorded assertions, 0 failures). The initial empty dependency-junction failure and PDF image-inspection Windows error 206 are disclosed.
+- Evidence: `docs/postal-context-luxembourg-m2.md`, `reports/postal-context-m2/lu-source-review-2026-08-30.json`, and `reports/postal-context-m2/lu-checks-2026-08-30.json`; ten exact official bodies/distributions are byte/SHA-256 bound. Raw POST/CACLR/address files and PDF images are not committed.
+- Retry: after pending countries and `2026-09-06T16:08:26.315Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After LU: 252 profiles, 170 pending, 76 blocked, 0 in progress, 6 evidence-verified M2; 135 manifests / 105 explicit definitions.
+- Next country: `LV` (Latvia). No second country was started.
