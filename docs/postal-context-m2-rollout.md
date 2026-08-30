@@ -1745,3 +1745,19 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T10:04:25.824Z; do not authenticate, request controlled KCR/address/cadastral data, accept terms/contracts, request keys, pay, create a destination, publish or deploy without explicit approval.
 - After HU: 252 profiles, 178 pending, 70 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
 - Next country: `IE` (Ireland). No second country was started.
+
+
+## Ireland (IE) M2 review - 2026-08-30
+
+- Target: Ireland (`IE`), Europe. The source-of-truth status command selected IE with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under the refined `M2_current_eircode_identity_and_routing_key_area_visualization` definition. A full seven-character Eircode is an address/property identity and must remain point/non-area; only its separately governed three-character Routing Key can have an area context.
+- Current rights: ECAF/ECAD assignment and coordinate products require annual licences and secure-portal access. No licence, contract, account, key or payment was accepted and no Finder, address or coordinate row was extracted.
+- Public-data audit: TERCET 2025 has 139 rows, 139 unique format-valid Routing Keys including D6W, 0 duplicates/invalid keys, 8 NUTS3 values and only `NUTS3`/`CODE`. Methodology V4 attributes all 139 IE rows to GeoNames and none to member-state postal/address data; there are 0 coordinates and 0 Polygon/MultiPolygon records.
+- CSO evidence: the 2026 SIMS report uses Routing Key Areas internally but keeps connection microdata inside CSO; Q1 2026 notes say substation-based splits may not precisely follow geographic boundaries. No CSO boundary or confidential row was acquired.
+- Geometry policy: no Finder point, GISCO/GeoNames point, NUTS/county/statistical proxy, buffer, Voronoi cell, building/parcel dissolve or generic synthetic planning cell was promoted. Full-code non-area and future official/derived/virtual Routing Key context remain explicit.
+- App status: shared Polygon/MultiPolygon filtering, fit, translucent fill, visible outline, point-only non-area and clear checks pass. No rights-cleared real IE artifact, API geometry response, map fit or translucent area exists, so browser E2E is not claimed.
+- Validation: IE evidence 5/5, rollout invariants 8/8, shared area UI 5/5, shared runtime 24/24, and repository-wide `tsc --noEmit` pass (43/43 recorded assertions). PDF text/digests reconcile, but local raster inspection failed with Windows error 206 and is not claimed.
+- Evidence: `docs/postal-context-ireland-m2.md`, `reports/postal-context-m2/ie-source-review-2026-08-30.json`, and `reports/postal-context-m2/ie-checks-2026-08-30.json`. Raw official captures and rows are not committed.
+- Retry: after pending countries and 2026-09-06T10:32:18.330Z; do not register, authenticate, accept terms/contracts, request data/keys, pay, crawl Finder, create a destination, publish or deploy without explicit approval.
+- After IE: 252 profiles, 177 pending, 71 blocked, 0 in progress, 4 evidence-verified M2; 132 manifests / 102 explicit definitions.
+- Next country: `IM` (Isle of Man). No second country was started.
