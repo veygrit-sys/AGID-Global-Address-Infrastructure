@@ -1986,3 +1986,16 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T21:20:33.981Z`; do not contact a provider, register, authenticate, accept terms, pay, query protected data, create a destination, publish or deploy without explicit approval.
 - After PL: 252 profiles, 161 pending, 85 blocked, 0 in progress, 6 evidence-verified M2; 138 manifests / 108 explicit definitions.
 - Next country: `PT` (Portugal). No second country was started.
+
+## Portugal (PT) M2 review - 2026-08-30
+
+- Target: Portugal (PT), Europe. The source-of-truth status command selected PT with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under M2_current_portugal_postcode_assignment_and_authoritative_area_visualization. Explicit compatible CTT rights, a current complete assignment/exception denominator, a fixed authoritative postcode Polygon/MultiPolygon, complete reconciliation, approved immutable artifact and real application path remain mandatory.
+- Operator audit: six exact CTT HTML bodies total 608,046 bytes and are byte/SHA-256 bound. They establish the seven-digit NNNN-NNN form, postal designation, address-driven POST search, reverse-code lookup and a separate P.O.-box mode, but not a fixed complete distribution or area artifact.
+- Rights and geometry audit: CTT describes database licensing, supply of address-database portions and geographic webservices. Address treatment associates each address with its door coordinates in WGS84 EPSG:4326, which is Point context rather than a postcode area. No compatible AGID processing, derivation, storage, redistribution or public-serving grant was established.
+- Authority policy: DGT says CTT assigns postcodes and DGT has no postcode-code creation/intervention role. CAOP, parish/municipality, cadastral, address/street and door-point geometry remain separate authorities. No union, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No real eligible PT artifact exists, so real PT API/map rendering and browser E2E are not claimed.
+- Evidence: docs/postal-context-portugal-m2.md, reports/postal-context-m2/pt-source-review-2026-08-30.json and reports/postal-context-m2/pt-checks-2026-08-30.json. Raw CTT bodies, address rows, P.O.-box rows and DGT bodies are not committed.
+- Retry: after pending countries and 2026-09-06T21:59:04.571Z; do not contact a provider, register, authenticate, accept terms, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
+- After PT: 252 profiles, 160 pending, 86 blocked, 0 in progress, 6 evidence-verified M2; 139 manifests / 109 explicit definitions.
+- Next country: RO (Romania). No second country was started.
