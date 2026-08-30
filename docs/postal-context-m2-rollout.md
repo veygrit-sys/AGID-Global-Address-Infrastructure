@@ -1706,3 +1706,17 @@ No second country was started.
 - Recheck: after the pending-country pass and `2026-09-06T08:50:00.000Z`, unless explicit rights or an unrestricted current release appears earlier. Authentication, contract/NDA, API key, feature-row access, publication, new destination or deployment requires explicit approval.
 - After GI: 252 profiles, 181 pending, 67 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
 - Next country: `GR` (Greece). No second country was started.
+
+
+## Greece (GR) M2 review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_elta_assignment_and_postcode_area_visualization`.
+- Official observation: ELTA exposes street/village lookup but no reviewed reusable bulk assignment file, postcode Polygon/MultiPolygon release or product-specific redistribution grant. Eleven official response bodies are pinned by retrieval time, byte length and SHA-256.
+- Crosswalk quality: TERCET 2025 contains 1,041 unique five-digit Greece codes, with zero duplicates, invalid values or blanks and 52 NUTS3 values. Methodology V4 records zero member-state postal/address rows, 1,041 rows carried from GISCO Postal Code 2020 and GeoNames as the primary source. The CSV has only NUTS3 and CODE - no geometry.
+- Geometry and rights: GISCO explicitly provides points with omission/location caveats, not ELTA perimeters. ELSTAT cartography is census/statistical and its request declaration limits purpose and third-party redistribution. No ELSTAT, address, building, cadastral or land row was queried or committed; no point, NUTS/admin proxy, buffer, Voronoi cell, parcel/building dissolve or synthetic fixture became a postal area.
+- App status: shared Polygon/MultiPolygon filtering, fit, translucent fill, visible outline, states, metadata, clear and re-search tests pass. No authorized real GR artifact, API geometry response or semi-transparent app area exists, so M2 remains unmet and browser E2E is not claimed.
+- Validation: GR metadata/source/audit/blocking suite 10/10, existing GR runtime/route/source regression 139/139, shared Postal Context runtime 161/161, shared area UI 23/23, ledger/rollout suite 12/12, and repository-wide `tsc --noEmit` pass. Raw official captures and crosswalk rows are not committed.
+- Evidence: [source report](../reports/postal-context-m2/gr-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/gr-checks-2026-08-30.json), and [technical review](postal-context-greece-m2.md).
+- Recheck: after the pending-country pass and `2026-09-06T09:16:27.503Z`, unless an unrestricted current ELTA denominator and postcode polygon release appears earlier. Authentication, request submission, terms/contract acceptance, payment, publication, new destination, land-record access or deployment requires explicit approval.
+- After GR: 252 profiles, 180 pending, 68 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
+- Next country: `HR` (Croatia). No second country was started.
