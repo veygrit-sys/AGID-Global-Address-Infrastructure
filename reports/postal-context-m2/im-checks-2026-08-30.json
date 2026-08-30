@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "IM",
+  "observedAt": "2026-08-30T11:20:49.034Z",
+  "completedAt": "2026-08-30T12:03:07.9746885Z",
+  "baseCommit": "884124893460b6aba67da8ba0a886929aff92293",
+  "scope": "Country definition and conservative M2 blocker evidence; no real IM data pack, API route or browser geometry was promoted.",
+  "checks": [
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "isle-of-man-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-im-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "unit/outward grain, complete ONSPD denominator, PQI 9 sentinel non-promotion, public GIS point-layer separation, source/report digests and next-country order"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draw, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "root TypeScript graph passes with exact-version new dependencies, a read-only existing dependency overlay and temporary local @agid workspace junctions"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 5,
+    "testsPassed": 44,
+    "testsFailed": 0
+  },
+  "runtime": {
+    "node": "bundled Codex primary runtime v24.19.0",
+    "dependencies": "A full npm ci was attempted in a run-specific untracked directory but exceeded the host's remaining disk capacity before extraction completed. Validation then used a clean exact-version 267-package install for missing/current type dependencies, read-only junctions to an existing dependency tree for unchanged packages, and temporary junctions to the isolated repository workspaces.",
+    "productionDependenciesChanged": false
+  },
+  "knownLimitations": [
+    "The npm wrapper could not expose node to package scripts in this shell, so status/refresh used the same rollout script through the pinned Node executable after the requested npm commands were attempted.",
+    "A full npm ci exhausted the host's approximately 2.77 GB free disk before package extraction completed. The failed run-specific tree was safely deleted, and a minimal exact-version overlay plus read-only existing dependencies passed the unchanged TypeScript graph; no repository dependency or lockfile was changed.",
+    "No real rights-cleared IM unit-postcode or outward-code Polygon/MultiPolygon exists, so real IM API, map fit, translucent rendering and browser E2E remain unverified.",
+    "PDF pages were rendered, but local image inspection failed with Windows os error 206; no successful visual-review claim is made."
+  ],
+  "countryM2Achieved": false
+}

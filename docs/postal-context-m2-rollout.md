@@ -1761,3 +1761,18 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T10:32:18.330Z; do not register, authenticate, accept terms/contracts, request data/keys, pay, crawl Finder, create a destination, publish or deploy without explicit approval.
 - After IE: 252 profiles, 177 pending, 71 blocked, 0 in progress, 4 evidence-verified M2; 132 manifests / 102 explicit definitions.
 - Next country: `IM` (Isle of Man). No second country was started.
+
+## Isle of Man (IM) M2 review - 2026-08-30
+
+- Target: Isle of Man (`IM`), Europe. The source-of-truth status command selected IM with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under the new `M2_current_unit_postcode_and_truthful_postal_area_visualization` definition. Exact unit-postcode geometry and separately labelled outward-code postal context remain distinct, and no point, sentinel or administrative proxy may become an area.
+- Current ONSPD audit: the May 2026 public query returned 4,591 live rows, 4,591 distinct valid IM unit postcodes, 0 duplicates and 0 invalid codes across 10 outward codes. Every row has `GRIDIND=9`, null easting/northing, online sentinel `LAT=100`/`LONG=0`, and no ArcGIS geometry. The official user guide states that no geographic coordinates are provided for Isle of Man postcodes.
+- Rights and access: non-BT ONSPD reuse is available under OGL v3 with required ONS/OS/Royal Mail attribution. The Post Office Finder is personal-use-only, and RFQ47 describes postcode lookup as an internal capped RESTful API. No Finder address, credential, contact, contract, payment, key or internal API was used.
+- Government GIS audit: all six advertised folders yielded 25 services, 122 layers and 4 tables with zero metadata errors. No name contained `postcode` or `postal`; the only broad `post` matches were point layers for post boxes and post offices. No facility feature was queried and no point was promoted.
+- Geometry policy: 0 exact unit-postcode surfaces, 0 outward-code postal surfaces and 0 production-eligible records. Sentinels, facility points, constituencies/administration, addresses, routes, PO boxes, organisations, buffers, Voronoi cells, parcels/buildings and synthetic fixtures remain unavailable or separate authority.
+- App status: shared Polygon/MultiPolygon filtering, point-only non-area handling, fit, translucent fill, visible outline and clear checks pass. No rights-cleared real IM artifact, API geometry response, map fit or translucent area exists, so browser E2E is not claimed.
+- Validation: IM evidence 6/6, rollout invariants 8/8, shared area UI 5/5, shared runtime 24/24 and repository-wide `tsc --noEmit` pass (44/44 recorded assertions). PDF text/digests reconcile, but local raster inspection failed with Windows error 206 and is not claimed.
+- Evidence: `docs/postal-context-isle-of-man-m2.md`, `reports/postal-context-m2/im-source-review-2026-08-30.json`, and `reports/postal-context-m2/im-checks-2026-08-30.json`. Raw official captures and postcode/address rows are not committed.
+- Retry: after pending countries and `2026-09-06T11:20:49.034Z`; do not contact procurement, register, authenticate, accept terms/contracts, request an API overview/key/data, pay, crawl Finder, create a destination, publish or deploy without explicit approval.
+- After IM: 252 profiles, 176 pending, 72 blocked, 0 in progress, 4 evidence-verified M2; 133 manifests / 103 explicit definitions.
+- Next country: `IS` (Iceland). No second country was started.
