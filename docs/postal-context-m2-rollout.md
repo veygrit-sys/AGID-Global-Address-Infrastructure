@@ -1651,3 +1651,17 @@ No second country was started.
 - Evidence: [source report](../reports/postal-context-m2/fo-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/fo-checks-2026-08-30.json), [technical review](postal-context-faroe-islands-m2.md), and [source/reuse notice](../data/postal_country_packs/fo/postal-context/M2-SOURCE-NOTICE.md).
 - After FO: 252 profiles, 185 pending, 64 blocked, 0 in progress, 3 evidence-verified M2; 129 manifests / 99 explicit definitions.
 - Next country: `FR` (France). No second country was started.
+
+## France (FR) M2 verified - 2026-08-30
+
+- Result: evidence-verified under the repository-specific `M2_experimental` definition for a scoped `75001`-`75020` release.
+- Assignment: the pinned La Poste official CSV has 39,192 rows, 6,328 distinct postal codes and 35,007 distinct commune codes. Each target code maps exactly once to INSEE `75101`-`75120`; CSV SHA-256 is `f921ac020ca3b9efebd8f0d01782555fb70d63d1ae36535109c67e4a74bd6e22`.
+- Geometry: 20 exact Data Fair responses expose the matching administrative MultiPolygons; aggregate response SHA-256 is `76d9f52e38386339a15d3becc6f4ed6eb3605af3cb82669cea772feb8fd586ec`. The pack publishes 20 source-identical, boolean-valid MultiPolygons with 1,157 positions and labels every surface `derived`. This is not a La Poste boundary or national coverage.
+- Rights: La Poste and Etalab inputs use Open Licence 2.0. Exact source, metadata, licence and response-set bytes, updates, retrieval time, hashes, attribution and transformations are pinned. Raw source downloads are not committed.
+- Authority separation: official postal assignment, official administrative geometry and the derived postcode display join stay distinct. No postcode outside the scope, CEDEX/PO box/route/organization, address, building, recipient, customer, deliverability, AGID proxy or land-right object receives an invented area.
+- Application: `７５ ００１` normalizes to `75001`; the real API returns a MultiPolygon, the app computes fit bounds and uses fill opacity `0.22` plus outline opacity `0.95`/width `3`. Loading, no-match, multiple, API failure, invalid geometry, provenance metadata, clear and re-search are covered. `69001` is no-match and `750-01` is invalid.
+- Validation: FR real-data suite 7/7, FR legacy/shared regression 74/74, repository-wide `tsc --noEmit`, and a byte-identical second build all pass. Deterministic HTTP API plus application GeoJSON/map-source/style/fit assertions provide the rendering evidence.
+- Artifacts: [graph](https://github.com/veygrit-sys/Address-Grid-ID/blob/9698166109b7dffdbf3ee321ad28a669f3636512/data/postal_country_packs/fr/postal-context/m2/graph.json), [geometry](https://github.com/veygrit-sys/Address-Grid-ID/blob/9698166109b7dffdbf3ee321ad28a669f3636512/data/postal_country_packs/fr/postal-context/m2/geometry.json), [descriptor](https://github.com/veygrit-sys/Address-Grid-ID/blob/9698166109b7dffdbf3ee321ad28a669f3636512/data/postal_country_packs/fr/postal-context/m2/descriptor.json).
+- Evidence: [source report](../reports/postal-context-m2/fr-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/fr-checks-2026-08-30.json), [technical review](postal-context-france-m2.md), and [source/reuse notice](../data/postal_country_packs/fr/postal-context/M2-SOURCE-NOTICE.md).
+- After FR: 252 profiles, 184 pending, 64 blocked, 0 in progress, 4 evidence-verified M2; 129 manifests / 99 explicit definitions.
+- Next country: `GB` (United Kingdom). No second country was started.
