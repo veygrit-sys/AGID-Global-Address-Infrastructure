@@ -1,6 +1,6 @@
 # United Kingdom Postal Context runtime
 
-Status: `M2 runtime-ready / M1 United Kingdom data`
+Status: `M2 runtime-ready / M1 United Kingdom data / real area M2 blocked`
 
 AGID can load Japan, Singapore, the Netherlands, and the United Kingdom
 independently. The GB country policy adds outward/inward normalization,
@@ -133,7 +133,11 @@ derived surface keeps its source and quality metadata and is never presented as
 a Royal Mail boundary. Coordinate resolution reaches a premise or building only
 through coherent address-point and relationship evidence.
 
-## 5. Remaining production work
+## 5. Current M2 source audit
+
+The 2026-08-30 primary-source review confirms that ONSPD, Code-Point Open, and OS NI Postcodes are point/crosswalk products, not unit-postcode boundaries. OS Code-Point with Polygons supplies notional Great Britain extents but requires agreement-controlled access and has no Northern Ireland polygon coverage. No contract was accepted, no controlled bytes were acquired, and no point or synthetic fixture was turned into an area. See [the GB M2 review](postal-context-united-kingdom-m2.md) and the [machine-readable source report](../reports/postal-context-m2/gb-source-review-2026-08-30.json).
+
+## 6. Remaining production work
 
 The truthful capability is “United Kingdom runtime and country contract ready;
 nationwide production pack not complete.” The external `agid-postal-gb`

@@ -1665,3 +1665,17 @@ No second country was started.
 - Evidence: [source report](../reports/postal-context-m2/fr-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/fr-checks-2026-08-30.json), [technical review](postal-context-france-m2.md), and [source/reuse notice](../data/postal_country_packs/fr/postal-context/M2-SOURCE-NOTICE.md).
 - After FR: 252 profiles, 184 pending, 64 blocked, 0 in progress, 4 evidence-verified M2; 129 manifests / 99 explicit definitions.
 - Next country: `GB` (United Kingdom). No second country was started.
+
+
+## United Kingdom (GB) M2 review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_uk_unit_postcode_area_visualization`.
+- Official observation: ONSPD and OS Code-Point Open/OS NI products provide postcode points or crosswalks, not unit-postcode boundaries. The reviewed Code-Point Open release is August 2026. Seven official page bodies are pinned by retrieval time, byte length and SHA-256; one stale legacy PDF URL returned HTTP 404.
+- Polygon source: OS Code-Point with Polygons supplies about 1.7 million quarterly notional Great Britain extents derived from PAF delivery-address points, but access/use are agreement-controlled and the product has no Northern Ireland polygon coverage. No agreement or Data Exploration Licence was accepted, and zero production-eligible records were acquired.
+- Geometry policy: notional OS polygons are derived, not official Royal Mail boundaries. Points, buffers, reconstructed Voronoi/Thiessen cells, administrative proxies, buildings, AGID cells, and synthetic `ZZ0` fixtures are not promoted. P.O. Box, BFPO, route, organization, large-user, BT, and other unavailable/non-area cases retain truthful non-area results.
+- App status: shared normalization, Polygon/MultiPolygon filtering, bounds fit, translucent fill, visible outline, loading/no-match/multiple/API-failure/invalid-geometry/provenance/clear/re-search tests pass. No authorized real GB artifact, API geometry response, or semi-transparent app area exists, so M2 remains unmet.
+- Validation: GB/relevant UI suite 35/35, shared Postal Context suite 161/161, ledger/rollout suite 12/12, and repository-wide `tsc --noEmit` all pass. Raw official captures and controlled data are not committed.
+- Evidence: [source report](../reports/postal-context-m2/gb-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/gb-checks-2026-08-30.json), and [technical review](postal-context-united-kingdom-m2.md).
+- Recheck: after the pending-country pass and `2026-09-06T07:40:08.000Z`, unless an unrestricted current polygon release or explicit licence authority appears earlier. Authentication, agreement, payment, publication, new destination, or deployment requires explicit approval.
+- After GB: 252 profiles, 183 pending, 65 blocked, 0 in progress, 4 evidence-verified M2; 129 manifests / 99 explicit definitions.
+- Next country: `GG` (Guernsey). No second country was started.

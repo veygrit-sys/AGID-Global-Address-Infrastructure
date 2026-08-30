@@ -1,5 +1,5 @@
 {
-  "schema_version": "agid-postal-gb-source-profile-v0.1",
+  "schema_version": "agid-postal-gb-source-profile-v0.2",
   "country_code": "GB",
   "artifact_scope": "metadata-only-contract-seed",
   "redistribution_classes": [
@@ -168,6 +168,115 @@
         "occupant-or-owner",
         "unlicensed-public-redistribution"
       ]
+    },
+    {
+      "source_id": "ordnance-survey-code-point-open",
+      "provider": "Ordnance Survey",
+      "source_url": "https://www.ordnancesurvey.co.uk/products/code-point-open",
+      "role": [
+        "current-unit-postcode-reference",
+        "representative-point"
+      ],
+      "production_scope": "Pinned Great Britain Code-Point Open release under OGL with OS attribution.",
+      "assignment_authority": "official_postal_operator_derived_reference",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "Code-Point Open supplies a representative point for each current Great Britain unit postcode. The product comparison explicitly says that it has no polygons.",
+      "expected_update_cadence": "quarterly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-digest-and-product-notice",
+        "emit-os-and-royal-mail-attribution",
+        "retain-point-geometry-type"
+      ],
+      "prohibited_claims": [
+        "unit-postcode-polygon",
+        "official-royal-mail-boundary",
+        "exact-delivery-point",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "ordnance-survey-code-point-with-polygons",
+      "provider": "Ordnance Survey",
+      "source_url": "https://www.ordnancesurvey.co.uk/products/code-point-polygons",
+      "role": [
+        "notional-unit-postcode-extent",
+        "great-britain-postcode-display-surface"
+      ],
+      "production_scope": "Only a current release and fields whose acquisition, transformation, serving, and redistribution are authorized by the applicable agreement.",
+      "assignment_authority": "official_postal_operator_derived_reference",
+      "geometry_authority": "derived_geometry",
+      "redistribution_class": "R3_licensed_product",
+      "terms_note": "Notional Great Britain extents are derived from georeferenced PAF delivery addresses using Thiessen construction. They are not official Royal Mail boundaries; access and use are agreement controlled.",
+      "expected_update_cadence": "quarterly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-contract-and-publication-serving-rights",
+        "pin-release-terms-schema-crs-and-digest",
+        "exclude-northern-ireland",
+        "retain-non-area-discard-reasons"
+      ],
+      "prohibited_claims": [
+        "official-royal-mail-boundary",
+        "northern-ireland-coverage",
+        "po-box-area",
+        "unlicensed-public-redistribution"
+      ]
+    },
+    {
+      "source_id": "ordnance-survey-ni-postcodes",
+      "provider": "Ordnance Survey",
+      "source_url": "https://www.ordnancesurvey.co.uk/products/os-ni-postcodes",
+      "role": [
+        "northern-ireland-postcode-reference",
+        "representative-point"
+      ],
+      "production_scope": "Only uses permitted by the applicable OS/LPS product and exploration licence.",
+      "assignment_authority": "official_postal_operator_derived_reference",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R3_licensed_product",
+      "terms_note": "OS NI Postcodes supplies a representative point, not a unit-postcode polygon, and product/sample access is licence controlled.",
+      "expected_update_cadence": "provider-product-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "review-exact-os-lps-publication-rights",
+        "pin-release-digest-and-schema",
+        "retain-point-geometry-type"
+      ],
+      "prohibited_claims": [
+        "unit-postcode-polygon",
+        "great-britain-rights-inherited",
+        "official-royal-mail-boundary",
+        "unlicensed-public-redistribution"
+      ]
+    },
+    {
+      "source_id": "lps-central-postcode-directory",
+      "provider": "Land and Property Services Northern Ireland",
+      "source_url": "https://www.finance-ni.gov.uk/publications/digital-application-forms-use-lps-intellectual-property",
+      "role": [
+        "northern-ireland-postcode-directory",
+        "rights-gated-reference"
+      ],
+      "production_scope": "Only supply, use, transformation, and publication permitted by an explicitly reviewed LPS licence.",
+      "assignment_authority": "official_postal_operator_derived_reference",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_licensed_product",
+      "terms_note": "LPS publishes application forms for supply and licensing. A directory or representative point does not establish a unit-postcode polygon.",
+      "expected_update_cadence": "provider-product-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-explicit-lps-licence-authority",
+        "pin-release-and-digest",
+        "keep-bt-rights-partition"
+      ],
+      "prohibited_claims": [
+        "unit-postcode-polygon",
+        "great-britain-rights-inherited",
+        "automatic-commercial-or-public-reuse",
+        "official-royal-mail-boundary"
+      ]
     }
   ],
   "artifact_partitions": [
@@ -194,6 +303,14 @@
     {
       "id": "synthetic-conformance",
       "rule": "Non-geographic fixtures only; never promotion evidence."
+    },
+    {
+      "id": "os-unit-postcode-polygons-licensed-gb",
+      "rule": "Code-Point with Polygons remains agreement-gated, Great Britain-only, notional derived geometry and is never represented as a Royal Mail boundary."
+    },
+    {
+      "id": "bt-unit-postcode-polygon-unavailable",
+      "rule": "BT retains Northern Ireland identity and a non-area result until a separately rights-cleared Polygon/MultiPolygon source is pinned."
     }
   ]
 }

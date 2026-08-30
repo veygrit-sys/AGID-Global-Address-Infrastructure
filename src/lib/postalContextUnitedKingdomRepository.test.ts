@@ -40,6 +40,7 @@ type RepositoryManifest = {
   };
   promotion: {
     current_stage: string;
+    stages: Array<{ id: string; definition: string }>;
     hard_blockers: string[];
   };
 };
@@ -159,4 +160,28 @@ test('United Kingdom fixtures are non-geographic and never promotion evidence', 
   assert.ok(prohibited.has('bt-commercial-reuse-authorized'));
   assert.ok(prohibited.has('occupant-or-recipient'));
   assert.ok(prohibited.has('deliverability'));
+});
+
+
+test('United Kingdom M2 source audit keeps points, licensed GB polygons, and BT scope separate', () => {
+  const profile = readJson<SourceProfile>('source-profile.json');
+  const manifest = readJson<RepositoryManifest>('repository-manifest.json');
+  const sources = new Map(profile.sources.map(source => [source.source_id, source]));
+  const openPoints = sources.get('ordnance-survey-code-point-open');
+  const licensedPolygons = sources.get('ordnance-survey-code-point-with-polygons');
+  const niPoints = sources.get('ordnance-survey-ni-postcodes');
+
+  assert.equal(openPoints?.redistribution_class, 'R1_open_attribution');
+  assert.equal(openPoints?.geometry_authority, 'official_mapping_geometry');
+  assert.ok(openPoints?.prohibited_claims.includes('unit-postcode-polygon'));
+  assert.equal(licensedPolygons?.redistribution_class, 'R3_licensed_product');
+  assert.equal(licensedPolygons?.geometry_authority, 'derived_geometry');
+  assert.ok(licensedPolygons?.prohibited_claims.includes('northern-ireland-coverage'));
+  assert.equal(niPoints?.redistribution_class, 'R3_licensed_product');
+  assert.ok(niPoints?.prohibited_claims.includes('unit-postcode-polygon'));
+  assert.ok(profile.artifact_partitions.some(partition => partition.id === 'os-unit-postcode-polygons-licensed-gb'));
+  assert.ok(profile.artifact_partitions.some(partition => partition.id === 'bt-unit-postcode-polygon-unavailable'));
+  assert.ok(manifest.promotion.hard_blockers.includes('open-postcode-point-presented-as-polygon'));
+  assert.ok(manifest.promotion.hard_blockers.includes('licensed-code-point-polygons-published-without-rights'));
+  assert.ok(manifest.promotion.hard_blockers.includes('northern-ireland-polygon-coverage-assumed'));
 });
