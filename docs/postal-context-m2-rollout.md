@@ -1599,3 +1599,14 @@ No second country was started.
 - Evidence: [source report](../reports/postal-context-m2/dk-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/dk-checks-2026-08-30.json), and [technical review](postal-context-denmark-m2.md).
 - Recheck: after the pending-country pass and 2026-09-30 unless a corrected immutable release appears earlier. Publication or deployment requires explicit approval.
 - Next country: `EE` (Estonia).
+
+## Estonia (EE) review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_aks_sihtnumbri_alad_visualization`.
+- Official observation: 5,436 distinct current AKS postcode areas, comprising 4,320 Polygons and 1,116 MultiPolygons; exact page SHA-256 values `b4a2df24…b77a2847` and `54a67aac…571b81`. Postcode `10621` independently returned a real MultiPolygon.
+- Quality blockers: WFS paging is explicitly non-transaction-safe; no release edition or validity is embedded; 91 features are Turf-invalid. No repair or proxy surface was created.
+- Rights: agency WFS terms permit reuse and redistribution with attribution, but capabilities flag additional external-geometry terms and Omniva's separate database terms require prior consent for publication. The complete artifact publication right remains unresolved; no agreement or operator database download was accepted.
+- App status: shared fit/translucent-fill/outline/loading/no-result/multiple/failure/invalid-geometry/clear/re-search tests pass, but EE runtime/API tests use synthetic `00000`; real EE API and app-area visualization remain false.
+- Evidence: [source report](../reports/postal-context-m2/ee-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/ee-checks-2026-08-30.json), and [technical review](postal-context-estonia-m2.md).
+- Recheck: after the pending-country pass and 2026-09-30 unless a corrected immutable release or clear publication grant appears earlier. Agreement, publication or deployment requires explicit approval.
+- Next country: `ES` (Spain).
