@@ -1679,3 +1679,17 @@ No second country was started.
 - Recheck: after the pending-country pass and `2026-09-06T07:40:08.000Z`, unless an unrestricted current polygon release or explicit licence authority appears earlier. Authentication, agreement, payment, publication, new destination, or deployment requires explicit approval.
 - After GB: 252 profiles, 183 pending, 65 blocked, 0 in progress, 4 evidence-verified M2; 129 manifests / 99 explicit definitions.
 - Next country: `GG` (Guernsey). No second country was started.
+
+## Guernsey (GG) M2 review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_guernsey_postcode_area_visualization`.
+- Official observation: Guernsey Post provides an official interactive Bailiwick address/postcode finder, but no public bulk assignment file, postcode Polygon/MultiPolygon release, or open redistribution grant. Postcodes usually span multiple addresses; organizations and PO Boxes can have unique non-area codes.
+- Open data: ONSPD May 2026 has 3,384 GY rows (3,298 live; 86 terminated; 10 districts; 16 sectors), but the User Guide states Channel Islands coordinates are unavailable. All sampled records have PQI 9, null grid references and unusable coordinate placeholders, so zero points or areas are promoted.
+- Controlled products: Digimap advertises paid government-licensed postcode centroids, a credentialed/licensed address-point CAF, and agreement/API-key base-map tiles. Public States of Guernsey land-parcel polygons have postcode attributes but are cadastral, not postcode geometry; no feature rows were queried or committed and no parcel dissolve was made.
+- Geometry policy: points/centroids, ONSPD placeholders, parcel dissolves, administrative proxies, tiles, AGID cells and synthetic fixtures are not promoted. PO Box, organization and other non-area cases retain truthful unavailable/non-area outcomes.
+- App status: shared normalization, Polygon/MultiPolygon filtering, bounds fit, translucent fill, visible outline, loading/no-match/multiple/API-failure/invalid-geometry/provenance/clear/re-search tests pass. No authorized real GG artifact, API geometry response, or semi-transparent area exists, so M2 remains unmet.
+- Validation: GG metadata/source/count/blocking suite 4/4, shared Postal Context suite 161/161, shared area UI suite 23/23, ledger/rollout suite 12/12, and repository-wide `tsc --noEmit` pass. Raw official captures, addresses and land/cadastre rows are not committed.
+- Evidence: [source report](../reports/postal-context-m2/gg-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/gg-checks-2026-08-30.json), and [technical review](postal-context-guernsey-m2.md).
+- Recheck: after the pending-country pass and `2026-09-06T08:18:41.047Z`, unless an unrestricted current release or explicit authority appears earlier. Authentication, agreement, API key, payment, publication, new destination, land-record access, or deployment requires explicit approval.
+- After GG: 252 profiles, 182 pending, 66 blocked, 0 in progress, 4 evidence-verified M2; 130 manifests / 100 explicit definitions.
+- Next country: `GI` (Gibraltar). No second country was started.

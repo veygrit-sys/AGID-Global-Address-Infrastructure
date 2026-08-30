@@ -1,0 +1,190 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-gg",
+    "country_code": "GG",
+    "country_name": "Guernsey",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/gg/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "contains_land_or_cadastre_records": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "unit_postcode",
+    "full_code_format": "GY9 9AA or GY10 9AA",
+    "full_code_regex": "^GY(?:[1-9]|10) [0-9][A-Z]{2}$",
+    "full_code_default_geometry": "delivery_address_group_or_non_area_no_polygon_presumption",
+    "assignment_rule": "Guernsey Post is the postal assignment authority. Its public finder is an interactive address lookup for the Bailiwick, not a bulk or redistribution grant and not a polygon source.",
+    "ons_rule": "ONSPD May 2026 lists GY current and terminated unit postcodes under OGL evidence, but the User Guide gives every Channel Islands record PQI 9 and supplies no easting, northing, latitude, longitude, or postcode boundary.",
+    "digimap_centroid_rule": "Digimap advertises a government-licensed annual-fee Channel Islands centroid product. A centroid is Point evidence only and cannot be promoted to an area.",
+    "digimap_caf_rule": "The Corporate Address File is a licensed authenticated address-point product. An address result does not create a postcode Polygon and cannot be acquired, served, or redistributed without reviewed authority.",
+    "parcel_rule": "Digimap land-parcel services contain Polygon features with postcode attributes, but their grain is cadastre or land parcel, not postal extent. Parcels must never be dissolved, filled across gaps, or relabelled as official postcode areas without an explicit rights-cleared postal derivation contract and complete denominator.",
+    "public_mapping_rule": "The public mapping API is agreement/API-key gated and returns tiled base-map endpoints. Image tiles are background context, not postcode vector geometry.",
+    "non_area_rule": "Unique large-user, organization, PO Box, route, terminated, and otherwise non-geographic or unavailable records remain non-areal with an explicit reason.",
+    "identity_rule": "Keep GG separate from GB, JE, and IM. Preserve Guernsey, Sark, Herm, Alderney, and other source partitions without changing the registered country/territory identity or merging geometry."
+  },
+  "address_graph": {
+    "node_types": [
+      "unit_postcode",
+      "postcode_sector",
+      "postcode_district",
+      "country_or_territory",
+      "island",
+      "parish",
+      "postal_address",
+      "delivery_point",
+      "large_user",
+      "po_box",
+      "uprn",
+      "land_parcel",
+      "building",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "part_of",
+      "addresses",
+      "derived_from",
+      "covered_by_agid"
+    ],
+    "cardinality_rules": [
+      "unit-postcode-to-address-is-zero-one-or-many",
+      "postcode-to-parcel-is-not-a-postal-boundary-relation",
+      "postcode-centroid-to-area-is-not-authoritative",
+      "address-to-building-requires-an-explicit-rights-cleared-relation",
+      "agid-crosswalk-does-not-create-postal-authority"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "small_user_group",
+      "rule": "A postcode usually covers more than one address, but no area is inferred from that fact alone."
+    },
+    {
+      "id": "large_user_or_organisation",
+      "rule": "A unique organization postcode remains non-areal unless an independent postal surface exists."
+    },
+    {
+      "id": "po_box",
+      "rule": "A PO Box has a unique postcode distinct from the holder's address; never assign it the address, sorting office, parcel, buffer, or invented area."
+    },
+    {
+      "id": "terminated_or_reused",
+      "rule": "Preserve status and valid time. Never expose a terminated record as current or overwrite historical identity."
+    },
+    {
+      "id": "channel_islands_no_coordinate",
+      "rule": "PQI 9, null grid references, and latitude/longitude placeholders are no-geometry evidence, not a Point at 99.999999/0."
+    },
+    {
+      "id": "cadastre_or_land_parcel",
+      "rule": "Land or property polygons with a postcode attribute are separate address context and must not become postal boundaries."
+    },
+    {
+      "id": "island_scope",
+      "rule": "Coverage and exceptions must be explicit for Guernsey, Sark, Herm, Alderney, and every GY assignment in the declared release scope."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source and artifact has provider, role, edition, validity, retrieval time, byte count, SHA-256, terms, attribution, and permitted-use record."
+    },
+    {
+      "id": "assignment-denominator",
+      "scope": "unit-postcode",
+      "pass": "The current full-code denominator and current/terminated, small/large-user, PO Box, organization, and island scope are reproducibly classified."
+    },
+    {
+      "id": "unit-postcode-normalization",
+      "scope": "unit-postcode",
+      "metric": "normalized_uppercase_outward_single-space_inward_ratio",
+      "minimum": 1
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Postal assignment, ONS directory evidence, Digimap centroid/address service, base-map tile, parcel/building geometry, derived postal surface, and AGID index remain separate."
+    },
+    {
+      "id": "postcode-area-topology",
+      "scope": "postcode-area",
+      "pass": "Every promoted geometry is Polygon or MultiPolygon, valid, closed, non-empty, bounded, source-linked, and classified official or derived with no address/parcel proxy substitution."
+    },
+    {
+      "id": "api-and-map-path",
+      "scope": "candidate-release",
+      "pass": "Real GG data passes normalization, ambiguity, no-result, API failure, invalid geometry, fit, translucent fill, visible outline, provenance, clear, and re-search checks."
+    },
+    {
+      "id": "privacy-and-land-rights",
+      "scope": "public-artifacts",
+      "pass": "No person, customer, recipient, delivery instruction, real address, UPRN, cadastre, owner, parcel, building, credential, or raw restricted record is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production assignment, geometry, rights, artifact, or app gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, country scope, rights, and missing geometry are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "The country-specific contract and blocked-source evidence are reviewable without raw address, parcel, or restricted data."
+      },
+      {
+        "id": "M2_current_guernsey_postcode_area_visualization",
+        "definition": "A current rights-cleared Bailiwick-wide Guernsey Post assignment denominator and full-code postcode-specific Polygon/MultiPolygon release is pinned by edition, validity, terms, SHA-256, island coverage and exception handling, published as an approved immutable artifact, and passes the real GG loader, API and app search-to-translucent-area path. ONSPD rows or coordinate placeholders, Digimap paid centroids or authenticated address results, cadastral parcels, base-map tiles, synthetic fixtures and invented non-area surfaces never satisfy M2."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Coverage, topology, ambiguity, privacy, freshness, correction, and independent validation gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two refreshes pass and monitored rollback operates."
+      }
+    ],
+    "hard_blockers": [
+      "interactive-finder-presented-as-bulk-redistribution-right",
+      "onspd-channel-islands-placeholder-presented-as-coordinate",
+      "point-or-centroid-presented-as-postcode-polygon",
+      "paid-or-authenticated-data-acquired-without-approval",
+      "base-map-tile-presented-as-postcode-vector-geometry",
+      "cadastre-land-parcel-or-building-presented-as-postal-boundary",
+      "po-box-large-user-organisation-or-route-given-an-invented-area",
+      "terminated-postcode-presented-as-current",
+      "gg-jersey-isle-of-man-or-great-britain-identity-merged",
+      "missing-assignment-or-geometry-authority",
+      "missing-immutable-artifact",
+      "synthetic-evidence-promoted-to-production"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_or_occupant_identity",
+    "official-postal-boundary",
+    "postcode-has-one-address-or-building",
+    "centroid-is-delivery-point",
+    "parcel-is-postcode-area",
+    "legal-boundary-or-survey-certification"
+  ]
+}
