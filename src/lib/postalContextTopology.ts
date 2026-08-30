@@ -141,13 +141,17 @@ function ringsIntersect(
   right: PostalContextLinearRing,
   budget: { remaining: number },
 ) {
-  for (const first of ringSegments(left)) {
-    for (const second of ringSegments(right)) {
-      if (--budget.remaining < 0) return 'budget' as const;
-      if (first.maximumLongitude < second.minimumLongitude
-        || second.maximumLongitude < first.minimumLongitude
-        || first.maximumLatitude < second.minimumLatitude
+  const firstSegments = ringSegments(left).sort((a, b) =>
+    a.minimumLongitude - b.minimumLongitude || a.index - b.index);
+  const secondSegments = ringSegments(right).sort((a, b) =>
+    a.minimumLongitude - b.minimumLongitude || a.index - b.index);
+  for (const first of firstSegments) {
+    for (const second of secondSegments) {
+      if (second.minimumLongitude > first.maximumLongitude) break;
+      if (second.maximumLongitude < first.minimumLongitude) continue;
+      if (first.maximumLatitude < second.minimumLatitude
         || second.maximumLatitude < first.minimumLatitude) continue;
+      if (--budget.remaining < 0) return 'budget' as const;
       if (segmentsIntersect(first.a, first.b, second.a, second.b)) return true;
     }
   }

@@ -1,86 +1,54 @@
-# Iceland Postal Context repository seed
+# Iceland Postal Context M2
 
-This directory is the metadata-only seed for the planned `agid-postal-is`
-country repository. It defines Iceland-specific source roles, public-sector
-reuse boundaries, three-digit postcode semantics, exceptions, quality gates,
-and non-geographic synthetic fixtures. It contains no Pósturinn customer or
-shipment data, Byggðastofnun rows, IS 50V rows, HMS rows, Statistics Iceland
-rows, real addresses, or production geometry.
+This directory publishes Iceland's experimental current postcode-area runtime.
+It contains 174 searchable three-digit postcode areas built from the 175-feature
+Byggðastofnun `postnumer` WFS snapshot retrieved at
+`2026-08-30T12:20:57.000Z`. The raw WFS response is not committed.
 
-## Authority model
+## Authority and geometry
 
-```text
-Pósturinn
-  -> official postcode routing and rural-service classification
+Byggðastofnun is the statutory postcode-register and geographic-coverage
+authority. The release pins the authority page, metadata record, WFS
+capabilities, schema, explicit EPSG:4326 query, byte digest, edition and source
+dates. The exact reuse attribution is in `M2-SOURCE-NOTICE.md`.
 
-Byggðastofnun postcode register and geographic coverage
-  -> statutory assignment and official Polygon / MultiPolygon geometry
+The source contains 175 features and 174 distinct codes; code `310` has two
+source features which are deterministically unioned. Sixty-one source features
+were invalid under JSTS and three edge cases required bounded epsilon/simplify
+repair. The resulting 62 repaired codes are labelled `derived_geometry` with
+confidence `0.99999`; the remaining 112 are `official`/authoritative with
+confidence `1`. Maximum relative area change is below `0.00001`.
 
-HMS Staðfangaskrá
-  -> official public address point, house number, postcode and coordinate type
+Twelve source-preserved overlaps above 0.01 m² remain multiple-candidate
+evidence. They are not clipped, assigned to a neighbour, or replaced with an
+administrative/AGID surface. Every published feature is a real Polygon or
+MultiPolygon from the postcode source; no point, route, PO box, organisation,
+address, building, customer, recipient or land-right row receives an invented
+area.
 
-Náttúrufræðistofnun IS 50V buildings
-  -> topographic building candidate, not an address link
+## Application path
 
-Statistics Iceland
-  -> municipalities, urban nuclei and statistical context
+The pinned descriptor loads through the normal AGID pack store. A country `IS`
+and normalized `NNN` search calls `/api/postal/IS/{postcode}`, returns the real
+area and provenance, converts it to the application feature collection, fits
+the map bounds and uses fill opacity `0.22`, outline opacity `0.95` and outline
+width `3`. Shared UI handling remains fail-closed for loading, no result,
+multiple candidates, API failure and invalid geometry; clear and re-search are
+covered by the country harness.
 
-AGID cell cover
-  -> candidate index followed by original geometry checks
-```
+## Evidence separation
 
-Assignment authority, geometry authority, redistribution terms, and evidence
-purpose remain independent on every assertion.
-
-## Postal geometry
-
-The pinned Byggðastofnun postcode register and geographic coverage are the
-canonical assignment and geometry source for a release. A code may have Polygon
-or MultiPolygon geometry, including disconnected islands or rural components.
-Pósturinn's public tables add routing and service classification, but they are
-not scraped into an unversioned bulk geometry set. The postcode layer was
-removed from IS 50V after responsibility moved to Byggðastofnun, so historical
-IS 50V rows cannot be treated as the current register.
-
-An AGID cell, municipality, urban nucleus, address-point hull, buffer, or
-Voronoi surface is always `derived_geometry`. It never replaces the official
-Byggðastofnun polygon or inherits Pósturinn authority.
-
-## Address and building display
-
-HMS Staðfangaskrá publishes address identifiers, house number and suffix,
-postcode, municipality, coordinate geometry, coordinate type, review state,
-and estimated accuracy. Its coordinate can represent an estimated building
-centre, main entrance, driveway, parcel interior, or estimated building site.
-
-IS 50V buildings are topographic features at 1:50,000. Nearest or containing
-geometry remains a candidate. AGID displays a definitive building only when a
-source-backed path connects the HMS address identifier to that building.
-
-## Required exceptions
-
-- Store the three-digit postcode as a string.
-- Preserve multipart rural and island geometry.
-- Keep Byggðastofnun register/geometry, Pósturinn routing and HMS assignment
-  evidence separate.
-- Preserve HMS coordinate type, review state, accuracy and stable identifiers.
-- Do not infer a building from IS 50V proximity or containment alone.
-- A selected Póstbox is a delivery preference, not a residence or premise
-  postcode reassignment.
-- Statistical municipalities and urban nuclei are not postcode boundaries.
-
-## Promotion
-
-This seed is `M1_metadata`. Promotion requires rights-reviewed and pinned
-Byggðastofnun, IS 50V building, HMS and Statistics Iceland releases; reviewed
-Pósturinn evidence;
-three-digit normalization; topology validation; coherent address/building
-links; independent holdout results; attribution; correction/rollback flows;
-and two successful source refreshes.
+- Byggðastofnun: current postcode assignment and area geometry.
+- Pósturinn: routing/service reference only; no polygon authority here.
+- HMS Staðfangaskrá: separate address-point evidence, not bundled in M2.
+- IS 50V buildings: separate topographic candidate, not an address link.
+- Statistics Iceland: statistical context, not a postcode boundary.
+- AGID: spatial index/lookup, never the canonical postal surface.
 
 Files:
 
-- `repository-manifest.json`: country contract and promotion gates.
-- `source-profile.json`: Byggðastofnun, Pósturinn, IS 50V building, HMS and
-  Statistics Iceland roles.
-- `fixtures/iceland-synthetic.json`: non-geographic conformance cases.
+- `repository-manifest.json`: Iceland-specific rules and M2 definition.
+- `source-profile.json`: source roles, pinned release and rights evidence.
+- `M2-SOURCE-NOTICE.md`: required attribution and reproducibility record.
+- `m2/{descriptor,graph,geometry}.json`: public runtime artifact.
+- `fixtures/iceland-synthetic.json`: test-only, non-geographic M1 fixtures.

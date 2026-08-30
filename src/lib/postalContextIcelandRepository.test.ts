@@ -12,6 +12,7 @@ type SourceProfile = {
     geometry_authority: string;
     redistribution_class: string;
     bundled_here: boolean;
+    observed_release?: { digest: string; feature_count: number; retrieved_at: string };
     prohibited_claims: string[];
   }>;
   artifact_partitions: Array<{ id: string }>;
@@ -19,24 +20,9 @@ type SourceProfile = {
 
 type RepositoryManifest = {
   repository: { name: string; country_code: string; maturity: string };
-  release_scope: {
-    metadata_only: boolean;
-    contains_raw_source_data: boolean;
-    contains_real_addresses: boolean;
-    contains_personal_data: boolean;
-    contains_production_geometry: boolean;
-    fixtures_are_synthetic: boolean;
-    publication_claim: string;
-  };
-  postal_system: {
-    full_code_name: string;
-    full_code_format: string;
-    full_code_default_geometry: string;
-    address_rule: string;
-    building_rule: string;
-    postbox_rule: string;
-  };
-  promotion: { current_stage: string; hard_blockers: string[] };
+  release_scope: Record<string, boolean | string>;
+  postal_system: Record<string, string>;
+  promotion: { current_stage: string; stages: Array<{ id: string; definition: string }>; hard_blockers: string[] };
 };
 
 type SyntheticFixturePack = {
@@ -65,37 +51,33 @@ function readJson<T>(name: string): T {
   return JSON.parse(readFileSync(resolve(seedRoot, name), 'utf8')) as T;
 }
 
-test('Iceland seed remains metadata-only with postcode, address, and building evidence separated', () => {
+test('Iceland repository promotes only the current postcode-area runtime and no address or building rows', () => {
   const manifest = readJson<RepositoryManifest>('repository-manifest.json');
 
   assert.equal(manifest.repository.name, 'agid-postal-is');
   assert.equal(manifest.repository.country_code, 'IS');
-  assert.equal(manifest.repository.maturity, 'M1_metadata');
-  assert.deepEqual(
-    manifest.release_scope,
-    {
-      metadata_only: true,
-      contains_raw_source_data: false,
-      contains_real_addresses: false,
-      contains_personal_data: false,
-      contains_production_geometry: false,
-      fixtures_are_synthetic: true,
-      publication_claim: 'contract-seed-only',
-    },
-  );
+  assert.equal(manifest.repository.maturity, 'M2_experimental');
+  assert.equal(manifest.release_scope.metadata_only, false);
+  assert.equal(manifest.release_scope.contains_raw_source_data, false);
+  assert.equal(manifest.release_scope.contains_real_addresses, false);
+  assert.equal(manifest.release_scope.contains_personal_data, false);
+  assert.equal(manifest.release_scope.contains_production_geometry, true);
+  assert.equal(manifest.release_scope.fixtures_are_synthetic, true);
+  assert.equal(manifest.release_scope.publication_claim, 'current-byggdastofnun-postnumer-area-runtime');
   assert.equal(manifest.postal_system.full_code_name, 'póstnúmer');
   assert.equal(manifest.postal_system.full_code_format, 'NNN');
-  assert.equal(manifest.postal_system.full_code_default_geometry, 'official_postcode_area');
+  assert.match(manifest.postal_system.m2_geometry_rule, /Byggðastofnun.*WFS.*Polygon.*MultiPolygon.*repair.*derived/i);
   assert.match(manifest.postal_system.address_rule, /coordinate type/i);
   assert.match(manifest.postal_system.building_rule, /proximity.*exact/i);
-  assert.match(manifest.postal_system.postbox_rule, /does not change.*postcode/i);
-  assert.equal(manifest.promotion.current_stage, 'M1_metadata');
-  assert.ok(manifest.promotion.hard_blockers.includes('unpinned-postcode-layer'));
-  assert.ok(manifest.promotion.hard_blockers.includes('retired-is50v-postcode-layer-presented-as-current'));
+  assert.equal(manifest.promotion.current_stage, 'M2_current_byggdastofnun_postnumer_visualization');
+  assert.ok(manifest.promotion.stages.some(stage =>
+    stage.id === 'M2_current_byggdastofnun_postnumer_visualization'
+    && /search.*API.*map.*translucent/i.test(stage.definition)));
   assert.ok(manifest.promotion.hard_blockers.includes('postcode-stored-as-number'));
+  assert.ok(manifest.promotion.hard_blockers.includes('is50v-building-proximity-presented-as-exact-link'));
 });
 
-test('Iceland source policy separates Byggðastofnun, Pósturinn, HMS, IS 50V buildings, and Statistics Iceland authority', () => {
+test('Iceland source policy bundles only the rights-reviewed Byggðastofnun runtime evidence', () => {
   const profile = readJson<SourceProfile>('source-profile.json');
   const sources = new Map(profile.sources.map(source => [source.source_id, source]));
   const posturinn = sources.get('posturinn-iceland-postcodes');
@@ -104,23 +86,26 @@ test('Iceland source policy separates Byggðastofnun, Pósturinn, HMS, IS 50V bu
   const buildings = sources.get('natt-is50v-buildings');
   const statistics = sources.get('statistics-iceland-geography');
 
-  assert.equal(profile.artifact_scope, 'metadata-only-contract-seed');
-  assert.ok(profile.sources.every(source => source.bundled_here === false));
-  assert.equal(posturinn?.assignment_authority, 'official_postal_operator');
-  assert.equal(posturinn?.geometry_authority, 'none');
-  assert.ok(posturinn?.prohibited_claims.includes('postcode-polygon-authority'));
+  assert.equal(profile.artifact_scope, 'current-byggdastofnun-postnumer-area-runtime');
+  assert.equal(postcodeAreas?.bundled_here, true);
+  assert.equal(postcodeAreas?.assignment_authority, 'official_postcode_regulator');
   assert.equal(postcodeAreas?.geometry_authority, 'official_postcode_register_geometry');
   assert.equal(postcodeAreas?.redistribution_class, 'R1_public_sector_reuse');
-  assert.equal(addresses?.assignment_authority, 'official_address_registry');
+  assert.equal(postcodeAreas?.observed_release?.feature_count, 175);
+  assert.equal(postcodeAreas?.observed_release?.digest, 'sha256:5a5fb67232ce16d6023204dd45b4004930db0858e9788b78ae97a0d601d2f76a');
+  assert.match(postcodeAreas?.observed_release?.retrieved_at ?? '', /^2026-08-30T12:20:57/u);
+  assert.equal(posturinn?.bundled_here, false);
+  assert.ok(posturinn?.prohibited_claims.includes('postcode-polygon-authority'));
+  assert.equal(addresses?.bundled_here, false);
   assert.ok(addresses?.prohibited_claims.includes('exact-building-footprint-from-address-point'));
-  assert.equal(buildings?.assignment_authority, 'none');
+  assert.equal(buildings?.bundled_here, false);
   assert.ok(buildings?.prohibited_claims.includes('exact-address-link-from-proximity'));
-  assert.equal(statistics?.geometry_authority, 'official_statistical_geometry');
+  assert.equal(statistics?.bundled_here, false);
   assert.ok(statistics?.prohibited_claims.includes('postcode-boundary'));
   assert.ok(profile.artifact_partitions.some(partition => partition.id === 'byggdastofnun-postcode-geometry'));
 });
 
-test('Iceland fixtures use test-only three-digit codes and never become production evidence', () => {
+test('Iceland fixtures remain synthetic and never become M2 evidence', () => {
   const pack = readJson<SyntheticFixturePack>('fixtures/iceland-synthetic.json');
   const postcodes = pack.fixtures
     .map(fixture => fixture.synthetic_address.postcode)

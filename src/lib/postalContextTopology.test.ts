@@ -58,8 +58,8 @@ function collectionWithPolygon(
   };
 }
 
-test('topology validation aborts a large hole-pair scan as soon as its comparison budget is exhausted', () => {
-  const holes = Array.from({ length: 5_000 }, (_, index) => {
+test('topology sweep skips disjoint segment boxes without consuming the comparison budget', () => {
+  const holes = Array.from({ length: 1_000 }, (_, index) => {
     const column = index % 100;
     const row = Math.floor(index / 100);
     return ring(-75 + column * 1.5, -75 + row * 3, 0.2);
@@ -71,8 +71,28 @@ test('topology validation aborts a large hole-pair scan as soon as its compariso
 
   const result = validatePostalContextGeometryTopology(collection);
 
-  assert.equal(result.valid, false);
+  assert.equal(result.valid, true, result.errors.join('\n'));
   assert.equal(result.positionCount, 5 + holes.length * 5);
+  assert.deepEqual(result.errors, []);
+});
+
+test('topology validation still aborts an adversarial overlapping-longitude scan at the same budget', () => {
+  const zigzag: Array<readonly [number, number]> = Array.from({ length: 2_200 }, (_, index) => [
+    index % 2,
+    index * 0.001,
+  ] as const);
+  const maximumLatitude = (zigzag.length - 1) * 0.001;
+  const adversarialRing = [
+    ...zigzag,
+    [2, maximumLatitude + 1] as const,
+    [2, -1] as const,
+    [-1, -1] as const,
+    zigzag[0],
+  ] as PostalContextLinearRing;
+  const result = validatePostalContextGeometryTopology(collectionWithPolygon([adversarialRing]));
+
+  assert.equal(result.valid, false);
+  assert.equal(result.positionCount, adversarialRing.length);
   assert.equal(result.errors.length, 1);
   assert.match(result.errors[0], /^geometry-topology-budget-exceeded:/u);
 });
