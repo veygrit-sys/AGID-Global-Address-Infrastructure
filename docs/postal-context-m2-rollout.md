@@ -1720,3 +1720,14 @@ No second country was started.
 - Recheck: after the pending-country pass and `2026-09-06T09:16:27.503Z`, unless an unrestricted current ELTA denominator and postcode polygon release appears earlier. Authentication, request submission, terms/contract acceptance, payment, publication, new destination, land-record access or deployment requires explicit approval.
 - After GR: 252 profiles, 180 pending, 68 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
 - Next country: `HR` (Croatia). No second country was started.
+## Croatia (HR) M2 review - 2026-08-30
+
+- Target: Croatia (`HR`), Europe. The source-of-truth status command selected HR with no country in progress; no second country was started.
+- M2 result: **blocked / unmet**. HR now has a country-specific `M2_current_hrvatska_posta_assignment_and_postcode_area_visualization` definition. Hrvatska pošta exposes current Excel/XML assignment downloads, but its legal notice does not establish AGID reuse or redistribution rights. DGU confirms graphical delivery-office areas, but release is request- and price-controlled and no reusable release or explicit operator-office identifier crosswalk was obtained.
+- Real-data audit: TERCET 2025 HR has 667 rows, 667 distinct five-digit codes after quote normalization, 0 duplicate or invalid normalized codes, 21 NUTS3 values, and only `NUTS3`/`CODE` columns. Methodology V4 attributes 0 codes to a member-state postal dataset, 289 to address data, 24 to GeoNames and 354 to manual location/geocoding. There are 0 Polygon/MultiPolygon records and 0 production-eligible artifacts.
+- App status: shared Polygon/MultiPolygon filtering, fit, translucent fill, visible outline, states, metadata, clear and re-search tests pass. No authorized real HR artifact, API geometry response or translucent app area exists, so M2 remains unmet and browser E2E is not claimed.
+- Validation: HR metadata/source/audit/blocking suite 10/10, existing HR runtime/route/source regression 139/139, shared Postal Context runtime 161/161, shared area UI 23/23, ledger/rollout suite 12/12, and repository-wide `tsc --noEmit` pass. Raw official captures and crosswalk rows are not committed.
+- Evidence: `docs/postal-context-croatia-m2.md`, `reports/postal-context-m2/hr-source-review-2026-08-30.json`, and `reports/postal-context-m2/hr-checks-2026-08-30.json`.
+- Retry: after pending countries and 2026-09-06T09:42:03.227Z; do not authenticate, download restricted files, seek consent, request or pay for DGU data, accept terms, query address/building/cadastral/land rows, create a destination, publish or deploy without explicit approval.
+- After HR: 252 profiles, 179 pending, 69 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
+- Next country: `HU` (Hungary). No second country was started.
