@@ -1636,3 +1636,18 @@ No second country was started.
 - Evidence: [source report](../reports/postal-context-m2/fi-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/fi-checks-2026-08-30.json), [technical review](postal-context-finland-m2.md), and [source/reuse notice](../data/postal_country_packs/fi/postal-context/M2-SOURCE-NOTICE.md).
 - After FI: 252 profiles, 186 pending, 64 blocked, 0 in progress, 2 evidence-verified M2; 128 manifests / 98 explicit definitions.
 - Next country: `FO` (Faroe Islands). No second country was started.
+
+
+## Faroe Islands (FO) M2 verified - 2026-08-30
+
+- Result: evidence-verified under `M2_current_umhvorvisstovan_postoki_visualization`.
+- Source: Umhvørvisstovan `Postnr` layer 0 publishes 117 distinct current three-digit postøki as 115 source Polygons and two source MultiPolygons. ArcGIS 11.4, document 2.9.0, item GUID and every object ID/count are pinned; the EPSG:4326 query SHA-256 is `952d2b52d358cd2671673ea1bc5ee3e9161eacd6b15981a9c97f9fc08709ced2`.
+- Rights: the June 2019 Faroese map-data terms permit commercial and non-commercial copying, distribution, publication, modification and combination with attribution. Exact catalogue, service, layer, item, query and terms captures have retrieval time, edition and SHA-256 evidence.
+- Geometry: 116 published Polygons and one MultiPolygon have 52,065 positions and 118 closed rings. Code `476` alone had eight source self-intersections; deterministic Turf buffer `0.000001 metre / 8 steps` makes it valid with relative area delta `1.5494530300567815e-9`, and it is explicitly labelled derived/confidence `0.999999`. No absent area is invented.
+- Authority separation: the mapped postal identity uses `official_postal_mapping_authority`; unchanged surfaces use `official_postal_geometry`, while the repaired `476` surface uses `derived_geometry`. Operator deliverability, addresses, buildings, people, customers and land rights are not claimed or bundled.
+- Application: `FO-100` normalizes to `100`; the real API returns a Polygon, the app converts it to GeoJSON, fits bounds and uses fill opacity `0.22` plus outline opacity `0.95`/width `3`. Loading, no-match, multiple, API failure, invalid geometry, provenance metadata, clear and re-search are covered. `999` is no-match and `FO100` is rejected.
+- Validation: FO policy/repository/API/app 9/9, shared postal-area UI 5/5, shared runtime 159/159, focused typecheck, and byte-identical second build all pass. Repository-wide typecheck remains blocked only by six pre-existing unresolved local workspace aliases and has no FO diagnostic. Deterministic real HTTP plus app map-source/style/fit assertions provide the drawing evidence.
+- Artifacts: [graph](https://github.com/veygrit-sys/Address-Grid-ID/blob/9554e12402e3d2c80bf53bbe7d0c4120a4716925/data/postal_country_packs/fo/postal-context/m2/graph.json), [geometry](https://github.com/veygrit-sys/Address-Grid-ID/blob/9554e12402e3d2c80bf53bbe7d0c4120a4716925/data/postal_country_packs/fo/postal-context/m2/geometry.json), [descriptor](https://github.com/veygrit-sys/Address-Grid-ID/blob/9554e12402e3d2c80bf53bbe7d0c4120a4716925/data/postal_country_packs/fo/postal-context/m2/descriptor.json).
+- Evidence: [source report](../reports/postal-context-m2/fo-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/fo-checks-2026-08-30.json), [technical review](postal-context-faroe-islands-m2.md), and [source/reuse notice](../data/postal_country_packs/fo/postal-context/M2-SOURCE-NOTICE.md).
+- After FO: 252 profiles, 185 pending, 64 blocked, 0 in progress, 3 evidence-verified M2; 129 manifests / 99 explicit definitions.
+- Next country: `FR` (France). No second country was started.
