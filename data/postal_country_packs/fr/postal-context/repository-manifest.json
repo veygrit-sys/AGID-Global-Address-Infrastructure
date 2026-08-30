@@ -5,18 +5,18 @@
     "name": "agid-postal-fr",
     "country_code": "FR",
     "country_name": "France",
-    "lifecycle": "planned_external_repository",
+    "lifecycle": "embedded_experimental_pack",
     "seed_location": "data/postal_country_packs/fr/postal-context",
-    "maturity": "M1_metadata"
+    "maturity": "M2_experimental"
   },
   "release_scope": {
-    "metadata_only": true,
+    "metadata_only": false,
     "contains_raw_source_data": false,
     "contains_real_addresses": false,
     "contains_personal_data": false,
-    "contains_production_geometry": false,
+    "contains_production_geometry": true,
     "fixtures_are_synthetic": true,
-    "publication_claim": "contract-seed-only"
+    "publication_claim": "75001-75020-derived-paris-arrondissement-display-surfaces"
   },
   "postal_system": {
     "full_code_name": "code_postal",
@@ -24,40 +24,22 @@
     "full_code_regex": "^\\d{5}$",
     "full_code_default_geometry": "routing_locality_with_optional_derived_area",
     "full_code_rule": "Treat a five-digit code as a La Poste routing assignment to one or more delivery localities, addresses, or special services. It is not an official polygon.",
+    "m2_scope_rule": "M2 publishes only 75001-75020 where the pinned La Poste snapshot has one exact postcode-to-INSEE arrondissement relation. The matching official administrative contour is exposed as a derived display surface, never as a La Poste boundary or national coverage.",
     "commune_rule": "La Poste code-to-INSEE-commune mappings and commune contours are separate evidence. A commune may have multiple codes and a code may serve multiple communes.",
     "cedex_rule": "CEDEX and organization-specific codes are non-areal routing assignments unless independent public address and building geometry exists.",
-    "model_geometry_rule": "BAN-point Voronoi, buffers, alpha shapes, learned boundaries, commune unions, and AGID cell unions are derived candidate geometry only.",
+    "model_geometry_rule": "BAN-point Voronoi, buffers, alpha shapes, learned boundaries, commune unions, arrondissement joins, and AGID cell unions are derived candidate geometry only.",
     "territory_rule": "Metropolitan FR stays separate from overseas ISO territories and Monaco even when an upstream La Poste table contains them."
   },
   "address_graph": {
     "node_types": [
-      "postal_code",
-      "cedex_code",
-      "country",
-      "region",
-      "department",
-      "commune",
-      "municipal_arrondissement",
-      "delegated_commune",
-      "delivery_locality",
-      "lieu_dit",
-      "street",
-      "ban_address",
-      "premise",
-      "building",
-      "parcel",
-      "po_box",
-      "organization",
-      "agid_cell"
+      "postal_code", "cedex_code", "country", "region", "department", "commune",
+      "municipal_arrondissement", "delegated_commune", "delivery_locality", "lieu_dit",
+      "street", "ban_address", "premise", "building", "parcel", "po_box",
+      "organization", "agid_cell"
     ],
     "edge_types": [
-      "postal_assigned",
-      "located_at",
-      "addresses",
-      "part_of",
-      "postal_contains",
-      "covered_by_agid",
-      "derived_from"
+      "postal_assigned", "located_at", "addresses", "part_of", "postal_contains",
+      "covered_by_agid", "derived_from"
     ],
     "cardinality_rules": [
       "postal-code-to-commune-is-many-to-many",
@@ -69,8 +51,12 @@
   },
   "exception_classes": [
     {
+      "id": "m2-paris-arrondissement-scope",
+      "rule": "Only 75001-75020 pass this M2 release. Each has one exact official La Poste-to-INSEE arrondissement mapping in the pinned snapshot; the administrative contour remains derived postcode display geometry."
+    },
+    {
       "id": "multi_commune_postal_code",
-      "rule": "Retain every La Poste code-to-INSEE relation; do not collapse multiple communes to one centroid."
+      "rule": "Retain every La Poste code-to-INSEE relation; do not collapse multiple communes to one centroid or surface."
     },
     {
       "id": "multi_code_commune",
@@ -115,19 +101,14 @@
       "pass": "La Poste routing assignment, BAN address point, COG identity, administrative boundary, BD TOPO building relation, derived surface, and AGID index remain separate."
     },
     {
-      "id": "exact-ban-path",
-      "scope": "promoted-address-links",
-      "pass": "Postal code, house number, suffix, street, commune, BAN identifier, and BD TOPO relationship agree; conflicts remain alternatives."
-    },
-    {
       "id": "postal-commune-cardinality",
       "scope": "postal-commune-crosswalk",
-      "pass": "All many-to-many code/commune relations remain queryable and no commune centroid selects an exact address."
+      "pass": "All many-to-many code/commune relations remain queryable; M2 surfaces are published only for exact one-to-one scoped rows."
     },
     {
       "id": "derived-area-topology",
       "scope": "derived-postcode-areas",
-      "pass": "Geometry is valid, bounded, versioned, clipped, and evaluated against independent holdout BAN addresses."
+      "pass": "Geometry is valid, bounded, versioned, source-identical, and labelled derived; no administrative contour is called a La Poste boundary."
     },
     {
       "id": "territory-routing",
@@ -137,17 +118,7 @@
     {
       "id": "privacy",
       "scope": "public-artifacts",
-      "pass": "No recipient, occupant, customer record, phone, delivery instruction, credential, or private unit assertion is published."
-    },
-    {
-      "id": "holdout",
-      "scope": "candidate-release",
-      "metrics": {
-        "exact_postcode_address_match_ratio_minimum": 0.995,
-        "coordinate_top_1_match_ratio_minimum": 0.98,
-        "coordinate_top_k_match_ratio_minimum": 0.995
-      },
-      "requires_independent_holdout": true
+      "pass": "No address, recipient, occupant, customer, phone, delivery instruction, credential, or private unit assertion is published."
     },
     {
       "id": "synthetic-evidence-never-promotes",
@@ -156,12 +127,13 @@
     }
   ],
   "promotion": {
-    "current_stage": "M1_metadata",
+    "current_stage": "M2_experimental_paris_arrondissement_visualization",
     "stages": [
       { "id": "M0_inventory", "definition": "Source roles and legal blockers are inventoried." },
       { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
       { "id": "M2_experimental", "definition": "Pinned open snapshots reproduce experimental packs with full lineage." },
-      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M2_experimental_paris_arrondissement_visualization", "definition": "Pinned La Poste assignments and administrative contours reproduce 75001-75020 derived surfaces, and the real API/application path renders, fits, clears, and re-searches them with provenance visible." },
+      { "id": "M3_candidate", "definition": "National scope, holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
       { "id": "M4_stable", "definition": "Two refreshes pass and monitored rollback operates." }
     ],
     "hard_blockers": [
@@ -173,7 +145,8 @@
       "overseas-or-monaco-record-served-as-fr",
       "stale-or-unpinned-source-release",
       "occupant-or-customer-data-published",
-      "missing-assignment-or-geometry-authority"
+      "missing-assignment-or-geometry-authority",
+      "national-coverage-inferred-from-paris-scope"
     ]
   },
   "non_guarantees": [
@@ -181,6 +154,7 @@
     "recipient_identity",
     "occupancy",
     "official-la-poste-polygon",
+    "national-france-coverage",
     "commune-equals-postal-area",
     "postcode-has-one-commune-or-building",
     "legal-boundary-or-survey-certification"

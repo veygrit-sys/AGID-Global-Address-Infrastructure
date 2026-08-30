@@ -1,86 +1,56 @@
-# `agid-postal-fr` contract seed
+# `agid-postal-fr` M2 experimental pack
 
-Status: `M1 metadata / no production France data`
+Status: `M2 experimental / 75001-75020 only`
 
-This directory is the lightweight seed for a future independent
-`agid-postal-fr` repository. It contains source policy, quality gates, and
-non-geographic synthetic fixtures only. It contains no La Poste rows, BAN
-addresses, COG extracts, BD TOPO geometry, real addresses, or production
-polygons.
+This directory publishes a fixed, real-data Postal Context pack for the 20
+Paris municipal-arrondissement postcodes. It does **not** claim national France
+coverage and it does **not** publish official La Poste postal boundaries.
 
-The shared resolver remains in Address-Grid-ID. A future FR repository will
-publish immutable, digest-addressed packs through the same country interface as
-Japan, Singapore, the Netherlands, and the United Kingdom.
+## Authority separation
 
-## France geometry rule
+The release joins two separately attributed facts:
 
-A five-digit `code postal` is a routing assignment, not an administrative code
-or an official surface. La Poste's open dataset links postal codes to INSEE
-communes, delivery labels, and line-five localities, but explicitly does not
-provide postal-code boundaries.
+1. La Poste's official base maps `75001`-`75020` exactly to INSEE municipal
+   arrondissement codes `75101`-`75120` in the pinned snapshot.
+2. The La Poste Data Fair extension exposes the matching official
+   administrative contour from API Découpage administratif.
 
-```text
-La Poste postal-code assignment
-  -> code-to-INSEE-commune and delivery-locality relation
-  -> BAN public address point
-  -> BD TOPO explicit address-to-building link
-  -> optional derived postal-code surface
-  -> AGID cell cover for candidate indexing
-```
-
-The evidence stays independent:
-
-- La Poste is authoritative for postal routing and code-to-commune relations.
-- BAN is the nationally recognized public address reference and supplies
-  georeferenced address localizers.
-- INSEE COG is authoritative for commune, department, region, and history.
-- IGN BD TOPO supplies building geometry and explicit BAN-address links.
-- Commune geometry and BAN-point-generated surfaces remain administrative or
-  derived geometry, never La Poste postal boundaries.
-
-## Derived polygon rule
-
-Let `A_c` be BAN address points carrying code `c`, `B` a rights-cleared clip
-boundary, and `V(p)` a Voronoi cell. A candidate surface is:
+The resulting postcode display surface is labelled `derived`, even though its
+assignment and administrative geometry inputs are official. No coordinate is
+buffered, inferred, simplified, or otherwise changed.
 
 ```text
-R_model(c) = B intersect union(V(p) for p in A_c)
+La Poste postcode assignment
+  -> exact INSEE arrondissement equality join
+  -> official administrative MultiPolygon
+  -> derived postcode display surface
+  -> Postal Context API
+  -> translucent application map layer and fit bounds
 ```
 
-A commune union is valid only as derived evidence and only when source-backed
-cardinality shows the complete commune belongs to that one code. Split
-communes, multi-commune codes, CEDEX, BP, CS, TSA, and poste restante stay
-partial or non-areal. Every model pins input digests, algorithm, parameters,
-time, and holdout results.
+## Scope and non-area handling
 
-## Address and building display ceiling
+- Only `75001` through `75020` are published.
+- Other standard French postcodes return no match in this release rather than
+  borrowing a commune, centroid, point, building, or AGID cell.
+- CEDEX, BP, CS, TSA, poste restante, organization and route codes remain
+  non-areal unless a future separately sourced release proves an area.
+- FR stays separate from overseas ISO territories and Monaco.
+- No address, building, parcel, recipient, customer, occupant, or land-rights
+  record is bundled.
 
-AGID may display number, suffix, street, lieu-dit, commune, postal code, and a
-building only when they form one coherent BAN/BD TOPO path. A La Poste commune
-centroid, commune polygon, or derived postal surface alone cannot invent a
-house number, premise, building, recipient, or deliverability status.
+## Reproducibility
 
-## Geographic and postal exceptions
+`scripts/build-postal-context-fr-m2.mjs` verifies the exact La Poste CSV and 20
+exact-query response digests, validates one-to-one identities, rings, Paris
+bounds and boolean validity, then writes deterministic `graph.json`,
+`geometry.json`, and `descriptor.json` artifacts. Raw CSV/API responses stay in
+an audit-only temporary directory and are not committed.
 
-- One postal code may cover multiple communes; one commune may have multiple
-  postal codes.
-- Corsican postal prefix `20` must not replace COG department codes `2A`/`2B`.
-- Paris, Lyon, and Marseille municipal arrondissements remain distinct address
-  districts.
-- CEDEX and organization codes remain non-areal unless separately evidenced.
-- Overseas ISO territories and Monaco are routed to separate country packs even
-  if the upstream La Poste export contains them.
+Source, rights, transformation, limitations, validation, application-path
+evidence, and artifact hashes are recorded in
+`docs/postal-context-france-m2.md` and
+`reports/postal-context-m2/fr-*-2026-08-30.json`.
 
-## Production promotion
-
-Promotion beyond M1 requires pinned La Poste, BAN, COG, and BD TOPO releases;
-exact many-to-many code/commune preservation; BAN address and explicit building
-links; reproducible derived surfaces; CEDEX/special-distribution and territory
-partitions; independent holdout; topology, privacy, freshness, rollback, and
-two-refresh gates. Synthetic fixtures never satisfy production evidence.
-
-## Files
-
-- `repository-manifest.json`: postal/commune semantics, gates, and blockers.
-- `source-profile.json`: conservative La Poste, BAN, IGN, and INSEE roles.
-- `fixtures/france-synthetic.json`: non-geographic conformance cases.
+The legacy non-geographic fixtures remain contract tests only. They are not M2
+evidence and never promote a release.
