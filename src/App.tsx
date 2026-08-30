@@ -69,6 +69,7 @@ import { getAgidAddressTabLanguages } from './lib/languageTabs';
 import { markMapOverlayDefaultsMigrated,readMapOverlayModeDefault } from './lib/mapOverlayDefaults';
 import {
 createPostalAreaFeatureCollection,
+postalAreaUnavailableDetail,
 postalAreaBounds,
 resolvePostalAreaLookupCandidate,
 syncPostalAreaMapLayer,
@@ -2440,7 +2441,7 @@ export default function App() {
         setPostalAreaNotice({
           status: 'unavailable',
           title: 'Postal area unavailable',
-          detail: 'この郵便番号には公開済みのPolygon/MultiPolygonがありません。点・建物データを郵便区域として表示していません。',
+          detail: postalAreaUnavailableDetail(response.data),
         });
         return;
       }

@@ -55,12 +55,12 @@ test('Finland seed separates Posti assignment, Paavo statistical geometry, addre
 
   assert.equal(manifest.repository.name, 'agid-postal-fi');
   assert.equal(manifest.repository.country_code, 'FI');
-  assert.equal(manifest.repository.maturity, 'M1_metadata');
-  assert.equal(manifest.release_scope.metadata_only, true);
+  assert.equal(manifest.repository.maturity, 'M2_experimental');
+  assert.equal(manifest.release_scope.metadata_only, false);
   assert.equal(manifest.release_scope.contains_raw_source_data, false);
   assert.equal(manifest.release_scope.contains_real_addresses, false);
   assert.equal(manifest.release_scope.contains_personal_data, false);
-  assert.equal(manifest.release_scope.contains_production_geometry, false);
+  assert.equal(manifest.release_scope.contains_production_geometry, true);
   assert.equal(manifest.release_scope.fixtures_are_synthetic, true);
   assert.equal(manifest.postal_system.full_code_format, 'NNNNN');
   assert.match(manifest.postal_system.assignment_rule, /Posti.*five-digit.*Basic Address File.*Aland.*does not establish.*deliverability/i);
@@ -71,7 +71,7 @@ test('Finland seed separates Posti assignment, Paavo statistical geometry, addre
   assert.match(manifest.postal_system.licence_rule, /Posti.*Statistics Finland.*DVV.*Ryhti.*NLS.*CC BY 4.0.*not by itself unrestricted/i);
   assert.match(manifest.postal_system.crs_rule, /EPSG:3067.*reviewed versioned transform.*Coastline-clipped.*sea-extended/i);
   assert.match(manifest.postal_system.territory_rule, /mainland Finland.*Aland.*excludes.*AX.*never.*silently merges/i);
-  assert.equal(manifest.promotion.current_stage, 'M1_metadata');
+  assert.equal(manifest.promotion.current_stage, 'M3_statistical_geometry');
   assert.ok(manifest.promotion.hard_blockers.includes('paavo-presented-as-posti-official-polygon'));
   assert.ok(manifest.promotion.hard_blockers.includes('nls-interpolated-road-address-presented-as-exact-entrance'));
   assert.ok(manifest.promotion.hard_blockers.includes('fi-and-ax-scope-silently-merged'));
@@ -91,7 +91,7 @@ test('Finland source policy separates Posti, Paavo, DVV, Ryhti, NLS, administrat
   const administration = sources.get('nls-finland-municipal-division');
   const aland = sources.get('aland-post-postal-services');
 
-  assert.equal(profile.artifact_scope, 'metadata-only-contract-seed');
+  assert.equal(profile.artifact_scope, 'current-posti-assignment-and-paavo-statistical-area-runtime');
   assert.ok(profile.sources.every(source => source.bundled_here === false));
   assert.equal(postcodes?.assignment_authority, 'official_postal_operator');
   assert.equal(postcodes?.geometry_authority, 'none');

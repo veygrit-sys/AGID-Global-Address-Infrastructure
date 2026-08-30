@@ -36,6 +36,68 @@ export type PostalAreaLookupCandidate = {
   postalCode: string;
 };
 
+function samePosition(a: unknown, b: unknown) {
+  return Array.isArray(a) && Array.isArray(b)
+    && a.length >= 2 && b.length >= 2
+    && a[0] === b[0] && a[1] === b[1];
+}
+
+function validPosition(value: unknown): value is [number, number] {
+  return Array.isArray(value) && value.length >= 2
+    && typeof value[0] === 'number' && Number.isFinite(value[0])
+    && typeof value[1] === 'number' && Number.isFinite(value[1])
+    && value[0] >= -180 && value[0] <= 180
+    && value[1] >= -90 && value[1] <= 90;
+}
+
+function validRing(value: unknown) {
+  return Array.isArray(value) && value.length >= 4
+    && value.every(validPosition)
+    && samePosition(value[0], value.at(-1));
+}
+
+function validPolygon(value: unknown) {
+  return Array.isArray(value) && value.length > 0 && value.every(validRing);
+}
+
+export function isRenderablePostalAreaGeometry(value: unknown): value is PostalAreaGeometry {
+  const geometry = record(value);
+  if (geometry.type === 'Polygon') return validPolygon(geometry.coordinates);
+  return geometry.type === 'MultiPolygon'
+    && Array.isArray(geometry.coordinates)
+    && geometry.coordinates.length > 0
+    && geometry.coordinates.every(validPolygon);
+}
+
+export function hasInvalidPostalAreaGeometry(lookup: PostalContextLookupResponse) {
+  return lookup.geometries.some(item => item.node.kind === 'postal_feature'
+    && (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon')
+    && !isRenderablePostalAreaGeometry(item.geometry));
+}
+
+export function postalAreaUnavailableDetail(lookup: PostalContextLookupResponse) {
+  if (hasInvalidPostalAreaGeometry(lookup)) {
+    return 'APIが返した郵便区域geometryが無効なため表示を拒否しました。点・建物データから面を補完していません。';
+  }
+  const kinds = new Set([
+    ...lookup.postalFeatures.map(feature => feature.featureKind),
+    ...lookup.alternatives.map(alternative => alternative.postalFeature.featureKind),
+  ]);
+  if (kinds.has('po_box')) {
+    return 'この郵便番号はPO Box分類で、公開済みのPolygon/MultiPolygonがありません。周辺に面を捏造していません。';
+  }
+  if (kinds.has('organization') || kinds.has('large_user')) {
+    return 'この郵便番号は法人・大口利用者分類で、公開済みのPolygon/MultiPolygonがありません。建物や敷地を郵便区域に代用していません。';
+  }
+  if (kinds.has('route')) {
+    return 'この郵便番号は集配・返信・端末等の非面分類で、公開済みのPolygon/MultiPolygonがありません。経路や拠点から面を捏造していません。';
+  }
+  if (kinds.has('standard_area')) {
+    return '現行の通常郵便番号ですが、選択中の公開境界版には対応するPolygon/MultiPolygonがありません。自治体や近隣区域で補完していません。';
+  }
+  return 'この郵便番号には公開済みのPolygon/MultiPolygonがありません。点・建物データを郵便区域として表示していません。';
+}
+
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? value as Record<string, unknown>
@@ -91,7 +153,7 @@ export function createPostalAreaFeatureCollection(
     type: 'FeatureCollection',
     features: lookup.geometries.flatMap(item => {
       if (item.node.kind !== 'postal_feature') return [];
-      if (item.geometry.type !== 'Polygon' && item.geometry.type !== 'MultiPolygon') return [];
+      if (!isRenderablePostalAreaGeometry(item.geometry)) return [];
       return [{
         type: 'Feature' as const,
         geometry: item.geometry,
