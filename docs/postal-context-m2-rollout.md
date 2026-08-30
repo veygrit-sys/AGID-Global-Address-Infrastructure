@@ -1957,3 +1957,18 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T20:04:32.662Z`; do not contact a provider, register, authenticate, accept terms, pay, query protected address/building/cadastral/land data, create a destination, publish or deploy without explicit approval.
 - After NL: 252 profiles, 163 pending, 83 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
 - Next country: `NO` (Norway). No second country was started.
+
+## Norway (NO) M2 review - 2026-08-30
+
+- Target: Norway (`NO`), Europe. The source-of-truth status command selected NO with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_norway_assignment_and_official_area_visualization`. Reviewed Posten public-serving rights, a fixed current Kartverket geometry artifact/digest, complete reconciliation, approved immutable artifact and real application path remain mandatory.
+- Operator audit: the current Windows-1252 TAB register is effective 2025-10-01 and has 5,122 unique well-formed codes: G 3,318, P 1,740, B 60 and S 4, with zero malformed or duplicate rows and 359 municipality references.
+- Territory audit: seven rows use Posten's county-like 21 Svalbard classification and one uses 22 Jan Mayen. These operational fields were retained without merging repository `NO` and `SJ` identities.
+- Geometry/rights audit: data.norge advertises official monthly Kartverket Postnummerområder downloads/services under CC BY 4.0 and explicitly says P.O.-box codes are additional. Repeated WFS/download-host requests timed out, so zero fixed geometry artifacts and zero Polygon/MultiPolygon features were digest/topology verified. A free Posten download was not treated as an AGID processing/public-serving grant.
+- Geometry policy: no P/O-box or special area, municipality/county, address/building point, FKB object, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No real eligible NO artifact exists, so real NO API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, NO ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and full TypeScript 1/1 pass (51 recorded assertions, 0 failures).
+- Evidence: `docs/postal-context-norway-m2.md`, `reports/postal-context-m2/no-source-review-2026-08-30.json`, and `reports/postal-context-m2/no-checks-2026-08-30.json`; six exact official/licence bodies are byte/SHA-256 bound. Raw source bodies and postcode rows are not committed.
+- Retry: after pending countries and `2026-09-06T20:52:33.425Z`; do not contact a provider, register, authenticate, accept terms, pay, query protected address/building/cadastral/land rows, create a destination, publish or deploy without explicit approval.
+- After NO: 252 profiles, 162 pending, 84 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
+- Next country: `PL` (Poland). No second country was started.
