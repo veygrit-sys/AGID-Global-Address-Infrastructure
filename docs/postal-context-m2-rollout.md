@@ -1873,3 +1873,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T16:45:28.862Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After LV: 252 profiles, 169 pending, 77 blocked, 0 in progress, 6 evidence-verified M2; 135 manifests / 105 explicit definitions.
 - Next country: `MC` (Monaco). No second country was started.
+
+## Monaco (MC) M2 review - 2026-08-30
+
+- Target: Monaco (`MC`), Europe. The source-of-truth status command selected MC with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_monaco_postcode_area_visualization`. A complete current rights-cleared ordinary-plus-exception denominator, real postcode Polygon/MultiPolygon, approved immutable artifact and real application path remain mandatory.
+- Official assignment audit: the 2026-08-08 Open-Licence La Poste base has 39,192 rows / 6,328 codes and exactly one Monaco row, `98000 MONACO`; its Monaco geocode and requested geometry are empty, and the official catalogue says postcode contours are not supplied.
+- Operator/exception audit: current 2026 La Poste Monaco material displays `98020 MONACO CEDEX` as an example but provides no complete 980xx allocation denominator, polygon product or bulk address-data grant.
+- Geometry: the reviewed 2021 Open-Licence BAN-derived hull GeoJSON has 6,158 features and zero `98xxx` records. No Principality/commune, quartier, urban-plan, address, building, road, endpoint, buffer, hull, Voronoi/raster or synthetic proxy was promoted.
+- Application status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear and re-search behavior pass. No real MC polygon artifact exists, so real MC API/map rendering and browser E2E are not claimed.
+- Validation: shared area UI 5/5, MC country contracts 14/14, shared runtime 24/24, rollout invariants 8/8, MC ledger evidence 5/5 and full TypeScript 1/1 pass (57 recorded assertions, 0 failures).
+- Evidence: `docs/postal-context-monaco-m2.md`, `reports/postal-context-m2/mc-source-review-2026-08-30.json`, and `reports/postal-context-m2/mc-checks-2026-08-30.json`; seventeen exact official/public-service bodies or distributions are byte/SHA-256 bound. Raw CSV, GeoJSON, PDFs and source bodies are not committed.
+- Retry: after pending countries and `2026-09-06T17:24:29.593Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After MC: 252 profiles, 168 pending, 78 blocked, 0 in progress, 6 evidence-verified M2; 135 manifests / 105 explicit definitions.
+- Next country: `MD` (Moldova). No second country was started.
