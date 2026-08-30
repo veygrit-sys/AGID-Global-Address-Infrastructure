@@ -1,7 +1,7 @@
 {
   "schema_version": "agid-postal-li-source-profile-v0.1",
   "country_code": "LI",
-  "artifact_scope": "metadata-only-contract-seed",
+  "artifact_scope": "current-swisstopo-plzo-li-domicile-area-runtime",
   "redistribution_classes": [
     { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-geographic fixtures only." },
     { "id": "R1_llv_ogd", "meaning": "Liechtenstein National Administration official directories and permitted geodata with required attribution and license-link propagation." },
@@ -34,7 +34,16 @@
       "geometry_authority": "official_public_postal_locality_geometry",
       "validation_readiness": "open_and_reproducible",
       "redistribution_class": "R2_swisstopo_ogd",
-      "bundled_here": false,
+      "bundled_here": true,
+      "observed_release": {
+        "version": "STAC item 2026-08-11; assets updated 2026-08-11",
+        "retrieved_at": "2026-08-30T14:39:53.180Z",
+        "shapefile_zip_digest": "sha256:a58e105be27c1b4f4797ccbb5765861711ada593163059969c49a33489e0a60a",
+        "csv_zip_digest": "sha256:0542e70aaf2890a5e48d8bb22e2aec233a413bc26a8420d506551ac3a1af1e26",
+        "source_polygon_records": 4073,
+        "li_csv_rows": 20,
+        "li_domicile_polygons": 13
+      },
       "promotion_requirements": ["pin-release-schema-crs-row-count-byte-length-and-digest", "retain-plz4-plz6-locality-and-postcode-type", "prove-li-country-partition", "emit-swisstopo-attribution"],
       "prohibited_claims": ["all-swiss-post-codes-have-plzo-area", "plzo-proves-address-or-building", "ch-row-is-li-from-shared-source-alone", "deliverability-guarantee"]
     },
@@ -111,7 +120,7 @@
   ],
   "artifact_partitions": [
     { "id": "shared-postal-assignment", "rule": "Swiss Post rows retain product, edition, postcode type, country evidence, rights, and digest; licensed rows never silently enter public artifacts." },
-    { "id": "li-plzo", "rule": "Only authoritatively LI-classified PLZO rows enter the pack; PLZ4 and PLZ6 remain separate fields." },
+    { "id": "li-plzo", "rule": "Only PLZO rows whose ZIP_ID resolves exclusively to official municipality BFS 7001-7011 rows enter the pack; the 13 selected PLZ6 suffix-00 polygons retain PLZ4, ZIP_ID, source edition and attribution." },
     { "id": "local-delivery-endpoints", "rule": "Liechtensteinische Post facilities, post offices, parcel terminals, and PO boxes remain point or non-area evidence." },
     { "id": "llv-open-address", "rule": "Official addresses retain building identifier, object status, hierarchy, coordinates, CRS, release, attribution, and postal cross-check status." },
     { "id": "llv-public-building", "rule": "Public GWR identity and survey geometry remain distinct until the same source identifier or reviewed crosswalk proves the link." },

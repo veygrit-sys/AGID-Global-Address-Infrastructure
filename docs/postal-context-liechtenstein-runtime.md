@@ -1,6 +1,6 @@
 # Liechtenstein Postal Context runtime
 
-Status: `M1_metadata`
+Status: `M2_current_swisstopo_plzo_li_domicile_visualization`
 
 The Liechtenstein pack joins the shared Swiss postcode system to sovereign LI
 address, building, and boundary evidence without merging the two countries.
@@ -35,10 +35,19 @@ containment and nearest-footprint matches remain candidates.
 
 ## Country partition
 
-Shared Swiss sources are filtered using explicit country evidence and official
-LI sovereign geometry. A missing canton value, a `94xx` code, or a border clip
-cannot independently classify a row. CH and AT artifacts are rejected from the
-LI pack, and an LI result always receives an LI AGID relation.
+The 2026-08-11 swisstopo edition is partitioned by joining the PLZ polygon
+`ZIP_ID` to CSV municipality rows. A `ZIP_ID` is admitted only when every row
+uses official municipality BFS 7001-7011 and the Swiss canton field is blank.
+The exact admitted set is 9485-9488 and 9490-9498. A missing canton value, a
+`94xx` code, or a border clip cannot independently classify a row. CH and AT
+artifacts are rejected from the LI pack.
+
+The fixed M2 pack contains 13 official `REAL`, not-in-modification Polygon
+features, 10,598 coordinates, no synthetic or invented areas, and no address
+or building rows. The API normalizes the code, returns the selected Polygon
+and source metadata, and the application fits the map while drawing a
+0.22-opacity fill with a 0.95-opacity three-pixel outline. Clear and re-search
+remove and restore the source/layers deterministically.
 
 ## Repository and runtime boundary
 
@@ -49,6 +58,7 @@ bbox intersection, address/building context, and AGID relations. Raw sources,
 licensed products, personal fields, and private dwelling data stay outside the
 AGID repository.
 
-Environment slots use `AGID_POSTAL_CONTEXT_LI_*`. Until a separately attested
-M2+ descriptor exists, Liechtenstein remains `unconfigured`; synthetic packs
-are tests only.
+Environment slots use `AGID_POSTAL_CONTEXT_LI_*`. Configure the descriptor
+path and expected digest from `data/postal_country_packs/li/postal-context/m2`
+to load this M2 release. Synthetic packs remain tests only and never replace
+the digest-pinned current artifact.

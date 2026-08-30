@@ -4,16 +4,16 @@
     "name": "agid-postal-li",
     "country_code": "LI",
     "country_name": "Liechtenstein",
-    "maturity": "M1_metadata"
+    "maturity": "M2_experimental"
   },
   "release_scope": {
-    "metadata_only": true,
+    "metadata_only": false,
     "contains_raw_source_data": false,
     "contains_real_addresses": false,
     "contains_personal_data": false,
-    "contains_production_geometry": false,
+    "contains_production_geometry": true,
     "fixtures_are_synthetic": true,
-    "publication_claim": "contract-seed-only"
+    "publication_claim": "current-swisstopo-plzo-li-domicile-area-runtime"
   },
   "postal_system": {
     "full_code_name": "Postleitzahl (PLZ4)",
@@ -22,6 +22,7 @@
     "assignment_rule": "Swiss Post postcode/place and street-directory evidence defines PLZ4 assignment in the shared Swiss-Liechtenstein system. Liechtensteinische Post supplies local delivery and endpoint evidence; syntax or an endpoint listing alone never proves a domicile assignment.",
     "plz6_rule": "swisstopo PLZO PLZ6 combines PLZ4 with a two-digit locality suffix and remains separately stored from the public four-digit address code.",
     "perimeter_rule": "The swisstopo official directory publishes monthly locality and PLZ6 perimeters for domicile-address postcode types in Switzerland and Liechtenstein. Company, professional, administrative, PO-box, parcel-terminal, and other special codes may remain non-areal.",
+    "m2_geometry_rule": "The 2026-08-11 swisstopo STAC edition supplies 13 official REAL PLZ6 suffix-00 Polygon features. Official municipality BFS codes 7001-7011 and ZIP_ID joins partition LI rows before EPSG:2056 to EPSG:4326 conversion; no address, building or special-code area is inferred.",
     "address_rule": "The Liechtenstein National Administration official building-address directory supplies street, house number, postcode, locality, coordinates, and Gebäudeidentifikator evidence. It does not replace Swiss Post postal assignment authority.",
     "building_rule": "The public GWR and municipal official-survey packages supply building identity and geometry. Exact display requires the same official building identifier or a reviewed explicit crosswalk; containment and proximity remain candidates.",
     "administrative_rule": "Official sovereign and municipal boundaries supply jurisdiction context and country partitioning but never replace a PLZO perimeter.",
@@ -43,11 +44,11 @@
     { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
   ],
   "promotion": {
-    "current_stage": "M1_metadata",
+    "current_stage": "M2_current_swisstopo_plzo_li_domicile_visualization",
     "stages": [
       { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
       { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
-      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M2_current_swisstopo_plzo_li_domicile_visualization", "definition": "The current rights-cleared swisstopo PLZO edition reproduces all official LI domicile PLZ4 polygons with country-partition, lineage and topology evidence; the real API search reaches map fit, translucent fill, clear and re-search while non-area special codes remain explicit." },
       { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
       { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
     ],
