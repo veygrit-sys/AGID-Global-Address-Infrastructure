@@ -1731,3 +1731,17 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T09:42:03.227Z; do not authenticate, download restricted files, seek consent, request or pay for DGU data, accept terms, query address/building/cadastral/land rows, create a destination, publish or deploy without explicit approval.
 - After HR: 252 profiles, 179 pending, 69 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
 - Next country: `HU` (Hungary). No second country was started.
+
+
+## Hungary (HU) M2 review - 2026-08-30
+
+- Target: Hungary (`HU`), Europe. The source-of-truth status command selected HU with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under the refined `M2_current_magyar_posta_assignment_and_postcode_area_visualization` definition. The public Partner Extra assignment is current and application-usable, but has neither explicit special/non-geographic classification nor area geometry.
+- Real-data audit: Magyar Posta XML has 3,817 rows, 3,817 distinct valid four-digit codes, 16 leading-zero codes, 0 duplicate/invalid codes, and only `Code`/`city`/`TimeWindowID`. TERCET 2025 has 3,156 distinct valid codes and only `NUTS3`/`CODE`; it overlaps 3,049 current codes (79.879%), omits 768 and adds 107. Both have 0 Polygon/MultiPolygon records.
+- Authority and geometry: TERCET/GISCO points and NUTS correspondence, KSH administrative units and controlled KCR addresses remain separate from postal membership. No point, buffer, Voronoi cell, administrative proxy, address, building, parcel, cadastral object or synthetic fixture was promoted; no raw rows were committed.
+- App status: shared Polygon/MultiPolygon validation, fit, translucent fill, visible outline, states, provenance, clear and re-search tests pass. No rights-cleared real HU artifact, API geometry response, fit or translucent area exists, so M2 remains unmet and browser E2E is not claimed.
+- Validation: HU review 11/11, existing HU regression 139/139, shared Postal Context runtime 161/161, shared area UI 23/23, ledger/rollout 12/12, and repository-wide `tsc --noEmit` pass (346/346 tests total). Raw official captures and postcode rows are not committed.
+- Evidence: `docs/postal-context-hungary-m2.md`, `reports/postal-context-m2/hu-source-review-2026-08-30.json`, and `reports/postal-context-m2/hu-checks-2026-08-30.json`.
+- Retry: after pending countries and 2026-09-06T10:04:25.824Z; do not authenticate, request controlled KCR/address/cadastral data, accept terms/contracts, request keys, pay, create a destination, publish or deploy without explicit approval.
+- After HU: 252 profiles, 178 pending, 70 blocked, 0 in progress, 4 evidence-verified M2; 131 manifests / 101 explicit definitions.
+- Next country: `IE` (Ireland). No second country was started.

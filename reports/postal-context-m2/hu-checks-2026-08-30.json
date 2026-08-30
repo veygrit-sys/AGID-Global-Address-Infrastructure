@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "countryCode": "HU",
+  "checkedAt": "2026-08-30T10:19:49.200Z",
+  "result": "blocked",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/hu-source-review-2026-08-30.json",
+    "sha256": "62976a08ac170a5123ee4d292d1893b899a782beda6c1be55f35f991e2902df9"
+  },
+  "commands": [
+    {
+      "name": "hungary-country-review",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextHungaryRepository.test.ts src/data/hungaryOpenGeoSources.test.ts src/lib/postalContextHungaryM2Review.test.ts",
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "name": "hungary-existing-runtime-regression",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <8 existing HU policy/repository/runtime/route/source/catalog/address-format test files>",
+      "passed": 139,
+      "failed": 0
+    },
+    {
+      "name": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <31 shared runtime/API/schema/topology test files>",
+      "passed": 161,
+      "failed": 0
+    },
+    {
+      "name": "shared-postal-map-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "name": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "ledgerValidation": {
+    "command": "node --test scripts/postal-context-m2-hu-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+    "countryLedgerTests": 4,
+    "rolloutTests": 8,
+    "passed": 12,
+    "failed": 0,
+    "nextCountry": "IE"
+  },
+  "totalPassed": 346,
+  "totalFailed": 0,
+  "deterministicUiEvidence": {
+    "sharedStateAndRenderTestsPassed": 23,
+    "polygonAndMultiPolygonOnly": true,
+    "translucentFillAndVisibleOutline": true,
+    "fitAndClearPathCovered": true,
+    "syntheticHungaryRenderPromoted": false,
+    "realHungaryPolygonAvailable": false,
+    "realHungaryAppPathVerified": false
+  },
+  "browserAttempt": {
+    "attempted": false,
+    "passed": false,
+    "implication": "No browser E2E is claimed because no real rights-cleared HU polygon exists. Shared deterministic UI checks passed, but HU remains blocked."
+  },
+  "launcherNote": "The npm status launcher could not locate Node and the npm shared-runtime launcher could not locate tsx on this host; the checked-in status script and all tests were run with the same bundled Node executable and local tsx directly.",
+  "conclusion": "The country-specific definition, official data quality and blockers are verified. M2 is not achieved: current assignment rows, point/NUTS correspondence, controlled address coordinates, administration, buildings and parcels were not fabricated into a Hungarian postcode area, so no real HU API/app area result is claimed.",
+  "testExecutionCountsIncludeIntentionalRegressionOverlap": true
+}
