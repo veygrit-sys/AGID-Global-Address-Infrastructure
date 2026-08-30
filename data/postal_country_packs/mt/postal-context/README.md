@@ -55,3 +55,27 @@ upstream records and are ineligible for promotion. M2 requires pinned,
 rights-reviewed and confirmed snapshots. M3 requires independent postcode,
 address, building-link, privacy and freshness holdouts. M4 requires two
 successful refreshes and tested rollback.
+
+## 2026-08-30 M2 audit
+
+The current MaltaPost finder bundle exposes versioned town, street, address and
+search endpoints. The public API returned 89 towns, 116 streets for Il-Ħamrun
+and three records for the operator's published example HMR 2042. Those records
+are assignment responses only: the app contract and sampled responses contain
+no Polygon, MultiPolygon or coordinate field and do not document a complete
+ordinary-plus-exception allocation denominator.
+
+The current OAR localities table contains 85 data rows with locality, local
+council and region context only. It has no postcode or geometry column.
+MaltaPost website terms restrict unaltered reproduction to personal,
+non-commercial use or internal circulation, so this review did not infer a
+dataset-specific bulk-processing, derivation, public-serving or redistribution
+grant. No OAR locality/street record, address response, point, building,
+administrative or statistical area, buffer, hull, Voronoi/raster cell or
+synthetic fixture was promoted to a postcode area.
+
+Malta therefore remains at M1_metadata and is blocked under
+M2_current_malta_postcode_area_visualization. See
+docs/postal-context-malta-m2.md and the corresponding source and engineering
+reports under reports/postal-context-m2/. Raw finder responses and official
+page bodies are not committed.

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "MT",
+  "observedAt": "2026-08-30T19:32:32.164Z",
+  "completedAt": "2026-08-30T19:54:25.7435667Z",
+  "baseCommit": "0fe21c7ee12b670aa4a44fa5a95fa7cd323115f6",
+  "scope": "Country-specific M2 definition, current official finder/API, rights and OAR context audit, deterministic source inspection and conservative blocker evidence; no raw source body, address row, postal data pack, API geometry route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "malta-source-inspector",
+      "command": "node scripts/inspect-postal-context-mt-sources.mjs --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "twelve byte/SHA-256-bound official bodies reproduce API v1/maxResult 50, 89 towns, 116 Il-Ħamrun streets, three HMR 2042 assignment records, 85 OAR locality rows and zero postcode areas"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "malta-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-mt-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, exact API/OAR counts, rights and prohibited proxy separation, report digests and Netherlands next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 6,
+    "testsPassed": 44,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 9,
+    "exactBodiesByteAndSha256Bound": 12,
+    "operatorTowns": 89,
+    "operatorHamrunStreets": 116,
+    "operatorSampleSearchRecords": 3,
+    "operatorSampleSearchDistinctPostcodes": 1,
+    "oarLocalityRows": 85,
+    "oarPostcodeColumns": 0,
+    "oarGeometryColumns": 0,
+    "publicOfficialPostcodePolygonRecords": 0,
+    "rightsClearedDerivedPostcodePolygonRecords": 0,
+    "rawSourceBodiesInGit": 0,
+    "operatorDatasetSpecificBulkProcessingDerivationPublicServingAndRedistributionGrantEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realMtRuntimeVerified": false,
+    "realMtApiVerified": false,
+    "realMtAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no official or rights-cleared derived real MT Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "The current public finder/API is an individual address-assignment product, not a complete bulk ordinary-plus-exception postcode denominator.",
+    "The API contract and sampled current responses contain no geometry field, coordinates, Polygon or MultiPolygon.",
+    "The OAR locality/street services are separate non-postal context and contain no reviewed postcode-area product.",
+    "MaltaPost website terms restrict reproduction; no dataset-specific AGID bulk-processing, derivation, public-serving or redistribution grant was established.",
+    "Government open-data catalogue requests returned HTTP 403; the run records availability failure, not dataset nonexistence.",
+    "The first npm-script status invocation inherited a PATH without node and failed before the script ran; the same status command passed after the local Node.js path was set explicitly.",
+    "No real MT postcode Polygon/MultiPolygon can be exercised; country runtime, API map fit, translucent rendering and browser E2E remain unverified."
+  ],
+  "countryM2Achieved": false
+}

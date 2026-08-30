@@ -1929,3 +1929,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T18:56:31.619Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After MK: 252 profiles, 165 pending, 81 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
 - Next country: `MT` (Malta). No second country was started.
+
+## Malta (MT) M2 review - 2026-08-30
+
+- Target: Malta (`MT`), Europe. The source-of-truth status command selected MT with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_malta_postcode_area_visualization`. A complete current rights-cleared ordinary/exception denominator plus real postcode Polygon/MultiPolygon is mandatory.
+- Operator audit: the current finder bundle uses API v1 and maxResult 50. Anonymous GETs returned 89 towns, 116 Il-Ħamrun streets and three current records for the published HMR 2042 example. The response fields are address components plus `postCode`; the bundle and responses contain zero geometry tokens and no complete denominator.
+- OAR and rights: the current OAR table has 85 locality rows and only locality/council/region columns, with no postcode or geometry. MaltaPost website terms limit unaltered reproduction to personal non-commercial use or internal circulation; no dataset-specific AGID processing, derivation, public-serving or redistribution grant was established. Three Government catalogue requests returned HTTP 403, recorded only as availability failure.
+- Geometry: no finder address, prefix, OAR locality/street, address Point, Planning Authority building, administrative/statistical/cadastral proxy, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No real eligible MT polygon exists, so real MT runtime/API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, MT ledger evidence 5/5 and full TypeScript 1/1 pass (44 recorded assertions, 0 failures).
+- Evidence: `docs/postal-context-malta-m2.md`, `reports/postal-context-m2/mt-source-review-2026-08-30.json` and `reports/postal-context-m2/mt-checks-2026-08-30.json`; twelve exact official bodies are byte/SHA-256 bound. Raw source bodies and address rows are not committed.
+- Retry: after pending countries and `2026-09-06T19:32:32.164Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After MT: 252 profiles, 164 pending, 82 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
+- Next country: `NL` (Netherlands). No second country was started.
