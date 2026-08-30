@@ -1915,3 +1915,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T18:22:01.106Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After ME: 252 profiles, 166 pending, 80 blocked, 0 in progress, 6 evidence-verified M2; 136 manifests / 106 explicit definitions.
 - Next country: `MK` (North Macedonia). No second country was started.
+
+## North Macedonia (MK) M2 review - 2026-08-30
+
+- Target: North Macedonia (`MK`), Europe. The source-of-truth status command selected MK with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_north_macedonia_postcode_area_visualization`. A complete current rights-cleared four-digit ordinary and exception denominator, real postcode Polygon/MultiPolygon, approved immutable artifact and real application path remain mandatory.
+- Operator audit: the official addressing table has 1,831 rows, 230 codes, 1,693 localities, 230 delivery offices, 87 municipalities and 15 branches; the official locator has 331 unique valid facility Points and 326 rendered codes. Both have zero polygons.
+- Reconciliation/rights: only 218 codes overlap; 12 are table-only and 108 locator-only, so no complete reconciled ordinary-plus-exception denominator is claimed. Privacy/contact pages provide no dataset-specific public-serving grant. Government open-data and NSDI requests timed out; this records availability failure, not nonexistence.
+- Geometry: no locality/facility Point, delivery office, municipality, branch, address/cadastral unit, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, loading/no-match/multiple/API-failure/invalid-geometry, provenance, clear and re-search behavior pass. No real eligible MK polygon exists, so real MK runtime/API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, MK ledger evidence 5/5 and full TypeScript 1/1 pass (44 recorded assertions, 0 failures).
+- Evidence: `docs/postal-context-north-macedonia-m2.md`, `reports/postal-context-m2/mk-source-review-2026-08-30.json`, and `reports/postal-context-m2/mk-checks-2026-08-30.json`; eight exact official bodies are byte/SHA-256 bound. Raw source bodies, locality rows and facility coordinates are not committed.
+- Retry: after pending countries and `2026-09-06T18:56:31.619Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
+- After MK: 252 profiles, 165 pending, 81 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
+- Next country: `MT` (Malta). No second country was started.
