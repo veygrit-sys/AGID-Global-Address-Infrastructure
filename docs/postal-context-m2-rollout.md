@@ -1790,3 +1790,17 @@ No second country was started.
 - Evidence: [source report](../reports/postal-context-m2/is-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/is-checks-2026-08-30.json), [technical review](postal-context-iceland-m2.md), [build report](../reports/postal-context-m2/is-build-2026-08-30.json), and [source/reuse notice](../data/postal_country_packs/is/postal-context/M2-SOURCE-NOTICE.md). Raw official captures and WFS rows are not committed.
 - After IS: 252 profiles, 175 pending, 72 blocked, 0 in progress, 5 evidence-verified M2; 133 manifests / 103 explicit definitions.
 - Next country: `IT` (Italy). No second country was started.
+
+## Italy (IT) M2 review - 2026-08-30
+
+- Target: Italy (`IT`), Europe. The source-of-truth status command selected IT with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under the refined `M2_current_poste_italiane_assignment_and_postcode_area_visualization` definition. A complete current assignment, explicit publication rights and real CAP area geometry are all mandatory.
+- Official update: Poste Italiane's third 2025 update is effective from 25 May 2026 and replaced CAPs remain valid for at least twelve months. Its 172,296-byte ZIP contains exactly two SHA-pinned PDF change lists and no CSV, GeoJSON, Shapefile, GeoPackage, complete nationwide assignment or Polygon/MultiPolygon.
+- Rights and denominator: CAP Professional describes multi-CAP streets, arcs and civic range/parity, but requires purchase, registration/login and a PIN. Poste's current FAQ limits the database to internal use and prohibits transfer to third parties. No product data, credential, contract, payment or provider contact was used.
+- Open-data audit: ANNCSU advertises monthly open address downloads and daily APIs, but the official schema has zero CAP fields and the national download returned 403; zero address rows were acquired. ISTAT's 2026 WGS84 release is administrative/statistical geometry, not CAP geometry. No ANNCSU point, ISTAT administration, DBGT building, cadastral parcel, buffer, Voronoi cell or synthetic fixture was promoted.
+- App status: shared Polygon/MultiPolygon filtering, fit, translucent fill, visible outline, states, metadata, clear and re-search tests pass. No rights-cleared real IT artifact, API geometry response, map fit or translucent area exists, so browser E2E is not claimed.
+- Validation: IT existing runtime/source regression 71/71, shared Postal Context runtime 162/162, shared area UI 23/23, ledger/rollout 12/12 and repository-wide `tsc --noEmit` pass (268 recorded test executions). Initial launcher/dependency-only failures are recorded in the engineering report and do not hide product-test failures.
+- Evidence: `docs/postal-context-italy-m2.md`, `reports/postal-context-m2/it-source-review-2026-08-30.json`, and `reports/postal-context-m2/it-checks-2026-08-30.json`. Raw official captures and address/building/cadastral/land rows are not committed.
+- Retry: after pending countries and `2026-09-06T13:34:49.549Z`; do not purchase CAP Professional, register/authenticate, contact a provider, accept terms/contracts, request restricted data/keys, pay, create a destination, publish or deploy without explicit approval.
+- After IT: 252 profiles, 174 pending, 73 blocked, 0 in progress, 5 evidence-verified M2; 133 manifests / 103 explicit definitions.
+- Next country: `JE` (Jersey). No second country was started.
