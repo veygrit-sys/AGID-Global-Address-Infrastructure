@@ -1943,3 +1943,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T19:32:32.164Z`; do not contact a provider, register, authenticate, accept terms, pay, create a destination, publish or deploy without explicit approval.
 - After MT: 252 profiles, 164 pending, 82 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
 - Next country: `NL` (Netherlands). No second country was started.
+
+## Netherlands (NL) M2 review - 2026-08-30
+
+- Target: Netherlands (`NL`), Europe. The source-of-truth status command selected NL with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_netherlands_pc6_assignment_and_cbs_area_visualization`. A complete current rights-cleared PostNL ordinary/exception denominator, corrected CBS/Esri reconciliation, approved immutable artifact and real application path remain mandatory.
+- CBS geometry audit: the corrected 2025-v1 ZIP was fixed 2026-08-18. Its GeoPackage has 465,935 unique valid PC6 MultiPolygons, 597,956 polygon parts and 14,458,509 positions, with zero malformed codes, empty geometry or invalid geometry. CBS/Esri CC BY 4.0 NL surfaces remain `derived_geometry`, never PostNL assignment authority.
+- PostNL/rights audit: PCT-R covers current H house-number, B P.O.-box and N NAPO ranges and PCT-H about nine million addresses, but the product is purchased through a protected environment. Public terms restrict use to personal/strictly internal purposes and prohibit reproduction or third-party availability; no AGID public-serving grant was established.
+- Exception evidence: public headquarters code `2521 CA` has one CBS surface, while public P.O.-box codes `2500 GG` and `2500 CC` have none. No P.O.-box/NAPO/organization/special area, BAG/address/building, PC4/PC5, administrative/statistical/cadastral proxy, buffer, hull, Voronoi/raster cell or synthetic fixture was invented or promoted.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, clear and re-search behavior pass. No approved complete NL runtime artifact exists, so real NL normalization/API/map rendering and browser E2E are not claimed.
+- Validation: reproducible full-source inspector 1/1, shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, NL ledger evidence 5/5, changed JavaScript/JSON syntax 5/5 and full TypeScript 1/1 pass (49 recorded assertions, 0 failures). The initial empty dependency-tree and ENOSPC installation failures are disclosed in the engineering report.
+- Evidence: `docs/postal-context-netherlands-m2.md`, `reports/postal-context-m2/nl-source-review-2026-08-30.json`, and `reports/postal-context-m2/nl-checks-2026-08-30.json`; twelve exact official bodies/distributions are byte/SHA-256 bound. Raw ZIP, GeoPackage, workbook, page bodies and address rows are not committed.
+- Retry: after pending countries and `2026-09-06T20:04:32.662Z`; do not contact a provider, register, authenticate, accept terms, pay, query protected address/building/cadastral/land data, create a destination, publish or deploy without explicit approval.
+- After NL: 252 profiles, 163 pending, 83 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
+- Next country: `NO` (Norway). No second country was started.
