@@ -1588,3 +1588,14 @@ agreement, payment, new publication destination and deployment require explicit
 approval. After DE: 252 profiles, 190 pending, 61 blocked, 0 in progress, 1
 evidence-verified M2; 127 manifests / 97 explicit definitions. Next: **DK**.
 No second country was started.
+
+## Denmark (DK) review - 2026-08-30
+
+- Result: blocked at M1 under `M2_current_dagi_postnummerinddeling_visualization`.
+- Official observation: 1,089 current land-clipped DAWA MultiPolygons and 1,089 matching four-digit records; exact GeoJSON SHA-256 `5f489e68f49f95fe8e89ec9cd38c7f8a93986b88a95a1b4233bf3bed22e2bbf2`.
+- Rights: Dataforsyningen terms permit reuse and redistribution with authority, dataset, acquisition/service and terms attribution.
+- Quality blockers: 39 Turf-invalid geometries; three-position rings for `4000` and `8543`; zero `ErGadepostnummer` fields; live response is mutable and not an immutable public artifact. No repair or proxy surface was created.
+- App status: shared fit/translucent-fill/outline/clear/re-search tests pass, but DK-specific runtime/API tests use synthetic `0000`; real DK API and app-area visualization remain false.
+- Evidence: [source report](../reports/postal-context-m2/dk-source-review-2026-08-30.json), [engineering checks](../reports/postal-context-m2/dk-checks-2026-08-30.json), and [technical review](postal-context-denmark-m2.md).
+- Recheck: after the pending-country pass and 2026-09-30 unless a corrected immutable release appears earlier. Publication or deployment requires explicit approval.
+- Next country: `EE` (Estonia).
