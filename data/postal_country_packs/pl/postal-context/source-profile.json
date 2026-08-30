@@ -1,0 +1,66 @@
+{
+  "schema_version": "agid-postal-pl-source-profile-v0.1",
+  "country_code": "PL",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
+    { "id": "R1_public_validation_only", "meaning": "Public official pages, search results and manuals retained only as audit receipts; access does not grant dataset reproduction, transformation, database storage, redistribution or public serving." },
+    { "id": "R2_open_official_context", "meaning": "An exact official distribution under explicit open reuse terms with attribution, edition, date, schema, CRS, coverage and digest pinned; its authority remains limited to its declared subject." },
+    { "id": "R3_controlled_or_contract", "meaning": "Purchased, permissioned, credentialed or otherwise controlled material used only as specifically permitted." },
+    { "id": "R4_private_excluded", "meaning": "Personal, customer, ownership, shipment, credential or private property evidence is excluded from public artifacts." }
+  ],
+  "sources": [
+    {
+      "source_id": "poczta-polska-system-pna",
+      "provider": "Poczta Polska S.A.",
+      "source_url": "https://bip.poczta-polska.pl/bez-kategorii/system-pocztowych-numerow-adresowych-pna/",
+      "distribution_url": "https://www.poczta-polska.pl/wp-content/uploads/2024/05/spispna.pdf",
+      "role": ["official-pna-system", "current-pna-list-reference", "operator-assignment-and-membership-evidence"],
+      "production_scope": "Only a separately authorized current complete PNA assignment/exception release may supply production rows. The July 2026 public PDF and its extracted text are audit receipts only and are not bundled or transformed into an AGID dataset.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "validation_readiness": "written-agid-processing-derivation-storage-redistribution-and-public-serving-permission-plus-edition-schema-and-digest-required",
+      "redistribution_class": "R3_controlled_or_contract",
+      "bundled_here": false,
+      "promotion_requirements": ["obtain-explicit-compatible-permission", "pin-current-complete-edition-schema-date-byte-length-and-digest", "retain-leading-zeroes-and-canonical-hyphen", "reconcile-every-code-to-authoritative-area-or-explicit-non-area"],
+      "prohibited_claims": ["public-pdf-is-open-data", "search-result-is-bulk-redistribution-right", "pna-row-is-polygon", "address-membership-or-teryt-context-is-postcode-area"]
+    },
+    {
+      "source_id": "poczta-polska-pna-search",
+      "provider": "Poczta Polska S.A.",
+      "source_url": "https://www.poczta-polska.pl/znajdz-kod-pocztowy/",
+      "role": ["current-public-pna-search", "individual-non-personal-validation-receipt", "multiple-result-and-non-area-observation"],
+      "production_scope": "A minimal non-personal result may validate expected public behavior at a capture time. Search HTML is not a bulk source, licence grant, fixed distribution or geometry authority.",
+      "assignment_authority": "official_postal_operator_lookup",
+      "geometry_authority": "none",
+      "validation_readiness": "purpose-terms-request-method-response-time-schema-and-digest-required",
+      "redistribution_class": "R1_public_validation_only",
+      "bundled_here": false,
+      "promotion_requirements": ["use-only-minimal-non-personal-validation", "pin-capture-time-request-purpose-schema-and-digest", "never-promote-search-rows-to-production-pack"],
+      "prohibited_claims": ["search-response-is-complete-denominator", "six-rows-form-a-polygon", "locality-or-administrative-fields-define-area", "public-form-permits-scraping-or-republication"]
+    },
+    {
+      "source_id": "gugik-prg-and-address-services",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)",
+      "source_url": "https://www.geoportal.gov.pl/pl/dane/panstwowy-rejestr-granic-prg/",
+      "service_url": "https://www.geoportal.gov.pl/pl/usluga/uslugi-pobierania-wfs/",
+      "role": ["official-administrative-boundary-context", "official-address-and-street-context", "teryt-and-locality-validation"],
+      "production_scope": "Exact PRG or related official distributions may supply their declared administrative/address context under pinned reuse terms. They do not supply PNA postal-area geometry merely because postal codes or addresses can be associated with locations.",
+      "assignment_authority": "official_administrative_and_address_context_only",
+      "geometry_authority": "official_administrative_or_address_geometry_not_postcode_area",
+      "validation_readiness": "exact-distribution-license-edition-schema-crs-coverage-and-digest-required-for-context-only",
+      "redistribution_class": "R2_open_official_context",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-exact-open-reuse-terms-edition-schema-crs-coverage-and-digest", "retain-source-feature-authority", "obtain-separate-authoritative-postal-area-source"],
+      "prohibited_claims": ["administrative-boundary-is-postcode-area", "address-point-buffer-is-postcode-area", "wfs-catalogue-entry-proves-postcode-layer", "teryt-membership-proves-postal-boundary"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "operator-assignment", "rule": "Current Poczta PNA assignment, exception/membership semantics, edition, date, terms and digest remain operator evidence separate from geometry." },
+    { "id": "authoritative-postcode-area-or-non-area", "rule": "Only exact authoritative PNA Polygon/MultiPolygon features can be served as areas; organization, route, P.O.-box, point, membership-only and missing features remain explicit non-areas." },
+    { "id": "administrative-and-address-context", "rule": "PRG, TERYT, locality, street, address and administrative geometry retain their own authority and never become postal area by relabelling, union, buffer or nearest match." },
+    { "id": "public-search-validation", "rule": "Minimal non-personal lookup receipts may test expected public behavior but never become a bulk distribution or production artifact." },
+    { "id": "private-and-controlled", "rule": "Purchased lists, credentials, customers, recipients, owners, rightsholders, shipments and private property records never enter the open country seed." },
+    { "id": "synthetic-conformance", "rule": "Non-production fixture metadata only; never promotion evidence." }
+  ]
+}

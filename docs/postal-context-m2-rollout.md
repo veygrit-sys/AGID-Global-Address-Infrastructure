@@ -1972,3 +1972,17 @@ No second country was started.
 - Retry: after pending countries and `2026-09-06T20:52:33.425Z`; do not contact a provider, register, authenticate, accept terms, pay, query protected address/building/cadastral/land rows, create a destination, publish or deploy without explicit approval.
 - After NO: 252 profiles, 162 pending, 84 blocked, 0 in progress, 6 evidence-verified M2; 137 manifests / 107 explicit definitions.
 - Next country: `PL` (Poland). No second country was started.
+
+## Poland (PL) M2 review - 2026-08-30
+
+- Target: Poland (`PL`), Europe. The source-of-truth status command selected PL with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under `M2_current_poland_pna_assignment_and_postcode_area_visualization`. Explicit compatible Poczta rights, a fixed authoritative postcode Polygon/MultiPolygon, complete reconciliation, approved immutable artifact and real application path remain mandatory.
+- Operator audit: the exact official July 2026 PDF has 1,786 pages / 7,874,157 bytes, 121,627 PNA occurrences and 21,642 distinct `NN-NNN` codes from `00-001` to `99-440`; it contains zero geometry terms. Poczta's current public search database is dated 2026-08-30; one non-personal `00-940` lookup returned six rows, seven fields and zero geometry tokens.
+- Rights audit: Poczta states that it owns System PNA economic copyrights, sells electronic lists with quarterly updates and requires written consent for PDF reproduction, electronic processing, other-publication use and database storage. No AGID processing, derivation, redistribution or public-serving grant was established.
+- Geometry policy: GUGiK PRG/address data remain separate administrative/address authorities. No lookup-row envelope, locality, voivodeship/district/commune/PRG boundary, address/building point, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted. Six direct Geoportal/WFS timeouts are availability evidence only, not proof of nonexistence.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area, clear and re-search behavior pass. No real eligible PL artifact exists, so real PL API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area UI 5/5, shared runtime 24/24, rollout invariants 8/8, PL ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and full TypeScript 1/1 pass (51 recorded assertions, 0 failures). ENOSPC dependency installation and the temporary workspace-path typecheck workaround are disclosed.
+- Evidence: `docs/postal-context-poland-m2.md`, `reports/postal-context-m2/pl-source-review-2026-08-30.json`, and `reports/postal-context-m2/pl-checks-2026-08-30.json`; eight exact official bodies are byte/SHA-256 bound. Raw source bodies, PDF/text extraction, search rows and PNGs are not committed.
+- Retry: after pending countries and `2026-09-06T21:20:33.981Z`; do not contact a provider, register, authenticate, accept terms, pay, query protected data, create a destination, publish or deploy without explicit approval.
+- After PL: 252 profiles, 161 pending, 85 blocked, 0 in progress, 6 evidence-verified M2; 138 manifests / 108 explicit definitions.
+- Next country: `PT` (Portugal). No second country was started.
