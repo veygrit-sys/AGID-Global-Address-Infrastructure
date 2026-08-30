@@ -1551,3 +1551,40 @@ agreement, new publication destination and deployment require explicit
 approval. After CZ: 252 profiles, 191 pending, 60 blocked, 0 in progress, 1
 evidence-verified M2; 127 manifests / 97 explicit definitions. Next: **DE**.
 No second country was started.
+
+## 2026-08-30 DE: current national product documented, licensed data and real visualization blocked
+
+DE now has
+`M2_current_deutsche_post_delivery_area_visualization`. Ten exact official
+bodies were byte and SHA-256 verified. BKG documents release `2026-02` with
+8,169 five-digit delivery-postcode surfaces sourced from Deutsche Post Direkt,
+semiannual updates and `PLZ_5` Shapefile delivery. The documentation is dated
+2026-07-14, the terms 2026-07-21 and the catalogue update 2026-07-30.
+
+The national bytes, WFS and WMS are restricted to eligible federal/V GeoBund
+users under a licence agreement; an anonymous WFS capability request returned
+HTTP 403. No authentication, agreement acceptance, payment or rights claim was
+made. The public BKG ZIP contains three valid EPSG:25832 Polygon records for
+`38350`, `38368` and `38379`, but is explicitly compatibility test data.
+Its production-eligible count is therefore zero and it remains outside Git.
+
+BKG geometry is a generalized cartographic delivery surface, not an
+administrative boundary or exact street/house/building relation. Large-recipient
+and other non-area codes receive no buffer, proxy boundary, Voronoi or AGID-cell
+surface. Austrian codes `87491`, `87567`, `87568` and `87569` routed
+through Germany remain Austrian identity and are excluded from German coverage.
+
+Shared tests verify normalized search, Polygon/MultiPolygon filtering, bounds
+fit, translucent fill, visible outline, clear/re-search and failure states. DE
+has no authorized current national artifact, immutable publication or real-data
+DE API/app response, so postcode search cannot yet display a verified
+semi-transparent German delivery area and M2 remains blocked.
+
+[DE review](postal-context-germany-m2.md), [source report](../reports/postal-context-m2/de-source-review-2026-08-30.json)
+and [engineering checks](../reports/postal-context-m2/de-checks-2026-08-30.json)
+record 110 passing tests, zero failures and zero TypeScript errors. Recheck after
+the pending-country pass and `2026-09-30T02:00:12.877Z`. Authentication,
+agreement, payment, new publication destination and deployment require explicit
+approval. After DE: 252 profiles, 190 pending, 61 blocked, 0 in progress, 1
+evidence-verified M2; 127 manifests / 97 explicit definitions. Next: **DK**.
+No second country was started.
