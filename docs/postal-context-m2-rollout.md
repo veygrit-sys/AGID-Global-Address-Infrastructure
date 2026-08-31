@@ -2271,3 +2271,13 @@ No second country was started.
 - Retry: not before `2026-09-07T08:45:47.702Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After AW: 252 profiles, 143 pending, 102 blocked, 0 in progress, 7 evidence-verified M2; 150 manifests / 121 explicit definitions.
 - Next country: BB (Barbados). No second country was started.
+
+## 2026-08-31 Barbados (BB) - blocked at M1
+
+- **Primary evidence:** preserved and SHA-256-verified 11 exact official/public bodies (1,951,330 bytes): current Barbados Postal Service search, addressing and terms pages; the UPU 11/2014 one-page addressing guide; and current public BBID Experience, WebMap, building-item, FeatureServer and layer metadata. No feature or address row was queried.
+- **Rights:** BPS terms assert copyright and restrict making, transmitting and storing electronic copies. The public BBID Experience has `licenseInfo: null` and no terms field; its WebMap and building item have empty licence metadata and no terms field. Public viewing and Query capability do not grant AGID processing, derivation, redistribution or public-serving rights.
+- **Geometry:** BBID layer `Simplified Buildings 24082026` is an `esriGeometryPolygon` building-footprint layer with `BuildingID`, `ShortPosta` and `LongPostal` fields. A building footprint is not a legacy ShortPosta postal area. No dissolve, fill, buffer, parcel/locality/parish/point/AGID proxy, or fabricated area is permitted. A LongPostal footprint remains ineligible until an explicit, permitted same-feature relationship and privacy review exist.
+- **M2/app status:** M2 remains unmet. There is no complete current finite assignment denominator, rights-cleared fixed artifact, production BB API record, or real postcode-to-Polygon/MultiPolygon app path. Loading, no-match, multiple, API-failure, invalid-geometry, metadata, clear and re-search behavior therefore remain intentionally disabled for BB real data.
+- **Validation:** 59/59 deterministic checks passed across exact-source inspection, inspector unit tests, shared Postal Context runtime tests, rollout invariants, BB ledger contracts, focused TypeScript checking and syntax/JSON validation. The UPU PDF was also rendered at 150 dpi and checked for a non-empty page without relying on OCR.
+- **Retry:** after `2026-09-07T09:32:18.170Z`, and only after the pending-country sweep; no provider contact, account, contract, payment, protected-row query, new destination or deployment without explicit approval.
+- **Next:** Saint Barthélemy (`BL`).
