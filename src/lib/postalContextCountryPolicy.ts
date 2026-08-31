@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'AI', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'FO', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'LR', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'AI', 'BL', 'NI', 'BR', 'VE', 'PE', 'CO', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'FO', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'LR', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -95,6 +95,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   AI: {
     countryCode: 'AI',
     postalCodeFormat: 'AI-2640 (single postcode for the whole territory)',
+    fullCodeGeometrySemantics: 'postal-area-first',
+  },
+  BL: {
+    countryCode: 'BL',
+    postalCodeFormat: '97133 (single postcode for Saint Barthélemy)',
     fullCodeGeometrySemantics: 'postal-area-first',
   },
   NI: {
@@ -1485,6 +1490,13 @@ export function normalizeAnguillaPostalCode(value: unknown) {
   return /^AI-?2640$/.test(normalized) ? 'AI-2640' : null;
 }
 
+export function normalizeSaintBarthelemyPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return normalized === '97133' ? normalized : null;
+}
+
 export function normalizePostalContextPostalCode(countryCode: string, value: unknown) {
   const normalizedCountry = countryCode.toUpperCase();
   if (normalizedCountry === 'JP') return normalizeJapanPostalCode(value);
@@ -1504,6 +1516,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'PA') return normalizePanamaPostalCode(value);
   if (normalizedCountry === 'BB') return normalizeBarbadosPostalCode(value);
   if (normalizedCountry === 'AI') return normalizeAnguillaPostalCode(value);
+  if (normalizedCountry === 'BL') return normalizeSaintBarthelemyPostalCode(value);
   if (normalizedCountry === 'NI') return normalizeNicaraguaPostalCode(value);
   if (normalizedCountry === 'BR') return normalizeBrazilPostalCode(value);
   if (normalizedCountry === 'VE') return normalizeVenezuelaPostalCode(value);

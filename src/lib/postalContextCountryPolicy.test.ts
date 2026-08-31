@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import {
   normalizeAnguillaPostalCode,
+  normalizeSaintBarthelemyPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeSerbiaPostalCode,
   normalizeCroatiaPostalCode,
@@ -809,6 +810,10 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeAnguillaPostalCode('2640'), null);
   assert.equal(normalizeAnguillaPostalCode('AI-2641'), null);
   assert.equal(normalizePostalContextPostalCode('ai', 'AI 2640'), 'AI-2640');
+  assert.equal(normalizeSaintBarthelemyPostalCode('９７１３３'), '97133');
+  assert.equal(normalizeSaintBarthelemyPostalCode('97 133'), '97133');
+  assert.equal(normalizeSaintBarthelemyPostalCode('97134'), null);
+  assert.equal(normalizePostalContextPostalCode('bl', '９７１３３'), '97133');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -843,6 +848,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('BB'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BB.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BB.postalCodeFormat, 'BBNNNNN or BBNNNNN-AAAAA');
+  assert.equal(isPostalContextCountryCode('BL'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BL.fullCodeGeometrySemantics, 'postal-area-first');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BL.postalCodeFormat, '97133 (single postcode for Saint Barthélemy)');
   assert.equal(isPostalContextCountryCode('NI'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NI.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.NI.postalCodeFormat, 'NNNNN');
