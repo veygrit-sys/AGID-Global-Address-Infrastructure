@@ -2281,3 +2281,20 @@ No second country was started.
 - **Validation:** 59/59 deterministic checks passed across exact-source inspection, inspector unit tests, shared Postal Context runtime tests, rollout invariants, BB ledger contracts, focused TypeScript checking and syntax/JSON validation. The UPU PDF was also rendered at 150 dpi and checked for a non-empty page without relying on OCR.
 - **Retry:** after `2026-09-07T09:32:18.170Z`, and only after the pending-country sweep; no provider contact, account, contract, payment, protected-row query, new destination or deployment without explicit approval.
 - **Next:** Saint Barthélemy (`BL`).
+
+## BL - Saint Barthélemy
+
+- Status: m2_verified / M2 achieved
+- Attempt: 1 at 2026-08-31T10:26:19.045Z
+- Definition: M2_current_laposte_single_postcode_derived_collectivity_visualization
+- Evidence: reports/postal-context-m2/bl-current-single-postcode-2026-08-31.json (sha256:6f13839e5d8d3647064e827bc4490e1229593f1d3655055fb02cc34810bfd8e2)
+- Checks: reports/postal-context-m2/bl-validation-2026-08-31.json (sha256:bade8154b2ade5087c4a8ec68f177f1542675b28aa26ab7a10b50f72f0818bb6)
+- Country report: docs/postal-context-saint-barthelemy-m2.md (sha256:9e38c65c9c0956fa4613416c675ef96e10fad9207f3d82be2e037b477cd5ae20)
+- Official assignment: the complete La Poste snapshot updated 2026-08-08 has 39,192 rows and exactly one 977-prefix and one 97133 row, both 97701 Saint-Barthélemy to 97133. La Poste explicitly supplies no open postcode contours.
+- Real display geometry: fixed geo.api.gouv.fr code and postcode queries return the same 21-part, 2,912-position real MultiPolygon. The coordinate-preserving build passes Turf and JSTS; all seven exact source receipts total 1,879,646 bytes and remain outside Git under Open Licence 2.0.
+- Authority: assignment is official; the displayed administrative geometry is derived, confidence 0.97, and is not an official postal, legal, survey, cadastral or delivery boundary. No address, building, parcel, recipient, customer, land-rights or fabricated area is published.
+- Application: BL plus 97133 normalizes to 97133; the real descriptor flows through the shared runtime and Express API to the MultiPolygon, bounds fit, opacity-0.22 fill, opacity-0.95/width-3 outline, provenance metadata, clear and re-search. Invalid input returns 400 without fabricated geometry. Deterministic route-to-map verification substitutes for browser E2E.
+- Validation: BL country/topology/API/app 16/16, shared runtime 162/162, shared area UI 5/5, TypeScript and diff checks all pass; a second isolated build reproduced descriptor, graph and geometry digests (185 recorded passes, 0 failures).
+- Published artifact commit: f66ebcd354b97507111691ba003f26e5eec31f57 on codex/postal-context-m2-rollout.
+- After BL: 252 profiles, 141 pending, 103 blocked, 0 in progress, 8 evidence-verified M2; 151 manifests / 123 explicit definitions.
+- Next country: BM (Bermuda). No second country was started.
