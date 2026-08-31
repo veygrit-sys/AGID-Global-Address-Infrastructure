@@ -2055,3 +2055,20 @@ No second country was started.
 - Application: shared Polygon/MultiPolygon draw/fit/translucent fill/outline/clear and error/provenance contracts pass, but no real SE loader, API response, map rendering or browser E2E is claimed.
 - Retry: not before 2026-09-07T00:16:38.482Z while pending countries remain; any provider contact, registration, application, terms acceptance, purchase, publication or deployment requires explicit approval.
 - Next country: SI (Slovenia).
+
+## SI - Slovenia
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at 2026-08-31T00:49:09.000Z
+- Definition: `M2_current_slovenia_assignment_crosswalk_and_area_visualization`
+- Evidence: `reports/postal-context-m2/si-source-review-2026-08-31.json` (`sha256:eab55088fbae287ed33e208e5a3b6a4ed6dc361029a381df39bcf27d0fd36fff`)
+- Checks: `reports/postal-context-m2/si-checks-2026-08-31.json` (`sha256:884dcc19073f33dccc626c0f6a46b1b7f9c931fd030c6500fbcb1045a48d91fd`)
+- Country report: `docs/postal-context-slovenia-m2.md`
+- Exact-body receipts: 20 bodies / 17,226,218 bytes with SHA-256; raw HTML/XML/CSV/GeoJSON and temporary inspection output stay outside Git.
+- Source and geometry: the current Pošta normal CSV contains 570 rows / 569 unique four-digit codes with duplicate `1002`. All 466 GURS postal-district codes match Pošta, and all 445 Polygon plus 21 MultiPolygon features have finite coordinates, closed rings and no duplicate IDs/codes.
+- Result: 103 Pošta codes have no GURS geometry, the official current special-code PDF needed to source-classify them returns HTTP 404, and compatible Pošta processing/storage/derivation/redistribution/public-serving permission is unverified. No unmatched code was inferred as non-area, and no approved immutable artifact exists.
+- Application: shared Polygon/MultiPolygon draw/fit/translucent fill/outline/clear and SI synthetic repository/runtime/API contracts pass, but raw GURS geometry was not promoted; no real SI loader, API response, map rendering or browser E2E is claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime plus SI country contracts 38/38, rollout invariants 8/8, SI ledger evidence 5/5, changed JavaScript/JSON syntax 6/6 and full TypeScript 1/1 pass (59 recorded assertions, 0 failures).
+- Retry: not before 2026-09-07T00:49:09.000Z while pending countries remain; provider contact, registration, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After SI: 252 profiles, 155 pending, 91 blocked, 0 in progress, 6 evidence-verified M2; 141 manifests / 111 explicit definitions.
+- Next country: SJ (Svalbard and Jan Mayen). No second country was started.
