@@ -37,12 +37,13 @@ test('Colombia seed separates official polygons, layer rights, addresses, constr
   const value = readJson<Manifest>('repository-manifest.json');
   assert.equal(value.repository.name, 'agid-postal-co');
   assert.equal(value.repository.country_code, 'CO');
-  assert.equal(value.repository.maturity, 'M1_metadata');
-  assert.equal(value.release_scope.metadata_only, true);
+  assert.equal(value.repository.maturity, 'M2_national_derived_visualization');
+  assert.equal(value.promotion.current_stage, 'M2_national_derived_visualization');
+  assert.equal(value.release_scope.metadata_only, false);
   assert.equal(value.release_scope.contains_raw_source_data, false);
   assert.equal(value.release_scope.contains_real_addresses, false);
   assert.equal(value.release_scope.contains_personal_data, false);
-  assert.equal(value.release_scope.contains_production_geometry, false);
+  assert.equal(value.release_scope.contains_production_geometry, true);
   assert.equal(value.postal_system.code_format, 'NNNNNN');
   assert.match(value.postal_system.assignment_rule, /department.*postal zone.*district.*represents an area.*not proof/i);
   assert.match(value.postal_system.geometry_rule, /Shapefile.*CSV.*normal-code.*expanded-code.*official release.*all-rights-reserved.*cannot fill/i);
@@ -71,17 +72,21 @@ test('Colombia seed separates official polygons, layer rights, addresses, constr
 test('Colombia source profile implements the official release polygon promotion gate', () => {
   const profile = readJson<Profile>('source-profile.json');
   const sources = new Map(profile.sources.map(source => [source.source_id, source]));
-  assert.equal(profile.artifact_scope, 'metadata-only-contract-seed');
+  assert.equal(profile.artifact_scope, 'M2-national-derived-display-artifact');
   assert.ok(profile.sources.every(source => source.bundled_here === false));
   assert.match(sources.get('codigo-postal-colombia-472')?.assignment_authority ?? '', /official_postal_operator.*observation/i);
-  assert.match(sources.get('codigo-postal-colombia-bulk')?.geometry_authority ?? '', /official_postal_operator_release_polygon_candidate/i);
+  assert.match(sources.get('codigo-postal-colombia-bulk')?.geometry_authority ?? '', /official_postal_operator_release_polygon_source_for_derived_display/i);
   assert.match(sources.get('codigo-postal-colombia-open-license')?.redistribution_class ?? '', /open_reuse.*transformation.*attribution/i);
-  assert.match(sources.get('codigo-postal-colombia-arcgis')?.redistribution_class ?? '', /all_rights_reserved.*resolution/i);
+  assert.match(sources.get('codigo-postal-colombia-arcgis')?.redistribution_class ?? '', /government_catalog_CC_BY_SA_4_0.*viewer_open_clause/i);
   assert.match(sources.get('dane-colombia-divipola-mgn-2025')?.geometry_authority ?? '', /mgn.*not_postal/i);
   assert.match(sources.get('igac-colombia-open-cadastre')?.redistribution_class ?? '', /CC_BY_SA_4_0/i);
   assert.match(sources.get('osm-colombia')?.redistribution_class ?? '', /ODbL/i);
   assert.equal(profile.official_polygon_promotion_gate.maximum_claim, 'official-release');
   assert.match(profile.official_polygon_promotion_gate.failure_mode, /non-geometric.*derived review.*failed gate/i);
+  assert.equal((profile.official_polygon_promotion_gate as any).verification?.status, 'passed-for-derived-display-artifact');
+  assert.equal((profile.official_polygon_promotion_gate as any).verification?.current_assignment_records, 3681);
+  assert.equal((profile.official_polygon_promotion_gate as any).verification?.official_polygon_records, 3681);
+  assert.equal((profile.official_polygon_promotion_gate as any).verification?.output_provenance, 'derived');
   for (const check of [
     'exact-official-shapefile-bytes-and-digest',
     'artifact-level-open-licence-applicability-proved',
