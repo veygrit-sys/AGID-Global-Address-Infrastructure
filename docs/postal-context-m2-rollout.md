@@ -2089,3 +2089,21 @@ No second country was started.
 - Retry: not before 2026-09-07T01:28:39.617Z while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After SJ: 252 profiles, 154 pending, 92 blocked, 0 in progress, 6 evidence-verified M2; 142 manifests / 112 explicit definitions.
 - Next country: SK (Slovakia). No second country was started.
+
+## SK - Slovakia
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T02:02:10.112Z`
+- Definition: `M2_current_slovakia_psc_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/sk-source-review-2026-08-31.json` (`sha256:e1b612208236149d5d47573995bf6264226ce422439e08ef9caa49ff26878e8a`)
+- Checks: `reports/postal-context-m2/sk-checks-2026-08-31.json` (`sha256:74cedef7d10b72737b1fa860ef8d3c677e6f6d6e55724882a905a43d2c8667e1`)
+- Country report: `docs/postal-context-slovakia-m2.md`
+- Exact-body receipts: 20 official bodies / 135,325,717 bytes with SHA-256; raw HTML/JavaScript/JSON/XML/GeoJSON and address/source rows remain outside Git.
+- Operator evidence: the current public Slovenská pošta UI performs bounded street/municipality search (`limit=5`). One non-personal sample returned `81107` and `81108`; direct code `81108` returned no row. The generated access XML has 2,449 office/access-point Point records and no area geometry. Neither establishes a complete assignment/exception denominator.
+- Address and geometry evidence: eight current daily Register adries NUTS3 metadata records state no access limitation and CC BY 4.0 for author and database rights. The exact current SK010 GeoJSON has 160,897 real address features: 158,803 Point and 2,094 null geometry, 108 distinct valid five-digit postal codes, and zero Polygon/MultiPolygon.
+- Result: compatible operator processing/storage/derivation/redistribution/public-serving permission, a complete operator denominator, fixed PSČ area product, complete area/non-area reconciliation, approved immutable artifact and real SK API/UI area path remain unverified. No Point buffer, hull, Voronoi/raster, administrative/cadastral/building/office/access-point or synthetic proxy was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point-only non-area, clear and re-search contracts pass. No real eligible SK artifact exists, so real SK API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, SK ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures). Repository-wide TypeScript was attempted but the available dependency tree has unrelated missing packages and inherited errors; the limitation is recorded in the checks report.
+- Retry: not before `2026-09-07T02:02:10.112Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After SK: 252 profiles, 153 pending, 93 blocked, 0 in progress, 6 evidence-verified M2; 142 manifests / 112 explicit definitions.
+- Next country: SM (San Marino). No second country was started.
