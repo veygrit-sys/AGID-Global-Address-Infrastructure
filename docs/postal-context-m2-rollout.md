@@ -2416,3 +2416,23 @@ No second country was started.
 - Retry: not before 2026-09-07T15:51:58.097Z while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After BZ: 252 profiles, 135 pending, 109 blocked, 0 in progress, 8 evidence-verified M2; 156 manifests / 129 explicit definitions.
 - Next country: Canada (CA). No second country was started.
+
+## CA - Canada
+
+- Status: blocked / M2 unmet
+- Attempt: 1 at 2026-08-31T16:29:28.906Z
+- Definition: M2_current_canada_post_assignment_and_area_visualization
+- Evidence: reports/postal-context-m2/ca-source-review-2026-08-31.json (sha256:d1c14546a5f52592c6775525ff1069cd40a1377bc4e66980615893fb6329a9f3)
+- Checks: reports/postal-context-m2/ca-checks-2026-08-31.json (sha256:3a92dc2279c236da402f1b3e92825d696ae5d82efebfd795c88ccbac4501f96d)
+- Country report: docs/postal-context-canada-m2.md
+- Exact-body receipts: 11 Canada Post and Statistics Canada bodies / 2,395,946 bytes with SHA-256. Raw HTML/JSON/PDF, assignment/address/feature rows, rendered pages and temporary inspection output remain outside Git.
+- Current assignment: Canada Post identifies Postal Code Address Data as the complete list and publishes monthly files; the review-date release is 260807ad.zip. Acquisition requires a use request, pricing and a licence agreement. No provider was contacted, no request submitted and no licensed row acquired.
+- Format and object classes: ANA NAN contains an FSA and LDU. A full code may identify a block face, single building, large-volume receiver or rural community. Technical specifications also type lock-box, route and general-delivery records; none was expanded into a surface.
+- Rights and geometry: AddressComplete requires a key/terms, and the licensed product schema publishes addresses/ranges rather than full-code Polygon/MultiPolygon, CRS or topology. Compatible AGID public-serving rights were not established.
+- CFSA boundary: the open 2021 layer contains 1,643 three-character Polygon CFSAs derived from respondent-reported codes and dissemination areas. It may differ from Canada Post-assigned FSA geography, has no LDU/full-code geometry and was not promoted. No FSA/CFSA, PCCF, NAR, ODB, administrative, road, parcel, Point, buffer, cell, model, AGID or synthetic proxy was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no eligible immutable real CA full-code area artifact, real CA search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, CA ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures).
+- PDF review: four PDFs / 49 physical pages were byte- and text-verified; four relevant pages rendered to non-empty 150-DPI RGB PNGs with fixed dimensions, non-white bounds and SHA-256. The local image-view helper returned Windows error 206 through original and short paths, so interactive visual inspection could not complete; no image was committed.
+- Retry: not before 2026-09-07T16:29:28.906Z while pending countries remain. Provider contact/request, registration, authentication, licence/contract acceptance, payment, protected-row access, destination creation, publication or deployment requires explicit approval.
+- After CA: 252 profiles, 134 pending, 110 blocked, 0 in progress, 8 evidence-verified M2; 156 manifests / 130 explicit definitions.
+- Next country: Chile (CL). No second country was started.
