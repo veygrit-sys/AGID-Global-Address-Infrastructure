@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BR",
+  "observedAt": "2026-08-31T14:18:56.294Z",
+  "completedAt": "2026-08-31T14:44:00.4135498Z",
+  "baseCommit": "0f132c9d456eebc09c42106cf187152c4b4d0304",
+  "scope": "BR-specific current Correios DNE product/version/licensing evidence, Busca CEP API contract/authentication evidence, public CAPTCHA portal evidence, UPU eight-digit and non-area-object semantics, and shared application contracts. No DNE dataset, API credential, query response, raw address row, recipient, customer, P.O.-Box holder, delivery record, coordinate, building, parcel, cadastral or land-right record or production geometry was acquired, copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "br-source-inspector",
+      "command": "<bundled-python with pypdf> scripts/inspect-br-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "four exact official bodies reproduce current DNE V.26082/licensing, API contract/authentication, public CAPTCHA and UPU eight-digit/non-area semantics without a dataset, secret, query row or geometry promotion"
+    },
+    {
+      "id": "br-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-br-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, text/PDF drift, contract/licence/CAPTCHA semantic drift and no-secret/no-proxy behavior fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, approval blocker policy and evidence gates"
+    },
+    {
+      "id": "br-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-br-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, DNE/API rights boundary, CAPTCHA exclusion, typed non-area objects, no proxy geometry, report digests, no real runtime claim and next BS"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 60,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialAndPublicReferencesReviewed": 4,
+    "exactBodiesByteAndSha256Bound": 4,
+    "exactOfficialBodiesBytes": 512491,
+    "sourceReviewDigest": "sha256:95f521e3fc1e3989f8d201661f2b57317ee6b556771bba39637e0d39780cae2f",
+    "postcodeDisplayFormat": "NNNNN-NNN",
+    "postcodeNormalizedFormat": "NNNNNNNN",
+    "latestAdvertisedDneEdition": "V.26082",
+    "latestAdvertisedDnePublicationDate": "2026-08-31",
+    "dneDatasetAcquired": false,
+    "apiContractOrCredentialsUsed": false,
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "featureOrAddressRowsQueried": 0,
+    "rawSourceRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBrRuntimeVerified": false,
+    "realBrApiVerified": false,
+    "realBrAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no approved immutable real BR postal Polygon/MultiPolygon artifact exists; a browser run would validate only shared code or the existing synthetic fixture and cannot satisfy BR M2"
+  },
+  "knownLimitations": [
+    "The complete current Correios assignment denominator is advertised as a paid and licensed DNE product; no contract, term, payment or dataset acquisition was authorized.",
+    "The official Busca CEP API requires a corporate account, commercial contract, service 86738 and Bearer token; no access or output redistribution/public-serving rights were established.",
+    "The public Busca CEP interface is CAPTCHA-protected and is not a fixed complete release or bulk licence.",
+    "No DNE/API address object, UPU example, CNEFE point or CEP aggregate, administrative/census area, road, building, parcel, buffer, model or AGID cell was promoted as a postcode area.",
+    "Street/range, building, large-user, Correios-unit, locker, pickup-point, P.O.-box, community-mailbox, organization, Point and unknown CEP objects remain non-area unless authoritative geometry proves otherwise."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "Poppler rendered the two-page UPU PDF to non-empty RGB PNGs. The local image-view helper returned Windows error 206; exact PDF bytes, extracted page text, page count, page size, image dimensions, non-white bounds and render SHA-256 values were validated.",
+    "The IBGE CNEFE metadata page returned HTTP 403 to the command-line downloader. It was reviewed through the official indexed page only and was not added to the fixed-body count; no CNEFE row or archive was downloaded.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

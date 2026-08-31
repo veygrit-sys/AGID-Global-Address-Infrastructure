@@ -2356,3 +2356,23 @@ No second country was started.
 - Retry: not before `2026-09-07T13:36:23.702Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After BQ: 252 profiles, 138 pending, 106 blocked, 0 in progress, 8 evidence-verified M2; 154 manifests / 126 explicit definitions.
 - Next country: Brazil (`BR`). No second country was started.
+
+## BR - Brazil
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T14:18:56.294Z`
+- Definition: `M2_current_correios_cep_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/br-source-review-2026-08-31.json` (`sha256:95f521e3fc1e3989f8d201661f2b57317ee6b556771bba39637e0d39780cae2f`)
+- Checks: `reports/postal-context-m2/br-checks-2026-08-31.json` (`sha256:c04390b3ab5decfa4e435368801423d389fddd5a4e9dfed03ce3869150b4e13c`)
+- Country report: `docs/postal-context-brazil-m2.md`
+- Exact-body receipts: 4 Correios and UPU bodies / 512,491 bytes with SHA-256. Raw HTML/PDF, UPU example addresses, rendered pages and temporary inspection output remain outside Git; no DNE dataset, API credential, feature or address row was queried.
+- Assignment authority and version: Correios advertises DNE as its complete official and exclusive national database with more than 1.3 million CEPs. The current schedule reaches V.26082 on 2026-08-31. DNE is delivered only after a formal request, contract, use commitment and payment and remains licence-restricted.
+- API/public portal: Busca CEP API manual v1.0 requires a Brazilian corporate account, a commercial contract containing service 86738 and a Bearer token. Public Busca CEP 1.5.8 is CAPTCHA-protected. Neither path was accessed beyond its public documentation, treated as a complete fixed release or scraped.
+- Format and object classes: the UPU sheet confirms eight digits, displayed `NNNNN-NNN`, and distinguishes ordinary delivery, P.O. box, community mailbox and big-mailer/special-code examples. Syntax and examples are not current assignment rows, and non-area objects were not expanded to surfaces.
+- Rights and geometry: compatible AGID processing, derivation, redistribution and public-serving rights were not established. DNE TXT/MDB rows and documented API responses contain typed address/range/object attributes, not geometry. No CNEFE point or CEP aggregate, municipality/district/neighbourhood/census boundary, road, building, parcel, buffer, hull, Voronoi/raster cell, model or AGID cell was promoted as a Correios postal Polygon/MultiPolygon.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no approved immutable real BR area artifact, real BR search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, BR ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures).
+- PDF review: the two-page UPU sheet rendered to non-empty 993x1404 RGB PNGs; exact bytes, page count, six text markers, dimensions, non-white bounds and render SHA-256 passed. The local image-view helper returned Windows error 206; no image was committed.
+- Retry: not before `2026-09-07T14:18:56.294Z` while pending countries remain; Correios contact, corporate registration, contract/term acceptance, payment, credential use, protected-row query/scrape, destination creation, publication or deployment requires explicit approval.
+- After BR: 252 profiles, 137 pending, 107 blocked, 0 in progress, 8 evidence-verified M2; 154 manifests / 127 explicit definitions.
+- Next country: Bahamas (`BS`). No second country was started.
