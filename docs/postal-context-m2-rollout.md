@@ -2027,3 +2027,17 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T23:01:37.379Z; do not contact a provider, register, authenticate, accept terms or a contract, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
 - After RS: 252 profiles, 158 pending, 88 blocked, 0 in progress, 6 evidence-verified M2; 139 manifests / 109 explicit definitions.
 - Next country: RU (Russia). No second country was started.
+
+## Russia (RU) M2 review - 2026-08-31
+
+- Target: Russia (RU), Europe. The source-of-truth status command selected RU with no country in progress; no second country was started.
+- M2 result: **blocked / unmet** under M2_current_russia_postcode_assignment_and_area_visualization. A current complete six-digit assignment/exception denominator, exact valid area coverage, compatible rights, complete reconciliation, approved immutable artifact and real application path remain mandatory.
+- Operator audit: seven exact official bodies total 2,062,744 bytes and are byte/SHA-256 bound. Russian Post defines the index as the unique post-office number assigned to an address. Its current directory advertises 61,358 office records formed 2026-08-25 and monthly-or-faster updates; the exact current archive returned HTTP 417 and a numbered relative archive returned 404 during this audit, which are availability observations rather than non-existence proof.
+- Address, rights and geometry audit: FIAS/GAR is the open official address register and advertises twice-weekly snapshots. Federal Law 443-FZ establishes common-access/open address information used by postal services, but not a Russian Post area licence. The tariff API PDF version 3.20 exposes office dictionary fields, not Polygon/MultiPolygon. No complete assignment/exception denominator, official postcode-area release or compatible AGID postal-area public-serving grant was established.
+- Authority policy: office indices, operator lookups, tariff records, FIAS address objects, administration, cadastre, buildings, parcels and territory remain separate. No point, street/boundary, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted; RU/source identity remains unchanged.
+- App status: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, point-only non-area and clear/re-search behavior pass. No eligible fixed RU artifact exists, so real RU API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime plus RU country contracts 31/31, rollout invariants 8/8, RU ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and full TypeScript 1/1 pass (53 recorded assertions, 0 failures).
+- Evidence: docs/postal-context-russia-m2.md, reports/postal-context-m2/ru-source-review-2026-08-31.json and reports/postal-context-m2/ru-checks-2026-08-31.json. Raw official bodies, rendered PDF pages, address rows and geometry are not committed.
+- Retry: after pending countries and 2026-09-06T23:41:07.953Z; do not contact a provider, register, authenticate, accept terms or a contract, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
+- After RU: 252 profiles, 157 pending, 89 blocked, 0 in progress, 6 evidence-verified M2; 140 manifests / 110 explicit definitions.
+- Next country: SE (Sweden). No second country was started.

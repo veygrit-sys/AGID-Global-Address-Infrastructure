@@ -1,0 +1,94 @@
+{
+  "schema_version": "agid-postal-ru-source-profile-v0.1",
+  "country_code": "RU",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_metadata", "meaning": "AGID-created metadata and non-production conformance only." },
+    { "id": "R1_public_reference", "meaning": "Public official pages or documents retained as validation receipts; visibility does not imply bulk extraction or public-serving rights." },
+    { "id": "R2_fias_open_address", "meaning": "Exact GAR address information published as open/common-access data with source, release, download URL, transformations, schema, validity and digest pinned." },
+    { "id": "R3_controlled_or_unclear", "meaning": "Credentialed, restricted, failed-download or unclear-rights material used only as specifically permitted and never promoted by assumption." },
+    { "id": "R4_validation_only", "meaning": "Personal, ownership, shipment, protected-property or non-redistributable evidence may detect discrepancies but cannot become public output." }
+  ],
+  "sources": [
+    {
+      "source_id": "russian-post-reference-index-directory",
+      "provider": "АО Почта России",
+      "source_url": "https://info.pochta.ru/support/database/ops",
+      "role": ["official-post-office-index-directory", "current-index-name-and-hierarchy", "monthly-update-reference"],
+      "production_scope": "The live page advertises 61,358 DBF records formed 2026-08-25 and official post-office index, hierarchy and name data. The current archive returned HTTP 417 to this audit and the relative numbered archive returned 404; no DBF row, complete address assignment or geometry was acquired.",
+      "assignment_authority": "official_postal_operator_office_directory",
+      "geometry_authority": "none_advertised",
+      "validation_readiness": "exact_archive_access_schema_rights_and_digest_required",
+      "redistribution_class": "R3_controlled_or_unclear",
+      "bundled_here": false,
+      "promotion_requirements": ["acquire-exact-current-archive-without-bypass", "pin-provider-release-reference-date-terms-attribution-bytes-schema-and-digest", "separate-office-directory-from-address-membership-and-area"],
+      "prohibited_claims": ["office-record-is-address-assignment", "post-office-is-postcode-polygon", "download-page-is-public-serving-license", "failed-download-proves-data-does-not-exist"]
+    },
+    {
+      "source_id": "russian-post-index-address-lookup",
+      "provider": "АО Почта России",
+      "source_url": "https://info.pochta.ru/support/popular-questions/how-do-you-know-your-zip-code",
+      "role": ["official-index-definition", "address-to-index-search-reference", "office-map-reference"],
+      "production_scope": "The operator says an index is the unique post-office number to which an address is assigned and instructs users to enter an address on the office map. A public lookup receipt or map point is not a national assignment denominator or area.",
+      "assignment_authority": "official_postal_operator_lookup",
+      "geometry_authority": "office_map_or_point_reference_only",
+      "validation_readiness": "query_terms_automation_rate_and_redistribution_review_required",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-query-purpose-input-output-capture-time-terms-and-digest", "retain-six-digit-text-and-address-assignment-semantics", "honor-automation-and-rate-policy"],
+      "prohibited_claims": ["public-query-authorizes-national-scraping", "office-map-is-postcode-area", "one-query-proves-complete-current-assignment", "address-result-proves-universal-deliverability"]
+    },
+    {
+      "source_id": "russian-post-tariff-postoffice-api",
+      "provider": "АО Почта России",
+      "source_url": "https://tariff.pochta.ru/post-calculator-api.pdf",
+      "role": ["official-post-office-dictionary-api-contract", "index-and-date-query", "operational-office-metadata"],
+      "production_scope": "Pinned API PDF for version 3.20. The postoffice response table advertises index, parent, name, type, region/locality and operational fields but no coordinates, Polygon or MultiPolygon. Dictionary access is not address membership or postal geometry.",
+      "assignment_authority": "official_postal_operator_api_dictionary",
+      "geometry_authority": "none_advertised",
+      "validation_readiness": "endpoint_terms_version_schema_and_response_digest_required",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-endpoint-version-query-date-response-terms-schema-and-digest", "separate-tariff-office-and-address-assignment-semantics"],
+      "prohibited_claims": ["tariff-response-is-postcode-area", "postoffice-dictionary-is-address-membership", "regional-field-is-polygon", "api-documentation-is-redistribution-license"]
+    },
+    {
+      "source_id": "fns-fias-gar-address-register",
+      "provider": "Федеральная налоговая служба России",
+      "source_url": "https://www.nalog.gov.ru/rn77/service/fias/",
+      "role": ["official-open-address-register", "stable-address-identity", "postcode-attribute-and-address-history"],
+      "production_scope": "GAR/FIAS is the official open/common-access address register. FNS describes current address information as available through the portal, twice-weekly snapshots and APIs. An exact current snapshot, its postcode attributes, history, exceptions, public fields, schema and digest require review; address authority does not supply a postal perimeter.",
+      "assignment_authority": "official_address_register_with_postcode_attribute",
+      "geometry_authority": "address_object_or_map_location_not_postal_area",
+      "validation_readiness": "exact-current-release-fields-history-coverage-schema-rights-and-digest-required",
+      "redistribution_class": "R2_fias_open_address",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-current-release-url-date-open-data-basis-fields-history-schema-coverage-and-digest", "reconcile-every-postcode-member-gap-conflict-and-exception", "retain-address-and-postal-authority-separation"],
+      "prohibited_claims": ["fias-postcode-attribute-is-official-postal-polygon", "address-point-or-map-location-is-postcode-area", "incomplete-snapshot-proves-complete-membership", "fias-address-is-building-footprint"]
+    },
+    {
+      "source_id": "federal-law-443-fz-fias",
+      "provider": "Федеральная налоговая служба России",
+      "source_url": "https://www.nalog.gov.ru/rn77/about_fts/docs/4468685/",
+      "role": ["gar-legal-framework", "open-common-access-address-data-basis", "address-authority-separation"],
+      "production_scope": "Federal Law 443-FZ establishes GAR address information as common-access information published including as open data and required for postal services. It is a legal basis for address data access, not a geometry artifact, postcode service-boundary definition or blanket right over Russian Post data.",
+      "assignment_authority": "legal_framework_only",
+      "geometry_authority": "none",
+      "validation_readiness": "law-version-and-dataset-specific-rights-review-required",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-law-page-capture-date-and-digest", "review-exact-dataset-and-output-rights-separately"],
+      "prohibited_claims": ["open-address-law-is-russian-post-geometry-license", "law-text-is-current-data", "address-openness-authorizes-personal-or-property-data-publication"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "postal-office-and-index", "rule": "Operator office/index records retain exact release, six-digit text, source purpose, capture time, schema and digest; office infrastructure never creates a perimeter." },
+    { "id": "operator-query-and-api", "rule": "Address lookup and tariff/dictionary responses retain query purpose, access basis, freshness and digest and never imply bulk extraction, membership or geometry rights." },
+    { "id": "official-open-address", "rule": "FIAS/GAR address identity, postcode attribute, lifecycle, public fields, open-data basis, release, schema and digest remain separately auditable." },
+    { "id": "postal-surface", "rule": "Only exact source areas or reproducible complete-membership derivations may be published, with official/derived class, gaps, conflicts, exclusions, rights, topology, uncertainty and lineage." },
+    { "id": "building-and-cadastral-context", "rule": "Address, building, parcel, cadastral object and explicit address-building relation remain distinct; protected fields never enter public artifacts." },
+    { "id": "administration-and-territory", "rule": "Administrative geometry, source coverage, postal coverage and sovereignty policy remain separate and never infer one another." },
+    { "id": "private-and-restricted", "rule": "Recipients, residents, owners, contacts, credentials, shipments and protected property records never enter public artifacts." },
+    { "id": "synthetic-conformance", "rule": "Non-geographic test evidence only; never promotion evidence." }
+  ]
+}

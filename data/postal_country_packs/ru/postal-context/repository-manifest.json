@@ -1,0 +1,83 @@
+{
+  "schema_version": "agid-postal-ru-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ru",
+    "country_code": "RU",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "metadata-only-contract-seed"
+  },
+  "postal_system": {
+    "full_code_name": "Почтовый индекс",
+    "full_code_format": "NNNNNN",
+    "full_code_default_geometry": "address_assignment_or_post_office_reference_or_non_area",
+    "assignment_rule": "АО Почта России defines the six-digit index as the unique number of the post office to which an address is assigned. The current reference DBF establishes post-office index, hierarchy and name records; syntax, an office, a tariff response, an address-search result or a FIAS postal-code attribute alone does not establish a delivery perimeter or universal deliverability.",
+    "office_reference_rule": "The current operator reference advertises 61,358 records formed 2026-08-25 and monthly-or-faster updates. It is an official post-office index directory, not a current complete address-to-index exception denominator and not Polygon/MultiPolygon geometry. An inaccessible archive link is availability evidence only and never proves that the data does not exist.",
+    "lookup_rule": "The operator address search and map may resolve an address to an index or select an office. Each result is a reference receipt; map or office-point display does not grant bulk extraction, assignment reconstruction, area derivation, redistribution or public-serving rights.",
+    "api_rule": "The tariff API can query post-office dictionary records by index and date. Its reviewed postoffice schema returns index, parent, name, type, regional/locality and operational attributes but no advertised coordinates or Polygon/MultiPolygon. A tariff or dictionary response is not address membership or a postal area.",
+    "address_rule": "The Federal Tax Service operates FIAS/GAR as the open official address register. GAR address records may include a six-digit postcode and stable address identity, and published snapshots are described as twice-weekly. FIAS address authority does not convert address points, objects, map locations or administrative hierarchy into official Russian Post service perimeters.",
+    "postal_surface_rule": "Only a current source Polygon/MultiPolygon explicitly representing Russian Post postcode coverage under reviewed AGID processing, storage, derivation, redistribution and public-serving rights, or a reproducible derived surface from a complete current rights-cleared address-to-postcode assignment and explicit exception denominator, may become postal geometry. Derived surfaces remain noncanonical and preserve gaps, conflicts and non-areas. Office points, FIAS address/map points, streets, administrative boundaries, parcels, buildings, buffers, hulls, Voronoi and raster cells are prohibited proxies.",
+    "endpoint_rule": "Post-office-only, poste-restante, P.O.-box, organization, military, route, closed, temporary and other endpoint or operational indices remain point, route or non-area unless exact source area geometry exists.",
+    "building_rule": "A building may be shown only from a separately rights-cleared building source with an explicit stable address-to-building relationship. A FIAS address, cadastral number, postal assignment, parcel, map pin, containment, overlap or nearest footprint alone is not an exact building link.",
+    "territorial_rule": "Every artifact retains RU identity and the exact source-published coverage and exclusions. Postal, address, administrative, cadastral and political coverage are separate; dataset coverage is never used as a sovereignty conclusion or to absorb another country or region identity.",
+    "privacy_rule": "Recipients, residents, owners, rightsholders, occupants, contacts, credentials, shipments, delivery instructions and protected property fields never enter public artifacts.",
+    "crs_rule": "Every geometry retains source CRS and transform version. WGS84 output requires a reviewed reproducible transform; no coordinate or map screenshot is relabelled as a postal area."
+  },
+  "integration": {
+    "agid_country_code": "RU",
+    "postcode_flow": "canonical six digits -> current operator or FIAS address assignment -> explicit area or reasoned non-area -> official address hierarchy -> explicit building relation -> AGID cells",
+    "coordinate_flow": "coordinate -> rights-cleared address or postal surface candidate -> separately verified postcode assignment -> explicit building relation -> RU AGID cell",
+    "building_output_gate": "separate building authority plus source-defined relationship, common authoritative identifier or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Six-digit postcodes remain text and preserve leading zeroes." },
+    { "id": "operator-assignment", "pass": "Every current postcode assertion pins the exact Russian Post or FIAS source, purpose, capture/reference time, terms, schema and digest." },
+    { "id": "official-or-derived-area", "pass": "Every area is an exact valid source Polygon/MultiPolygon or a labelled derived surface from a complete assignment and exception denominator with method, members, exclusions, uncertainty, rights and lineage." },
+    { "id": "non-area-honesty", "pass": "Office, point, route, P.O.-box, organization, temporary, closed and unmatched records remain explicit non-areas unless exact source geometry proves otherwise." },
+    { "id": "authority-separation", "pass": "Postal assignment, FIAS address, administration, cadastre, building and territory evidence remain independently attributable." },
+    { "id": "explicit-building-link", "pass": "Building output has an explicit authoritative relation; point, parcel, containment and proximity alone never pass." },
+    { "id": "privacy", "pass": "No recipient, resident, owner, contact, credential, shipment or protected-property record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures may verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country-specific authority contracts and promotion blockers are reviewable without raw data or production geometry." },
+      { "id": "M2_current_russia_postcode_assignment_and_area_visualization", "definition": "A current complete six-digit Russian postcode assignment and exception denominator and corresponding valid Polygon/MultiPolygon coverage are usable under explicit reviewed AGID processing, storage, derivation, redistribution and public-serving permission. Provider, edition, reference date, licence, attribution, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage, gaps, conflicts and exceptions are fixed in an approved immutable artifact. Any surface derived from complete address membership is labelled derived and noncanonical. The real RU API/app normalizes the selected six-digit postcode, returns only valid real areas, fits and renders translucent fill with a clear outline, and shows selected code, geometry kind, official/derived/virtual class, source, reference date and confidence; office-only, poste-restante, P.O.-box, organization, military, route, point, temporary, closed, unmatched and other non-area records remain explicit. No post-office point, tariff/dictionary response, FIAS address/map point, street, administrative/cadastral/building/parcel object, buffer, hull, Voronoi/raster or synthetic proxy satisfies M2, and RU/source territorial identity remains unchanged." },
+      { "id": "M3_address", "definition": "A pinned current FIAS/GAR address snapshot passes public-field, rights, validity, history, schema and postcode-assignment reconciliation gates." },
+      { "id": "M4_geometry", "definition": "Postal surface and separately sourced building joins pass complete membership, exception, topology, ambiguity, identifier, licence, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "post-office-reference-or-point-presented-as-postcode-polygon",
+      "tariff-api-dictionary-presented-as-address-membership-or-area",
+      "fias-address-or-map-point-presented-as-postcode-polygon",
+      "incomplete-address-membership-presented-as-complete-denominator",
+      "derived-surface-presented-as-russian-post-or-fias-official-boundary",
+      "administrative-cadastral-building-or-parcel-boundary-presented-as-postcode-area",
+      "buffer-hull-voronoi-raster-or-synthetic-area-promoted",
+      "portal-visibility-or-download-link-presented-as-public-serving-right",
+      "point-containment-or-proximity-presented-as-exact-address-building-link",
+      "recipient-resident-owner-contact-credential-shipment-or-protected-property-data-published",
+      "coverage-presented-as-sovereignty-determination",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-stored-as-number"
+    ]
+  },
+  "non_goals": [
+    "bundling-current-postal-or-fias-address-rows",
+    "every-postcode-is-a-polygon",
+    "post-office-is-postcode-area",
+    "address-point-buffer-is-postcode-area",
+    "administrative-boundary-equals-postal-area",
+    "parcel-or-address-point-is-building",
+    "dataset-coverage-determines-sovereignty"
+  ]
+}
