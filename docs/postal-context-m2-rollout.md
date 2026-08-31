@@ -2529,3 +2529,21 @@ No second country was started.
 - Retry: not before `2026-09-07T22:07:06.826Z` and only after all pending countries have been swept. Provider contact, registration, key/token request, authentication, terms/declaration/NDA/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After CU: 252 profiles, 129 pending, 113 blocked, 0 in progress, 10 evidence-verified M2; 157 manifests / 135 explicit definitions.
 - Next country: Curaçao (`CW`). No second country was started.
+
+## CW - Curaçao
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-08-31T22:53:09.194Z`; completed `2026-08-31T23:15:36.8554694Z`.
+- Definition: `M2_current_cpost_curacao_postcode_assignment_and_area_visualization`.
+- Evidence: `reports/postal-context-m2/cw-source-review-2026-09-01.json` (`sha256:378cb59069f9bd466da025d489be4507cd183c12aa3a0e44ddaf1b1ad57a67ea`).
+- Checks: `reports/postal-context-m2/cw-checks-2026-09-01.json` (`sha256:b20daed0c0bc656253c09c49404c21b17e8b56adf237ceb021bf7cba960fe52e`).
+- Country report: `docs/postal-context-curacao-m2.md` (`sha256:580e6359e5014a9c93747a6e4acd0ff3129f661c482baf82623a5775cb250daa`).
+- Exact receipts: four Cpost/UPU bodies / 926,717 bytes, all fixed by byte count and SHA-256. Raw HTML, PDFs, extracted text, rendered pages and temporary inspection output remain outside Git.
+- Postal status and correction: the UPU September 2025 list includes Curaçao among countries and territories not requiring postal codes. Current Cpost pages publish address delivery, postal boxes and registered-mail pickup but no code table. The unsupported CW four-digit JSON/YAML/hierarchy metadata was corrected to `None` with null regex/API/rule; no replacement code was invented.
+- Identity and authority: the May 2015 UPU sheet preserves CUW for Curaçao and identifies Cpost International N.V. as designated operator. CW remains separate from AW, SX, BQ, the former Netherlands Antilles and NL.
+- Rights and geometry: Cpost asserts 2026 copyright and the four bodies publish no open postal dataset licence. There are 0 official/derived/virtual postal Polygon/MultiPolygon records. No island, district, locality, address, route, service area, postal box, building, Point, buffer, hull, cell, model, synthetic code or AGID proxy was promoted.
+- Application: shared normalization/no-match, Polygon/MultiPolygon-only draw, map fit, opacity-0.22 translucent fill, visible outline, non-area rejection, clear and re-search contracts pass. With no valid CW postcode input or eligible real artifact, real CW API/search-to-map visualization and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 5/5, CW address metadata 2/2, shared area runtime 29/29, rollout invariants 8/8, CW ledger 5/5, focused TypeScript 1/1 and changed syntax/JSON/YAML checks 11/11 pass (62 recorded checks, 0 failures). Repository-wide address common/YAML tests retain unrelated pre-existing KM duplicate-source and EH/HM missing-YAML failures.
+- Retry: not before `2026-09-07T22:53:09.194Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After CW: 252 profiles, 128 pending, 114 blocked, 0 in progress, 10 evidence-verified M2; 158 manifests / 136 explicit definitions.
+- Next country: Dominica (`DM`). No second country was started.
