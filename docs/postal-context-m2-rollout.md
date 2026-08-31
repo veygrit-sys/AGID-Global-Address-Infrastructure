@@ -2511,3 +2511,21 @@ No second country was started.
 - Retry: not before `2026-09-07T21:09:35.746Z` and only after all pending countries have been swept. Public metadata may then be rechecked; provider contact/request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After CR: 252 profiles, 130 pending, 112 blocked, 0 in progress, 10 evidence-verified M2; 157 manifests / 134 explicit definitions.
 - Next country: Cuba (`CU`). No second country was started.
+
+## CU - Cuba
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-08-31T22:07:06.826Z`; completed `2026-08-31T22:45:35.1589258Z`.
+- Definition: `M2_current_correos_cuba_assignment_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/cu-source-review-2026-09-01.json` (`sha256:515cfe21bafa6c122a89e36bc6e580cfab26e0dc1642d0a390b33da8f565b80a`).
+- Checks: `reports/postal-context-m2/cu-checks-2026-09-01.json` (`sha256:c443d16284153e290f6f6ea6dfa1feea4bc1e104da47fc16f237848581d3b17f`).
+- Country report: `docs/postal-context-cuba-m2.md` (`sha256:2a7ee09273ae7299ba26ddda219fb78fcb82811791c12a8386a334d0bfa7b604`).
+- Exact receipts: eleven successful Correos/UPU official bodies / 1,492,006 bytes, all fixed by byte count and SHA-256. Empty timeout bodies are excluded; raw HTML, JavaScript, JSON, PDFs, headers, cookies, renders and office rows remain outside Git.
+- Assignment and data quality: Correos' public page describes 812 post offices while its current UI-equivalent query reports 841. The observed ten-row page has 13 office identity/address/contact/service fields and no geometry, membership, validity, alias or supersession field. It is an office directory, not a complete current delivery-code denominator; 0 assignment rows are eligible for AGID.
+- UPU and rights: the Cuba sheet is visibly dated `09/2004` and supplies five-digit `CP` syntax/examples only. POST*CODE documents postcode/locality validation, requires registration/API keys or country-unique CDS security tokens, and supplies no area geometry. UPU copyright requires written permission and restricts external distribution; compatible AGID processing/derivation/redistribution/public-serving rights are not established.
+- Geometry and authority: 0 official or rights-cleared derived CU Postal Polygon/MultiPolygon records exist. No office address or postcode, locality, municipality, province, IDERC/ONEI/GEOCUBA/OSM context, point, buffer, hull, cell, model, synthetic fixture or AGID proxy was promoted; office, postal, administrative, statistical, cartographic, cadastral, address and building identities remain distinct.
+- Application: shared and synthetic CU normalization, runtime/API, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, states, metadata, clear and re-search contracts pass. With no approved immutable real CU artifact, real CU API/search-to-map visualization and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 4/4, existing CU regression 139/139, shared runtime/API/area UI 54/54, ledger/rollout invariants 14/14 and repository-wide TypeScript 1/1 pass (213 recorded automated checks, 0 failures). Three relevant UPU PDF pages were rendered and visually reconciled.
+- Retry: not before `2026-09-07T22:07:06.826Z` and only after all pending countries have been swept. Provider contact, registration, key/token request, authentication, terms/declaration/NDA/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After CU: 252 profiles, 129 pending, 113 blocked, 0 in progress, 10 evidence-verified M2; 157 manifests / 135 explicit definitions.
+- Next country: Curaçao (`CW`). No second country was started.
