@@ -1,0 +1,63 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ai-upu-geoboundaries",
+    "country_code": "AI",
+    "country_name": "Anguilla",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "current-upu-single-postcode-with-derived-whole-territory-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Anguilla postcode",
+    "full_code_format": "AI-2640",
+    "full_code_default_geometry": "whole-territory-derived-display-surface",
+    "assignment_rule": "The UPU Universal POST*CODE DataBase August 2026 edition and its Anguilla addressing sheet state that AI-2640 is the single postcode for the whole territory. This proves only the postcode assignment and whole-territory scope.",
+    "geometry_rule": "No official postal polygon was located. A pinned geoBoundaries gbOpen AIA ADM0 MultiPolygon is used only because the official postcode scope is the whole territory; it remains derived display geometry and is never presented as an official postal, legal, survey, cadastral or delivery boundary.",
+    "topology_rule": "The pinned source has 28 polygon parts. Turf identifies three cross-part overlap pairs while JSTS accepts the source MultiPolygon. The reproducible builder preserves every coordinate and partitions parts into two independently valid MultiPolygons so the API can return honest multiple derived surfaces.",
+    "delivery_zone_rule": "Anguilla Postal Service POCDS East/West fee and drop-off zones are delivery-service zones, not postcodes, and never replace AI-2640 or become postal polygons.",
+    "address_rule": "No address, recipient, customer, delivery record, PO box, organisation or building row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The postal node and derived surface are linked only inside the versioned Postal Context graph. AGID identity, addresses and buildings require independent explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "AI-2640 is represented from the current August 2026 UPU evidence; the display geometry retains boundary year 2021 and build date 2023-12-12.",
+    "known_time": "Retrieval, source edition, fixed commit, digests and AGID release time remain separately recorded.",
+    "history_rule": "A later postcode or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "official-assignment", "pass": "AI-2640 remains an official UPU dictionary assertion with no geometry authority." },
+    { "id": "derived-surface", "pass": "Each displayed surface retains the fixed geoBoundaries source, CC BY 4.0, boundary year, source digest and derived geometry authority." },
+    { "id": "coordinate-preservation", "pass": "All 28 source parts and all 10,606 source positions are emitted exactly once with no coordinate fabrication." },
+    { "id": "runtime", "pass": "The real pack passes API lookup, normalization, multiple-surface conversion, bounds fit, translucent paint, clear and re-search tests." },
+    { "id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-rights data is published." }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_upu_whole_territory_derived_visualization",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Country-specific contracts and provenance are reviewable." },
+      { "id": "M2_current_upu_whole_territory_derived_visualization", "definition": "Current UPU evidence proves AI-2640 is the single postcode for the whole territory; a pinned, CC BY 4.0 ADM0 source reproducibly supplies real derived MultiPolygon display surfaces; the shared API and app path renders, fits, clears and re-searches them with provenance and multiple-result state." },
+      { "id": "M3_candidate", "definition": "A refresh and independent review pass without authority drift." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback." }
+    ],
+    "hard_blockers": [
+      "derived-adm0-presented-as-official-postal-geometry",
+      "pocds-fee-zone-presented-as-postcode-area",
+      "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability",
+      "source-coordinates-invented-or-silently-repaired",
+      "missing-upu-edition-or-geoboundaries-commit-digest-and-rights",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": [
+    "official_postal_boundary", "legal_or_survey_boundary", "cadastral_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "recipient_identity"
+  ]
+}

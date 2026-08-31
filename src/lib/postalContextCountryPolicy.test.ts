@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeAnguillaPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeSerbiaPostalCode,
   normalizeCroatiaPostalCode,
@@ -803,6 +804,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeGeorgiaPostalCode('GE0002'), null);
   assert.equal(normalizeGeorgiaPostalCode('00020'), null);
   assert.equal(normalizePostalContextPostalCode('ge', '00 02'), '0002');
+  assert.equal(normalizeAnguillaPostalCode('ＡＩ ２６４０'), 'AI-2640');
+  assert.equal(normalizeAnguillaPostalCode('ai2640'), 'AI-2640');
+  assert.equal(normalizeAnguillaPostalCode('2640'), null);
+  assert.equal(normalizeAnguillaPostalCode('AI-2641'), null);
+  assert.equal(normalizePostalContextPostalCode('ai', 'AI 2640'), 'AI-2640');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
