@@ -2161,3 +2161,21 @@ No second country was started.
 - Retry: not before `2026-09-07T04:15:44.116Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After XD: 252 profiles, 149 pending, 97 blocked, 0 in progress, 6 evidence-verified M2; 145 manifests / 115 explicit definitions.
 - Next country: XK (Kosovo). No second country was started.
+
+## XK - Kosovo
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T04:57:44.714Z`
+- Definition: `M2_current_kosovo_official_postal_code_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/xk-source-review-2026-08-31.json` (`sha256:a00b018f876ba5b2c2cc18dcaf4a4899127984be06dbe89fe1f2e9fd36fb4f20`)
+- Checks: `reports/postal-context-m2/xk-checks-2026-08-31.json` (`sha256:147ff6e6c5492a77e0ba30fd6098157100819f2e28bde43247a320d645466ee1`)
+- Country report: `docs/postal-context-kosovo-m2.md`
+- Exact-body receipts: 8 official bodies / 860,744 bytes with SHA-256; raw HTML/JSON/PNG, source geometry and temporary inspection output remain outside Git.
+- Operator evidence: the current official Posta page embeds 133 unique five-digit assignments across seven regions.
+- Real geometry evidence: the official Geoportal Layer API exposes `PostalZone` and `ZyratPostare`. Dynamic WMS GetFeatureInfo returned two duplicate Level-1 `Prishtinë`/`10000` EPSG:4326 MultiPolygons with finite closed rings, and GetMap rendered actual translucent fill with visible boundaries.
+- Result: representative geometry does not establish a fixed complete artifact or all-133-code coverage. Feature level/parent/duplicate semantics, immutable version/schema, full operator area/non-area reconciliation and resource-specific compatible Posta/Geoportal public-serving rights remain unverified. No dynamic response, Level-1 assumption, office, administrative/address/building/parcel/point/buffer/hull/Voronoi/raster or synthetic proxy was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point-only non-area, clear and re-search contracts pass. No approved XK artifact exists, so real XK API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, XK ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures).
+- Retry: not before `2026-09-07T04:57:44.714Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After XK: 252 profiles, 148 pending, 98 blocked, 0 in progress, 6 evidence-verified M2; 146 manifests / 116 explicit definitions.
+- Next country: XU (current ledger identity). No second country was started.
