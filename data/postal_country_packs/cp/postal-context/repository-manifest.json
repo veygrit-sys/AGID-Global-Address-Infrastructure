@@ -1,0 +1,49 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {"name": "agid-postal-cp-laposte-geoapi", "country_code": "CP", "country_name": "Clipperton Island", "maturity": "M2_experimental"},
+  "release_scope": {
+    "metadata_only": false, "contains_raw_source_data": false, "contains_real_addresses": false,
+    "contains_personal_data": false, "contains_production_geometry": true, "fixtures_are_synthetic": false,
+    "publication_claim": "current-official-single-postcode-with-derived-territory-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Clipperton Island postal code", "full_code_format": "98799",
+    "full_code_default_geometry": "single-postcode-derived-territory-display-surface",
+    "assignment_rule": "La Poste's complete official 2026-08-08 snapshot has exactly one 98901 row and exactly one 98799 row: ILE DE CLIPPERTON maps to 98799.",
+    "geometry_rule": "La Poste explicitly states that postcode contours are not supplied in open data. The current geo.api.gouv.fr 98901 administrative Polygon is used only because the complete official assignment denominator proves that Clipperton Island has one postcode and the independent 98799 lookup returns the same feature and coordinates. It remains derived display geometry and is never official postal, legal, survey, cadastral or delivery geometry.",
+    "non_area_rule": "No Point, route, P.O. box or organisation object is expanded into an area.",
+    "address_rule": "No address, building, parcel, recipient, customer, delivery or land-rights row is bundled. French Ministry of Armed Forces primary evidence describes no inhabitants and no habitation. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The postal node and derived administrative surface are linked only inside the versioned Postal Context graph. AGID identity, addresses and buildings require independent explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "The assignment is represented from the 2026-08-08 official La Poste data update.",
+    "known_time": "Retrieval time, exact source bodies, edition, digests and AGID release time are recorded separately.",
+    "history_rule": "The former COG code 98799 and current COG application code 98901 remain distinct from the current postal assignment 98799. A later assignment or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["polygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    {"id": "complete-assignment-denominator", "pass": "The full 39,192-row official snapshot has exactly one 98901 row and one 98799 row, both the same Clipperton assignment."},
+    {"id": "derived-surface", "pass": "The fixed geo.api.gouv.fr response is Polygon, has the same 98901/98799 identity, retains Open Licence 2.0 and is labelled derived."},
+    {"id": "geometry", "pass": "The closed ring and all 110 positions pass Turf, JSTS and shared topology checks without coordinate modification."},
+    {"id": "runtime", "pass": "The real pack passes normalization, API lookup, metadata, bounds fit, translucent paint, clear, re-search and invalid-code tests."},
+    {"id": "identity-history", "pass": "INSEE current and historical codes, La Poste assignment and CP territory identity remain separated."},
+    {"id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-rights data is published."}
+  ],
+  "promotion": {
+    "current_stage": "M2_current_laposte_single_postcode_derived_territory_visualization",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried."},
+      {"id": "M1_metadata", "definition": "Country-specific contracts and provenance are reviewable."},
+      {"id": "M2_current_laposte_single_postcode_derived_territory_visualization", "definition": "A complete current official La Poste assignment snapshot proves that Clipperton Island has the single postcode 98799 and maps it to current COG application code 98901; fixed Open Licence 2.0 geo.api.gouv.fr code and postcode responses supply the same real valid Polygon without coordinate modification; it is published only as derived administrative territory display context, and the shared real API/app path normalizes, renders, fits, clears and re-searches it with provenance while rejecting invalid and non-area fabrication. Historical COG use of 98799, uninhabited status and UPU format references never change CP identity or turn an address, building, parcel, route or organization into a postal area."},
+      {"id": "M3_candidate", "definition": "A source refresh and independent review pass without authority drift."},
+      {"id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback."}
+    ],
+    "hard_blockers": [
+      "derived-administrative-contour-presented-as-official-postal-geometry", "incomplete-official-assignment-denominator",
+      "historical-cog-code-confused-with-current-postal-authority", "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability",
+      "source-coordinates-invented-or-silently-modified", "missing-edition-digest-rights-or-reproducible-join",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": ["official_postal_boundary", "legal_or_survey_boundary", "cadastral_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "recipient_identity"]
+}
