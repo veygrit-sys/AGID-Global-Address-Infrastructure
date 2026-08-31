@@ -2493,3 +2493,21 @@ No second country was started.
 - Published implementation/artifact commit: `7f9723b9c8ef706027483b66646b7b0a08fc2190` on `codex/postal-context-m2-rollout`.
 - After CP: 252 profiles, 131 pending, 111 blocked, 0 in progress, 10 evidence-verified M2; 157 manifests / 133 explicit definitions.
 - Next country: Costa Rica (`CR`). No second country was started.
+
+## CR - Costa Rica
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-08-31T21:09:35.746Z`; completed `2026-08-31T21:45:25.7693185Z`.
+- Definition: `M2_current_correos_assignment_to_rights_cleared_district_area_visualization`.
+- Evidence: `reports/postal-context-m2/cr-source-review-2026-09-01.json` (`sha256:bcf94411cb5e6ee6420759ce6ee883d6e4d799f81ff220aa7940817abe5d1079`).
+- Checks: `reports/postal-context-m2/cr-checks-2026-09-01.json` (`sha256:c10d582c98abe5d92ad14ab027900498311ec3bc891fd65f8d2e051c02c3184c`).
+- Country report: `docs/postal-context-costa-rica-m2.md` (`sha256:d53ca29f7e919ff1b68edb90e0a36c4f4f327a91dc8b926d0851277f03e90205`).
+- Exact receipts: six top-level Correos/INEC bodies / 15,518,804 bytes plus the 34,595-byte archive metadata member, all fixed by byte count and SHA-256. Raw HTML, JSON, Shapefile archive, feature rows and temporary inspection output remain outside Git.
+- Assignment and join: the current Correos observation has 493 enabled district rows and 493 unique five-digit codes. INEC UGED 2024 has 492 unique Polygon codes; 492 join exactly and `60702` is Correos-only. Correos simultaneously enables `60702` and `61301` for Puerto Jiménez without validity or supersession fields, so a complete current one-to-one or dated alias crosswalk is not established.
+- Rights: Correos provides free interactive access but no explicit nationwide extraction, derivation, redistribution or public-serving licence. The UGED archive metadata marks Copyright and attribution while use limitation is missing; applicability of the public-site CC BY-SA statement to the archive and derived public serving remains unclear.
+- Geometry and authority: UGED has 492 non-empty, OGC-valid EPSG:8908 Polygons, but they remain source-specific geostatistical geometry and 0 were promoted. No postal, legal DTA, cadastral, address, building, parcel, Point, buffer, hull, cell, model, synthetic or AGID proxy area was created; CR, province, canton, district and UGED identities remain distinct.
+- Application: shared and synthetic CR normalization, routing, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear and re-search contracts pass. With no approved immutable, rights-cleared and alias-resolved real CR artifact, real CR API/search-to-map visualization and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 4/4, shared and CR repository/runtime/API/UI contracts 41/41, rollout invariants 8/8, changed JavaScript/JSON/diff checks 6/6 and focused TypeScript 1/1 pass (61 recorded checks, 0 failures).
+- Retry: not before `2026-09-07T21:09:35.746Z` and only after all pending countries have been swept. Public metadata may then be rechecked; provider contact/request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After CR: 252 profiles, 130 pending, 112 blocked, 0 in progress, 10 evidence-verified M2; 157 manifests / 134 explicit definitions.
+- Next country: Cuba (`CU`). No second country was started.

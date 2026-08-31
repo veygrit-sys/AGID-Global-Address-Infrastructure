@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "CR",
+  "observedAt": "2026-08-31T21:09:35.746Z",
+  "completedAt": "2026-08-31T21:45:25.7693185Z",
+  "baseCommit": "3de6e37bdfa236724242cd7b8d1a2b722e8511e6",
+  "scope": "CR-specific current Correos nationwide assignment observation, INEC UGED 2024 code/geometry/CRS/topology and archive-level rights review, Puerto Jiménez 60702/61301 temporal ambiguity, identity/privacy/no-proxy rules and shared/CR application contracts. No provider contact, registration, authentication, agreement acceptance, payment, address, building, parcel, recipient, customer, organization, land-right, internal delivery-point or protected row was acquired or promoted. Raw official bodies and geometry remain outside Git.",
+  "checks": [
+    {"id":"cr-source-inspector","command":"node scripts/inspect-postal-context-cr-sources.mjs <temporary-source-directory>","result":"pass","tests":1,"assertion":"six exact top-level receipts plus the archive member reproduce 493 enabled unique Correos codes, 492 unique UGED polygons, 492 exact joins, operator-only 60702, enabled 60702/61301 Puerto Jiménez ambiguity and unresolved operator/archive reuse rights"},
+    {"id":"cr-source-inspector-unit","command":"node --test scripts/inspect-postal-context-cr-sources.test.mjs","result":"pass","tests":4,"assertion":"common, operator-only, geometry-only and access-versus-reuse rights logic fails closed"},
+    {"id":"shared-and-cr-runtime-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/lib/postalContextCostaRicaRepository.test.ts src/lib/postalContextCostaRicaRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts src/server/routes/postalContextCostaRicaRoutes.test.ts src/data/costaRicaOpenGeoSources.test.ts","result":"pass","tests":41,"assertion":"five-digit normalization, country routing, Polygon/MultiPolygon-only display, fit, translucent fill, visible outline, clear, re-search, synthetic-only and non-area/authority boundaries remain fail closed"},
+    {"id":"rollout-invariants","command":"node --test scripts/postal-context-m2-rollout.test.mjs","result":"pass","tests":8,"assertion":"stable order, one active country, pending-before-retry policy, approval gates and M2 evidence requirements"},
+    {"id":"focused-typescript","command":"node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck <seven shared/CR test modules>","result":"pass","tests":1,"assertion":"shared postal-area plus CR repository, runtime, API, store and source test graph passes noEmit checking"},
+    {"id":"changed-javascript-json-and-diff","command":"node --check for two changed JavaScript modules, JSON.parse for three changed JSON files, and git diff --check","result":"pass","tests":6,"assertion":"source inspector, unit test, manifest, source profile, source review and diff are structurally valid"}
+  ],
+  "totals": {"assertionGroups":6,"testsPassed":61,"testsFailed":0},
+  "sourceAndRightsValidation": {
+    "exactTopLevelBodiesByteAndSha256Bound": 6,
+    "exactTopLevelOfficialBodiesBytes": 15518804,
+    "exactArchiveMemberMetadataBytes": 34595,
+    "sourceReviewDigest": "sha256:bcf94411cb5e6ee6420759ce6ee883d6e4d799f81ff220aa7940817abe5d1079",
+    "operatorEnabledRows": 493,
+    "operatorUniqueCodes": 493,
+    "ugedPolygonFeatures": 492,
+    "ugedUniqueCodes": 492,
+    "exactCodeJoins": 492,
+    "operatorOnlyCodes": ["60702"],
+    "ambiguousEnabledPuertoJimenezCodes": ["60702", "61301"],
+    "oneToOneOrDatedAliasCrosswalkEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "rawSourceRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "geometryValidation": {"source":"INEC UGED 2024","features":492,"uniqueCodes":492,"type":"Polygon","crs":"EPSG:8908","empty":0,"ogcInvalid":0,"promoted":0},
+  "applicationVerification": {"sharedAreaCapabilityVerified":true,"syntheticCrRuntimeContractsVerified":true,"realCrRuntimeVerified":false,"realCrApiVerified":false,"realCrAppAreaVisualizationVerified":false,"browserE2e":"not run because no approved immutable rights-cleared one-to-one or dated alias-aware current CR postal Polygon/MultiPolygon artifact exists"},
+  "identityAndPrivacyValidation": {"crIdentityPreserved":true,"provinceCantonDistrictAndUgedIdentitiesPreserved":true,"postalAdministrativeGeostatisticalCadastralAddressBuildingAndAgidAuthoritiesSeparated":true,"protectedOrPersonalRowsQueried":0,"personalCustomerPropertyCadastralOrLandRightsRowsInGit":0},
+  "knownLimitations": [
+    "The current operator service returns both enabled 60702 and 61301 Puerto Jiménez assignments without validity or supersession fields; UGED contains only 61301.",
+    "Correos free interactive access is not an explicit licence for nationwide extraction, derivation, redistribution or public serving.",
+    "UGED archive metadata marks Copyright and attribution and leaves useLimitation missing; public-site CC BY-SA applicability to the archive and derived output remains unclear.",
+    "UGED is source-specific geostatistical geometry and was not relabelled as operator-issued, legal DTA, cadastral or delivery geometry."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "GDAL 3.12.1 read the fixed Shapefile directly, confirmed 492 unique features in EPSG:8908 and separately reported zero empty and zero OGC-invalid geometries.",
+    "No PDF or screenshot was required; the decisive evidence is structured HTML/JSON, the Shapefile archive and its ISO metadata."
+  ],
+  "countryM2Achieved": false
+}
