@@ -2457,3 +2457,22 @@ No second country was started.
 - Retry: not before 2026-09-07T17:13:59.841Z while pending countries remain; provider contact/integration request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After CL: 252 profiles, 133 pending, 111 blocked, 0 in progress, 8 evidence-verified M2; 156 manifests / 131 explicit definitions.
 - Next country: Colombia (CO). No second country was started.
+
+## CO - Colombia
+
+- Status: `m2_verified` / M2 achieved
+- Attempt: 1 at `2026-08-31T18:08:30.995Z`
+- Definition: `M2_current_national_472_derived_area_visualization`
+- Evidence: `reports/postal-context-m2/co-source-review-2026-09-01.json` (`sha256:b3c245e7687d0a1bcf3a238b1e8a03443a170bc1085dc3029436c7fe2979c409`)
+- Checks: `reports/postal-context-m2/co-checks-2026-09-01.json` (`sha256:157076e67c5aeb6a80125298b3d26563705875a3c43e77acaba9b288bd5b4fa3`)
+- Country report: `docs/postal-context-colombia-m2.md` (`sha256:32fe63509a8456c30a92f9b3ad771a2282f0d63191e20a76e592e2ad9987e168`)
+- Exact primary receipts: eight official 4-72/MINTIC and datos.gov.co bodies / 70,743,890 bytes with SHA-256. Raw HTML, CSV, ZIP, ArcGIS JSON, PDF, rendered page and temporary transform output remain outside Git.
+- Assignments: the current official dataset updated 2025-05-20 has 3,681 distinct valid normal six-digit rows: 1,395 urban and 2,286 rural. Reversible numeric normalization and the fixed official Shapefile produce an exact 3,681-code match with zero assignment-only or geometry-only codes.
+- Rights and dates: the government catalog applies CC BY-SA 4.0 and links the exact 4-72 archive; the viewer open clause permits reuse, redistribution and transformation with required attribution and safeguards. Assignment date remains 2025-05-20 and the older geometry source date remains 2016-06-28.
+- Geometry: GDAL 3.12.1 reproducibly creates 3,681 topology-valid derived MultiPolygons with 312,937 positions, 4,586 rings and confidence 0.97. One collapsed non-area LineString component is discarded; no area is invented and no official-current-boundary claim is made.
+- Authority separation: expanded postcodes, sites, properties, addresses, buildings, P.O. boxes, organizations, routes, people, customers, parcels, land rights, administrative/cadastral areas, Points, buffers, hulls, Voronoi/raster cells, models and AGID proxies are excluded.
+- Application: full-width/spaced `CO/110 911` normalizes to `110911`; the real API returns one derived MultiPolygon with code, geometry type, class, source dates and confidence. The app converts it to GeoJSON, fits exact bounds, renders opacity-0.22 fill and opacity-0.95/width-3 outline, clears and re-searches. Loading, no-match, multiple, API-failure, invalid-geometry and invalid-input/no-fabrication states are verified. Deterministic route-to-map verification substitutes for browser E2E.
+- Validation: CO suite 143/143, shared store/graph/runtime/topology/UI 45/45 and rollout policy 8/8 pass; TypeScript no-emit, builder syntax, JSON parse and diff checks pass; a second build reproduced all three artifact digests (196 recorded tests, 0 failures).
+- Published artifact commit: `5afa0ae7a01b23615a56a0d578881ce0ff54539a`; documentation/checks commit: `3a73f9fadefe31a4e3a4a064bcb6ba45d3bb1382`, both on `codex/postal-context-m2-rollout`.
+- After CO: 252 profiles, 132 pending, 111 blocked, 0 in progress, 9 evidence-verified M2; 156 manifests / 132 explicit definitions.
+- Next country: Clipperton Island (`CP`). No second country was started.

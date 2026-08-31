@@ -8,7 +8,7 @@ type Manifest = {
   repository: { name: string; country_code: string; maturity: string };
   release_scope: Record<string, boolean>;
   postal_system: Record<string, string>;
-  promotion: { current_stage: string; hard_blockers: string[] };
+  promotion: { current_stage: string; stages: Array<{ id: string; definition: string }>; hard_blockers: string[] };
 };
 type Profile = {
   artifact_scope: string;
@@ -39,6 +39,7 @@ test('Colombia seed separates official polygons, layer rights, addresses, constr
   assert.equal(value.repository.country_code, 'CO');
   assert.equal(value.repository.maturity, 'M2_national_derived_visualization');
   assert.equal(value.promotion.current_stage, 'M2_national_derived_visualization');
+  assert.equal(value.promotion.stages[0]?.id, 'M2_current_national_472_derived_area_visualization');
   assert.equal(value.release_scope.metadata_only, false);
   assert.equal(value.release_scope.contains_raw_source_data, false);
   assert.equal(value.release_scope.contains_real_addresses, false);
