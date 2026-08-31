@@ -1,0 +1,76 @@
+{
+  "schema_version": "agid-postal-va-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-va",
+    "country_code": "VA",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "CAP Vaticano",
+    "full_code_format": "00120",
+    "full_code_default_geometry": "operator_delivery_zone_or_explicit_non_area",
+    "assignment_rule": "The current Vatican postal operator and UPU establish 00120 as the single Vatican postcode. That syntax and country-wide assignment do not prove that a sovereign boundary, office point, address, recipient category or delivery-zone illustration is an exact postcode Polygon/MultiPolygon.",
+    "postcode_area_rule": "The current operator delivery-zone release separates zones 1-3 inside the walls from zone 4 addresses and recipient categories outside or across different properties. Only a rights-cleared fixed geospatial operator resource may establish drawable membership. The raster illustration, Vatican sovereign boundary, Holy See extraterritorial property, basilica, piazza, office, address, organization, P.O.-box, point, buffer, hull, Voronoi/raster cell or synthetic fixture never becomes the 00120 perimeter by implication.",
+    "address_rule": "Postcode assignment, delivery-zone membership, Vatican City identity, Holy See extraterritorial property, recipient category, address and service state remain separate assertions.",
+    "building_rule": "Building output requires a separately sourced explicit distributable address-building relationship or common authoritative identifier; postcode, zone, recipient category, administration, proximity, containment and point evidence are insufficient.",
+    "administrative_rule": "Vatican City territory and Holy See extraterritorial properties remain sovereign or legal-property context. They are not silently merged, relabelled or treated as the complete 00120 postal perimeter.",
+    "service_status_rule": "P.O.-box authorization, office location, service availability and delivery timing are time-stamped service assertions separate from postcode assignment, area membership and deliverability."
+  },
+  "integration": {
+    "agid_country_code": "VA",
+    "coordinate_flow": "coordinate -> rights-cleared 00120 delivery area or explicit non-area -> address graph -> explicit building relation -> AGID cell",
+    "postcode_flow": "canonical 00120 -> operator assignment and complete exception evidence -> valid official/derived/virtual area or explicit non-area -> address context -> explicit building relation -> AGID cells",
+    "building_output_gate": "explicit distributable relation, common authoritative identifier, or reviewed crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-cap", "pass": "CAP is stored as the exact five-character text 00120 without losing leading zeroes." },
+    { "id": "complete-delivery-denominator", "pass": "The current complete assignment, four-zone membership, address/category exceptions and non-area denominator are fixed with version, date, bytes, SHA-256, correction policy and compatible rights." },
+    { "id": "territory-and-postal-separation", "pass": "Vatican City territory, Holy See extraterritorial properties, zones 1-4, P.O. boxes, organizations and individual addresses remain distinct and are reconciled only by postal authority." },
+    { "id": "valid-area-only", "pass": "Every drawable area uses finite closed valid Polygon/MultiPolygon geometry in the declared CRS with class, lineage, date, confidence and exceptions." },
+    { "id": "resource-rights", "pass": "Every assignment and geometry resource pins exact processing, storage, derivation, redistribution, public-serving and attribution permission." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures, raster tracing and shared code capability never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_vatican_00120_assignment_delivery_zone_and_area_visualization", "definition": "The current complete Vatican postal-operator assignment, four delivery-zone membership, address/category exception and explicit non-area denominator for 00120 is pinned under reviewed rights compatible with AGID processing, storage, derivation, redistribution and public serving. Every drawable component reconciles to fixed finite closed valid Polygon/MultiPolygon geometry whose official/derived/virtual class, provider, edition, reference date, rights, attribution, bytes, SHA-256, schema, CRS, topology, coverage, method, confidence and exceptions are recorded; P.O.-box, organization, address, route, point and other non-area cases retain source-grounded reasons. Vatican City territory, Holy See extraterritorial properties, the operator's raster zone illustration, offices, addresses, recipients, buildings, parcels, buffers, hulls, Voronoi/raster cells and synthetic fixtures never become the 00120 perimeter by implication and neither VA identity nor source territories are changed or merged. The approved immutable artifact drives the real VA API/app, which normalizes 00120, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_address", "definition": "Explicit address identifiers and points pass rights, schema, coverage, validity, privacy and correction gates." },
+      { "id": "M4_geometry", "definition": "Postal surfaces and building joins pass topology, ambiguity, identifier, rights and quality gates." }
+    ],
+    "hard_blockers": [
+      "single-country-postcode-presented-as-sovereign-boundary",
+      "vatican-and-holy-see-extraterritorial-property-merged",
+      "raster-zone-illustration-traced-as-authoritative-gis",
+      "zone-four-address-or-recipient-category-invented-as-area",
+      "po-box-organization-address-or-point-buffered-to-area",
+      "public-page-or-pdf-access-substituted-for-resource-specific-license",
+      "postcode-presented-as-building-or-delivery-guarantee"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_VA_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_VA_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_VA_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_VA_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-address-or-recipient-rows",
+    "single-postcode-means-country-polygon",
+    "vatican-territory-equals-postal-perimeter",
+    "exterritorial-property-equals-postal-perimeter",
+    "raster-tracing-or-georeferencing-without-provider-authority",
+    "po-box-organization-or-address-buffer",
+    "nearest-building-is-exact-address-link",
+    "public-document-access-is-blanket-redistribution-license"
+  ]
+}
