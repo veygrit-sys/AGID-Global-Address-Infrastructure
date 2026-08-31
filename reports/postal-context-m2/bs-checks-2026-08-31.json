@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BS",
+  "observedAt": "2026-08-31T14:59:26.917Z",
+  "completedAt": "2026-08-31T15:38:58.8324160Z",
+  "baseCommit": "523d7eb993967b8f6a6caa1031c6193801375e99",
+  "scope": "BS-specific current UPU no-postcode and no-home-delivery evidence, Bahamas authority/PO-Box context, UPU rights boundary and no-proxy evidence plus shared application contracts. No raw address row, feature row, recipient, customer, P.O.-Box holder, Poste Restante user, coordinate, building, parcel, person, property or land-right record or production geometry was copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "bs-source-inspector",
+      "command": "<bundled-python with pypdf> scripts/inspect-bs-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "six exact authority bodies reproduce the current Bahamas no-postcode/no-home-delivery result, P.O.-Box/Poste-Restante semantics and rights boundary without raw rows or geometry promotion"
+    },
+    {
+      "id": "bs-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-bs-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, text/PDF drift, authority/right/no-code semantic drift and box/office-abbreviation no-promotion behavior fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "bs-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-bs-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, current no-postcode authority, UPU text/data rights boundary, box/island/no-proxy behavior, report digests, no real runtime claim and next BZ"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 60,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialAndPublicReferencesReviewed": 6,
+    "exactBodiesByteAndSha256Bound": 6,
+    "exactOfficialBodiesBytes": 2910631,
+    "sourceReviewDigest": "sha256:da04ceb2f6c8cd13843b12fcb1bfa93f70754e08d2a032d4b1683d074b558ee9",
+    "currentPostalCodeFormat": "none",
+    "upuBahamasSheetEdition": "10/2025",
+    "upuBahamasSaysNoPostcodeSystem": true,
+    "upuBahamasSaysNoHomeDeliverySystem": true,
+    "currentPostalCodeAssignments": 0,
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "featureOrAddressRowsQueried": 0,
+    "rawSourceRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBsRuntimeVerified": false,
+    "realBsApiVerified": false,
+    "realBsAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no valid current BS postcode input or eligible immutable BS postal Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "Current UPU evidence establishes that The Bahamas applies no postcode or home-delivery system; absence is represented as none and cannot itself satisfy the Polygon/MultiPolygon M2 milestone.",
+    "P.O. Box numbers, post-office abbreviations, Poste Restante and island names or abbreviations are independently typed address/routing elements, not postcodes or postal-area keys.",
+    "UPU website-reference reuse with source acknowledgement does not create resource-specific rights in a complete assignment or geometry dataset; compatible public-serving permission was not established.",
+    "No island, administrative/planning/electoral area, locality, office, route, service area, delivery point, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model or AGID cell was promoted as a postcode area.",
+    "ISO BS and every island identity remain distinct from postal objects and from one another."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "Poppler rendered four relevant pages from three PDFs to non-empty RGB PNGs. Web screenshots succeeded for the two UPU Bahamas pages and UPU general page 4; the government rate-book page had a cache miss. The local image-view helper returned Windows error 206 through original and short paths; exact bytes, extracted text, page counts, dimensions, non-white bounds and render SHA-256 values were validated.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

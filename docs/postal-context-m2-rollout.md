@@ -2376,3 +2376,23 @@ No second country was started.
 - Retry: not before `2026-09-07T14:18:56.294Z` while pending countries remain; Correios contact, corporate registration, contract/term acceptance, payment, credential use, protected-row query/scrape, destination creation, publication or deployment requires explicit approval.
 - After BR: 252 profiles, 137 pending, 107 blocked, 0 in progress, 8 evidence-verified M2; 154 manifests / 127 explicit definitions.
 - Next country: Bahamas (`BS`). No second country was started.
+
+## BS - Bahamas
+
+- Status: blocked / M2 unmet
+- Attempt: 1 at 2026-08-31T14:59:26.917Z
+- Definition: M2_current_bahamas_postcode_assignment_and_area_visualization
+- Evidence: reports/postal-context-m2/bs-source-review-2026-08-31.json (sha256:da04ceb2f6c8cd13843b12fcb1bfa93f70754e08d2a032d4b1683d074b558ee9)
+- Checks: reports/postal-context-m2/bs-checks-2026-08-31.json (sha256:a76de0733c5bb985a553db9463de015fc9eba0f1bb7eada2f774fdbcb1412ef8)
+- Country report: docs/postal-context-bahamas-m2.md
+- Exact-body receipts: 6 Bahamas authority and UPU bodies / 2,910,631 bytes with SHA-256. Raw HTML/PDF, example addresses, rendered pages and temporary inspection output remain outside Git; no feature, assignment or address row was queried.
+- Current postal authority: UPU Bahamas addressing sheet edition 10/2025 says that The Bahamas does not apply a postcode system or home-delivery system. Mail is dispatched through Post Office Boxes, and Poste Restante is available to people without a box. The September 2025 UPU no-postcode table independently lists Bahamas.
+- Object boundary: GT 2001 and comparable examples contain a post-office abbreviation plus P.O. Box number; neither is a postcode or postal-area key. No island name/abbreviation, office, box, Poste Restante object or historical Nassau-Freeport routing practice was promoted.
+- Rights: UPU website information reuse with source acknowledgement was distinguished from its copyright/database restrictions. The reviewed ministry page and government-hosted historical rate book publish no complete current assignment/geometry dataset licence. Compatible AGID processing, derivation, redistribution and public-serving rights were not established.
+- Geometry and identity: there is no current BS postcode assignment to anchor an official, derived or virtual postal Polygon/MultiPolygon. No island, administrative/planning/electoral area, locality, office, route, service area, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model or AGID cell was promoted. ISO BS and all island identities remain distinct.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no valid BS postcode input or eligible immutable real area artifact, real BS search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, BS ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures).
+- PDF review: three PDFs / 36 physical pages were byte- and text-verified; four relevant pages rendered to non-empty RGB PNGs with fixed dimensions, non-white bounds and SHA-256. Web screenshots succeeded for three UPU pages, the government rate-book page had a cache miss, and the local image-view helper returned Windows error 206 through original and short paths; no image was committed.
+- Retry: not before 2026-09-07T14:59:26.917Z while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After BS: 252 profiles, 136 pending, 108 blocked, 0 in progress, 8 evidence-verified M2; 155 manifests / 128 explicit definitions.
+- Next country: Belize (BZ). No second country was started.
