@@ -2252,3 +2252,22 @@ No second country was started.
 - Retry: not before `2026-09-07T07:54:17.132Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After AR: 252 profiles, 144 pending, 101 blocked, 0 in progress, 7 evidence-verified M2; 149 manifests / 120 explicit definitions.
 - Next country: AW (Aruba). No second country was started.
+
+## AW - Aruba
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T08:45:47.702Z`
+- Definition: `M2_current_post_aruba_postcode_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/aw-source-review-2026-08-31.json` (`sha256:67b439cef18bee4ddef3e40c7f2660afa3a31430f2e44d13456acec50f9c7b77`)
+- Checks: `reports/postal-context-m2/aw-checks-2026-08-31.json` (`sha256:26c726b10d2f2ce505fe7cef4ca740a8b6615db2a0486cf1c3c3cc155842972f`)
+- Country report: `docs/postal-context-aruba-m2.md`
+- Exact-body receipts: 4 official bodies / 839,174 bytes with SHA-256; raw HTML/PDF, rendered pages and temporary inspection output remain outside Git.
+- Postal authority: Post Aruba states that Aruba has no postal code. The UPU September 2025 Universal DataBase independently lists Aruba among countries and territories which do not require postal codes.
+- Rights: reviewed Post Aruba bodies assert 2026 copyright and publish no open postal dataset licence; public web access was not treated as processing, derivation, redistribution or public-serving permission.
+- Result: no postcode search key, current assignment/alias/validity/exception/non-area denominator or official/derived/virtual postal Polygon/MultiPolygon exists. No island, district, region, locality, neighbourhood, address, route, service area, parcel, building, Point, buffer, hull, Voronoi/raster cell, AGID cell, commerce ZIP placeholder or synthetic AW planning code was promoted.
+- Application: shared normalization/no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. No eligible real AW input or area artifact exists, so real AW API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, source-inspector unit tests 5/5, shared area/runtime/store contracts 29/29, rollout invariants 8/8, AW ledger evidence 5/5, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (57 recorded assertions, 0 failures).
+- PDF review: UPU physical page 4 rendered to a non-empty 1158x1638 RGB PNG and exact bytes, 12-page count, page markers and render SHA-256 passed. The local image-view helper failed with Windows error 206 even at a short path; no image was committed.
+- Retry: not before `2026-09-07T08:45:47.702Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After AW: 252 profiles, 143 pending, 102 blocked, 0 in progress, 7 evidence-verified M2; 150 manifests / 121 explicit definitions.
+- Next country: BB (Barbados). No second country was started.
