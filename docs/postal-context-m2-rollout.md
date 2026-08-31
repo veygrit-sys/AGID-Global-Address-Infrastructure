@@ -2107,3 +2107,21 @@ No second country was started.
 - Retry: not before `2026-09-07T02:02:10.112Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After SK: 252 profiles, 153 pending, 93 blocked, 0 in progress, 6 evidence-verified M2; 142 manifests / 112 explicit definitions.
 - Next country: SM (San Marino). No second country was started.
+
+## SM - San Marino
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T02:35:10.604Z`
+- Definition: `M2_current_san_marino_cap_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/sm-source-review-2026-08-31.json` (`sha256:9378cbd7bad8728c3324f17119c4ac64b9e93859a5082deac9c74da4d6ee5989`)
+- Checks: `reports/postal-context-m2/sm-checks-2026-08-31.json` (`sha256:017f021e42eb3373684d715602d9ff1ed41815a327356a56e4d4f5cdf207ebf1`)
+- Country report: `docs/postal-context-san-marino-m2.md`
+- Exact-body receipts: 10 official bodies / 1,699,234 bytes with SHA-256; raw HTML/JSON/GeoJSON and office/source rows remain outside Git.
+- Operator evidence: the current official Poste office page contains all ten `47890`-`47899` values. These are office-address examples, not a complete assignment/exception denominator, and compatible processing/storage/derivation/redistribution/public-serving rights are unverified.
+- Administrative and geometry evidence: the official denominator is nine Castelli, while the `CASTELLI` ArcGIS layer has 12 administrative Polygon features, including three Serravalle and two Borgo Maggiore sub-polygons. All 27,446 positions are finite and all 12 rings close, but the returned GeoJSON declares EPSG:4326 while bbox longitude 21.32-21.44 does not intersect expected San Marino.
+- Result: no Castello/sobborgo or office point was promoted as CAP area. In particular, `47891` Dogana and `47899` Serravalle still lack a postal-source-defined split. Resource-specific reuse rights, complete reconciliation, approved immutable artifact and real SM API/UI area path remain blocked.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point-only non-area, clear and re-search contracts pass. No real eligible SM artifact exists, so real SM API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, SM ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures). Repository-wide TypeScript was attempted but the available dependency tree has unrelated missing packages and inherited errors; the limitation is recorded in the checks report.
+- Retry: not before `2026-09-07T02:35:10.604Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After SM: 252 profiles, 152 pending, 94 blocked, 0 in progress, 6 evidence-verified M2; 143 manifests / 113 explicit definitions.
+- Next country: UA (Ukraine). No second country was started.
