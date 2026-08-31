@@ -2072,3 +2072,20 @@ No second country was started.
 - Retry: not before 2026-09-07T00:49:09.000Z while pending countries remain; provider contact, registration, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After SI: 252 profiles, 155 pending, 91 blocked, 0 in progress, 6 evidence-verified M2; 141 manifests / 111 explicit definitions.
 - Next country: SJ (Svalbard and Jan Mayen). No second country was started.
+
+## SJ - Svalbard and Jan Mayen
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at 2026-08-31T01:28:39.617Z
+- Definition: `M2_current_svalbard_jan_mayen_assignment_and_official_area_visualization`
+- Evidence: `reports/postal-context-m2/sj-source-review-2026-08-31.json` (`sha256:d6e1c42fac8693466691935f4bff57050c53af7f2b967882c4e9b33b2e749767`)
+- Checks: `reports/postal-context-m2/sj-checks-2026-08-31.json` (`sha256:31967c28f7baf0c247927d3ca7a066d316e9ee29a81c5e41052529ae478c28ff`)
+- Country report: `docs/postal-context-svalbard-jan-mayen-m2.md`
+- Exact-body receipts: 5 bodies / 723,960 bytes with SHA-256; raw HTML/text, source rows, WFS/Atom attempts and temporary inspection output stay outside Git.
+- Source denominator: the complete current Posten register has 5,122 unique rows and is effective 2025-10-01. Exact SJ filtering yields eight unique codes: seven source-classified 21 Svalbard rows and one 22 Jan Mayen row, with G 6, P 1, B 1 and S 0. These operational fields were retained without merging repository NO/SJ identities.
+- Result: Posten public-serving permission is unverified. Kartverket advertises official `Postnummerområder` under CC BY 4.0, but five WFS/Atom attempts timed out; no fixed geometry body, SJ coverage, Polygon/MultiPolygon validation or eight-code area/non-area reconciliation exists. No Point, municipality, settlement, island, administration, building, buffer, hull, Voronoi/raster or synthetic proxy was promoted.
+- Application: shared Polygon/MultiPolygon draw/fit/translucent fill/outline/clear, error and provenance contracts pass, but no real SJ loader, API response, map rendering or browser E2E is claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, SJ ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures). Repository-wide TypeScript was attempted but the available dependency tree is incomplete; unrelated inherited errors are disclosed in the checks report.
+- Retry: not before 2026-09-07T01:28:39.617Z while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After SJ: 252 profiles, 154 pending, 92 blocked, 0 in progress, 6 evidence-verified M2; 142 manifests / 112 explicit definitions.
+- Next country: SK (Slovakia). No second country was started.
