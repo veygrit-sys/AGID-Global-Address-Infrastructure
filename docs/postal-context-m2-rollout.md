@@ -2197,3 +2197,23 @@ No second country was started.
 - Retry: not before `2026-09-07T05:23:45.136Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After XU: 252 profiles, 147 pending, 99 blocked, 0 in progress, 6 evidence-verified M2; 147 manifests / 117 explicit definitions.
 - Next country: AG (Antigua and Barbuda). No second country was started.
+
+
+## AG - Antigua and Barbuda
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T05:49:45.489Z`
+- Definition: `M2_current_antigua_barbuda_optional_postal_identifier_and_area_visualization`
+- Evidence: `reports/postal-context-m2/ag-source-review-2026-08-31.json` (`sha256:7d8bc4e0fda4594f8c36a01178b4beb6e7ac94b6cc0af76215579bf2950734e6`)
+- Checks: `reports/postal-context-m2/ag-checks-2026-08-31.json` (`sha256:56e23dec994e36ce5892f8de7055786507a67a60a77f2b22e2c3e3aa7a14174a`)
+- Country report: `docs/postal-context-antigua-barbuda-m2.md`
+- Exact-body receipts: 7 official bodies / 1,674,773 bytes with SHA-256; raw PDF/HTML, rendered pages, source rows and temporary inspection output remain outside Git.
+- Postal-system evidence: the UPU August 2026 publication's September 2025 table lists Antigua and Barbuda among countries which do not require postal codes. This keeps `postalCode` nullable but does not prove that no internal office, route, P.O.-box or organization identifiers exist.
+- Operator and rights evidence: current UPU references identify Antigua and Barbuda Postal Service, General Post Office and organization code `AGA`. They publish no complete identifier/alias/eligibility/exception/non-area denominator or geometry. UPU rights are reserved and no resource-specific compatible public-serving permission was established.
+- Existing pack boundary: the draft Postal Forge pack's 246 planning cells, 48 synthetic locality identifiers and 12 required boundary slots remain simulation/planning fixtures; it contains zero official municipality records and zero production-eligible postal areas.
+- Result: no official, derived or virtual postal Polygon/MultiPolygon exists. No island, parish, locality, administrative boundary, office, route, P.O. box, organization, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, AGID planning cell or synthetic proxy was promoted. No approved immutable artifact or real AG API/UI path exists.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. No eligible real AG artifact exists, so real AG API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, source-inspector unit tests 5/5, shared area/runtime/store contracts 29/29, rollout invariants 8/8, AG ledger evidence 5/5, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (57 recorded assertions, 0 failures).
+- Retry: not before `2026-09-07T05:49:45.489Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After AG: 252 profiles, 146 pending, 100 blocked, 0 in progress, 6 evidence-verified M2; 148 manifests / 118 explicit definitions.
+- Next country: AI (Anguilla). No second country was started.
