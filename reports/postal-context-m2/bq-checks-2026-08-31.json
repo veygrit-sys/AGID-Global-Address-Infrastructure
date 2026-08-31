@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BQ",
+  "observedAt": "2026-08-31T13:36:23.702Z",
+  "completedAt": "2026-08-31T14:05:57.0486558Z",
+  "baseCommit": "1c7a114b5ca40dbde9953becd96bec5d0ef38829",
+  "scope": "BQ-specific current RCN no-postcode and proposal evidence, ACM operator context, consultation placeholder exclusions, UPU identity/no-postcode evidence, website text-rights boundary and no-proxy evidence plus shared application contracts. No raw address row, feature row, recipient, customer, P.O.-Box holder, coordinate, building, parcel, person, land-right record or geometry was copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "bq-source-inspector",
+      "command": "<bundled-python with pypdf> scripts/inspect-bq-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "eight exact bodies reproduce the current RCN no-postcode statement, proposal-only identifiers, current ACM operator context, UPU identity/no-postcode evidence and text-rights boundary without raw rows or geometry promotion"
+    },
+    {
+      "id": "bq-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-bq-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, text/PDF drift, operator/right/no-code semantic drift and proposal/workaround no-promotion behavior fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "bq-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-bq-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, no-current-postcode authority, proposal/workaround exclusion, text/data rights boundary, no-proxy geometry, report digests, no real runtime claim and next BR"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 60,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialAndPublicReferencesReviewed": 8,
+    "exactBodiesByteAndSha256Bound": 8,
+    "exactOfficialBodiesBytes": 1751301,
+    "sourceReviewDigest": "sha256:404cd477a0ae7cc0f1141a78c7f40b9983ccce427a394032f5cec96d544b2738",
+    "currentGovernmentNoPostcodeStatementValidated": true,
+    "upuNoPostcodeListEdition": "Sep. 2025",
+    "upuListsBonaireSaintEustatiusAndSabaAsNotRequiringPostalCodes": true,
+    "currentPostalCodeAssignments": 0,
+    "proposalIdentifiersPromoted": 0,
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "featureOrAddressRowsQueried": 0,
+    "rawSourceRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBqRuntimeVerified": false,
+    "realBqApiVerified": false,
+    "realBqAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no valid current BQ postcode input or eligible immutable BQ postal Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "Current RCN and UPU evidence establishes no current BQ postcode system; no proposal or placeholder can be introduced to satisfy M2.",
+    "0000AA-0999ZZ is a consultation proposal, 0000BQ is a workaround and 0100AA is merely a possible future first combination; none is a valid current assignment.",
+    "CC0 applies to eligible RCN website text but does not create resource-specific rights in a future assignment or geometry dataset.",
+    "No island, public-body, administrative area, locality, office, route, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model or AGID cell was promoted as a postcode area.",
+    "BQ, BES and the three island identities remain distinct from European Netherlands, Aruba, Curaçao, Sint Maarten and the former Netherlands Antilles."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "Poppler rendered four relevant PDF pages to non-empty RGB PNGs. Web screenshots timed out or missed cache for three pages, and the local image-view helper returned Windows error 206 through original and short mapped paths; exact bytes, extracted page text, page counts, dimensions, non-white bounds and render SHA-256 values were validated.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

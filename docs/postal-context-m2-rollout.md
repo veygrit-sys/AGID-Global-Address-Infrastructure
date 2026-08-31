@@ -2336,3 +2336,23 @@ No second country was started.
 - Retry: not before `2026-09-07T12:44:51.745Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After BO: 252 profiles, 139 pending, 105 blocked, 0 in progress, 8 evidence-verified M2; 153 manifests / 125 explicit definitions.
 - Next country: BQ (Caribbean Netherlands). No second country was started.
+
+## BQ - Caribbean Netherlands
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T13:36:23.702Z`
+- Definition: `M2_current_caribbean_netherlands_postcode_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/bq-source-review-2026-08-31.json` (`sha256:404cd477a0ae7cc0f1141a78c7f40b9983ccce427a394032f5cec96d544b2738`)
+- Checks: `reports/postal-context-m2/bq-checks-2026-08-31.json` (`sha256:15ab77999dda86de8fcad951bbe227f4fb842a084107eb46ac42a010ff31f8d2`)
+- Country report: `docs/postal-context-caribbean-netherlands-m2.md`
+- Exact-body receipts: 8 RCN, ACM, Internetconsultatie and UPU bodies / 1,751,301 bytes with SHA-256. Raw HTML/PDF, addresses, rendered pages and temporary inspection output remain outside Git; no feature or address row was queried.
+- Current authority: the current RCN postal-service page says no postcodes exist in Bonaire, Saba or Sint Eustatius. ACM identifies FXDC as the supervised concession holder, and UPU's September 2025 table independently lists Bonaire, Saint Eustatius and Saba among territories not requiring postal codes.
+- Proposal boundary: the concluded 2024 consultation describes `0000AA-0999ZZ` as a proposal. Its final report records `0000BQ` as a workaround, excludes `0000AA-0000ZZ` from proposed use and calls `0100AA` only a possible first combination. None was promoted as an assignment, lookup input or area key.
+- Rights: RCN applies CC0 1.0 to eligible website text while restricting most images. Text-reference reuse does not create or license a future assignment/geometry dataset; no compatible complete postal public-serving right was established.
+- Geometry and identity: with no current assignment there is no official/derived/virtual BQ postal Polygon/MultiPolygon. No island, public body, administrative area, locality, office, route, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model, AGID cell or proposal scenario was promoted. BQ and the three island identities remain separate from European Netherlands, Aruba, Curaçao and Sint Maarten.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no valid BQ input or eligible immutable area artifact, real BQ search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, BQ ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures).
+- PDF review: three PDFs / 20 physical pages were byte- and text-verified; four relevant pages rendered to non-empty RGB PNGs with fixed dimensions, non-white bounds and SHA-256. Web screenshots timed out or missed cache for three pages, and the local image-view helper returned Windows error 206 through original and short paths; no image was committed.
+- Retry: not before `2026-09-07T13:36:23.702Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After BQ: 252 profiles, 138 pending, 106 blocked, 0 in progress, 8 evidence-verified M2; 154 manifests / 126 explicit definitions.
+- Next country: Brazil (`BR`). No second country was started.
