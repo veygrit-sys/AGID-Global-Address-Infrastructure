@@ -2179,3 +2179,21 @@ No second country was started.
 - Retry: not before `2026-09-07T04:57:44.714Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After XK: 252 profiles, 148 pending, 98 blocked, 0 in progress, 6 evidence-verified M2; 146 manifests / 116 explicit definitions.
 - Next country: XU (current ledger identity). No second country was started.
+
+## XU - Akrotiri
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T05:23:45.136Z`
+- Definition: `M2_current_akrotiri_bfpo_and_cyprus_postal_area_visualization`
+- Evidence: `reports/postal-context-m2/xu-source-review-2026-08-31.json` (`sha256:fb151d3a3dda727448dcb58b54fbd1cfbc75effde1ac5126899f123837af8f80`)
+- Checks: `reports/postal-context-m2/xu-checks-2026-08-31.json` (`sha256:1dfe7013559d7f4ef4f180c9e1530d0befce1feba6effb9e52f6ab1b5a59723e`)
+- Country report: `docs/postal-context-akrotiri-m2.md`
+- Exact-body receipts: 9 official bodies / 8,102,778 bytes with SHA-256; raw HTML/ZIP, source geometry and temporary inspection output remain outside Git.
+- Route evidence: current GOV.UK maps Akrotiri to BFPO `57` and shadow postcode `BF1 2AT`; it separately preserves Episkopi `53` / `BF1 2AS`. BFPO addressing is a route, not an area assertion.
+- Real geometry evidence: the fixed official DLS September 2025 Shapefile has 870 Polygon features, 848 distinct code values, zero null/invalid geometry and one valid 1,285-point `AKROTIRI` / `4640` Polygon in CGRS93 LTM.
+- Result: DLS 4640 name/code geometry does not establish equivalence to BFPO 57, BF1 2AT, all XU territory or all eligible users. The current complete dual-system assignment/eligibility/alias/exception/non-area denominator, authoritative cross-system reconciliation and resource-specific compatible DLS public-serving rights remain unverified. No name/containment assumption, route, territory, administrative/environmental area, office, address, building, parcel, point, buffer, hull, Voronoi/raster cell or synthetic proxy was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point-only non-area, clear and re-search contracts pass. No approved XU artifact exists, so real XU API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, XU ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures).
+- Retry: not before `2026-09-07T05:23:45.136Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After XU: 252 profiles, 147 pending, 99 blocked, 0 in progress, 6 evidence-verified M2; 147 manifests / 117 explicit definitions.
+- Next country: AG (Antigua and Barbuda). No second country was started.
