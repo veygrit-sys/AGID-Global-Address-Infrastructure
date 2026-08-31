@@ -1,0 +1,84 @@
+{
+  "schema_version": "agid-postal-se-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-se",
+    "country_code": "SE",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "metadata-only-contract-seed"
+  },
+  "postal_system": {
+    "full_code_name": "Postnummer",
+    "full_code_format": "NNNNN",
+    "display_format": "NNN NN",
+    "full_code_default_geometry": "delivery_assignment_or_endpoint_or_non_area",
+    "assignment_rule": "PTS appoints PostNord to administer the postcode system, and PostNord establishes and updates the postcode and post town attached to valid municipal addresses. A five-digit code or formatted NNN NN label alone does not establish an exact delivery perimeter.",
+    "purpose_rule": "PTS says the postcode system exists only to route mail and need not follow districts, municipalities or counties. Postal, residential, administrative and statistical geographies remain separate.",
+    "commercial_surface_rule": "Postnummerservice advertises quality-controlled Nordic address, postcode and geodata and an indexed 2026 price list identifies five-digit Swedish postcode surfaces. No product delivery was purchased or fixed, and current purchase terms grant organizational use while prohibiting resale and sublicensing. Product visibility or a price is not AGID processing, derivation, redistribution or public-serving permission.",
+    "address_rule": "Lantmäteriet's address product is municipality-partitioned address data with optional PostNord postcode/post-town attributes. Its reviewed INSPIRE example geometry is an entrance Point. Address identity, a point, a municipal download envelope or PostNord attribute does not create a postcode Polygon/MultiPolygon.",
+    "postal_surface_rule": "Only an exact valid source Polygon/MultiPolygon explicitly representing five-digit Swedish postcode coverage under reviewed AGID processing, storage, derivation, redistribution and public-serving rights, or a reproducible derived surface from a complete current rights-cleared address-to-postcode assignment plus explicit endpoint/exception denominator, may become postal geometry. Derived surfaces remain noncanonical and preserve gaps, conflicts and non-areas. Address points, municipal/administrative boundaries, buildings, parcels, buffers, hulls, Voronoi and raster cells are prohibited proxies.",
+    "endpoint_rule": "Poste restante, P.O.-box, reply/freepost, competition-mail, large-customer, organization, route and other administrative or endpoint codes remain point, route or non-area unless exact source area geometry exists. A large-customer code is never assigned a geographic perimeter by inference.",
+    "normalization_rule": "Store the canonical postcode as five text digits, preserve leading zeroes and normalize ordinary spaces from NNN NN to NNNNN. Formatting never supplies membership, deliverability or geometry.",
+    "building_rule": "A building may be shown only from a separately rights-cleared building source with an explicit stable address-to-building relationship. A postal assignment, address point, parcel, containment, overlap or nearest footprint alone is not an exact building link.",
+    "territorial_rule": "Every artifact retains SE identity and the exact source-published coverage and exclusions. Postal, address, administrative and territorial coverage are separate; dataset coverage is never used to change or merge another country or region identity.",
+    "privacy_rule": "Recipients, residents, owners, rightsholders, occupants, contacts, credentials and protected property fields never enter public artifacts.",
+    "crs_rule": "Every geometry retains source CRS and transform version. WGS84 output requires a reviewed reproducible transform; no address point, download envelope or map screenshot is relabelled as a postal area."
+  },
+  "integration": {
+    "agid_country_code": "SE",
+    "postcode_flow": "canonical five digits -> current PostNord or licensed assignment denominator -> exact area or reasoned non-area -> official address hierarchy -> explicit building relation -> AGID cells",
+    "coordinate_flow": "coordinate -> rights-cleared address or postal surface candidate -> separately verified postcode assignment -> explicit building relation -> SE AGID cell",
+    "building_output_gate": "separate building authority plus source-defined relationship, common authoritative identifier or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Five-digit postcodes remain text, preserve leading zeroes and normalize NNN NN without inventing membership." },
+    { "id": "operator-assignment", "pass": "Every current postcode assertion pins the exact PostNord or licensed source, purpose, capture/reference time, terms, schema and digest." },
+    { "id": "official-or-derived-area", "pass": "Every area is an exact valid source Polygon/MultiPolygon or a labelled derived surface from a complete assignment and exception denominator with method, members, exclusions, uncertainty, rights and lineage." },
+    { "id": "non-area-honesty", "pass": "Poste-restante, P.O.-box, reply/freepost, large-customer, organization, route, point and unmatched records remain explicit non-areas unless exact source geometry proves otherwise." },
+    { "id": "authority-separation", "pass": "Postal assignment, Lantmäteriet address, administration, building, parcel and territory evidence remain independently attributable." },
+    { "id": "explicit-building-link", "pass": "Building output has an explicit authoritative relation; point, parcel, containment and proximity alone never pass." },
+    { "id": "privacy", "pass": "No recipient, resident, owner, contact, credential or protected-property record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures may verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country-specific authority contracts and promotion blockers are reviewable without raw data or production geometry." },
+      { "id": "M2_current_sweden_five_digit_assignment_and_area_visualization", "definition": "A current complete five-digit Swedish postcode assignment and explicit delivery/endpoint exception denominator and corresponding valid Polygon/MultiPolygon coverage are usable under explicit reviewed AGID processing, storage, derivation, redistribution and public-serving permission. Provider, product, edition, reference date, licence, attribution, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage, gaps, conflicts and exceptions are fixed in an approved immutable artifact. Any surface derived from complete address membership is labelled derived and noncanonical. The real SE API/app normalizes NNN NN to five text digits, returns only valid real areas, fits and renders translucent fill with a clear outline, and shows selected code, geometry kind, official/derived/virtual class, source, reference date and confidence; poste-restante, P.O.-box, reply/freepost, competition-mail, large-customer, organization, route, point, unmatched and other non-area records remain explicit. No address Point, municipal/administrative boundary, building/parcel object, download envelope, buffer, hull, Voronoi/raster or synthetic proxy satisfies M2, and SE/source territorial identity remains unchanged." },
+      { "id": "M3_address", "definition": "A pinned current authorized Lantmäteriet or other official address snapshot passes public-field, purpose approval, rights, validity, schema and postcode-assignment reconciliation gates." },
+      { "id": "M4_geometry", "definition": "Postal surface and separately sourced building joins pass complete membership, endpoint exception, topology, ambiguity, identifier, licence, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "commercial-product-listing-presented-as-delivered-authorized-artifact",
+      "organization-only-license-presented-as-public-serving-right",
+      "address-point-presented-as-postcode-polygon",
+      "municipal-or-administrative-boundary-presented-as-postcode-area",
+      "incomplete-deliverable-address-membership-presented-as-complete-denominator",
+      "endpoint-or-large-customer-code-presented-as-geographic-area",
+      "derived-surface-presented-as-postnord-official-boundary",
+      "buffer-hull-voronoi-raster-or-synthetic-area-promoted",
+      "point-containment-or-proximity-presented-as-exact-address-building-link",
+      "recipient-resident-owner-contact-credential-or-protected-property-data-published",
+      "coverage-presented-as-territorial-determination",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-stored-as-number"
+    ]
+  },
+  "non_goals": [
+    "bundling-current-postal-or-address-rows",
+    "every-postcode-is-a-polygon",
+    "commercial-listing-is-licensed-artifact",
+    "address-point-buffer-is-postcode-area",
+    "municipal-boundary-equals-postcode-area",
+    "parcel-or-address-point-is-building",
+    "dataset-coverage-determines-territory"
+  ]
+}

@@ -2041,3 +2041,17 @@ No second country was started.
 - Retry: after pending countries and 2026-09-06T23:41:07.953Z; do not contact a provider, register, authenticate, accept terms or a contract, pay, submit/query protected data, create a destination, publish or deploy without explicit approval.
 - After RU: 252 profiles, 157 pending, 89 blocked, 0 in progress, 6 evidence-verified M2; 140 manifests / 110 explicit definitions.
 - Next country: SE (Sweden). No second country was started.
+
+## SE - Sweden
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at 2026-08-31T00:16:38.482Z
+- Definition: `M2_current_sweden_five_digit_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/se-source-review-2026-08-31.json` (`sha256:fa6883c88986118798d067c2c6ba91d1d285422f559f8ab280c8f6fe038b0908`)
+- Checks: `reports/postal-context-m2/se-checks-2026-08-31.json` (`sha256:633e7b21ce0ae1754a4bfdb82083317e9a14b0ee4a81b39dc2ef6afc749a62bc`)
+- Country report: `docs/postal-context-sweden-m2.md`
+- Exact-body receipts: 9 bodies / 910,512 bytes with SHA-256; raw pages/PDFs, rendered pages, address rows and geometry stay outside Git.
+- Result: PTS/PostNord governance and Postnummerservice's commercial five-digit surface product are verified, but no delivery was acquired; organization-only terms prohibit resale/sublicensing, Lantmäteriet requires an approved application purpose and provides address Points, and no compatible public-serving Polygon/MultiPolygon artifact or real SE API/UI area path exists.
+- Application: shared Polygon/MultiPolygon draw/fit/translucent fill/outline/clear and error/provenance contracts pass, but no real SE loader, API response, map rendering or browser E2E is claimed.
+- Retry: not before 2026-09-07T00:16:38.482Z while pending countries remain; any provider contact, registration, application, terms acceptance, purchase, publication or deployment requires explicit approval.
+- Next country: SI (Slovenia).
