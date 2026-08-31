@@ -2476,3 +2476,20 @@ No second country was started.
 - Published artifact commit: `5afa0ae7a01b23615a56a0d578881ce0ff54539a`; documentation/checks commit: `3a73f9fadefe31a4e3a4a064bcb6ba45d3bb1382`, both on `codex/postal-context-m2-rollout`.
 - After CO: 252 profiles, 132 pending, 111 blocked, 0 in progress, 9 evidence-verified M2; 156 manifests / 132 explicit definitions.
 - Next country: Clipperton Island (`CP`). No second country was started.
+
+## CP - Clipperton Island
+
+- Status: `m2_verified` / M2 achieved.
+- Attempt: 1 at `2026-08-31T19:42:34.212Z`; completed `2026-08-31T20:46:09.208Z`.
+- Definition: `M2_current_laposte_single_postcode_derived_territory_visualization`.
+- Official assignment: La Poste's complete 39,192-row snapshot updated 2026-08-08 and three exact searches have one CP assignment: current application code 98901, ILE DE CLIPPERTON, postcode 98799.
+- Geometry and authority: current geo.api.gouv.fr code and postcode queries return the same real valid Polygon. It is published only as derived administrative territory display context with confidence 0.97, not an official postal, legal, cadastral, survey or delivery boundary.
+- Identity/history: INSEE's former COG use of 98799 and current five-position application code 98901 remain separate from La Poste's current postal assignment. CP identity is unchanged.
+- Object boundary: French Defense primary evidence states no inhabitants and no habitation. No address, building, parcel, P.O. box, organization, route, person, customer, land right, Point, buffer, hull, cell, model or AGID proxy was promoted.
+- Rights and receipts: Etalab Open Licence 2.0 permits reuse with attribution. Fifteen exact data/reference receipts total 2,845,023 bytes with SHA-256; the Defense legal-notice and UPU terms pages are separately fixed by SHA-256 in the ledger. Raw CSV, HTML, JSON, PDF, rendered pages and temporary output remain outside Git.
+- Geometry validation: one part, one closed ring, 110 positions, exact bounds `[-109.234607, 10.287154, -109.19979, 10.31957]`, geodesic area 8.889080340032724 km², Turf/JSTS/shared topology valid, no coordinate modification; a second build reproduced descriptor, graph and geometry byte-for-byte.
+- Application: full-width/spaced CP/98799 normalizes to 98799; the real API returns one derived Polygon with geometry type, provenance, source date and confidence. The app converts it to GeoJSON, fits exact bounds, renders opacity-0.22 fill and opacity-0.95/width-3 outline, clears and re-searches. Shared loading/no-match/multiple/API-failure/invalid-geometry states pass; invalid 98798 returns 400 with no fabricated area. Deterministic route-to-map verification substitutes for browser E2E.
+- Validation: CP focused 9/9, shared runtime 162/162 and shared postal-area UI 7/7 pass; TypeScript no-emit and diff checks pass; UPU text/page/raster checks pass (178 recorded tests, 0 failures).
+- Published implementation/artifact commit: `7f9723b9c8ef706027483b66646b7b0a08fc2190` on `codex/postal-context-m2-rollout`.
+- After CP: 252 profiles, 131 pending, 111 blocked, 0 in progress, 10 evidence-verified M2; 157 manifests / 133 explicit definitions.
+- Next country: Costa Rica (`CR`). No second country was started.
