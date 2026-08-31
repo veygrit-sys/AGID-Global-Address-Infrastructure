@@ -2396,3 +2396,23 @@ No second country was started.
 - Retry: not before 2026-09-07T14:59:26.917Z while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After BS: 252 profiles, 136 pending, 108 blocked, 0 in progress, 8 evidence-verified M2; 155 manifests / 128 explicit definitions.
 - Next country: Belize (BZ). No second country was started.
+
+## BZ - Belize
+
+- Status: blocked / M2 unmet
+- Attempt: 1 at 2026-08-31T15:51:58.097Z
+- Definition: M2_current_belize_postcode_assignment_and_area_visualization
+- Evidence: reports/postal-context-m2/bz-source-review-2026-08-31.json (sha256:b256d5ebe68082a757860ed10bf9b1dc261f274de3be125ac8922b819df69e55)
+- Checks: reports/postal-context-m2/bz-checks-2026-08-31.json (sha256:f9c67582d9bb3bf0580b3d3fd37e5559e40f36bc280ae6500bdf069fb27a2ddd)
+- Country report: docs/postal-context-belize-m2.md
+- Exact-body receipts: 7 Belize Postal Service and UPU bodies / 1,055,719 bytes with SHA-256. Raw HTML/PDF, example addresses, rendered pages and temporary inspection output remain outside Git; no feature, assignment, P.O.-Box-holder or address row was queried.
+- Current postal authority: the UPU September 2025 table explicitly lists Belize among countries not requiring postal codes. The Belize addressing sheet edition 05/2021 has no postcode line, and current Belize Postal Service regular-mail and P.O.-Box instructions publish no postcode requirement.
+- Object boundary: a private P.O. Box number forms part of an address but is not a postcode or postal-area key. No address example, district, caye, city, town, village, locality, post office, route, delivery area, box or other service object was promoted.
+- Rights: UPU website information reuse with source acknowledgement was distinguished from its copyright/database restrictions. The reviewed Belize Postal Service pages publish no complete current assignment/geometry dataset licence. Compatible AGID processing, derivation, redistribution and public-serving rights were not established.
+- Geometry and identity: there is no current BZ postcode assignment to anchor an official, derived or virtual postal Polygon/MultiPolygon. No administrative/settlement area, office, route, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model or AGID cell was promoted. ISO BZ, all six districts, cayes and settlement identities remain distinct.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no valid BZ postcode input or eligible immutable real area artifact, real BZ search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, BZ ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures).
+- PDF review: two PDFs / 13 physical pages were byte- and text-verified; two relevant pages rendered to non-empty 1241x1754 RGB PNGs with fixed non-white bounds and SHA-256. The local image-view helper returned Windows error 206 through original and short paths, and web screenshot calls returned no visible image payload; no image was committed.
+- Retry: not before 2026-09-07T15:51:58.097Z while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After BZ: 252 profiles, 135 pending, 109 blocked, 0 in progress, 8 evidence-verified M2; 156 manifests / 129 explicit definitions.
+- Next country: Canada (CA). No second country was started.

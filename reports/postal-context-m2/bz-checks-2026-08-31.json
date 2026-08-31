@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BZ",
+  "observedAt": "2026-08-31T15:51:58.097Z",
+  "completedAt": "2026-08-31T16:19:21.4786222Z",
+  "baseCommit": "b1ffe8590cab84fa647030a289cdd468e6382a62",
+  "scope": "BZ-specific current Belize Postal Service regular-mail and P.O.-Box evidence, UPU Belize address-format and September 2025 no-postcode evidence, UPU rights boundaries, identity/privacy no-proxy rules and shared application contracts. No address, recipient, customer, P.O.-Box holder, delivery, coordinate, building, parcel, cadastral or land-right row or production geometry was acquired, copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "bz-source-inspector",
+      "command": "<bundled-python with pypdf> scripts/inspect-bz-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "seven exact official/public bodies reproduce current no-postcode semantics, typed private P.O.-Box treatment and rights boundaries without a source row or geometry promotion"
+    },
+    {
+      "id": "bz-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-bz-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, text/PDF/authority/rights/no-code marker drift and P.O.-Box/address-example promotion fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, approval blocker policy and evidence gates"
+    },
+    {
+      "id": "bz-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-bz-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, no-code and P.O.-Box semantics, rights boundary, no proxy geometry, report digests, no real runtime claim and next Canada"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 60,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialAndPublicReferencesReviewed": 7,
+    "exactBodiesByteAndSha256Bound": 7,
+    "exactOfficialBodiesBytes": 1055719,
+    "sourceReviewDigest": "sha256:b256d5ebe68082a757860ed10bf9b1dc261f274de3be125ac8922b819df69e55",
+    "currentPostalCodeFormat": "none",
+    "upuBelizeSheetEdition": "05/2021",
+    "upuNoPostcodeListEdition": "Sep. 2025",
+    "upuListsBelizeAsNotRequiringPostalCodes": true,
+    "belizePostalServiceCurrentPagesContainPostcodeRequirement": false,
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "featureOrAddressRowsQueried": 0,
+    "rawSourceRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBzRuntimeVerified": false,
+    "realBzApiVerified": false,
+    "realBzAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no approved immutable real BZ postal Polygon/MultiPolygon artifact exists; a browser run would validate only shared code or the existing synthetic fixture and cannot satisfy BZ M2"
+  },
+  "identityAndPrivacyValidation": {
+    "bzIdentityPreserved": true,
+    "sixDistrictIdentitiesPreserved": true,
+    "cayeAndSettlementIdentitiesPreserved": true,
+    "poBoxAddressOrProtectedRowsQueried": 0,
+    "personalCustomerPropertyCadastralOrLandRightsRowsInGit": 0
+  },
+  "knownLimitations": [
+    "Current Belize Postal Service and UPU evidence publishes no postcode requirement or current assignment denominator.",
+    "No resource-specific assignment or geometry dataset licence establishes compatible AGID processing, derivation, redistribution and public-serving rights.",
+    "No district, caye, city, town, village, locality, office, route, P.O. Box, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model, AGID cell or synthetic fixture was promoted as a postcode area.",
+    "P.O. Box, route, organization, office, Point and unknown postal objects remain non-area unless authoritative geometry proves otherwise."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "Poppler rendered the relevant pages of the two UPU PDFs to non-empty RGB PNGs. The local image-view helper returned Windows error 206 through original and short paths; exact PDF bytes, extracted page text, page counts, image dimensions, non-white bounds and render SHA-256 values were validated.",
+    "Web screenshot calls returned no visible image payload; no source body or rendered image was committed.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}
