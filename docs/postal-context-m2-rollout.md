@@ -2298,3 +2298,22 @@ No second country was started.
 - Published artifact commit: f66ebcd354b97507111691ba003f26e5eec31f57 on codex/postal-context-m2-rollout.
 - After BL: 252 profiles, 141 pending, 103 blocked, 0 in progress, 8 evidence-verified M2; 151 manifests / 123 explicit definitions.
 - Next country: BM (Bermuda). No second country was started.
+
+## BM - Bermuda
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T11:37:20.370Z`
+- Definition: `M2_current_bpo_assignments_and_postal_area_visualization`
+- Evidence: `reports/postal-context-m2/bm-source-review-2026-08-31.json` (`sha256:f788c2355fe77717f134cd16f57c84355a3368e83ca26aa87d2e6a301cb2b14c`)
+- Checks: `reports/postal-context-m2/bm-checks-2026-08-31.json` (`sha256:c900e3115e126ccd09accf89370ec002e357fe9314bd7412ed59574ad792b35f`)
+- Country report: `docs/postal-context-bermuda-m2.md`
+- Exact-body receipts: 12 official/public bodies / 1,039,242 bytes with SHA-256; raw HTML, JSON, PDF, encrypted/decrypted workbook bytes, logical source rows, rendered pages and temporary inspection output remain outside Git.
+- Assignment evidence: the current BPO location page confirms nine live examples, and its official workbook exposes 2,087 candidate assignment rows, 2,086 unique normalized rows and 102 normalized codes. The workbook was last saved in 2019, has one embedded header, one case anomaly, one qualifier anomaly, one duplicate, 30 ambiguous assignment keys and 12 parish-label variants; it declares no edition, validity period, correction log, geometry or completeness denominator.
+- Format evidence: the UPU `4/2026` addressing sheet defines home delivery as `AA NN` and PO Box codes as `AA AA`. This corroborates syntax only and does not cure workbook currency, rights, exceptions or area geometry.
+- Rights: Government of Bermuda terms reserve Crown copyright in content and databases and prohibit reproduction, distribution, modification and transmission without written permission. UPU Universal POST*CODE 2026.1 access requires a contract, NDA, exhibits, data-use declaration and rates. Public viewing was not treated as AGID processing, derivation, redistribution or public-serving permission.
+- Geometry: no official or rights-compatible fixed BM postal Polygon/MultiPolygon was found. The public BELCO tile package is unlisted private-owner imagery with empty access/licence metadata and is not queryable vector data. The only Polygon FeatureServer candidate is outside Bermuda and has no postcode field. No parish, locality, route, building, Point, buffer, hull, raster/Voronoi cell, AGID cell or synthetic fixture was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no eligible real BM area artifact, real BM search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, BM ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures). The UPU PDF and ten-page government terms PDF were rendered and checked as non-empty; the encrypted XLS was read with Excel's standard built-in protection and no provider/user credential.
+- Retry: not before `2026-09-07T11:37:20.370Z` while pending countries remain; provider contact, written permission, contract/NDA acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After BM: 252 profiles, 140 pending, 104 blocked, 0 in progress, 8 evidence-verified M2; 152 manifests / 124 explicit definitions.
+- Next country: BO (Bolivia). No second country was started.
