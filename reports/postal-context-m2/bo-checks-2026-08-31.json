@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BO",
+  "observedAt": "2026-08-31T12:44:51.745Z",
+  "completedAt": "2026-08-31T13:21:22.2043983Z",
+  "baseCommit": "c8b8bc263dcfd464cb5c93e54ca582b80de20069",
+  "scope": "BO-specific current UPU no-postcode and address-format evidence, AGBC tracking/P.O.-Box/office/right semantics, Colombian ArcGIS false-positive exclusion and no-proxy evidence plus shared application contracts. No raw office or address row, feature row, recipient, customer, P.O.-Box holder, coordinate, building, parcel, person, land-right record or geometry was copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "bo-source-inspector",
+      "command": "<bundled-python with pdfplumber> scripts/inspect-bo-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "nine exact bodies reproduce UPU no-postcode evidence, AGBC tracking/P.O.-Box/office/right semantics and the Colombian ArcGIS exclusion without raw rows or geometry promotion"
+    },
+    {
+      "id": "bo-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-bo-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, text/PDF drift, AGBC semantic drift and ArcGIS extent/field drift fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "bo-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-bo-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, no-postcode authority, tracking/P.O.-Box typing, rights, Colombian false-positive no-proxy boundary, report digests, no real runtime claim and next BQ"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 60,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialAndPublicMetadataReferencesReviewed": 9,
+    "exactBodiesByteAndSha256Bound": 9,
+    "exactOfficialBodiesBytes": 1421915,
+    "sourceReviewDigest": "sha256:dfcb4fbdd13412d2f6517b4965233de63fb5e3793ce556aad0acdc4c77c4f461",
+    "currentAddressingSheetEdition": "2/2026",
+    "upuNoPostcodeListEdition": "Sep. 2025",
+    "upuListsBoliviaAsNotRequiringPostalCodes": true,
+    "currentPostalCodeAssignments": 0,
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "featureRowsQueried": 0,
+    "rawOfficeOrAddressRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBoRuntimeVerified": false,
+    "realBoApiVerified": false,
+    "realBoAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no valid BO postcode input or eligible immutable BO postal Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "UPU currently lists Bolivia as not requiring postcodes; no placeholder code or surface can be introduced to satisfy M2.",
+    "AGBC publishes tracking, P.O. Box and office context but no postcode assignment or geometry dataset and no open postal data licence.",
+    "The generic M0 BO address-format placeholder is not postal authority and cannot enable a real route.",
+    "The ArcGIS Polygon candidate uses Colombia CRS EPSG:3116 and is geographically outside Bolivia with empty licence metadata.",
+    "No department, province, municipality, locality, office, route, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, model, AGID cell or foreign Polygon was promoted as a postcode area."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "Poppler rendered both relevant UPU pages to non-empty RGB PNGs. The local image-view helper returned Windows error 206 even through a short mapped path; exact PDF bytes, extracted page text, page counts, dimensions, non-white bounds and render SHA-256 values were validated.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

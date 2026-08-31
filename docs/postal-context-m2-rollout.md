@@ -2317,3 +2317,22 @@ No second country was started.
 - Retry: not before `2026-09-07T11:37:20.370Z` while pending countries remain; provider contact, written permission, contract/NDA acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After BM: 252 profiles, 140 pending, 104 blocked, 0 in progress, 8 evidence-verified M2; 152 manifests / 124 explicit definitions.
 - Next country: BO (Bolivia). No second country was started.
+
+## BO - Bolivia
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T12:44:51.745Z`
+- Definition: `M2_current_agbc_postcode_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/bo-source-review-2026-08-31.json` (`sha256:dfcb4fbdd13412d2f6517b4965233de63fb5e3793ce556aad0acdc4c77c4f461`)
+- Checks: `reports/postal-context-m2/bo-checks-2026-08-31.json` (`sha256:8177399d6983beaf8695a1f9f76be616d2f110b75603f036eccbb6e1276f61ab`)
+- Country report: `docs/postal-context-bolivia-m2.md`
+- Exact-body receipts: 9 AGBC, UPU and ArcGIS bodies / 1,421,915 bytes with SHA-256. Raw HTML, JSON, JavaScript, PDF, office/address rows, rendered pages and temporary inspection output remain outside Git.
+- Postal authority: UPU General Addressing Issues physical page 4 (`Sep. 2025`) includes Bolivia among countries not requiring postal codes. The Bolivia addressing sheet edition `2/2026` shows home, P.O. Box and rural delivery without a postcode line. `Casilla Postal 3515` is a box identifier, not a code.
+- AGBC objects and rights: the current portal labels `PE123456789` as a shipment tracking identifier, exposes a P.O. Box service and nine office records, asserts 2026 copyright and links `Terminos y Condiciones` only to `#`. No open postal dataset licence, assignment denominator or geometry release is published; only the aggregate office count was retained.
+- Geometry: no current BO postcode exists to anchor a postal Polygon/MultiPolygon. The indexed `CodigoPostal` Polygon layer uses Colombia CRS EPSG:3116 and an extent around longitude -75.63, latitude 6.11, outside Bolivia; licence fields are empty and no feature row was queried. No department, province, municipality, locality, office, route, address, building, Point, buffer, hull, Voronoi/raster cell, model, AGID cell or foreign Polygon was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, bounds fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. With no valid BO postcode input or eligible real area artifact, real BO search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared area/runtime/store contracts 29/29, rollout invariants 8/8, BO ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (60 recorded assertions, 0 failures).
+- PDF review: both relevant UPU pages rendered to non-empty RGB PNGs; exact bytes, 13 total physical pages, text markers, dimensions, non-white bounds and render SHA-256 passed. The local image-view helper returned Windows error 206 even through a short mapped path; no image was committed.
+- Retry: not before `2026-09-07T12:44:51.745Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After BO: 252 profiles, 139 pending, 105 blocked, 0 in progress, 8 evidence-verified M2; 153 manifests / 125 explicit definitions.
+- Next country: BQ (Caribbean Netherlands). No second country was started.
