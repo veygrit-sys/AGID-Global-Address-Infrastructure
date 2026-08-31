@@ -2125,3 +2125,21 @@ No second country was started.
 - Retry: not before `2026-09-07T02:35:10.604Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After SM: 252 profiles, 152 pending, 94 blocked, 0 in progress, 6 evidence-verified M2; 143 manifests / 113 explicit definitions.
 - Next country: UA (Ukraine). No second country was started.
+
+## UA - Ukraine
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T03:03:41.090Z`
+- Definition: `M2_current_ukraine_postal_index_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/ua-source-review-2026-08-31.json` (`sha256:f446fcb61253fe62755cf95df9579a73c916c169208acd517a7e4ffb2193ac7b`)
+- Checks: `reports/postal-context-m2/ua-checks-2026-08-31.json` (`sha256:780244a5138147e01eeb7d2f4f0a2334a0d14c741910793eaacee198824d91ad`)
+- Country report: `docs/postal-context-ukraine-m2.md`
+- Exact-body receipts: 6 official bodies / 13,280,996 bytes with SHA-256. The expanded 117,904,566-byte CSV is separately fixed as `sha256:46e0a2992a23d32a8165e9bf2fa6f0b83c8f261585da72717bbbf7020d22d512`; raw PDF/HTML/JSON/7z/CSV and address rows remain outside Git.
+- Open-data evidence: the official CC BY August 2025 archive reproducibly contains 320,249 Windows-1251 address-membership rows, 16 columns and 28,796 distinct valid five-digit indices (`01001`-`93891`, including 1,435 leading-zero codes). The monthly portal marks it not updated, and no coordinate, geometry, Polygon or MultiPolygon column exists.
+- Current API evidence: Address Classifier v3.20 (2026-02-11) and general API documentation (2026-03-09) require a bearer obtained after contract. They document address membership, a courier-area yes/no flag and office-point latitude/longitude, but no postcode Polygon/MultiPolygon endpoint. No contact, contract, credential or authenticated request was attempted.
+- Result: no address/office row, office point, KATOTTG/administrative boundary, settlement, street, building, parcel, buffer, hull, Voronoi/raster cell or synthetic fixture was promoted as a postcode perimeter. A current complete assignment/exception/non-area denominator, fixed area product, full reconciliation, approved immutable artifact and real UA API/UI area path remain blocked.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point-only non-area, clear and re-search contracts pass. No real eligible UA artifact exists, so real UA API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, UA ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures). Repository-wide TypeScript was attempted but the available dependency tree has unrelated missing packages and inherited errors; the limitation is recorded in the checks report.
+- Retry: not before `2026-09-07T03:03:41.090Z` while pending countries remain; provider contact, contract/terms acceptance, registration, authentication, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After UA: 252 profiles, 151 pending, 95 blocked, 0 in progress, 6 evidence-verified M2; 143 manifests / 113 explicit definitions.
+- Next country: VA (Vatican City). No second country was started.
