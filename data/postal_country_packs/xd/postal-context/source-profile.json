@@ -1,0 +1,69 @@
+{
+  "schema_version": "agid-postal-xd-source-profile-v0.1",
+  "country_code": "XD",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
+    { "id": "R1_public_reference", "meaning": "Public official pages or metadata used as validation receipts; access does not imply bulk redistribution or public-serving rights." },
+    { "id": "R2_open_resource", "meaning": "An exact official open resource whose licence, attribution, version, schema, coverage, CRS and digest are pinned." },
+    { "id": "R4_validation_only", "meaning": "Unclear-rights or non-geospatial evidence may detect discrepancies but cannot become public output." }
+  ],
+  "sources": [
+    {
+      "source_id": "govuk-bfpo-dhekelia-current",
+      "provider": "UK Ministry of Defence / GOV.UK",
+      "source_url": "https://www.gov.uk/bfpo/find-a-bfpo-number",
+      "role": ["current-bfpo-route-assignment", "shadow-postcode-equivalence", "bfpo-addressing-rule"],
+      "production_scope": "Current GOV.UK pages establish Dhekelia as BFPO 58 with shadow postcode BF1 2AU and instruct senders to use the BFPO number rather than a town or country. OGL v3 permits reuse of GOV.UK content subject to its terms, but these route/format pages contain no postal area geometry.",
+      "assignment_authority": "official_bfpo_operator_reference",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_open_resource",
+      "bundled_here": false,
+      "prohibited_claims": ["bfpo-route-is-area", "shadow-postcode-is-dhekelia-territory", "bfpo-office-is-polygon"]
+    },
+    {
+      "source_id": "cyprus-post-current-postal-codes-workbook",
+      "provider": "Cyprus Post",
+      "source_url": "https://www.cypruspost.post/postal_codes.xlsx",
+      "role": ["current-cyprus-post-assignment-reference", "dhekelia-related-6370-and-7502-validation"],
+      "production_scope": "The current six-sheet workbook contains exact Dhekelia-related assignment rows for 6370 and 7502 but no coordinate, CRS, WKT, GeoJSON, Polygon or MultiPolygon field. The public page displays a 2026 copyright notice and no resource-specific AGID-compatible processing, storage, derivation, redistribution and public-serving grant or immutable release URL was established.",
+      "assignment_authority": "official_postal_operator_reference",
+      "geometry_authority": "none",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "prohibited_claims": ["public-xlsx-is-open-license", "street-or-community-is-area", "dhekelia-text-match-is-xd-membership"]
+    },
+    {
+      "source_id": "sba-dhekelia-area-office-2015",
+      "provider": "Sovereign Base Areas Administration",
+      "source_url": "https://www.sbaadministration.org/docs/eco/SAC/EN_20150528-ECO_FPACK_SAC_Covering_Note_Communities.pdf",
+      "role": ["historical-official-bfpo-58-address-reference"],
+      "production_scope": "The 2015 official PDF confirms the Dhekelia Area Office postal address uses BFPO 58. It concerns Special Areas of Conservation; its attached environmental-map context is not postal geometry, it is stale for the current denominator, and no resource-specific public-serving right was established.",
+      "assignment_authority": "historical_official_address_reference",
+      "geometry_authority": "none_for_postal_context",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "prohibited_claims": ["environmental-map-is-postal-area", "area-office-address-is-postal-denominator"]
+    },
+    {
+      "source_id": "govuk-dhekelia-identity-current",
+      "provider": "UK Ministry of Defence / GOV.UK",
+      "source_url": "https://www.gov.uk/government/publications/permanent-joint-operating-bases-pjobs/fd",
+      "role": ["current-dhekelia-and-sba-identity-context"],
+      "production_scope": "Current OGL GOV.UK material identifies Dhekelia within the Sovereign Base Areas and the separate SBA Administration. This administrative context prevents identity merging; it never supplies a postcode perimeter.",
+      "assignment_authority": "administrative_identity_only",
+      "geometry_authority": "none_for_postal_context",
+      "redistribution_class": "R2_open_resource",
+      "bundled_here": false,
+      "prohibited_claims": ["combined-sba-territory-is-postcode-area", "administration-is-postal-authority"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "bfpo-route", "rule": "BFPO 58, BF1 2AU, eligibility and routing retain MOD provenance and explicit non-area semantics unless postal authority supplies area geometry." },
+    { "id": "cyprus-postal-assignment", "rule": "6370 and 7502 retain Cyprus Post provenance and are not silently assigned to XD merely from text or containment." },
+    { "id": "postcode-area", "rule": "Only separately reviewed rights-cleared Polygon/MultiPolygon with complete dual-system reconciliation may be public output." },
+    { "id": "territory", "rule": "XD, Cyprus, Akrotiri, Episkopi, Ayios Nikolaos and combined SBA context remain distinct administrative identity evidence." },
+    { "id": "address-building", "rule": "Addresses, streets, communities, offices and buildings remain separate and are not buffered into geometry." },
+    { "id": "synthetic-conformance", "rule": "Non-production fixture metadata only; never promotion evidence." }
+  ]
+}

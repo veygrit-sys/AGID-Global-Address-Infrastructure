@@ -2143,3 +2143,21 @@ No second country was started.
 - Retry: not before `2026-09-07T03:03:41.090Z` while pending countries remain; provider contact, contract/terms acceptance, registration, authentication, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After UA: 252 profiles, 151 pending, 95 blocked, 0 in progress, 6 evidence-verified M2; 143 manifests / 113 explicit definitions.
 - Next country: VA (Vatican City). No second country was started.
+
+## XD - Dhekelia
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T04:15:44.116Z`
+- Definition: `M2_current_dhekelia_bfpo_and_cyprus_assignment_area_visualization`
+- Evidence: `reports/postal-context-m2/xd-source-review-2026-08-31.json` (`sha256:3d14761219a34d4ca5abfb380a30b0101bb0f84e25951d5059244890020d8f14`)
+- Checks: `reports/postal-context-m2/xd-checks-2026-08-31.json` (`sha256:7635f73282951761c78c61d0b3cf1a751eead8d604078571742c1a050bee473f`)
+- Country report: `docs/postal-context-dhekelia-m2.md`
+- Exact-body receipts: 7 official bodies / 4,207,851 bytes with SHA-256; raw HTML/XLSX/PDF, source rows, rendered pages and temporary inspection output remain outside Git.
+- Dual-system evidence: current GOV.UK maps Dhekelia to BFPO `58` and shadow postcode `BF1 2AU`, and instructs BFPO addressing by number rather than location. The current Cyprus Post workbook separately contains `6370` and `7502`: 39 `Dekeleia` street rows at 7502, one military-labelled row at 6370 and two community rows; a `Dekeleias`/3045 false positive was excluded.
+- Result: the six-sheet workbook has no coordinate, CRS, WKT, GeoJSON, Polygon or MultiPolygon field. Cyprus Post resource-specific AGID processing/storage/derivation/redistribution/public-serving permission, an immutable fixed release and a complete cross-system assignment/eligibility/exception/non-area denominator are unverified. The 2015 SBA PDF is environmental and was not promoted as postal geometry.
+- Identity and geometry: XD, Cyprus, Akrotiri, Episkopi and Ayios Nikolaos remain distinct. No territory, combined SBA boundary, community, street, environmental map, office, address, point, building, parcel, buffer, hull, Voronoi/raster cell or synthetic proxy was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point-only non-area, clear and re-search contracts pass. No eligible XD artifact exists, so real XD API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, shared area/runtime/store contracts 29/29, rollout invariants 8/8, XD ledger evidence 5/5, changed JavaScript/JSON syntax 7/7 and focused TypeScript 1/1 pass (51 recorded assertions, 0 failures).
+- Retry: not before `2026-09-07T04:15:44.116Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After XD: 252 profiles, 149 pending, 97 blocked, 0 in progress, 6 evidence-verified M2; 145 manifests / 115 explicit definitions.
+- Next country: XK (Kosovo). No second country was started.

@@ -1,0 +1,71 @@
+{
+  "schema_version": "agid-postal-xd-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-xd", "country_code": "XD", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Dhekelia BFPO route and Cyprus postal assignments",
+    "full_code_format": "BFPO 58 | BF1 2AU | 6370 | 7502",
+    "full_code_default_geometry": "operator_postal_area_or_explicit_non_area",
+    "assignment_rule": "Current GOV.UK evidence maps Dhekelia to BFPO 58 and shadow postcode BF1 2AU, while the current Cyprus Post workbook contains Dhekelia-related assignments 6370 and 7502. These are separate operator assertions and do not by themselves establish a postal Polygon/MultiPolygon.",
+    "postcode_area_rule": "Only a rights-cleared fixed geospatial postal resource may establish drawable membership. Dhekelia SBA territory, the combined Sovereign Base Areas, streets, communities, environmental maps, offices, addresses, points, buffers, hulls, Voronoi/raster cells and synthetic fixtures never become postcode perimeters by implication.",
+    "address_rule": "BFPO routing, shadow-postcode equivalence, Cyprus Post assignment, postal-area membership, country identity, address and service state remain separate assertions.",
+    "building_rule": "Building output requires a separately sourced explicit distributable address-building relationship or common authoritative identifier.",
+    "administrative_rule": "XD remains distinct from Cyprus, Akrotiri, Episkopi and Ayios Nikolaos. Administrative or sovereign-base descriptions are not merged or relabelled as postal areas.",
+    "service_status_rule": "BFPO eligibility, route/office state and delivery service are time-stamped assertions separate from area membership and deliverability."
+  },
+  "integration": {
+    "agid_country_code": "XD",
+    "coordinate_flow": "coordinate -> rights-cleared postal area or explicit non-area -> address graph -> explicit building relation -> AGID cell",
+    "postcode_flow": "normalized BFPO 58, BF1 2AU, 6370 or 7502 -> operator assignment and exception evidence -> valid official/derived/virtual area or explicit non-area -> address context -> explicit building relation -> AGID cells",
+    "building_output_gate": "explicit distributable relation, common authoritative identifier, or reviewed crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-routing-and-codes", "pass": "BFPO 58, BF1 2AU, 6370 and 7502 retain exact operator, normalization and equivalence semantics." },
+    { "id": "complete-dual-system-denominator", "pass": "Current complete BFPO eligibility/routing and Cyprus Post assignment, exception and non-area denominators are fixed with dates, digests, correction policy and compatible rights." },
+    { "id": "identity-separation", "pass": "XD, Cyprus, Akrotiri, Episkopi and Ayios Nikolaos identities remain distinct and are reconciled only by postal authority." },
+    { "id": "valid-area-only", "pass": "Every drawable code uses finite closed valid Polygon/MultiPolygon geometry in the declared CRS with lineage, class, date, confidence and exceptions." },
+    { "id": "resource-rights", "pass": "Every assignment and geometry resource pins exact processing, storage, derivation, redistribution, public-serving and attribution permission." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures and shared code capability never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_dhekelia_bfpo_and_cyprus_assignment_area_visualization", "definition": "The current complete Dhekelia BFPO 58 and BF1 2AU routing/eligibility denominator plus Cyprus Post 6370 and 7502 assignment, exception and explicit non-area denominator is pinned under reviewed rights compatible with AGID processing, storage, derivation, redistribution and public serving. Each normalized value reconciles to fixed finite closed valid Polygon/MultiPolygon geometry whose official/derived/virtual class, provider, edition, reference date, rights, attribution, bytes, SHA-256, schema, CRS, topology, coverage, method, confidence and exceptions are recorded, or retains a source-grounded route, office, P.O.-box, organization, point or other non-area reason. Dhekelia SBA territory, combined Sovereign Base Areas, Cyprus territory, streets, communities, environmental maps, offices, addresses, buildings, parcels, points, buffers, hulls, Voronoi/raster cells and synthetic fixtures never become postal perimeters by implication; XD, Cyprus, Akrotiri, Episkopi and Ayios Nikolaos identities are not changed or merged. The approved immutable artifact drives the real XD API/app, which normalizes all supported forms, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_address", "definition": "Explicit address identifiers and points pass rights, schema, coverage, validity, privacy and correction gates." },
+      { "id": "M4_geometry", "definition": "Postal surfaces and building joins pass topology, ambiguity, identifier, rights and quality gates." }
+    ],
+    "hard_blockers": [
+      "bfpo-route-or-shadow-postcode-presented-as-area",
+      "sovereign-base-or-combined-sba-boundary-presented-as-postcode-area",
+      "cyprus-community-street-office-or-address-presented-as-area",
+      "environmental-map-presented-as-postal-geometry",
+      "xd-cyprus-akrotiri-episkopi-or-ayios-nikolaos-identity-merged",
+      "public-workbook-or-page-access-substituted-for-resource-specific-license",
+      "point-office-address-or-route-buffered-to-area"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_XD_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_XD_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_XD_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_XD_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-source-address-or-street-rows",
+    "bfpo-route-equals-polygon",
+    "dhekelia-or-combined-sba-territory-equals-postal-perimeter",
+    "cyprus-community-or-street-equals-postal-perimeter",
+    "environmental-map-tracing",
+    "office-address-route-or-point-buffer",
+    "public-document-access-is-blanket-redistribution-license"
+  ]
+}
