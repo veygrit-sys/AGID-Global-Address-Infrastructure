@@ -2436,3 +2436,24 @@ No second country was started.
 - Retry: not before 2026-09-07T16:29:28.906Z while pending countries remain. Provider contact/request, registration, authentication, licence/contract acceptance, payment, protected-row access, destination creation, publication or deployment requires explicit approval.
 - After CA: 252 profiles, 134 pending, 110 blocked, 0 in progress, 8 evidence-verified M2; 156 manifests / 130 explicit definitions.
 - Next country: Chile (CL). No second country was started.
+
+
+## CL - Chile
+
+- Status: blocked / M2 unmet
+- Attempt: 1 at 2026-08-31T17:13:59.841Z
+- Definition: M2_current_correoschile_assignment_and_area_visualization
+- Evidence: reports/postal-context-m2/cl-source-review-2026-08-31.json (sha256:9487c98c69cdbaa5f567c2ed2da9ac42199ce4140aa799b284444f7d0c42d2a1)
+- Checks: reports/postal-context-m2/cl-checks-2026-08-31.json (sha256:621b2254cda3d3d4f3808d67f031c45226e3e488f5a238419523a4d57142545f)
+- Country report: docs/postal-context-chile-m2.md
+- Exact-body receipts: 8 ChileAtiende, CorreosChile, UPU and IDE Chile Geoportal bodies / 692,958 bytes with SHA-256. Raw HTML/XML/JSON/PDF, address or feature rows, rendered pages and temporary inspection output remain outside Git.
+- Assignment authority: the current ChileAtiende procedure and CorreosChile form require commune, street and municipal number and return a property-specific seven-digit observation. The developer normalization API requires customer credentials and returns normalized address/postcode fields without geometry. No address was submitted, CAPTCHA bypassed, credential used or integration request made.
+- Format and object classes: the UPU 03/2017 sheet defines three distribution-area digits plus four sequential block-face digits and separately documents commune fallback, post-office/P.O.-box and rural no-number cases. Syntax, examples, one lookup and the three-digit prefix are not current complete assignment evidence; non-area objects were not expanded to surfaces.
+- Catalog and geometry: the fixed official CSW query for codigo postal matched 0 records. Broad postal matched two unrelated border-control datasets. DPA 2023 is region/province/commune administrative Polygon geometry, not postal geometry. No DPA/commune, census, road, address-range, parcel, Point, building, buffer, hull, cell, model, AGID or synthetic proxy was promoted.
+- Rights: no complete versioned assignment denominator or written rights compatible with AGID processing, derivation, redistribution and public area serving were established. There are 0 approved current assignment rows, real seven-digit Polygon/MultiPolygon records and production runtime artifacts.
+- Application: shared and synthetic CL normalization, routing, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, no-match, Point/non-area, clear and re-search contracts pass. With no eligible immutable real CL artifact, real CL search-to-API-to-map rendering and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, shared and CL repository/runtime/API/source contracts 41/41, rollout invariants 8/8, CL ledger evidence 6/6, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (72 recorded assertions, 0 failures).
+- PDF review: two PDFs / four physical pages were byte- and text-verified; three relevant pages rendered to non-empty 150-DPI RGB PNGs with fixed dimensions, non-white bounds and SHA-256. The local image-view helper returned Windows error 206, so interactive visual inspection is not claimed; no image was committed.
+- Retry: not before 2026-09-07T17:13:59.841Z while pending countries remain; provider contact/integration request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After CL: 252 profiles, 133 pending, 111 blocked, 0 in progress, 8 evidence-verified M2; 156 manifests / 131 explicit definitions.
+- Next country: Colombia (CO). No second country was started.
