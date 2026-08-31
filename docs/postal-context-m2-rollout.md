@@ -2234,3 +2234,21 @@ No second country was started.
 - Published artifact commit: `636f4bc9620c24eeb9304b1a2cf944d9201ade10` on `codex/postal-context-m2-rollout`.
 - After AI: 252 profiles, 145 pending, 100 blocked, 0 in progress, 7 evidence-verified M2; 149 manifests / 119 explicit definitions.
 - Next country: AR (Argentina). No second country was started.
+
+## AR - Argentina
+
+- Status: `blocked` / M2 unmet
+- Attempt: 1 at `2026-08-31T07:54:17.132Z`
+- Definition: `M2_current_correo_argentino_cpa_assignment_and_area_visualization`
+- Evidence: `reports/postal-context-m2/ar-source-review-2026-08-31.json` (`sha256:2ebd32f9ab89db98d36a378bf123628cb4e0a36e55c748040bcd087dbea2b18e`)
+- Checks: `reports/postal-context-m2/ar-checks-2026-08-31.json` (`sha256:1e46200e67468007e714ff512f88f590b33f7ea42e21974f8d1347d9e8f76004`)
+- Country report: `docs/postal-context-argentina-m2.md`
+- Exact-body receipts: 8 official bodies / 432,562 bytes with SHA-256; raw HTML/JSON/PDF, rendered pages, lookup responses, source rows and temporary inspection output remain outside Git.
+- Operator and access evidence: Correo Argentino maintains the national locality/street/height CPA master and offers free individual epistolary lookup. Official AAIP record EX-2023-59298590 documents partial or total database processing as a commercial product supplied through batch/Web Service and particular agreements with intellectual-property protection.
+- Georef boundary: the official OpenAPI `0.5.X` has ten address/territorial/download paths but no CPA/postal schema key or postal-area endpoint. No Georef point, locality, department, municipality, census unit or other territorial geometry was promoted as CPA assignment or postal area.
+- Result: no current complete authorized assignment/alias/validity/exception/non-area denominator, compatible AGID public-serving rights, or fixed official/derived/virtual postal Polygon/MultiPolygon was found. No nominal block face, street range, address, building, parcel, Point, buffer, hull, Voronoi/raster cell, AGID cell or synthetic fixture was promoted.
+- Application: shared Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, Point/non-area, clear and re-search contracts pass. No eligible real AR artifact exists, so real AR API/map rendering and browser E2E are not claimed.
+- Validation: reproducible source inspector 1/1, source-inspector unit tests 6/6, AR country/runtime/API boundary 12/12, shared area/runtime/store contracts 29/29, rollout invariants 8/8, AR ledger evidence 5/5, changed Python/JavaScript/JSON syntax 8/8 and focused TypeScript 1/1 pass (70 recorded assertions, 0 failures).
+- Retry: not before `2026-09-07T07:54:17.132Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After AR: 252 profiles, 144 pending, 101 blocked, 0 in progress, 7 evidence-verified M2; 149 manifests / 120 explicit definitions.
+- Next country: AW (Aruba). No second country was started.
