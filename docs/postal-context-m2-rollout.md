@@ -2217,3 +2217,20 @@ No second country was started.
 - Retry: not before `2026-09-07T05:49:45.489Z` while pending countries remain; provider contact, registration, authentication, terms/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After AG: 252 profiles, 146 pending, 100 blocked, 0 in progress, 6 evidence-verified M2; 148 manifests / 118 explicit definitions.
 - Next country: AI (Anguilla). No second country was started.
+
+## AI - Anguilla
+
+- Status: `m2_verified` / M2 achieved
+- Attempt: 1 at `2026-08-31T06:30:16.139Z`
+- Definition: `M2_current_upu_whole_territory_derived_visualization`
+- Evidence: `reports/postal-context-m2/ai-current-whole-territory-2026-08-31.json` (`sha256:f84b550e390ffb4e536f0a996342d05446830039eb763a9cffd5e3647cb6a12d`)
+- Checks: `reports/postal-context-m2/ai-validation-2026-08-31.json` (`sha256:99905de17fef699c5bb8b18e0e41b9e6ebf0e7ee2d04828a5180c0d6056f4b2e`)
+- Country report: `docs/postal-context-anguilla-m2.md` (`sha256:4b13276402e33b36c614beaac4dc8482249efb57dfa22199793cd9a7861a969a`)
+- Official assignment: the UPU Universal POST*CODE DataBase August 2026 and Anguilla addressing sheet establish `AI-2640` as the single postcode for the whole territory. UPU material remains reference evidence and is not redistributed.
+- Real display geometry: fixed geoBoundaries commit `9469f09592ced973a3448cf66b6100b741b64c0d`, boundary `AIA-ADM0-96724787`, boundary year 2021, CC BY 4.0. The reproducible coordinate-preserving partition retains all 28 parts and 10,606 positions as two independently valid derived MultiPolygons; area delta is `1.4901161193847656e-8` square metres.
+- Authority: UPU assignment is official but has no geometry authority. Geometry is explicitly `derived`, confidence `0.92`, and is not an official postal, legal, survey, cadastral or delivery boundary. POCDS service zones, addresses, buildings, parcels, recipients, customers and land-rights objects were not promoted.
+- Application: `AI2640` and full-width `ＡＩ ２６４０` normalize to `AI-2640`; the real descriptor flows through the shared runtime and Express API to two MultiPolygons, multiple-result state, union-bounds fit, opacity-0.22 fill, opacity-0.95/width-3 outline, provenance metadata, clear and re-search. `AI-2641` returns 400 with no fabricated geometry. Deterministic route-to-map verification substitutes for browser E2E.
+- Validation: AI country/topology/API/app 16/16, shared runtime 162/162, shared area UI 5/5, TypeScript and diff checks all pass; a second isolated build reproduced descriptor, graph and geometry digests (185 recorded passes, 0 failures).
+- Published artifact commit: `636f4bc9620c24eeb9304b1a2cf944d9201ade10` on `codex/postal-context-m2-rollout`.
+- After AI: 252 profiles, 145 pending, 100 blocked, 0 in progress, 7 evidence-verified M2; 149 manifests / 119 explicit definitions.
+- Next country: AR (Argentina). No second country was started.
