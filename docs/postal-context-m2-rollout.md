@@ -2547,3 +2547,22 @@ No second country was started.
 - Retry: not before `2026-09-07T22:53:09.194Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After CW: 252 profiles, 128 pending, 114 blocked, 0 in progress, 10 evidence-verified M2; 158 manifests / 136 explicit definitions.
 - Next country: Dominica (`DM`). No second country was started.
+
+## DM - Dominica
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-08-31T23:25:39.859Z`; completed `2026-08-31T23:47:56.1446788Z`.
+- Definition: `M2_current_dominica_postal_service_postcode_assignment_and_area_visualization`.
+- Evidence: `reports/postal-context-m2/dm-source-review-2026-09-01.json` (`sha256:ac0a3f9b42239f3e0be6c62838355f071964ad917f4938adbd4fc75d68fa09da`).
+- Checks: `reports/postal-context-m2/dm-checks-2026-09-01.json` (`sha256:b926c4ea7b040ce45f72a4cd9b373f0e8b967d880bdcf87834cd09839eda128e`).
+- Country report: `docs/postal-context-dominica-m2.md`.
+- Exact receipts: six Dominica government and UPU bodies / 1,455,690 bytes, all fixed by byte count and SHA-256. Raw HTML, PDFs, extracted text, rendered pages, addresses and temporary inspection output remain outside Git.
+- Postal status and correction: the UPU September 2025 list includes Dominica among countries and territories not requiring postal codes. The July 2002 UPU sheet shows a Roseau address without a postcode; current government/UPU operator pages list the General Post Office, branches, Parcel Post and Dominica Postal Service without a code table. DM JSON/YAML/hierarchy now use `None`, null regex/API/rule and no unsupported postcode field/token/order.
+- Rights: the Dominica government limits copying to unaltered personal non-commercial use and prohibits transmission/distribution without prior written permission. UPU material has copyright/database restrictions. Compatible AGID processing, derivation, redistribution and public-serving rights were not established.
+- Identity, geometry and draft-pack boundary: DM remains distinct from Dominican Republic DO; no five-digit DO code or geometry was borrowed. There are 0 official/derived/virtual postal Polygon/MultiPolygon records. The draft DM pack's 48 locality fixtures, 246 planning cells, three test vectors, AGID values and synthetic code seeds were not promoted. No island, parish, district, locality, address, office, route, service area, parcel, building, Point, buffer, hull, cell, model or AGID proxy was promoted.
+- Application: shared normalization/no-match, Polygon/MultiPolygon-only draw, map fit, opacity-0.22 translucent fill, visible outline, non-area rejection, clear and re-search contracts pass. With no valid DM postcode input or eligible real artifact, real DM API/search-to-map visualization and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 5/5, DM address metadata 2/2, common address contracts 68/68, shared area runtime 29/29, rollout invariants 8/8, DM ledger 6/6, focused TypeScript 1/1 and changed syntax/JSON/YAML checks 12/12 pass (132 recorded checks, 0 failures).
+- PDF review: the Dominica sheet and no-postcode page rendered to non-empty 992x1404 and 993x1404 RGB PNGs with fixed SHA-256. The local image-view helper returned Windows error 206 through original and short paths, so interactive display is not claimed; no image was committed.
+- Retry: not before `2026-09-07T23:25:39.859Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After DM: 252 profiles, 127 pending, 115 blocked, 0 in progress, 10 evidence-verified M2; 159 manifests / 137 explicit definitions.
+- Next country: Dominican Republic (`DO`). No second country was started.
