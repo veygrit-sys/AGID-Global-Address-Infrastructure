@@ -1,0 +1,115 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-gp-laposte-geoapi",
+    "country_code": "GP",
+    "country_name": "Guadeloupe",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "complete-current-official-postcode-assignments-with-derived-commune-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Guadeloupe postal code",
+    "full_code_format": "971NN, restricted to official GP assignments; 97133 BL and 97150 MF are excluded",
+    "full_code_default_geometry": "derived-commune-display-surface",
+    "assignment_rule": "The complete 39,192-row La Poste snapshot contains 38 GP assignment rows, 33 distinct postal codes and 32 distinct COG 2026 communes. Multiple Ligne 5 rows do not create additional postal areas.",
+    "geometry_rule": "La Poste explicitly says postal-code contours are not supplied in open data. Each distinct GP code is joined by exact INSEE identity to the matching unmodified geo.api.gouv.fr commune Polygon or MultiPolygon and remains derived display geometry, never an official postal boundary.",
+    "shared_surface_rule": "97139 and 97142 both map to Les Abymes (97101) and return the same full commune display surface. The four multi-Ligne-5 code groups 97125, 97130, 97131 and 97180 each remain one postal identity and one whole-commune surface.",
+    "territory_exclusion_rule": "Postal prefix 971 is not treated as territorial identity. La Poste rows 97133/97701 (BL) and 97150/97801 (MF) are excluded from GP without reassignment or merger.",
+    "non_area_rule": "No point, route, P.O. box or organisation object is expanded into an area.",
+    "address_rule": "No address, building, parcel, recipient, customer, delivery or land-rights row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "Postal nodes and derived commune surfaces are linked only inside the versioned Postal Context graph. AGID identity, addresses and buildings require independent explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "Assignments are represented from the 2026-08-08 official La Poste data update.",
+    "known_time": "Retrieval time, exact source bodies, edition, digests and AGID release time are recorded separately.",
+    "history_rule": "A later assignment or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": [
+    "polygon",
+    "multipolygon",
+    "point",
+    "route",
+    "po_box",
+    "organization",
+    "unknown"
+  ],
+  "quality_gates": [
+    {
+      "id": "complete-assignment-denominator",
+      "pass": "The full 39,192-row official snapshot has exactly 38 GP rows, 33 distinct GP postcodes and 32 GP commune identities; BL 97133 and MF 97150 remain excluded."
+    },
+    {
+      "id": "exact-geoapi-cross-check",
+      "pass": "All 33 fixed postcode queries return exactly one matching GP commune feature, and all identities and coordinates equal the 32-feature department response."
+    },
+    {
+      "id": "geometry",
+      "pass": "All 33 published Polygon/MultiPolygon responses pass Turf, JSTS, ring closure, range and 20,000-position runtime gates without coordinate modification."
+    },
+    {
+      "id": "shared-and-multiline-disclosure",
+      "pass": "97139/97142 share Les Abymes; four multi-Ligne-5 groups stay one postal identity and one surface; confidence is 0.90 and no distinct postal boundary is claimed."
+    },
+    {
+      "id": "runtime",
+      "pass": "The real pack passes normalization, API lookup, metadata, bounds fit, translucent paint, clear, re-search, no-match and invalid-code tests."
+    },
+    {
+      "id": "privacy",
+      "pass": "No address, building, parcel, recipient, customer or land-rights data is published."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_laposte_all_postcodes_derived_commune_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Country-specific contracts and provenance are reviewable."
+      },
+      {
+        "id": "M2_current_laposte_all_postcodes_derived_commune_visualization",
+        "definition": "The complete current official La Poste snapshot proves all 33 GP postcode identities from 38 assignment rows while excluding BL/MF; fixed Open Licence 2.0 geo.api.gouv.fr department and per-postcode responses supply matching real valid commune geometry without coordinate modification; it is published only as derived administrative display context, with shared and multi-Ligne-5 cases disclosed, while the shared real API/app path normalizes, renders, fits, clears and re-searches it with provenance."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "A source refresh and independent review pass without authority drift."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass with monitored rollback."
+      }
+    ],
+    "hard_blockers": [
+      "derived-commune-contour-presented-as-official-postal-geometry",
+      "incomplete-official-assignment-denominator",
+      "BL-or-MF-row-reassigned-to-GP-by-postal-prefix",
+      "shared-commune-or-Ligne-5-surface-presented-as-a-distinct-postal-perimeter",
+      "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability",
+      "source-coordinates-invented-or-silently-modified",
+      "missing-edition-digest-rights-or-reproducible-join",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": [
+    "official_postal_boundary",
+    "sub_commune_or_ligne5_postal_perimeter",
+    "legal_or_survey_boundary",
+    "cadastral_boundary",
+    "delivery_zone",
+    "deliverability",
+    "address_or_building_identity",
+    "recipient_identity"
+  ]
+}

@@ -107,6 +107,7 @@ import {
   normalizeItalyPostalCode,
   normalizeFrancePostalCode,
   normalizeFrenchGuianaPostalCode,
+  normalizeGuadeloupePostalCode,
   normalizeJapanPostalCode,
   normalizeNetherlandsPostalCode,
   normalizeNewZealandPostalCode,
@@ -149,6 +150,13 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeFrenchGuianaPostalCode('973-00'), null);
   assert.equal(normalizeFrenchGuianaPostalCode('75001'), null);
   assert.equal(normalizePostalContextPostalCode('gf', '９７３ ００'), '97300');
+  assert.equal(normalizeGuadeloupePostalCode('９７１ １０'), '97110');
+  assert.equal(normalizeGuadeloupePostalCode('97100'), '97100');
+  assert.equal(normalizeGuadeloupePostalCode('971-00'), null);
+  assert.equal(normalizeGuadeloupePostalCode('97133'), null);
+  assert.equal(normalizeGuadeloupePostalCode('97150'), null);
+  assert.equal(normalizeGuadeloupePostalCode('97300'), null);
+  assert.equal(normalizePostalContextPostalCode('gp', '９７１ １０'), '97110');
   assert.equal(normalizeNewZealandPostalCode('\uFF10\uFF11\uFF12\uFF13'), '0123');
   assert.equal(normalizeNewZealandPostalCode('01 23'), '0123');
   assert.equal(normalizeNewZealandPostalCode('0123'), '0123');
@@ -874,6 +882,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('GF'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GF.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GF.postalCodeFormat, '973NN');
+  assert.equal(isPostalContextCountryCode('GP'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GP.fullCodeGeometrySemantics, 'routing-locality-first');
+  assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.GP.postalCodeFormat, /971NN.*97133 BL.*97150 MF/);
   assert.equal(isPostalContextCountryCode('CP'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CP.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CP.postalCodeFormat, '98799 (single postcode for Clipperton Island)');
