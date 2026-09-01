@@ -9,7 +9,7 @@ The recurring task processes one country at a time in this order:
 5. Oceania
 
 The ledger is `docs/postal-context-m2-rollout.json` on the cumulative
-`codex/postal-context-m2-rollout` branch of `veygrit-sys/Address-Grid-ID`.
+`codex/postal-context-m2-rollout` branch of `veygrit-sys/AGID-Global-Address-Infrastructure`.
 Read the latest remote commit before every run. A local working copy may have
 been removed after a verified push; an older user worktree is not the ledger.
 
@@ -2848,3 +2848,18 @@ No second country was started.
 - Reports: `reports/postal-context-m2/mq-current-postcodes-2026-09-01.json`, `reports/postal-context-m2/mq-validation-2026-09-01.json`, and `docs/postal-context-martinique-m2.md`.
 - After MQ: 252 profiles, 109 pending, 127 blocked, 0 in progress, 16 evidence-verified M2; 173 manifests / 155 explicit definitions.
 - Next country: Montserrat (`MS`). No second country was started.
+
+
+## MS - Montserrat
+
+- Status: `blocked` / M2 unmet; the current integral `MSR9999` system is confirmed and address metadata now reflects the country prefix plus four digits.
+- Attempt: 1 at `2026-09-01T14:04:28.185Z`; completed `2026-09-01T14:31:51.5493777Z`.
+- Definition: `M2_current_montserrat_postcode_assignments_and_delivery_area_visualization`.
+- Evidence: `reports/postal-context-m2/ms-source-review-2026-09-01.json` (`sha256:1db8a0c99e9c30fa74b18fd82b2c7de5187750c8a743abc1fe171f9c2753e69e`); checks `reports/postal-context-m2/ms-checks-2026-09-01.json` (`sha256:5ce7460f3d80162c9bb1ea47ed5ca712ef8a9fa2d339d4f365e3c638520aa614`).
+- Current semantics: six exact Government of Montserrat and UPU bodies / 991,172 bytes establish the `MSR` prefix and UPU `06/2026` address format. The dated Government guide lists eight active codes, fixed as a sorted code-set digest; it is not a current versioned complete assignment, alias, validity, correction, exception and explicit non-area denominator.
+- Geometry and rights: the guide supplies prose locality/post-office coverage, not Polygon/MultiPolygon geometry. Physical Planning documents a spatial-data request path but publishes no postcode-area artifact or public-serving permission. The Statistics Department open licence is limited to its own data, and UPU restrictions apply. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: the isolated actual app returned HTTP 200 at `http://127.0.0.1:3017/`; real unmocked MS API lookup returned 404 unsupported. In-app Browser failed before navigation on the Windows ACL sandbox. Deterministic Playwright entered `MSR1110 Montserrat`, observed two map canvases but no MS postal request, notice, translucent area or provenance. The screenshot is byte/hash-fixed outside Git; image viewing failed with Windows error 206, so visual success is not claimed.
+- Verification: fixed-source inspection 1/1, inspector units 5/5, address formats 68/68, shared runtime 31/31, rollout 8/8, ledger 6/6, TypeScript and syntax/status checks pass (128 recorded, 0 failed).
+- Retry: not before `2026-12-01T14:04:28.185Z` and only after pending countries have been swept. Provider/authority contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After MS: 252 profiles, 108 pending, 128 blocked, 0 in progress, 16 evidence-verified M2; 174 manifests / 156 explicit definitions.
+- Next country: Mexico (`MX`). No second country was started.

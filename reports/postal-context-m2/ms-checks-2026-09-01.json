@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "MS",
+  "observedAt": "2026-09-01T14:04:28.185Z",
+  "completedAt": "2026-09-01T14:31:51.5493777Z",
+  "baseCommit": "32582536f559b08c55828ffc5420713c3ee46d00",
+  "scope": "MS-specific Government of Montserrat and UPU format, eight-code guide, exact-body, rights-scope, metadata and no-proxy evidence plus actual-app fail-closed verification. No raw locality/address row, parish/locality/street/office/route/P.O. box/Point/buffer/cell/model, production pack, real MS postal area or successful browser visual was promoted.",
+  "checks": [
+    {
+      "id": "ms-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-ms-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "six exact official bodies reproduce MSR+4-digit format, the eight-code guide set, 06/2026 UPU edition, rights-scope and no-geometry evidence"
+    },
+    {
+      "id": "ms-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-ms-sources.test.py -v",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "complete set, digest, code-set, licence-scope, HTML/PDF signature, page and marker drift fail closed"
+    },
+    {
+      "id": "address-format-common-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/data/address_formats/addressFormatRulesJson.test.ts",
+      "result": "pass",
+      "tests": 68,
+      "assertion": "regional address-format contracts pass after MS correction"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 31,
+      "assertion": "normalization, no-match, geometry validation, fit, translucent fill, outline, clear, non-area and routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker retry policy and M2 evidence gates"
+    },
+    {
+      "id": "ms-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-ms-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, current system, eight-code observation, rights/no-proxy boundary, reports and next MX"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-syntax-and-ledger-status",
+      "command": "py_compile, node --check, JSON.parse, MS YAML marker validation, git diff --check and postal-context:m2:status",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "changed code/data parse, diff is clean and status advances to MX"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 8,
+    "testsPassed": 128,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 6,
+    "exactBodiesByteAndSha256Bound": 6,
+    "exactOfficialBodiesBytes": 991172,
+    "sourceReviewDigest": "sha256:1db8a0c99e9c30fa74b18fd82b2c7de5187750c8a743abc1fe171f9c2753e69e",
+    "currentPostalCodeFormat": "MSR9999",
+    "integralCountryPrefix": "MSR",
+    "upuAddressingSheetEdition": "06/2026",
+    "observedGuidePostcodes": 8,
+    "observedGuidePostcodeSetSha256": "28c4a6162d72f74fe75498bda8c659b404e2fc0e5346fe3483280d3066bc12be",
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialPostalPolygonOrMultiPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "actualAppStarted": true,
+    "actualAppHttpStatus": 200,
+    "sharedAreaCapabilityVerified": true,
+    "realMsRuntimeVerified": false,
+    "realMsApiStatus": 404,
+    "realMsApiMessage": "Postal Context country is not supported",
+    "realMsApiVerified": false,
+    "realMsAppAreaVisualizationVerified": false,
+    "inAppBrowser": "failed before navigation with Windows sandbox ACL helper error",
+    "deterministicPlaywrightFallback": "queried MSR1110 Montserrat against the actual app with postal API unmocked; issued no MS postal request and rendered no postal area or metadata",
+    "screenshotBytes": 52913,
+    "screenshotSha256": "5f9d3646d4acd27f3fc3d639fd647edf8e043c65fd78c28cdf12035760440b12",
+    "browserE2eVerified": false,
+    "visualInspectionCompleted": false
+  },
+  "knownLimitations": [
+    "The Government guide lists eight active postcodes but is not a current versioned complete assignment, alias, validity, correction, exception and non-area denominator.",
+    "Prose locality and post-office coverage is not Polygon/MultiPolygon geometry.",
+    "The Statistics Department open licence is expressly limited to its own data and does not establish Postal Service or Physical Planning reuse/public-serving rights.",
+    "The real MS API returned unsupported; no MS translucent fill, outline, geometry class, source, date or confidence was rendered.",
+    "No parish, locality, street, office, route, P.O. box, organization, address, building, Point, buffer, hull, Voronoi/raster cell, AGID cell or synthetic MSR code was promoted."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "In-app Browser failed before navigation because its Windows sandbox could not apply deny-read ACLs; deterministic Playwright fallback was reported honestly as not a successful MS postal-area visual E2E.",
+    "The screenshot was fixed and hashed outside Git, but the local image-view helper returned Windows error 206 even for short temporary copies; visual inspection is not claimed."
+  ],
+  "countryM2Achieved": false
+}
