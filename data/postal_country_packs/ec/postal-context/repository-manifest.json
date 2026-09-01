@@ -15,30 +15,53 @@
   "postal_system": {
     "code_format": "NNNNNN",
     "assignment_rule": "The Ecuadorian Postal Code System defines six numeric digits: two for province, two for planning district and two for postal zone. The complete value identifies a postal zone, but valid syntax alone is not a current assignment, reusable boundary, address, parcel, building, occupant or delivery entitlement.",
-    "geometry_rule": "The technical standard defines postal zones as territorial portions, while the official lookup describes its adjusted source cartography as referential and unsuitable for precision projects. A permitted lookup observation may support time-bound validation, but a rendered map, unidentified FeatureServer, road or census block, INEC feature, IGM layer, municipal parcel, OSM object, Voronoi cell, buffer, interpolation, API cache or model surface cannot be presented as an official reusable postal polygon without an authority-published versioned artifact and explicit reuse rights.",
+    "geometry_rule": "The technical standard defines postal zones as territorial portions, while the official lookup describes its adjusted source cartography as referential and unsuitable for precision projects. The reviewed official example 180204 returns a real MultiPolygon and the official client fits and draws it, but a single live observation is neither a current complete immutable release nor a reusable national artifact. The 2020 ARCP resolution declares a vector postal-polygon product public only after acceptance of an annexed use agreement and protected download; that agreement and artifact were not obtained or accepted. A rendered map, unidentified GeoServer, road or census block, INEC feature, IGM layer, municipal parcel, OSM object, Voronoi cell, buffer, interpolation, API cache or model surface cannot be presented as an official reusable postal polygon.",
     "address_format_rule": "Store recipient, attention, organization, building, main street, house or building number, cross street, block, lot, floor, unit, P.O. Box, development or sector, neighborhood, locality, parish, canton, province and six-digit postcode as separate fields. Formatting guidance and synthetic fixtures contain no real example address, person, property, CUEN, cadastral code or upstream response.",
     "postal_object_rule": "Store postal object type independently as postal_area, unique_postcode, route, po_box, organization, delivery_point, other_special or unknown. The six-digit standard primarily names a postal zone; special or future assignments must not be forced into polygon geometry without source evidence.",
     "building_rule": "Building-level display requires a rights-cleared civic-address identifier, a stable reviewed relation to an INEC or other permitted building identifier, and separately permitted point or footprint geometry with producer, purpose, validity, privacy, CRS and digest pinned. A postcode, postal-zone rendering, street intersection, census point, parcel, coordinate, CUEN, containment or proximity is not an exact address-building relation.",
     "cadastre_rule": "Ecuador's national cadastral framework standardizes an integrated georeferenced cadastre, while municipal and metropolitan GADs remain responsible for their data. Parcels remain separate from postal zones, civic addresses and buildings. Owner, resident, value, tax, unit, utility and property identifiers require exact local authority, purpose and privacy review.",
     "derived_and_realtime_rule": "Permitted MINTEL or interoperability calls, mathematical models and machine learning may normalize input, compare observations, compress reviewed geometry, detect drift and produce review candidates. Every output preserves source and service version, request and input digests, observed_at, generated_at, cache TTL, confidence, uncertainty and official-observation or derived status. It never overwrites source evidence, invents official geometry or infers a house number, unit, building or occupant.",
     "agid_rule": "AGID remains an independent spatial index. Versioned crosswalks may relate time-bound postal observations, rights-cleared postal geometry, typed postal objects, permitted civic or census points, explicit address-building relations and administrative or cadastral context to AGID cells without relabelling any source object as an AGID cell or claiming AGID geometry is official Ecuador postal geometry.",
-    "licence_rule": "The official lookup is public but no blanket bulk polygon redistribution grant was identified. DINARP interoperability requires exact authorization and purpose; INEC statistical cartography follows its use and distribution policy; IGM and municipal artifacts have artifact-specific licences, including possible commercial and redistribution restrictions; ODbL material remains partitioned. Pin terms, producer, version and digest before use.",
+    "licence_rule": "The official lookup is public but no blanket bulk polygon processing, derivation, redistribution or public-serving grant was identified. ARCP Resolution 2020-26 declares the national lists, thematic maps and vector postal polygons public while requiring natural or legal persons to accept an annexed use agreement and satisfy protected-download conditions. The retrieved five-page resolution omits Annex 1, so no agreement was reviewed or accepted and no vector artifact was downloaded. DINARP interoperability requires exact authorization and purpose; INEC statistical cartography follows its use and distribution policy; IGM and municipal artifacts have artifact-specific licences; ODbL material remains partitioned. Pin terms, producer, version and digest before use.",
     "jurisdiction_rule": "The country pack is ISO EC scope and records mainland, insular and other declared source coverage explicitly. It does not silently extend a source layer into maritime space, unrepresented islands, international-boundary assertions or separately sourced territorial claims; coverage, asserted_by, legal status, boundary vintage and AGID jurisdiction remain independent.",
     "privacy_rule": "Exact addresses, house or building numbers, cross streets, coordinates, entrances, floors, units, recipients, residents, owners, CUENs, cadastral identifiers, utility or tax records, API responses, credentials and query logs can expose personal, property or security context. Exclude them from public artifacts unless lawful authority, purpose limitation, minimisation, retention, access control and publication approval are explicit.",
     "temporal_rule": "Postal assignments, lookup observations, technical standards, roads, localities, INEC census identifiers and points, IGM and administrative layers, municipal parcels, building geometries, derived surfaces and AGID crosswalks are time-dependent. Store valid_from, valid_to, observed_at, retrieved_at, generated_at, source version, service version, digest and supersession independently; never rewrite historical evidence or present an undated map rendering as timeless truth."
   },
   "promotion": {
     "current_stage": "M1_metadata",
+    "data_completion_verified": false,
+    "agid_integration_verified": false,
     "hard_blockers": [
       "valid-six-digit-text-presented-as-current-assignment",
-      "lookup-rendering-or-unverified-featureserver-presented-as-official-reusable-postal-polygon",
+      "single-live-lookup-or-unverified-geoserver-presented-as-current-complete-reusable-postal-polygon-release",
+      "vector-product-downloaded-or-used-without-reviewed-and-authorized-use-agreement",
+      "historical-1225-zone-count-presented-as-current-complete-denominator",
       "dinarp-inec-igm-admin-cadastre-or-osm-evidence-presented-as-canonical-postal-polygon",
       "coordinate-cuen-census-point-parcel-containment-or-proximity-presented-as-exact-building-relation",
       "person-owner-resident-property-utility-or-api-response-published-without-authority",
       "derived-api-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage",
       "mintel-dinarp-inec-igm-gad-or-community-terms-and-source-version-not-pinned",
       "postal-source-coverage-silently-extended-beyond-declared-ec-scope",
-      "one-source-presented-as-universal-address-building-or-delivery-coverage"
+      "one-source-presented-as-universal-address-building-or-delivery-coverage",
+      "synthetic-999999-fixture-presented-as-production-evidence"
+    ],
+    "stages": [
+      {
+        "id": "M2_current_mintel_assignment_and_postal_area_visualization",
+        "definition": "M2 requires a current complete competent-authority Ecuador denominator of every six-digit assignment, alias, validity interval, correction, supersession, exception and typed area/non-area object, not the historical 1,225-zone count, fixed with retrieval time, edition, release identity, schema, coverage, exact bytes and SHA-256 under terms compatible with AGID processing, storage, derivation, redistribution and public serving. ARCP Resolution 2020-26 declares national lists, thematic maps and vector postal polygons public, but requires interested natural or legal persons to accept an annexed use agreement and satisfy protected-download conditions; the retrieved five-page resolution omits Annex 1, no agreement was reviewed or accepted and no national artifact was downloaded. The current official lookup returns a real MultiPolygon for example 180204 and its client fits and draws it, but the response publishes no release, validity, object class, producer lineage, source edition, reference date, CRS, method, confidence or exception model and does not prove complete coverage. Every drawable code must reconcile to fixed real finite closed valid Polygon/MultiPolygon geometry with explicit postal authority and official/derived/virtual class. Point, route, P.O. box, organization and other non-area objects must expose type and reason without fabricated areas. Provinces, planning districts, circuits, parishes, census sectors, localities, addresses, offices, routes, parcels, buildings, Points, buffers, hulls, Voronoi/raster cells, AGID cells, interpolation, model surfaces and synthetic 999999 are prohibited proxies. An approved immutable artifact must drive the real EC API/app, which normalizes the code, handles loading, no-match, multiple, API-failure and invalid-geometry states, fits and renders translucent fill with a clear outline only for eligible geometry, supports clear/re-search, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence."
+      }
+    ],
+    "agid_integration": {
+      "approved_runtime_artifacts": 0,
+      "real_country_api_verified": false,
+      "real_country_app_area_visualization_verified": false,
+      "browser_e2e_verified": false,
+      "shared_capability_only": true
+    },
+    "non_goals": [
+      "No use agreement, registration, authentication, provider contact, protected download, publication destination or deployment was accepted or created.",
+      "No live lookup body, postcode row, coordinate, geometry, address, person, customer, property, cadastral or land-right data is committed.",
+      "Shared runtime code and the synthetic 999999 fixture do not count as EC M2 data completion."
     ]
   }
 }

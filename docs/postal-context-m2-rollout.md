@@ -2586,3 +2586,23 @@ No second country was started.
 - Retry: not before `2026-09-07T23:54:10.401Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/contract/NDA/data-use acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After DO: 252 profiles, 126 pending, 116 blocked, 0 in progress, 10 evidence-verified M2; 159 manifests / 138 explicit definitions.
 - Next country: Ecuador (`EC`). No second country was started.
+
+## EC - Ecuador
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-09-01T00:34:11.103Z`; completed `2026-09-01T01:00:43.9865049Z`.
+- Definition: `M2_current_mintel_assignment_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/ec-source-review-2026-09-01.json` (`sha256:ee9fb31db052b0dd574822b298b46c48d3954171e610d6c72dff5c585cbebbb6`).
+- Checks: `reports/postal-context-m2/ec-checks-2026-09-01.json` (`sha256:8fe2c771a0f7bc34006b6059e25a4843ab65ab9823387297937e7d8347ec127d`).
+- Country report: `docs/postal-context-ecuador-m2.md`.
+- Exact receipts: nine official Ecuador bodies / 667,199 bytes, all fixed by byte count and SHA-256. Raw HTML, JavaScript, JSON, PDFs, postcode rows, coordinates, WKT, renders and temporary output remain outside Git.
+- Official lookup: the official example `180204` returns one valid closed MultiPolygon with 227 coordinate pairs; the official client uses the same-origin PHP endpoint, draws it and fits the map. The response lacks a release, validity, alias/supersession, object class, producer lineage, edition, reference date, CRS, method, confidence and exception model, and one probe does not prove complete coverage.
+- Semantics and currentness: the vigente 2015 standard defines six digits as province, planning district and postal zone. Its 1,225-zone statement is historical, not a current denominator, because the standard expressly permits changes after geographic or demographic updates.
+- Rights and access: ARCP Resolution 2020-26 declares national postcode lists, thematic maps and vector postal polygons public, but requires interested natural or legal persons to accept an annexed use agreement and satisfy protected-download safeguards. The fixed five-page resolution omits Annex 1. No agreement was reviewed or accepted, and no provider contact, registration, authentication, protected download or payment was attempted.
+- Authority boundary: 0 records are production-eligible. No province, planning district, circuit, parish, census sector, locality, address, office, route, P.O. box, organization, parcel, building, Point, buffer, hull, Voronoi/raster cell, AGID cell, interpolation/model surface or synthetic `999999` fixture was promoted.
+- Application: the official client proves a live search-to-area fit/draw path, while shared AGID normalization, API, Polygon/MultiPolygon draw/fit, translucent fill, clear outline, clear/re-search and failure contracts pass. Without an approved immutable artifact, real EC AGID API/app visualization, browser E2E and a separate data app are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 6/6, EC country/runtime/source contracts 139/139, shared area runtime 29/29, rollout invariants 8/8, EC ledger 7/7, focused TypeScript 1/1 and changed syntax/JSON checks 10/10 pass (201 recorded checks, 0 failures).
+- PDF review: technical-standard pages 4, 5 and 11 and resolution pages 4 and 5 rendered to non-empty RGB PNGs with fixed SHA-256. The local image-view helper returned Windows error 206 through original and short paths, so interactive display is not claimed; no image was committed.
+- Retry: not before `2026-09-08T00:34:11.103Z` and only after all pending countries have been swept. Provider contact, registration, authentication, use-agreement/contract acceptance, protected download, payment, destination creation, publication or deployment requires explicit approval.
+- After EC: 252 profiles, 125 pending, 117 blocked, 0 in progress, 10 evidence-verified M2; 159 manifests / 139 explicit definitions.
+- Next country: Falkland Islands (`FK`). No second country was started.

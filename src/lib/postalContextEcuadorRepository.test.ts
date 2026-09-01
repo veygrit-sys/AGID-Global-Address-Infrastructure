@@ -8,7 +8,7 @@ type Manifest = {
   repository: { name: string; country_code: string; maturity: string };
   release_scope: Record<string, boolean>;
   postal_system: Record<string, string>;
-  promotion: { current_stage: string; hard_blockers: string[] };
+  promotion: { current_stage: string; data_completion_verified: boolean; agid_integration_verified: boolean; hard_blockers: string[]; stages: Array<{ id: string; definition: string }>; agid_integration: Record<string, any> };
 };
 type Profile = {
   artifact_scope: string;
@@ -43,19 +43,26 @@ test('Ecuador seed separates lookup evidence, legal semantics, interoperability,
   assert.equal(value.release_scope.contains_production_geometry, false);
   assert.equal(value.postal_system.code_format, 'NNNNNN');
   assert.match(value.postal_system.assignment_rule, /six numeric digits.*province.*planning district.*postal zone.*syntax alone/i);
-  assert.match(value.postal_system.geometry_rule, /territorial portions.*referential.*precision.*FeatureServer.*cannot be presented.*reuse rights/i);
+  assert.match(value.postal_system.geometry_rule, /territorial portions.*180204.*MultiPolygon.*single live observation.*2020.*use agreement.*cannot be presented/i);
   assert.match(value.postal_system.address_format_rule, /recipient.*building.*house or building number.*cross street.*canton.*province.*no real example/i);
   assert.match(value.postal_system.postal_object_rule, /postal_area.*unique_postcode.*unknown.*postal zone.*without source evidence/i);
   assert.match(value.postal_system.building_rule, /civic-address identifier.*stable reviewed relation.*INEC.*CUEN.*not an exact/i);
   assert.match(value.postal_system.cadastre_rule, /municipal.*GADs.*Parcels remain separate.*Owner.*resident/i);
   assert.match(value.postal_system.derived_and_realtime_rule, /machine learning.*cache TTL.*derived status.*never overwrites/i);
   assert.match(value.postal_system.agid_rule, /independent spatial index.*Versioned crosswalks.*official Ecuador/i);
-  assert.match(value.postal_system.licence_rule, /no blanket bulk polygon.*DINARP.*INEC.*IGM.*ODbL/i);
+  assert.match(value.postal_system.licence_rule, /no blanket bulk polygon.*Resolution 2020-26.*use agreement.*Annex 1.*DINARP.*INEC.*IGM.*ODbL/i);
   assert.match(value.postal_system.jurisdiction_rule, /ISO EC.*mainland.*insular.*maritime/i);
   assert.match(value.postal_system.temporal_rule, /lookup observations.*INEC.*municipal parcels.*source version.*timeless/i);
+  assert.equal(value.promotion.data_completion_verified, false);
+  assert.equal(value.promotion.agid_integration_verified, false);
+  assert.equal(value.promotion.stages[0].id, 'M2_current_mintel_assignment_and_postal_area_visualization');
+  assert.match(value.promotion.stages[0].definition, /current complete.*use agreement.*180204.*MultiPolygon.*translucent fill/i);
+  assert.equal(value.promotion.agid_integration.approved_runtime_artifacts, 0);
   for (const blocker of [
     'valid-six-digit-text-presented-as-current-assignment',
-    'lookup-rendering-or-unverified-featureserver-presented-as-official-reusable-postal-polygon',
+    'single-live-lookup-or-unverified-geoserver-presented-as-current-complete-reusable-postal-polygon-release',
+    'vector-product-downloaded-or-used-without-reviewed-and-authorized-use-agreement',
+    'historical-1225-zone-count-presented-as-current-complete-denominator',
     'dinarp-inec-igm-admin-cadastre-or-osm-evidence-presented-as-canonical-postal-polygon',
     'coordinate-cuen-census-point-parcel-containment-or-proximity-presented-as-exact-building-relation',
     'derived-api-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage',
@@ -71,13 +78,15 @@ test('Ecuador source profile keeps postal lookup, interoperability, census, IGM,
   assert.match(sources.get('codigo-postal-ec')?.assignment_authority ?? '', /official_government.*lookup/i);
   assert.match(sources.get('codigo-postal-ec')?.geometry_authority ?? '', /lookup_rendering.*not_bulk.*polygon/i);
   assert.match(sources.get('codigo-postal-ec-technical-standard')?.geometry_authority ?? '', /none.*without_digital_release/i);
+  assert.match(sources.get('codigo-postal-ec-public-products-resolution')?.geometry_authority ?? '', /vector_product_declared.*not_retrieved/i);
+  assert.match(sources.get('codigo-postal-ec-public-products-resolution')?.redistribution_class ?? '', /use_agreement.*protected_download/i);
   assert.match(sources.get('dinarp-ecuador-postal-interoperability')?.redistribution_class ?? '', /authorized_interoperability/i);
   assert.match(sources.get('inec-ecuador-census-cartography')?.geometry_authority ?? '', /census_point.*not_postal.*footprint/i);
   assert.match(sources.get('igm-ecuador-base-cartography')?.geometry_authority ?? '', /base_cartography.*not_postal/i);
   assert.match(sources.get('sistema-nacional-catastro-ecuador')?.geometry_authority ?? '', /parcel.*not_postal/i);
   assert.match(sources.get('osm-ecuador')?.redistribution_class ?? '', /ODbL/i);
   for (const id of [
-    'official-postal-lookup-observations', 'postal-legal-semantics',
+    'official-postal-lookup-observations', 'postal-legal-semantics', 'official-controlled-postal-products',
     'authorized-interoperability-observations', 'typed-postal-objects',
     'historical-postal-observations', 'derived-postal-validation-surfaces',
     'administrative-identities-and-boundaries', 'civic-address-and-intersection-context',
