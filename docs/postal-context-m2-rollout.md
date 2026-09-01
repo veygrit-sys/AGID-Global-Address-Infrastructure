@@ -2755,3 +2755,19 @@ No second country was started.
 - Retry: not before `2026-12-01T07:52:20.335Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After HN: 252 profiles, 116 pending, 122 blocked, 0 in progress, 14 evidence-verified M2; 167 manifests / 148 explicit definitions.
 - Next country: Haiti (`HT`). No second country was started.
+
+## HT - Haiti
+
+- Status: `blocked` / M2 unmet; current integral `HTNNNN` semantics are recorded without promoting examples or administrative geometry.
+- Attempt: 1 at `2026-09-01T08:40:22.648Z`.
+- Definition: `M2_current_office_des_postes_haiti_htnnnn_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/ht-source-review-2026-09-01.json` (`sha256:0b3d0dc763c1ef2dc9b9acff32cba6a09621c292b1871ff3bf3a10a4db6005bf`); checks `reports/postal-context-m2/ht-checks-2026-09-01.json` (`sha256:b59ef720553cf4c13c2a5ba6cec467136a06f8a0fd2b94d1e7756a72c9b9102f`).
+- Published evidence commit: `d0f1b7262ac625bf51dde0427e330fd51b42d74f`.
+- Current semantics: the August 2026 UPU tables list Haiti among countries requiring postcodes, total length six, format `HT9999`, alphanumeric. The September 2017 country sheet says `HT` is integral even domestically and documents department/district/municipality/delivery-area digits and 42 district examples; examples were not promoted to a complete current denominator.
+- Operator and rights: UPU identifies Office des Postes d'Haiti. The listed new domain did not resolve; the legacy postcode route returned 404. The active legacy WordPress site had 14 pages, three posts and zero postcode/licence/privacy/open-data search results. UPU complete data requires contract, NDA, declaration and annual fees and is not postal geometry. No compatible AGID data rights were established.
+- Geometry: CNIGS documents national reference geodata and HaitiData/GeoNode, but the current open-data application says it is under improvement. IHSI's six-digit territorial code and 509-page administrative publication remain non-postal context. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: the isolated app ran at `http://127.0.0.1:3013/`. In-app Browser setup failed before navigation due Windows deny-read ACL setup; Playwright Chromium entered `HT 6110` and returned 12 results including two Haiti candidates. Clicking Haiti retained the first Southern River, Australia result. The fixed screenshot was displayed and visually inspected. No HT Postal Context request, unavailable notice, translucent postal fill, outline or provenance appeared. Direct HT API returned 503 `Postal Context pack is unavailable`; the background map, AGID grid and AU card were not promoted.
+- Verification: fixed-source inspection 1/1, inspector units 3/3, Haiti metadata/runtime/API 80/80, shared postal runtime/API/service/UI 45/45, rollout 8/8, TypeScript 1/1, syntax/diff audit 1/1, real app API and visual checks 2/2 pass (141 recorded, 0 failed). Four UPU PDF renders were displayed and visually reconciled.
+- Retry: not before `2026-12-01T08:40:22.648Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After HT: 252 profiles, 115 pending, 123 blocked, 0 in progress, 14 evidence-verified M2; 167 manifests / 149 explicit definitions.
+- Next country: Jamaica (`JM`). No second country was started.
