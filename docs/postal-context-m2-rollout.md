@@ -2863,3 +2863,16 @@ No second country was started.
 - Retry: not before `2026-12-01T14:04:28.185Z` and only after pending countries have been swept. Provider/authority contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After MS: 252 profiles, 108 pending, 128 blocked, 0 in progress, 16 evidence-verified M2; 174 manifests / 156 explicit definitions.
 - Next country: Mexico (`MX`). No second country was started.
+
+## MX - Mexico
+
+- Result: `m2_verified` / `M2_latest_official_sepomex_2025_national_postcode_polygons_derived_display` at `2026-09-02T00:00:00.000+09:00`.
+- Official release: the datos.gob.mx CKAN package and all 32 SEPOMEX state Shapefile ZIPs are fixed as 33 exact bodies / 129,105,086 bytes with individual SHA-256 values. The release is titled 2025, the source DBFs report `2026-01-05`, and its 35,898 features reconcile one-to-one to 35,898 distinct five-digit postcodes under CC BY 4.0.
+- Geometry and authority: the EPSG:4326 transform retains only official Polygon/MultiPolygon surface components, applies documented validity repair, 100 m base simplification and bounded 0.0012-degree display simplification, and declares `derived`, confidence `0.92`, geometry date `2025-01-01` and conservative 250 m accuracy. Collapsed or invalid cases fall back only to polygonal parts of official original surfaces; no point, route, P.O. box, organization, buffer, hull, cell, address, building, parcel, cadastral fact or land-right surface is invented.
+- Fixed artifacts: 35,899 graph nodes, 35,898 assertions, 35,898 geometry features and 1,065,949 positions. Clean end-to-end rebuild reproduced descriptor `sha256:2f5dc6bd36f5700ff8b97accd936c4f7b9defbdd0247288f174dc417a4d1ca37`; graph `sha256:b737b2c34ecfe0c6b428987ddb486fc561d5427b88f8a77ab419b0199f3ae7e9`; geometry `sha256:26e8a0a34454c3f2f91161065ebd0e59ad42d4066617860123396e928ebc27c6`.
+- Application and visual check: the actual app ran at `http://0.0.0.0:3002`. Country `MX` plus `06000` made a real Postal Context API HTTP 200 request, returned one derived Polygon, fit the map, and visibly rendered a translucent blue fill and clear outline over the background basemap with code/type/source/date/confidence. Clear removed the area; `01000` returned HTTP 200 and re-fit the new Polygon. In-app Browser bootstrap failed twice on Windows ACL setup, so this is honestly recorded as a Playwright Chromium visual check, not an in-app-browser check.
+- States and verification: loading, no-match, multiple candidates, API failure, invalid geometry, fit, clear and re-search are deterministic tests. MX repository/API `6/6`, shared runtime `162/162`, shared postal-area UI `9/9`, TypeScript, strict topology parser, JSON/diff/raw-source audits, rollout policy and MX ledger pinning all pass.
+- Evidence commit: `908cec63cffc8c2ba85cfddcb561972e13a89f08`.
+- Reports: `reports/postal-context-m2/mx-current-postal-polygons-2026-09-01.json`, `reports/postal-context-m2/mx-validation-2026-09-01.json`, and `docs/postal-context-mexico-m2.md`.
+- After MX: 252 profiles, 107 pending, 128 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 157 explicit definitions.
+- Next country: Nicaragua (`NI`). No second country was started.
