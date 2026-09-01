@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'AI', 'FK', 'BL', 'MF', 'GF', 'GP', 'GS', 'NI', 'BR', 'VE', 'PE', 'CO', 'CP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'FO', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'LR', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'AI', 'FK', 'BL', 'MF', 'GF', 'GP', 'MQ', 'GS', 'NI', 'BR', 'VE', 'PE', 'CO', 'CP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'FO', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'LR', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -120,6 +120,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   GP: {
     countryCode: 'GP',
     postalCodeFormat: '971NN (GP assignments only; 97133 BL and 97150 MF excluded)',
+    fullCodeGeometrySemantics: 'routing-locality-first',
+  },
+  MQ: {
+    countryCode: 'MQ',
+    postalCodeFormat: '972NN (official MQ assignments only)',
     fullCodeGeometrySemantics: 'routing-locality-first',
   },
   GS: {
@@ -665,6 +670,13 @@ export function normalizeGuadeloupePostalCode(value: unknown) {
     .normalize('NFKC')
     .replace(/\s+/g, '');
   return /^971\d{2}$/.test(normalized) && !['97133', '97150'].includes(normalized) ? normalized : null;
+}
+
+export function normalizeMartiniquePostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return /^972\d{2}$/.test(normalized) ? normalized : null;
 }
 
 export function normalizeNewZealandPostalCode(value: unknown) {
@@ -1595,6 +1607,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'MF') return normalizeSaintMartinPostalCode(value);
   if (normalizedCountry === 'GF') return normalizeFrenchGuianaPostalCode(value);
   if (normalizedCountry === 'GP') return normalizeGuadeloupePostalCode(value);
+  if (normalizedCountry === 'MQ') return normalizeMartiniquePostalCode(value);
   if (normalizedCountry === 'GS') return normalizeSouthGeorgiaSouthSandwichIslandsPostalCode(value);
   if (normalizedCountry === 'NI') return normalizeNicaraguaPostalCode(value);
   if (normalizedCountry === 'BR') return normalizeBrazilPostalCode(value);

@@ -110,6 +110,7 @@ import {
   normalizeFrancePostalCode,
   normalizeFrenchGuianaPostalCode,
   normalizeGuadeloupePostalCode,
+  normalizeMartiniquePostalCode,
   normalizeJapanPostalCode,
   normalizeNetherlandsPostalCode,
   normalizeNewZealandPostalCode,
@@ -158,6 +159,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeGuadeloupePostalCode('97133'), null);
   assert.equal(normalizeGuadeloupePostalCode('97150'), null);
   assert.equal(normalizeGuadeloupePostalCode('97300'), null);
+  assert.equal(normalizeMartiniquePostalCode('９７２ １８'), '97218');
+  assert.equal(normalizeMartiniquePostalCode('97200'), '97200');
+  assert.equal(normalizeMartiniquePostalCode('972-00'), null);
+  assert.equal(normalizeMartiniquePostalCode('97100'), null);
+  assert.equal(normalizePostalContextPostalCode('mq', '９７２ ５０'), '97250');
   assert.equal(normalizePostalContextPostalCode('gp', '９７１ １０'), '97110');
   assert.equal(normalizeNewZealandPostalCode('\uFF10\uFF11\uFF12\uFF13'), '0123');
   assert.equal(normalizeNewZealandPostalCode('01 23'), '0123');
