@@ -2785,3 +2785,18 @@ No second country was started.
 - Retry: not before `2026-09-08T09:20:23.139Z` and only after pending countries have been swept, unless Jamaica Post or UPU announces a rights-cleared fixed postcode assignment and postal-area artifact.
 - After JM: 252 profiles, 114 pending, 124 blocked, 0 in progress, 14 evidence-verified M2; 168 manifests / 150 explicit definitions.
 - Next country: Saint Kitts and Nevis (`KN`). No second country was started.
+
+## KN - Saint Kitts and Nevis
+
+- Status: `blocked` / M2 unmet; the official integral `KN9999` system is confirmed and corrected in address metadata, but no postal area was fabricated.
+- Attempt: 1 at `2026-09-01T10:04:53.864Z`; completed `2026-09-01T10:26:03.123Z`.
+- Definition: `M2_current_skn_postal_assignments_and_delivery_district_area_visualization`.
+- Evidence: `reports/postal-context-m2/kn-source-review-2026-09-01.json` (`sha256:b265181ea5f42cd7cca964ca8e6e3be5b85888331c076e5cd0926a36a022d540`); checks `reports/postal-context-m2/kn-checks-2026-09-01.json` (`sha256:678d7621bcf7baabfceb08d4107c298a45933be90b31556d8387cd680a00d1b2`).
+- Current system: seven exact Government/SKNIS and UPU bodies / 1,176,198 bytes establish the `KN` prefix, two postal-zone digits, two delivery-district digits, official 2016-10-09 launch and December 2017 UPU address format. The dated Government article exposes 32 codes, including `KN7000`, fixed as a sorted code-set digest.
+- Denominator and geometry: the article is not a current versioned complete assignment/alias/validity/correction/exception/non-area denominator. It supplies prose street/locality membership, not Polygon/MultiPolygon, feature identity, CRS, topology, method, class, confidence or exceptions. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Rights: the current Government site states All Rights Reserved and UPU restricts reproduction, transmission and database use. No compatible AGID processing, derivation, redistribution or public-serving permission was found.
+- Running app: the isolated app returned HTTP 200 at `http://127.0.0.1:3015/`; real unmocked KN Postal API lookup returned 404 unsupported. In-app Browser failed before navigation on the Windows ACL sandbox. Playwright entered `KN0101 Saint Kitts and Nevis`, saw 12 generic results and two map canvases, but selected a Turkish consulate result, issued no KN postal request and showed no postal fill, outline or provenance. Screenshot/PDF bytes and render hashes were fixed; the local image-view helper failed, so visual success is not claimed.
+- Verification: source inspection 1/1, inspector units 5/5, KN metadata 2/2, address formats 68/68, shared runtime 30/30, rollout 8/8, ledger 6/6, TypeScript and syntax/status checks pass (135 recorded, 0 failed).
+- Retry: not before `2026-12-01T10:04:53.864Z` and only after pending countries have been swept, unless a competent authority publishes a rights-cleared current complete assignment and postal-area artifact.
+- After KN: 252 profiles, 113 pending, 125 blocked, 0 in progress, 14 evidence-verified M2; 169 manifests / 151 explicit definitions.
+- Next country: Cayman Islands (`KY`). No second country was started.
