@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "GT",
+  "observedAt": "2026-09-01T06:21:18.707Z",
+  "result": "pass-for-blocked-review",
+  "checks": [
+    {"name":"exact-fixed-source-inspection","command":"<bundled-python> scripts/inspect-postal-context-gt-sources.py --source-dir <temporary-source-directory>","passed":1,"failed":0,"detail":"29 exact bodies, 3,683,865 bytes, 22 department PDFs / 35 pages / 544 unique codes / prefixes 01-22; zero official postal geometry and production records"},
+    {"name":"source-inspector-unit-tests","command":"<bundled-python> scripts/inspect-postal-context-gt-sources.test.py","passed":4,"failed":0},
+    {"name":"gt-country-runtime-and-metadata","command":"node node_modules/tsx/dist/cli.mjs --test <GT focused suite>","passed":139,"failed":0,"detail":"Existing synthetic GT M1 fixtures remain gated and are not M2 data."},
+    {"name":"shared-postal-area-ui","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts","passed":6,"failed":0},
+    {"name":"shared-runtime-api-service","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/services/PostalContextService.test.ts src/server/routes/postalContextRoutes.test.ts","passed":39,"failed":0},
+    {"name":"rollout-invariants","command":"node --test scripts/postal-context-m2-rollout.test.mjs","passed":8,"failed":0},
+    {"name":"root-typescript","command":"node node_modules/typescript/bin/tsc --noEmit --pretty false","passed":1,"failed":0,"setup":"npm ci omitted local workspace links; temporary node_modules/@agid junctions to the six checked-in workspace packages were created in the isolated worktree and are not committed"},
+    {"name":"running-app-api","command":"GET http://127.0.0.1:3000/api/v1/postal/GT/01001?geometry=geojson","passed":1,"failed":0,"expectedStatus":503,"expectedError":"Postal Context pack is unavailable"},
+    {"name":"running-app-browser-visual","command":"Playwright Chromium against http://127.0.0.1:3000/","passed":1,"failed":0,"detail":"GT 01001 place result selected and background map visible; no postal area layer or provenance notice. Only ordinary red AGID grid cell visible and explicitly not promoted. Browser-plugin path failed before navigation due Windows deny-read ACL setup."}
+  ],
+  "totals": {"passed":200,"failed":0},
+  "jsonSyntaxVerified": true,
+  "pythonSyntaxVerified": true,
+  "rawSourceBodiesInGit": 0,
+  "countryM2Achieved": false
+}
