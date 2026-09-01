@@ -2800,3 +2800,17 @@ No second country was started.
 - Retry: not before `2026-12-01T10:04:53.864Z` and only after pending countries have been swept, unless a competent authority publishes a rights-cleared current complete assignment and postal-area artifact.
 - After KN: 252 profiles, 113 pending, 125 blocked, 0 in progress, 14 evidence-verified M2; 169 manifests / 151 explicit definitions.
 - Next country: Cayman Islands (`KY`). No second country was started.
+
+## KY - Cayman Islands
+
+- Status: `blocked` / M2 unmet; the current integral `KYN-NNNN` system is confirmed and address metadata now follows P.O. Box + official island + postcode rather than a street-only form.
+- Attempt: 1 at `2026-09-01T10:40:54.523Z`; completed `2026-09-01T10:55:42.6445417Z`.
+- Definition: `M2_current_cips_box_section_and_unique_postcode_context_visualization`.
+- Evidence: `reports/postal-context-m2/ky-source-review-2026-09-01.json` (`sha256:0f816f677e03ab6f1f5fe6077bc8b0e809d00748537c0eda979776d6caeb4a67`); checks `reports/postal-context-m2/ky-checks-2026-09-01.json` (`sha256:d522dd9b60e20f5b89872dd09c1e882781c8b089c9317d6dde456dfc5e759991`).
+- Current semantics: six fixed official bodies / 876,000 bytes establish integral KY, island codes 1/2/3, four section digits, private-letter-box delivery and undeliverable street-only mail. The 2025 regulations confirm unique company postcodes; examples and that service class are not a current complete assignment denominator.
+- Geometry and rights: the public GIS has one Street Address Polygon layer, no tables and no postcode field. It is not postal geometry. The FAQ requires express written Chief Surveyor permission for map publication; blank service copyright text is not a licence. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: HTTP 200 at `http://127.0.0.1:3016/`; real KY postal API returned 404 unsupported. In-app Browser failed before navigation on the Windows ACL sandbox. Deterministic Playwright entered `KY1-1100 Cayman Islands`, observed two canvases but no result, KY postal request, notice, translucent area or provenance. Screenshot/render bytes and hashes were fixed, but image viewing failed with Windows error 206, so visual success is not claimed.
+- Verification: fixed-source inspection 1/1, inspector units 5/5, KY metadata 2/2, address formats 68/68, shared runtime 30/30, rollout 8/8, ledger 6/6, TypeScript, syntax/diff and real app/browser evidence checks pass (124 recorded, 0 failed).
+- Retry: not before `2026-12-01T10:40:54.523Z` and only after pending countries have been swept, unless CIPS/UPU publishes a rights-cleared current complete typed assignment and eligible postal-area artifact.
+- After KY: 252 profiles, 112 pending, 126 blocked, 0 in progress, 14 evidence-verified M2; 170 manifests / 152 explicit definitions.
+- Next country: Saint Lucia (`LC`). No second country was started.
