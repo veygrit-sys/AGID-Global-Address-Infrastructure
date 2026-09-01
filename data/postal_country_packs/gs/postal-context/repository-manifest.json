@@ -1,0 +1,69 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-gs-upu-sggis-bas",
+    "country_code": "GS",
+    "country_name": "South Georgia and the South Sandwich Islands",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "current-upu-siqq-whole-territory-with-derived-sggis-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "South Georgia and the South Sandwich Islands postcode",
+    "full_code_format": "SIQQ 1ZZ",
+    "full_code_default_geometry": "whole-territory-derived-display-surface",
+    "assignment_rule": "The August 2026 Universal POST*CODE DataBase and the country-specific UPU addressing sheet state that SIQQ 1ZZ is the single postcode for the whole territory. No second code, subdivision code or inferred delivery code is accepted.",
+    "geometry_rule": "No reusable official postal polygon was located. BAS dataset edition 1.0 explicitly says its South Georgia and South Sandwich Islands coastlines come from the South Georgia GIS. The fixed CC BY 4.0 source features are used only because the official postcode covers the whole territory; output remains derived display geometry and is never an official postal, legal, survey, cadastral or delivery boundary.",
+    "topology_rule": "The fixed BAS Shapefile contains 466 polygons. A reproducible attribute filter keeps exactly 357 South Georgia GIS polygons, transforms EPSG:3031 to EPSG:4326 without coordinate rounding or simplification, and partitions them at the empty longitude gap -30 into South Georgia and South Sandwich Islands MultiPolygons. All 357 polygon parts and 90,610 positions occur exactly once and pass Turf, JSTS and the shared runtime validator.",
+    "address_rule": "No address, recipient, customer, delivery record, PO box, organisation, route, parcel, building or land-right row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The postal node and derived surfaces are linked only inside the versioned Postal Context graph. AGID identity, addresses and buildings require independent explicit evidence. GS remains a distinct source identity; South Georgia and the South Sandwich Islands are not merged with another country or territory."
+  },
+  "temporal_model": {
+    "valid_time": "SIQQ 1ZZ is represented from the current August 2026 UPU edition; display geometry is BAS edition 1.0 with source temporal end 2020-11-03 and current metadata reviewed 2026-09-01.",
+    "known_time": "Retrieval time, source editions, exact body digests, transform digest and AGID release time remain separately recorded.",
+    "history_rule": "A later postcode or coastline edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "official-assignment", "pass": "SIQQ 1ZZ remains an official UPU whole-territory assertion with geometry authority none." },
+    { "id": "derived-surface", "pass": "Every displayed surface retains the BAS/South Georgia GIS identity, edition 1.0, source and transform digests, CC BY 4.0 and derived classification." },
+    { "id": "coordinate-provenance", "pass": "All 357 filtered source polygons and 90,610 reprojected positions are emitted exactly once; there is no rounding, simplification, buffer, hull, cell or invented coordinate." },
+    { "id": "runtime", "pass": "The real pack passes API lookup, normalization, two-surface conversion, union-bounds fit, translucent paint, clear and re-search tests." },
+    { "id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-right data is published." }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_upu_siqq_whole_territory_derived_visualization",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Country-specific assignment, geometry, transform, rights and provenance are reviewable." },
+      { "id": "M2_current_upu_siqq_whole_territory_derived_visualization", "definition": "Current UPU evidence proves SIQQ 1ZZ is the single postcode for the whole territory; fixed CC BY 4.0 BAS/South Georgia GIS coastline data reproducibly supplies real derived MultiPolygon display surfaces for South Georgia and the South Sandwich Islands; the shared API and app path renders, fits, clears and re-searches them with provenance and without promoting addresses or buildings." },
+      { "id": "M3_candidate", "definition": "A refresh and independent review pass without authority drift." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback." }
+    ],
+    "hard_blockers": [
+      "derived-coastline-presented-as-official-postal-geometry",
+      "south-georgia-only-geometry-presented-as-whole-gs-territory",
+      "postcode-or-coastline-presented-as-address-building-parcel-or-deliverability",
+      "source-coordinates-rounded-simplified-invented-or-silently-repaired",
+      "missing-upu-edition-or-bas-dataset-digest-and-rights",
+      "gs-source-identity-merged-or-relabelled",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": [
+    "official_postal_boundary",
+    "legal_or_survey_boundary",
+    "cadastral_boundary",
+    "delivery_zone",
+    "deliverability",
+    "address_or_building_identity",
+    "recipient_identity"
+  ]
+}

@@ -198,11 +198,10 @@ export function postalAreaBounds(
   return Number.isFinite(west) ? [[west, south], [east, north]] : null;
 }
 
-export function syncPostalAreaMapLayer(
+function syncPostalAreaMapLayerReady(
   map: maplibregl.Map,
   collection: PostalAreaFeatureCollection | null,
 ) {
-  if (!map.isStyleLoaded()) return;
   if (!collection?.features.length) {
     if (map.getLayer(POSTAL_SEARCH_AREA_OUTLINE_LAYER_ID)) map.removeLayer(POSTAL_SEARCH_AREA_OUTLINE_LAYER_ID);
     if (map.getLayer(POSTAL_SEARCH_AREA_FILL_LAYER_ID)) map.removeLayer(POSTAL_SEARCH_AREA_FILL_LAYER_ID);
@@ -239,4 +238,48 @@ export function syncPostalAreaMapLayer(
       },
     });
   }
+}
+
+export function syncPostalAreaMapLayer(
+  map: maplibregl.Map,
+  collection: PostalAreaFeatureCollection | null,
+) {
+  if (!map.isStyleLoaded()) return;
+  syncPostalAreaMapLayerReady(map, collection);
+}
+
+export function subscribePostalAreaMapLayer(
+  map: maplibregl.Map,
+  collection: PostalAreaFeatureCollection | null,
+) {
+  const clearRetry = () => {
+    map.off('styledata', retryWhenPossible);
+    map.off('idle', syncWhenReady);
+  };
+  const syncWhenReady = () => {
+    try {
+      syncPostalAreaMapLayerReady(map, collection);
+      clearRetry();
+      return true;
+    } catch (error) {
+      if (map.isStyleLoaded()) throw error;
+      return false;
+    }
+  };
+  function retryWhenPossible() {
+    syncWhenReady();
+  }
+  const syncOnStyleLoad = () => {
+    if (syncWhenReady()) return;
+    map.on('styledata', retryWhenPossible);
+    map.on('idle', syncWhenReady);
+  };
+
+  syncOnStyleLoad();
+  map.on('style.load', syncOnStyleLoad);
+
+  return () => {
+    map.off('style.load', syncOnStyleLoad);
+    clearRetry();
+  };
 }

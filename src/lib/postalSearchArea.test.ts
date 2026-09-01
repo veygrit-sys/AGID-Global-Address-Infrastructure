@@ -8,6 +8,7 @@ import {
   createPostalAreaFeatureCollection,
   postalAreaBounds,
   resolvePostalAreaLookupCandidate,
+  subscribePostalAreaMapLayer,
   syncPostalAreaMapLayer,
 } from './postalSearchArea';
 
@@ -168,4 +169,54 @@ test('map sync installs a translucent fill and a visible outline, then removes b
   syncPostalAreaMapLayer(map as never, null);
   assert.equal(layers.size, 0);
   assert.equal(sources.size, 0);
+});
+
+test('map sync waits for idle when style.load already fired but the style is not ready', () => {
+  const collection = createPostalAreaFeatureCollection(lookup([{
+    node: { id: 'postal', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'polygon', postalCode: '100-0001' },
+    geometry: { type: 'Polygon', coordinates: [[[139, 35], [140, 35], [140, 36], [139, 35]]] },
+    source,
+    quality,
+    validTime,
+  }]));
+  let styleLoaded = false;
+  const sources = new Map<string, { setData: (value: unknown) => void; data: unknown }>();
+  const layers = new Map<string, Record<string, unknown>>();
+  const listeners = new Map<string, Set<() => void>>();
+  const map = {
+    isStyleLoaded: () => styleLoaded,
+    getSource: (id: string) => sources.get(id),
+    addSource: (id: string, sourceDefinition: { data: unknown }) => {
+      if (!styleLoaded) throw new Error('Style is not done loading');
+      const stored = {
+        data: sourceDefinition.data,
+        setData(value: unknown) { stored.data = value; },
+      };
+      sources.set(id, stored);
+    },
+    removeSource: (id: string) => { sources.delete(id); },
+    getLayer: (id: string) => layers.get(id),
+    addLayer: (layer: Record<string, unknown>) => { layers.set(String(layer.id), layer); },
+    removeLayer: (id: string) => { layers.delete(id); },
+    on: (event: string, listener: () => void) => {
+      const eventListeners = listeners.get(event) ?? new Set();
+      eventListeners.add(listener);
+      listeners.set(event, eventListeners);
+    },
+    off: (event: string, listener: () => void) => { listeners.get(event)?.delete(listener); },
+  };
+
+  const unsubscribe = subscribePostalAreaMapLayer(map as never, collection);
+  assert.equal(sources.size, 0);
+  assert.equal(listeners.get('idle')?.size, 1);
+
+  styleLoaded = true;
+  listeners.get('idle')?.forEach(listener => listener());
+  assert.equal(sources.get(POSTAL_SEARCH_AREA_SOURCE_ID)?.data, collection);
+  assert.equal(layers.has(POSTAL_SEARCH_AREA_FILL_LAYER_ID), true);
+  assert.equal(layers.has(POSTAL_SEARCH_AREA_OUTLINE_LAYER_ID), true);
+  assert.equal(listeners.get('idle')?.size, 0);
+
+  unsubscribe();
+  assert.equal(listeners.get('style.load')?.size, 0);
 });

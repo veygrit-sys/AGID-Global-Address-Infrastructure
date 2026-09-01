@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import {
   normalizeAnguillaPostalCode,
   normalizeFalklandIslandsPostalCode,
+  normalizeSouthGeorgiaSouthSandwichIslandsPostalCode,
   normalizeSaintBarthelemyPostalCode,
   normalizeClippertonPostalCode,
   normalizeGeorgiaPostalCode,
@@ -831,6 +832,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeFalklandIslandsPostalCode('F1QQ 1ZZ'), null);
   assert.equal(normalizeFalklandIslandsPostalCode('FIQQ 1ZY'), null);
   assert.equal(normalizePostalContextPostalCode('fk', 'FIQQ1ZZ'), 'FIQQ 1ZZ');
+  assert.equal(normalizeSouthGeorgiaSouthSandwichIslandsPostalCode('ＳＩＱＱ １ＺＺ'), 'SIQQ 1ZZ');
+  assert.equal(normalizeSouthGeorgiaSouthSandwichIslandsPostalCode('siqq1zz'), 'SIQQ 1ZZ');
+  assert.equal(normalizeSouthGeorgiaSouthSandwichIslandsPostalCode('SIQQ 1ZY'), null);
+  assert.equal(normalizeSouthGeorgiaSouthSandwichIslandsPostalCode('FIQQ 1ZZ'), null);
+  assert.equal(normalizePostalContextPostalCode('gs', 'SIQQ1ZZ'), 'SIQQ 1ZZ');
   assert.equal(normalizeSaintBarthelemyPostalCode('９７１３３'), '97133');
   assert.equal(normalizeSaintBarthelemyPostalCode('97 133'), '97133');
   assert.equal(normalizeSaintBarthelemyPostalCode('97134'), null);
@@ -885,6 +891,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('GP'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GP.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.match(POSTAL_CONTEXT_COUNTRY_POLICIES.GP.postalCodeFormat, /971NN.*97133 BL.*97150 MF/);
+  assert.equal(isPostalContextCountryCode('GS'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GS.fullCodeGeometrySemantics, 'postal-area-first');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GS.postalCodeFormat, 'SIQQ 1ZZ (single postcode for the whole territory)');
   assert.equal(isPostalContextCountryCode('CP'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CP.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CP.postalCodeFormat, '98799 (single postcode for Clipperton Island)');

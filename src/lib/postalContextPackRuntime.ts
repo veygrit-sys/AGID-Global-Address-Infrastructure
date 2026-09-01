@@ -261,7 +261,9 @@ export const POSTAL_CONTEXT_RUNTIME_QUERY_LIMITS = {
   lookupAlternatives: 32,
   lookupAlternativeDepth: 32,
   geometryResponseFeatures: 16,
-  geometryResponsePositions: 20_000,
+  // Keep enough headroom for one source-preserving high-resolution coastline
+  // response; feature, pack-byte and total-position limits remain independent.
+  geometryResponsePositions: 100_000,
   resolutionNodes: 128,
   resolutionAssertions: 256,
   resolutionAssertionsExamined: 2_048,

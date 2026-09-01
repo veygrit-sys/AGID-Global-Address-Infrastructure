@@ -72,7 +72,7 @@ createPostalAreaFeatureCollection,
 postalAreaUnavailableDetail,
 postalAreaBounds,
 resolvePostalAreaLookupCandidate,
-syncPostalAreaMapLayer,
+subscribePostalAreaMapLayer,
 type PostalAreaFeatureCollection,
 } from './lib/postalSearchArea';
 import { applySmartPattern,getPatternForPrefix } from './lib/postalPatterns';
@@ -938,16 +938,11 @@ export default function App() {
   useEffect(() => {
     const currentMap = map.current;
     if (!currentMap) return;
-    const syncLayer = () => {
-      try {
-        syncPostalAreaMapLayer(currentMap, postalAreaFeatureCollection);
-      } catch (error) {
-        console.warn('Postal area layer sync failed:', error);
-      }
-    };
-    syncLayer();
-    currentMap.on('style.load', syncLayer);
-    return () => { currentMap.off('style.load', syncLayer); };
+    try {
+      return subscribePostalAreaMapLayer(currentMap, postalAreaFeatureCollection);
+    } catch (error) {
+      console.warn('Postal area layer sync failed:', error);
+    }
   }, [isMapLoaded, mapStyle, postalAreaFeatureCollection]);
 
   useEffect(() => {
@@ -2447,7 +2442,6 @@ export default function App() {
       }
 
       const currentMap = map.current;
-      if (currentMap) syncPostalAreaMapLayer(currentMap, collection);
       setPostalAreaFeatureCollection(collection);
       const sourceIds = Array.from(new Set(collection.features.map(feature => feature.properties.sourceId)));
       const geometryTypes = Array.from(new Set(collection.features.map(feature => feature.geometry.type)));

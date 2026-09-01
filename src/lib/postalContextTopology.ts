@@ -14,7 +14,10 @@ export const POSTAL_CONTEXT_PACK_LIMITS = {
   assertions: 500_000,
   features: 100_000,
   positions: 2_000_000,
-  positionsPerRing: 20_000,
+  // High-resolution official mapping sources can contain a single coastline ring
+  // larger than 20k positions. The independent 64 MiB and 2M-position limits
+  // continue to bound a pack while preserving source coordinates exactly.
+  positionsPerRing: 100_000,
   topologyComparisons: 2_000_000,
   topologyErrors: 100,
 } as const;
