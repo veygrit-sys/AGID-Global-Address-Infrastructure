@@ -951,7 +951,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     url: 'https://inposdom.gob.do/codigo-postal/index.html',
     sourceNames: ['inposdom postcode search', 'inposdom codigo postal', 'código postal república dominicana'],
     openSourceIds: ['inposdom-postcode-search'], requiresCredential: false,
-    notes: ['Current official search accepts address, sector or five-digit postcode and returns operator context.', 'Pin query, response, observed time, service version, automation, cache, privacy and redistribution terms; a result is not a reusable national address corpus, building relation or official polygon release.'],
+    notes: ['Official search accepts address, sector or five-digit postcode; the reviewed client loads a static 2021 index and fetches Polygon responses from polygon.php.', 'The public index and sampled polygons lack a current complete release, coverage proof, validity/alias/object class, immutable version, provenance, official/derived/virtual class, CRS, confidence and compatible bulk redistribution/public-serving rights; they are not an approved national artifact, address corpus or building relation.'],
   },
   {
     id: 'upu-dominican-republic-addressing-2005', countryCodes: ['DO'], label: 'UPU Dominican Republic addressing sheet (March 2005)',

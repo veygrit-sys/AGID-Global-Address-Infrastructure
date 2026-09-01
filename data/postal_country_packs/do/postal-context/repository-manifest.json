@@ -15,7 +15,7 @@
   "postal_system": {
     "code_format": "NNNNN",
     "assignment_rule": "INPOSDOM provides a current official search by address, sector or five-digit postcode. The March 2005 UPU sheet records five digits to the left of the locality after street-number and district lines, but is dated formatting evidence rather than a current assignment table. Syntax, a locality name, sector, address string, search example or third-party row is not proof of a current assignment.",
-    "geometry_rule": "Treat a five-digit code as postal-area-first, not automatically a polygon. No reusable national official postcode polygon release has been verified for this seed. Store an INPOSDOM result as a time-bound typed observation. Search-map graphics, sector or barrio boundaries, road buffers, address interpolation, Voronoi cells, administrative joins and model outputs are official-context or derived-review geometry only and cannot fill unknown official coverage.",
+    "geometry_rule": "Treat a five-digit code as postal-area-first, not automatically a polygon. The reviewed INPOSDOM public client fetches Polygon features from polygon.php for a selected code, and fixed probes for 10100, 10101 and 11903 contain valid closed finite rings. Those responses publish only a zipcode property: they do not establish a complete denominator, release version, validity, official/derived/virtual class, producer lineage, CRS, method, confidence, exceptions or compatible processing and redistribution rights. Search-map graphics, sector or barrio boundaries, road buffers, address interpolation, Voronoi cells, administrative joins and model outputs cannot fill unknown postal coverage.",
     "address_format_rule": "Store recipient, attention, organization, street, house number, building name, floor, unit, sector or barrio, section or paraje, municipal district, municipality or locality, province or National District, P.O. box, post office and five-digit postcode separately. UPU and INPOSDOM examples are never production address rows.",
     "postal_object_rule": "Store postal object type independently as postal_area, sector_or_barrio, locality, post_office, po_box, organization or unknown. A searchable address, sector, locality, postcode and postal office must never be collapsed into one polygon class.",
     "building_rule": "Building-level display requires a rights-cleared stable civic-address identifier, an explicit reviewed relation to a permitted building or construction identifier, and separately permitted point or footprint geometry with producer, edition, validity, privacy, CRS and digest pinned. A postcode, sector, barrio, locality, address string, RI parcel, designation, coordinate, containment or proximity is not an exact address-to-building relation.",
@@ -23,7 +23,7 @@
     "cadastre_rule": "Registro Inmobiliario parcel and property-location services provide official cadastral context for permitted consultation, but portal terms do not grant bulk commercial reuse. Parcel, positional designation, ownership, condominium and registry fields remain independently governed and cannot be inferred from a postcode or republished without authority.",
     "derived_and_realtime_rule": "Authorized INPOSDOM observations plus rights-cleared ONE, IDE-RD, IGN, RI and road data may normalize input, validate strict joins, build candidate postal-area review surfaces, compress geometry, create indexes, detect drift and train or run review models. Every output preserves service or release version, input and artifact digests, observed_at, retrieved_at, generated_at, cache TTL, confidence, uncertainty and official-observation or derived-review status. It never overwrites evidence, fills unknown coverage or invents a house number, civic address, unit, building, person, owner, occupant or delivery entitlement.",
     "agid_rule": "AGID remains an independent spatial index. Versioned crosswalks may relate time-bound INPOSDOM observations, typed postal objects, derived postal-area review geometry, permitted civic addresses, explicit address-to-building relations and administrative or cadastral context to AGID cells without relabelling any source object as an AGID cell or claiming AGID geometry is official Dominican postal geometry.",
-    "licence_rule": "Public INPOSDOM search access does not grant bulk address or postcode redistribution rights; pin applicable terms, automation and cache rules. UPU publications are standards references, not bulk-data licences. ONE, IDE-RD and IGN resources require item-level producer, edition and reuse terms. Registro Inmobiliario portal content is restricted by its terms and commercial reuse requires written authorization. ODbL content remains separately attributed and partitioned.",
+    "licence_rule": "The reviewed INPOSDOM terms protect portal content, compilations and programs as agency or licensor intellectual property and do not publish permission for bulk extraction, processing, derivation, redistribution or public serving of the postcode index or polygons. The current complete UPU POST*CODE DataBase is offered under 2026.1 contract, non-disclosure, data-use declaration and rates documents. No contract, NDA, payment or provider contact was attempted. ONE, IDE-RD and IGN resources require item-level producer, edition and reuse terms. Registro Inmobiliario portal content is restricted by its terms and commercial reuse requires written authorization. ODbL content remains separately attributed and partitioned.",
     "jurisdiction_rule": "The pack is ISO DO scope and stores national, border, province, National District, municipality, municipal district, section, paraje, barrio, sector, locality and source-specific coverage independently. Postal, administrative, cadastral, address, building and AGID coverage, asserted_by, legal status and vintage must not be conflated or extended beyond an artifact's declared jurisdiction.",
     "privacy_rule": "Addresses, house numbers, apartment or office identifiers, coordinates, INPOSDOM queries, cadastral designations, parcel and condominium records, ownership, recipients, organizations, credentials and logs can expose household, property, registry, security or commercial context. Apply purpose limitation, minimisation, retention, access control and publication review; exclude private, owner-linked and query data from public artifacts.",
     "temporal_rule": "INPOSDOM assignments and observations, the March 2005 UPU sheet, ONE territorial editions, IDE-RD and IGN layers, RI parcel states and terms, derived surfaces and AGID crosswalks are time-dependent. Store valid_from, valid_to, observed_at, retrieved_at, generated_at, service and artifact version, edition, digest and supersession independently.",
@@ -32,6 +32,10 @@
   "promotion": {
     "current_stage": "M1_metadata",
     "hard_blockers": [
+      "public-search-index-last-modified-2021-without-current-complete-release-version-validity-alias-correction-exception-or-object-class-denominator",
+      "public-polygon-endpoint-without-complete-coverage-release-provenance-official-derived-virtual-class-crs-method-confidence-or-compatible-licence",
+      "upu-2026-1-complete-database-requires-contract-nda-data-use-declaration-and-rates",
+      "inposdom-terms-protect-content-without-bulk-processing-derivation-redistribution-or-public-serving-permission",
       "valid-five-digit-text-presented-as-current-inposdom-assignment",
       "postcode-sector-or-locality-presented-as-an-automatic-polygon",
       "interactive-search-response-republished-as-a-bulk-address-dataset",
@@ -41,7 +45,34 @@
       "owner-recipient-occupant-condominium-credential-or-query-data-published-without-authority",
       "derived-buffer-voronoi-interpolation-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage",
       "hugging-face-artifact-published-without-release-terms-crs-and-digest",
-      "postal-or-administrative-coverage-silently-extended-beyond-declared-do-scope"
-    ]
-  }
+      "postal-or-administrative-coverage-silently-extended-beyond-declared-do-scope",
+      "synthetic-fixture-shared-runtime-or-policy-page-called-m2"
+    ],
+    "target_stage": "M2_current_inposdom_assignment_and_postal_area_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Dominican Republic format inventory, draft country pack and synthetic fixtures only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Digest-bound official-source, rights, identity, privacy, object-separation and fail-closed runtime contracts without production postcode data or geometry."
+      },
+      {
+        "id": "M2_current_inposdom_assignment_and_postal_area_visualization",
+        "definition": "M2 requires a current complete INPOSDOM or competent-authority denominator of every Dominican Republic postcode assignment, alias, validity interval, correction, exception and typed area/non-area object, fixed with retrieval time, edition, release identity, schema, coverage, exact bytes and SHA-256 under rights compatible with AGID processing, storage, derivation, redistribution and public serving. The reviewed public index has 1,403 rows, 1,401 syntactically valid rows, 528 unique five-digit codes, two invalid code values and 29 exact duplicate groups, but its Last-Modified date is 16 April 2021 and it publishes no currentness, validity, alias, supersession or object-class contract. The public map endpoint returned valid Polygon probes for official examples 10100, 10101 and 11903, but publishes no complete coverage proof, immutable release, producer lineage, official/derived/virtual class, reference date, CRS, method, confidence, exception model or compatible licence. The current complete UPU 2026.1 database is contract-, NDA-, data-use- and rates-controlled. Every drawable code must reconcile to fixed real finite closed valid Polygon/MultiPolygon geometry with explicit postal authority and provenance; point, route, P.O. box, organization and other non-area objects must expose their type and reason without fabricated areas. Provinces, the National District, municipalities, districts, sections, parajes, barrios, sectors, localities, addresses, offices, parcels, buildings, Points, buffers, hulls, Voronoi/raster cells, AGID cells, interpolation, model surfaces and the synthetic 99999 fixture are prohibited proxies. An approved immutable artifact must drive the real DO API/app, which normalizes the code, handles loading, no-match, multiple, API-failure and invalid-geometry states, fits and renders translucent fill with a clear outline only for eligible geometry, supports clear/re-search, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence."
+      }
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "DO metadata, source policy, synthetic fixtures and shared runtime contracts only; no rights-cleared real DO descriptor is enabled.",
+    "enablement_gate": "A current complete rights-compatible fixed assignment and geometry release plus real DO loader, API, app and deterministic rendering verification are required before enablement.",
+    "geometry_rule": "Do not manufacture a Dominican postal polygon or promote the public probe responses before release, coverage, class, provenance, CRS, reference date, confidence and rights are complete."
+  },
+  "non_goals": [
+    "new-repository-public-destination-provider-contact-contract-nda-payment-or-production-deployment-without-approval",
+    "postal-areas-from-administrative-locality-address-office-route-po-box-parcel-building-point-buffer-hull-cell-interpolation-or-model-proxies",
+    "personal-customer-recipient-query-property-cadastral-or-land-rights-distribution"
+  ]
 }

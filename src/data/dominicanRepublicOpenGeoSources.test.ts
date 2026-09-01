@@ -31,7 +31,7 @@ test('Dominican registry separates INPOSDOM observations, addressing semantics, 
     assert.equal(AMERICAS_OPEN_GEO_SOURCES[id].id, id);
     assert.equal(AMERICAS_OPEN_GEO_SOURCES[id].url.startsWith('http'), true);
   }
-  assert.match(AMERICAS_OPEN_GEO_SOURCES['inposdom-postcode-search'].notes, /address.*sector.*five-digit.*time-bound.*not.*building.*polygon/i);
+  assert.match(AMERICAS_OPEN_GEO_SOURCES['inposdom-postcode-search'].notes, /address.*sector.*five-digit.*static index.*polygon\.php.*2021.*coverage proof.*official\/derived\/virtual.*not an approved national artifact.*building/i);
   assert.match(AMERICAS_OPEN_GEO_SOURCES['upu-dominican-republic-addressing-2005'].notes, /five digits.*locality.*district.*not current/i);
   assert.match(AMERICAS_OPEN_GEO_SOURCES['one-dominican-territorial-division-2021'].notes, /provinces.*municipalities.*sections.*barrios.*not INPOSDOM/i);
   assert.match(AMERICAS_OPEN_GEO_SOURCES['iderd-dominican-geoservices'].notes, /CSW.*WMS.*WFS.*not postal/i);
@@ -44,6 +44,7 @@ test('Dominican catalog treats INPOSDOM observations as authoritative but keeps 
   assert.equal(sources.get('inposdom-postcode-search')?.trustTier, 'authoritative');
   assert.equal(sources.get('inposdom-postcode-search')?.sourceRole, 'postal-reference-data');
   assert.equal(sources.get('inposdom-postcode-search')?.validationReadiness, 'reference-eligible');
+  assert.match(sources.get('inposdom-postcode-search')?.notes.join(' ') ?? '', /static 2021 index.*Polygon.*coverage proof.*official\/derived\/virtual.*bulk redistribution\/public-serving rights/i);
   assert.equal(sources.get('upu-dominican-republic-addressing-2005')?.sourceRole, 'context-only');
   assert.equal(sources.get('one-dominican-territorial-division-2021')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('iderd-dominican-geoservices')?.sourceRole, 'context-only');

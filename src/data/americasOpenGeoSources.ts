@@ -1413,7 +1413,7 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     coverage: 'country',
     usage: 'primary',
     license: 'Interactive official service; pin exact terms, automation, caching and redistribution authority',
-    notes: 'Official search accepts an address, sector or five-digit postcode and returns current operator context. A result is a time-bound observation, not bulk reuse permission, a person, delivery entitlement, exact civic address, building link or verified national polygon release.',
+    notes: 'Official search accepts an address, sector or five-digit postcode; its reviewed client loads a static index and an interactive polygon.php endpoint. The 2021 index and sampled Polygon responses lack a current complete release, coverage proof, validity/alias/object class, immutable version, provenance, official/derived/virtual class, CRS, confidence and compatible bulk redistribution/public-serving rights. They remain time-bound observations, not an approved national artifact, person, delivery entitlement, exact civic address or building link.',
   },
   'upu-dominican-republic-addressing-2005': {
     id: 'upu-dominican-republic-addressing-2005',

@@ -2566,3 +2566,23 @@ No second country was started.
 - Retry: not before `2026-09-07T23:25:39.859Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After DM: 252 profiles, 127 pending, 115 blocked, 0 in progress, 10 evidence-verified M2; 159 manifests / 137 explicit definitions.
 - Next country: Dominican Republic (`DO`). No second country was started.
+
+## DO - Dominican Republic
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-08-31T23:54:10.401Z`; completed `2026-09-01T00:26:00.9862659Z`.
+- Definition: `M2_current_inposdom_assignment_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/do-source-review-2026-09-01.json` (`sha256:e523912c2c08c75a574408eabf8761b6ebbb6b16637940484f40644ebf49f6d6`).
+- Checks: `reports/postal-context-m2/do-checks-2026-09-01.json` (`sha256:1812373f192586c95c0af45509460834d415b0c13f4f0966375595542e8175d7`).
+- Country report: `docs/postal-context-dominican-republic-m2.md`.
+- Exact receipts: twelve INPOSDOM, UPU and datos.gob.do bodies / 2,524,052 bytes, all fixed by byte count and SHA-256. Raw HTML, JavaScript, JSON, GeoJSON, PDFs, postcode rows, coordinates, polygon responses, renders and temporary output remain outside Git.
+- Index quality: the public client loads 1,403 rows: 1,401 valid rows, 528 unique five-digit codes, two invalid values, no missing coordinates and 29 exact duplicate groups. Its Last-Modified date is 2021-04-16 and it publishes no current release/version, validity, alias, supersession, exception or object-class contract.
+- Polygon observations: fixed official-example probes 10100, 10101 and 11903 have six valid Polygon features, six closed rings and 11,465 vertices. They publish only `zipcode`, with no complete-coverage proof, immutable edition, producer lineage, official/derived/virtual class, reference date, CRS, method, confidence or exception model.
+- Rights and current data: INPOSDOM terms protect portal content, compilations and programs without explicit bulk processing, derivation, redistribution or public-serving permission. The complete UPU 2026.1 database requires contract, NDA, data-use declaration and rates. The government portal's four INPOSDOM datasets do not include postcode assignments or polygons. No provider contact, registration, contract/NDA/terms acceptance, payment or bulk crawl was attempted.
+- Authority boundary: 0 records are production-eligible. No province, National District, municipality, district, section, paraje, barrio, sector, locality, address, office, route, P.O. box, parcel, building, Point, buffer, hull, Voronoi/raster cell, AGID cell, interpolation/model surface or synthetic `99999` fixture was promoted.
+- Application: the official client can search, show candidates/no-match, fetch real polygons, fit and render 18% fill with a 2-pixel outline, but it lacks required failure/invalid-geometry distinctions and provenance metadata. Shared AGID normalization, API and Polygon/MultiPolygon draw/fit/fill/outline/clear/re-search contracts pass; without an approved immutable artifact, real DO AGID API/app visualization and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 7/7, DO country/runtime/source contracts 139/139, shared area runtime 29/29, rollout invariants 8/8, DO ledger 7/7, focused TypeScript 1/1 and changed syntax/JSON checks 13/13 pass (205 recorded checks, 0 failures).
+- PDF review: the DO sheet and two relevant General Addressing Issues pages rendered to non-empty 992x1404, 993x1404 and 993x1404 RGB PNGs with fixed SHA-256. The local image-view helper returned Windows error 206 through original and short paths, so interactive display is not claimed; no image was committed.
+- Retry: not before `2026-09-07T23:54:10.401Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/contract/NDA/data-use acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After DO: 252 profiles, 126 pending, 116 blocked, 0 in progress, 10 evidence-verified M2; 159 manifests / 138 explicit definitions.
+- Next country: Ecuador (`EC`). No second country was started.

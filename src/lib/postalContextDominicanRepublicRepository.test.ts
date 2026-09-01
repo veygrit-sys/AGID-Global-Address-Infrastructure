@@ -20,7 +20,7 @@ test('Dominican seed separates postal observations, area geometry, administratio
   assert.equal(value.release_scope.contains_production_geometry, false);
   assert.equal(value.postal_system.code_format, 'NNNNN');
   assert.match(value.postal_system.assignment_rule, /INPOSDOM.*address.*sector.*five-digit.*UPU.*dated.*not proof/i);
-  assert.match(value.postal_system.geometry_rule, /postal-area-first.*not automatically a polygon.*No reusable national official.*derived-review.*cannot fill/i);
+  assert.match(value.postal_system.geometry_rule, /postal-area-first.*not automatically a polygon.*polygon\.php.*valid closed finite rings.*complete denominator.*official\/derived\/virtual.*cannot fill/i);
   assert.match(value.postal_system.address_format_rule, /house number.*building name.*sector or barrio.*P\.O\. box.*never production/i);
   assert.match(value.postal_system.postal_object_rule, /postal_area.*sector_or_barrio.*post_office.*must never be collapsed/i);
   assert.match(value.postal_system.building_rule, /stable civic-address.*explicit reviewed relation.*not an exact/i);
@@ -28,10 +28,14 @@ test('Dominican seed separates postal observations, area geometry, administratio
   assert.match(value.postal_system.cadastre_rule, /Registro Inmobiliario.*do not grant bulk.*cannot be inferred/i);
   assert.match(value.postal_system.derived_and_realtime_rule, /INPOSDOM observations.*review surfaces.*train or run review models.*never overwrites/i);
   assert.match(value.postal_system.agid_rule, /independent spatial index.*Versioned crosswalks.*official Dominican postal geometry/i);
-  assert.match(value.postal_system.licence_rule, /Public INPOSDOM.*does not grant bulk.*Registro Inmobiliario.*ODbL/i);
+  assert.match(value.postal_system.licence_rule, /INPOSDOM terms.*intellectual property.*bulk extraction.*UPU POST\*CODE.*contract.*non-disclosure.*Registro Inmobiliario.*ODbL/i);
   assert.match(value.postal_system.temporal_rule, /March 2005 UPU.*ONE territorial editions.*RI parcel states.*supersession/i);
   assert.match(value.postal_system.hugging_face_rule, /Dataset.*Parquet.*GeoParquet.*pin a Hub commit.*digests/i);
   for (const blocker of [
+    'public-search-index-last-modified-2021-without-current-complete-release-version-validity-alias-correction-exception-or-object-class-denominator',
+    'public-polygon-endpoint-without-complete-coverage-release-provenance-official-derived-virtual-class-crs-method-confidence-or-compatible-licence',
+    'upu-2026-1-complete-database-requires-contract-nda-data-use-declaration-and-rates',
+    'inposdom-terms-protect-content-without-bulk-processing-derivation-redistribution-or-public-serving-permission',
     'valid-five-digit-text-presented-as-current-inposdom-assignment',
     'postcode-sector-or-locality-presented-as-an-automatic-polygon',
     'interactive-search-response-republished-as-a-bulk-address-dataset',
@@ -41,6 +45,9 @@ test('Dominican seed separates postal observations, area geometry, administratio
     'owner-recipient-occupant-condominium-credential-or-query-data-published-without-authority',
     'derived-buffer-voronoi-interpolation-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage',
   ]) assert.ok(value.promotion.hard_blockers.includes(blocker), blocker);
+  assert.equal(value.promotion.target_stage, 'M2_current_inposdom_assignment_and_postal_area_visualization');
+  assert.equal(value.promotion.data_completion_verified, false);
+  assert.match(value.promotion.stages.at(-1)?.definition ?? '', /1,403 rows.*528 unique.*Polygon.*10100.*2026\.1.*approved immutable artifact.*real DO API\/app/i);
 });
 
 test('Dominican source profile gates official observations and caps postal geometry at derived review', () => {
@@ -49,7 +56,8 @@ test('Dominican source profile gates official observations and caps postal geome
   assert.equal(profile.artifact_scope, 'metadata-only-contract-seed');
   assert.ok(profile.sources.every((source: any) => source.bundled_here === false));
   assert.match(sources.get('inposdom-postcode-search')?.assignment_authority ?? '', /official_postal_operator.*observation/i);
-  assert.match(sources.get('inposdom-postcode-search')?.geometry_authority ?? '', /none.*no_verified.*polygon/i);
+  assert.match(sources.get('inposdom-postcode-search')?.geometry_authority ?? '', /interactive_polygon_response.*official_derived_virtual_class_unpublished/i);
+  assert.match(sources.get('inposdom-postcode-search')?.redistribution_class ?? '', /content_ip_protected.*no_bulk_derivation_redistribution_or_public_serving/i);
   assert.match(sources.get('one-dominican-territorial-division-2021')?.geometry_authority ?? '', /territorial.*not_postal/i);
   assert.match(sources.get('iderd-dominican-geoservices')?.geometry_authority ?? '', /source_specific.*item_review/i);
   assert.match(sources.get('registro-inmobiliario-dominican-cadastre')?.redistribution_class ?? '', /restrict.*commercial.*bulk/i);
