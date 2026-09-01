@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "JM",
+  "observedAt": "2026-09-01T09:20:23.139Z",
+  "completedAt": "2026-09-01T09:56:30.000Z",
+  "baseCommit": "d836c9c2d826f3dc074c9728332734d3d2f23fd9",
+  "scope": "JM-specific current Jamaica Post, UPU no-postcode, Kingston-sector, exact-body, rights, address-metadata and no-proxy evidence plus real-app fail-closed verification. No raw body, address, sector, office/locality/parish/route proxy, Point, synthetic planning code, production pack, real JM postal area or successful browser area was promoted.",
+  "checks": [
+    {"id":"jm-source-inspector","command":"<bundled-python> scripts/inspect-postal-context-jm-sources.py --source-dir <temporary-source-directory>","result":"pass","tests":1,"assertion":"seven exact official bodies reproduce current Jamaica Post, UPU no-postcode, Kingston sector and rights evidence without rows or geometry"},
+    {"id":"jm-source-inspector-unit","command":"<bundled-python> scripts/inspect-postal-context-jm-sources.test.py -v","result":"pass","tests":5,"assertion":"complete set and digest, filename, HTML marker and PDF signature/page/marker drift fail closed"},
+    {"id":"jm-address-metadata","command":"node --test scripts/postal-context-jm-address-metadata.test.mjs","result":"pass","tests":2,"assertion":"JSON, YAML and Americas hierarchy represent no postcode and remove unsupported postcode template metadata"},
+    {"id":"address-format-common-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/data/address_formats/addressFormatRulesJson.test.ts","result":"pass","tests":68,"assertion":"regional address-format contracts pass after JM correction"},
+    {"id":"shared-area-runtime-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts","result":"pass","tests":30,"assertion":"normalization, no-match, geometry validation, fit, translucent fill, outline, clear, non-area and routing stay fail closed"},
+    {"id":"rollout-invariants","command":"node --test scripts/postal-context-m2-rollout.test.mjs","result":"pass","tests":8,"assertion":"stable order, one active country, blocker policy and evidence gates"},
+    {"id":"jm-ledger-and-evidence","command":"node --test scripts/postal-context-m2-jm-ledger.test.mjs","result":"pass","tests":6,"assertion":"country definition, no-postcode authority, exact receipts, rights/no-proxy boundary, draft exclusion, report digests and next KN"},
+    {"id":"focused-typescript","command":"node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts","result":"pass","tests":1,"assertion":"shared postal-search test graph passes noEmit type checking"},
+    {"id":"changed-syntax-and-ledger-status","command":"py_compile, node --check, JSON.parse, JM YAML marker validation and postal-context:m2:status","result":"pass","tests":14,"assertion":"changed code/data parse and status advances to KN"}
+  ],
+  "totals": {"assertionGroups":9,"testsPassed":135,"testsFailed":0},
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 7,
+    "exactBodiesByteAndSha256Bound": 7,
+    "exactOfficialBodiesBytes": 1076160,
+    "sourceReviewDigest": "sha256:20d428b863cf55357b90a3199a8a314e2efbacba6739a1a1790fc156a9ff0cf2",
+    "currentPostalCodeFormat": "none",
+    "upuListsJamaicaAsNotRequiringPostalCodes": true,
+    "upuJamaicaSheetStatesNoPostcodeSystem": true,
+    "kingstonSectorCodesAreNotPostcodes": true,
+    "postcodeDataCreationTarget": false,
+    "currentCompletePostalCodeAssignmentsValidated": 0,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialPostalPolygonOrMultiPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "actualAppStarted": true,
+    "actualAppHttpStatus": 200,
+    "sharedAreaCapabilityVerified": true,
+    "realJmRuntimeVerified": false,
+    "realJmApiStatus": 404,
+    "realJmApiVerified": false,
+    "realJmAppAreaVisualizationVerified": false,
+    "inAppBrowser": "failed before navigation with Windows sandbox ACL helper error",
+    "deterministicPlaywrightFallback": "ran against the actual app with real postal API unmocked; no successful place-result/postal-area overlay was produced",
+    "browserE2eVerified": false
+  },
+  "knownLimitations": [
+    "Current no-postcode status is represented as none and cannot become an island-wide placeholder code or polygon.",
+    "Kingston sectors are not national postcode assignments or postal geometry.",
+    "Jamaica Post All Rights Reserved and UPU copyright/database restrictions were recorded; no compatible open postal dataset licence was found.",
+    "Draft JM pack localities, boundaries, planning cells and test vectors are synthetic and not Jamaica Post assignments.",
+    "The real JM API returned unsupported and no successful JM browser area visual is claimed.",
+    "No island, parish, sector, locality, office, route, postal box, Point, buffer, hull, raster/Voronoi cell, AGID cell, commerce ZIP placeholder or synthetic JM code was promoted."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "The UPU Jamaica sheet and no-postcode page rendered to non-empty PNGs, but the local image-view helper returned Windows error 206; exact PDF bytes, page counts, markers and render hashes were validated.",
+    "In-app Browser failed before navigation because its Windows sandbox could not apply deny-read ACLs; deterministic Playwright fallback was used and reported honestly as not a successful JM postal-area E2E."
+  ],
+  "countryM2Achieved": false
+}

@@ -2771,3 +2771,17 @@ No second country was started.
 - Retry: not before `2026-12-01T08:40:22.648Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After HT: 252 profiles, 115 pending, 123 blocked, 0 in progress, 14 evidence-verified M2; 167 manifests / 149 explicit definitions.
 - Next country: Jamaica (`JM`). No second country was started.
+
+## JM - Jamaica
+
+- Status: `blocked` / M2 unmet; postcode-data creation is excluded because current primary evidence establishes no Jamaica postcode system.
+- Attempt: 1 at `2026-09-01T09:20:23.139Z`; completed `2026-09-01T09:56:30.000Z`.
+- Definition: `M2_current_jamaica_post_postcode_assignment_and_area_visualization`.
+- Evidence: `reports/postal-context-m2/jm-source-review-2026-09-01.json` (`sha256:20d428b863cf55357b90a3199a8a314e2efbacba6739a1a1790fc156a9ff0cf2`); checks `reports/postal-context-m2/jm-checks-2026-09-01.json` (`sha256:f329381165e8babb5b2e365423ea76f74ebd9485e93b82fa6e7fee8729e88397`).
+- Current status: UPU September 2025 lists Jamaica among countries not requiring postal codes; the May 2021 Jamaica sheet states that Jamaica has no postcode system. Current Jamaica Post addresses use Kingston 2/4/14 sector suffixes, which remain typed address context and are not promoted to national postcodes.
+- Rights and geometry: Jamaica Post states All Rights Reserved and UPU restricts reproduction/transmission/database use. Zero official/derived/virtual postal areas and zero production records were promoted; no island, parish, sector, locality, office, route, Point, buffer, cell or synthetic code became postal geometry.
+- Running app: the isolated app returned HTTP 200 at `http://127.0.0.1:3014/`; real unmocked JM Postal API lookup returned 404 unsupported. In-app Browser failed before navigation on the Windows ACL sandbox. Playwright fallback used controlled place search only and real postal API, showed two map canvases but no successful place result, postal area, notice or provenance. Browser E2E and translucent-area visualization are not claimed.
+- Verification: source inspection 1/1, inspector units 5/5, JM metadata 2/2, address formats 68/68, shared runtime 30/30, rollout 8/8, ledger 6/6, TypeScript and syntax/status checks pass (135 recorded, 0 failed).
+- Retry: not before `2026-09-08T09:20:23.139Z` and only after pending countries have been swept, unless Jamaica Post or UPU announces a rights-cleared fixed postcode assignment and postal-area artifact.
+- After JM: 252 profiles, 114 pending, 124 blocked, 0 in progress, 14 evidence-verified M2; 168 manifests / 150 explicit definitions.
+- Next country: Saint Kitts and Nevis (`KN`). No second country was started.
