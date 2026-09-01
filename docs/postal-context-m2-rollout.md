@@ -2707,3 +2707,20 @@ No second country was started.
 - Reports: `reports/postal-context-m2/gs-current-whole-territory-2026-09-01.json`, `reports/postal-context-m2/gs-validation-2026-09-01.json`, `reports/postal-context-m2/gs-browser-visual-2026-09-01.json`, and `docs/postal-context-south-georgia-south-sandwich-islands-m2.md`.
 - After GS: 252 profiles, 119 pending, 119 blocked, 0 in progress, 14 evidence-verified M2; 165 manifests / 145 explicit definitions.
 - Next country: Guatemala (`GT`). No second country was started.
+
+## GT - Guatemala
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-09-01T06:21:18.707Z`; completed `2026-09-01T06:48:25.7392111Z`.
+- Definition: `M2_current_correos_guatemala_postcode_area_visualization`.
+- Evidence: `reports/postal-context-m2/gt-source-review-2026-09-01.json` (`sha256:564e793e59b0e2b62f9d098d429f0d6b9d0cb3a20d93e66fe623db4b01e6aaa8`).
+- Checks: `reports/postal-context-m2/gt-checks-2026-09-01.json` (`sha256:7a4e077d067d779be7be44b0323528bcdf9f4e807ba94bd01dc1fa5631dab0a0`).
+- Published evidence commit: `8dc96ec82b404aa73b54f7c381db7210a0bd8dc5`; the remote branch SHA and both GitHub Contents API bodies were verified, with byte counts and SHA-256 matching the local reports.
+- Country report: `docs/postal-context-guatemala-m2.md`.
+- Current assignment denominator: the 2025-07-21 Correos page and all 22 linked department PDFs are fixed by byte count/SHA-256. Their 35 pages contain 560 occurrences / 544 unique five-digit codes across prefixes 01-22, mixing department, municipality, Guatemala City zone and named-locality objects. The November 2025 UPU sheet confirms five digits and department/route/delivery-office semantics.
+- Rights and geometry: the Correos tables publish no Polygon/MultiPolygon and no compatible data licence. SEGEPLAN free access is not a dataset-specific postal reuse grant; the INE CC Attribution populated-place resource is centroid points, not Correos postal geometry. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: the isolated app started at `http://127.0.0.1:3000/`. In-app Browser setup failed before navigation because Windows deny-read ACL setup failed, so Playwright Chromium was used and visually inspected. Searching `GT 01001` and selecting Guatemala City showed the place/background map and an ordinary red AGID cell, but no translucent postal area, postal outline, source/date/confidence metadata or unavailable notice. Direct `GET /api/v1/postal/GT/01001?geometry=geojson` returned HTTP 503 `Postal Context pack is unavailable`. The AGID cell was not relabelled as postal geometry.
+- Verification: fixed-source inspection 1/1, source-inspector units 4/4, GT metadata/runtime 139/139, shared postal-area UI 6/6, shared runtime/API/service 39/39, rollout 8/8, root TypeScript 1/1, running API and browser checks 2/2 pass (200 recorded checks, 0 failures). Existing GT synthetic fixtures remain M1 test material only.
+- Retry: not before `2026-09-08T06:21:18.707Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After GT: 252 profiles, 118 pending, 120 blocked, 0 in progress, 14 evidence-verified M2; 165 manifests / 146 explicit definitions.
+- Next country: Guyana (`GY`). No second country was started.
