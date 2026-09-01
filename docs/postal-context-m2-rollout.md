@@ -2724,3 +2724,18 @@ No second country was started.
 - Retry: not before `2026-09-08T06:21:18.707Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After GT: 252 profiles, 118 pending, 120 blocked, 0 in progress, 14 evidence-verified M2; 165 manifests / 146 explicit definitions.
 - Next country: Guyana (`GY`). No second country was started.
+
+## GY - Guyana
+
+- Status: `blocked` / M2 unmet; the inaccurate no-postcode placeholder was replaced by current seven-digit metadata and a country-specific M2 definition.
+- Attempt: 1 at `2026-09-01T07:07:19.468Z`; completed `2026-09-01T07:43:37.8103352Z`.
+- Evidence: `reports/postal-context-m2/gy-source-review-2026-09-01.json` (`sha256:588a57d45a8e8ab97dc45b810c844557cd79ea64fad0f001ffa6e70f9554ed6c`); checks `reports/postal-context-m2/gy-checks-2026-09-01.json` (`sha256:416b26de3b37ca762b2c55f37a611f7aff0e582bda8c2f3ac540468b78c5ead3`).
+- Published evidence commit: `c2d7c2d873ab8f25fbb304d08ed20a3549c53137`.
+- Current denominator: 14 exact bodies / 3,938,769 bytes; current GPOC finder has 2,272 rows, 214 valid seven-digit codes across ten regions, one six-digit anomaly `120101`, 23 localities, 239 sub-localities, 1,910 streets, 64 post offices and three exact duplicates. No geometry field exists.
+- Semantics/exceptions: GPOC and UPU digit meanings stay source-specific. UPU edition `08/2025` confirms seven digits but includes six-digit P.O. Box example `413018`; neither exception is padded or made into an area.
+- Rights/geometry: no applicable GPOC open-data/public-serving licence was located. UPU complete data requires contract, NDA, data-use declaration and annual fees. Guyana GeoPortal public APIs returned zero resources; the Bureau open licence does not license GPOC/UPU or supply a postcode crosswalk. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: the isolated app ran at `http://127.0.0.1:3011/`. In-app Browser setup failed before navigation due Windows deny-read ACL setup; Playwright Chromium entered `GY 4130106`, recorded twelve unrelated place results and auto-selected Kazakhstan. The fixed screenshot was displayed and visually inspected. No GY Postal Context request, unavailable notice, translucent postal fill, outline or provenance appeared. Direct GY API returned 404 `Postal Context country is not supported`; the background map and AGID cell were not promoted.
+- Verification: fixed-source inspection 1/1, inspector units 3/3, address-format metadata 68/68, shared postal runtime/API/service/UI 45/45, rollout 8/8, TypeScript 1/1, real app API and visual checks 2/2 pass (128 recorded, 0 failed).
+- Retry: not before `2026-12-01T07:07:19.468Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After GY: 252 profiles, 117 pending, 121 blocked, 0 in progress, 14 evidence-verified M2; 166 manifests / 147 explicit definitions.
+- Next country: Honduras (`HN`). No second country was started.
