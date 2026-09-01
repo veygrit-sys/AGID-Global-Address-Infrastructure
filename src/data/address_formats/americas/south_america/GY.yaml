@@ -3,12 +3,17 @@ name: Guyana
 native:
   name: English
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{houseNumber}} {{street}}
+    {{houseNumber}} {{street}} {{premises}}
     {{subdistrict}}
     {{city}}
+    {{postcode}}
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: Full name
+      placeholder: ""
     - key: organization
       label: Company
       placeholder: ""
@@ -18,22 +23,34 @@ native:
     - key: street
       label: Street
       placeholder: Brickdam
+    - key: premises
+      label: Apartment / Premises
+      placeholder: ""
     - key: subdistrict
       label: Area
       placeholder: Stabroek
     - key: city
       label: Town/City
       placeholder: Georgetown
+    - key: postcode
+      label: Postcode (7 digits)
+      placeholder: "4130106"
+      required: true
 english:
   name: International English
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{houseNumber}} {{street}}
+    {{houseNumber}} {{street}} {{premises}}
     {{subdistrict}}
     {{city}}
+    {{postcode}}
     GUYANA
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: Full name
+      placeholder: ""
     - key: organization
       label: Building / Company
       placeholder: ""
@@ -43,12 +60,19 @@ english:
     - key: street
       label: Street
       placeholder: Brickdam
+    - key: premises
+      label: Apartment / Premises
+      placeholder: ""
     - key: subdistrict
       label: Neighborhood / Area
       placeholder: Stabroek
     - key: city
       label: City / Town
       placeholder: Georgetown
+    - key: postcode
+      label: Postcode (7 digits)
+      placeholder: "4130106"
+      required: true
 openSourceIds:
   - osm-nominatim
   - osm-overpass
@@ -70,10 +94,10 @@ openSourceIds:
   - ibge-geosciences
   - inpe-terrabrasilis
 postalCode:
-  format: country specific or not used
-  regex: null
-  api: null
-  source: GeoNames / UPU
+  format: NNNNNNN
+  regex: ^\d{7}$
+  api: https://guypost.gy/find-your-postcode/
+  source: Guyana Post Office Corporation / UPU Guyana addressing sheet 08/2025
 addressRules:
   languages:
     - code: en
@@ -83,25 +107,34 @@ addressRules:
       name: English
   nativeOrder:
     - name
+    - organization
     - street
+    - premises
+    - subdistrict
     - city
-    - region
     - postcode
     - country
   englishOrder:
     - name
+    - organization
     - street
+    - premises
+    - subdistrict
     - city
-    - region
     - postcode
     - country
   regionalHierarchy:
     - region
     - town
   postalCode:
-    label: country specific or not used
-    required: false
-    usage: optional
+    label: NNNNNNN
+    required: true
+    usage: >-
+      Current GPOC assignment is seven digits. Preserve the official row as a
+      source-specific assignment; the reviewed table contains one six-digit
+      anomaly (120101), and the UPU sheet includes a six-digit P.O. Box example
+      (413018), neither of which may be coerced into a seven-digit postal-area
+      polygon.
   openSourceIds:
     - osm-nominatim
     - osm-overpass
