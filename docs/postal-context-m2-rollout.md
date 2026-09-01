@@ -2643,3 +2643,17 @@ No second country was started.
 - Retry: not before `2026-09-08T02:05:43.142Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After GD: 252 profiles, 123 pending, 118 blocked, 0 in progress, 11 evidence-verified M2; 161 manifests / 141 explicit definitions.
 - Next country: French Guiana (`GF`). No second country was started.
+
+## GF - French Guiana
+
+- Result: `m2_verified` / `M2_current_laposte_all_postcodes_derived_commune_visualization` at `2026-09-01T02:54:50.355Z`.
+- Official assignment denominator: the complete 39,192-row La Poste snapshot has exactly 25 distinct `973` postcode rows mapped to 22 distinct INSEE communes. The snapshot is the 2026-08-08 data update under Etalab Open Licence 2.0; all metadata, licence, documentation and source bodies remain outside Git and are fixed by 32 byte-count/SHA-256 receipts totalling 6,473,543 bytes.
+- Geometry and authority: the fixed 22-feature department response and all 25 exact `geo.api.gouv.fr` postcode queries agree by commune identity and coordinates. The published 17 Polygon and eight MultiPolygon responses are unmodified commune contours with `derived` provenance and confidence `0.90`, never official postal, legal, cadastral or delivery boundaries.
+- Shared-surface exception: `97311/97352` share Roura, `97318/97360` share Mana and `97353/97390` share Régina. Each code remains a separate postal node while the full commune surface is intentionally identical; no sub-commune perimeter is inferred.
+- Geometry validation: 73 closed rings and 118,559 published positions pass finite-range, Turf and JSTS validity gates. The largest API response has 11,375 positions, below the 20,000-position gate. An independent second build reproduced descriptor, graph and geometry SHA-256 exactly.
+- App path: real API lookup normalizes `９７３ ００` to `97300`, returns its real derived MultiPolygon and provenance, calculates exact fit bounds, renders opacity-`0.22` fill plus opacity-`0.95`/width-`3` outline, clears and re-searches `97370`. `97399` is `no_match`; `973-00`, cross-country `75001` and invalid geometry yield no fabricated area. Shared UI tests retain loading, multiple, API-failure and invalid-geometry states and expose selected code, type, class, source date and confidence.
+- Authority/privacy: official postal assignment, official administrative geometry and derived display publication remain separate. No address, building, parcel, recipient, customer, deliverability or land-right row is bundled. GF identity and department code `973` remain unchanged.
+- Verification: GF suite `10/10`, shared graph/runtime/schema/topology/UI/service/store plus France regressions `75/75`, repository-wide TypeScript, JSON/diff/raw-source audits and deterministic rebuild all passed (`86` checks, `0` failed).
+- Evidence commit: `410ce010d5e996adc2535c6f6e0e5a352122704c`; descriptor `sha256:d225a9de69e70e80ce487be5b90c5ce69aa2ddf9c045944d946e95c135cb404c`, graph `sha256:1aff3293404e6ab813c14b83593a4b4f461ee6a062060dd6aef44c2716098db8`, geometry `sha256:4947e12fc0a4f90b4d157c34b21e2da4ae8b22d999c64e4df963ef4943c9915b`.
+- Reports: `reports/postal-context-m2/gf-current-postcodes-2026-09-01.json`, `reports/postal-context-m2/gf-validation-2026-09-01.json`, and `docs/postal-context-french-guiana-m2.md`.
+- Next country: Greenland (`GL`). No second country was started.
