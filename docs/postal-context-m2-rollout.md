@@ -2876,3 +2876,19 @@ No second country was started.
 - Reports: `reports/postal-context-m2/mx-current-postal-polygons-2026-09-01.json`, `reports/postal-context-m2/mx-validation-2026-09-01.json`, and `docs/postal-context-mexico-m2.md`.
 - After MX: 252 profiles, 107 pending, 128 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 157 explicit definitions.
 - Next country: Nicaragua (`NI`). No second country was started.
+
+## NI - Nicaragua
+
+- Status: `blocked` / M2 unmet; the current numeric five-digit system is confirmed and NI remains in the postcode-data creation scope.
+- Attempt: 1 at `2026-09-01T17:00:01.381Z`; completed `2026-09-01T17:21:18.0734935Z`.
+- Definition: `M2_current_correos_nicaragua_typed_postcode_assignments_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/ni-source-review-2026-09-01.json` (`sha256:6ef22b8fa83954e0cf2a9912d5c4375b328e5a82900aeb955f9c604d63519fcb`); checks `reports/postal-context-m2/ni-checks-2026-09-01.json` (`sha256:1799ef6bf0151b64fb191ea77fbaae31d409877728493c362d0c4c2e211a45d3`).
+- Published evidence commit: `0525ddc90a031c66a9100a48eeaba9993f40eb84`.
+- Current semantics: UPU General Addressing Issues, Universal DataBase August 2026, lists Nicaragua among countries requiring postcodes and fixes numeric format `99999`. The country sheet edition `05/2014` documents five-digit placement and examples `12005`/`11147`; it is not a current assignment denominator.
+- Operator and rights: both current Correos de Nicaragua lookup URLs returned exact Cloudflare managed-challenge bodies in HTTP and headless-browser retrieval. Search-index snippets were not treated as current source data. UPU copyright/database restrictions were fixed; no compatible Correos public-serving licence was established.
+- Geometry: the two reviewed INETER service pages expose administrative/cartographic WMS/WFS and zero postal/postcode/código-postal matches. No Código Maestro, barrio, comarca, municipality, point, route, P.O. box, organization, address, building, administrative layer or AGID cell was promoted. Zero official/derived/virtual postal areas and zero production records were added.
+- Running app and visual check: the actual isolated app returned HTTP 200 at `http://127.0.0.1:3018/`; direct NI Postal Context API returned 503 unavailable. In-app Browser initialization failed on Windows deny-read ACLs. Deterministic unmocked Playwright queried `12012 Nicaragua`, selected a Nicaragua result and fixed a screenshot outside Git. The screenshot was manually inspected through the app: background map, AGID grid and NI address card were visible, but no translucent postal fill, clear postal outline or postal provenance appeared. This is negative visual evidence, not a successful browser E2E.
+- Verification: fixed-source inspection 1/1, inspector units 5/5, NI policy/repository/runtime/API 12/12, shared runtime/store/UI 31/31, scoped TypeScript 1/1 and actual app/API/visual negative checks 2/2 pass (52 recorded, 0 failed).
+- Retry: not before `2026-12-01T17:00:01.381Z` and only after pending countries have been swept. Provider/authority contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After NI: 252 profiles, 106 pending, 129 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 158 explicit definitions.
+- Next country: Panama (`PA`). No second country was started.
