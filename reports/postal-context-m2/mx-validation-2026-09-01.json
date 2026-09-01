@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "postal-context-m2-validation-report/v1",
+  "countryCode": "MX",
+  "validatedAt": "2026-09-02T00:00:00.000+09:00",
+  "status": "passed",
+  "artifactDescriptorDigest": "sha256:2f5dc6bd36f5700ff8b97accd936c4f7b9defbdd0247288f174dc417a4d1ca37",
+  "artifactValidation": {
+    "features": 35898,
+    "distinctPostalCodes": 35898,
+    "invalidFeatures": 0,
+    "unresolvedPostalCodes": 0,
+    "inventedSurfaces": 0,
+    "fallbackFeaturesFromOfficialOriginalSurfaces": 228,
+    "invalidOriginalFallbackFeatures": 35,
+    "selectedGeosFallbackFeatures": 10,
+    "strictParserGeosFallbackFeatures": 8,
+    "strictRuntimeRepairedFeatures": 4,
+    "strictRuntimeMaximumRelativeAreaDelta": 0.00025700261674698084,
+    "maximumFinalJstsRepairRelativeAreaDelta": 0.000004073789482394257
+  },
+  "deterministicRebuild": {
+    "command": "node scripts/prepare-postal-context-mx-m2.mjs",
+    "exitCode": 0,
+    "descriptorDigestMatched": true,
+    "expectedDescriptorDigest": "sha256:2f5dc6bd36f5700ff8b97accd936c4f7b9defbdd0247288f174dc417a4d1ca37",
+    "actualDescriptorDigest": "sha256:2f5dc6bd36f5700ff8b97accd936c4f7b9defbdd0247288f174dc417a4d1ca37"
+  },
+  "tests": [
+    {
+      "name": "MX repository and API M2 targeted suite",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextMexicoRepository.test.ts src/server/routes/postalContextMexicoM2Routes.test.ts",
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "name": "shared Postal Context runtime suite",
+      "command": "node node_modules/tsx/dist/cli.mjs --test (same file set as verify:postal-context-runtime)",
+      "passed": 162,
+      "failed": 0
+    },
+    {
+      "name": "shared postal-area UI suite",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalSearchAreaGeometryValidation.test.ts",
+      "passed": 9,
+      "failed": 0
+    }
+  ],
+  "testTotals": {
+    "passed": 177,
+    "failed": 0
+  },
+  "typecheck": {
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "passed": true
+  },
+  "browserVerification": {
+    "engine": "Playwright Chromium",
+    "inAppBrowser": false,
+    "inAppBrowserFailure": "Windows ACL bootstrap failed twice; this result is not represented as an in-app-browser check.",
+    "baseUrl": "http://0.0.0.0:3002",
+    "checks": [
+      {
+        "country": "MX",
+        "input": "06000",
+        "request": "GET /api/v1/postal/MX/06000?geometry=geojson",
+        "status": 200,
+        "geometryType": "Polygon",
+        "provenance": "derived",
+        "source": "mx-sepomex-derived-display-2025",
+        "geometryAsOf": "2025-01-01",
+        "confidence": 0.92,
+        "mapFit": true,
+        "translucentFill": true,
+        "clearOutline": true,
+        "backgroundBasemapVisible": true
+      },
+      {
+        "action": "clear",
+        "areaRemoved": true
+      },
+      {
+        "country": "MX",
+        "input": "01000",
+        "request": "GET /api/v1/postal/MX/01000?geometry=geojson",
+        "status": 200,
+        "geometryType": "Polygon",
+        "provenance": "derived",
+        "mapRefit": true,
+        "researchSucceeded": true
+      }
+    ],
+    "styleContract": {
+      "fillOpacity": 0.22,
+      "outlineOpacity": 0.95,
+      "outlineWidth": 3
+    }
+  },
+  "additionalChecks": {
+    "strictTopologyParser": "passed for all 35,898 features",
+    "jsonParse": "passed",
+    "gitDiffCheck": "passed",
+    "rawSourceBodiesStaged": 0
+  }
+}
