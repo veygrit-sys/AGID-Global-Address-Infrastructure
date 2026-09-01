@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "HT",
+  "observedAt": "2026-09-01T08:40:22.648Z",
+  "result": "pass-for-blocked-review",
+  "checks": [
+    {"name":"exact-fixed-source-inspection","command":"<bundled-python> scripts/inspect-postal-context-ht-sources.py --source-dir <temporary-source-directory>","passed":1,"failed":0,"detail":"22 exact official bodies / 35,633,074 bytes; current Aug. 2026 required HT9999 syntax; 09/2017 integral prefix and hierarchy preserved; operator route 404; HaitiData open-data platform unavailable; zero postal polygons and production records"},
+    {"name":"source-inspector-unit-tests","command":"<bundled-python> scripts/inspect-postal-context-ht-sources.test.py","passed":3,"failed":0},
+    {"name":"haiti-metadata-runtime-api","command":"node node_modules/tsx/dist/cli.mjs --test src/data/haitiOpenGeoSources.test.ts src/lib/postalContextHaitiRepository.test.ts src/lib/postalContextHaitiRuntime.test.ts src/server/routes/postalContextHaitiRoutes.test.ts src/data/address_formats/addressFormatRulesJson.test.ts","passed":80,"failed":0},
+    {"name":"shared-postal-area-runtime-api-service-ui","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/services/PostalContextService.test.ts src/server/routes/postalContextRoutes.test.ts","passed":45,"failed":0},
+    {"name":"rollout-invariants","command":"node --test scripts/postal-context-m2-rollout.test.mjs","passed":8,"failed":0},
+    {"name":"root-typescript","command":"node node_modules/typescript/bin/tsc --noEmit --pretty false","passed":1,"failed":0},
+    {"name":"json-python-and-diff-audit","command":"JSON parse, python compile, git diff --check","passed":1,"failed":0},
+    {"name":"running-app-api","command":"GET http://127.0.0.1:3013/api/v1/postal/HT/HT6110?geometry=geojson","passed":1,"failed":0,"expectedStatus":503,"expectedError":"Postal Context pack is unavailable"},
+    {"name":"running-app-browser-visual","command":"Playwright Chromium against http://127.0.0.1:3013/","passed":1,"failed":0,"detail":"Entered HT 6110 and observed 12 results including two Haiti candidates. A Haiti candidate click retained the first Southern River, Australia result; screenshot displayed and visually inspected. No HT Postal Context request, unavailable notice, postal fill, outline or provenance appeared. In-app Browser setup failed before navigation due Windows deny-read ACL setup."}
+  ],
+  "totals": {"passed":141,"failed":0},
+  "jsonSyntaxVerified": true,
+  "pythonSyntaxVerified": true,
+  "rawSourceBodiesInGit": 0,
+  "countryM2Achieved": false
+}
