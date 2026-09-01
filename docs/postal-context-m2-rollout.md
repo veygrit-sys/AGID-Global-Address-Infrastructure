@@ -2739,3 +2739,19 @@ No second country was started.
 - Retry: not before `2026-12-01T07:07:19.468Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After GY: 252 profiles, 117 pending, 121 blocked, 0 in progress, 14 evidence-verified M2; 166 manifests / 147 explicit definitions.
 - Next country: Honduras (`HN`). No second country was started.
+
+## HN - Honduras
+
+- Status: `blocked` / M2 unmet; the current five-digit system is recorded while the six-character `05/2004` UPU sheet remains explicit legacy evidence.
+- Attempt: 1 at `2026-09-01T07:52:20.335Z`; completed `2026-09-01T08:23:17.5686267Z`.
+- Definition: `M2_current_honducor_honduras_five_digit_postcode_area_visualization`.
+- Evidence: `reports/postal-context-m2/hn-source-review-2026-09-01.json` (`sha256:b9683364a79d2d21f36285d657a6d91186ed0ebce9b7e4368c71a98728bee883`); checks `reports/postal-context-m2/hn-checks-2026-09-01.json` (`sha256:8bee871e90555f06c53a959cb1e1a01d605f7c303b9f38bb7b881ae32acc625c`).
+- Published evidence commit: `d223f3cc4750bca910569c094cf5093dcdee8dc7`.
+- Current/legacy semantics: August 2026 UPU tables list Honduras among countries requiring postcodes, length five, format `99999`, numeric. The country sheet is edition `05/2004`, says six alphanumeric characters and shows `CM1102`; it was not rewritten as current data.
+- Operator and denominator: current HONDUCOR pages, EMS guidance, FAQ, agency map and February 2024 manual version 1.1 establish operator/service context but no complete current postcode assignment or area release. The official site search returned eleven broad postcode results and no applicable public data licence.
+- Geometry and rights: the fixed SINIT catalogue contains 1,034 layers and zero postal/correo/HONDUCOR matches. Administrative, settlement, lot, block, parcel and agency proxies were not promoted. UPU complete data requires contract, NDA, declaration and annual fees and is not postal geometry. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: the isolated app ran at `http://127.0.0.1:3012/`. In-app Browser setup failed before navigation due Windows deny-read ACL setup; Playwright Chromium entered `HN 11101`, observed eleven results including two Honduras candidates, selected Honduras and moved the map to Tegucigalpa. The fixed screenshot was displayed and visually inspected. No HN Postal Context request, unavailable notice, translucent postal fill, outline or provenance appeared. Direct HN API returned 404 `Postal Context country is not supported`; the background map and AGID grid were not promoted.
+- Verification: fixed-source inspection 1/1, inspector units 3/3, address-format metadata 68/68, shared postal runtime/API/service/UI 45/45, rollout 8/8, TypeScript 1/1, real app API and visual checks 2/2 pass (128 recorded, 0 failed).
+- Retry: not before `2026-12-01T07:52:20.335Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After HN: 252 profiles, 116 pending, 122 blocked, 0 in progress, 14 evidence-verified M2; 167 manifests / 148 explicit definitions.
+- Next country: Haiti (`HT`). No second country was started.
