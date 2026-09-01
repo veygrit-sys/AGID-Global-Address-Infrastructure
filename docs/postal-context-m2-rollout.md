@@ -2606,3 +2606,20 @@ No second country was started.
 - Retry: not before `2026-09-08T00:34:11.103Z` and only after all pending countries have been swept. Provider contact, registration, authentication, use-agreement/contract acceptance, protected download, payment, destination creation, publication or deployment requires explicit approval.
 - After EC: 252 profiles, 125 pending, 117 blocked, 0 in progress, 10 evidence-verified M2; 159 manifests / 139 explicit definitions.
 - Next country: Falkland Islands (`FK`). No second country was started.
+
+## FK - Falkland Islands
+
+- Status: `m2_verified` / M2 achieved.
+- Attempt: 1 at `2026-09-01T01:11:41.684Z`.
+- Definition: `M2_current_upu_fiqq_whole_territory_derived_visualization`.
+- Evidence: `reports/postal-context-m2/fk-current-whole-territory-2026-09-01.json` (`sha256:3ae0be3dfcec6b0004aca3f70b40274d438328246f98bc26e726920c17ca7e75`).
+- Checks: `reports/postal-context-m2/fk-validation-2026-09-01.json` (`sha256:cf46fb861a990a6246abc8f3ce6204bd5631b12a98df390dd4c2ac1bbf9b1291`).
+- Country report: `docs/postal-context-falkland-islands-m2.md` (`sha256:b9c0a8a0226fddcf6b93694b912b96d61c102b8118188a99ba1adc6d8ada494d`).
+- Official assignment: the country-specific UPU sheet states that `FIQQ 1ZZ` is the single postcode for the whole territory. The August 2026 general table's `F1QQ 1ZZ` glyph is preserved as a source exception and rejected; current Falkland Islands Government and GOV.UK office pages corroborate `FIQQ 1ZZ`.
+- Real display geometry: fixed geoBoundaries commit `9469f09592ced973a3448cf66b6100b741b64c0d`, boundary `FLK-ADM0-20895774`, boundary year 2021, CC BY 4.0. The reproducible transform preserves all 394 source outer rings and 13,250 outer positions, omits 488 land-cover water-exclusion rings / 2,944 positions because the code covers the whole territory, and partitions the result into two independently valid derived MultiPolygons. The documented filled interior area is 114.45298678976631 km².
+- Authority: UPU assignment is official but has no geometry authority. Geometry is explicitly `derived`, confidence `0.90`, and is not an official postal, legal, survey, cadastral or delivery boundary. No address, building, parcel, recipient, customer or land-rights data is published; FK identity remains separate.
+- Application: `FIQQ1ZZ` and full-width `ＦＩＱＱ １ＺＺ` normalize to `FIQQ 1ZZ`; the real descriptor flows through the shared runtime and Express API to two MultiPolygons, multiple-result state, union-bounds fit, opacity-0.22 fill, opacity-0.95/width-3 outline, source/date/confidence metadata, clear and re-search. `F1QQ 1ZZ` and invalid codes return no fabricated area. Deterministic route-to-map verification substitutes for browser E2E.
+- Validation: FK country/topology/API/app 16/16, shared runtime 162/162, shared area UI 5/5, TypeScript and diff checks all pass; a second isolated build reproduced descriptor, graph and geometry digests (185 recorded passes, 0 failures).
+- Published artifact commit: `59799057a8dfee4bc943a83c28c561b0e0374ce6` on `codex/postal-context-m2-rollout`.
+- After FK: 252 profiles, 124 pending, 117 blocked, 0 in progress, 11 evidence-verified M2; 160 manifests / 140 explicit definitions.
+- Next country: Grenada (`GD`). No second country was started.
