@@ -2906,3 +2906,17 @@ No second country was started.
 - Retry: not before `2026-12-01T17:38:32.056Z` and only after pending countries have been swept. Provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After PA: 252 profiles, 105 pending, 130 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 159 explicit definitions.
 - Next country: Peru (`PE`). No second country was started.
+
+## PE - Peru
+
+- Status: `blocked` / M2 unmet; the current five-digit system is confirmed and PE remains in the postcode-data creation scope.
+- Attempt: 1 at `2026-09-01T18:18:02.840Z`; completed `2026-09-01T18:50:04.9974925Z`.
+- Definition: `M2_current_mtc_complete_assignment_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/pe-source-review-2026-09-01.json` (`sha256:0497209ffdea1d264d867af5a5e89517e96969468f7c23af59d4bfb9cb28dae3`); checks `reports/postal-context-m2/pe-checks-2026-09-01.json` (`sha256:a8094a9ddd01feb1879ec9431f2f472afde47a7fa3c1da7e3a128125641dbf19`).
+- Current and dated denominator: eight exact MTC/open-data/licence bodies / 10,888,424 bytes are fixed by byte count and SHA-256. The ODC-By workbook has 98,378 valid five-digit rows, 2,669 distinct codes and 97,992 populated-centre identifiers, while the 2022 MTC bulletin reports 2,670 codes. The dated release is reusable assignment evidence, not a current complete denominator.
+- Geometry and rights: the workbook has zero geometry and coordinate columns. Current viewer limits are labelled referential; current lookup automation/caching/redistribution rights and a reusable current nationwide postal Polygon/MultiPolygon artifact were not established. Zero official/derived/virtual postal areas and zero production records were promoted.
+- Running app: the actual isolated app returned HTTP 200 at `http://127.0.0.1:3020/`; real unmocked PE API lookup returned 503 unavailable. In-app Browser initialization failed on Windows deny-read ACLs. Deterministic unmocked Playwright queried `15082 Peru`, selected the Lima result and made zero PE Postal Context v1 requests. The manually inspected safe map-only image showed the background map, PE AGID cell and Lima address card, but no translucent postal area, distinct postal outline, unavailable notice or postal provenance. The AGID cell was not promoted.
+- Verification: fixed-source inspection 1/1, inspector units 5/5, PE/shared policy/runtime/API/address/UI 166/166, TypeScript 1/1, actual app/API and visual negative checks 2/2 pass (175 recorded, 0 failed).
+- Retry: not before `2026-12-01T18:18:02.840Z` and only after pending countries have been swept. Provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After PE: 252 profiles, 104 pending, 131 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 160 explicit definitions.
+- Next country: Saint Pierre and Miquelon (`PM`). No second country was started.
