@@ -106,6 +106,7 @@ import {
   normalizeDenmarkPostalCode,
   normalizeItalyPostalCode,
   normalizeFrancePostalCode,
+  normalizeFrenchGuianaPostalCode,
   normalizeJapanPostalCode,
   normalizeNetherlandsPostalCode,
   normalizeNewZealandPostalCode,
@@ -143,6 +144,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeFrancePostalCode('75001'), '75001');
   assert.equal(normalizeFrancePostalCode('75-001'), null);
   assert.equal(normalizePostalContextPostalCode('fr', '75 001'), '75001');
+  assert.equal(normalizeFrenchGuianaPostalCode('９７３ ００'), '97300');
+  assert.equal(normalizeFrenchGuianaPostalCode('97300'), '97300');
+  assert.equal(normalizeFrenchGuianaPostalCode('973-00'), null);
+  assert.equal(normalizeFrenchGuianaPostalCode('75001'), null);
+  assert.equal(normalizePostalContextPostalCode('gf', '９７３ ００'), '97300');
   assert.equal(normalizeNewZealandPostalCode('\uFF10\uFF11\uFF12\uFF13'), '0123');
   assert.equal(normalizeNewZealandPostalCode('01 23'), '0123');
   assert.equal(normalizeNewZealandPostalCode('0123'), '0123');
@@ -865,6 +871,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('BL'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BL.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BL.postalCodeFormat, '97133 (single postcode for Saint Barthélemy)');
+  assert.equal(isPostalContextCountryCode('GF'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GF.fullCodeGeometrySemantics, 'routing-locality-first');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GF.postalCodeFormat, '973NN');
   assert.equal(isPostalContextCountryCode('CP'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CP.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.CP.postalCodeFormat, '98799 (single postcode for Clipperton Island)');
