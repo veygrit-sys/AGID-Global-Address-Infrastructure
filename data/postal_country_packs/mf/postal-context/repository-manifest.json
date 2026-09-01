@@ -1,0 +1,47 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {"name": "agid-postal-mf-laposte-geoapi", "country_code": "MF", "country_name": "Saint Martin", "maturity": "M2_experimental"},
+  "release_scope": {
+    "metadata_only": false, "contains_raw_source_data": false, "contains_real_addresses": false,
+    "contains_personal_data": false, "contains_production_geometry": true, "fixtures_are_synthetic": false,
+    "publication_claim": "current-official-single-postcode-with-derived-collectivity-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Saint Martin postal code", "full_code_format": "97150",
+    "full_code_default_geometry": "single-postcode-derived-collectivity-display-surface",
+    "assignment_rule": "La Poste's complete official 2026-08-08 snapshot has exactly one 978-prefix commune row and exactly one 97150 row: INSEE 97801 Saint-Martin maps to 97150.",
+    "geometry_rule": "La Poste explicitly states that postal-code contours are not supplied in open data. The current geo.api.gouv.fr 97801 administrative MultiPolygon is used only because the complete official assignment denominator proves that Saint-Martin has one postcode. It remains derived display geometry and is never official postal, legal, survey, cadastral or delivery geometry.",
+    "non_area_rule": "No Point, route, P.O. box or organisation object is expanded into an area.",
+    "address_rule": "No address, building, parcel, recipient, customer, delivery or land-rights row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The postal node and derived administrative surface are linked only inside the versioned Postal Context graph. AGID identity, addresses and buildings require independent explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "The assignment is represented from the 2026-08-08 official La Poste data update.",
+    "known_time": "Retrieval time, exact source bodies, edition, digests and AGID release time are recorded separately.",
+    "history_rule": "A later assignment or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    {"id": "complete-assignment-denominator", "pass": "The full 39,192-row official snapshot has exactly one 978-prefix and one 97150 row, both the same 97801 assignment."},
+    {"id": "derived-surface", "pass": "The fixed geo.api.gouv.fr response is MultiPolygon, has the same 97801/97150 identity, retains Open Licence 2.0 and is labelled derived."},
+    {"id": "geometry", "pass": "All 11 parts, 11 closed rings and 2,136 positions pass Turf and JSTS validity checks without coordinate modification."},
+    {"id": "runtime", "pass": "The real pack passes normalization, API lookup, metadata, bounds fit, translucent paint, clear, re-search and invalid-code tests."},
+    {"id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-rights data is published."}
+  ],
+  "promotion": {
+    "current_stage": "M2_current_laposte_single_postcode_derived_collectivity_visualization",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried."},
+      {"id": "M1_metadata", "definition": "Country-specific contracts and provenance are reviewable."},
+      {"id": "M2_current_laposte_single_postcode_derived_collectivity_visualization", "definition": "A complete current official La Poste assignment snapshot proves that Saint-Martin has the single postcode 97150 and maps it to INSEE 97801; fixed Open Licence 2.0 geo.api.gouv.fr code and postcode responses supply the same real valid MultiPolygon without coordinate modification; it is published only as derived administrative display context, and the shared real API/app path normalizes, renders, fits, clears and re-searches it with provenance while rejecting invalid and non-area fabrication."},
+      {"id": "M3_candidate", "definition": "A source refresh and independent review pass without authority drift."},
+      {"id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback."}
+    ],
+    "hard_blockers": [
+      "derived-administrative-contour-presented-as-official-postal-geometry", "incomplete-official-assignment-denominator",
+      "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability", "source-coordinates-invented-or-silently-modified",
+      "missing-edition-digest-rights-or-reproducible-join", "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": ["official_postal_boundary", "legal_or_survey_boundary", "cadastral_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "recipient_identity"]
+}

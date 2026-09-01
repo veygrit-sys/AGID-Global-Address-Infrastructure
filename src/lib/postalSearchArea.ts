@@ -134,12 +134,12 @@ export function resolvePostalAreaLookupCandidate(
   if (!postalCode || !postalKey(query) || postalKey(query) !== postalKey(postalCode)) return null;
 
   const countryCode = (
-    text(address.country_code)
+    singleCountryFallback(countryFilter)
+    ?? text(address.country_code)
     ?? text(result.country_code)
     ?? text(result.countrycode)
     ?? text(tags.countrycode)
     ?? text(tags['addr:country'])
-    ?? singleCountryFallback(countryFilter)
   )?.toUpperCase();
   if (!countryCode || !/^[A-Z]{2}$/.test(countryCode)) return null;
   return { countryCode, postalCode };

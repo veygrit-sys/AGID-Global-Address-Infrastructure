@@ -6,6 +6,7 @@ import {
   normalizeFalklandIslandsPostalCode,
   normalizeSouthGeorgiaSouthSandwichIslandsPostalCode,
   normalizeSaintBarthelemyPostalCode,
+  normalizeSaintMartinPostalCode,
   normalizeClippertonPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeSerbiaPostalCode,
@@ -840,11 +841,15 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeSaintBarthelemyPostalCode('９７１３３'), '97133');
   assert.equal(normalizeSaintBarthelemyPostalCode('97 133'), '97133');
   assert.equal(normalizeSaintBarthelemyPostalCode('97134'), null);
+  assert.equal(normalizeSaintMartinPostalCode('９７１５０'), '97150');
+  assert.equal(normalizeSaintMartinPostalCode('97 150'), '97150');
+  assert.equal(normalizeSaintMartinPostalCode('97151'), null);
   assert.equal(normalizeClippertonPostalCode('９８７９９'), '98799');
   assert.equal(normalizeClippertonPostalCode('98 799'), '98799');
   assert.equal(normalizeClippertonPostalCode('98798'), null);
   assert.equal(normalizePostalContextPostalCode('cp', '９８７９９'), '98799');
   assert.equal(normalizePostalContextPostalCode('bl', '９７１３３'), '97133');
+  assert.equal(normalizePostalContextPostalCode('mf', '９７１５０'), '97150');
 });
 
 test('declares country-specific full-code geometry semantics', () => {
@@ -885,6 +890,9 @@ test('declares country-specific full-code geometry semantics', () => {
   assert.equal(isPostalContextCountryCode('BL'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BL.fullCodeGeometrySemantics, 'postal-area-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.BL.postalCodeFormat, '97133 (single postcode for Saint Barthélemy)');
+  assert.equal(isPostalContextCountryCode('MF'), true);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MF.fullCodeGeometrySemantics, 'postal-area-first');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.MF.postalCodeFormat, '97150 (single postcode for Saint Martin)');
   assert.equal(isPostalContextCountryCode('GF'), true);
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GF.fullCodeGeometrySemantics, 'routing-locality-first');
   assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.GF.postalCodeFormat, '973NN');

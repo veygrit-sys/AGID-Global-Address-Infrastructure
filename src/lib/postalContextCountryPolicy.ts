@@ -1,4 +1,4 @@
-export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'AI', 'FK', 'BL', 'GF', 'GP', 'GS', 'NI', 'BR', 'VE', 'PE', 'CO', 'CP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'FO', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'LR', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
+export const POSTAL_CONTEXT_COUNTRY_CODES = ['JP', 'US', 'CA', 'MX', 'CU', 'AR', 'UY', 'EC', 'SV', 'GT', 'CR', 'CL', 'DO', 'HT', 'PA', 'BB', 'AI', 'FK', 'BL', 'MF', 'GF', 'GP', 'GS', 'NI', 'BR', 'VE', 'PE', 'CO', 'CP', 'SG', 'NL', 'GB', 'FR', 'NZ', 'IS', 'IT', 'EE', 'CH', 'DE', 'CZ', 'SK', 'SI', 'NO', 'HU', 'FI', 'FO', 'BG', 'BY', 'BE', 'ME', 'RO', 'TW', 'KR', 'SA', 'OM', 'ZA', 'EG', 'MA', 'DZ', 'ET', 'CV', 'KE', 'ZM', 'SN', 'SC', 'SO', 'TZ', 'TN', 'NG', 'NA', 'NE', 'MG', 'MU', 'MZ', 'LR', 'IN', 'PK', 'BD', 'BT', 'ID', 'PH', 'BN', 'VN', 'MY', 'MM', 'MV', 'MN', 'JO', 'LA', 'LB', 'AF', 'IL', 'IQ', 'IR', 'UZ', 'KZ', 'CN', 'KH', 'KG', 'KW', 'BH', 'DK', 'MT', 'MC', 'AU', 'LV', 'LT', 'LI', 'AZ', 'AL', 'AM', 'AD', 'UA', 'AT', 'CY', 'GR', 'HR', 'RS', 'GE'] as const;
 
 export type PostalContextCountryCode = typeof POSTAL_CONTEXT_COUNTRY_CODES[number];
 
@@ -105,6 +105,11 @@ export const POSTAL_CONTEXT_COUNTRY_POLICIES: Record<
   BL: {
     countryCode: 'BL',
     postalCodeFormat: '97133 (single postcode for Saint Barthélemy)',
+    fullCodeGeometrySemantics: 'postal-area-first',
+  },
+  MF: {
+    countryCode: 'MF',
+    postalCodeFormat: '97150 (single postcode for Saint Martin)',
     fullCodeGeometrySemantics: 'postal-area-first',
   },
   GF: {
@@ -1552,6 +1557,13 @@ export function normalizeSaintBarthelemyPostalCode(value: unknown) {
   return normalized === '97133' ? normalized : null;
 }
 
+export function normalizeSaintMartinPostalCode(value: unknown) {
+  const normalized = String(value ?? '')
+    .normalize('NFKC')
+    .replace(/\s+/g, '');
+  return normalized === '97150' ? normalized : null;
+}
+
 export function normalizeClippertonPostalCode(value: unknown) {
   const normalized = String(value ?? '')
     .normalize('NFKC')
@@ -1580,6 +1592,7 @@ export function normalizePostalContextPostalCode(countryCode: string, value: unk
   if (normalizedCountry === 'AI') return normalizeAnguillaPostalCode(value);
   if (normalizedCountry === 'FK') return normalizeFalklandIslandsPostalCode(value);
   if (normalizedCountry === 'BL') return normalizeSaintBarthelemyPostalCode(value);
+  if (normalizedCountry === 'MF') return normalizeSaintMartinPostalCode(value);
   if (normalizedCountry === 'GF') return normalizeFrenchGuianaPostalCode(value);
   if (normalizedCountry === 'GP') return normalizeGuadeloupePostalCode(value);
   if (normalizedCountry === 'GS') return normalizeSouthGeorgiaSouthSandwichIslandsPostalCode(value);

@@ -81,6 +81,19 @@ test('single explicit country filter can bind a postal result without a country 
   assert.equal(resolvePostalAreaLookupCandidate(result, '12345', 'de,fr'), null);
 });
 
+test('single explicit country filter overrides an umbrella geocoder country', () => {
+  const result = {
+    display_name: '97150, Saint Martin, France',
+    lat: '18.0794',
+    lon: '-63.0608',
+    address: { postcode: '97150', country_code: 'fr' },
+  };
+  assert.deepEqual(resolvePostalAreaLookupCandidate(result, '97150', 'mf'), {
+    countryCode: 'MF',
+    postalCode: '97150',
+  });
+});
+
 test('only postal Polygon and MultiPolygon geometries become map features', () => {
   const collection = createPostalAreaFeatureCollection(lookup([
     {
