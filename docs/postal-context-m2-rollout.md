@@ -2657,3 +2657,23 @@ No second country was started.
 - Evidence commit: `410ce010d5e996adc2535c6f6e0e5a352122704c`; descriptor `sha256:d225a9de69e70e80ce487be5b90c5ce69aa2ddf9c045944d946e95c135cb404c`, graph `sha256:1aff3293404e6ab813c14b83593a4b4f461ee6a062060dd6aef44c2716098db8`, geometry `sha256:4947e12fc0a4f90b4d157c34b21e2da4ae8b22d999c64e4df963ef4943c9915b`.
 - Reports: `reports/postal-context-m2/gf-current-postcodes-2026-09-01.json`, `reports/postal-context-m2/gf-validation-2026-09-01.json`, and `docs/postal-context-french-guiana-m2.md`.
 - Next country: Greenland (`GL`). No second country was started.
+
+## GL - Greenland
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-09-01T03:30:45.800Z`; completed `2026-09-01T03:52:05.6869258Z`.
+- Definition: `M2_current_greenland_address_register_postcode_polygon_visualization`.
+- Evidence: `reports/postal-context-m2/gl-source-review-2026-09-01.json` (`sha256:40c199aaaff32294e0d0ee4796a98660cf093b0bd559f70326b5e4ec21925354`).
+- Checks: `reports/postal-context-m2/gl-checks-2026-09-01.json` (`sha256:094a2e0c28d2ebba6b83e4ed5bbf4a4449e249e5c9b31c50a7151146bd5938a0`).
+- Published evidence commit: `468b04419c8724026b3a96de3ce0490250172604`; both pinned GitHub bodies were fetched from the cumulative branch and matched local SHA-256.
+- Country report: `docs/postal-context-greenland-m2.md`.
+- Exact receipts: five Tusass and Government of Greenland/NunaGIS bodies / 363,762 bytes, all fixed by byte count and SHA-256. Raw HTML, JSON, GeoJSON, postcode rows and temporary inspection output remain outside Git.
+- Current denominator: the complete public Address Register `Postnummer` query returned 32 records for 31 distinct four-digit codes. Tusass provides 28 coded and 44 dash-valued locality rows and omits register values 3940, 3972 and 3982, so the public register controls this observation.
+- Geometry: 30 features contain real closed Turf-valid Polygon geometry with 38 rings and 3,902 positions. The only 2412 feature, OBJECTID 42399, is empty. Empty 3992 OBJECTID 42400 is rejected while separate OBJECTID 42369 is valid. No missing surface was fabricated.
+- Rights and currentness: NunaGIS states the services are publicly available and connectable to GIS, but the reviewed pages and service metadata publish no explicit permission for AGID storage, derivation, redistribution or public serving. Empty `copyrightText` is not treated as a licence. Source date fields are null and no fixed release/reference date is published.
+- Authority boundary: 0 records and 0 artifacts are production-eligible. No municipality, locality, place-name, address point, building, route, Point, buffer, hull, Voronoi/raster cell, AGID cell or model surface was promoted. GL and Greenland/Kalaallit Nunaat identity remain separate from Denmark, the Faroe Islands, Canada and other Arctic jurisdictions.
+- Application: the shared normalization, Polygon/MultiPolygon-only draw, map fit, translucent fill, visible outline, invalid-geometry rejection, clear and re-search contracts pass. Without an approved immutable artifact, real GL API/search-to-map visualization and browser E2E are not claimed.
+- Validation: fixed-source validation 1/1, shared area runtime 29/29, rollout invariants 8/8, cumulative M2 verification 31/31, TypeScript 1/1 and changed syntax/JSON/diff 1/1 pass (71 recorded checks, 0 failures). GL ledger assertions pass separately after this ledger update.
+- Retry: not before `2026-09-08T03:30:45.800Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/permission/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After GL: 252 profiles, 121 pending, 119 blocked, 0 in progress, 12 evidence-verified M2; 163 manifests / 143 explicit definitions.
+- Next country: Guadeloupe (`GP`). No second country was started.
