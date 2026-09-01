@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "NI",
+  "observedAt": "2026-09-01T17:00:01.381Z",
+  "completedAt": "2026-09-01T17:21:18.0734935Z",
+  "result": "pass_negative_evidence_m2_blocked",
+  "recordedChecks": 52,
+  "failedChecks": 0,
+  "checks": [
+    {
+      "name": "exact official source inspection",
+      "command": "<bundled-python> scripts/inspect-postal-context-ni-sources.py --source-dir <temporary-source-directory>/official",
+      "passed": 1,
+      "failed": 0,
+      "result": "Seven exact bodies, 1,024,163 bytes, SHA-256/page/marker checks passed; two Correos challenge bodies and zero postal geometry records were reported."
+    },
+    {
+      "name": "source inspector unit tests",
+      "command": "<bundled-python> scripts/inspect-postal-context-ni-sources.test.py",
+      "passed": 5,
+      "failed": 0,
+      "result": "Exact-set, body-drift, missing/extra/rename, PDF signature/page/marker and HTML marker fail-closed cases passed."
+    },
+    {
+      "name": "Nicaragua policy repository runtime and API tests",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextNicaraguaRepository.test.ts src/lib/postalContextNicaraguaRuntime.test.ts src/server/routes/postalContextNicaraguaRoutes.test.ts src/data/nicaraguaOpenGeoSources.test.ts",
+      "passed": 12,
+      "failed": 0,
+      "result": "Synthetic fixtures remain gated review material; typed objects, postal geometry, buildings, cadastre, privacy and AGID stay separate."
+    },
+    {
+      "name": "shared Postal Context runtime store and postal-area UI tests",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "passed": 31,
+      "failed": 0,
+      "result": "Normalization, authority gating, Polygon/MultiPolygon filtering, fit layer synchronization, translucent fill, clear and unsupported-country isolation passed."
+    },
+    {
+      "name": "scoped TypeScript check",
+      "command": "node node_modules/typescript/bin/tsc --noEmit <NI and shared postal-area targets>",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "name": "actual app and unmocked NI API",
+      "command": "HTTP GET / and GET /api/v1/postal/NI/12012?geometry=geojson against the isolated app",
+      "passed": 1,
+      "failed": 0,
+      "result": "App returned 200; NI API deterministically returned expected negative evidence 503 Postal Context pack is unavailable."
+    },
+    {
+      "name": "deterministic actual-app visual inspection",
+      "command": "Playwright Chromium query 12012 Nicaragua; fixed screenshot hash verification and manual inspection through the app",
+      "passed": 1,
+      "failed": 0,
+      "result": "A Nicaragua result and background map were visible, but no NI Postal Context browser request, translucent postal fill, outline or provenance appeared; visual M2 success remains false."
+    }
+  ],
+  "application": {
+    "url": "http://127.0.0.1:3018/",
+    "httpStatus": 200,
+    "apiStatus": 503,
+    "apiMessage": "Postal Context pack is unavailable",
+    "inAppBrowserConnected": false,
+    "deterministicPlaywrightFallbackRan": true,
+    "visualInspectionCompleted": true,
+    "browserE2eVerified": false,
+    "realPostalAreaVisualized": false,
+    "screenshotBytes": 282076,
+    "screenshotSha256": "382e33a0edcfb81d3f39b03147a748cca5777e2e7295f3798c08645bf49a623e",
+    "screenshotCommitted": false
+  },
+  "audit": {
+    "rawSourceBodiesInGit": 0,
+    "productionPostalGeometryAdded": 0,
+    "addressesBuildingsParcelsPeopleCustomersLandRightsAdded": 0,
+    "syntheticFixturesPromoted": 0,
+    "countryIdentityChangedOrMerged": false,
+    "existingUserChangesTouched": false
+  }
+}
