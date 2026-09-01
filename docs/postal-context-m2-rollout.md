@@ -2814,3 +2814,10 @@ No second country was started.
 - Retry: not before `2026-12-01T10:40:54.523Z` and only after pending countries have been swept, unless CIPS/UPU publishes a rights-cleared current complete typed assignment and eligible postal-area artifact.
 - After KY: 252 profiles, 112 pending, 126 blocked, 0 in progress, 14 evidence-verified M2; 170 manifests / 152 explicit definitions.
 - Next country: Saint Lucia (`LC`). No second country was started.
+
+## 2026-09-01 — LC — Saint Lucia
+
+- M2 result: **blocked / unmet** under `M2_current_saint_lucia_postal_delivery_point_assignment_and_area_visualization`. Seven exact official bodies confirm the current postcode system, official double-space `LCNN  NNN` syntax and a dated 54-code delivery-point table. `LC04  113` is an address example and is excluded from that table.
+- Missing: a current versioned complete assignment/alias/validity/correction/exception/non-area denominator, compatible rights, and real postal Polygon/MultiPolygon geometry. Delivery points may be mailboxes, offices, private boxes, residential or business addresses and cannot be inflated into areas.
+- App: the isolated actual app returned HTTP 200; the real LC API returned unsupported 404. In-app Browser setup failed on Windows ACLs. Deterministic Playwright found Saint Lucia search content and one map canvas but no LC postal request, translucent area or geometry/provenance metadata. Screenshot and PDF render bytes/hashes are fixed; local image display failed with Windows error 206, so visual success is not claimed.
+- Evidence: `reports/postal-context-m2/lc-source-review-2026-09-01.json`, `reports/postal-context-m2/lc-checks-2026-09-01.json`, and `docs/postal-context-saint-lucia-m2.md`. Retry after `2026-12-01T11:09:55.107Z`; continue to MF.
