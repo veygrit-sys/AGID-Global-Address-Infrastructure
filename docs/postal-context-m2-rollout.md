@@ -2892,3 +2892,17 @@ No second country was started.
 - Retry: not before `2026-12-01T17:00:01.381Z` and only after pending countries have been swept. Provider/authority contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After NI: 252 profiles, 106 pending, 129 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 158 explicit definitions.
 - Next country: Panama (`PA`). No second country was started.
+
+## PA - Panama
+
+- Status: `blocked` / M2 unmet; the current 2026 geolocated full/grid postcode system is confirmed and PA remains in the postcode-data creation scope.
+- Attempt: 1 at `2026-09-01T17:38:32.056Z`; completed `2026-09-01T18:05:24.8261266Z`.
+- Definition: `M2_current_correos_panama_complete_geolocated_code_and_pico_cell_visualization`.
+- Evidence: `reports/postal-context-m2/pa-source-review-2026-09-01.json` (`sha256:c347621e77332daa2c4d7ca12b4fa3755727d80f37819be4b5b97d5d6500cd5f`); checks `reports/postal-context-m2/pa-checks-2026-09-01.json` (`sha256:29a559931d3d1ab7ec25b52f4d9c5ce123c762f720036a4d57ee2dede8d81aa6`).
+- Current semantics: seven exact Correos/portal/API/UPU bodies / 1,037,823 bytes fix the 2026-05-07 launch, full/grid format and two consistent live observations of `A7C95-69R3E`. Both responses expose nine valid PICO cells and one selected cell; observations are not a current complete immutable denominator.
+- Geometry and rights: the official client renders observed PICO rectangles, but reviewed bodies publish no compatible bulk processing/storage/derivation/redistribution/public-serving licence. No response cell, area scalar, administration, point, address, building, synthetic fixture or AGID cell was promoted. Zero official/derived/virtual postal areas and zero production records were added.
+- Running app: HTTP 200 at `http://127.0.0.1:3019/`; real PA API returned 503 unavailable. In-app Browser failed Windows ACL setup. Deterministic unmocked Playwright queried `A7C95-69R3E Panama`, returned two generic non-PA results and made zero PA postal requests. The manually inspected fixed image showed background map and AGID grid but no PA result, translucent area, outline or provenance. This is negative visual evidence.
+- Verification: fixed-source inspection 1/1, inspector units 5/5, PA/shared runtime/API/address/UI 108/108, TypeScript 1/1, actual app/API and visual negative checks 2/2 pass (117 recorded, 0 failed).
+- Retry: not before `2026-12-01T17:38:32.056Z` and only after pending countries have been swept. Provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After PA: 252 profiles, 105 pending, 130 blocked, 0 in progress, 17 evidence-verified M2; 174 manifests / 159 explicit definitions.
+- Next country: Peru (`PE`). No second country was started.
