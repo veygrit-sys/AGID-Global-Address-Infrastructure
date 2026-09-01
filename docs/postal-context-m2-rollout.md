@@ -2623,3 +2623,23 @@ No second country was started.
 - Published artifact commit: `59799057a8dfee4bc943a83c28c561b0e0374ce6` on `codex/postal-context-m2-rollout`.
 - After FK: 252 profiles, 124 pending, 117 blocked, 0 in progress, 11 evidence-verified M2; 160 manifests / 140 explicit definitions.
 - Next country: Grenada (`GD`). No second country was started.
+
+## GD - Grenada
+
+- Status: `blocked` / M2 unmet.
+- Attempt: 1 at `2026-09-01T02:05:43.142Z`; completed `2026-09-01T02:34:01.3606649Z`.
+- Definition: `M2_current_grenada_postal_corporation_postcode_assignment_and_area_visualization`.
+- Evidence: `reports/postal-context-m2/gd-source-review-2026-09-01.json` (`sha256:e8598290e35e565fbf5a02ff2cc15af0b3d339269ab7c136014375b4344b33fe`).
+- Checks: `reports/postal-context-m2/gd-checks-2026-09-01.json` (`sha256:1e416ef833becc06ea26f44c6ac9dba0d31d45b730d94e01ca9dede106ef38ab`).
+- Published evidence commit: `6ddfca0b8aa033ca76f67b69f6e222cb9f51066f`; both pinned GitHub bodies were retrieved through the authenticated API and matched local SHA-256.
+- Country report: `docs/postal-context-grenada-m2.md`.
+- Exact receipts: six GPC, Government of Grenada and UPU bodies / 1,195,959 bytes, all fixed by byte count and SHA-256. Raw HTML, PDFs, extracted text, rendered pages, addresses and temporary inspection output remain outside Git.
+- Postal status and correction: the UPU September 2025 list includes Grenada among countries and territories not requiring postal codes. The May 2004 UPU sheet has three postcode-free village/P.O. Box/municipality examples and records `WEST INDIES` as optional wording, not a code. Current GPC/government pages list the operator, ten GPC locations, 52 postal stations and six sub-offices without a code table. GD JSON/YAML/hierarchy now use `None`, null regex/API/rule and no unsupported postcode field/token/order.
+- Rights: GPC pages state all rights reserved, the government page is copyright-marked, and UPU material has copyright/database restrictions. Compatible AGID processing, derivation, redistribution and public-serving rights for a postal dataset were not established.
+- Identity, geometry and draft-pack boundary: GD and source-described Grenada, Carriacou and Petite Martinique identities remain unchanged. There are 0 official/derived/virtual postal Polygon/MultiPolygon records. The draft GD pack's 48 locality fixtures, 246 planning cells, three test vectors and synthetic code seeds were not promoted. No country, island, parish, district, locality, address, office, route, service area, parcel, building, Point, buffer, hull, cell, model, airport code or AGID proxy was promoted.
+- Application: shared normalization/no-match, Polygon/MultiPolygon-only draw, map fit, opacity-0.22 translucent fill, visible outline, non-area rejection, clear and re-search contracts pass. With no valid GD postcode input or eligible real artifact, real GD API/search-to-map visualization and browser E2E are not claimed.
+- Validation: exact-source inspection 1/1, source-inspector unit tests 5/5, common address contracts 68/68, shared area runtime 29/29, rollout invariants 8/8, GD address sync 2/2, GD ledger 7/7, focused TypeScript 1/1 and changed syntax/JSON/YAML checks 9/9 pass (130 recorded checks, 0 failures).
+- PDF review: the Grenada sheet and no-postcode page rendered to non-empty 993x1404 RGB PNGs with fixed SHA-256. The local image-view helper returned Windows error 206 through original and short paths, so interactive display is not claimed; no image was committed.
+- Retry: not before `2026-09-08T02:05:43.142Z` and only after all pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After GD: 252 profiles, 123 pending, 118 blocked, 0 in progress, 11 evidence-verified M2; 161 manifests / 141 explicit definitions.
+- Next country: French Guiana (`GF`). No second country was started.
