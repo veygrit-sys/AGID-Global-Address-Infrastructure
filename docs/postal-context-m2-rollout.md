@@ -2835,3 +2835,16 @@ No second country was started.
 - Reports: `reports/postal-context-m2/mf-current-single-postcode-2026-09-01.json`, `reports/postal-context-m2/mf-validation-2026-09-01.json`, and `docs/postal-context-saint-martin-m2.md`.
 - After MF: 252 profiles, 110 pending, 127 blocked, 0 in progress, 15 evidence-verified M2; 172 manifests / 154 explicit definitions.
 - Next country: Martinique (`MQ`). No second country was started.
+
+## MQ - Martinique
+
+- Result: `m2_verified` / `M2_current_laposte_all_martinique_postcodes_derived_commune_visualization` at `2026-09-01T13:51:48.3100007Z`.
+- Official assignment: the complete 39,192-row La Poste snapshot has 38 MQ rows, 30 postal codes, 34 INSEE 972xx communes and 35 postcode/commune pairs. The update is 2026-08-08 under Etalab Open Licence 2.0; 37 exact evidence bodies / 3,608,319 bytes are hash-pinned outside Git.
+- Geometry and exceptions: 21 Polygon plus 14 MultiPolygon pair surfaces preserve all 102 rings / 40,100 positions and pass Turf and JSTS. `97218`, `97222` and `97250` remain multiple candidates without union; `97200/97234` keep distinct postal identities on the shared Fort-de-France contour; Ligne 5 labels remain provenance only.
+- Authority/privacy: La Poste supplies official assignments and geo.api.gouv.fr supplies official administrative contours. The joined display surfaces are `derived` confidence `0.90`, never official postal, legal, cadastral or delivery boundaries. No address, building, parcel, recipient, customer, deliverability or land-right row is published.
+- Application and visual check: the actual app used country filter `mq` and `97218`, called `/api/v1/postal/MQ/97218?geometry=geojson` with HTTP 200 and displayed three Polygon candidates, source, 2026-08-08 date and confidence. The Browser Plugin failed Windows ACL setup; Playwright fallback ran the actual postal API/committed geometry path. Its browser frame was manually inspected: all three areas were fitted, the blue fill was translucent over the background map and the outlines were clear. Loading, no-match, API-failure, invalid geometry, clear and re-search remain deterministically tested.
+- Verification: MQ/API/app `21/21`, shared runtime `162/162`, shared UI `7/7`, TypeScript, JSON/diff audit and byte-identical rebuild pass (`190` recorded, `0` failed).
+- Evidence commit: `67273667202defc00695de75e8d770b730bb4da5`; descriptor `sha256:22e0ebf3386c6bfda50d84a102202da4a7f6846a4a0ea3aaf9c1aee409723758`, graph `sha256:5d3de3c265f67e440f332891bd158810a51d8987388f8b64b4d9aa250e680220`, geometry `sha256:b0048123e1c1485ba2b1e82e8bdc454484e2ce41e92f9d5d2fa87f3eabebf4d0`.
+- Reports: `reports/postal-context-m2/mq-current-postcodes-2026-09-01.json`, `reports/postal-context-m2/mq-validation-2026-09-01.json`, and `docs/postal-context-martinique-m2.md`.
+- After MQ: 252 profiles, 109 pending, 127 blocked, 0 in progress, 16 evidence-verified M2; 173 manifests / 155 explicit definitions.
+- Next country: Montserrat (`MS`). No second country was started.
