@@ -1203,12 +1203,13 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
   },
   'la-poste-benin': {
     id: 'la-poste-benin',
-    name: 'La Poste du Benin agency directory',
+    name: 'La Poste du Bénin address and agency references',
     url: 'https://laposte.bj/nos-agences/',
-    kind: 'postal-code',
+    kind: 'address',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Official La Poste du Benin agency and service directory used as current postal-operator evidence while public postcode tooling remains limited.',
+    license: 'Website All Rights Reserved; reference access only, no dataset redistribution right inferred',
+    notes: 'Official operator references. The UPU November 2025 Benin sheet treats the leading two digits in 10 BP 648 as a delivery-office identifier and BP 648 as a P.O. box, not a postcode. The UPU September 2025 list says Benin does not require postal codes. Agency, locality and service data remain non-postcode context and are not postal geometry.',
   },
   'la-poste-burkina': {
     id: 'la-poste-burkina',

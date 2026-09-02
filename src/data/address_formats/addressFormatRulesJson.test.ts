@@ -1657,7 +1657,11 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadRules('GM').postalCode?.label, '3 digits used');
   assert.equal(loadRules('CI').postalCode?.label, '5 digits used');
   assert.equal(loadFormat('GH').postalCode?.api, 'https://www.ghanapostgps.com/');
-  assert.equal(loadFormat('BJ').postalCode?.api, 'https://laposte.bj/nos-agences/');
+  assert.equal(loadFormat('BJ').postalCode?.format, 'None');
+  assert.equal(loadFormat('BJ').postalCode?.api, null);
+  assert.match(loadFormat('BJ').postalCode?.source ?? '', /UPU Benin.*11\/2025.*Universal DataBase Sep\. 2025.*no postal codes required/i);
+  assert.equal(loadRules('BJ').postalCode, null);
+  assert.deepEqual(loadRules('BJ').regionalHierarchy, ['department', 'commune', 'arrondissement', 'quarter', 'streetOrPremise', 'houseOrSquareNumber', 'postalOfficeIdentifierAndBoxObject', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuilding', 'agidCell']);
   assert.equal(loadFormat('BF').postalCode?.api, 'https://laposte.bf/code-postal/');
   assert.match(loadFormat('BF').postalCode?.source ?? '', /La Poste Burkina Faso.*UPU Burkina Faso.*reference.*complete assignment register.*postal-area geometry licence/i);
   assert.match(loadRules('BF').postalCode?.label ?? '', /5 digits.*commune.*quartier.*agency.*validate current La Poste.*no automatic polygon.*building/i);

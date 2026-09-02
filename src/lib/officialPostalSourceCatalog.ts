@@ -3654,16 +3654,21 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
   {
     id: 'la-poste-benin',
     countryCodes: ['BJ'],
-    label: 'La Poste du Benin agency directory',
+    label: 'La Poste du Bénin address and agency references',
     authority: 'postal-operator',
     trustTier: 'official',
     availability: 'web-search',
     depth: 'locality',
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
     url: 'https://laposte.bj/nos-agences/',
     sourceNames: ['la poste du benin', 'laposte.bj', 'poste benin'],
     openSourceIds: ['la-poste-benin'],
     requiresCredential: false,
-    notes: ['Official Benin postal operator directory; use as postal-network evidence while direct public postcode tooling remains limited.'],
+    notes: [
+      'The November 2025 UPU Benin addressing sheet identifies La Poste du Bénin, uses a delivery-office identifier plus P.O. box and locality without a postcode, and the UPU September 2025 list says Benin does not require postal codes.',
+      'The operator agency and distribution pages provide postal-network and civic-address context only. They do not publish a complete postcode assignment denominator, postal Polygon/MultiPolygon artifact or compatible open dataset licence.',
+    ],
   },
   {
     id: 'la-poste-burkina',
