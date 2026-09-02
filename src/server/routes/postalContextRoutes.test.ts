@@ -105,11 +105,29 @@ test('research endpoints expose all country work, evidence integrity, real packs
   assert.equal(all.response.status, 200);
   assert.equal(all.body.ok, true);
   assert.equal(all.body.data.summary.totalCountries, 252);
-  assert.equal(all.body.data.summary.runtimeArtifacts, 24);
-  assert.equal(all.body.data.summary.geometryFeatures, 49_308);
+  assert.equal(all.body.data.summary.runtimeArtifacts, 25);
+  assert.equal(all.body.data.summary.geometryFeatures, 49_310);
   assert.equal(all.body.data.sourcePolicy.rawSourceRowsPublished, false);
   assert.equal(all.body.data.sourcePolicy.postalGeometryMayInferAddressesOrBuildings, false);
   assert.ok(all.body.warnings.includes('research-evidence-integrity:digest_mismatch'));
+
+  const ac = await getJson(running.baseUrl, '/api/postal/research/AC');
+  assert.equal(ac.response.status, 200);
+  assert.equal(ac.body.data.status, 'm2_verified');
+  assert.equal(ac.body.data.runtimeArtifact.recordCounts.features, 2);
+  assert.equal(ac.body.data.runtimeArtifact.recordCounts.positions, 1_261);
+  assert.equal(ac.body.data.runtimeArtifact.sourceTypeCounts.derived, 2);
+  assert.equal(ac.body.data.runtimeArtifact.sampleIds.postalContextId, 'postal-ac-ascn-1zz');
+  assert.equal(
+    ac.body.data.runtimeArtifact.sampleIds.geometryFeatureId,
+    'geoboundaries-ac-2021-ascn-1zz-surface-1',
+  );
+  assert.equal(
+    ac.body.data.runtimeArtifact.sampleIds.assertionId,
+    'upu-ac-20260820-ascn-1zz-admin-within-ac',
+  );
+  assert.deepEqual(ac.body.data.runtimeArtifact.sampleIds.linkedContextIds, ['country-ac']);
+  assert.doesNotMatch(JSON.stringify(ac.body), /recipient|customer|landRights/u);
 
   const pr = await getJson(running.baseUrl, '/api/postal/research/PR');
   assert.equal(pr.response.status, 200);

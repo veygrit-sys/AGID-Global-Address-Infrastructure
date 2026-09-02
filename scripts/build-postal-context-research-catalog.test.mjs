@@ -15,20 +15,31 @@ test('committed Postal Context research catalog is deterministic and covers the 
   assert.equal(catalog.summary.totalCountries, 252);
   assert.deepEqual(catalog.summary.statusCounts, {
     blocked: 142,
-    m2_verified: 20,
-    pending: 90,
+    m2_verified: 21,
+    pending: 89,
   });
-  assert.equal(catalog.summary.manifests, 184);
-  assert.equal(catalog.summary.explicitM2Definitions, 174);
-  assert.equal(catalog.summary.runtimeArtifacts, 24);
-  assert.equal(catalog.summary.geometryFeatures, 49_308);
-  assert.equal(catalog.summary.geometryPositions, 4_144_806);
-  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_946, official: 362 });
-  assert.equal(catalog.ordering.nextCountry, 'AC');
+  assert.equal(catalog.summary.manifests, 185);
+  assert.equal(catalog.summary.explicitM2Definitions, 175);
+  assert.equal(catalog.summary.runtimeArtifacts, 25);
+  assert.equal(catalog.summary.geometryFeatures, 49_310);
+  assert.equal(catalog.summary.geometryPositions, 4_146_067);
+  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_948, official: 362 });
+  assert.equal(catalog.ordering.nextCountry, 'AO');
 });
 
 test('catalog separates rollout status from real derived runtime availability and exposes linked IDs', () => {
   const catalog = buildPostalContextResearchCatalog();
+  const ascension = catalog.countries.find(country => country.countryCode === 'AC');
+  assert.ok(ascension);
+  assert.equal(ascension.status, 'm2_verified');
+  assert.equal(ascension.runtimeArtifact?.recordCounts.features, 2);
+  assert.equal(ascension.runtimeArtifact?.recordCounts.positions, 1261);
+  assert.deepEqual(ascension.runtimeArtifact?.sourceTypeCounts, { derived: 2 });
+  assert.equal(ascension.runtimeArtifact?.sampleIds.postalContextId, 'postal-ac-ascn-1zz');
+  assert.equal(ascension.runtimeArtifact?.sampleIds.geometryFeatureId, 'geoboundaries-ac-2021-ascn-1zz-surface-1');
+  assert.deepEqual(ascension.runtimeArtifact?.sampleIds.linkedContextIds, ['country-ac']);
+  assert.ok(ascension.evidence.every(item => item.integrity === 'verified'));
+
   const puertoRico = catalog.countries.find(country => country.countryCode === 'PR');
   assert.ok(puertoRico);
   assert.equal(puertoRico.status, 'blocked');
