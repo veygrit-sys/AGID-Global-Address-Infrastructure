@@ -72,6 +72,7 @@ createPostalAreaFeatureCollection,
 postalAreaUnavailableDetail,
 postalAreaBounds,
 resolvePostalAreaLookupCandidate,
+summarizePostalAreaIdentity,
 subscribePostalAreaMapLayer,
 type PostalAreaFeatureCollection,
 } from './lib/postalSearchArea';
@@ -2468,22 +2469,13 @@ export default function App() {
       const geometryFeatureIds = Array.from(new Set(
         collection.features.map(feature => feature.properties.geometryFeatureId),
       ));
+      const identity = summarizePostalAreaIdentity(response.data, collection);
       const licenseIds = Array.from(new Set(
         collection.features.map(feature => feature.properties.licenseId).filter(Boolean),
       ));
       const sourceDigests = Array.from(new Set(
         collection.features.map(feature => feature.properties.sourceDigest).filter(Boolean),
       ));
-      const linkedContexts = Array.from(new Map(
-        response.data.alternatives
-          .flatMap(alternative => alternative.contexts)
-          .filter(context => context.featureKind !== 'country')
-          .map(context => [context.id, context] as const),
-      ).values());
-      const assertionIds = Array.from(new Set([
-        ...response.data.assertionIds,
-        ...response.data.alternatives.flatMap(alternative => alternative.assertionIds),
-      ]));
       const research = researchResponse?.ok ? researchResponse.data : undefined;
       const evidenceSummary = research?.evidence.length
         ? research.evidence.map(item => `${item.kind}: ${item.path} [${item.integrity}]`).join(' / ')
@@ -2501,16 +2493,26 @@ export default function App() {
           { label: 'Mapped postal objects / 対応郵便オブジェクト', value: postalContextLabels.join(' / '), monospace: true },
           { label: 'Postal context ID', value: postalContextIds.join(' / '), monospace: true },
           { label: 'Geometry feature ID', value: geometryFeatureIds.join(' / '), monospace: true },
-          ...(linkedContexts.length ? [{
-            label: 'Linked locality / admin IDs',
-            value: linkedContexts.map(context => `${context.label ?? context.id} (${context.id})`).join(' / '),
+          ...(identity.agidObjectChains.length ? [{
+            label: 'AGID Postal Context chain',
+            value: identity.agidObjectChains.join(' / '),
+            monospace: true,
+          }] : []),
+          ...(identity.linkedContextObjects.length ? [{
+            label: 'Linked country / locality / admin IDs',
+            value: identity.linkedContextObjects.join(' / '),
             monospace: true,
           }] : []),
           { label: 'Geometry source', value: sourceIds.join(' / '), monospace: true },
+          ...(identity.sourceAuthorities.length ? [{ label: 'Assignment / geometry authority', value: identity.sourceAuthorities.join(' / '), monospace: true }] : []),
+          ...(identity.sourceVersions.length ? [{ label: 'Source version', value: identity.sourceVersions.join(' / '), monospace: true }] : []),
+          ...(identity.qualityStatements.length ? [{ label: 'Geometry quality', value: identity.qualityStatements.join(' / '), monospace: true }] : []),
+          ...(identity.validityWindows.length ? [{ label: 'Geometry validity', value: identity.validityWindows.join(' / '), monospace: true }] : []),
           ...(licenseIds.length ? [{ label: 'Source licence', value: licenseIds.join(' / '), monospace: true }] : []),
           ...(sourceDigests.length ? [{ label: 'Source digest', value: sourceDigests.join(' / '), monospace: true }] : []),
-          { label: 'Pinned release', value: response.data.release.releaseId, monospace: true },
-          ...(assertionIds.length ? [{ label: 'Evidence assertion IDs', value: assertionIds.join(' / '), monospace: true }] : []),
+          { label: 'AGID repository / pinned release', value: `${identity.repositoryId} / ${identity.releaseId}`, monospace: true },
+          { label: 'Release manifest digest', value: identity.manifestDigest, monospace: true },
+          ...(identity.assertionIds.length ? [{ label: 'Evidence assertion IDs', value: identity.assertionIds.join(' / '), monospace: true }] : []),
           ...(research ? [{
             label: 'Research / M2 status',
             value: `${research.status} · ${research.declaredStage} · ${research.attempts} attempt(s)`,

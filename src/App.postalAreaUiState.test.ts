@@ -6,9 +6,10 @@ const appSource = readFileSync(new URL('./App.tsx', import.meta.url), 'utf8');
 const searchSidebarSource = readFileSync(new URL('./components/SearchSidebar.tsx', import.meta.url), 'utf8');
 const noticeSource = readFileSync(new URL('./components/PostalAreaNotice.tsx', import.meta.url), 'utf8');
 
-test('postal search results stay interactable until selection and then yield to the map detail', () => {
+test('postal suggestions stay interactable and form search selects a result before yielding to map detail', () => {
   assert.match(searchSidebarSource, /const isSearchExpanded = isSearchFocused;/);
-  assert.match(appSource, /if \(results\.length > 0\) \{\s+setIsSearchFocused\(true\);/);
+  assert.match(searchSidebarSource, /onClick=\{\(\) => selectSearchResult\(result\)\}/);
+  assert.match(appSource, /if \(results\.length > 0\) \{[\s\S]*?await selectSearchResult\(results\[0\]\);/);
   assert.match(
     appSource,
     /setSearchQuery\(display_name\);\s+setSearchResults\(\[\]\);\s+setIsSearchFocused\(false\);/,

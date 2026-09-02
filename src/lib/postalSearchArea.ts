@@ -41,6 +41,19 @@ export type PostalAreaLookupCandidate = {
   postalCode: string;
 };
 
+export type PostalAreaIdentitySummary = {
+  agidObjectChains: string[];
+  linkedContextObjects: string[];
+  assertionIds: string[];
+  sourceAuthorities: string[];
+  sourceVersions: string[];
+  qualityStatements: string[];
+  validityWindows: string[];
+  repositoryId: string;
+  releaseId: string;
+  manifestDigest: string;
+};
+
 function samePosition(a: unknown, b: unknown) {
   return Array.isArray(a) && Array.isArray(b)
     && a.length >= 2 && b.length >= 2
@@ -188,6 +201,58 @@ export function createPostalAreaFeatureCollection(
         },
       }];
     }),
+  };
+}
+
+function uniqueText(values: Array<string | undefined>) {
+  return Array.from(new Set(values.filter((value): value is string => Boolean(value))));
+}
+
+export function summarizePostalAreaIdentity(
+  lookup: PostalContextLookupResponse,
+  collection: PostalAreaFeatureCollection,
+): PostalAreaIdentitySummary {
+  const renderedGeometryIds = new Set(
+    collection.features.map(feature => feature.properties.geometryFeatureId),
+  );
+  const renderedGeometries = lookup.geometries.filter(geometry => renderedGeometryIds.has(geometry.id));
+  const linkedContexts = Array.from(new Map([
+    ...lookup.contexts,
+    ...lookup.alternatives.flatMap(alternative => alternative.contexts),
+  ].map(context => [context.id, context] as const)).values());
+  const formatQuality = (geometry: typeof renderedGeometries[number]) => [
+    geometry.quality.status,
+    typeof geometry.quality.confidence === 'number'
+      ? `confidence ${geometry.quality.confidence.toFixed(2)}`
+      : undefined,
+    typeof geometry.quality.accuracyMeters === 'number'
+      ? `accuracy ${geometry.quality.accuracyMeters} m`
+      : undefined,
+    geometry.quality.validatedAt ? `validated ${geometry.quality.validatedAt}` : undefined,
+  ].filter(Boolean).join(' | ');
+  const formatValidity = (geometry: typeof renderedGeometries[number]) =>
+    `${geometry.validTime.from} -> ${geometry.validTime.to ?? 'open'}`;
+
+  return {
+    agidObjectChains: uniqueText(collection.features.map(feature =>
+      `${feature.properties.contextId} -> ${feature.properties.geometryFeatureId}`,
+    )),
+    linkedContextObjects: linkedContexts.map(context =>
+      `${context.label ?? context.id} (${context.id})`,
+    ),
+    assertionIds: uniqueText([
+      ...lookup.assertionIds,
+      ...lookup.alternatives.flatMap(alternative => alternative.assertionIds),
+    ]),
+    sourceAuthorities: uniqueText(renderedGeometries.map(geometry =>
+      `${geometry.source.assignmentAuthority} -> ${geometry.source.geometryAuthority}`,
+    )),
+    sourceVersions: uniqueText(renderedGeometries.map(geometry => geometry.source.sourceVersion)),
+    qualityStatements: uniqueText(renderedGeometries.map(formatQuality)),
+    validityWindows: uniqueText(renderedGeometries.map(formatValidity)),
+    repositoryId: lookup.release.repositoryId,
+    releaseId: lookup.release.releaseId,
+    manifestDigest: lookup.release.manifestDigest,
   };
 }
 

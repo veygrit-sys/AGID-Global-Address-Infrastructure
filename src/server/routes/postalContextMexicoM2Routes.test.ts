@@ -5,7 +5,8 @@ import type { Server } from 'node:http';
 import { resolve } from 'node:path';
 import {
   POSTAL_SEARCH_AREA_FILL_LAYER_ID, POSTAL_SEARCH_AREA_OUTLINE_LAYER_ID, POSTAL_SEARCH_AREA_SOURCE_ID,
-  createPostalAreaFeatureCollection, hasInvalidPostalAreaGeometry, postalAreaBounds, syncPostalAreaMapLayer,
+  createPostalAreaFeatureCollection, hasInvalidPostalAreaGeometry, postalAreaBounds,
+  summarizePostalAreaIdentity, syncPostalAreaMapLayer,
 } from '../../lib/postalSearchArea';
 import type { PostalContextLookupResponse } from '../../services/PostalContextService';
 import { createInMemoryPostalContextPackStore, loadPostalContextPack } from '../postalContextPackStore';
@@ -45,6 +46,20 @@ test('real MX lookup reaches API, app conversion, fit, translucent paint, clear 
   assert.equal(collection.features[0].properties.postalCode, '06000');
   assert.ok(['Polygon', 'MultiPolygon'].includes(collection.features[0].properties.geometryType));
   assert.equal(collection.features[0].properties.provenance, 'derived');
+  const identity = summarizePostalAreaIdentity(data, collection);
+  assert.deepEqual(identity.agidObjectChains, ['postal-mx-06000 -> mx-derived-06000']);
+  assert.deepEqual(
+    identity.linkedContextObjects.map(value => value.match(/\(([^)]+)\)$/)?.[1]),
+    ['country-mx'],
+  );
+  assert.deepEqual(identity.assertionIds, ['sepomex-mx-2025-06000-part-of-mx']);
+  assert.deepEqual(identity.sourceAuthorities, ['official_postal_mapping_authority -> official_postal_geometry']);
+  assert.deepEqual(identity.sourceVersions, ['CP_CDMX/250m-derived-repaired-v3']);
+  assert.deepEqual(identity.qualityStatements, ['derived | confidence 0.92 | accuracy 250 m | validated 2026-09-01T14:44:58.852Z']);
+  assert.deepEqual(identity.validityWindows, ['2025-01-01T00:00:00.000Z -> open']);
+  assert.equal(identity.repositoryId, 'agid-postal-mx-sepomex');
+  assert.equal(identity.releaseId, 'mx-sepomex-postal-polygons-2025-20260901');
+  assert.match(identity.manifestDigest, /^sha256:[a-f0-9]{64}$/);
   const bounds = postalAreaBounds(collection); assert.ok(bounds); assert.ok(bounds[0][0] < bounds[1][0] && bounds[0][1] < bounds[1][1]);
   const sources = new Map<string, { data: unknown; setData(value: unknown): void }>(); const layers = new Map<string, Record<string, any>>();
   const map = {

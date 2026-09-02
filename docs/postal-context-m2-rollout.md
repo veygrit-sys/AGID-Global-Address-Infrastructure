@@ -63,9 +63,26 @@ never invent an official code or silently mark it completed.
 npm run postal-context:m2:status
 npm run postal-context:m2:refresh
 npm run verify:postal-context-m2
+node scripts/verify-postal-context-m2-reference.mjs
+npm run verify:postal-context-m2-reference
 node scripts/intake-postal-context-jp-m2.mjs --report reports/postal-context-m2/<new-report>.json
 node scripts/intake-postal-context-jp-m2.mjs --report <new-report>.json --expected-archive-digest sha256:<pinned-source-digest>
 ```
+
+## Reusable completed-country reference
+
+Mexico (`MX`) is the reference implementation for taking a country from
+fixed official-source evidence through a real Postal Context API lookup and
+translucent map rendering. The machine-readable reference is
+`docs/postal-context-m2-reference.json`; the implementation and reuse guide
+is `docs/postal-context-m2-reference-implementation.md`.
+
+The reference checker verifies the ledger state, country-specific definition,
+local hashes and byte counts for every pinned artifact, all 35,898 geometry
+records, sample Postal Context ID chains, authority and quality metadata, and
+the required UI detail labels. It is a floor for engineering and evidence, not
+a global definition override. A second country must still satisfy its own
+official-source, rights and geometry constraints.
 
 `refresh` regenerates inventory metadata and preserves progress. It refuses
 duplicate countries, multiple active countries, missing proof for a completed

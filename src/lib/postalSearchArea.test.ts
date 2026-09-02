@@ -8,6 +8,7 @@ import {
   createPostalAreaFeatureCollection,
   postalAreaBounds,
   resolvePostalAreaLookupCandidate,
+  summarizePostalAreaIdentity,
   subscribePostalAreaMapLayer,
   syncPostalAreaMapLayer,
 } from './postalSearchArea';
@@ -132,6 +133,37 @@ test('only postal Polygon and MultiPolygon geometries become map features', () =
   ]));
   assert.deepEqual(collection.features.map(feature => feature.geometry.type), ['Polygon', 'MultiPolygon']);
   assert.deepEqual(postalAreaBounds(collection), [[138, 34], [140, 36]]);
+});
+
+test('postal area identity summary keeps IDs, evidence, authority and quality separate', () => {
+  const response = lookup([{
+    id: 'geometry-postal-100-0001',
+    node: { id: 'postal-100-0001', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'polygon', postalCode: '100-0001' },
+    geometry: { type: 'Polygon', coordinates: [[[139, 35], [140, 35], [140, 36], [139, 35]]] },
+    source,
+    quality: { ...quality, validatedAt: '2026-08-29T12:00:00.000Z' },
+    validTime,
+  }]);
+  response.contexts = [{
+    id: 'country-jp',
+    kind: 'administrative_area',
+    featureKind: 'country',
+    geometryType: 'none',
+    label: 'Japan',
+  }];
+  response.assertionIds = ['postal-100-0001-part-of-country-jp'];
+  const summary = summarizePostalAreaIdentity(response, createPostalAreaFeatureCollection(response));
+
+  assert.deepEqual(summary.agidObjectChains, ['postal-100-0001 -> geometry-postal-100-0001']);
+  assert.deepEqual(summary.linkedContextObjects, ['Japan (country-jp)']);
+  assert.deepEqual(summary.assertionIds, ['postal-100-0001-part-of-country-jp']);
+  assert.deepEqual(summary.sourceAuthorities, ['official_postal_operator -> official_postal_geometry']);
+  assert.deepEqual(summary.sourceVersions, ['2026-08']);
+  assert.deepEqual(summary.qualityStatements, ['authoritative | confidence 1.00 | accuracy 1 m | validated 2026-08-29T12:00:00.000Z']);
+  assert.deepEqual(summary.validityWindows, ['2026-08-01T00:00:00.000Z -> open']);
+  assert.equal(summary.repositoryId, 'postal-jp');
+  assert.equal(summary.releaseId, '2026-08');
+  assert.equal(summary.manifestDigest, digest);
 });
 
 test('point-only lookup has no drawable postal area', () => {

@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
 const readJson = path => JSON.parse(readFileSync(new URL(path, root), 'utf8'));
@@ -16,7 +18,15 @@ const graph = bytes('data/postal_country_packs/mx/postal-context/m2/graph.json')
 const geometry = bytes('data/postal_country_packs/mx/postal-context/m2/geometry.json');
 const report = bytes('reports/postal-context-m2/mx-current-postal-polygons-2026-09-01.json');
 const validation = bytes('reports/postal-context-m2/mx-validation-2026-09-01.json');
-const countryDoc = bytes('docs/postal-context-mexico-m2.md');
+const pinnedBody = artifact => {
+  const match = artifact.url.match(/\/blob\/([0-9a-f]{40})\/(.+)$/u);
+  assert.ok(match, artifact.url);
+  return execFileSync('git', ['show', `${match[1]}:${decodeURIComponent(match[2])}`], {
+    cwd: fileURLToPath(root),
+    encoding: 'buffer',
+    maxBuffer: 128 * 1024 * 1024,
+  });
+};
 
 test('MX reaches M2 only under its country-specific manifest definition', () => {
   assert.equal(mx.status, 'm2_verified');
@@ -40,7 +50,7 @@ test('MX denominator and real area geometry are complete without invented surfac
 });
 
 test('ledger pins all MX artifacts by immutable commit, digest and byte length', () => {
-  const bodies = [descriptor, graph, geometry, report, validation, countryDoc];
+  const bodies = mx.evidence.artifacts.map(pinnedBody);
   assert.deepEqual(mx.evidence.artifacts.map(item => item.digest), bodies.map(digest));
   assert.deepEqual(mx.evidence.artifacts.map(item => item.bytes), bodies.map(body => body.byteLength));
   assert.ok(mx.evidence.artifacts.every(item => /\/blob\/[0-9a-f]{40}\//u.test(item.url)));
@@ -59,10 +69,10 @@ test('runtime evidence is real and records the in-app browser limitation honestl
   assert.deepEqual(result.browserVerification.checks.filter(item => item.status).map(item => item.status), [200, 200]);
 });
 
-test('MX completion leaves the next pending Americas country untouched', () => {
+test('MX completion remains stable after later Americas reviews advance', () => {
   assert.equal(digest(report), mx.lastAttempt.reportDigest);
   assert.equal(digest(validation), mx.lastAttempt.engineeringReportDigest);
   const ni = ledger.countries.find(country => country.countryCode === 'NI');
-  assert.equal(ni.status, 'pending');
-  assert.equal(ni.attempts, 0);
+  assert.equal(ni.status, 'blocked');
+  assert.equal(ni.attempts, 1);
 });
