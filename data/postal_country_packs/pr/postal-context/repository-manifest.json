@@ -1,0 +1,35 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {"name": "agid-postal-pr-census-zcta", "country_code": "PR", "country_name": "Puerto Rico", "maturity": "M2_experimental"},
+  "release_scope": {
+    "metadata_only": false, "contains_raw_source_data": false, "contains_real_addresses": false,
+    "contains_personal_data": false, "contains_production_geometry": true, "fixtures_are_synthetic": false,
+    "publication_claim": "fixed-2020-census-zcta-derived-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Puerto Rico ZIP Code", "full_code_format": "NNNNN or NNNNN-NNNN",
+    "full_code_default_geometry": "five-digit-derived-census-zcta-display-surface-when-available",
+    "assignment_rule": "USPS evidence confirms Puerto Rico ZIP usage and 006–009 prefixes but licensed rows are not redistributed; this pack makes no complete current USPS assignment claim.",
+    "geometry_rule": "2020 Census ZCTAs are official Census mapping geometry used only as derived statistical display context, never official USPS postal or delivery boundaries.",
+    "non_area_rule": "A ZIP without a Census ZCTA, ZIP+4 delivery code, route, P.O. box or organisation is never expanded into a fabricated area.",
+    "address_rule": "No address, building, parcel, recipient, customer, delivery or land-right row is bundled.",
+    "agid_rule": "Stable postal, geometry, assertion, country and release IDs are exposed; address/building identity needs independent explicit evidence."
+  },
+  "quality_gates": [
+    {"id": "fixed-source", "pass": "Every source receipt is exact-hash gated, Census attribution is retained, and raw USPS licensed data remains out of Git."},
+    {"id": "zcta-scope", "pass": "All 132 unique fixed-query 2020 Census ZCTAs are published with no USPS-boundary claim."},
+    {"id": "geometry", "pass": "142 polygon parts, 152 rings and 168,582 positions pass Turf, JSTS and shared topology checks without coordinate modification."},
+    {"id": "detail-and-id-linkage", "pass": "Lookup exposes detailed Census attributes plus postal, geometry, assertion, country and pinned-release IDs."},
+    {"id": "privacy", "pass": "No address, building, parcel, recipient, customer, land-right or USPS licensed row is published."}
+  ],
+  "promotion": {
+    "current_stage": "M2_fixed_2020_census_zcta_visualization",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried."},
+      {"id": "M1_metadata", "definition": "Country-specific contracts and provenance are reviewable."},
+      {"id": "M2_fixed_2020_census_zcta_visualization", "definition": "All 132 exact-query 2020 Census ZCTAs load through the API/app, expose stable IDs and attributes, render and fit as translucent derived areas, and clear/re-search without fabricating missing postal areas."}
+    ],
+    "hard_blockers": ["zcta-presented-as-official-usps-boundary", "current-usps-assignment-completeness-claimed", "licensed-usps-row-published", "address-building-or-deliverability-inferred", "coordinate-invention"]
+  },
+  "non_guarantees": ["complete_current_usps_assignment", "official_postal_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "legal_survey_or_cadastral_boundary"]
+}

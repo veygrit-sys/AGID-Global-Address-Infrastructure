@@ -30,7 +30,7 @@ export const PostalAreaNotice: React.FC<PostalAreaNoticeProps> = ({ model, onDis
       aria-live="polite"
       data-testid="postal-area-notice"
       className={cn(
-        'absolute left-3 top-[68px] z-30 flex max-h-[calc(100vh-88px)] max-w-[calc(100vw-24px)] items-start gap-3 overflow-auto rounded-2xl border bg-white/95 px-4 py-3 shadow-xl backdrop-blur md:top-[92px] md:max-h-[calc(100vh-116px)] md:max-w-[560px]',
+        'absolute left-3 top-[68px] z-30 flex max-h-[46vh] max-w-[calc(100vw-24px)] items-start gap-3 overflow-auto rounded-2xl border bg-white/95 px-4 py-3 shadow-xl backdrop-blur md:top-[92px] md:max-h-[calc(100vh-116px)] md:max-w-[560px]',
         model.status === 'visible' ? 'border-blue-200' : 'border-slate-200',
       )}
     >

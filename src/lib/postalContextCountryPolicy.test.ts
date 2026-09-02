@@ -8,6 +8,7 @@ import {
   normalizeSaintBarthelemyPostalCode,
   normalizeSaintMartinPostalCode,
   normalizeSaintPierreMiquelonPostalCode,
+  normalizePuertoRicoPostalCode,
   normalizeClippertonPostalCode,
   normalizeGeorgiaPostalCode,
   normalizeSerbiaPostalCode,
@@ -854,6 +855,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeSaintPierreMiquelonPostalCode('９７５００'), '97500');
   assert.equal(normalizeSaintPierreMiquelonPostalCode('97 500'), '97500');
   assert.equal(normalizeSaintPierreMiquelonPostalCode('97501'), null);
+  assert.equal(normalizePuertoRicoPostalCode('００９２６－３２３２'), '00926');
+  assert.equal(normalizePuertoRicoPostalCode('00601'), '00601');
+  assert.equal(normalizePuertoRicoPostalCode('00501'), null);
+  assert.equal(normalizePuertoRicoPostalCode('0092'), null);
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.PR.fullCodeGeometrySemantics, 'area-or-non-area');
   assert.equal(normalizeClippertonPostalCode('９８７９９'), '98799');
   assert.equal(normalizeClippertonPostalCode('98 799'), '98799');
   assert.equal(normalizeClippertonPostalCode('98798'), null);

@@ -28,6 +28,7 @@ export type PostalAreaFeatureCollection = {
       confidence: number | null;
       accuracyMeters: number | null;
       contextId: string;
+      geometryFeatureId: string;
       linkedContextIds: string;
       assertionIds: string;
       releaseId: string;
@@ -180,6 +181,7 @@ export function createPostalAreaFeatureCollection(
           confidence: item.quality.confidence ?? null,
           accuracyMeters: item.quality.accuracyMeters ?? null,
           contextId: item.node.id,
+          geometryFeatureId: item.id,
           linkedContextIds,
           assertionIds,
           releaseId: lookup.release.releaseId,

@@ -14,7 +14,9 @@ import {
 
 const digest = `sha256:${'a'.repeat(64)}` as `sha256:${string}`;
 
-function lookup(geometries: PostalContextLookupResponse['geometries']): PostalContextLookupResponse {
+function lookup(
+  geometries: Array<Omit<PostalContextLookupResponse['geometries'][number], 'id'> & { id?: string }>,
+): PostalContextLookupResponse {
   return {
     status: 'unique',
     countryCode: 'JP',
@@ -34,7 +36,10 @@ function lookup(geometries: PostalContextLookupResponse['geometries']): PostalCo
     contexts: [],
     assertionIds: [],
     alternatives: [],
-    geometries,
+    geometries: geometries.map((geometry, index) => ({
+      ...geometry,
+      id: geometry.id ?? `geometry-${index}`,
+    })),
     errors: [],
     warnings: [],
   };

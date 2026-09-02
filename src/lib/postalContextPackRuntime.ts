@@ -194,6 +194,7 @@ export type PostalContextPublicCoordinateResolution = {
 };
 
 export type PostalContextPostalGeometryResult = {
+  id: string;
   node: PostalContextPublicComponent;
   geometry: PostalContextGeometryFeature['geometry'];
   source: Pick<
@@ -1160,6 +1161,7 @@ export class PostalContextPackRuntime {
             break;
           }
           geometries.push({
+            id: feature.id,
             node: publicComponent(this.nodeById.get(feature.nodeId)!),
             geometry: feature.geometry,
             source: {
@@ -1702,6 +1704,7 @@ export class PostalContextPackRuntime {
         return { ...base, status: 'invalid', bbox: bboxValue, errors: ['geometry-response-limit-exceeded'] };
       }
       matches.push({
+        id: feature.id,
         node: publicComponent(this.nodeById.get(feature.nodeId)!),
         geometry: feature.geometry,
         source: {

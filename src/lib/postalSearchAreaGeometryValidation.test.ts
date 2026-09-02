@@ -15,6 +15,7 @@ const lookup = {
   release: { countryCode: 'FI', repositoryId: 'fi', releaseId: 'r', manifestDigest: digest, policyVersion: 'v1', releasedAt: '2026-08-29T00:00:00.000Z', validTime: { from: '2026-08-29T00:00:00.000Z', to: null } },
   postalFeatures: [], contexts: [], assertionIds: [], alternatives: [], errors: [], warnings: [],
   geometries: [{
+    id: 'geometry-fi-00100',
     node: { id: 'postal', kind: 'postal_feature', featureKind: 'standard_area', geometryType: 'polygon', postalCode: '00100' },
     geometry: { type: 'Polygon', coordinates: [[[24.9, 60.1], [25, 60.1], [25, 60.2], [24.9, 60.15]]] },
     source: { sourceId: 'fi', sourceType: 'derived', assignmentAuthority: 'official_postal_operator', geometryAuthority: 'derived_geometry', sourceVersion: 'v1', sourceDate: '2026-08-29', licenseId: 'cc-by-4.0', digest },

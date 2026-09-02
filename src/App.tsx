@@ -2456,6 +2456,18 @@ export default function App() {
       const postalContextIds = Array.from(new Set(
         response.data.postalFeatures.map(feature => feature.id),
       ));
+      const postalContextLabels = response.data.postalFeatures.map(feature =>
+        `${feature.label ?? feature.postalCode ?? feature.id} (${feature.id})`,
+      );
+      const geometryFeatureIds = Array.from(new Set(
+        collection.features.map(feature => feature.properties.geometryFeatureId),
+      ));
+      const licenseIds = Array.from(new Set(
+        collection.features.map(feature => feature.properties.licenseId).filter(Boolean),
+      ));
+      const sourceDigests = Array.from(new Set(
+        collection.features.map(feature => feature.properties.sourceDigest).filter(Boolean),
+      ));
       const linkedContexts = Array.from(new Map(
         response.data.alternatives
           .flatMap(alternative => alternative.contexts)
@@ -2473,13 +2485,17 @@ export default function App() {
           : 'Postal area / 郵便番号エリア',
         detail: `${candidate.countryCode} ${response.data.normalizedPostalCode ?? candidate.postalCode} · ${geometryTypes.join(' + ')} · ${provenance.join(' + ')} · ${collection.features.length} area · ${sourceIds.slice(0, 2).join(', ')} · as of ${sourceDates.join(' / ')}${confidenceText}`,
         items: [
+          { label: 'Mapped postal objects / 対応郵便オブジェクト', value: postalContextLabels.join(' / '), monospace: true },
           { label: 'Postal context ID', value: postalContextIds.join(' / '), monospace: true },
+          { label: 'Geometry feature ID', value: geometryFeatureIds.join(' / '), monospace: true },
           ...(linkedContexts.length ? [{
             label: 'Linked locality / admin IDs',
             value: linkedContexts.map(context => `${context.label ?? context.id} (${context.id})`).join(' / '),
             monospace: true,
           }] : []),
           { label: 'Geometry source', value: sourceIds.join(' / '), monospace: true },
+          ...(licenseIds.length ? [{ label: 'Source licence', value: licenseIds.join(' / '), monospace: true }] : []),
+          ...(sourceDigests.length ? [{ label: 'Source digest', value: sourceDigests.join(' / '), monospace: true }] : []),
           { label: 'Pinned release', value: response.data.release.releaseId, monospace: true },
           ...(assertionIds.length ? [{ label: 'Evidence assertion IDs', value: assertionIds.join(' / '), monospace: true }] : []),
           { label: 'Authority boundary', value: 'Postal assignment → derived polygon → address context. No address/building inference.' },
@@ -2523,6 +2539,7 @@ export default function App() {
     setClickedAddress(display_name);
     setSearchQuery(display_name);
     setSearchResults([]);
+    setIsSearchFocused(false);
 
     map.current.flyTo({
       center: [newLng, newLat],
@@ -2668,6 +2685,7 @@ export default function App() {
         setSearchResults(results);
 
         if (results.length > 0) {
+          setIsSearchFocused(true);
           const first = results[0];
           void updatePostalAreaForSearchResult(first, query);
           const newLat = parseFloat(first.lat);
@@ -2692,7 +2710,6 @@ export default function App() {
       showAlert("Search Error", "Error searching for location.");
     } finally {
       setIsSearching(false);
-      setIsSearchFocused(false);
     }
   };
 
@@ -4968,7 +4985,8 @@ export default function App() {
 
       <div className={cn(
         "absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-[450px] px-4 flex flex-col gap-4 pointer-events-none transition-all duration-500",
-        isAgidPanelCollapsed && "bottom-2"
+        isAgidPanelCollapsed && "bottom-2",
+        postalAreaNotice && "hidden md:flex"
       )}>
         {/* Selected Location Panel - Improved UX */}
         {clickedAgid && (

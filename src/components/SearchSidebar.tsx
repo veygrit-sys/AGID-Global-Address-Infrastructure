@@ -184,6 +184,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
 }) => {
   const [coordLat, setCoordLat] = useState("");
   const [coordLng, setCoordLng] = useState("");
+  const isSearchExpanded = isSearchFocused;
   const updateAdvancedSearch = (patch: Partial<AdvancedSearchOptions>) => {
     setAdvancedSearchOptions({ ...advancedSearchOptions, ...patch });
   };
@@ -218,7 +219,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
   return (
     <div className={cn(
       "absolute z-40 transition-all duration-300 pointer-events-none flex flex-col gap-3",
-      isSearchFocused ? "inset-0 w-full h-full md:inset-auto md:top-6 md:left-3 md:w-[440px] md:h-[calc(100vh-48px)] p-0 md:p-0" : "top-2 left-3 right-3 md:top-6 md:left-3 md:w-[440px] md:h-auto p-0",
+      isSearchExpanded ? "inset-0 w-full h-full md:inset-auto md:top-6 md:left-3 md:w-[440px] md:h-[calc(100vh-48px)] p-0 md:p-0" : "top-2 left-3 right-3 md:top-6 md:left-3 md:w-[440px] md:h-auto p-0",
       "max-w-md"
     )}>
       <AnimatePresence mode="wait">
@@ -230,14 +231,14 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
             exit={{ opacity: 0, y: -20 }}
             className={cn(
               "bg-white shadow-xl border-slate-200 pointer-events-auto flex flex-col transition-all duration-300 ease-in-out max-h-full overflow-hidden",
-              isSearchFocused ? "h-full rounded-2xl md:rounded-3xl shadow-xl" : "h-[48px] md:h-[56px] rounded-2xl md:rounded-3xl shadow-md border"
+              isSearchExpanded ? "h-full rounded-2xl md:rounded-3xl shadow-xl" : "h-[48px] md:h-[56px] rounded-2xl md:rounded-3xl shadow-md border"
             )}
           >
             {/* Search Bar Header */}
             <div className="flex items-center p-1 md:p-1.5 gap-0.5 md:gap-1.5 shrink-0">
               <button
                 onClick={() => {
-                  if (isSearchFocused) {
+                  if (isSearchExpanded) {
                     setIsSearchFocused(false);
                     setSearchResults([]);
                   } else {
@@ -246,7 +247,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
                 }}
                 className="p-2 md:p-2.5 hover:bg-slate-100 rounded-xl transition-colors text-slate-600"
               >
-                {isSearchFocused ? (
+                {isSearchExpanded ? (
                   <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
                 ) : (
                   <Menu className="w-5 h-5 md:w-6 md:h-6" />
@@ -325,7 +326,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
 
             {/* Collapsible Search Content */}
             <AnimatePresence>
-              {(isSearchFocused || searchResults.length > 0) && (
+              {isSearchExpanded && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
@@ -670,7 +671,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
             </AnimatePresence>
 
             {/* Utility shortcuts */}
-            {!(isSearchFocused || searchResults.length > 0) && (
+            {!isSearchExpanded && (
               <div className="flex items-center gap-0.5 ml-auto pr-1.5 shrink-0">
                 <button
                   type="button"
