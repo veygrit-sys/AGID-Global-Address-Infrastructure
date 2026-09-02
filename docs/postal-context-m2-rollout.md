@@ -3154,3 +3154,18 @@ No second country was started.
 - Reproducibility and verification: independent rebuilds of descriptor, graph and geometry were byte-identical; AC repository/topology/API/normalization/map/invalid-geometry tests passed 20/20, with JSON, script syntax and diff checks. Evidence commit: `baf75c19ad3ffd50bd6c86e7f6f2874b70aa409d`.
 - After AC: 252 profiles, 89 pending, 142 blocked, 0 in progress, 21 evidence-verified M2; 185 manifests / 175 explicit definitions; 25 non-synthetic research artifacts.
 - Next country: Angola (`AO`). No second country was started.
+
+## BW - Botswana
+
+- Status: `blocked` / M2 unmet; current UPU evidence places BW outside postcode-data creation because no postcode is required.
+- Attempt: 1 from `2026-09-02T22:16:31.130Z`; completed `2026-09-02T22:42:19.921Z`.
+- Definition: `M2_current_botswanapost_postcode_assignment_and_area_visualization` requires any future complete authoritative assignment and area/non-area denominator, compatible rights, real postal Polygon/MultiPolygon, separate postal/address/building/AGID identities and actual API/app render/fit/clear/re-search.
+- Evidence: five exact BotswanaPost, Botswana Government and UPU bodies / 1,102,846 bytes are URL/byte/SHA-256 bound outside Git. The UPU September 2025 list, updated 20 August 2026, includes Botswana among countries not requiring postcodes. Published address examples use P.O. Box or private bag plus locality; the government page separately identifies its physical Plot address.
+- Address and detailed IDs: the unsupported `AA NNN` format was removed. Recipient, plot, street, P.O.-box/private-bag object and locality remain independently typed. The live Gaborone OSM candidate displayed source/ambiguity evidence, detailed address context and independent AGID `BW03TY8S4KWK`; none is promoted to a postcode or postal surface.
+- Geometry and rights: zero official/derived/virtual postal areas and zero country/district/ward/village/locality/office/box/bag/plot/street/route/Point/buffer/hull/Voronoi/raster/AGID proxies were promoted. BotswanaPost copyright and UPU database terms establish no compatible open postal-dataset grant.
+- App and visual boundary: the actual isolated app returned 200; unmocked `GET /api/v1/postal/BW/AA123?geometry=geojson` returned 404 `Postal Context country is not supported`. Deterministic Playwright explicitly selected Gaborone, rendered two map canvases and the BW AGID/address card, with no postal-area notice or fake overlay. In-app Browser and local image viewing failed at the Windows helper boundary, so no human visual or successful postcode-area E2E is claimed.
+- Verification: exact source 1/1, inspector units 4/4, address metadata 2/2, source catalog 56/56, shared area runtime 32/32, app/API 2/2, deterministic browser 1/1, ledger/rollout 14/14, research catalog 2/2 and focused syntax/data/type 12/12 pass (126 recorded, 0 failed).
+- Evidence commit: `eb58aab927314109a0b0211f0a02e575f2b11489`; reports `reports/postal-context-m2/bw-source-review-2026-09-03.json`, `reports/postal-context-m2/bw-checks-2026-09-03.json` and `docs/postal-context-botswana-m2.md`.
+- Retry: not before `2026-12-02T22:16:31.130Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After BW: 252 profiles, 84 pending, 147 blocked, 0 in progress, 21 evidence-verified M2; 190 manifests / 180 explicit definitions; 25 non-synthetic research artifacts.
+- Next country: DR Congo (`CD`). No second country was started.
