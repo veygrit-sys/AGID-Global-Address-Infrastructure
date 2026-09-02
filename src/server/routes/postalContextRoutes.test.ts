@@ -105,8 +105,8 @@ test('research endpoints expose all country work, evidence integrity, real packs
   assert.equal(all.response.status, 200);
   assert.equal(all.body.ok, true);
   assert.equal(all.body.data.summary.totalCountries, 252);
-  assert.equal(all.body.data.summary.runtimeArtifacts, 19);
-  assert.equal(all.body.data.summary.geometryFeatures, 46_291);
+  assert.equal(all.body.data.summary.runtimeArtifacts, 23);
+  assert.equal(all.body.data.summary.geometryFeatures, 49_302);
   assert.equal(all.body.data.sourcePolicy.rawSourceRowsPublished, false);
   assert.equal(all.body.data.sourcePolicy.postalGeometryMayInferAddressesOrBuildings, false);
   assert.ok(all.body.warnings.includes('research-evidence-integrity:digest_mismatch'));

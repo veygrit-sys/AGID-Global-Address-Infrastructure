@@ -3098,3 +3098,17 @@ No second country was started.
 - Retry: not before `2026-12-02T12:27:31.870Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, publication or deployment requires explicit approval.
 - After VC: 252 profiles, 93 pending, 139 blocked, 0 in progress, 20 evidence-verified M2; 182 manifests / 171 explicit definitions; 23 non-synthetic research artifacts.
 - Next country: Venezuela (`VE`). No second country was started.
+
+## VE - Venezuela
+
+- Status: `blocked` / M2 unmet. IPOSTEL and UPU confirm the current numeric four-digit system, so VE remains in postcode-data creation scope.
+- Attempt: 1 from `2026-09-02T17:01:25.968Z`; completed `2026-09-02T17:20:00.000Z`.
+- Definition: `M2_current_ipostel_complete_typed_assignment_and_postal_area_visualization` requires a complete current typed assignment and area/non-area denominator, compatible rights, eligible real postal Polygon/MultiPolygon, separate postal/administrative/geometry/assertion/release/address/building/AGID IDs and actual API/app render/fit/clear/re-search.
+- Primary evidence: five exact IPOSTEL/UPU bodies / 1,015,533 bytes are URL/status/byte/SHA-256 bound outside Git. UPU edition 05/2019 confirms four digits and examples. IPOSTEL's linked postcode page returned 200 with an empty content area, its REST page returned 401 authentication required and the official site search exposed no eligible versioned assignment or geometry artifact.
+- Geometry and rights: public page access establishes no compatible bulk processing, storage, derivation, redistribution or public-serving grant. Zero official/derived/virtual postal areas, zero office/route/P.O.-box/locality/administrative/point/buffer/hull/Voronoi/raster/AGID proxies and zero production records were promoted.
+- App and visual boundary: the actual isolated app returned 200 and unmocked `GET /api/v1/postal/VE/1010?geometry=geojson` returned 503 `Postal Context pack is unavailable`. Deterministic Playwright fixed only the external place-search result, observed two real VE requests and the explicit `Postal area unavailable` / no-inferred-polygon UI, retained two background-map canvases and found zero postal geometry or Polygon/MultiPolygon detail labels. In-app Browser initialization and the local screenshot viewer failed on Windows; no human/live-browser visual or translucent-area success is claimed.
+- Verification: fixed-source receipts 5/5, actual app/API 2/2, deterministic browser/UI 3/3 and polygon non-fabrication 3/3 pass in the engineering report. VE ledger, shared rollout, JSON, diff, type and related shared runtime checks are recorded in the commit verification.
+- Evidence commit: `bb7424d2fb5e972ce1859dd327d3cfa6b88e6e5b`; reports `reports/postal-context-m2/ve-source-review-2026-09-03.json`, `reports/postal-context-m2/ve-checks-2026-09-03.json`, `docs/postal-context-venezuela-m2.md` and fixed PNG receipt.
+- Retry: not before `2026-12-02T17:01:25.968Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/NDA/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After VE: 252 profiles, 92 pending, 140 blocked, 0 in progress, 20 evidence-verified M2; 182 manifests / 172 explicit definitions; 23 non-synthetic research artifacts.
+- Next country: British Virgin Islands (`VG`). No second country was started.
