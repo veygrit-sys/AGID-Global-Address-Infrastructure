@@ -17,7 +17,7 @@ test('registers official and open postal sources for the priority rollout countr
 });
 
 test('prefers country-specific official sources before the UPU global fallback', () => {
-  const countrySpecificCountries = ['AO', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'ME', 'TW', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
+  const countrySpecificCountries = ['AO', 'BI', 'DJ', 'DZ', 'EG', 'ET', 'GH', 'KE', 'LR', 'MA', 'MW', 'MZ', 'NA', 'NG', 'SC', 'SO', 'SS', 'TN', 'TZ', 'UG', 'RW', 'ZM', 'ZW', 'MG', 'MU', 'BW', 'AT', 'CH', 'DE', 'CZ', 'DK', 'MT', 'MC', 'FI', 'BG', 'BY', 'BE', 'ME', 'TW', 'LV', 'LT', 'LI', 'NL', 'PT', 'JE', 'IM', 'GI'];
 
   for (const countryCode of countrySpecificCountries) {
     const sources = getOfficialPostalSourcesForCountry(countryCode);
@@ -32,6 +32,9 @@ test('prefers country-specific official sources before the UPU global fallback',
   }
 
   assert.equal(getOfficialPostalSourcesForCountry('DE')[0]?.id, 'bkg-postleitzahlgebiete');
+  const burundi = getOfficialPostalSourcesForCountry('BI').find(source => source.id === 'rnp-burundi');
+  assert.equal(burundi?.sourceRole, 'context-only');
+  assert.equal(burundi?.validationReadiness, 'metadata-only');
   assert.equal(getOfficialPostalSourcesForCountry('CZ')[0]?.id, 'ceska-posta-customer-outputs');
   assert.equal(getOfficialPostalSourcesForCountry('FI')[0]?.id, 'posti-finland-postal-code-services');
   assert.ok(getOfficialPostalSourcesForCountry('BG').some(source => source.id === 'bulgarian-posts-postcode-reference'));

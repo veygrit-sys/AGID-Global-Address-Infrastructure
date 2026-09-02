@@ -133,6 +133,7 @@ export type AfricaOpenGeoSourceId =
   | 'osm-cabo-verde'
   | 'la-poste-benin'
   | 'la-poste-burkina'
+  | 'rnp-burundi'
   | 'gambia-post-services'
   | 'guinee-poste'
   | 'mopt-liberia-postal-services'
@@ -1218,6 +1219,15 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     usage: 'primary',
     notes: 'Official La Poste Burkina Faso postcode search for locality and five-digit postal-code confirmation.',
   },
+  'rnp-burundi': {
+    id: 'rnp-burundi',
+    name: 'Régie nationale des postes du Burundi',
+    url: 'https://posteburundi.bi/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official RNP operator and delivery-context reference. The November 2025 UPU Burundi sheet uses BP, commune and province without a postcode; no postcode assignment or postal area is implied.',
+  },
   'gambia-post-services': {
     id: 'gambia-post-services',
     name: 'Gambia Postal Services Corporation',
@@ -2082,6 +2092,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   KE: ['posta-kenya', 'posta-kenya-customer-service-charter-2022', 'posta-kenya-properties-2026', 'upu-kenya-addressing-2004', 'ca-kenya-national-addressing-system', 'kenya-national-addressing-policy-2023', 'survey-of-kenya-mapping-policy-2021', 'ardhisasa-kenya', 'odpc-kenya-address-location-privacy', 'osm-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
   TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'tcra-tanzania-addressing', 'tanzania-postal-regulations-2018', 'nbs-tanzania-wards-2022', 'tcra-tanzania-napa', 'pdpc-tanzania-act-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  BI: ['rnp-burundi', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   RW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SO: ['somalia-moct-posta', 'somalia-moct-postal-revival-2025', 'somalia-national-postal-policy-2026', 'somalia-moct-digital-addressing', 'somalia-sobs-address-observation', 'somalia-sobs-cbca-jurisdiction', 'somalia-snbs-gis', 'somalia-nira-principles', 'somalia-nca-privacy', 'osm-somalia', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
   SS: ['south-sudan-nca-postal-sector', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
