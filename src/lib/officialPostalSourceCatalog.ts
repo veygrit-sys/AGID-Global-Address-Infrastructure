@@ -3592,7 +3592,7 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     sourceNames: ['correios de angola', 'encta'],
     openSourceIds: [],
     requiresCredential: false,
-    notes: ['Official Angolan postal operator; use for postal-network evidence until a machine-readable postcode file is connected.'],
+    notes: ['Official Angolan postal operator. Current operator pages and the UPU Universal DataBase Sep. 2025 (updated 20 Aug. 2026) support a no-postcode classification; no postcode assignment or postal-area artifact is implied.'],
   },
   {
     id: 'la-poste-cote-divoire',

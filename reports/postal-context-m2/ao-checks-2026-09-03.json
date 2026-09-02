@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "AO",
+  "observedAt": "2026-09-02T19:30:58.531Z",
+  "completedAt": "2026-09-02T19:55:00.000Z",
+  "baseCommit": "297f54ff0ac858b10f2662d2549f526607b34d30",
+  "scope": "AO-specific Correios de Angola, INACOM, UPU no-postcode, exact-body, rights, address-metadata and no-proxy evidence plus real-app fail-closed verification. No raw body, real address, administrative/service proxy, Point, synthetic planning code, production geometry or successful AO postal-area visual was promoted.",
+  "checks": [
+    {"id":"ao-source-inspector","command":"<bundled-python> scripts/inspect-postal-context-ao-sources.py --source-dir <temporary-source-directory>","result":"pass","tests":1,"assertion":"seven exact official bodies reproduce operator, regulator, UPU no-postcode, address format and rights evidence without rows or geometry"},
+    {"id":"ao-source-inspector-unit","command":"<bundled-python> scripts/inspect-postal-context-ao-sources.test.py -v","result":"pass","tests":4,"assertion":"digest, source-set and marker drift fail closed"},
+    {"id":"ao-address-metadata","command":"node --test scripts/postal-context-ao-address-metadata.test.mjs","result":"pass","tests":2,"assertion":"AO JSON and Africa hierarchy represent no postcode and remove unsupported four-digit metadata"},
+    {"id":"real-app-and-api","command":"GET http://127.0.0.1:3022/ and GET /api/v1/postal/AO/1234?geometry=geojson","result":"pass","tests":2,"assertion":"actual app HTTP 200; real unmocked AO postal API HTTP 404 unsupported and no fake geometry"},
+    {"id":"deterministic-browser-fallback","command":"temporary Playwright Chromium check against actual app","result":"pass-with-blocked-country","tests":1,"assertion":"page/title/body, two canvases and no framework overlay; controlled non-postal Luanda Address Context produced an AGID ID while no postal geometry was shown; no successful AO postal E2E is claimed"},
+    {"id":"shared-area-runtime-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts","result":"pass","tests":32,"assertion":"normalization, no-match, geometry validation, fit, translucent fill, outline, clear, non-area and routing stay fail closed; AC is now covered by the configured-store status assertion"},
+    {"id":"rollout-invariants-and-ledger","command":"node --test scripts/postal-context-m2-rollout.test.mjs scripts/postal-context-m2-ao-ledger.test.mjs","result":"pass","tests":14,"assertion":"stable queue, blocker policy, AO no-postcode evidence/report digests and next DZ"},
+    {"id":"changed-syntax-json-and-types","command":"py_compile, node --check, JSON.parse and focused tsc","result":"pass","tests":12,"assertion":"changed code/data parse and focused shared postal graph type-check passes"}
+  ],
+  "totals": {"assertionGroups":8,"testsPassed":68,"testsFailed":0},
+  "applicationVerification": {
+    "actualAppStarted": true,
+    "actualAppHttpStatus": 200,
+    "realAoApiStatus": 404,
+    "realAoApiMessage": "Postal Context country is not supported",
+    "realAoAppAreaVisualizationVerified": false,
+    "inAppBrowser": "failed before navigation with Windows sandbox ACL helper error",
+    "deterministicPlaywrightFallback": "ran against the actual app with place discovery controlled only and the postal API unmocked; non-postal AGID Address Context was visible, but no successful postcode-area overlay was produced",
+    "manualVisualInspection": false,
+    "browserE2eVerified": false
+  },
+  "environmentNotes": [
+    "The broad address-format suite has one unrelated pre-existing VC failure because svg-post-post-codes is referenced by VC metadata but not registered in the shared official-source catalog. AO-specific metadata, Africa hierarchy, source-inspector, research-catalog, shared postal runtime, rollout invariants and focused type checks pass.",
+    "In-app Browser and local PDF bitmap viewing both failed at the Windows ACL/path helper boundary; deterministic checks are recorded without claiming manual visual inspection."
+  ],
+  "countryM2Achieved": false
+}
