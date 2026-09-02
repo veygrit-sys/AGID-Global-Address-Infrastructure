@@ -13,7 +13,7 @@ test('loads the committed public research catalog and preserves M2/runtime separ
   const puertoRico = postalContextResearchCountry(catalog, 'pr');
 
   assert.equal(catalog.summary.totalCountries, 252);
-  assert.equal(catalog.summary.runtimeArtifacts, 24);
+  assert.equal(catalog.summary.runtimeArtifacts, 25);
   assert.equal(puertoRico?.status, 'blocked');
   assert.equal(puertoRico?.runtimeArtifact?.synthetic, false);
   assert.equal(puertoRico?.runtimeArtifact?.recordCounts.features, 132);

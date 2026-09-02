@@ -295,7 +295,7 @@ test('committed real research packs are explicit opt-in and preserve rollout sta
   assert.ok(puertoRico.warnings.includes('research-rollout-status:blocked'));
   assert.equal(
     enabled.statuses().filter(status => status.state === 'ready').length,
-    19,
+    23,
   );
 });
 
