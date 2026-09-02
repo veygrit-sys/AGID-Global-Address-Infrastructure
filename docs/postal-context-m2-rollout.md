@@ -2978,3 +2978,17 @@ No second country was started.
 - Retry: not before `2026-12-02T06:49:26.752Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After SR: 252 profiles, 100 pending, 133 blocked, 0 in progress, 19 evidence-verified M2; 178 manifests / 164 explicit definitions.
 - Next country: El Salvador (`SV`). No second country was started.
+
+## SV - El Salvador
+
+- Status: `blocked` / M2 unmet; the current numeric four-digit system is confirmed and SV remains in postcode-data creation scope.
+- Attempt: 1 from `2026-09-02T07:20:57.200Z`; completed `2026-09-02T07:39:33.1261320Z`.
+- Definition: `M2_current_correos_el_salvador_complete_assignment_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/sv-source-review-2026-09-02.json` (`sha256:1bf79707eaee87be1190fe4486b526c6f54810fbd95e4c9f7c426dd9858345f4`); checks `reports/postal-context-m2/sv-checks-2026-09-02.json` (`sha256:ecf88576e4b86fdbdab49987cff52d731f53472d132ac771125a3ccb0a5feb25`).
+- Current semantics: five exact UPU/Correos bodies / 1,106,242 bytes fix the UPU August 2026 required-postcode list, numeric four-digit format and dated 05/2019 composition/placement guidance. The dated sheet is not a current complete assignment denominator.
+- Geometry and rights: reviewed Correos pages expose no open bulk assignment or postal-polygon licence. CNR two-, four- and six-digit geographic codes and administrative geometry were not promoted. Zero official/derived/virtual postal areas, zero production records and zero synthetic `9999` records were added.
+- App and visual boundary: isolated Vite failed shared dependency resolution and in-app Browser failed Windows ACL setup before navigation. Shared deterministic normalization/API/Polygon/MultiPolygon/render/fit/clear/re-search contracts pass, but no real SV API, translucent area, ID panel or visual E2E is claimed.
+- Verification: fixed-source inspection 1/1, inspector units 2/2, rollout 8/8, SV address/shared Postal runtime 33/33 and scoped TypeScript 1/1 pass (45 recorded, 0 scoped failures). One broader unrelated pre-existing App source-shape assertion remains baseline-only.
+- Retry: not before `2026-12-02T07:20:57.200Z` and only after pending countries are swept. Provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After SV: 252 profiles, 99 pending, 134 blocked, 0 in progress, 19 evidence-verified M2; 178 manifests / 165 explicit definitions.
+- Next country: Sint Maarten (`SX`). No second country was started.
