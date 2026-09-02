@@ -118,3 +118,32 @@ test('topology validation hard-caps negative errors and stops scanning the remai
   assert.equal(result.errors.at(-1), 'geometry-topology-error-limit-exceeded');
   assert.ok(result.positionCount < collection.features.length * invalidRing.length);
 });
+
+test('topology validation accepts OGC-valid point contacts without accepting edge overlap', () => {
+  const outer = ring(0, 0, 10);
+  const pointTouchingOuter = [
+    [0, 0], [2, 1], [1, 2], [0, 0],
+  ] as PostalContextLinearRing;
+  const firstHole = ring(3, 3, 1);
+  const pointTouchingHole = ring(4, 4, 1);
+  const valid = validatePostalContextGeometryTopology(collectionWithPolygon([
+    outer, pointTouchingOuter, firstHole, pointTouchingHole,
+  ]));
+  assert.equal(valid.valid, true, valid.errors.join('\n'));
+
+  const edgeOverlappingOuter = [
+    [0, 2], [2, 2], [2, 4], [0, 4], [0, 2],
+  ] as PostalContextLinearRing;
+  const invalid = validatePostalContextGeometryTopology(collectionWithPolygon([
+    outer, edgeOverlappingOuter,
+  ]));
+  assert.equal(invalid.valid, false);
+  assert.ok(invalid.errors.some(error => error.includes('geometry-hole-intersects-outer')));
+
+  const bowTie = [
+    [0, 0], [2, 2], [0, 2], [2, 0], [0, 0],
+  ] as PostalContextLinearRing;
+  const crossed = validatePostalContextGeometryTopology(collectionWithPolygon([bowTie]));
+  assert.equal(crossed.valid, false);
+  assert.ok(crossed.errors.some(error => error.includes('geometry-ring-self-intersection')));
+});

@@ -135,7 +135,7 @@ const SPANISH_SHIPPING_PROFILES: Record<string, SpanishShippingProfile> = {
   EC: profile('EC', 'Ecuador', 'Ecuador', 'andean', '^\\d{6}$', true),
   PE: profile('PE', 'Perú', 'Peru', 'andean', '^\\d{5}$', true),
   BO: profile('BO', 'Bolivia', 'Bolivia', 'andean', null, false),
-  PY: profile('PY', 'Paraguay', 'Paraguay', 'paraguay', '^\\d{4}$', true),
+  PY: profile('PY', 'Paraguay', 'Paraguay', 'paraguay', '^\\d{6}$', true),
   UY: profile('UY', 'Uruguay', 'Uruguay', 'southern-cone', '^\\d{5}$', true),
   AR: profile(
     'AR',

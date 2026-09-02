@@ -88,7 +88,7 @@ function pointOnSegment(point: PostalContextPosition, a: PostalContextPosition, 
     && point[1] <= Math.max(a[1], b[1]) + TOPOLOGY_EPSILON;
 }
 
-function segmentsIntersect(
+function segmentIntersectionKind(
   a: PostalContextPosition,
   b: PostalContextPosition,
   c: PostalContextPosition,
@@ -101,11 +101,30 @@ function segmentsIntersect(
   if (((abC > TOPOLOGY_EPSILON && abD < -TOPOLOGY_EPSILON)
       || (abC < -TOPOLOGY_EPSILON && abD > TOPOLOGY_EPSILON))
     && ((cdA > TOPOLOGY_EPSILON && cdB < -TOPOLOGY_EPSILON)
-      || (cdA < -TOPOLOGY_EPSILON && cdB > TOPOLOGY_EPSILON))) return true;
-  return (Math.abs(abC) <= TOPOLOGY_EPSILON && pointOnSegment(c, a, b))
-    || (Math.abs(abD) <= TOPOLOGY_EPSILON && pointOnSegment(d, a, b))
-    || (Math.abs(cdA) <= TOPOLOGY_EPSILON && pointOnSegment(a, c, d))
-    || (Math.abs(cdB) <= TOPOLOGY_EPSILON && pointOnSegment(b, c, d));
+      || (cdA < -TOPOLOGY_EPSILON && cdB > TOPOLOGY_EPSILON))) return 'cross' as const;
+  const cOnAb = Math.abs(abC) <= TOPOLOGY_EPSILON && pointOnSegment(c, a, b);
+  const dOnAb = Math.abs(abD) <= TOPOLOGY_EPSILON && pointOnSegment(d, a, b);
+  const aOnCd = Math.abs(cdA) <= TOPOLOGY_EPSILON && pointOnSegment(a, c, d);
+  const bOnCd = Math.abs(cdB) <= TOPOLOGY_EPSILON && pointOnSegment(b, c, d);
+  if (!cOnAb && !dOnAb && !aOnCd && !bOnCd) return 'none' as const;
+  const collinear = Math.abs(abC) <= TOPOLOGY_EPSILON
+    && Math.abs(abD) <= TOPOLOGY_EPSILON
+    && Math.abs(cdA) <= TOPOLOGY_EPSILON
+    && Math.abs(cdB) <= TOPOLOGY_EPSILON;
+  if (!collinear) return 'touch' as const;
+  const useLongitude = Math.abs(b[0] - a[0]) >= Math.abs(b[1] - a[1]);
+  const axis = useLongitude ? 0 : 1;
+  const overlap = Math.min(Math.max(a[axis], b[axis]), Math.max(c[axis], d[axis]))
+    - Math.max(Math.min(a[axis], b[axis]), Math.min(c[axis], d[axis]));
+  return overlap > TOPOLOGY_EPSILON ? 'overlap' as const : 'touch' as const;
+}
+
+function pointExactlyOnSegment(point: PostalContextPosition, a: PostalContextPosition, b: PostalContextPosition) {
+  return orientation(a, b, point) === 0
+    && point[0] >= Math.min(a[0], b[0])
+    && point[0] <= Math.max(a[0], b[0])
+    && point[1] >= Math.min(a[1], b[1])
+    && point[1] <= Math.max(a[1], b[1]);
 }
 
 type Segment = {
@@ -139,7 +158,7 @@ function adjacentSegments(left: number, right: number, segmentCount: number) {
     || (right === 0 && left === segmentCount - 1);
 }
 
-function ringsIntersect(
+function ringsConflict(
   left: PostalContextLinearRing,
   right: PostalContextLinearRing,
   budget: { remaining: number },
@@ -155,7 +174,8 @@ function ringsIntersect(
       if (first.maximumLatitude < second.minimumLatitude
         || second.maximumLatitude < first.minimumLatitude) continue;
       if (--budget.remaining < 0) return 'budget' as const;
-      if (segmentsIntersect(first.a, first.b, second.a, second.b)) return true;
+      const kind = segmentIntersectionKind(first.a, first.b, second.a, second.b);
+      if (kind === 'cross' || kind === 'overlap') return true;
     }
   }
   return false;
@@ -173,7 +193,16 @@ function ringSelfIntersects(ring: PostalContextLinearRing, budget: { remaining: 
       if (--budget.remaining < 0) return 'budget' as const;
       if (left.maximumLatitude < right.minimumLatitude
         || right.maximumLatitude < left.minimumLatitude) continue;
-      if (segmentsIntersect(left.a, left.b, right.a, right.b)) return true;
+      const kind = segmentIntersectionKind(left.a, left.b, right.a, right.b);
+      if (kind === 'cross' || kind === 'overlap') return true;
+      if (kind === 'touch' && (
+        samePosition(left.a, right.a) || samePosition(left.a, right.b)
+        || samePosition(left.b, right.a) || samePosition(left.b, right.b)
+        || pointExactlyOnSegment(left.a, right.a, right.b)
+        || pointExactlyOnSegment(left.b, right.a, right.b)
+        || pointExactlyOnSegment(right.a, left.a, left.b)
+        || pointExactlyOnSegment(right.b, left.a, left.b)
+      )) return true;
     }
   }
   return false;
@@ -192,6 +221,14 @@ function pointInRing(point: PostalContextPosition, ring: PostalContextLinearRing
     }
   }
   return inside ? 'inside' as const : 'outside' as const;
+}
+
+function ringHasRelation(
+  ring: PostalContextLinearRing,
+  container: PostalContextLinearRing,
+  expected: 'inside' | 'outside',
+) {
+  return ring.slice(0, -1).some(point => pointInRing(point, container) === expected);
 }
 
 function validateRing(
@@ -235,10 +272,13 @@ function validatePolygon(
   for (let index = 1; index < polygon.length; index += 1) {
     const hole = polygon[index];
     if (!hole?.length) continue;
-    const relation = pointInRing(hole[0], outer);
-    if (relation !== 'inside') addTopologyError(state, `geometry-hole-outside-outer:${id}:${index}`);
+    const hasInsidePoint = ringHasRelation(hole, outer, 'inside');
+    const hasOutsidePoint = ringHasRelation(hole, outer, 'outside');
+    if (!hasInsidePoint || hasOutsidePoint) {
+      addTopologyError(state, `geometry-hole-outside-outer:${id}:${index}`);
+    }
     if (state.aborted) return;
-    const outerIntersection = ringsIntersect(outer, hole, state.budget);
+    const outerIntersection = ringsConflict(outer, hole, state.budget);
     if (outerIntersection === 'budget') {
       abortForBudget(state, `${id}:${index}`);
       return;
@@ -246,13 +286,13 @@ function validatePolygon(
     if (outerIntersection) addTopologyError(state, `geometry-hole-intersects-outer:${id}:${index}`);
     if (state.aborted) return;
     for (let other = 1; other < index; other += 1) {
-      const intersection = ringsIntersect(polygon[other], hole, state.budget);
+      const intersection = ringsConflict(polygon[other], hole, state.budget);
       if (intersection === 'budget') {
         abortForBudget(state, `${id}:${other}:${index}`);
         return;
       }
-      if (intersection || pointInRing(hole[0], polygon[other]) === 'inside'
-        || pointInRing(polygon[other][0], hole) === 'inside') {
+      if (intersection || ringHasRelation(hole, polygon[other], 'inside')
+        || ringHasRelation(polygon[other], hole, 'inside')) {
         addTopologyError(state, `geometry-holes-overlap:${id}:${other}:${index}`);
       }
       if (state.aborted) return;
@@ -360,7 +400,7 @@ function segmentIntersectsBbox(a: PostalContextPosition, b: PostalContextPositio
     [bbox[0], bbox[3]],
   ];
   return corners.some((corner, index) =>
-    segmentsIntersect(a, b, corner, corners[(index + 1) % corners.length]));
+    segmentIntersectionKind(a, b, corner, corners[(index + 1) % corners.length]) !== 'none');
 }
 
 export function postalContextGeometryIntersectsBbox(
