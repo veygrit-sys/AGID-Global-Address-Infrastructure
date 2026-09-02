@@ -1,4 +1,5 @@
 export type AfricaOpenGeoSourceId =
+  | 'botswanapost-addressing'
   | 'osm-nominatim'
   | 'osm-overpass'
   | 'openaddresses'
@@ -1211,6 +1212,16 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'Website All Rights Reserved; reference access only, no dataset redistribution right inferred',
     notes: 'Official operator references. The UPU November 2025 Benin sheet treats the leading two digits in 10 BP 648 as a delivery-office identifier and BP 648 as a P.O. box, not a postcode. The UPU September 2025 list says Benin does not require postal codes. Agency, locality and service data remain non-postcode context and are not postal geometry.',
   },
+  'botswanapost-addressing': {
+    id: 'botswanapost-addressing',
+    name: 'BotswanaPost address and delivery references',
+    url: 'https://botswanapost.post/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Website copyright notice; reference access only, no dataset redistribution right inferred',
+    notes: 'Official operator reference. BotswanaPost displays a P.O. Box plus Gaborone without a postcode, the UPU Botswana sheet uses P.O. Box or private bag plus locality, and the UPU September 2025 list says Botswana does not require postal codes. Boxes, bags, plots, streets, localities and AGID cells remain non-postcode context and are not postal geometry.',
+  },
   'la-poste-burkina': {
     id: 'la-poste-burkina',
     name: 'La Poste Burkina Faso postcode search',
@@ -2103,7 +2114,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   MW: ['malawi-postcodes-macra', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  BW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  BW: ['botswanapost-addressing', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SC: ['seychelles-postal-regulator-nas', 'seychelles-statehouse-nas-2024', 'seychelles-finance-nas-2025', 'seychelles-statehouse-nas-bill-2026', 'seychelles-postal-regulator-operators', 'seychelles-nbs-gis', 'seychelles-lands-webgis', 'seychelles-webgis-disclaimer', 'seychelles-land-registration-act', 'seychelles-data-protection-act-2023', 'osm-seychelles', 'osm-seychelles-building-import', 'rcmrd-gmes-africa-geoportal'],
