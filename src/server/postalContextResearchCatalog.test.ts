@@ -13,13 +13,21 @@ test('loads the committed public research catalog and preserves M2/runtime separ
   const puertoRico = postalContextResearchCountry(catalog, 'pr');
 
   assert.equal(catalog.summary.totalCountries, 252);
-  assert.equal(catalog.summary.runtimeArtifacts, 23);
+  assert.equal(catalog.summary.runtimeArtifacts, 24);
   assert.equal(puertoRico?.status, 'blocked');
   assert.equal(puertoRico?.runtimeArtifact?.synthetic, false);
   assert.equal(puertoRico?.runtimeArtifact?.recordCounts.features, 132);
   assert.equal(puertoRico?.runtimeArtifact?.sampleIds.linkedContextIds[0], 'country-pr');
   assert.equal(catalog.sourcePolicy.rawSourceRowsPublished, false);
   assert.equal(catalog.sourcePolicy.postalGeometryMayInferAddressesOrBuildings, false);
+  const usVirginIslands = postalContextResearchCountry(catalog, 'VI');
+  assert.equal(usVirginIslands?.status, 'blocked');
+  assert.equal(usVirginIslands?.runtimeArtifact?.recordCounts.features, 6);
+  assert.equal(usVirginIslands?.runtimeArtifact?.sampleIds.postalContextId, 'postal-vi-census-zcta-00802');
+  assert.deepEqual(usVirginIslands?.runtimeArtifact?.sampleIds.linkedContextIds, [
+    'country-vi',
+    'agid-vi-census-zcta-00802-internal-point',
+  ]);
 });
 
 test('rejects traversal in runtime artifact paths', () => {

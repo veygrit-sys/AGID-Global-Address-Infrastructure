@@ -14,17 +14,17 @@ test('committed Postal Context research catalog is deterministic and covers the 
   assert.equal(committed, expected);
   assert.equal(catalog.summary.totalCountries, 252);
   assert.deepEqual(catalog.summary.statusCounts, {
-    blocked: 141,
+    blocked: 142,
     m2_verified: 20,
-    pending: 91,
+    pending: 90,
   });
-  assert.equal(catalog.summary.manifests, 183);
-  assert.equal(catalog.summary.explicitM2Definitions, 173);
-  assert.equal(catalog.summary.runtimeArtifacts, 23);
-  assert.equal(catalog.summary.geometryFeatures, 49_302);
-  assert.equal(catalog.summary.geometryPositions, 4_133_039);
-  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_940, official: 362 });
-  assert.equal(catalog.ordering.nextCountry, 'VI');
+  assert.equal(catalog.summary.manifests, 184);
+  assert.equal(catalog.summary.explicitM2Definitions, 174);
+  assert.equal(catalog.summary.runtimeArtifacts, 24);
+  assert.equal(catalog.summary.geometryFeatures, 49_308);
+  assert.equal(catalog.summary.geometryPositions, 4_144_806);
+  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_946, official: 362 });
+  assert.equal(catalog.ordering.nextCountry, 'AC');
 });
 
 test('catalog separates rollout status from real derived runtime availability and exposes linked IDs', () => {
@@ -76,4 +76,17 @@ test('catalog separates rollout status from real derived runtime availability an
     true,
     'existing stale evidence pins must remain visible rather than silently trusted',
   );
+
+  const usVirginIslands = catalog.countries.find(country => country.countryCode === 'VI');
+  assert.ok(usVirginIslands);
+  assert.equal(usVirginIslands.status, 'blocked');
+  assert.equal(usVirginIslands.runtimeArtifact?.promotionEligible, false);
+  assert.equal(usVirginIslands.runtimeArtifact?.recordCounts.features, 6);
+  assert.deepEqual(usVirginIslands.runtimeArtifact?.sourceTypeCounts, { derived: 6 });
+  assert.equal(usVirginIslands.runtimeArtifact?.sampleIds.postalContextId, 'postal-vi-census-zcta-00802');
+  assert.equal(usVirginIslands.runtimeArtifact?.sampleIds.geometryFeatureId, 'census-vi-zcta-2020-00802');
+  assert.deepEqual(usVirginIslands.runtimeArtifact?.sampleIds.linkedContextIds, [
+    'country-vi',
+    'agid-vi-census-zcta-00802-internal-point',
+  ]);
 });

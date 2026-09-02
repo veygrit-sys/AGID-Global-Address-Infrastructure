@@ -105,8 +105,8 @@ test('research endpoints expose all country work, evidence integrity, real packs
   assert.equal(all.response.status, 200);
   assert.equal(all.body.ok, true);
   assert.equal(all.body.data.summary.totalCountries, 252);
-  assert.equal(all.body.data.summary.runtimeArtifacts, 23);
-  assert.equal(all.body.data.summary.geometryFeatures, 49_302);
+  assert.equal(all.body.data.summary.runtimeArtifacts, 24);
+  assert.equal(all.body.data.summary.geometryFeatures, 49_308);
   assert.equal(all.body.data.sourcePolicy.rawSourceRowsPublished, false);
   assert.equal(all.body.data.sourcePolicy.postalGeometryMayInferAddressesOrBuildings, false);
   assert.ok(all.body.warnings.includes('research-evidence-integrity:digest_mismatch'));
@@ -131,6 +131,19 @@ test('research endpoints expose all country work, evidence integrity, real packs
   assert.deepEqual(pr.body.data.runtimeArtifact.sampleIds.linkedContextIds, ['country-pr']);
   assert.match(pr.body.data.blocker.kind, /assignment-denominator/u);
   assert.doesNotMatch(JSON.stringify(pr.body), /recipient|customer|landRights/u);
+
+  const vi = await getJson(running.baseUrl, '/api/postal/research/VI');
+  assert.equal(vi.response.status, 200);
+  assert.equal(vi.body.data.status, 'blocked');
+  assert.equal(vi.body.data.runtimeArtifact.recordCounts.features, 6);
+  assert.equal(vi.body.data.runtimeArtifact.sourceTypeCounts.derived, 6);
+  assert.equal(vi.body.data.runtimeArtifact.sampleIds.postalContextId, 'postal-vi-census-zcta-00802');
+  assert.equal(vi.body.data.runtimeArtifact.sampleIds.geometryFeatureId, 'census-vi-zcta-2020-00802');
+  assert.deepEqual(vi.body.data.runtimeArtifact.sampleIds.linkedContextIds, [
+    'country-vi',
+    'agid-vi-census-zcta-00802-internal-point',
+  ]);
+  assert.doesNotMatch(JSON.stringify(vi.body), /recipient|customer|landRights/u);
 
   const unknown = await getJson(running.baseUrl, '/api/postal/research/ZZ');
   assert.equal(unknown.response.status, 404);
