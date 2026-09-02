@@ -7108,6 +7108,22 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     ],
   },
   {
+    id: 'scpt-rdc-postcode-directory', countryCodes: ['CD'], label: 'SCPT Code Postal RDC directory',
+    authority: 'postal-operator', trustTier: 'official', availability: 'public-api', depth: 'postcode',
+    sourceRole: 'postal-reference-data', validationReadiness: 'metadata-only', url: 'https://www.codepostal.cd/',
+    sourceNames: ['scpt code postal rdc', 'codepostal.cd', 'société congolaise des postes et télécommunications'],
+    openSourceIds: ['scpt-rdc-postcode-directory'], requiresCredential: false,
+    notes: ['The public directory confirms individual seven-digit rows with city, province and neighbourhood fields.', 'No reviewed endpoint supplies postal geometry, complete versioned coverage, correction history or compatible bulk redistribution rights.'],
+  },
+  {
+    id: 'upu-dr-congo-addressing-2022', countryCodes: ['CD'], label: 'UPU DR Congo addressing sheet 09/2022',
+    authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode',
+    sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/codEn.pdf',
+    sourceNames: ['upu dr congo addressing 2022', 'upu congo dem rep addressing'], openSourceIds: ['upu-dr-congo-addressing-2022'], requiresCredential: false,
+    notes: ['Defines the seven-digit format and address placement, not a complete assignment table, polygon release, deliverability guarantee or open dataset licence.'],
+  },
+  {
     id: 'elta-gr',
     countryCodes: ['GR'],
     label: 'ELTA Postal Code and Address Finder',

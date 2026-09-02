@@ -1,5 +1,10 @@
 export type AfricaOpenGeoSourceId =
   | 'botswanapost-addressing'
+  | 'scpt-rdc-postcode-directory'
+  | 'upu-dr-congo-addressing-2022'
+  | 'arptc-dr-congo-postal-market-2021-2022'
+  | 'osm-dr-congo'
+  | 'hf-libpostal-address-parser-candidate'
   | 'osm-nominatim'
   | 'osm-overpass'
   | 'openaddresses'
@@ -1222,6 +1227,35 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'Website copyright notice; reference access only, no dataset redistribution right inferred',
     notes: 'Official operator reference. BotswanaPost displays a P.O. Box plus Gaborone without a postcode, the UPU Botswana sheet uses P.O. Box or private bag plus locality, and the UPU September 2025 list says Botswana does not require postal codes. Boxes, bags, plots, streets, localities and AGID cells remain non-postcode context and are not postal geometry.',
   },
+  'scpt-rdc-postcode-directory': {
+    id: 'scpt-rdc-postcode-directory', name: 'SCPT Code Postal RDC directory',
+    url: 'https://www.codepostal.cd/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'SCPT website copyright; reference access only, no bulk redistribution right inferred',
+    notes: 'Official seven-digit lookup and hierarchical assignment reference. Its public API returns locality rows and IDs but no geometry, national version denominator or reusable dataset licence.',
+  },
+  'upu-dr-congo-addressing-2022': {
+    id: 'upu-dr-congo-addressing-2022', name: 'UPU DR Congo addressing sheet (September 2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/codEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'Defines seven digits and gives urban, rural, P.O.-box and poste-restante examples; not a complete assignment register or geometry release.',
+  },
+  'arptc-dr-congo-postal-market-2021-2022': {
+    id: 'arptc-dr-congo-postal-market-2021-2022', name: 'ARPTC postal-market observatory 2021-2022',
+    url: 'https://arptc.gouv.cd/app/uploads/2023/10/Rapport-annuel-sur-lobservatoire-du-marche%CC%81-de-la-Poste-en-RDC-2021-2022.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official publication; no postal dataset redistribution licence inferred',
+    notes: 'Reports approximately 429 post offices, 379 SCPT offices and weak coverage. Facilities and statistics are not postcode areas.',
+  },
+  'osm-dr-congo': {
+    id: 'osm-dr-congo', name: 'OpenStreetMap DR Congo candidate context',
+    url: 'https://www.openstreetmap.org/copyright', kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Candidate-only place/admin context. Observed Residentiel and Bulungu results are Points or unrelated features; Limete geometry is too coarse for postcode 1004131.',
+  },
+  'hf-libpostal-address-parser-candidate': {
+    id: 'hf-libpostal-address-parser-candidate', name: 'Hugging Face ellenhp/libpostal candidate corpus',
+    url: 'https://huggingface.co/datasets/ellenhp/libpostal', kind: 'address', coverage: 'global', usage: 'validation',
+    license: 'Dataset card has no licence tag and refers to upstream mixed-source licensing; do not ingest',
+    notes: 'Under-construction parser corpus considered only for future offline evaluation. Samples did not establish CD coverage, official assignment authority, geometry or reusable rights.',
+  },
   'la-poste-burkina': {
     id: 'la-poste-burkina',
     name: 'La Poste Burkina Faso postcode search',
@@ -2115,6 +2149,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   BW: ['botswanapost-addressing', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  CD: ['scpt-rdc-postcode-directory', 'upu-dr-congo-addressing-2022', 'arptc-dr-congo-postal-market-2021-2022', 'osm-dr-congo', 'hf-libpostal-address-parser-candidate', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
   NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   SC: ['seychelles-postal-regulator-nas', 'seychelles-statehouse-nas-2024', 'seychelles-finance-nas-2025', 'seychelles-statehouse-nas-bill-2026', 'seychelles-postal-regulator-operators', 'seychelles-nbs-gis', 'seychelles-lands-webgis', 'seychelles-webgis-disclaimer', 'seychelles-land-registration-act', 'seychelles-data-protection-act-2023', 'osm-seychelles', 'osm-seychelles-building-import', 'rcmrd-gmes-africa-geoportal'],

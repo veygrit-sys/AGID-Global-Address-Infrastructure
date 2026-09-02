@@ -169,64 +169,114 @@
             "name": "DR Congo",
             "native": {
               "name": "RD Congo",
-              "addressFormat": "{{recipient}}\n{{street}}\n{{city}}\nRD Congo",
+              "addressFormat": "{{recipient}}\n{{street}}\n{{subLocality}}\n{{locality}}\n{{postcode}} {{province}}\nRÉPUBLIQUE DÉMOCRATIQUE DU CONGO",
               "ordering": "small-to-big",
               "fields": [
                 {
                   "key": "recipient",
-                  "label": "Nom Complet",
-                  "placeholder": "Félix Tshisekedi",
+                  "label": "Nom complet",
+                  "placeholder": "Nom du destinataire",
                   "required": true,
                   "type": "text"
                 },
                 {
                   "key": "street",
-                  "label": "Adresse",
-                  "placeholder": "123 Blvd du 30 Juin",
+                  "label": "Voie et numéro",
+                  "placeholder": "Avenue et numéro",
                   "required": true,
                   "type": "text"
                 },
                 {
-                  "key": "city",
-                  "label": "Ville / Province",
-                  "placeholder": "Kinshasa",
+                  "key": "subLocality",
+                  "label": "Quartier / secteur / village",
+                  "placeholder": "Quartier ou secteur",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "locality",
+                  "label": "Commune / territoire",
+                  "placeholder": "Commune ou territoire",
+                  "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "postcode",
+                  "label": "Code postal",
+                  "placeholder": "1004131",
+                  "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "province",
+                  "label": "Ville-province / province",
+                  "placeholder": "KINSHASA",
                   "required": true,
                   "type": "text"
                 }
               ]
             },
             "english": {
-              "addressFormat": "{{recipient}}\n{{street}}\n{{city}}\nDR Congo",
+              "name": "International English",
+              "addressFormat": "{{recipient}}\n{{street}}\n{{subLocality}}\n{{locality}}\n{{postcode}} {{province}}\nDEMOCRATIC REPUBLIC OF THE CONGO",
               "ordering": "small-to-big",
               "fields": [
                 {
                   "key": "recipient",
-                  "label": "Full Name",
-                  "placeholder": "Félix Tshisekedi",
+                  "label": "Full name",
+                  "placeholder": "Addressee",
                   "required": true,
                   "type": "text"
                 },
                 {
                   "key": "street",
-                  "label": "Street Address",
-                  "placeholder": "123 June 30th Blvd",
+                  "label": "Street and premises",
+                  "placeholder": "Street and number",
                   "required": true,
                   "type": "text"
                 },
                 {
-                  "key": "city",
-                  "label": "City / Province",
-                  "placeholder": "Kinshasa",
+                  "key": "subLocality",
+                  "label": "Neighbourhood / sector / village",
+                  "placeholder": "Neighbourhood or sector",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "locality",
+                  "label": "Commune / territory",
+                  "placeholder": "Commune or territory",
+                  "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "postcode",
+                  "label": "Postcode",
+                  "placeholder": "1004131",
+                  "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "province",
+                  "label": "City-province / province",
+                  "placeholder": "KINSHASA",
                   "required": true,
                   "type": "text"
                 }
               ]
             },
             "postalCode": {
-              "format": null,
-              "regex": null
+              "format": "NNNNNNN",
+              "regex": "^\\d{7}$",
+              "api": "https://codepostal.cd/backend/public/api/address/list-by-postal-code",
+              "source": "SCPT Code Postal RDC directory / UPU Congo (Dem. Rep.) addressing sheet 09/2022"
             },
             "openSourceIds": [
+              "scpt-rdc-postcode-directory",
+              "upu-dr-congo-addressing-2022",
+              "arptc-dr-congo-postal-market-2021-2022",
+              "osm-dr-congo",
+              "hf-libpostal-address-parser-candidate",
               "osm-nominatim",
               "osm-overpass",
               "openaddresses",
@@ -270,20 +320,37 @@
               "nativeOrder": [
                 "recipient",
                 "street",
-                "city",
+                "subLocality",
+                "locality",
+                "postcode",
+                "province",
                 "country"
               ],
               "englishOrder": [
                 "recipient",
                 "street",
-                "city",
+                "subLocality",
+                "locality",
+                "postcode",
+                "province",
                 "country"
               ],
               "regionalHierarchy": [
-                "province",
-                "city"
+                "provinceOrCityProvince",
+                "cityOrTownship",
+                "townshipOrTerritory",
+                "sectorOrNeighbourhood",
+                "deliveryAreaOrPostOffice",
+                "typedSevenDigitPostcode",
+                "officialPostalSurfaceOrNoCanonicalGeometry",
+                "explicitAddressLinkedBuilding",
+                "agidCell"
               ],
-              "postalCode": null
+              "postalCode": {
+                "label": "7 digits to the left of the province or city-province name",
+                "required": true,
+                "usage": "SCPT assignment; parsed segments alone do not prove an assignment, delivery area, building or Polygon/MultiPolygon"
+              }
             }
           }
         },
@@ -1985,7 +2052,7 @@
               "format": "NNNNN",
               "regex": "^\\d{5}$",
               "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "source": "Djibouti Ministry of Communication, Posts and Telecommunications / La Poste de Djibouti official postal service information"
             },
             "addressRules": {
               "languages": [
@@ -2027,6 +2094,7 @@
               }
             },
             "openSourceIds": [
+              "mcpt-djibouti-poste",
               "rcmrd-geoportal",
               "hot-osm-east-southern-africa",
               "osm-nominatim",
@@ -2643,8 +2711,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "api": "https://www.snpsf.com/poste",
+              "source": "Societe Nationale des Postes et Services Financiers (SNPSF) official postal services portal"
             },
             "addressRules": {
               "languages": [
@@ -2693,6 +2761,35 @@
                   "code": "ar",
                   "name": "Arabic"
                 }
+              ],
+              "openSourceIds": [
+                "osm-nominatim",
+                "osm-overpass",
+                "openaddresses",
+                "geonames-postal",
+                "geonames-gazetteer",
+                "geoboundaries",
+                "upu-addressing",
+                "hot-osm-africa",
+                "openstreetmap-wiki-africa",
+                "humdata-africa",
+                "openaerialmap",
+                "digital-earth-africa-dem",
+                "digital-earth-africa-coastlines",
+                "digital-earth-africa-waterbodies",
+                "digital-earth-africa-wofs",
+                "digital-earth-africa-fractional-cover",
+                "digital-earth-africa-geomad",
+                "fao-wapor",
+                "esa-worldcover",
+                "gebco-bathymetry",
+                "gmrt-topography",
+                "global-mangrove-watch",
+                "allen-coral-atlas",
+                "protected-planet-wdpa",
+                "gbif-occurrence",
+                "rcmrd-gmes-africa-geoportal",
+                "snpsf-comores-poste"
               ]
             },
             "openSourceIds": [
@@ -2721,7 +2818,8 @@
               "allen-coral-atlas",
               "protected-planet-wdpa",
               "gbif-occurrence",
-              "rcmrd-gmes-africa-geoportal"
+              "rcmrd-gmes-africa-geoportal",
+              "snpsf-comores-poste"
             ]
           }
         },
@@ -3388,8 +3486,8 @@
             "postalCode": {
               "format": "NNNNNN",
               "regex": "^\\d{6}$",
-              "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "api": "https://macra.mw/post-codes/",
+              "source": "Malawi Communications Regulatory Authority / Malawi Posts Corporation"
             },
             "addressRules": {
               "languages": [
@@ -3433,6 +3531,7 @@
               ]
             },
             "openSourceIds": [
+              "malawi-postcodes-macra",
               "rcmrd-geoportal",
               "hot-osm-east-southern-africa",
               "osm-nominatim",
@@ -4037,6 +4136,7 @@
               "somalia-nira-principles",
               "somalia-nca-privacy",
               "osm-somalia",
+              "rcmrd-gmes-africa-geoportal",
               "osm-nominatim",
               "osm-overpass",
               "openaddresses",
@@ -4061,8 +4161,7 @@
               "global-mangrove-watch",
               "allen-coral-atlas",
               "protected-planet-wdpa",
-              "gbif-occurrence",
-              "rcmrd-gmes-africa-geoportal"
+              "gbif-occurrence"
             ]
           }
         },
@@ -4133,7 +4232,7 @@
               "format": "NNNNN",
               "regex": "^\\d{5}$",
               "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "source": "South Sudan National Communication Authority postal and courier sector oversight"
             },
             "addressRules": {
               "languages": [
@@ -4171,6 +4270,7 @@
               }
             },
             "openSourceIds": [
+              "south-sudan-nca-postal-sector",
               "rcmrd-geoportal",
               "hot-osm-east-southern-africa",
               "osm-nominatim",
@@ -4500,8 +4600,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID East Africa regional table; open OSS source not configured"
+              "api": "https://ugapost.co.ug/our-services/physical-address/",
+              "source": "Posta Uganda physical address service"
             },
             "addressRules": {
               "languages": [
@@ -4543,6 +4643,7 @@
               }
             },
             "openSourceIds": [
+              "posta-uganda-physical-address",
               "rcmrd-geoportal",
               "hot-osm-east-southern-africa",
               "osm-nominatim",
@@ -5466,8 +5567,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "No free postal OSS source configured"
+              "api": "https://libyapost.ly/en/services/",
+              "source": "Libya Post official services"
             },
             "addressRules": {
               "languages": [
@@ -5503,6 +5604,7 @@
               }
             },
             "openSourceIds": [
+              "libya-post-services",
               "osm-nominatim",
               "osm-overpass",
               "openaddresses",
@@ -5763,8 +5865,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "No free postal OSS source configured"
+              "api": "https://www.mauripost.mr/",
+              "source": "MAURIPOST official portal"
             },
             "addressRules": {
               "languages": [
@@ -5802,6 +5904,7 @@
               }
             },
             "openSourceIds": [
+              "mauripost",
               "osm-nominatim",
               "osm-overpass",
               "openaddresses",
@@ -5911,8 +6014,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "No free postal OSS source configured"
+              "api": "https://sudapost.sd/wp/",
+              "source": "Sudapost official site"
             },
             "addressRules": {
               "languages": [
@@ -5950,6 +6053,7 @@
               }
             },
             "openSourceIds": [
+              "sudapost",
               "osm-nominatim",
               "osm-overpass",
               "openaddresses",
@@ -8284,8 +8388,8 @@
             "postalCode": {
               "format": "NNNN",
               "regex": "^\\d{4}$",
-              "api": null,
-              "source": "Postal metadata from AGID Southern Africa and Indian Ocean regional table; open OSS source not configured"
+              "api": "https://www.zimpost.co.zw/",
+              "source": "Zimbabwe Posts official portal / Zimpost"
             },
             "addressRules": {
               "languages": [
@@ -8329,6 +8433,7 @@
               }
             },
             "openSourceIds": [
+              "zimpost",
               "rcmrd-geoportal",
               "hot-osm-east-southern-africa",
               "osm-nominatim",
@@ -8898,8 +9003,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://www.laposte.ci/",
+              "source": "La Poste de Cote d'Ivoire official portal"
             },
             "addressRules": {
               "languages": [
@@ -8941,6 +9046,7 @@
               ]
             },
             "openSourceIds": [
+              "la-poste-cote-divoire",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
@@ -9192,13 +9298,44 @@
               "name": "International English",
               "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{district}}\n{{city}}\n{{postcode}}\nGHANA",
               "ordering": "small-to-big",
-              "fields": []
+              "fields": [
+                {
+                  "key": "organization",
+                  "label": "Company",
+                  "placeholder": ""
+                },
+                {
+                  "key": "houseNumber",
+                  "label": "Digital Address/No.",
+                  "placeholder": "GA-123-4567"
+                },
+                {
+                  "key": "street",
+                  "label": "Street Name",
+                  "placeholder": "Independence Ave"
+                },
+                {
+                  "key": "district",
+                  "label": "District",
+                  "placeholder": "Osu"
+                },
+                {
+                  "key": "city",
+                  "label": "City/Town",
+                  "placeholder": "Accra"
+                },
+                {
+                  "key": "postcode",
+                  "label": "Postal Code",
+                  "placeholder": "GA123"
+                }
+              ]
             },
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://www.ghanapostgps.com/",
+              "source": "GhanaPostGPS National Digital Address System"
             },
             "addressRules": {
               "languages": [
@@ -9235,6 +9372,7 @@
               ]
             },
             "openSourceIds": [
+              "ghanapostgps",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
@@ -9331,8 +9469,8 @@
             "postalCode": {
               "format": "NNN",
               "regex": "^\\d{3}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://gambiapost.gm/",
+              "source": "Gambia Postal Services Corporation"
             },
             "addressRules": {
               "languages": [
@@ -9373,6 +9511,7 @@
               ]
             },
             "openSourceIds": [
+              "gambia-post-services",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
@@ -9469,8 +9608,8 @@
             "postalCode": {
               "format": "NNNN",
               "regex": "^\\d{4}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://www.laposte.gn/",
+              "source": "La Poste Guineenne"
             },
             "addressRules": {
               "languages": [
@@ -9514,6 +9653,7 @@
               ]
             },
             "openSourceIds": [
+              "guinee-poste",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
@@ -9934,8 +10074,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://laposte.ml/",
+              "source": "Official La Poste du Mali postal operator portal"
             },
             "addressRules": {
               "languages": [
@@ -9979,6 +10119,7 @@
               ]
             },
             "openSourceIds": [
+              "la-poste-mali",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
@@ -10586,8 +10727,8 @@
             "postalCode": {
               "format": "NNNN",
               "regex": "^\\d{4}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://salpost.gov.sl/",
+              "source": "Official Sierra Leone Postal Services Ltd (SALPOST) portal"
             },
             "addressRules": {
               "languages": [
@@ -10631,6 +10772,7 @@
               ]
             },
             "openSourceIds": [
+              "salpost-sierra-leone",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
@@ -10942,8 +11084,8 @@
             "postalCode": {
               "format": "NNNN",
               "regex": "^\\d{4}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://www.laposte.tg/bureaux-poste",
+              "source": "Societe des Postes du Togo"
             },
             "addressRules": {
               "languages": [
@@ -10987,6 +11129,7 @@
               ]
             },
             "openSourceIds": [
+              "societe-postes-togo",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",
