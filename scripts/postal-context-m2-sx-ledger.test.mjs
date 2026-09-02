@@ -61,7 +61,7 @@ test('generated SX pack remains synthetic and reports are digest pinned', () => 
   assert.equal(sx.blocker.evidence.engineeringChecksDigest, sx.lastAttempt.engineeringReportDigest);
 });
 
-test('shared capability never promotes absent SX input or geometry and TC stays next', () => {
+test('shared capability never promotes absent SX input or geometry', () => {
   const e = sx.blocker.evidence;
   assert.equal(e.sharedAppAreaPathVerified, true);
   assert.equal(e.realSxAgidPostalApiVerified, false);
@@ -71,7 +71,4 @@ test('shared capability never promotes absent SX input or geometry and TC stays 
   assert.equal(e.rawSourceBodiesInGit, 0);
   assert.equal(e.sxIdentityPreserved, true);
   assert.equal(sx.blocker.requiresExplicitApproval, false);
-  const tc = ledger.countries.find(x => x.countryCode === 'TC');
-  assert.equal(tc.status, 'pending');
-  assert.equal(tc.attempts, 0);
 });
