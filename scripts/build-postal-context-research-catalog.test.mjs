@@ -14,17 +14,17 @@ test('committed Postal Context research catalog is deterministic and covers the 
   assert.equal(committed, expected);
   assert.equal(catalog.summary.totalCountries, 252);
   assert.deepEqual(catalog.summary.statusCounts, {
-    blocked: 137,
+    blocked: 138,
     m2_verified: 20,
-    pending: 95,
+    pending: 94,
   });
   assert.equal(catalog.summary.manifests, 181);
-  assert.equal(catalog.summary.explicitM2Definitions, 169);
+  assert.equal(catalog.summary.explicitM2Definitions, 170);
   assert.equal(catalog.summary.runtimeArtifacts, 23);
   assert.equal(catalog.summary.geometryFeatures, 49_302);
   assert.equal(catalog.summary.geometryPositions, 4_133_039);
   assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_940, official: 362 });
-  assert.equal(catalog.ordering.nextCountry, 'UY');
+  assert.equal(catalog.ordering.nextCountry, 'VC');
 });
 
 test('catalog separates rollout status from real derived runtime availability and exposes linked IDs', () => {
@@ -60,7 +60,7 @@ test('catalog separates rollout status from real derived runtime availability an
 
   const uruguay = catalog.countries.find(country => country.countryCode === 'UY');
   assert.ok(uruguay);
-  assert.equal(uruguay.status, 'pending');
+  assert.equal(uruguay.status, 'blocked');
   assert.equal(uruguay.runtimeArtifact?.promotionEligible, false);
   assert.equal(uruguay.runtimeArtifact?.recordCounts.features, 121);
   assert.equal(uruguay.runtimeArtifact?.sampleIds.postalContextId, 'postal-uy-correo-2023-11000');
