@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "SX",
+  "observedAt": "2026-09-02T07:53:57.668Z",
+  "completedAt": "2026-09-02T08:23:06.5053318Z",
+  "baseCommit": "7a99e28c8b2610c0f89b32d7f68694ae865d366b",
+  "scope": "SX official no-postcode, exact-body, operator, rights, address-format, identity and no-proxy fail-closed evidence plus shared application contracts. No raw source body, address row, postcode row, island/district/neighbourhood/locality/address/route/service-area/point/building proxy, generated planning code, production pack, real SX API response or browser area was promoted.",
+  "checks": [
+    {
+      "id": "sx-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-sx-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "five exact official bodies reproduce UPU no-postcode and PSS operator/regulator/activity evidence without rows or geometry"
+    },
+    {
+      "id": "sx-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-sx-sources.test.py -v",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "complete set, changed body, missing/extra/renamed body, HTML marker and PDF signature/page/marker drift fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts",
+      "result": "pass",
+      "tests": 28,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and context authority remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "address-format-regression",
+      "command": "tsx --test src/data/address_formats/addressFormatRulesJson.test.ts",
+      "result": "pass",
+      "tests": 68,
+      "assertion": "all registered address JSON rules pass after removing the unsupported SX four-digit postcode metadata"
+    },
+    {
+      "id": "sx-ledger-address-and-evidence",
+      "command": "node --test scripts/postal-context-m2-sx-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country definition, exact receipts, no-postcode address metadata, synthetic-pack exclusion, report digests and next TC"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "typescript tsc --noEmit for src/lib/postalSearchArea.test.ts and src/lib/postalContextPackRuntime.test.ts with Bundler resolution and shared dependencies as read-only base/type roots",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal search area and pack runtime graphs pass limited noEmit type checking"
+    },
+    {
+      "id": "syntax-yaml-and-status",
+      "command": "python compileall for two changed Python files; YAML parse; JSON.parse for changed JSON; postal-context status",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "changed executable, YAML and JSON files parse and rollout selects TC after blocked SX"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 8,
+    "testsPassed": 117,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 5,
+    "exactBodiesByteAndSha256Bound": 5,
+    "exactOfficialBodiesBytes": 1116875,
+    "sourceReviewDigest": "sha256:06abde2e6f734a1bf465834e23f92871b59a37181f5529acd1a5c51d7d085392",
+    "currentPostalCodeFormat": "none",
+    "upuNoPostcodeListEdition": "Sep. 2025",
+    "upuListsSintMaartenAsNotRequiringPostalCodes": true,
+    "designatedOperator": "Postal Services Sint Maarten (PSS)",
+    "currentCompletePostalCodeAssignmentsValidated": 0,
+    "compatiblePublicServingPermissionEstablished": false,
+    "fixedOfficialPostalGeometryArtifactsInspected": 0,
+    "officialPostalPolygonOrMultiPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realSxRuntimeVerified": false,
+    "realSxApiVerified": false,
+    "realSxAppAreaVisualizationVerified": false,
+    "browserE2e": "not run: Sint Maarten has no valid postcode input or eligible real postal Polygon/MultiPolygon; in-app Browser setup failed on Windows deny-read ACLs, no process listened on the ambient port, and a cross-worktree writable dependency-link workaround was rejected"
+  },
+  "knownLimitations": [
+    "Current UPU no-postcode evidence cannot become an island-wide placeholder code or polygon.",
+    "The UPU sheets, BTP page and government operator marker contain no reusable postcode assignment or geometry dataset.",
+    "No compatible open postal dataset licence was established.",
+    "Existing SX generated localities, planning cells and draft codes are synthetic planning material and remain unpromoted."
+  ],
+  "environmentNotes": [
+    "Only 586,780,672 bytes were free on C:, so dependencies were not installed or copied into the isolated worktree.",
+    "Targeted runtime, rollout and address tests consumed an existing dependency set read-only; no dependency link into another worktree was created.",
+    "The in-app Browser runtime exited during Windows deny-read ACL setup. Headless Playwright then confirmed no process listened on the ambient 3001 endpoint.",
+    "Starting the isolated app through NODE_PATH failed because ESM could not resolve dotenv. A proposed cross-worktree node_modules link forest was rejected because application writes could reach another worktree, so no unsafe workaround was used and no visual claim was made."
+  ],
+  "countryM2Achieved": false
+}

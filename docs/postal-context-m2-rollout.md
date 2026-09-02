@@ -2992,3 +2992,14 @@ No second country was started.
 - Retry: not before `2026-12-02T07:20:57.200Z` and only after pending countries are swept. Provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After SV: 252 profiles, 99 pending, 134 blocked, 0 in progress, 19 evidence-verified M2; 178 manifests / 165 explicit definitions.
 - Next country: Sint Maarten (`SX`). No second country was started.
+
+## SX - Sint Maarten
+
+- Result: blocked; excluded from postcode data creation. M2 remains unmet.
+- Exact evidence: five official UPU/BTP/Sint Maarten government bodies / 1,116,875 bytes, each fixed by filename, edition, retrieval context, byte count and SHA-256. The UPU September 2025 no-postcode list includes Sint Maarten (Dutch part); UPU documents identify Postal Services Sint Maarten (PSS), and BTP/government bodies confirm regulatory and dated operator context.
+- Address and IDs: removed the unsupported four-digit postcode metadata. Recipient, street, house number, city and country remain typed address fields; region, district, neighbourhood, building and AGID IDs remain independent and source-qualified.
+- Geometry quality: no assignment key or real official/derived/virtual postal Polygon/MultiPolygon exists. Island, administrative, locality, address, route, Point, buffer, hull, Voronoi/raster, AGID-cell and generated planning proxies promoted: zero. The existing generated SX pack is explicitly synthetic and not PSS authority.
+- App path: shared deterministic area contracts passed 28 tests for normalization, loading/error states, Polygon/MultiPolygon-only rendering, fit, translucent fill, outline, clear and re-search. No real SX API/visual claim is made: browser initialization failed on Windows ACLs, no process listened on the ambient port, and unsafe cross-worktree dependency links were rejected.
+- Validation: source inspector 1, inspector unit 5, shared runtime 28, rollout 8, address regression 68, SX ledger 5, focused type 1 and syntax/YAML/status 1 = 117 passed, 0 failed.
+- Rights and retry: no compatible open postal dataset licence was established. Recheck after 2026-12-02 and the pending-country sweep, or sooner after an official PSS/BTP/UPU release. External contact, registration, terms, payment, publication and deployment still require approval.
+- Next country: Turks and Caicos Islands (`TC`). No second country was started.
