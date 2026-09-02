@@ -2964,3 +2964,17 @@ No second country was started.
 - Reports: `reports/postal-context-m2/py-source-review-2026-09-02.json`, `reports/postal-context-m2/py-build-2026-09-02.json`, `reports/postal-context-m2/py-checks-2026-09-02.json`, `reports/postal-context-m2/py-visual-001518-2026-09-02.png`, and `docs/postal-context-paraguay-m2.md`.
 - After PY: 252 profiles, 101 pending, 132 blocked, 0 in progress, 19 evidence-verified M2; 177 manifests / 163 explicit definitions.
 - Next country: Suriname (`SR`). No second country was started.
+
+## SR - Suriname
+
+- Status: `blocked` / M2 unmet; current UPU evidence places SR outside postcode-data creation because no postcode is required.
+- Attempt: 1 from `2026-09-02T06:49:26.752Z`; completed `2026-09-02T07:09:19.9341353Z`.
+- Definition: `M2_current_surpost_no_postcode_authority_and_future_area_visualization`.
+- Evidence: `reports/postal-context-m2/sr-source-review-2026-09-02.json` (`sha256:50ef4a44d605bd89c30dba4a00398a2e46dbf644450e86ab8d991baabf3de9d0`); checks `reports/postal-context-m2/sr-checks-2026-09-02.json` (sha256:9fa39da1f71cb1c81ea3ea01b930002098efa9c834c97d68f9437c283d9222d0`).
+- Current semantics: three exact UPU/SURPOST bodies / 720,221 bytes show Suriname in the September 2025 no-postcode list and a dated address example with no postcode line. The AGID address definition now removes the misleading postcode field and retains recipient, organization, street, house number, sublocality, city and district as typed address/context fields.
+- Geometry and rights: zero official/derived/virtual postal areas and zero production records were promoted. Draft SR planning cells and synthetic codes remain unpromoted. SURPOST states all rights reserved and publishes no compatible open postcode dataset licence on the reviewed page.
+- App and visual boundary: shared Polygon/MultiPolygon-only area contracts pass, but no real SR API or visual area is claimed because there is no valid postcode input or eligible geometry. The in-app Browser failed Windows ACL setup before navigation; no synthetic fallback was used.
+- Verification: fixed-source inspection 1/1, inspector units 5/5, shared runtime 28/28, rollout 8/8, SR ledger/address 5/5, TypeScript 1/1 and syntax/status 1/1 pass (49 recorded, 0 failed). A broader suite exposed three unrelated pre-existing baseline failures and is recorded in the engineering report.
+- Retry: not before `2026-12-02T06:49:26.752Z` and only after pending countries have been swept. Provider contact, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After SR: 252 profiles, 100 pending, 133 blocked, 0 in progress, 19 evidence-verified M2; 178 manifests / 164 explicit definitions.
+- Next country: El Salvador (`SV`). No second country was started.
