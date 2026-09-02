@@ -2453,12 +2453,37 @@ export default function App() {
       const confidenceText = confidence.length
         ? ` · confidence ${Math.min(...confidence).toFixed(2)}`
         : '';
+      const postalContextIds = Array.from(new Set(
+        response.data.postalFeatures.map(feature => feature.id),
+      ));
+      const linkedContexts = Array.from(new Map(
+        response.data.alternatives
+          .flatMap(alternative => alternative.contexts)
+          .filter(context => context.featureKind !== 'country')
+          .map(context => [context.id, context] as const),
+      ).values());
+      const assertionIds = Array.from(new Set([
+        ...response.data.assertionIds,
+        ...response.data.alternatives.flatMap(alternative => alternative.assertionIds),
+      ]));
       setPostalAreaNotice({
         status: 'visible',
         title: response.data.status === 'ambiguous'
           ? 'Multiple postal areas / 複数候補'
           : 'Postal area / 郵便番号エリア',
         detail: `${candidate.countryCode} ${response.data.normalizedPostalCode ?? candidate.postalCode} · ${geometryTypes.join(' + ')} · ${provenance.join(' + ')} · ${collection.features.length} area · ${sourceIds.slice(0, 2).join(', ')} · as of ${sourceDates.join(' / ')}${confidenceText}`,
+        items: [
+          { label: 'Postal context ID', value: postalContextIds.join(' / '), monospace: true },
+          ...(linkedContexts.length ? [{
+            label: 'Linked locality / admin IDs',
+            value: linkedContexts.map(context => `${context.label ?? context.id} (${context.id})`).join(' / '),
+            monospace: true,
+          }] : []),
+          { label: 'Geometry source', value: sourceIds.join(' / '), monospace: true },
+          { label: 'Pinned release', value: response.data.release.releaseId, monospace: true },
+          ...(assertionIds.length ? [{ label: 'Evidence assertion IDs', value: assertionIds.join(' / '), monospace: true }] : []),
+          { label: 'Authority boundary', value: 'Postal assignment → derived polygon → address context. No address/building inference.' },
+        ],
       });
       const bounds = postalAreaBounds(collection);
       if (bounds && currentMap) {

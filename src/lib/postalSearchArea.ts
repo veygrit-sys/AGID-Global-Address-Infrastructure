@@ -27,6 +27,10 @@ export type PostalAreaFeatureCollection = {
       sourceDate: string;
       confidence: number | null;
       accuracyMeters: number | null;
+      contextId: string;
+      linkedContextIds: string;
+      assertionIds: string;
+      releaseId: string;
     };
   }>;
 };
@@ -149,6 +153,13 @@ export function createPostalAreaFeatureCollection(
   lookup: PostalContextLookupResponse,
 ): PostalAreaFeatureCollection {
   const postalCode = lookup.normalizedPostalCode ?? '';
+  const linkedContextIds = Array.from(new Set(
+    lookup.alternatives.flatMap(alternative => alternative.contexts.map(context => context.id)),
+  )).join(',');
+  const assertionIds = Array.from(new Set([
+    ...lookup.assertionIds,
+    ...lookup.alternatives.flatMap(alternative => alternative.assertionIds),
+  ])).join(',');
   return {
     type: 'FeatureCollection',
     features: lookup.geometries.flatMap(item => {
@@ -168,6 +179,10 @@ export function createPostalAreaFeatureCollection(
           sourceDate: item.source.sourceDate ?? item.validTime.from.slice(0, 10),
           confidence: item.quality.confidence ?? null,
           accuracyMeters: item.quality.accuracyMeters ?? null,
+          contextId: item.node.id,
+          linkedContextIds,
+          assertionIds,
+          releaseId: lookup.release.releaseId,
         },
       }];
     }),

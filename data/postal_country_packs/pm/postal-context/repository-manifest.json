@@ -1,0 +1,48 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {"name": "agid-postal-pm-laposte-geoapi", "country_code": "PM", "country_name": "Saint Pierre and Miquelon", "maturity": "M2_experimental"},
+  "release_scope": {
+    "metadata_only": false, "contains_raw_source_data": false, "contains_real_addresses": false,
+    "contains_personal_data": false, "contains_production_geometry": true, "fixtures_are_synthetic": false,
+    "publication_claim": "current-official-single-postcode-with-derived-two-commune-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Saint Pierre and Miquelon postal code", "full_code_format": "97500",
+    "full_code_default_geometry": "single-postcode-derived-two-commune-display-surface",
+    "assignment_rule": "La Poste's complete official 2026-08-08 snapshot has exactly three PM rows: two routing-line variants for INSEE 97501 Miquelon-Langlade and one for INSEE 97502 Saint-Pierre; every row maps to 97500.",
+    "geometry_rule": "La Poste explicitly states that postal-code contours are not supplied in open data. The current geo.api.gouv.fr 97501 and 97502 administrative MultiPolygons are concatenated without coordinate modification only as derived display geometry for the single 97500 context; they are not official postal, legal, survey, cadastral or delivery geometry.",
+    "non_area_rule": "No Point, route, P.O. box or organisation object is expanded into an area.",
+    "address_rule": "No address, building, parcel, recipient, customer, delivery or land-rights row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The public lookup links stable postal-pm-97500, admin-pm-insee-97501 and admin-pm-insee-97502 IDs plus evidence assertions. AGID identity, addresses and buildings require independent explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "The assignment is represented from the 2026-08-08 official La Poste data update.",
+    "known_time": "Retrieval time, exact source bodies, edition, digests and AGID release time are recorded separately.",
+    "history_rule": "A later assignment or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    {"id": "complete-assignment-denominator", "pass": "The full 39,192-row official snapshot has exactly three PM rows and all assign 97500 to 97501 or 97502."},
+    {"id": "derived-surface", "pass": "Fixed 97501, 97502 and 97500 geo.api.gouv.fr responses agree exactly; Open Licence 2.0 is retained and output is labelled derived."},
+    {"id": "geometry", "pass": "All 78 parts, 78 closed rings and 9,097 positions pass Turf, JSTS and shared topology checks without coordinate modification."},
+    {"id": "id-linkage", "pass": "Lookup exposes the postal ID, both official commune IDs, two evidence assertion IDs and the pinned release while rendering one derived surface."},
+    {"id": "runtime", "pass": "The real pack passes normalization, API lookup, metadata, bounds fit, translucent paint, clear, re-search and invalid-code tests."},
+    {"id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-rights data is published."}
+  ],
+  "promotion": {
+    "current_stage": "M2_current_laposte_single_postcode_two_commune_visualization",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried."},
+      {"id": "M1_metadata", "definition": "Country-specific contracts and provenance are reviewable."},
+      {"id": "M2_current_laposte_single_postcode_two_commune_visualization", "definition": "A complete current official La Poste assignment snapshot proves that 97500 links to commune IDs 97501 and 97502; fixed Open Licence 2.0 geo.api.gouv.fr code and postcode responses supply matching real valid MultiPolygons without coordinate modification; the shared API/app path exposes stable postal, commune, assertion and release IDs, renders and fits the combined surface as derived administrative display context, clears and re-searches it, and rejects invalid or fabricated areas."},
+      {"id": "M3_candidate", "definition": "A source refresh and independent review pass without authority drift."},
+      {"id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback."}
+    ],
+    "hard_blockers": [
+      "derived-administrative-contour-presented-as-official-postal-geometry", "incomplete-official-assignment-denominator",
+      "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability", "source-coordinates-invented-or-silently-modified",
+      "missing-edition-digest-rights-or-reproducible-join", "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": ["official_postal_boundary", "legal_or_survey_boundary", "cadastral_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "recipient_identity"]
+}
