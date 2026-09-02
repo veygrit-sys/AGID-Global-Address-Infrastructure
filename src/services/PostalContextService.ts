@@ -53,6 +53,55 @@ export type PostalContextIntersectResponse = Omit<PostalContextBboxIntersectionR
   knownAt: string;
 };
 
+export type PostalContextResearchCountryResponse = {
+  countryCode: string;
+  name: string;
+  region: string;
+  status: 'pending' | 'blocked' | 'm2_verified';
+  declaredStage: string;
+  attempts: number;
+  m2Definition: { id: string; definition: string } | null;
+  lastAttempt: {
+    observedAt: string | null;
+    completedAt: string | null;
+    result: string | null;
+    summary: string | null;
+    nextAction: string | null;
+  } | null;
+  blocker: {
+    kind: string | null;
+    reason: string | null;
+    retryAfter: string | null;
+    requiresExplicitApproval: boolean;
+    unblockCondition: string | null;
+  } | null;
+  evidence: Array<{
+    kind: string;
+    path: string;
+    declaredDigest: string;
+    actualDigest: string | null;
+    integrity: 'verified' | 'digest_mismatch' | 'missing';
+  }>;
+  runtimeArtifact: {
+    descriptorDigest: string;
+    releaseId: string;
+    maturity: string;
+    recordCounts: {
+      nodes: number;
+      assertions: number;
+      features: number;
+      positions: number;
+    };
+    sourceTypeCounts: Record<string, number>;
+    geometryTypeCounts: Record<string, number>;
+  } | null;
+  catalog: {
+    schemaVersion: string;
+    asOf: string;
+    ledgerDigest: string;
+  };
+};
+
 export type PostalContextServiceOptions = {
   fetcher?: typeof fetch;
   timeoutMs?: number;
@@ -156,6 +205,22 @@ export async function lookupPostalContext(
   const suffix = query.size ? `?${query.toString()}` : '';
   return agidFetch<PostalContextLookupResponse>(
     `${apiV1Path(`/postal/${normalizedCountry}/${encodeURIComponent(postalCode)}`)}${suffix}`,
+    {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      retries: 1,
+      ...requestOptions(options),
+    },
+  );
+}
+
+export async function getPostalContextResearchCountry(
+  requestedCountryCode: string,
+  options: PostalContextServiceOptions = {},
+): Promise<AgidApiResult<PostalContextResearchCountryResponse>> {
+  const normalizedCountry = countryCode(requestedCountryCode);
+  return agidFetch<PostalContextResearchCountryResponse>(
+    apiV1Path(`/postal/research/${normalizedCountry}`),
     {
       method: 'GET',
       headers: { Accept: 'application/json' },

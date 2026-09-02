@@ -2415,12 +2415,18 @@ export default function App() {
       detail: `${candidate.countryCode} ${candidate.postalCode} の公開ポリゴンを確認しています。`,
     });
     try {
-      const { lookupPostalContext } = await import('./services/PostalContextService');
-      const response = await lookupPostalContext({
-        countryCode: candidate.countryCode,
-        postalCode: candidate.postalCode,
-        includeGeometry: true,
-      });
+      const {
+        getPostalContextResearchCountry,
+        lookupPostalContext,
+      } = await import('./services/PostalContextService');
+      const [response, researchResponse] = await Promise.all([
+        lookupPostalContext({
+          countryCode: candidate.countryCode,
+          postalCode: candidate.postalCode,
+          includeGeometry: true,
+        }),
+        getPostalContextResearchCountry(candidate.countryCode).catch(() => undefined),
+      ]);
       if (requestId !== postalAreaRequestRef.current) return;
       if (!response.ok || !response.data) {
         setPostalAreaNotice({
@@ -2478,6 +2484,13 @@ export default function App() {
         ...response.data.assertionIds,
         ...response.data.alternatives.flatMap(alternative => alternative.assertionIds),
       ]));
+      const research = researchResponse?.ok ? researchResponse.data : undefined;
+      const evidenceSummary = research?.evidence.length
+        ? research.evidence.map(item => `${item.kind}: ${item.path} [${item.integrity}]`).join(' / ')
+        : '';
+      const runtimeResearchSummary = research?.runtimeArtifact
+        ? `${research.runtimeArtifact.releaseId} · ${research.runtimeArtifact.recordCounts.features} features · ${research.runtimeArtifact.recordCounts.positions} positions · ${Object.entries(research.runtimeArtifact.sourceTypeCounts).map(([type, count]) => `${type} ${count}`).join(' + ')}`
+        : '';
       setPostalAreaNotice({
         status: 'visible',
         title: response.data.status === 'ambiguous'
@@ -2498,13 +2511,62 @@ export default function App() {
           ...(sourceDigests.length ? [{ label: 'Source digest', value: sourceDigests.join(' / '), monospace: true }] : []),
           { label: 'Pinned release', value: response.data.release.releaseId, monospace: true },
           ...(assertionIds.length ? [{ label: 'Evidence assertion IDs', value: assertionIds.join(' / '), monospace: true }] : []),
+          ...(research ? [{
+            label: 'Research / M2 status',
+            value: `${research.status} · ${research.declaredStage} · ${research.attempts} attempt(s)`,
+            monospace: true,
+          }] : []),
+          ...(research?.m2Definition ? [{
+            label: 'Country-specific M2 definition',
+            value: research.m2Definition.id,
+            monospace: true,
+          }] : []),
+          ...(research?.lastAttempt?.result ? [{
+            label: 'Latest validation result',
+            value: research.lastAttempt.result,
+            monospace: true,
+          }] : []),
+          ...(runtimeResearchSummary ? [{
+            label: 'Fixed real runtime artifact',
+            value: runtimeResearchSummary,
+            monospace: true,
+          }] : []),
+          ...(research?.runtimeArtifact ? [{
+            label: 'Descriptor SHA-256',
+            value: research.runtimeArtifact.descriptorDigest,
+            monospace: true,
+          }] : []),
+          ...(evidenceSummary ? [{
+            label: 'Research evidence integrity',
+            value: evidenceSummary,
+            monospace: true,
+          }] : []),
+          ...(research?.blocker?.kind ? [{
+            label: 'Remaining M2 gate',
+            value: `${research.blocker.kind}${research.blocker.retryAfter ? ` · review ${research.blocker.retryAfter}` : ''}`,
+            monospace: true,
+          }] : []),
+          ...(research ? [{
+            label: 'Research ledger',
+            value: `${research.catalog.asOf} · ${research.catalog.ledgerDigest}`,
+            monospace: true,
+          }] : []),
           { label: 'Authority boundary', value: 'Postal assignment → derived polygon → address context. No address/building inference.' },
         ],
       });
       const bounds = postalAreaBounds(collection);
       if (bounds && currentMap) {
+        const mapWidth = currentMap.getContainer().clientWidth;
+        const fitPadding = mapWidth >= 768
+          ? {
+              top: 64,
+              right: 64,
+              bottom: 64,
+              left: Math.min(600, Math.max(320, mapWidth - 360)),
+            }
+          : 64;
         currentMap.fitBounds(bounds, {
-          padding: 64,
+          padding: fitPadding,
           maxZoom: 16,
           duration: 1200,
           essential: true,
@@ -2685,22 +2747,9 @@ export default function App() {
         setSearchResults(results);
 
         if (results.length > 0) {
-          setIsSearchFocused(true);
-          const first = results[0];
-          void updatePostalAreaForSearchResult(first, query);
-          const newLat = parseFloat(first.lat);
-          const newLng = parseFloat(first.lon);
-
-          map.current.flyTo({
-            center: [newLng, newLat],
-            zoom: 18,
-            essential: true
-          });
-
-          // Select it
-          const result = encodeAGID(newLat, newLng);
-          setIsManualSelection(true);
-          setClickedAgid(result);
+          // Reuse the explicit-result path so keyboard/form searches also close
+          // the expanded search sheet and leave the map plus evidence card visible.
+          await selectSearchResult(results[0]);
         } else {
           showAlert("No results found", "Try a different search term or check the spelling.");
         }

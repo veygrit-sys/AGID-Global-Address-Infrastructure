@@ -279,6 +279,46 @@ test('serves only a verified LKG and fails closed when both active and LKG pins 
   ]);
 });
 
+test('committed real research packs are explicit opt-in and preserve rollout status', () => {
+  const disabled = createConfiguredPostalContextPackStore({});
+  assert.equal(disabled.countryStatus('PR').state, 'unconfigured');
+  assert.equal(disabled.getRuntime('PR'), undefined);
+
+  const enabled = createConfiguredPostalContextPackStore({
+    AGID_POSTAL_CONTEXT_ENABLE_COMMITTED_RESEARCH_PACKS: '1',
+    AGID_POSTAL_CONTEXT_ALLOW_EXPERIMENTAL: '1',
+  });
+  const puertoRico = enabled.countryStatus('PR');
+  assert.equal(puertoRico.state, 'ready');
+  assert.equal(puertoRico.runtime?.counts.geometries, 132);
+  assert.ok(puertoRico.warnings.includes('committed-research-pack-opt-in'));
+  assert.ok(puertoRico.warnings.includes('research-rollout-status:blocked'));
+  assert.equal(
+    enabled.statuses().filter(status => status.state === 'ready').length,
+    19,
+  );
+});
+
+test('committed research opt-in does not bypass experimental or explicit configuration gates', () => {
+  const experimentalDenied = createConfiguredPostalContextPackStore({
+    AGID_POSTAL_CONTEXT_ENABLE_COMMITTED_RESEARCH_PACKS: '1',
+  });
+  assert.equal(experimentalDenied.countryStatus('PR').state, 'invalid');
+  assert.ok(experimentalDenied.countryStatus('PR').errors.includes(
+    'active:experimental-pack-not-enabled',
+  ));
+
+  const incompleteExplicit = createConfiguredPostalContextPackStore({
+    AGID_POSTAL_CONTEXT_ENABLE_COMMITTED_RESEARCH_PACKS: '1',
+    AGID_POSTAL_CONTEXT_ALLOW_EXPERIMENTAL: '1',
+    AGID_POSTAL_CONTEXT_PR_DESCRIPTOR_PATH: 'operator-explicit-path.json',
+  });
+  assert.equal(incompleteExplicit.countryStatus('PR').state, 'invalid');
+  assert.deepEqual(incompleteExplicit.countryStatus('PR').errors, [
+    'active-pack-configuration-incomplete',
+  ]);
+});
+
 test('binds synthetic provenance to experimental non-promotable descriptors', t => {
   const liedFixture = materializeRuntimeFixture(t);
   const liedDescriptor = structuredClone(liedFixture.descriptor);

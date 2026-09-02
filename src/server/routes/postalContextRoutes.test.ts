@@ -100,6 +100,53 @@ test('Postal Context metadata responses omit uncalibrated confidence', async () 
   }
 });
 
+test('research endpoints expose all country work, evidence integrity, real packs, and linked IDs', async () => {
+  const all = await getJson(running.baseUrl, '/api/postal/research');
+  assert.equal(all.response.status, 200);
+  assert.equal(all.body.ok, true);
+  assert.equal(all.body.data.summary.totalCountries, 252);
+  assert.equal(all.body.data.summary.runtimeArtifacts, 19);
+  assert.equal(all.body.data.summary.geometryFeatures, 46_291);
+  assert.equal(all.body.data.sourcePolicy.rawSourceRowsPublished, false);
+  assert.equal(all.body.data.sourcePolicy.postalGeometryMayInferAddressesOrBuildings, false);
+  assert.ok(all.body.warnings.includes('research-evidence-integrity:digest_mismatch'));
+
+  const pr = await getJson(running.baseUrl, '/api/postal/research/PR');
+  assert.equal(pr.response.status, 200);
+  assert.equal(pr.body.data.status, 'blocked');
+  assert.equal(pr.body.data.runtimeArtifact.recordCounts.features, 132);
+  assert.equal(pr.body.data.runtimeArtifact.sourceTypeCounts.derived, 132);
+  assert.equal(
+    pr.body.data.runtimeArtifact.sampleIds.postalContextId,
+    'postal-pr-census-zcta-00601',
+  );
+  assert.equal(
+    pr.body.data.runtimeArtifact.sampleIds.geometryFeatureId,
+    'census-pr-zcta-2020-00601',
+  );
+  assert.equal(
+    pr.body.data.runtimeArtifact.sampleIds.assertionId,
+    'census-pr-zcta-2020-00601-part-of-pr',
+  );
+  assert.deepEqual(pr.body.data.runtimeArtifact.sampleIds.linkedContextIds, ['country-pr']);
+  assert.match(pr.body.data.blocker.kind, /assignment-denominator/u);
+  assert.doesNotMatch(JSON.stringify(pr.body), /recipient|customer|landRights/u);
+
+  const unknown = await getJson(running.baseUrl, '/api/postal/research/ZZ');
+  assert.equal(unknown.response.status, 404);
+  const invalid = await getJson(running.baseUrl, '/api/postal/research/PUERTO-RICO');
+  assert.equal(invalid.response.status, 400);
+});
+
+test('capabilities advertises research availability separately from configured runtimes', async () => {
+  const { response, body } = await getJson(running.baseUrl, '/api/postal/capabilities');
+  assert.equal(response.status, 200);
+  assert.equal(body.data.research.available, true);
+  assert.equal(body.data.research.summary.totalCountries, 252);
+  assert.equal(body.data.endpoints.research, 'GET /api/v1/postal/research');
+  assert.equal(body.data.endpoints.researchCountry, 'GET /api/v1/postal/research/{country}');
+});
+
 test('POST postal resolve returns an exact source-linked public building context', async () => {
   const { response, body } = await postResolve(running.baseUrl, resolveBody());
 

@@ -14,9 +14,16 @@ import {
   createConfiguredPostalContextPackStore,
   type PostalContextPackStore,
 } from '../postalContextPackStore';
+import {
+  PostalContextResearchCatalogError,
+  loadPostalContextResearchCatalog,
+  postalContextResearchCountry,
+  type PostalContextResearchCatalog,
+} from '../postalContextResearchCatalog';
 
 export type PostalContextRouteOptions = {
   store?: PostalContextPackStore;
+  researchCatalog?: PostalContextResearchCatalog | null;
 };
 
 type JsonRecord = Record<string, unknown>;
@@ -146,6 +153,18 @@ export function registerPostalContextRoutes(
   options: PostalContextRouteOptions = {},
 ) {
   const store = options.store ?? createConfiguredPostalContextPackStore();
+  let researchCatalog = options.researchCatalog;
+  let researchCatalogError = '';
+  if (researchCatalog === undefined) {
+    try {
+      researchCatalog = loadPostalContextResearchCatalog();
+    } catch (error) {
+      researchCatalog = null;
+      researchCatalogError = error instanceof PostalContextResearchCatalogError
+        ? error.code
+        : 'research-catalog-unavailable';
+    }
+  }
 
   app.get('/api/postal/capabilities', (req, res) => {
     privateNoStore(res);
@@ -159,6 +178,17 @@ export function registerPostalContextRoutes(
           lookup: 'GET /api/v1/postal/{country}/{postalCode}',
           intersects: 'GET /api/v1/postal/intersects',
           releases: 'GET /api/v1/postal/releases/{country}',
+          research: 'GET /api/v1/postal/research',
+          researchCountry: 'GET /api/v1/postal/research/{country}',
+        },
+        research: researchCatalog ? {
+          available: true,
+          schemaVersion: researchCatalog.schemaVersion,
+          asOf: researchCatalog.asOf,
+          ledgerDigest: researchCatalog.ledger.digest,
+          summary: researchCatalog.summary,
+        } : {
+          available: false,
         },
         privacy: {
           coordinateTransport: 'post-body-only',
@@ -170,7 +200,64 @@ export function registerPostalContextRoutes(
         fallback: 'none-outside-verified-pack-or-lkg',
       },
       sources: ['agid-postal-context-runtime'],
-      warnings: [],
+      warnings: researchCatalogError ? [researchCatalogError] : [],
+      cache: 'none',
+    });
+  });
+
+  app.get('/api/postal/research', (req, res) => {
+    if (!researchCatalog) {
+      return routeError(
+        req,
+        res,
+        503,
+        'Postal Context research catalog is unavailable',
+        researchCatalogError ? [researchCatalogError] : [],
+      );
+    }
+    privateNoStore(res);
+    return sendAgidResult(req, res, {
+      ok: true,
+      data: researchCatalog,
+      sources: ['agid-postal-context-research-catalog'],
+      warnings: Object.keys(researchCatalog.summary.evidenceIntegrityCounts)
+        .filter(integrity => integrity !== 'verified')
+        .map(integrity => `research-evidence-integrity:${integrity}`),
+      cache: 'none',
+    });
+  });
+
+  app.get('/api/postal/research/:country', (req, res) => {
+    const countryCode = req.params.country.toUpperCase();
+    if (!/^[A-Z]{2}$/.test(countryCode)) {
+      return routeError(req, res, 400, 'Invalid country code');
+    }
+    if (!researchCatalog) {
+      return routeError(
+        req,
+        res,
+        503,
+        'Postal Context research catalog is unavailable',
+        researchCatalogError ? [researchCatalogError] : [],
+      );
+    }
+    const country = postalContextResearchCountry(researchCatalog, countryCode);
+    if (!country) return routeError(req, res, 404, 'Postal Context research country is unknown');
+    privateNoStore(res);
+    return sendAgidResult(req, res, {
+      ok: true,
+      data: {
+        ...country,
+        catalog: {
+          schemaVersion: researchCatalog.schemaVersion,
+          asOf: researchCatalog.asOf,
+          ledgerDigest: researchCatalog.ledger.digest,
+        },
+      },
+      sources: ['agid-postal-context-research-catalog'],
+      warnings: country.evidence
+        .filter(item => item.integrity !== 'verified')
+        .map(item => `research-evidence-integrity:${item.integrity}:${item.kind}`),
       cache: 'none',
     });
   });

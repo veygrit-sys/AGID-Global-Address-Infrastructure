@@ -102,6 +102,8 @@ test('OpenAPI paths stay relative to /api/v1 and cover core integration surfaces
     '/amn/registry/stats',
     '/postal-code/nearest',
     '/postal/capabilities',
+    '/postal/research',
+    '/postal/research/{country}',
     '/postal/releases/{country}',
     '/postal/resolve',
     '/postal/intersects',
@@ -132,6 +134,8 @@ test('OpenAPI components include shared AGID result and error schemas', () => {
   assert.ok('PostalContextPublicResolution' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('AgidResultPostalContextResolution' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('AgidResultPostalContextCapabilities' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('AgidResultPostalContextResearchCatalog' in AGID_OPENAPI_SPEC.components.schemas);
+  assert.ok('AgidResultPostalContextResearchCountry' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('DatabaseAdapterCompatibilityRecord' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('CloudDbConnectorPlanRequest' in AGID_OPENAPI_SPEC.components.schemas);
   assert.ok('CloudDbConnectorPlan' in AGID_OPENAPI_SPEC.components.schemas);
@@ -855,6 +859,8 @@ test('OpenAPI pins strict Postal Context DTOs to the public runtime and service 
   const paths = AGID_OPENAPI_SPEC.paths as Record<string, any>;
   const expectedResponseRefs = {
     '/postal/capabilities': '#/components/schemas/AgidResultPostalContextCapabilities',
+    '/postal/research': '#/components/schemas/AgidResultPostalContextResearchCatalog',
+    '/postal/research/{country}': '#/components/schemas/AgidResultPostalContextResearchCountry',
     '/postal/releases/{country}': '#/components/schemas/AgidResultPostalContextCountryStatus',
     '/postal/resolve': '#/components/schemas/AgidResultPostalContextResolution',
     '/postal/intersects': '#/components/schemas/AgidResultPostalContextIntersection',
@@ -893,9 +899,14 @@ test('OpenAPI pins strict Postal Context DTOs to the public runtime and service 
     'PostalContextRuntimeStatus',
     'PostalContextCountryStatus',
     'PostalContextCapabilitiesResponse',
+    'PostalContextResearchAvailability',
+    'PostalContextResearchCountry',
+    'PostalContextResearchCatalog',
     'PostalContextRuntimeRelease',
     'PostalContextPublicResolution',
     'AgidResultPostalContextCapabilities',
+    'AgidResultPostalContextResearchCatalog',
+    'AgidResultPostalContextResearchCountry',
     'AgidResultPostalContextCountryStatus',
     'AgidResultPostalContextResolution',
     'AgidResultPostalContextIntersection',
@@ -924,9 +935,14 @@ test('OpenAPI pins strict Postal Context DTOs to the public runtime and service 
     'PostalContextRuntimeStatus',
     'PostalContextCountryStatus',
     'PostalContextCapabilitiesResponse',
+    'PostalContextResearchAvailability',
+    'PostalContextResearchCountry',
+    'PostalContextResearchCatalog',
     'PostalContextRuntimeRelease',
     'PostalContextPublicResolution',
     'AgidResultPostalContextCapabilities',
+    'AgidResultPostalContextResearchCatalog',
+    'AgidResultPostalContextResearchCountry',
     'AgidResultPostalContextCountryStatus',
     'AgidResultPostalContextResolution',
     'AgidResultPostalContextIntersection',

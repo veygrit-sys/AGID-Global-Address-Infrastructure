@@ -27,6 +27,11 @@ import {
 } from '../lib/postalContextPackRuntime';
 import { POSTAL_CONTEXT_GEOMETRY_SCHEMA_VERSION } from '../lib/postalContextSpatial';
 import { POSTAL_CONTEXT_PACK_LIMITS } from '../lib/postalContextTopology';
+import {
+  DEFAULT_POSTAL_CONTEXT_RESEARCH_CATALOG_PATH,
+  loadPostalContextResearchCatalog,
+  type PostalContextResearchRuntimeArtifact,
+} from './postalContextResearchCatalog';
 
 export const POSTAL_CONTEXT_PACK_DESCRIPTOR_SCHEMA_VERSION =
   'postal-context-pack-descriptor/v0.1' as const;
@@ -616,17 +621,31 @@ function configurePostalContextCountry(
   countryCode: PostalContextCountryCode,
   allowExperimental: boolean,
   allowSynthetic: boolean,
+  committedResearch?: {
+    artifact: PostalContextResearchRuntimeArtifact;
+    rolloutStatus: string;
+  },
+  committedCatalogError = '',
 ): ConfiguredPostalContextCountry {
-  const descriptorPath = configuredCountryValue(
+  const configuredDescriptorPath = configuredCountryValue(
     environment,
     countryCode,
     POSTAL_CONTEXT_CONFIGURATION_SUFFIXES.descriptorPath,
   );
-  const descriptorDigest = configuredCountryValue(
+  const configuredDescriptorDigest = configuredCountryValue(
     environment,
     countryCode,
     POSTAL_CONTEXT_CONFIGURATION_SUFFIXES.descriptorDigest,
   );
+  const hasExplicitDescriptorConfiguration = Boolean(
+    configuredDescriptorPath || configuredDescriptorDigest,
+  );
+  const descriptorPath = !hasExplicitDescriptorConfiguration && committedResearch
+    ? resolve(process.cwd(), committedResearch.artifact.descriptorPath)
+    : configuredDescriptorPath;
+  const descriptorDigest = !hasExplicitDescriptorConfiguration && committedResearch
+    ? committedResearch.artifact.descriptorDigest
+    : configuredDescriptorDigest;
   const fallbackPath = configuredCountryValue(
     environment,
     countryCode,
@@ -642,7 +661,10 @@ function configurePostalContextCountry(
   const warnings: string[] = [];
   let state: PostalContextPackStoreCountryStatus['state'] = 'unconfigured';
 
-  if (Boolean(descriptorPath) !== Boolean(descriptorDigest)) {
+  if (!hasExplicitDescriptorConfiguration && committedCatalogError) {
+    state = 'invalid';
+    errors.push(`committed-research-catalog:${committedCatalogError}`);
+  } else if (Boolean(descriptorPath) !== Boolean(descriptorDigest)) {
     state = 'invalid';
     errors.push('active-pack-configuration-incomplete');
   } else if (descriptorPath && descriptorDigest) {
@@ -654,6 +676,12 @@ function configurePostalContextCountry(
       });
       runtime = loaded.runtime;
       warnings.push(...loaded.warnings);
+      if (!hasExplicitDescriptorConfiguration && committedResearch) {
+        warnings.push(
+          'committed-research-pack-opt-in',
+          `research-rollout-status:${committedResearch.rolloutStatus}`,
+        );
+      }
       state = 'ready';
     } catch (error) {
       errors.push(`active:${errorCode(error)}`);
@@ -699,6 +727,32 @@ export function createConfiguredPostalContextPackStore(
 ): PostalContextPackStore {
   const allowExperimental = enabled(environment.AGID_POSTAL_CONTEXT_ALLOW_EXPERIMENTAL);
   const allowSynthetic = enabled(environment.AGID_POSTAL_CONTEXT_ALLOW_SYNTHETIC);
+  const enableCommittedResearchPacks = enabled(
+    environment.AGID_POSTAL_CONTEXT_ENABLE_COMMITTED_RESEARCH_PACKS,
+  );
+  const committedResearch = new Map<PostalContextCountryCode, {
+    artifact: PostalContextResearchRuntimeArtifact;
+    rolloutStatus: string;
+  }>();
+  let committedCatalogError = '';
+  if (enableCommittedResearchPacks) {
+    try {
+      const catalog = loadPostalContextResearchCatalog(
+        environment.AGID_POSTAL_CONTEXT_RESEARCH_CATALOG_PATH?.trim()
+          || DEFAULT_POSTAL_CONTEXT_RESEARCH_CATALOG_PATH,
+      );
+      for (const country of catalog.countries) {
+        if (country.runtimeArtifact && isPostalContextCountryCode(country.countryCode)) {
+          committedResearch.set(country.countryCode, {
+            artifact: country.runtimeArtifact,
+            rolloutStatus: country.status,
+          });
+        }
+      }
+    } catch (error) {
+      committedCatalogError = errorCode(error);
+    }
+  }
   const countries = new Map<PostalContextCountryCode, ConfiguredPostalContextCountry>(
     POSTAL_CONTEXT_COUNTRY_CODES.map(countryCode => [
       countryCode,
@@ -707,6 +761,8 @@ export function createConfiguredPostalContextPackStore(
         countryCode,
         allowExperimental,
         allowSynthetic,
+        committedResearch.get(countryCode),
+        enableCommittedResearchPacks ? committedCatalogError : '',
       ),
     ]),
   );

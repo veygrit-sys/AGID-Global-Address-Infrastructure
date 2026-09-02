@@ -1682,6 +1682,39 @@ export const AGID_OPENAPI_SPEC = {
         },
       },
     },
+    '/postal/research': {
+      get: {
+        tags: ['Postal'],
+        summary: 'Read the cumulative public Postal Context research catalog',
+        operationId: 'getPostalContextResearchCatalog',
+        description: 'Rollout status and real runtime artifact availability are reported separately. The catalog contains no raw source rows, recipients, customers, or inferred addresses/buildings.',
+        responses: {
+          '200': jsonResponse('#/components/schemas/AgidResultPostalContextResearchCatalog'),
+          '503': errorResponse,
+        },
+      },
+    },
+    '/postal/research/{country}': {
+      get: {
+        tags: ['Postal'],
+        summary: 'Read one country Postal Context research and artifact record',
+        operationId: 'getPostalContextResearchCountry',
+        parameters: [
+          {
+            name: 'country',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', pattern: '^[A-Z]{2}$' },
+          },
+        ],
+        responses: {
+          '200': jsonResponse('#/components/schemas/AgidResultPostalContextResearchCountry'),
+          '400': errorResponse,
+          '404': errorResponse,
+          '503': errorResponse,
+        },
+      },
+    },
     '/postal/releases/{country}': {
       get: {
         tags: ['Postal'],
@@ -2765,7 +2798,7 @@ export const AGID_OPENAPI_SPEC = {
       },
       PostalContextCapabilitiesResponse: {
         type: 'object',
-        required: ['version', 'countries', 'endpoints', 'privacy', 'fallback'],
+        required: ['version', 'countries', 'endpoints', 'research', 'privacy', 'fallback'],
         properties: {
           version: { type: 'string', const: 'postal-context-api/v0.1' },
           countries: {
@@ -2774,15 +2807,18 @@ export const AGID_OPENAPI_SPEC = {
           },
           endpoints: {
             type: 'object',
-            required: ['resolve', 'lookup', 'intersects', 'releases'],
+            required: ['resolve', 'lookup', 'intersects', 'releases', 'research', 'researchCountry'],
             properties: {
               resolve: { type: 'string', const: 'POST /api/v1/postal/resolve' },
               lookup: { type: 'string', const: 'GET /api/v1/postal/{country}/{postalCode}' },
               intersects: { type: 'string', const: 'GET /api/v1/postal/intersects' },
               releases: { type: 'string', const: 'GET /api/v1/postal/releases/{country}' },
+              research: { type: 'string', const: 'GET /api/v1/postal/research' },
+              researchCountry: { type: 'string', const: 'GET /api/v1/postal/research/{country}' },
             },
             additionalProperties: false,
           },
+          research: { $ref: '#/components/schemas/PostalContextResearchAvailability' },
           privacy: {
             type: 'object',
             required: [
@@ -2802,6 +2838,72 @@ export const AGID_OPENAPI_SPEC = {
             additionalProperties: false,
           },
           fallback: { type: 'string', const: 'none-outside-verified-pack-or-lkg' },
+        },
+        additionalProperties: false,
+      },
+      PostalContextResearchAvailability: {
+        type: 'object',
+        required: ['available'],
+        properties: {
+          available: { type: 'boolean' },
+          schemaVersion: { type: 'string', const: 'agid-postal-context-research-catalog/v1' },
+          asOf: { type: 'string', format: 'date-time' },
+          ledgerDigest: { type: 'string', pattern: '^sha256:[a-f0-9]{64}$' },
+          summary: { $ref: '#/components/schemas/GenericJson' },
+        },
+        additionalProperties: false,
+      },
+      PostalContextResearchCountry: {
+        type: 'object',
+        required: [
+          'countryCode',
+          'name',
+          'region',
+          'status',
+          'declaredStage',
+          'attempts',
+          'addressFormatPath',
+          'manifestPath',
+          'm2Definition',
+          'lastAttempt',
+          'blocker',
+          'evidence',
+          'runtimeArtifact',
+        ],
+        properties: {
+          countryCode: { type: 'string', pattern: '^[A-Z]{2}$' },
+          name: { type: 'string' },
+          region: { type: 'string' },
+          sourceRegion: { type: 'string' },
+          status: { type: 'string', enum: ['pending', 'blocked', 'm2_verified'] },
+          declaredStage: { type: 'string' },
+          attempts: { type: 'integer', minimum: 0 },
+          addressFormatPath: { type: 'string' },
+          manifestPath: { type: ['string', 'null'] },
+          m2Definition: { type: ['object', 'null'], additionalProperties: true },
+          lastAttempt: { type: ['object', 'null'], additionalProperties: true },
+          blocker: { type: ['object', 'null'], additionalProperties: true },
+          evidence: { type: 'array', items: { type: 'object', additionalProperties: true } },
+          runtimeArtifact: { type: ['object', 'null'], additionalProperties: true },
+          catalog: { type: 'object', additionalProperties: true },
+        },
+        additionalProperties: false,
+      },
+      PostalContextResearchCatalog: {
+        type: 'object',
+        required: ['schemaVersion', 'asOf', 'sourceBaseCommit', 'ledger', 'ordering', 'summary', 'sourcePolicy', 'countries'],
+        properties: {
+          schemaVersion: { type: 'string', const: 'agid-postal-context-research-catalog/v1' },
+          asOf: { type: 'string', format: 'date-time' },
+          sourceBaseCommit: { type: 'string' },
+          ledger: { type: 'object', additionalProperties: true },
+          ordering: { type: 'object', additionalProperties: true },
+          summary: { type: 'object', additionalProperties: true },
+          sourcePolicy: { type: 'object', additionalProperties: true },
+          countries: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/PostalContextResearchCountry' },
+          },
         },
         additionalProperties: false,
       },
@@ -2917,6 +3019,32 @@ export const AGID_OPENAPI_SPEC = {
         properties: {
           ok: { type: 'boolean', const: true },
           data: { $ref: '#/components/schemas/PostalContextCapabilitiesResponse' },
+          sources: { type: 'array', items: { type: 'string' } },
+          warnings: { type: 'array', items: { type: 'string' } },
+          cache: { type: 'string', const: 'none' },
+          requestId: { type: 'string' },
+        },
+        additionalProperties: false,
+      },
+      AgidResultPostalContextResearchCatalog: {
+        type: 'object',
+        required: ['ok', 'data', 'sources', 'warnings', 'cache', 'requestId'],
+        properties: {
+          ok: { type: 'boolean', const: true },
+          data: { $ref: '#/components/schemas/PostalContextResearchCatalog' },
+          sources: { type: 'array', items: { type: 'string' } },
+          warnings: { type: 'array', items: { type: 'string' } },
+          cache: { type: 'string', const: 'none' },
+          requestId: { type: 'string' },
+        },
+        additionalProperties: false,
+      },
+      AgidResultPostalContextResearchCountry: {
+        type: 'object',
+        required: ['ok', 'data', 'sources', 'warnings', 'cache', 'requestId'],
+        properties: {
+          ok: { type: 'boolean', const: true },
+          data: { $ref: '#/components/schemas/PostalContextResearchCountry' },
           sources: { type: 'array', items: { type: 'string' } },
           warnings: { type: 'array', items: { type: 'string' } },
           cache: { type: 'string', const: 'none' },

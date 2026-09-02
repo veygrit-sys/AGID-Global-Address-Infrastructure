@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import type { AgidApiResult } from '../lib/agidHttpClient';
 import {
+  getPostalContextResearchCountry,
   intersectPostalContext,
   lookupPostalContext,
   resolvePostalContext,
@@ -212,6 +213,27 @@ test('postal context lookup encodes the postal code as one path segment and buil
     calls[1].url,
     '/api/v1/postal/JP/100-0001?geometry=geojson',
   );
+});
+
+test('postal research client requests one normalized country from API v1', async () => {
+  const calls: string[] = [];
+  const fetcher: typeof fetch = async input => {
+    calls.push(String(input));
+    return Response.json({
+      ok: true,
+      data: { countryCode: 'PR', status: 'blocked' },
+      sources: ['agid-postal-context-research-catalog'],
+      warnings: [],
+      cache: 'none',
+      requestId: 'research-pr',
+    });
+  };
+
+  const result = await getPostalContextResearchCountry(' pr ', { fetcher });
+  assert.deepEqual(calls, ['/api/v1/postal/research/PR']);
+  assert.equal(result.ok, true);
+  assert.equal(result.data?.countryCode, 'PR');
+  assert.equal(result.data?.status, 'blocked');
 });
 
 test('postal context intersects sends a bounded public bbox query and validates it first', async () => {
