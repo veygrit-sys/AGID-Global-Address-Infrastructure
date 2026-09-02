@@ -6,6 +6,7 @@ import {
   normalizeAnguillaPostalCode,
   normalizeFalklandIslandsPostalCode,
   normalizeSouthGeorgiaSouthSandwichIslandsPostalCode,
+  normalizeAscensionIslandPostalCode,
   normalizeSaintBarthelemyPostalCode,
   normalizeSaintMartinPostalCode,
   normalizeSaintPierreMiquelonPostalCode,
@@ -866,6 +867,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeSouthGeorgiaSouthSandwichIslandsPostalCode('SIQQ 1ZY'), null);
   assert.equal(normalizeSouthGeorgiaSouthSandwichIslandsPostalCode('FIQQ 1ZZ'), null);
   assert.equal(normalizePostalContextPostalCode('gs', 'SIQQ1ZZ'), 'SIQQ 1ZZ');
+  assert.equal(normalizeAscensionIslandPostalCode('ＡＳＣＮ １ＺＺ'), 'ASCN 1ZZ');
+  assert.equal(normalizeAscensionIslandPostalCode('ascn1zz'), 'ASCN 1ZZ');
+  assert.equal(normalizeAscensionIslandPostalCode('ASCN 1ZY'), null);
+  assert.equal(normalizeAscensionIslandPostalCode('SIQQ 1ZZ'), null);
+  assert.equal(normalizePostalContextPostalCode('ac', 'ASCN1ZZ'), 'ASCN 1ZZ');
   assert.equal(normalizeSaintBarthelemyPostalCode('９７１３３'), '97133');
   assert.equal(normalizeSaintBarthelemyPostalCode('97 133'), '97133');
   assert.equal(normalizeSaintBarthelemyPostalCode('97134'), null);
