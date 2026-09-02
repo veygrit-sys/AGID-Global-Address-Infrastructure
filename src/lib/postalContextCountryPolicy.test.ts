@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  normalizeTurksCaicosPostalCode,
   normalizeAnguillaPostalCode,
   normalizeFalklandIslandsPostalCode,
   normalizeSouthGeorgiaSouthSandwichIslandsPostalCode,
@@ -838,6 +839,11 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeGeorgiaPostalCode('GE0002'), null);
   assert.equal(normalizeGeorgiaPostalCode('00020'), null);
   assert.equal(normalizePostalContextPostalCode('ge', '00 02'), '0002');
+  assert.equal(normalizeTurksCaicosPostalCode('\uff34\uff2b\uff23\uff21 \uff11\uff3a\uff3a'), 'TKCA 1ZZ');
+  assert.equal(normalizeTurksCaicosPostalCode('tkca1zz'), 'TKCA 1ZZ');
+  assert.equal(normalizeTurksCaicosPostalCode('TKCA 2ZZ'), null);
+  assert.equal(normalizeTurksCaicosPostalCode('1ZZ'), null);
+  assert.equal(normalizePostalContextPostalCode('tc', 'TKCA1ZZ'), 'TKCA 1ZZ');
   assert.equal(normalizeAnguillaPostalCode('ＡＩ ２６４０'), 'AI-2640');
   assert.equal(normalizeAnguillaPostalCode('ai2640'), 'AI-2640');
   assert.equal(normalizeAnguillaPostalCode('2640'), null);
