@@ -20,10 +20,10 @@ test('committed Postal Context research catalog is deterministic and covers the 
   });
   assert.equal(catalog.summary.manifests, 181);
   assert.equal(catalog.summary.explicitM2Definitions, 169);
-  assert.equal(catalog.summary.runtimeArtifacts, 22);
-  assert.equal(catalog.summary.geometryFeatures, 49_181);
-  assert.equal(catalog.summary.geometryPositions, 3_881_359);
-  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_940, official: 241 });
+  assert.equal(catalog.summary.runtimeArtifacts, 23);
+  assert.equal(catalog.summary.geometryFeatures, 49_302);
+  assert.equal(catalog.summary.geometryPositions, 4_133_039);
+  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_940, official: 362 });
   assert.equal(catalog.ordering.nextCountry, 'UY');
 });
 
@@ -57,6 +57,18 @@ test('catalog separates rollout status from real derived runtime availability an
     'agid-us-census-zcta-10001-centroid',
   ]);
   assert.ok(unitedStates.evidence.every(item => item.integrity === 'verified'));
+
+  const uruguay = catalog.countries.find(country => country.countryCode === 'UY');
+  assert.ok(uruguay);
+  assert.equal(uruguay.status, 'pending');
+  assert.equal(uruguay.runtimeArtifact?.promotionEligible, false);
+  assert.equal(uruguay.runtimeArtifact?.recordCounts.features, 121);
+  assert.equal(uruguay.runtimeArtifact?.sampleIds.postalContextId, 'postal-uy-correo-2023-11000');
+  assert.equal(uruguay.runtimeArtifact?.sampleIds.geometryFeatureId, 'correo-uy-postal-2023-11000');
+  assert.deepEqual(uruguay.runtimeArtifact?.sampleIds.linkedContextIds, [
+    'country-uy',
+    'agid-uy-correo-2023-11000-reference',
+  ]);
 
   const singapore = catalog.countries.find(country => country.countryCode === 'SG');
   assert.equal(

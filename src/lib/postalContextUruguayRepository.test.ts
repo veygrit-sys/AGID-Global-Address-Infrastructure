@@ -36,11 +36,11 @@ test('Uruguay seed separates official releases, observations, addresses, buildin
   assert.equal(value.repository.name, 'agid-postal-uy');
   assert.equal(value.repository.country_code, 'UY');
   assert.equal(value.repository.maturity, 'M1_metadata');
-  assert.equal(value.release_scope.metadata_only, true);
+  assert.equal(value.release_scope.metadata_only, false);
   assert.equal(value.release_scope.contains_raw_source_data, false);
   assert.equal(value.release_scope.contains_real_addresses, false);
   assert.equal(value.release_scope.contains_personal_data, false);
-  assert.equal(value.release_scope.contains_production_geometry, false);
+  assert.equal(value.release_scope.contains_production_geometry, true);
   assert.equal(value.postal_system.code_format, 'NNNNN');
   assert.match(value.postal_system.assignment_rule, /Correo Uruguayo.*five-digit.*delivery point.*set of delivery points.*time-dependent/i);
   assert.match(value.postal_system.geometry_rule, /official.*SHP.*KML.*EPSG:4326.*resource.*digest.*cannot be substituted.*unknown/i);
@@ -66,8 +66,9 @@ test('Uruguay seed separates official releases, observations, addresses, buildin
 test('Uruguay source profile keeps postal geometry, service, IDE, DNC, and community authority separate', () => {
   const profile = readJson<Profile>('source-profile.json');
   const sources = new Map(profile.sources.map(source => [source.source_id, source]));
-  assert.equal(profile.artifact_scope, 'metadata-only-contract-seed');
-  assert.ok(profile.sources.every(source => source.bundled_here === false));
+  assert.equal(profile.artifact_scope, 'fixed-official-august-2023-postal-polygon-research-pack-currentness-blocked');
+  assert.equal(sources.get('correo-uruguayo-postal-polygons')?.bundled_here, true);
+  assert.ok(profile.sources.filter(source => source.source_id !== 'correo-uruguayo-postal-polygons').every(source => source.bundled_here === false));
   assert.match(sources.get('correo-uruguayo-postal-polygons')?.assignment_authority ?? '', /official_postal_operator/i);
   assert.match(sources.get('correo-uruguayo-postal-polygons')?.geometry_authority ?? '', /official_postal_operator_release_polygon/i);
   assert.match(sources.get('correo-uruguayo-postal-polygons')?.redistribution_class ?? '', /Uruguay_DAG/i);
