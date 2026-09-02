@@ -8303,7 +8303,7 @@
             "name": "Burkina Faso",
             "native": {
               "name": "Burkina Faso",
-              "addressFormat": "{{recipient}}\n{{street}}\n{{city}}\nBurkina Faso",
+              "addressFormat": "{{recipient}}\n{{premise}}\n{{street}}\n{{subLocality}}\n{{deliveryService}}\n{{postcode}} {{city}}\nBURKINA FASO",
               "ordering": "small-to-big",
               "fields": [
                 {
@@ -8314,10 +8314,38 @@
                   "type": "text"
                 },
                 {
+                  "key": "premise",
+                  "label": "Appartement / Immeuble",
+                  "placeholder": "Domicile 1114",
+                  "required": false,
+                  "type": "text"
+                },
+                {
                   "key": "street",
-                  "label": "Adresse / BP",
-                  "placeholder": "01 BP 123",
+                  "label": "Numéro et voie",
+                  "placeholder": "566 Avenue de la Nation",
                   "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "subLocality",
+                  "label": "Quartier / Village / Repère",
+                  "placeholder": "Dapoya",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "deliveryService",
+                  "label": "BP / BV / Poste restante et agence",
+                  "placeholder": "BP 6000 OUAGA CNT",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "postcode",
+                  "label": "Code postal",
+                  "placeholder": "10000",
+                  "required": false,
                   "type": "text"
                 },
                 {
@@ -8330,7 +8358,7 @@
               ]
             },
             "english": {
-              "addressFormat": "{{recipient}}\n{{street}}\n{{city}}\nBurkina Faso",
+              "addressFormat": "{{recipient}}\n{{premise}}\n{{street}}\n{{subLocality}}\n{{deliveryService}}\n{{postcode}} {{city}}\nBURKINA FASO",
               "ordering": "small-to-big",
               "fields": [
                 {
@@ -8341,10 +8369,38 @@
                   "type": "text"
                 },
                 {
+                  "key": "premise",
+                  "label": "Apartment / Building",
+                  "placeholder": "Domicile 1114",
+                  "required": false,
+                  "type": "text"
+                },
+                {
                   "key": "street",
-                  "label": "Street Address / PO Box",
-                  "placeholder": "01 PO Box 123",
+                  "label": "House number and street",
+                  "placeholder": "566 Avenue de la Nation",
                   "required": true,
+                  "type": "text"
+                },
+                {
+                  "key": "subLocality",
+                  "label": "Neighbourhood / Village / Landmark",
+                  "placeholder": "Dapoya",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "deliveryService",
+                  "label": "PO box / Virtual box / Poste restante and office",
+                  "placeholder": "BP 6000 OUAGA CNT",
+                  "required": false,
+                  "type": "text"
+                },
+                {
+                  "key": "postcode",
+                  "label": "Postcode",
+                  "placeholder": "10000",
+                  "required": false,
                   "type": "text"
                 },
                 {
@@ -8359,8 +8415,8 @@
             "postalCode": {
               "format": "NNNNN",
               "regex": "^\\d{5}$",
-              "api": null,
-              "source": "Postal metadata from AGID regional table; no free OSS source configured"
+              "api": "https://laposte.bf/code-postal/",
+              "source": "La Poste Burkina Faso live five-digit reference search and UPU Burkina Faso addressing sheet (12/2021); reference access does not establish a reusable complete assignment register or postal-area geometry licence"
             },
             "addressRules": {
               "languages": [
@@ -8370,29 +8426,40 @@
                 }
               ],
               "nativeOrder": [
-                "region",
-                "province",
-                "department",
-                "commune",
-                "village",
+                "recipient",
+                "premise",
                 "street",
+                "subLocality",
+                "deliveryService",
+                "postcode",
+                "city",
                 "country"
               ],
               "englishOrder": [
-                "region",
-                "province",
-                "department",
-                "commune",
-                "village",
+                "recipient",
+                "premise",
                 "street",
+                "subLocality",
+                "deliveryService",
+                "postcode",
+                "city",
                 "country"
               ],
               "regionalHierarchy": [
                 "region",
-                "province"
+                "province",
+                "commune",
+                "quarterOrVillage",
+                "postalOfficeOrAgency",
+                "typedFiveDigitPostcode",
+                "officialPostalSurfaceOrNoCanonicalGeometry",
+                "explicitCivicAddressPoint",
+                "explicitAddressLinkedBuildingFeature",
+                "exactRightsClearedBuilding",
+                "agidCell"
               ],
               "postalCode": {
-                "label": "5 digits used",
+                "label": "5 digits; commune, quartier and agency objects remain distinct; validate current La Poste assignment; no automatic polygon or building",
                 "required": false,
                 "usage": "used"
               },
@@ -8404,6 +8471,7 @@
               ]
             },
             "openSourceIds": [
+              "la-poste-burkina",
               "hot-osm-west-africa",
               "osm-nominatim",
               "osm-overpass",

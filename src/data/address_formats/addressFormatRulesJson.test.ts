@@ -1658,7 +1658,10 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.equal(loadRules('CI').postalCode?.label, '5 digits used');
   assert.equal(loadFormat('GH').postalCode?.api, 'https://www.ghanapostgps.com/');
   assert.equal(loadFormat('BJ').postalCode?.api, 'https://laposte.bj/nos-agences/');
-  assert.equal(loadFormat('BF').postalCode?.api, 'https://codespostaux.laposte.bf/');
+  assert.equal(loadFormat('BF').postalCode?.api, 'https://laposte.bf/code-postal/');
+  assert.match(loadFormat('BF').postalCode?.source ?? '', /La Poste Burkina Faso.*UPU Burkina Faso.*reference.*complete assignment register.*postal-area geometry licence/i);
+  assert.match(loadRules('BF').postalCode?.label ?? '', /5 digits.*commune.*quartier.*agency.*validate current La Poste.*no automatic polygon.*building/i);
+  assert.deepEqual(loadRules('BF').regionalHierarchy, ['region', 'province', 'commune', 'quarterOrVillage', 'postalOfficeOrAgency', 'typedFiveDigitPostcode', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding', 'agidCell']);
   assert.equal(loadFormat('GM').postalCode?.api, 'https://gambiapost.gm/');
   assert.equal(loadFormat('CI').postalCode?.api, 'https://www.laposte.ci/');
   assert.equal(loadFormat('CV').postalCode?.api, 'https://correios.cv/faq');

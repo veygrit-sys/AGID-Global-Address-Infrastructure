@@ -3654,11 +3654,16 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     trustTier: 'official',
     availability: 'web-search',
     depth: 'postcode',
-    url: 'https://codespostaux.laposte.bf/',
+    sourceRole: 'postal-reference-data',
+    validationReadiness: 'reference-eligible',
+    url: 'https://laposte.bf/code-postal/',
     sourceNames: ['la poste burkina faso', 'laposte.bf', 'codes postaux burkina'],
     openSourceIds: ['la-poste-burkina'],
     requiresCredential: false,
-    notes: ['Official Burkina Faso postal operator postcode search for locality and five-digit postal-code confirmation.'],
+    notes: [
+      'Official Burkina Faso postal operator live reference search for commune, quartier and agency five-digit assignments.',
+      'The reviewed site says all rights reserved and exposes no complete immutable download or postal Polygon/MultiPolygon licence; reference results must not be promoted to a redistributed production dataset.',
+    ],
   },
   {
     id: 'gambia-post-services',
