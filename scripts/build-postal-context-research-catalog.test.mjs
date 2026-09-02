@@ -14,17 +14,17 @@ test('committed Postal Context research catalog is deterministic and covers the 
   assert.equal(committed, expected);
   assert.equal(catalog.summary.totalCountries, 252);
   assert.deepEqual(catalog.summary.statusCounts, {
-    blocked: 135,
+    blocked: 136,
     m2_verified: 20,
-    pending: 97,
+    pending: 96,
   });
-  assert.equal(catalog.summary.manifests, 180);
-  assert.equal(catalog.summary.explicitM2Definitions, 167);
+  assert.equal(catalog.summary.manifests, 181);
+  assert.equal(catalog.summary.explicitM2Definitions, 168);
   assert.equal(catalog.summary.runtimeArtifacts, 21);
   assert.equal(catalog.summary.geometryFeatures, 49_180);
   assert.equal(catalog.summary.geometryPositions, 3_881_235);
   assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_939, official: 241 });
-  assert.equal(catalog.ordering.nextCountry, 'TT');
+  assert.equal(catalog.ordering.nextCountry, 'US');
 });
 
 test('catalog separates rollout status from real derived runtime availability and exposes linked IDs', () => {

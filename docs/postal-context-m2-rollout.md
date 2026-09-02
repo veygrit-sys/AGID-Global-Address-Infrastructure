@@ -3017,3 +3017,18 @@ No second country was started.
 - Reports: `reports/postal-context-m2/tc-current-whole-territory-2026-09-02.json`, `reports/postal-context-m2/tc-runtime-validation-2026-09-02.json`, and `docs/postal-context-turks-caicos-m2.md`.
 - After TC: 252 profiles, 97 pending, 135 blocked, 0 in progress, 20 evidence-verified M2; 180 manifests / 167 explicit definitions.
 - Next country: Trinidad and Tobago (`TT`). No second country was started.
+
+## TT - Trinidad and Tobago
+
+- Status: `blocked` / M2 unmet; TTPost and the UPU confirm the current numeric six-digit system, and TT remains in postcode-data creation scope.
+- Attempt: 1 from `2026-09-02T10:14:29.837Z`; completed `2026-09-02T10:42:18.9044904Z`.
+- Definition: `M2_current_ttpost_complete_typed_assignment_and_postal_area_visualization`.
+- Evidence: `reports/postal-context-m2/tt-source-review-2026-09-02.json` (`sha256:d4697043fd584402cead89c24768878dff20e4ca94efe852269663061197aae7`); checks `reports/postal-context-m2/tt-checks-2026-09-02.json` (`sha256:8ee1827a674b06e5e59538ce831b72bbf6a261a20f28b1d70c00f477483e7f2c`).
+- Current semantics: five exact TTPost/UPU bodies / 2,571,401 bytes fix national completion, all-address availability, numeric six-digit format and postal-district + delivery-loop + building-or-zone composition. TTPost also describes a small area or point, grouped addresses and large institutions; an individual code is therefore not guaranteed to be a Polygon.
+- Address and detailed IDs: TT address metadata now requires six digits. Postal object, postal district, loop, zone, administration, civic address, building, assertion, release and AGID identities remain independently typed. Zero exact address or building IDs are inferred from a postcode; a separately rights-cleared civic-address-to-building relation is mandatory for finer detail.
+- Geometry and rights: public lookup is address-specific email/WhatsApp. Reviewed bodies provide no current complete typed assignment/alias/validity/correction/exception/area denominator, compatible bulk reuse rights or postal Polygon/MultiPolygon release. Zero official/derived/virtual postal areas, zero district/loop/route/administrative/point/building/cell proxies and zero production records were promoted.
+- App and visual boundary: in-app Browser initialization failed while Windows sandbox deny-read ACL setup exited non-zero before connection. No real TT descriptor or eligible geometry exists, so no API result, fit, translucent area, outline, detailed ID panel or visual success is claimed. No synthetic or administrative fallback was drawn.
+- Verification: fixed-source inspection 1/1, inspector units 4/4, rollout 8/8, TT ledger/address/ID guardrails 5/5, AGID research catalog 2/2 and syntax/JSON/status/diff 1/1 pass (21 recorded, 0 failed). TypeScript runtime suites were unavailable because tsx/vite dependencies were absent and native Node failed at extensionless-module resolution; they are neither pass nor product failure.
+- Retry: not before `2026-12-02T10:14:29.837Z` and only after pending countries are swept. Provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After TT: 252 profiles, 96 pending, 136 blocked, 0 in progress, 20 evidence-verified M2; 181 manifests / 168 explicit definitions.
+- Next country: United States (`US`). No second country was started.
