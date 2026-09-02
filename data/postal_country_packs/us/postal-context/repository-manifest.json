@@ -2,15 +2,16 @@
   "repository": {
     "name": "agid-postal-us",
     "country_code": "US",
-    "maturity": "M1_metadata",
+    "maturity": "M2_experimental",
     "schema_version": "postal-context-repository-manifest-v1"
   },
   "release_scope": {
-    "metadata_only": true,
+    "metadata_only": false,
     "contains_raw_source_data": false,
     "contains_real_addresses": false,
     "contains_personal_data": false,
-    "contains_production_geometry": false
+    "contains_production_geometry": true,
+    "publication_claim": "one-fixed-2020-census-zcta-derived-validation-sample-with-agid-centroid-cell-crosswalk"
   },
   "postal_system": {
     "code_format": "NNNNN or NNNNN-NNNN",
@@ -29,7 +30,21 @@
     "temporal_rule": "USPS assignments, delivery object types, ZIP+4 ranges, routes, non-active objects, ZCTAs, TIGER releases, address points, building geometries, jurisdictions, local parcel sources, API observations and crosswalks are time-dependent. Store object_type, valid_from, valid_to, observed_at, retrieved_at, generated_at, source release and supersession independently; never rewrite historical evidence or promote a cached response or model surface into a timeless fact."
   },
   "promotion": {
-    "current_stage": "M1_metadata",
+    "current_stage": "M2_current_typed_usps_and_fixed_census_zcta_runtime",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights, ZIP object types, geometry limits, privacy boundaries and jurisdiction exclusions are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Country-specific ZIP, ZCTA, AGID, address-building and evidence contracts are reviewable."
+      },
+      {
+        "id": "M2_current_typed_usps_and_fixed_census_zcta_runtime",
+        "definition": "All current five-digit and ZIP+4 USPS assignments are fixed with validity, corrections, typed non-area exceptions and compatible redistribution rights; every eligible fixed Census or separately licensed postal Polygon/MultiPolygon loads through the API/app, exposes stable postal, geometry, assertion, AGID crosswalk and detailed source-attribute IDs, renders and fits as a translucent area, and clears/re-searches without fabricating missing areas, addresses or buildings."
+      }
+    ],
     "hard_blockers": [
       "zip-or-zip-plus-four-presented-as-canonical-area-or-building",
       "census-zcta-presented-as-official-usps-delivery-boundary-or-complete-coverage",
