@@ -24,4 +24,4 @@ The actual isolated application was started and the real AO postal API was queri
 
 ## Next step
 
-Keep AO blocked until an official postcode system and rights-cleared assignment/geometry artifact are published. Continue the first pending-country sweep with DZ (Algeria); re-check AO no earlier than 2 December 2026 unless Correios de Angola, INACOM or the UPU announces a system sooner.
+Keep AO blocked until an official postcode system and rights-cleared assignment/geometry artifact are published. Continue the first pending-country sweep with BF (Burkina Faso); re-check AO no earlier than 2 December 2026 unless Correios de Angola, INACOM or the UPU announces a system sooner.
