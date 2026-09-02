@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, statSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const ledgerPath = 'docs/postal-context-m2-rollout.json';
 const evidenceCommit = '0ea18839f88af144275f9636de0bdc3f6bac03de';
@@ -11,10 +12,14 @@ const engineeringReport = 'reports/postal-context-m2/ao-checks-2026-09-03.json';
 const countryReport = 'docs/postal-context-angola-m2.md';
 const manifestPath = 'data/postal_country_packs/ao/postal-context/repository-manifest.json';
 const digest = path => `sha256:${createHash('sha256').update(readFileSync(path)).digest('hex')}`;
-const artifact = path => ({
+const publishedBytes = path => execFileSync('git', ['show', `${evidenceCommit}:${path.replaceAll('\\', '/')}`]);
+const artifact = path => {
+  const bytes = publishedBytes(path);
+  return {
   url: `https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure/blob/${evidenceCommit}/${path.replaceAll('\\', '/')}`,
-  digest: digest(path), bytes: statSync(path).size,
-});
+  digest: `sha256:${createHash('sha256').update(bytes).digest('hex')}`, bytes: bytes.length,
+  };
+};
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 const stage = manifest.promotion.stages.find(item => item.id === manifest.promotion.target_stage);
@@ -23,7 +28,7 @@ const ledger = JSON.parse(readFileSync(ledgerPath, 'utf8'));
 const index = ledger.countries.findIndex(item => item.countryCode === 'AO');
 if (index < 0) throw new Error('missing-ao-ledger-entry');
 const previous = ledger.countries[index];
-if (previous.status !== 'pending' || previous.attempts !== 0) throw new Error('unexpected-ao-ledger-state');
+if (!((previous.status === 'pending' && previous.attempts === 0) || (previous.status === 'blocked' && previous.attempts === 1))) throw new Error('unexpected-ao-ledger-state');
 const artifactPaths = [
   manifestPath,
   'data/postal_country_packs/ao/postal-context/source-profile.json',
