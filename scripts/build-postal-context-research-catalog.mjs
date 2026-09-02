@@ -140,12 +140,13 @@ function runtimeArtifact(countryCode) {
   const sampleGeometry = geometry.value.features[0];
   const samplePostal = graph.value.nodes.find(node => node.id === sampleGeometry?.nodeId)
     ?? graph.value.nodes.find(node => node.kind === 'postal_feature');
-  const sampleAssertion = graph.value.assertions.find(assertion =>
+  const sampleAssertions = graph.value.assertions.filter(assertion =>
     assertion.fromNodeId === samplePostal?.id || assertion.toNodeId === samplePostal?.id,
   );
-  const linkedContextIds = sampleAssertion
-    ? [sampleAssertion.fromNodeId, sampleAssertion.toNodeId].filter(id => id !== samplePostal?.id)
-    : [];
+  const sampleAssertion = sampleAssertions[0];
+  const linkedContextIds = [...new Set(sampleAssertions.flatMap(assertion =>
+    [assertion.fromNodeId, assertion.toNodeId].filter(id => id !== samplePostal?.id),
+  ))];
 
   return {
     descriptorPath,
@@ -179,6 +180,7 @@ function runtimeArtifact(countryCode) {
       postalContextId: samplePostal?.id ?? null,
       geometryFeatureId: sampleGeometry?.id ?? null,
       assertionId: sampleAssertion?.id ?? null,
+      assertionIds: sampleAssertions.map(assertion => assertion.id),
       linkedContextIds,
     },
   };

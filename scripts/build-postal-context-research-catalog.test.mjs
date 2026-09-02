@@ -14,17 +14,17 @@ test('committed Postal Context research catalog is deterministic and covers the 
   assert.equal(committed, expected);
   assert.equal(catalog.summary.totalCountries, 252);
   assert.deepEqual(catalog.summary.statusCounts, {
-    blocked: 136,
+    blocked: 137,
     m2_verified: 20,
-    pending: 96,
+    pending: 95,
   });
   assert.equal(catalog.summary.manifests, 181);
-  assert.equal(catalog.summary.explicitM2Definitions, 168);
-  assert.equal(catalog.summary.runtimeArtifacts, 21);
-  assert.equal(catalog.summary.geometryFeatures, 49_180);
-  assert.equal(catalog.summary.geometryPositions, 3_881_235);
-  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_939, official: 241 });
-  assert.equal(catalog.ordering.nextCountry, 'US');
+  assert.equal(catalog.summary.explicitM2Definitions, 169);
+  assert.equal(catalog.summary.runtimeArtifacts, 22);
+  assert.equal(catalog.summary.geometryFeatures, 49_181);
+  assert.equal(catalog.summary.geometryPositions, 3_881_359);
+  assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_940, official: 241 });
+  assert.equal(catalog.ordering.nextCountry, 'UY');
 });
 
 test('catalog separates rollout status from real derived runtime availability and exposes linked IDs', () => {
@@ -40,6 +40,23 @@ test('catalog separates rollout status from real derived runtime availability an
   assert.deepEqual(puertoRico.runtimeArtifact?.sampleIds.linkedContextIds, ['country-pr']);
   assert.match(puertoRico.blocker?.kind ?? '', /assignment-denominator/u);
   assert.ok(puertoRico.evidence.every(item => item.integrity === 'verified'));
+
+  const unitedStates = catalog.countries.find(country => country.countryCode === 'US');
+  assert.ok(unitedStates);
+  assert.equal(unitedStates.status, 'blocked');
+  assert.equal(unitedStates.runtimeArtifact?.promotionEligible, false);
+  assert.equal(unitedStates.runtimeArtifact?.recordCounts.features, 1);
+  assert.equal(unitedStates.runtimeArtifact?.sampleIds.postalContextId, 'postal-us-census-zcta-10001');
+  assert.equal(unitedStates.runtimeArtifact?.sampleIds.geometryFeatureId, 'census-us-zcta-2020-10001');
+  assert.deepEqual(unitedStates.runtimeArtifact?.sampleIds.assertionIds, [
+    'census-us-zcta-2020-10001-part-of-us',
+    'census-us-zcta-2020-10001-centroid-agid-crosswalk',
+  ]);
+  assert.deepEqual(unitedStates.runtimeArtifact?.sampleIds.linkedContextIds, [
+    'country-us',
+    'agid-us-census-zcta-10001-centroid',
+  ]);
+  assert.ok(unitedStates.evidence.every(item => item.integrity === 'verified'));
 
   const singapore = catalog.countries.find(country => country.countryCode === 'SG');
   assert.equal(
