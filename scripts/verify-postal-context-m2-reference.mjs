@@ -221,8 +221,11 @@ export function verifyPostalContextM2Reference({
   const browserScreenshotPath = resolve(rootDir, browserEvidence?.screenshot?.path ?? '');
   const browserReportPresent = Boolean(browserEvidence?.report?.path && existsSync(browserReportPath));
   const browserScreenshotPresent = Boolean(browserEvidence?.screenshot?.path && existsSync(browserScreenshotPath));
+  const pinnedBrowserEvidenceBase = 'https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure/blob/4101d6688c579ad71f4301a2dddc363efe06143d/';
   check('browser-report-present', browserReportPresent, browserEvidence?.report?.path);
   check('browser-screenshot-present', browserScreenshotPresent, browserEvidence?.screenshot?.path);
+  check('browser-report-url-pinned', browserEvidence?.report?.url === `${pinnedBrowserEvidenceBase}${browserEvidence?.report?.path}`, browserEvidence?.report?.url);
+  check('browser-screenshot-url-pinned', browserEvidence?.screenshot?.url === `${pinnedBrowserEvidenceBase}${browserEvidence?.screenshot?.path}`, browserEvidence?.screenshot?.url);
   check('browser-manual-visual-honesty', browserEvidence?.manualVisualInspection === false, browserEvidence?.manualVisualInspection);
   let browserReport = null;
   if (browserReportPresent) {

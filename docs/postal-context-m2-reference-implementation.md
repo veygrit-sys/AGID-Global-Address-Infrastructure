@@ -139,6 +139,10 @@ Loading, no match, ambiguity, API failure and invalid geometry must remain
 explicit states. A point, route, P.O. box, organization, building or AGID cell
 must never be expanded into a postal polygon.
 
+The browser report and screenshot are pinned to implementation commit
+`4101d6688c579ad71f4301a2dddc363efe06143d`; the reference JSON records their
+immutable GitHub URLs, byte lengths and SHA-256 digests.
+
 ## Reusing the pattern for another country
 
 1. Copy the reference JSON and change the country, pack paths, official-source
