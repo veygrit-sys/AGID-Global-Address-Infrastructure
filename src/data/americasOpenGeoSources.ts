@@ -1937,6 +1937,7 @@ const BASE_OPEN_SOURCE_IDS: AmericasOpenGeoSourceId[] = [
 
 const COUNTRY_SOURCE_IDS: Partial<Record<AmericasCountryCode, AmericasOpenGeoSourceId[]>> = {
   US: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder', 'usdot-national-address-database', 'usgs-national-structures-dataset', 'hud-usps-zip-crosswalk', 'osm-united-states'],
+  VI: ['usps-web-tools', 'usps-ais-products', 'usps-publication-28-2024', 'usps-zip-code-lookup', 'us-census-zcta-2020', 'us-census-tiger-line', 'us-census-geocoder'],
   CA: ['canada-post-postal', 'canada-post-addresscomplete', 'canada-post-licensed-postal-data', 'statcan-pccf-licensed', 'statcan-census-fsa-2021', 'statcan-national-address-register', 'statcan-open-database-buildings', 'osm-canada'],
   DO: ['inposdom-postcode-search', 'upu-dominican-republic-addressing-2005', 'one-dominican-territorial-division-2021', 'iderd-dominican-geoservices', 'ign-dominican-cartographic-base', 'registro-inmobiliario-dominican-cadastre', 'osm-dominican-republic'],
   HT: ['office-postes-haiti-postcode-search', 'upu-haiti-addressing-2017', 'ihsi-haiti-territorial-codes', 'ihsi-haiti-admin-2024', 'cnigs-haiti-reference-geodata', 'osm-haiti'],
