@@ -5,8 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
 type Profile = { artifact_scope: string; sources: Array<{ source_id: string; assignment_authority: string; geometry_authority: string; redistribution_class: string; bundled_here: boolean; prohibited_claims: string[] }>; artifact_partitions: Array<{ id: string }> };
-type Manifest = { repository: { name: string; country_code: string; maturity: string }; release_scope: Record<string, boolean | string>; postal_system: Record<string, string>; promotion: { current_stage: string; hard_blockers: string[] } };
+type Manifest = { repository: { name: string; country_code: string; maturity: string }; release_scope: Record<string, boolean | string>; postal_system: Record<string, string>; promotion: { current_stage: string; target_stage: string; data_completion_verified: boolean; hard_blockers: string[] } };
 type Fixtures = { country_code: string; synthetic: boolean; promotion_eligible: boolean; fixture_policy: { contains_real_addresses: boolean; contains_upstream_rows: boolean; contains_personal_data: boolean; postal_prefix: string; coordinates_are_geographic: boolean; postcodes_are_assignment_evidence: boolean }; fixtures: Array<{ fixture_id: string; synthetic_address: { postcode?: string }; evidence: Array<{ assignment_authority: string; geometry_authority: string }>; expected: { must_not_assert: string[] } }> };
+type M2Review = { result: string; m2DefinitionId: string; postalAuthorityFindings: { currentFormatsObserved: string[]; completeCurrentAssignmentAndMigrationDenominatorAvailable: boolean }; rightsAndGeometry: { officialPostalPolygonOrMultiPolygonRecords: number; productionEligibleRecords: number; pointOfficeAdminBuildingClusterBufferHullVoronoiOsmModelOrAgidProxyPromoted: boolean }; applicationEvidence: { actualAppStarted: boolean; renderedAddressContextMoreSpecificThanPostcode: boolean; independentAgidPromotedToPostalId: boolean; realEgPostalApiStatus: number; realEgPostalAreaVisualized: boolean; manualVisualInspection: boolean }; countryM2Achieved: boolean };
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const seedRoot = resolve(root, 'data/postal_country_packs/eg/postal-context');
@@ -24,12 +25,14 @@ test('Egypt seed separates seven-digit assignment, migration, derived surfaces, 
   assert.equal(manifest.release_scope.contains_production_geometry, false);
   assert.equal(manifest.postal_system.full_code_format, 'NNNNNNN');
   assert.match(manifest.postal_system.assignment_rule, /July 2023.*seven digits.*province.*locality.*neighbourhood.*community.*GPS.*text.*does not prove/i);
-  assert.match(manifest.postal_system.legacy_rule, /five- or six-digit.*crosswalk.*never padded.*truncated.*guessed/i);
+  assert.match(manifest.postal_system.legacy_rule, /Aug\. 2026.*99999.*9999999.*five- or six-digit.*crosswalk.*never padded.*truncated.*guessed/i);
   assert.match(manifest.postal_system.geometry_rule, /group of buildings.*official rights-cleared.*GPS.*CAPMAS.*Voronoi.*derived non-canonical/i);
   assert.match(manifest.postal_system.building_rule, /rights-cleared.*source-defined stable relation.*crosswalk.*candidates only/i);
   assert.match(manifest.postal_system.licence_rule, /app access.*government-hosted guide.*free viewing.*never.*redistribution/i);
   assert.match(manifest.postal_system.crs_rule, /source CRS.*Egypt 1907.*Belt.*never relabelled WGS84.*reviewed/i);
   assert.equal(manifest.promotion.current_stage, 'M1_metadata');
+  assert.equal(manifest.promotion.target_stage, 'M2_current_egypt_post_assignments_migration_and_postal_area_visualization');
+  assert.equal(manifest.promotion.data_completion_verified, false);
   for (const blocker of [
     'five-or-six-digit-legacy-code-silently-padded-truncated-or-treated-as-current-seven-digit-code',
     'seven-digit-code-gps-result-building-group-or-administrative-boundary-presented-as-official-postal-polygon',
@@ -45,6 +48,8 @@ test('Egypt source profile keeps postal, lookup, statistical, survey, and commun
   assert.ok(profile.sources.every(source => source.bundled_here === false));
   assert.equal(sources.get('upu-egypt-postal-addressing-2023')?.assignment_authority, 'official_postal_system_semantics_only');
   assert.equal(sources.get('upu-egypt-postal-addressing-2023')?.geometry_authority, 'none');
+  assert.equal(sources.get('upu-general-addressing-issues-2026-eg')?.assignment_authority, 'official_current_system_status_only');
+  assert.equal(sources.get('upu-general-addressing-issues-2026-eg')?.geometry_authority, 'none');
   assert.match(sources.get('egypt-post-new-postcode-guide')?.assignment_authority ?? '', /official_lookup_workflow/i);
   assert.equal(sources.get('egypt-post-new-postcode-guide')?.redistribution_class, 'R4_validation_only');
   assert.match(sources.get('capmas-egypt-gis')?.geometry_authority ?? '', /official_product_geometry_only/i);
@@ -71,4 +76,22 @@ test('Egypt fixtures use synthetic seven-digit strings and no upstream rows', ()
   assert.ok(postcodes.every(code => code === '0000000'));
   assert.ok(pack.fixtures.every(item => item.fixture_id.startsWith('eg-syn-')));
   for (const claim of ['seven-digit-code-is-official-polygon', 'legacy-code-is-current-code-with-padding', 'derived-surface-is-official-postal-polygon', 'building-group-code-identifies-exact-building', 'recipient-owner-title-or-query-data']) assert.ok(prohibited.has(claim));
+});
+
+test('Egypt M2 review records the current dual-format gate and real app fail-closed evidence', () => {
+  const review = readJson<M2Review>('m2-source-review.json');
+  assert.equal(review.result, 'blocked');
+  assert.equal(review.m2DefinitionId, 'M2_current_egypt_post_assignments_migration_and_postal_area_visualization');
+  assert.deepEqual(review.postalAuthorityFindings.currentFormatsObserved, ['99999', '9999999']);
+  assert.equal(review.postalAuthorityFindings.completeCurrentAssignmentAndMigrationDenominatorAvailable, false);
+  assert.equal(review.rightsAndGeometry.officialPostalPolygonOrMultiPolygonRecords, 0);
+  assert.equal(review.rightsAndGeometry.productionEligibleRecords, 0);
+  assert.equal(review.rightsAndGeometry.pointOfficeAdminBuildingClusterBufferHullVoronoiOsmModelOrAgidProxyPromoted, false);
+  assert.equal(review.applicationEvidence.actualAppStarted, true);
+  assert.equal(review.applicationEvidence.renderedAddressContextMoreSpecificThanPostcode, true);
+  assert.equal(review.applicationEvidence.independentAgidPromotedToPostalId, false);
+  assert.equal(review.applicationEvidence.realEgPostalApiStatus, 503);
+  assert.equal(review.applicationEvidence.realEgPostalAreaVisualized, false);
+  assert.equal(review.applicationEvidence.manualVisualInspection, false);
+  assert.equal(review.countryM2Achieved, false);
 });
