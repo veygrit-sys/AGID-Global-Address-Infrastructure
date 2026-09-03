@@ -3185,3 +3185,17 @@ No second country was started.
 - Retry: not before `2026-12-02T23:01:02.073Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After CD: 252 profiles, 83 pending, 148 blocked, 0 in progress, 21 evidence-verified M2; 191 manifests / 181 explicit definitions; 25 non-synthetic research artifacts.
 - Next country: Central African Republic (`CF`). No second country was started.
+
+## CF - Central African Republic
+
+- Status: `blocked` at `M1_metadata`; M2 unmet. Current postcode data creation is excluded because primary UPU evidence says CF does not require postal codes.
+- Attempt: 1 from `2026-09-02T23:56:03.144Z`; completed `2026-09-03T00:20:00.000Z`.
+- Evidence: four exact UPU/ARCEP bodies / 845,353 bytes are URL/byte/SHA-256 bound outside Git. The UPU September 2025 no-postcode list in the file updated 20 August 2026 explicitly includes Central African Rep. The UPU 03/2022 examples use `BP 729 / BANGUI` and `BP 655 / BANGUI`; ARCEP uses `B.P. 1046 Bangui`. BP is a P.O.-box delivery object, not a postcode.
+- Polygon, OSS and model quality: zero official/derived/virtual postal Polygon/MultiPolygon records exist. The deterministic gate rejects numeric lookalikes, BP, office/route/Point/admin geometry, buffers, hulls, Voronoi/raster cells, draft planning cells, AGID cells and Hugging Face/libpostal output as postal truth. OSM remains separate source-qualified context; no proxy was promoted.
+- Address and ID boundary: the live Bangui OSM result displayed detailed place context and independent AGID `CF022WKY25JD`. It is not a postcode, postal area or building relation; more detailed buildings require independent rights-cleared identity and geometry evidence.
+- App and visual boundary: the isolated actual app returned 200; unmocked `GET /api/v1/postal/CF/00000?geometry=geojson` returned 404 `Postal Context country is not supported`. Deterministic Playwright selected Bangui, observed two map canvases and no postal-area notice or fake translucent overlay. In-app Browser and local image viewing failed at Windows helper boundaries, so human visual inspection is not claimed.
+- Verification: four source bodies, inspector units 3/3, address 2/2, CF/source/catalog 59/59, shared runtime 27/27, rollout 8/8, deterministic browser and typecheck pass (105 recorded, 0 failed).
+- Evidence commit: `6ab280746cca991550d56502d01618a2c74dd7be`; reports `reports/postal-context-m2/cf-source-review-2026-09-03.json`, `reports/postal-context-m2/cf-checks-2026-09-03.json` and `docs/postal-context-central-african-republic-m2.md`.
+- Retry: not before `2026-12-02T23:56:03.144Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After CF: 252 profiles, 82 pending, 149 blocked, 0 in progress, 21 evidence-verified M2; 192 manifests / 182 explicit definitions; 25 non-synthetic research artifacts.
+- Next country: Republic of the Congo (`CG`). No second country was started.
