@@ -5,7 +5,8 @@ native:
   addressFormat: |-
     {{recipient}}
     {{street}}
-    {{city}}
+    {{poBox}}
+    {{postcode}} {{city}}
     Djibouti
   ordering: small-to-big
   fields:
@@ -15,9 +16,19 @@ native:
       required: true
       type: text
     - key: street
-      label: Adresse
-      placeholder: BP 123
-      required: true
+      label: Adresse géocodée / adresse
+      placeholder: W3W jeunesse.livrable.brisons
+      required: false
+      type: text
+    - key: poBox
+      label: Boîte postale
+      placeholder: BP 1663
+      required: false
+      type: text
+    - key: postcode
+      label: Code postal
+      placeholder: '77101'
+      required: false
       type: text
     - key: city
       label: Ville
@@ -28,7 +39,8 @@ english:
   addressFormat: |-
     {{recipient}}
     {{street}}
-    {{city}}
+    {{poBox}}
+    {{postcode}} {{city}}
     Djibouti
   ordering: small-to-big
   fields:
@@ -38,9 +50,19 @@ english:
       required: true
       type: text
     - key: street
-      label: Street Address / PO Box
-      placeholder: PO Box 123
-      required: true
+      label: Geocoded / Street Address
+      placeholder: W3W jeunesse.livrable.brisons
+      required: false
+      type: text
+    - key: poBox
+      label: PO Box
+      placeholder: BP 1663
+      required: false
+      type: text
+    - key: postcode
+      label: Postcode
+      placeholder: '77101'
+      required: false
       type: text
     - key: city
       label: City
@@ -51,7 +73,7 @@ postalCode:
   format: NNNNN
   regex: ^\d{5}$
   api: null
-  source: Djibouti Ministry of Communication, Posts and Telecommunications / La Poste de Djibouti official postal service information
+  source: UPU Djibouti addressing sheet 05/2020 and Universal POST*CODE General Addressing Issues Aug. 2026
 addressRules:
   languages:
     - code: fr
@@ -61,7 +83,7 @@ addressRules:
   nativeOrder:
     - name
     - street
-    - houseNumber
+    - poBox
     - postcode
     - city
     - region
@@ -69,20 +91,28 @@ addressRules:
   englishOrder:
     - name
     - street
-    - houseNumber
+    - poBox
     - postcode
     - city
     - region
     - country
   regionalHierarchy:
-    - region
-    - district
+    - typedFiveDigitPostcode
+    - regionAndPostOfficeCodeSemantics
+    - explicitPostalSurfaceOrNoCanonicalGeometry
+    - independentGeocodedAddressOrPOBox
+    - explicitRightsClearedBuildingRelation
   postalCode:
-    label: 5 digits used
+    label: 5 digits (first digit country, next digit region, last three post office); geocoded address and P.O. box remain separate
     required: false
     usage: used
   openSourceIds:
     - mcpt-djibouti-poste
+    - upu-djibouti-addressing-2020
+    - upu-djibouti-postcode-length-2026
+    - upu-postcode-database-licensing-2026
+    - djibouti-decentralisation-cartography
+    - osm-djibouti
     - rcmrd-geoportal
     - hot-osm-east-southern-africa
     - osm-nominatim
@@ -113,6 +143,11 @@ addressRules:
     - rcmrd-gmes-africa-geoportal
 openSourceIds:
   - mcpt-djibouti-poste
+  - upu-djibouti-addressing-2020
+  - upu-djibouti-postcode-length-2026
+  - upu-postcode-database-licensing-2026
+  - djibouti-decentralisation-cartography
+  - osm-djibouti
   - rcmrd-geoportal
   - hot-osm-east-southern-africa
   - osm-nominatim

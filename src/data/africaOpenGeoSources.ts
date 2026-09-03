@@ -62,6 +62,11 @@ export type AfricaOpenGeoSourceId =
   | 'ethiopia-addis-land-registration-edas'
   | 'osm-ethiopia'
   | 'mcpt-djibouti-poste'
+  | 'upu-djibouti-addressing-2020'
+  | 'upu-djibouti-postcode-length-2026'
+  | 'upu-postcode-database-licensing-2026'
+  | 'djibouti-decentralisation-cartography'
+  | 'osm-djibouti'
   | 'snpsf-comores-poste'
   | 'paositra-malagasy'
   | 'paositra-malagasy-agencies'
@@ -758,7 +763,48 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Official Djibouti Ministry of Communication, Posts and Telecommunications page identifying La Poste de Djibouti as the national postal service and linking the operator site.',
+    license: 'Djibouti government public reference; no bulk assignment or redistribution grant inferred',
+    notes: 'Official Djibouti Ministry page identifies La Poste de Djibouti as the national postal service. Operator identity and postal law are not a complete current assignment denominator or postal Polygon/MultiPolygon release.',
+  },
+  'upu-djibouti-addressing-2020': {
+    id: 'upu-djibouti-addressing-2020',
+    name: 'UPU Djibouti addressing sheet (May 2020)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/djiEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright; public reference only and database redistribution requires separate permission',
+    notes: 'The two-page 05/2020 sheet defines five digits left of locality, country/region/post-office digit semantics, ten public distribution/postcode rows, separate geocoded address and BP fields, and examples. It is dated reference material, not proven complete for 2026 and contains no postal geometry.',
+  },
+  'upu-djibouti-postcode-length-2026': {
+    id: 'upu-djibouti-postcode-length-2026',
+    name: 'UPU Djibouti postcode length (August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright; Universal POST*CODE database separately licensed',
+    notes: 'The August 2026 UPU table confirms numeric 99999 for Djibouti. It does not provide assignments, validity, exceptions, postal geometry or redistribution rights.',
+  },
+  'upu-postcode-database-licensing-2026': {
+    id: 'upu-postcode-database-licensing-2026',
+    name: 'UPU Universal POST*CODE database licensing (release 2026.1)',
+    url: 'https://www.upu.int/en/Postal-Solutions/Programmes-Services/Addressing-Solutions',
+    kind: 'standard', coverage: 'global', usage: 'reference',
+    license: 'Licence contract, non-disclosure agreement, data-use declaration and rates apply',
+    notes: 'The current world postcode database is contractual. The public Africa sample ZIP contains Nigeria, Egypt, Morocco, South Africa and Somalia, but no Djibouti files. AGID did not register, authenticate, accept terms, contract or pay.',
+  },
+  'djibouti-decentralisation-cartography': {
+    id: 'djibouti-decentralisation-cartography',
+    name: 'Djibouti Ministry of Decentralisation cartography',
+    url: 'https://decentralisation.gouv.dj/cartographie/',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Djibouti government public reference; exact map reuse and redistribution terms not established',
+    notes: 'Official maps provide regional and administrative context only. They do not define the five Djibouti Ville delivery-office areas or any postcode Polygon/MultiPolygon and are not promoted as postal geometry.',
+  },
+  'osm-djibouti': {
+    id: 'osm-djibouti',
+    name: 'OpenStreetMap Djibouti candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0; separate attributed partition required',
+    notes: 'Community places, roads, post offices, addresses and buildings may support candidate context only. They cannot create current La Poste assignments, postal areas, rights or exact address-building relations.',
   },
   'snpsf-comores-poste': {
     id: 'snpsf-comores-poste',
@@ -2297,7 +2343,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   SO: ['somalia-moct-posta', 'somalia-moct-postal-revival-2025', 'somalia-national-postal-policy-2026', 'somalia-moct-digital-addressing', 'somalia-sobs-address-observation', 'somalia-sobs-cbca-jurisdiction', 'somalia-snbs-gis', 'somalia-nira-principles', 'somalia-nca-privacy', 'osm-somalia', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
   SS: ['south-sudan-nca-postal-sector', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ET: ['ethiopost-branches', 'ethiopost-delivery-address-form', 'upu-ethiopia-addressing-2002', 'ethiopia-ssgi-edas', 'ethiopia-nsdi-geoportal', 'ethiopia-bishoftu-address-book', 'ethiopia-addis-land-registration-edas', 'osm-ethiopia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  DJ: ['mcpt-djibouti-poste', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  DJ: ['mcpt-djibouti-poste', 'upu-djibouti-addressing-2020', 'upu-djibouti-postcode-length-2026', 'upu-postcode-database-licensing-2026', 'djibouti-decentralisation-cartography', 'osm-djibouti', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MZ: ['incm-mozambique-cep-2024', 'incm-mozambique-postal-law-2016', 'incm-mozambique-corre-universal-2024', 'incm-mozambique-postal-operators', 'mozambique-correios-dissolution-2021', 'correios-mocambique-codigos-postais', 'incm-mozambique-cep-rollout-2019-2022', 'ine-mozambique-admin-cartography', 'fnds-mozambique-land-cadastre', 'intic-mozambique-data-protection-status-2026', 'osm-mozambique', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   MW: ['malawi-postcodes-macra', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],

@@ -6770,6 +6770,8 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     trustTier: 'official',
     availability: 'web-search',
     depth: 'locality',
+    sourceRole: 'context-only',
+    validationReadiness: 'metadata-only',
     url: 'https://communication.gouv.dj/structures-sous-tutelle/',
     sourceNames: [
       'la poste de djibouti',
@@ -6780,7 +6782,28 @@ export const OFFICIAL_POSTAL_SOURCE_CATALOG: OfficialPostalSourceProfile[] = [
     ],
     openSourceIds: ['mcpt-djibouti-poste'],
     requiresCredential: false,
-    notes: ['Official Djibouti ministry page naming La Poste de Djibouti as the national postal service and linking the operator site while direct public operator endpoints remain unstable.'],
+    notes: ['Official Djibouti ministry page names La Poste de Djibouti as the national postal service; Law 13/AN/98 establishes the operator and its public-service mission.', 'Operator identity and law do not publish a complete current assignment denominator, postal Polygon/MultiPolygon, building relation or open data licence.'],
+  },
+  {
+    id: 'upu-djibouti-addressing-2020', countryCodes: ['DJ'], label: 'UPU Djibouti addressing sheet (May 2020)',
+    authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'postal-reference-data', validationReadiness: 'reference-eligible',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/djiEn.pdf',
+    sourceNames: ['upu djibouti addressing 2020', 'djibouti five digit postcode', '77101 djibouti ville'], openSourceIds: ['upu-djibouti-addressing-2020'], requiresCredential: false,
+    notes: ['The 05/2020 sheet defines five digits left of locality, country/region/post-office digit semantics and ten public rows from 77101 through 77601.', 'It remains dated reference evidence, not a proven complete current 2026 denominator, postal geometry, reusable address database or blanket republication grant.'],
+  },
+  {
+    id: 'upu-djibouti-postcode-length-2026', countryCodes: ['DJ'], label: 'UPU Djibouti postcode length (August 2026)',
+    authority: 'intergovernmental-postal-standard', trustTier: 'official', availability: 'web-search', depth: 'postcode', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    sourceNames: ['upu djibouti postcode length 2026', 'djibouti 99999'], openSourceIds: ['upu-djibouti-postcode-length-2026'], requiresCredential: false,
+    notes: ['The August 2026 table confirms a numeric five-digit format for Djibouti.', 'It supplies no current assignment rows, postal geometry, building relation or redistribution right.'],
+  },
+  {
+    id: 'djibouti-decentralisation-cartography', countryCodes: ['DJ'], label: 'Djibouti Ministry of Decentralisation cartography',
+    authority: 'government', trustTier: 'official', availability: 'web-search', depth: 'geo-only', sourceRole: 'context-only', validationReadiness: 'metadata-only',
+    url: 'https://decentralisation.gouv.dj/cartographie/',
+    sourceNames: ['djibouti decentralisation cartography', 'djibouti official administrative map'], openSourceIds: ['djibouti-decentralisation-cartography'], requiresCredential: false,
+    notes: ['Official map publications supply administrative context only.', 'They do not define the five Djibouti Ville delivery-office areas or any postal Polygon/MultiPolygon, and exact machine-data reuse rights are not established.'],
   },
   {
     id: 'snpsf-comores-poste',
