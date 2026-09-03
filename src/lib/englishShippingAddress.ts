@@ -138,7 +138,7 @@ const EXTENDED_COUNTRY_SPECS = [
   extendedSpec('SL', 'Sierra Leone', 'sle', 'africa', 'optional', '^\\d{4}$'),
   extendedSpec('LR', 'Liberia', 'lbr', 'africa', 'optional', '^\\d{4}$'),
   extendedSpec('GM', 'The Gambia', 'gmb', 'africa', 'not-used', null),
-  extendedSpec('CM', 'Cameroon', 'cmr', 'africa', 'required', '^\\d{5}$'),
+  extendedSpec('CM', 'Cameroon', 'cmr', 'africa', 'not-used', null),
   extendedSpec('ER', 'Eritrea', 'eri', 'africa', 'not-used', null),
   extendedSpec('ET', 'Ethiopia', 'eth', 'africa', 'required', '^\\d{4}$'),
   extendedSpec('KE', 'Kenya', 'ken', 'africa', 'required', '^\\d{5}$', 'before-locality'),

@@ -140,6 +140,11 @@ export type AfricaOpenGeoSourceId =
   | 'artci-cote-divoire-postal-sector-2024'
   | 'osm-cote-divoire'
   | 'la-poste-cote-divoire'
+  | 'upu-cameroon-no-postcode-2026'
+  | 'upu-cameroon-addressing-2002'
+  | 'minpostel-cameroon-postal-operators-2024'
+  | 'minesup-cameroon-bp-address-example'
+  | 'osm-cameroon'
   | 'correios-cabo-verde'
   | 'correios-cabo-verde-contact-identifiers'
   | 'correios-cabo-verde-cip'
@@ -1160,6 +1165,46 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     kind: 'address', coverage: 'country', usage: 'validation',
     license: 'ODbL 1.0; separate attributed partition required',
     notes: 'Community place, road, address, building and administrative features may enrich independently sourced context. They cannot create CI postal authority, assignments, postal surfaces, deliverability or address-to-building identity.',
+  },
+  'upu-cameroon-no-postcode-2026': {
+    id: 'upu-cameroon-no-postcode-2026',
+    name: 'UPU countries not requiring postal codes (Cameroon, September 2025 list; file updated August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright and database restrictions; reference evidence only unless written permission is obtained',
+    notes: 'The current UPU list explicitly includes Cameroon among countries that do not require postal codes. It is authoritative absence metadata, not a reusable assignment or geometry dataset.',
+  },
+  'upu-cameroon-addressing-2002': {
+    id: 'upu-cameroon-addressing-2002',
+    name: 'UPU Cameroon addressing sheet (July 2002)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cmrEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU reference publication; database reproduction requires separate permission',
+    notes: 'The dated addressing example uses BP 6000 followed by YAOUNDE without a postcode. BP is a P.O.-box identifier, not a national postcode, assignment or postal area.',
+  },
+  'minpostel-cameroon-postal-operators-2024': {
+    id: 'minpostel-cameroon-postal-operators-2024',
+    name: 'MINPOSTEL Cameroon authorized postal operators (March 2024)',
+    url: 'https://www.minpostel.gov.cm/index.php/en/actualites/475-reseaux-postaux-les-42-operateurs-prives-agrees',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Cameroon government all-rights-reserved public reference; no bulk or derivative redistribution grant inferred',
+    notes: 'MINPOSTEL identifies Campost as the public operator and 42 authorized private operators. Operator authorization is not a postcode assignment register or postal Polygon/MultiPolygon source.',
+  },
+  'minesup-cameroon-bp-address-example': {
+    id: 'minesup-cameroon-bp-address-example',
+    name: 'Cameroon MINESUP BP address examples',
+    url: 'https://www.minesup.gov.cm/index.php/centre/institut-superieur-technologique/',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Cameroon government all-rights-reserved public reference; no bulk or derivative redistribution grant inferred',
+    notes: 'The official page labels 54190 and 1739 as BP/address-postale values. A five-digit BP value must not be reclassified as a Cameroon postcode.',
+  },
+  'osm-cameroon': {
+    id: 'osm-cameroon',
+    name: 'OpenStreetMap Cameroon candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0; separate attributed partition required',
+    notes: 'ODbL place, address, post-office, road, building and administrative features remain separately attributed context. They cannot create Cameroon postcode authority, assignments, postal geometry, building identity or deliverability.',
   },
   'correios-cabo-verde': {
     id: 'correios-cabo-verde',
@@ -2228,6 +2273,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   TN: ['la-poste-tunisienne-codes', 'upu-tunisia-addressing-2014', 'tunisian-open-data-national-license', 'tunisian-open-data-delegations-2025', 'tunisian-open-data-governorates-2025', 'otc-tunisia-cadastral-geoportal', 'inpdp-tunisia-law-2004-63', 'la-poste-tunisienne-privacy', 'osm-tunisia'],
   GH: ['ghanapostgps', 'hot-osm-west-africa'],
   CI: ['upu-cote-divoire-no-postcode-2026', 'upu-cote-divoire-addressing-2004', 'artci-cote-divoire-postal-sector-2024', 'la-poste-cote-divoire', 'osm-cote-divoire', 'hot-osm-west-africa'],
+  CM: ['upu-cameroon-no-postcode-2026', 'upu-cameroon-addressing-2002', 'minpostel-cameroon-postal-operators-2024', 'minesup-cameroon-bp-address-example', 'osm-cameroon', 'hot-osm-africa'],
   BF: ['la-poste-burkina', 'hot-osm-west-africa'],
   GN: ['guinee-poste', 'hot-osm-west-africa'],
   ML: ['la-poste-mali', 'hot-osm-west-africa'],
