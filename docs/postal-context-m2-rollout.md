@@ -3199,3 +3199,17 @@ No second country was started.
 - Retry: not before `2026-12-02T23:56:03.144Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
 - After CF: 252 profiles, 82 pending, 149 blocked, 0 in progress, 21 evidence-verified M2; 192 manifests / 182 explicit definitions; 25 non-synthetic research artifacts.
 - Next country: Republic of the Congo (`CG`). No second country was started.
+
+## CG - Republic of the Congo
+
+- Status: `blocked` at `M1_metadata`; M2 unmet. Current postcode data creation is excluded because primary UPU evidence says CG does not require postal codes.
+- Attempt: 1 from `2026-09-03T00:24:33.589Z`; completed `2026-09-03T00:46:00.000Z`.
+- Evidence: four exact UPU/SOPECO bodies / 848,825 bytes are URL/byte/SHA-256 bound outside Git. The UPU September 2025 no-postcode list in the file updated 20 August 2026 explicitly includes Congo (Rep.). The UPU 09/2004 sheet ends its physical-address example with `BRAZZAVILLE / CONGO (REP.)` and lists `BP 652`; SOPECO's current page gives `68 Boulevard Denis Sassou Nguesso ... Brazzaville - Congo` and 39 postal establishments without a postcode. BP is a P.O.-box delivery object, not a postcode.
+- Polygon, OSS and model quality: zero official/derived/virtual postal Polygon/MultiPolygon records exist. The deterministic gate rejects numeric lookalikes, BP, office/route/Point/admin geometry, buffers, hulls, Voronoi/raster cells, draft planning cells, AGID cells, CD/CF assignments and Hugging Face/libpostal output as CG postal truth. OSM remains separate source-qualified context; no proxy was promoted.
+- Address and ID boundary: the live Photon Brazzaville result displayed detailed place context and independent AGID `CG039MN8CVH1`. It is not a postcode, postal area or building relation; CG identity remains separate from CD and CF, and more detailed buildings require independent rights-cleared identity and geometry evidence.
+- App and visual boundary: the isolated actual app returned 200; unmocked `GET /api/v1/postal/CG/00000?geometry=geojson` returned 404 `Postal Context country is not supported`. Deterministic Playwright selected Brazzaville, observed two map canvases and no postal-area notice or fake translucent overlay. In-app Browser and local image viewing failed at Windows helper boundaries, so human visual inspection is not claimed.
+- Verification: four source bodies, inspector units 3/3, address 2/2, CG/source/catalog 60/60, shared runtime 27/27, rollout 8/8, deterministic browser and typecheck pass (106 recorded, 0 failed).
+- Evidence commit: `86aa16f539a2304a7b3b303f0b0b1d53a8761fd3`; reports `reports/postal-context-m2/cg-source-review-2026-09-03.json`, `reports/postal-context-m2/cg-checks-2026-09-03.json` and `docs/postal-context-congo-republic-m2.md`.
+- Retry: not before `2026-12-03T00:24:33.589Z` and only after pending countries are swept; provider contact, data request, registration, authentication, terms/licence/contract acceptance, payment, protected-data access, destination creation, publication or deployment requires explicit approval.
+- After CG: 252 profiles, 81 pending, 150 blocked, 0 in progress, 21 evidence-verified M2; 193 manifests / 183 explicit definitions; 25 non-synthetic research artifacts.
+- Next country: Côte d'Ivoire (`CI`). No second country was started.
