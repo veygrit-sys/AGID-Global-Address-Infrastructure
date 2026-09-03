@@ -14,21 +14,31 @@ test('committed Postal Context research catalog is deterministic and covers the 
   assert.equal(committed, expected);
   assert.equal(catalog.summary.totalCountries, 252);
   assert.deepEqual(catalog.summary.statusCounts, {
-    blocked: 155,
+    blocked: 156,
     m2_verified: 21,
-    pending: 76,
+    pending: 75,
   });
-  assert.equal(catalog.summary.manifests, 196);
-  assert.equal(catalog.summary.explicitM2Definitions, 187);
+  assert.equal(catalog.summary.manifests, 197);
+  assert.equal(catalog.summary.explicitM2Definitions, 188);
   assert.equal(catalog.summary.runtimeArtifacts, 25);
   assert.equal(catalog.summary.geometryFeatures, 49_310);
   assert.equal(catalog.summary.geometryPositions, 4_146_067);
   assert.deepEqual(catalog.summary.sourceTypeCounts, { derived: 48_948, official: 362 });
-  assert.equal(catalog.ordering.nextCountry, 'EA');
+  assert.equal(catalog.ordering.nextCountry, 'EG');
 });
 
 test('catalog separates rollout status from real derived runtime availability and exposes linked IDs', () => {
   const catalog = buildPostalContextResearchCatalog();
+  const ceutaAndMelilla = catalog.countries.find(country => country.countryCode === 'EA');
+  assert.ok(ceutaAndMelilla);
+  assert.equal(ceutaAndMelilla.name, 'Ceuta');
+  assert.equal(ceutaAndMelilla.region, 'africa');
+  assert.equal(ceutaAndMelilla.sourceRegion, 'europe');
+  assert.equal(ceutaAndMelilla.status, 'blocked');
+  assert.equal(ceutaAndMelilla.runtimeArtifact, null);
+  assert.match(ceutaAndMelilla.blocker?.kind ?? '', /assignment-denominator-rights/u);
+  assert.ok(ceutaAndMelilla.evidence.every(item => item.integrity === 'verified'));
+
   const ascension = catalog.countries.find(country => country.countryCode === 'AC');
   assert.ok(ascension);
   assert.equal(ascension.status, 'm2_verified');
