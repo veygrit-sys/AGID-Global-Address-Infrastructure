@@ -5,8 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
 type Profile = { artifact_scope: string; sources: Array<{ source_id: string; assignment_authority: string; geometry_authority: string; redistribution_class: string; bundled_here: boolean }>; artifact_partitions: Array<{ id: string }> };
-type Manifest = { repository: { name: string; country_code: string; maturity: string }; release_scope: Record<string, boolean | string>; postal_system: Record<string, string>; promotion: { current_stage: string; hard_blockers: string[] } };
+type Manifest = { repository: { name: string; country_code: string; maturity: string }; release_scope: Record<string, boolean | string>; postal_system: Record<string, string>; promotion: { current_stage: string; hard_blockers: string[]; target_stage: string; stages: Array<{ id: string; definition: string }>; data_completion_verified: boolean } };
 type Fixtures = { country_code: string; synthetic: boolean; promotion_eligible: boolean; fixture_policy: { contains_real_addresses: boolean; contains_upstream_rows: boolean; contains_personal_data: boolean; postcode_value: string; cip_value: string; coordinates_are_upstream_observations: boolean; identifiers_are_assignment_evidence: boolean; synthetic_values_not_checked_against_live_operator: boolean; collision_requires_replacement_before_promotion: boolean }; fixtures: Array<{ fixture_id: string; synthetic_address: { postcode?: string }; expected: { must_not_assert: string[] } }> };
+type Review = { result: string; m2DefinitionId: string; sourceInspection: { exactBodiesByteAndSha256Bound: number; officialReferenceBytes: number }; postalAuthorityFindings: { currentPostalSystemConfirmed: boolean; currentCanonicalFormat: string; completeCurrentAssignmentDenominatorAvailable: boolean }; identifierBoundary: { contactPageUniqueExtendedValues: number; cipRowsAccessed: number; registrationOrAuthenticationAttempted: boolean; identifiersMergedOrDigitsInferred: boolean }; geometryQuality: { officialPostalPolygonOrMultiPolygonRecords: number; derivedPostalPolygonOrMultiPolygonRecords: number; virtualPostalPolygonOrMultiPolygonRecords: number; productionEligibleRecords: number }; countryM2Achieved: boolean };
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const seedRoot = resolve(root, 'data/postal_country_packs/cv/postal-context');
@@ -31,7 +32,30 @@ test('Cabo Verde seed separates postcode, extended identifier, CIP, derived surf
   assert.match(manifest.postal_system.privacy_rule, /CIP identifies.*person or company.*georeference.*purpose limitation.*access control/i);
   assert.match(manifest.postal_system.hosting_rule, /Cloudflare.*Hugging Face.*rights-cleared.*digests.*Private CIP/i);
   assert.equal(manifest.promotion.current_stage, 'M1_metadata');
+  assert.equal(manifest.promotion.target_stage, 'M2_current_correios_assignment_and_postal_area_visualization');
+  assert.equal(manifest.promotion.data_completion_verified, false);
+  assert.match(manifest.promotion.stages.find(stage => stage.id === manifest.promotion.target_stage)?.definition ?? '', /complete finite current denominator.*NNNN-NNN.*authenticated CIP.*Polygon\/MultiPolygon.*real CV API\/app/i);
   for (const blocker of ['nnnn-nnn-contact-value-conflated-with-four-digit-postcode-or-cip-without-operator-schema', 'cip-derived-guessed-or-published-without-purpose-and-authority', 'island-municipality-parish-zone-neighbourhood-cadastre-or-cip-point-presented-as-official-postcode-polygon', 'postcode-cip-address-text-coordinate-containment-overlap-or-proximity-presented-as-exact-building-link']) assert.ok(manifest.promotion.hard_blockers.includes(blocker));
+});
+
+test('Cabo Verde M2 source review is digest-bound and remains fail closed', () => {
+  const review = readJson<Review>('m2-source-review.json');
+  assert.equal(review.result, 'blocked');
+  assert.equal(review.m2DefinitionId, 'M2_current_correios_assignment_and_postal_area_visualization');
+  assert.equal(review.sourceInspection.exactBodiesByteAndSha256Bound, 8);
+  assert.equal(review.sourceInspection.officialReferenceBytes, 1_429_576);
+  assert.equal(review.postalAuthorityFindings.currentPostalSystemConfirmed, true);
+  assert.equal(review.postalAuthorityFindings.currentCanonicalFormat, '9999');
+  assert.equal(review.postalAuthorityFindings.completeCurrentAssignmentDenominatorAvailable, false);
+  assert.equal(review.identifierBoundary.contactPageUniqueExtendedValues, 32);
+  assert.equal(review.identifierBoundary.cipRowsAccessed, 0);
+  assert.equal(review.identifierBoundary.registrationOrAuthenticationAttempted, false);
+  assert.equal(review.identifierBoundary.identifiersMergedOrDigitsInferred, false);
+  assert.equal(review.geometryQuality.officialPostalPolygonOrMultiPolygonRecords, 0);
+  assert.equal(review.geometryQuality.derivedPostalPolygonOrMultiPolygonRecords, 0);
+  assert.equal(review.geometryQuality.virtualPostalPolygonOrMultiPolygonRecords, 0);
+  assert.equal(review.geometryQuality.productionEligibleRecords, 0);
+  assert.equal(review.countryM2Achieved, false);
 });
 
 test('Cabo Verde source profile keeps operator, CIP, UPU, INGT, cadastre, and community evidence separate', () => {

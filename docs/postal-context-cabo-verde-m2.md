@@ -1,0 +1,19 @@
+# Cabo Verde Postal Context M2 review
+
+Status: **blocked at M1 metadata**. Cabo Verde has a current four-digit postcode system, but M2 is not achieved.
+
+The current Correios FAQ states that a postcode has four digits followed by the resident zone/locality and publishes `7600 Plateau`, `7601 Fazenda` and `7602 Achada Santo Antonio`. The UPU 04/2014 sheet documents the four digit positions, and the UPU August 2026 table lists Cabo Verde as numeric `9999`. These official references establish current syntax and examples, not a complete versioned assignment denominator.
+
+The Correios contact page separately publishes `NNNN-NNN` values under its postal-code label: 35 occurrences and 32 unique values were observed on a page last updated 10 December 2019. The current CIP portal is authenticated and exposes personal/company account, physical-address, locality and postal fields plus location-code behavior. AGID does not strip the contact suffix, append it to a four-digit code, guess CIP or access private rows. No registration, authentication, terms acceptance or provider contact was attempted.
+
+Eight exact Correios, UPU and INGT bodies were verified offline by byte length, SHA-256, PDF page count and content markers (1,429,576 bytes). Correios all-rights-reserved wording, CIP reproduction restrictions, UPU publication/database restrictions and INGT copyright metadata are recorded. Raw HTML, JavaScript, PDF and JSON bodies are excluded from Git.
+
+The official INGT service has nine Polygon layers for islands, municipalities, parishes, zones, cities, towns, places and neighbourhoods from 2010 cartography at 1:5000. They are administrative/toponymic context, not postal areas. No official, derived or virtual postcode Polygon/MultiPolygon with compatible AGID processing, derivation, redistribution and public-serving rights was found. Branch points, CIP georeferences, OSM, buffers, hulls, Voronoi/raster cells, learned surfaces and AGID cells were not promoted.
+
+The actual app ran at `http://127.0.0.1:3037/`. A live `Praia, Cabo Verde` search rendered `Universidade de Cabo Verde, Palmarejo Grande, Praia, Cabo Verde`, two map canvases and independent AGID ID `CV014TVAYWAK`. This is more detailed than a postcode result, but Photon marked it high and ambiguous, so it is not asserted as an authoritative building relation. The unmocked request `GET /api/v1/postal/CV/7600?geometry=geojson` returned 503 `Postal Context pack is unavailable`; no postal-area notice or translucent overlay rendered.
+
+In-app Browser setup failed before navigation with a Windows ACL helper error, so deterministic Playwright was used. The full-page screenshot and assertions passed, but local image viewing failed with Windows error 206. Manual visual inspection is explicitly false. Polygon quality is therefore fail closed: there is no legitimate CV postcode polygon to inspect or improve.
+
+Hugging Face, libpostal and other open-source/model components can improve parsing evaluation, candidate ranking, topology checks and bounded-error compression only after postal authority and rights are proven. They cannot fill the missing assignment denominator, manufacture a postal boundary, create a CIP, grant reuse rights or infer a building identity.
+
+Reconsider M2 only after Correios or another competent authority releases a complete current assignment denominator, explicit postcode/contact/CIP object mapping and exact real postal Polygon/MultiPolygon data under compatible rights. The immutable artifact must then pass real CV API and app checks for normalization, loading, no match, multiple candidates, failure, invalid geometry, map fit, translucent fill and clear outline, metadata, clear and re-search. Retry after the pending-country sweep or 2026-12-03 unless an official release appears earlier.

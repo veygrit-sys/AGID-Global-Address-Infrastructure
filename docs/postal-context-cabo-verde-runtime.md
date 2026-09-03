@@ -2,6 +2,8 @@
 
 Status: M1_metadata. This release contains contracts, source policy, synthetic fixtures and runtime tests. It contains no current Correios assignment rows, real addresses, CIP accounts, personal data, production polygons, IDE-CV datasets, cadastral records, parcel features or buildings.
 
+The 2026-09-03 evidence audit and real-app result are recorded in [the country M2 review](postal-context-cabo-verde-m2.md). That review confirms the current four-digit system but keeps M2 blocked because no complete rights-cleared assignment denominator or postal Polygon/MultiPolygon artifact was identified.
+
 ## Evidence flow
 
 `four-digit postcode text -> pinned Correios assignment observation -> official surface or no canonical geometry -> island/municipality/parish/locality context -> permitted CIP or civic address -> explicit address-linked building or parcel -> CV AGID cell`
