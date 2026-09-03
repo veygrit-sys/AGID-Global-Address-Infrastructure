@@ -8,7 +8,7 @@ import { AFRICA_OPEN_GEO_SOURCES, getAfricaOpenSourceIds } from './africaOpenGeo
 import { getOfficialPostalSourcesForCountry } from '../lib/officialPostalSourceCatalog';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const EXPECTED = ["algerie-poste","algerie-poste-mobile-offices","algerie-poste-privacy","upu-algeria-addressing-2002","algeria-postal-addressing-regulation-2019","algeria-national-address-referential","algeria-local-authorities-directory","inct-algeria-digital-geodata","osm-algeria"] as const;
+const EXPECTED = ["algerie-poste","algerie-poste-mobile-offices","algerie-poste-privacy","upu-algeria-addressing-2002","upu-algeria-postcode-format-2026","algeria-postal-addressing-regulation-2019","algeria-national-address-referential","algeria-local-authorities-directory","inct-algeria-digital-geodata","osm-algeria"] as const;
 const OFFICIAL = EXPECTED.filter(id => id !== 'osm-algeria');
 
 test('Algeria registry separates fixed and mobile postal objects, historical and legal context, national addressing, administration, commercial GIS, and community data', () => {
@@ -22,6 +22,7 @@ test('Algeria registry separates fixed and mobile postal objects, historical and
   assert.match(AFRICA_OPEN_GEO_SOURCES['algerie-poste'].notes, /official.*five-digit.*observation.*not.*bulk.*geometry.*redistribution/i);
   assert.match(AFRICA_OPEN_GEO_SOURCES['algerie-poste-mobile-offices'].notes, /mobile.*non-area.*not.*route.*polygon/i);
   assert.match(AFRICA_OPEN_GEO_SOURCES['upu-algeria-addressing-2002'].notes, /Dated.*five-digit.*delivery-area.*wilaya.*not.*current.*polygon/i);
+  assert.match(AFRICA_OPEN_GEO_SOURCES['upu-algeria-postcode-format-2026'].notes, /current.*99999.*no assignment.*geometry.*redistribution/i);
   assert.match(AFRICA_OPEN_GEO_SOURCES['algeria-postal-addressing-regulation-2019'].notes, /six-line.*five-digit.*commune.*not.*address rows.*geometry.*building/i);
   assert.match(AFRICA_OPEN_GEO_SOURCES['algeria-national-address-referential'].notes, /institutional.*not.*public nationwide.*dataset.*licence.*building/i);
   assert.equal(AFRICA_OPEN_GEO_SOURCES['inct-algeria-digital-geodata'].license, 'Commercial or product-specific permission required');
@@ -35,6 +36,7 @@ test('Algeria official catalog exposes matching authority and reuse boundaries',
   assert.equal(sources.get('algerie-poste')?.validationReadiness, 'reference-eligible');
   assert.equal(sources.get('algerie-poste-mobile-offices')?.depth, 'postcode');
   assert.equal(sources.get('upu-algeria-addressing-2002')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.get('upu-algeria-postcode-format-2026')?.validationReadiness, 'metadata-only');
   assert.equal(sources.get('algeria-postal-addressing-regulation-2019')?.sourceRole, 'legal-framework-only');
   assert.equal(sources.get('algeria-national-address-referential')?.depth, 'address');
   assert.equal(sources.get('algeria-local-authorities-directory')?.sourceRole, 'context-only');

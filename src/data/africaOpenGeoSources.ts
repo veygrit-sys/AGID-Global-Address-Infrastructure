@@ -195,6 +195,7 @@ export type AfricaOpenGeoSourceId =
   | 'algerie-poste-mobile-offices'
   | 'algerie-poste-privacy'
   | 'upu-algeria-addressing-2002'
+  | 'upu-algeria-postcode-format-2026'
   | 'algeria-postal-addressing-regulation-2019'
   | 'algeria-national-address-referential'
   | 'algeria-local-authorities-directory'
@@ -1659,6 +1660,16 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'UPU publication terms; database reproduction requires separate permission',
     notes: 'Dated five-digit address-format and delivery-area/wilaya coding context only; it is not a current assignment table, polygon source, complete history or reusable postal database.',
   },
+  'upu-algeria-postcode-format-2026': {
+    id: 'upu-algeria-postcode-format-2026',
+    name: 'UPU Algeria current postcode format table (August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'The current Universal POST*CODE table lists Algeria as a postcode country with numeric 99999 format. It supplies no assignment rows, aliases, validity, exceptions, geometry, address-to-building relation or blanket redistribution permission.',
+  },
   'algeria-postal-addressing-regulation-2019': {
     id: 'algeria-postal-addressing-regulation-2019',
     name: 'Algeria Executive Decree 19-258 postal addressing regulation',
@@ -2309,7 +2320,7 @@ const BASE_OPEN_SOURCE_IDS: AfricaOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeoSourceId[]>> = {
-  DZ: ['algerie-poste', 'algerie-poste-mobile-offices', 'algerie-poste-privacy', 'upu-algeria-addressing-2002', 'algeria-postal-addressing-regulation-2019', 'algeria-national-address-referential', 'algeria-local-authorities-directory', 'inct-algeria-digital-geodata', 'osm-algeria'],
+  DZ: ['algerie-poste', 'algerie-poste-mobile-offices', 'algerie-poste-privacy', 'upu-algeria-addressing-2002', 'upu-algeria-postcode-format-2026', 'algeria-postal-addressing-regulation-2019', 'algeria-national-address-referential', 'algeria-local-authorities-directory', 'inct-algeria-digital-geodata', 'osm-algeria'],
   EG: ['upu-egypt-postal-addressing-2023', 'egypt-post-new-postcode-guide', 'egypt-post', 'capmas-egypt-gis', 'esa-egypt-geoportal', 'egy-list', 'datahub-postal'],
   LY: ['libya-post-services'],
   MA: ['upu-morocco-postcode-manual', 'poste-maroc-codepostal', 'morocco-open-data-postal', 'morocco-open-data-license', 'ancfcc-morocco-cartography', 'datahub-postal'],
