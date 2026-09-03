@@ -4,6 +4,10 @@ export type AfricaOpenGeoSourceId =
   | 'upu-central-african-republic-addressing-2022'
   | 'arcep-central-african-republic-postal'
   | 'osm-central-african-republic'
+  | 'upu-congo-republic-no-postcode-2026'
+  | 'upu-congo-republic-addressing-2004'
+  | 'sopeco-congo-location'
+  | 'osm-congo-republic'
   | 'scpt-rdc-postcode-directory'
   | 'upu-dr-congo-addressing-2022'
   | 'arptc-dr-congo-postal-market-2021-2022'
@@ -1263,6 +1267,38 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'ODbL 1.0 separate attributed partition',
     notes: 'Candidate-only place and administrative context. Points, buildings, roads, localities and administrative polygons are not postal assignments or postcode areas.',
   },
+  'upu-congo-republic-no-postcode-2026': {
+    id: 'upu-congo-republic-no-postcode-2026',
+    name: 'UPU countries not requiring postal codes (Congo Rep., September 2025 list; file updated August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'The current UPU file explicitly lists Congo (Rep.) among countries that do not require postal codes. It is absence evidence, not an assignment dataset or geometry source.',
+  },
+  'upu-congo-republic-addressing-2004': {
+    id: 'upu-congo-republic-addressing-2004',
+    name: 'UPU Congo (Rep.) addressing sheet (September 2004)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cogEn.pdf',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'Official example ends with BRAZZAVILLE / CONGO (REP.) without a postcode; BP 652 is a P.O.-box contact, not a postcode or postal polygon.',
+  },
+  'sopeco-congo-location': {
+    id: 'sopeco-congo-location',
+    name: 'SOPECO La Poste Congo location and network page',
+    url: 'https://www.laposte.cg/a-propos/ou-sommes-nous.html',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'SOPECO website all-rights-reserved notice; reference access only',
+    notes: 'Current designated-operator page gives its Brazzaville street address without a postcode and reports 39 active establishments. Addresses and offices are non-postcode context and not postal areas.',
+  },
+  'osm-congo-republic': {
+    id: 'osm-congo-republic',
+    name: 'OpenStreetMap Republic of the Congo candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Candidate-only place, address, building and administrative context. CG must not be confused with CD; no feature is a postcode assignment or postal area.',
+  },
   'scpt-rdc-postcode-directory': {
     id: 'scpt-rdc-postcode-directory', name: 'SCPT Code Postal RDC directory',
     url: 'https://www.codepostal.cd/', kind: 'postal-code', coverage: 'country', usage: 'primary',
@@ -2186,6 +2222,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   BW: ['botswanapost-addressing', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   CF: ['upu-central-african-republic-no-postcode-2026', 'upu-central-african-republic-addressing-2022', 'arcep-central-african-republic-postal', 'osm-central-african-republic', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
+  CG: ['upu-congo-republic-no-postcode-2026', 'upu-congo-republic-addressing-2004', 'sopeco-congo-location', 'osm-congo-republic', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
   CD: ['scpt-rdc-postcode-directory', 'upu-dr-congo-addressing-2022', 'arptc-dr-congo-postal-market-2021-2022', 'osm-dr-congo', 'hf-libpostal-address-parser-candidate', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
   NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
