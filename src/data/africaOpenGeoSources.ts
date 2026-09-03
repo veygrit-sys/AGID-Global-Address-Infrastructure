@@ -135,6 +135,10 @@ export type AfricaOpenGeoSourceId =
   | 'ndpc-nigeria-data-protection-act-2023'
   | 'ndpc-nigeria-gaid-2025'
   | 'osm-nigeria'
+  | 'upu-cote-divoire-no-postcode-2026'
+  | 'upu-cote-divoire-addressing-2004'
+  | 'artci-cote-divoire-postal-sector-2024'
+  | 'osm-cote-divoire'
   | 'la-poste-cote-divoire'
   | 'correios-cabo-verde'
   | 'correios-cabo-verde-contact-identifiers'
@@ -1120,10 +1124,42 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     id: 'la-poste-cote-divoire',
     name: "La Poste de Cote d'Ivoire",
     url: 'https://www.laposte.ci/',
-    kind: 'postal-code',
+    kind: 'address',
     coverage: 'country',
     usage: 'reference',
-    notes: "Official La Poste de Cote d'Ivoire portal with postal directory and post-office services; use as current postal-network evidence while direct public postcode lookup remains limited.",
+    notes: "Official La Poste de Cote d'Ivoire portal is postal-operator context only. It does not override the current UPU no-postcode classification or publish a complete assignment denominator, postal geometry or open redistribution licence.",
+  },
+  'upu-cote-divoire-no-postcode-2026': {
+    id: 'upu-cote-divoire-no-postcode-2026',
+    name: "UPU countries not requiring postal codes (Cote d'Ivoire, September 2025 list; file updated August 2026)",
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright and database restrictions; reference evidence only unless written permission is obtained',
+    notes: "The current UPU list explicitly includes Cote d'Ivoire among countries that do not require postal codes. It is authoritative absence metadata, not a reusable assignment or geometry dataset.",
+  },
+  'upu-cote-divoire-addressing-2004': {
+    id: 'upu-cote-divoire-addressing-2004',
+    name: "UPU Cote d'Ivoire addressing sheet (September 2004)",
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/civEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU reference publication; database reproduction requires separate permission',
+    notes: 'Dated guidance identifies 06 and 17 as two-digit post-office codes in BP address lines and 104 as a home-delivery indicator for office 04. These routing/office components are not current national postcodes, assignments or areas.',
+  },
+  'artci-cote-divoire-postal-sector-2024': {
+    id: 'artci-cote-divoire-postal-sector-2024',
+    name: "ARTCI Cote d'Ivoire postal-sector operator list (July 2024)",
+    url: 'https://www.artci.ci/index.php?Itemid=145&catid=56&id=681%3Aliste-operateurs-autorises-juillet-2024&option=com_content&view=article',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'ARTCI all-rights-reserved public reference; no bulk or derivative redistribution grant inferred',
+    notes: 'The regulator identifies La Poste as universal-service operator and repeats office-code/BP forms such as 17 BP 105 Abidjan 17. Operator addresses and licence coverage are not a postcode assignment register or postal polygons.',
+  },
+  'osm-cote-divoire': {
+    id: 'osm-cote-divoire',
+    name: "OpenStreetMap Cote d'Ivoire candidate context",
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0; separate attributed partition required',
+    notes: 'Community place, road, address, building and administrative features may enrich independently sourced context. They cannot create CI postal authority, assignments, postal surfaces, deliverability or address-to-building identity.',
   },
   'correios-cabo-verde': {
     id: 'correios-cabo-verde',
@@ -2191,7 +2227,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   SD: ['sudapost'],
   TN: ['la-poste-tunisienne-codes', 'upu-tunisia-addressing-2014', 'tunisian-open-data-national-license', 'tunisian-open-data-delegations-2025', 'tunisian-open-data-governorates-2025', 'otc-tunisia-cadastral-geoportal', 'inpdp-tunisia-law-2004-63', 'la-poste-tunisienne-privacy', 'osm-tunisia'],
   GH: ['ghanapostgps', 'hot-osm-west-africa'],
-  CI: ['la-poste-cote-divoire', 'hot-osm-west-africa'],
+  CI: ['upu-cote-divoire-no-postcode-2026', 'upu-cote-divoire-addressing-2004', 'artci-cote-divoire-postal-sector-2024', 'la-poste-cote-divoire', 'osm-cote-divoire', 'hot-osm-west-africa'],
   BF: ['la-poste-burkina', 'hot-osm-west-africa'],
   GN: ['guinee-poste', 'hot-osm-west-africa'],
   ML: ['la-poste-mali', 'hot-osm-west-africa'],

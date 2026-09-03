@@ -1,0 +1,15 @@
+# Côte d'Ivoire Postal Context M2 review
+
+Status: **blocked at M1 metadata; excluded from current postcode data creation**. M2 is not achieved.
+
+The UPU Universal DataBase September 2025 no-postcode list, in the file updated August 2026, explicitly includes Côte d'Ivoire. The official UPU 09/2004 CI sheet says deliveries are to P.O. boxes and labels `06` and `17` as two-digit post-office codes in `06 B.P. 37 ABIDJAN 06` and `17 B.P. 105 ABIDJAN 17`; `104` means home delivery by office `04`. These are office/routing and BP address components, not national postcodes. The false five-digit format in AGID's CI JSON/YAML and embedded Africa hierarchy has therefore been removed.
+
+Three exact UPU bodies were checked offline by byte length, SHA-256, page count and content markers (818,237 bytes total). UPU copyright/database restrictions and ARTCI's all-rights-reserved notice are recorded. The official ARTCI July 2024 operator page corroborates La Poste's universal-service role and the `17 BP 105 Abidjan 17` address form; direct exact-body retrieval returned 502 during this run, so it is not counted among the digest-bound bodies. Raw bodies are excluded from Git.
+
+The CI gate rejects arbitrary digits, two-digit office codes, `104`, BP, offices, routes, Points, administrative polygons, buffers, hulls, Voronoi/raster cells, AGID cells, neighbouring-country assignments and Hugging Face/libpostal output as CI postal truth. OSM may provide separately attributed place, address, building or administrative context only. Detailed building display still needs a separate rights-cleared identity and explicit geometry relation.
+
+The actual app ran at `http://127.0.0.1:3035/`. A live `Abidjan, Côte d'Ivoire` search rendered `Bibliothèque nationale de Côte d'Ivoire, Boulevard Carde, Le Plateau, Abidjan`, two map canvases and independent AGID `CI01ZMYVT7E8`. This is meaningfully more detailed than a country/postcode result, but Photon marked it `high`, `ambiguous` and `Needs review`; it is not asserted as an authoritative building-footprint relation. The unmocked request `GET /api/v1/postal/CI/06?geometry=geojson` returned 404 `Postal Context country is not supported`; no postal-area notice or translucent postal overlay rendered.
+
+In-app Browser setup failed before navigation with a Windows ACL helper error, so deterministic Playwright was used. Its full-page screenshot and assertions passed, but local image viewing failed with Windows error 206; manual visual inspection is explicitly false. Polygon quality is therefore a fail-closed result: there is no legitimate CI postcode polygon to inspect or improve, and no administrative/office/model proxy was produced.
+
+M2 can be reconsidered only after a competent authority introduces a current CI postcode system, releases a complete versioned assignment denominator and exact real Polygon/MultiPolygon geometry under AGID-compatible processing, derivation, redistribution and serving rights, and the real CI API/app/browser path passes all state, fit, styling, clear and re-search checks. Retry after the pending-country sweep or 2026-12-03, unless such an official release appears earlier.
