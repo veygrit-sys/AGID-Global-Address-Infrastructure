@@ -1,5 +1,9 @@
 export type AfricaOpenGeoSourceId =
   | 'botswanapost-addressing'
+  | 'upu-central-african-republic-no-postcode-2026'
+  | 'upu-central-african-republic-addressing-2022'
+  | 'arcep-central-african-republic-postal'
+  | 'osm-central-african-republic'
   | 'scpt-rdc-postcode-directory'
   | 'upu-dr-congo-addressing-2022'
   | 'arptc-dr-congo-postal-market-2021-2022'
@@ -1227,6 +1231,38 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'Website copyright notice; reference access only, no dataset redistribution right inferred',
     notes: 'Official operator reference. BotswanaPost displays a P.O. Box plus Gaborone without a postcode, the UPU Botswana sheet uses P.O. Box or private bag plus locality, and the UPU September 2025 list says Botswana does not require postal codes. Boxes, bags, plots, streets, localities and AGID cells remain non-postcode context and are not postal geometry.',
   },
+  'upu-central-african-republic-no-postcode-2026': {
+    id: 'upu-central-african-republic-no-postcode-2026',
+    name: 'UPU countries not requiring postal codes (September 2025 list, file updated August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'The current UPU file explicitly lists Central African Rep. among countries that do not require postal codes. This is absence evidence, not a postcode dataset or geometry source.',
+  },
+  'upu-central-african-republic-addressing-2022': {
+    id: 'upu-central-african-republic-addressing-2022',
+    name: 'UPU Central African Republic addressing sheet (March 2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cafEn.pdf',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'Official examples use BP plus BANGUI and the country without a postcode. BP is a P.O.-box delivery object and must not be promoted to a postcode or area.',
+  },
+  'arcep-central-african-republic-postal': {
+    id: 'arcep-central-african-republic-postal',
+    name: 'ARCEP Central African Republic postal-sector page',
+    url: 'https://www.arcep.cf/page.php?slug=postes',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'ARCEP website All Rights Reserved; reference access only, no dataset redistribution right inferred',
+    notes: 'Current regulator page describes postal licensing and publishes a BP 1046 Bangui contact address without a postcode. It supplies no assignment register or geometry.',
+  },
+  'osm-central-african-republic': {
+    id: 'osm-central-african-republic',
+    name: 'OpenStreetMap Central African Republic candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Candidate-only place and administrative context. Points, buildings, roads, localities and administrative polygons are not postal assignments or postcode areas.',
+  },
   'scpt-rdc-postcode-directory': {
     id: 'scpt-rdc-postcode-directory', name: 'SCPT Code Postal RDC directory',
     url: 'https://www.codepostal.cd/', kind: 'postal-code', coverage: 'country', usage: 'primary',
@@ -2149,6 +2185,7 @@ const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeo
   ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   BW: ['botswanapost-addressing', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  CF: ['upu-central-african-republic-no-postcode-2026', 'upu-central-african-republic-addressing-2022', 'arcep-central-african-republic-postal', 'osm-central-african-republic', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
   CD: ['scpt-rdc-postcode-directory', 'upu-dr-congo-addressing-2022', 'arptc-dr-congo-postal-market-2021-2022', 'osm-dr-congo', 'hf-libpostal-address-parser-candidate', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
   NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
