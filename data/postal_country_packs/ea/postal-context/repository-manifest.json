@@ -1,0 +1,64 @@
+{
+  "repository": {
+    "name": "agid-postal-ea",
+    "country_code": "EA",
+    "maturity": "M1_metadata",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "code_format": "51NNN (Ceuta) or 52NNN (Melilla)",
+    "assignment_rule": "Keep the EA ledger identity and the two source members separate: 51xxx is Ceuta and 52xxx is Melilla. A normalized code is an identifier first; area semantics require exact same-code geometry and rights.",
+    "geometry_rule": "CartoCiudad WMS may prove one official-view Polygon at an observed time but its documentation says the postcode surfaces are view-only and not downloadable. A Point, office, locality, autonomous-city boundary, buffer, hull, Voronoi cell, model result or AGID cell must never replace postal geometry.",
+    "address_rule": "Postal code, sourced street/address candidate, administrative context, building and independent AGID spatial ID are separately typed. More-detailed display is allowed only with its own source and confidence.",
+    "agid_rule": "An EA AGID may identify the selected map position independently; it is not the Correos postcode, a postal polygon, an exact building or delivery entitlement.",
+    "model_rule": "Hugging Face and open-source models may assist multilingual parsing, candidate ranking and anomaly review after source and rights gates. They cannot create an assignment, official boundary, licence, address-building relation or delivery fact.",
+    "building_rule": "Exact building display requires a separately licensed civic-address/building source and explicit stable relation; spatial proximity is insufficient.",
+    "licence_rule": "CNIG documents CartoCiudad postcode surfaces as visualization-only and datos.gob.es states Correos is the sole distributor. Correos Data is commercial with transfer, sublicensing and Internet finder restrictions. No contract or purchase was attempted.",
+    "jurisdiction_rule": "EA is traversed in Africa per the rollout ledger while its existing Europe-source address record remains intact. Do not absorb EA into ES, IC, PT or Morocco and do not collapse Ceuta and Melilla into one geometry.",
+    "temporal_rule": "Retain retrieval timestamp, exact response bytes, SHA-256, CartoCiudad database timestamp and source date. Re-check only after the pending-country sweep or a rights-cleared complete release."
+  },
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "hard_blockers": [
+      "complete-current-assignment-denominator-unavailable",
+      "view-only-postcode-surfaces-not-downloadable",
+      "correos-commercial-rights-incompatible-with-unapproved-public-serving",
+      "immutable-national-ea-artifact-unavailable",
+      "point-admin-model-or-agid-proxy-promoted-to-postal-area"
+    ],
+    "target_stage": "M2_current_correos_ea_assignments_and_postal_area_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Legacy EA address metadata covered Ceuta only and accepted only 51xxx."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Current 51xxx/52xxx normalization, distinct Ceuta/Melilla identity, digest-bound official references, one official-view 51001 Polygon quality receipt, explicit rights limits, and real API/app blocked-state evidence."
+      },
+      {
+        "id": "M2_current_correos_ea_assignments_and_postal_area_visualization",
+        "definition": "M2 requires a complete current finite denominator of every EA Correos assignment, alias, validity, correction, exception and area/non-area type plus exact corresponding Polygon/MultiPolygon geometry, all in immutable versioned artifacts under rights compatible with AGID processing, storage, derivation, redistribution and public serving. The real EA API/app must expose normalization, loading, no-match, multiple, failure and invalid-geometry states; fit a valid surface; render translucent fill and clear outline over a base map; show selected postcode, geometry type, official/derived/virtual class, source, date and confidence; clear and re-search; and keep address, building and AGID identity separately sourced."
+      }
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "EA format and source metadata, official-view geometry QA and source-qualified address/AGID display only; no EA Postal Context descriptor is enabled.",
+    "enablement_gate": "A complete immutable rights-cleared EA assignment and postal-geometry release must pass topology, prefix/member, API and application checks.",
+    "geometry_rule": "No official-view receipt, autonomous-city polygon, point, model or AGID cell is published as Postal Context geometry."
+  },
+  "non_goals": [
+    "raw-source-or-personal-address-publication",
+    "new-repository-hosting-paid-service-contract-or-deployment",
+    "postal-area-from-country-admin-locality-office-point-buffer-cell-model-or-agid",
+    "building-resident-owner-land-right-or-deliverability-inference"
+  ]
+}

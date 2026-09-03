@@ -50,6 +50,14 @@ test('prefers country-specific official sources before the UPU global fallback',
   assert.equal(getOfficialPostalSourcesForCountry('IM')[0]?.id, 'isle-of-man-post-office-postcode-finder');
 });
 
+test('keeps EA official view evidence separate from production geometry rights', () => {
+  const sources = getOfficialPostalSourcesForCountry('EA');
+  assert.equal(sources[0]?.id, 'cartociudad-ea-postcodes');
+  assert.equal(sources.find(source => source.id === 'cartociudad-ea-wms')?.validationReadiness, 'metadata-only');
+  assert.equal(sources.find(source => source.id === 'correos-data-ea')?.requiresCredential, true);
+  assert.ok(!getPreferredPostalSourceIdsForCountry('EA').includes('cartociudad-ea-wms'));
+});
+
 test('keeps Guatemala legal framework evidence separate from postal-reference data', () => {
   const source = getOfficialPostalSourcesForCountry('GT')
     .find(candidate => candidate.id === 'correos-guatemala-postal-legal-framework');

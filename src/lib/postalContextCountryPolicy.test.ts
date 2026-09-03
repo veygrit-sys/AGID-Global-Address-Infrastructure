@@ -51,6 +51,7 @@ import {
   normalizeEgyptPostalCode,
   normalizeMoroccoPostalCode,
   normalizeAlgeriaPostalCode,
+  normalizeCeutaMelillaPostalCode,
   normalizeEthiopiaPostalCode,
   normalizeCaboVerdePostalCode,
   normalizeKenyaPostalCode,
@@ -324,6 +325,14 @@ test('normalizes supported country postal codes without cross-country guessing',
   assert.equal(normalizeAlgeriaPostalCode('0999'), null);
   assert.equal(normalizeAlgeriaPostalCode('099999'), null);
   assert.equal(normalizePostalContextPostalCode('dz', '09 999'), '09999');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.EA.postalCodeFormat, '51NNN (Ceuta) or 52NNN (Melilla)');
+  assert.equal(POSTAL_CONTEXT_COUNTRY_POLICIES.EA.fullCodeGeometrySemantics, 'area-or-non-area');
+  assert.equal(normalizeCeutaMelillaPostalCode('５１ ００１'), '51001');
+  assert.equal(normalizeCeutaMelillaPostalCode('52 001'), '52001');
+  assert.equal(normalizeCeutaMelillaPostalCode('EA-51001'), null);
+  assert.equal(normalizeCeutaMelillaPostalCode('50001'), null);
+  assert.equal(normalizeCeutaMelillaPostalCode('53001'), null);
+  assert.equal(normalizePostalContextPostalCode('ea', '５２ ００１'), '52001');
   assert.equal(normalizeEthiopiaPostalCode('０９９９'), '0999');
   assert.equal(normalizeEthiopiaPostalCode('09 99'), '0999');
   assert.equal(normalizeEthiopiaPostalCode('ET-0999'), null);
