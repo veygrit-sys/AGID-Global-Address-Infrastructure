@@ -13,6 +13,10 @@ export type AmericasOpenGeoSourceId =
   | 'geonames-gazetteer'
   | 'geoboundaries'
   | 'upu-addressing'
+  | 'svg-post-post-codes'
+  | 'upu-vc-addressing'
+  | 'svg-statistical-office-maps'
+  | 'svg-statistical-office-open-licence'
   | 'copernicus-dem'
   | 'copernicus-corine-land-cover'
   | 'emodnet-bathymetry'
@@ -315,6 +319,44 @@ export const AMERICAS_OPEN_GEO_SOURCES: Record<AmericasOpenGeoSourceId, Americas
     coverage: 'global',
     usage: 'reference',
     notes: 'Postal addressing-system reference for country-level delivery conventions.',
+  },
+  'svg-post-post-codes': {
+    id: 'svg-post-post-codes',
+    name: 'SVG Post post codes',
+    url: 'https://svgpost.gov.vc/svgpost/index.php/post-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official current postcode reference page; no versioned bulk release, geometry, or reuse licence is inferred.',
+  },
+  'upu-vc-addressing': {
+    id: 'upu-vc-addressing',
+    name: 'UPU Saint Vincent and the Grenadines addressing guide',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/vctEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Dated official reference for postcode format and address-line order; it is not a complete assignment release or geometry licence.',
+  },
+  'svg-statistical-office-maps': {
+    id: 'svg-statistical-office-maps',
+    name: 'SVG Statistical Office maps',
+    url: 'https://stats.gov.vc/data/maps/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'SVG Statistical Office Open Licence Agreement; attribution required',
+    notes: 'Government census and administrative geography; these boundaries are not postal areas.',
+  },
+  'svg-statistical-office-open-licence': {
+    id: 'svg-statistical-office-open-licence',
+    name: 'SVG Statistical Office Open Licence Agreement',
+    url: 'https://stats.gov.vc/terms-and-conditions/open-licence-agreement/',
+    kind: 'data-catalog',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'SVG Statistical Office Open Licence Agreement; attribution required',
+    notes: 'Rights boundary for Statistical Office data only; it does not extend to SVG Post or UPU content.',
   },
   'copernicus-dem': {
     id: 'copernicus-dem',

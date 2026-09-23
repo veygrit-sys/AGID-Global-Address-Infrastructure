@@ -1655,7 +1655,8 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   });
   assert.match(loadRules('NG').postalCode?.label ?? '', /6 digits current.*11-character.*2026-10-01.*P\.O\. Box\/PMB.*separate/i);
   assert.equal(loadRules('GM').postalCode?.label, '3 digits used');
-  assert.equal(loadRules('CI').postalCode?.label, '5 digits used');
+  assert.equal(loadRules('CI').postalCode, null);
+  assert.equal(loadFormat('CI').postalCode?.format, null);
   assert.equal(loadFormat('GH').postalCode?.api, 'https://www.ghanapostgps.com/');
   assert.equal(loadFormat('BJ').postalCode?.format, 'None');
   assert.equal(loadFormat('BJ').postalCode?.api, null);
@@ -1667,7 +1668,7 @@ test('West Africa address JSON files expose addressRules metadata', () => {
   assert.match(loadRules('BF').postalCode?.label ?? '', /5 digits.*commune.*quartier.*agency.*validate current La Poste.*no automatic polygon.*building/i);
   assert.deepEqual(loadRules('BF').regionalHierarchy, ['region', 'province', 'commune', 'quarterOrVillage', 'postalOfficeOrAgency', 'typedFiveDigitPostcode', 'officialPostalSurfaceOrNoCanonicalGeometry', 'explicitCivicAddressPoint', 'explicitAddressLinkedBuildingFeature', 'exactRightsClearedBuilding', 'agidCell']);
   assert.equal(loadFormat('GM').postalCode?.api, 'https://gambiapost.gm/');
-  assert.equal(loadFormat('CI').postalCode?.api, 'https://www.laposte.ci/');
+  assert.equal(loadFormat('CI').postalCode?.api, undefined);
   assert.equal(loadFormat('CV').postalCode?.api, 'https://correios.cv/faq');
   assert.match(loadFormat('CV').postalCode?.source ?? '', /Correios de Cabo Verde.*UPU August 2026.*CIP.*INGT IDE-CV/i);
   assert.match(loadRules('CV').postalCode?.label ?? '', /4 digits.*canonical UPU.*NNNN-NNN.*CIP.*separate/i);
