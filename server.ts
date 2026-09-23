@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { GoogleGenAI } from "@google/genai";
 import { execFile as execFileCallback } from 'child_process';
 import express from 'express';
@@ -5,52 +6,140 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { promisify } from 'util';
 import { createServer as createViteServer } from 'vite';
-import { parseAddressText } from './src/lib/addressIntelligence';
+import { rewriteApiV1RequestUrl } from './src/lib/apiVersion';
+import { redactLogValue } from './src/lib/privacyPolicy';
 import {
 buildDroneObstacleOverpassQuery,
 resolveDroneNavigationPoint,
 } from './src/lib/droneNavigation';
 import {
-getHybridPolicy,
-isHybridWorkflow,
-resolveHybridRuntime,
-} from './src/lib/hybridArchitecture';
-import {
 buildCarStoppableOverpassQuery,
 resolveCarStoppableDestination,
 } from './src/lib/navigationDestination';
-import { detectOpenSourceTranslationLanguage,normalizeTranslationLanguage } from './src/lib/openSourceTranslation';
 import {
 DEFAULT_OVERTURE_RELEASE,
 buildOvertureBuildingNameDuckDbSql,
 buildingNameCandidateFromOvertureFeature,
 } from './src/lib/overtureMaps';
-import { getNearestPostalCode,initPostalCodeDB } from './src/services/PostalCodeDB';
+import { registerCoreApiRoutes } from './src/server/routes/coreRoutes';
+import { registerCarrierWaybillAddressRoutes } from './src/server/routes/carrierWaybillAddressRoutes';
+import { registerDhlCarrierRoutes } from './src/server/routes/dhlCarrierRoutes';
+import { registerExternalProxyRoutes } from './src/server/routes/externalProxyRoutes';
+import { registerSkipshipSandboxRoutes } from './src/server/routes/skipshipSandboxRoutes';
+import { registerTradeGatewayRoutes } from './src/server/routes/tradeGatewayRoutes';
+import { registerUpsCarrierRoutes } from './src/server/routes/upsCarrierRoutes';
+import { registerVeygritShipGuestRoutes } from './src/server/routes/veygritShipGuestRoutes';
+import { registerVeygritIdRoutes } from './src/server/routes/veygritIdRoutes';
+import { createGuestAccessServiceFromEnv } from './src/server/auth/veygritShipGuestAccess';
+import { createVeygritIdRuntimeFromEnv } from './src/server/auth/veygritIdRuntime';
+import { createMultiCloudVeygritIdSecretResolverFromEnv } from './src/server/auth/multiCloudVeygritIdSecretResolver';
+import { createVeygritSocialCallbackVerifierFromEnv } from './src/server/auth/veygritSocialProviderBroker';
+import { validateOverpassProxyQuery } from './src/server/proxySecurity';
+import { parseDevServerPort, resolveViteHmrConfig } from './src/server/devServerConfig';
+import { initPostalCodeDB } from './src/services/PostalCodeDB';
+import {
+  createVeygritShipRequestMiddleware,
+  registerVeygritShipMetricsRoute,
+  VeygritShipMetrics,
+  VeygritShipStructuredLogger,
+} from './src/server/observability/veygritShipObservability';
 const execFile = promisify(execFileCallback);
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
-    }
+function installPrivacySafeConsole() {
+  if (process.env.AGID_LOG_REDACTION === 'off') return;
+  const originalLog = console.log.bind(console);
+  const originalWarn = console.warn.bind(console);
+  const originalError = console.error.bind(console);
+  console.log = (...args: unknown[]) => originalLog(...args.map(redactLogValue));
+  console.warn = (...args: unknown[]) => originalWarn(...args.map(redactLogValue));
+  console.error = (...args: unknown[]) => originalError(...args.map(redactLogValue));
+}
+
+installPrivacySafeConsole();
+
+const ai = process.env.GEMINI_API_KEY
+  ? new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    })
+  : null;
+
+function configuredCorsOrigins() {
+  return new Set(
+    String(process.env.AGID_ALLOWED_ORIGINS ?? '')
+      .split(',')
+      .map(origin => origin.trim())
+      .filter(Boolean),
+  );
+}
+
+function allowedCorsOrigin(origin: string | undefined, port: number) {
+  if (!origin) return '';
+  const configured = configuredCorsOrigins();
+  if (configured.has(origin)) return origin;
+  if (process.env.NODE_ENV !== 'production') {
+    const localOrigins = new Set([
+      `http://localhost:${port}`,
+      `http://127.0.0.1:${port}`,
+      `http://0.0.0.0:${port}`,
+    ]);
+    if (localOrigins.has(origin)) return origin;
   }
-});
+  return '';
+}
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = parseDevServerPort(process.env.PORT) ?? 3000;
 
   // Trust proxy for rate limiting in Cloud Run environment (Setting to 1 for security)
   app.set('trust proxy', 1);
 
+  const veygritShipMetrics = new VeygritShipMetrics();
+  const veygritShipLogger = new VeygritShipStructuredLogger();
+  app.use(createVeygritShipRequestMiddleware(veygritShipLogger, veygritShipMetrics));
+
   // Extra Security Headers / Compatibility Headers
-  app.use((_req, res, next) => {
+  app.use((req, res, next) => {
+    const corsOrigin = allowedCorsOrigin(req.headers.origin, PORT);
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'ALLOWALL'); 
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Content-Security-Policy', String(process.env.AGID_CONTENT_SECURITY_POLICY ?? "frame-ancestors 'self'"));
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Permissions-Policy', 'geolocation=(self), camera=(self), nfc=(self)');
+    res.setHeader('Vary', 'Origin');
+    if (corsOrigin) res.setHeader('Access-Control-Allow-Origin', corsOrigin);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', [
+      'Content-Type',
+      'Authorization',
+      'X-AGID-Request-ID',
+      'X-AGID-Registry-Admin-Token',
+      'X-AGID-POS-Admin-Token',
+      'X-AGID-Ethereum-Admin-Token',
+      'X-AGID-OPERA-Admin-Token',
+      'X-AGID-External-POS-Token',
+      'X-AGID-External-Delivery-Token',
+      'X-AGID-External-Validator-Token',
+    ].join(', '));
+    if (req.path.startsWith('/api/')) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+    }
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+  });
+
+  app.use((req, _res, next) => {
+    const rewrittenUrl = rewriteApiV1RequestUrl(req.url);
+    if (rewrittenUrl !== req.url) {
+      req.url = rewrittenUrl;
+      req.headers['x-agid-api-version'] = 'v1';
+    }
     next();
   });
 
@@ -64,7 +153,7 @@ async function startServer() {
   });
   app.use('/api/', limiter);
 
-  // Initialize Postal Code DB (downloads data in background)
+  // Initialize Postal Code DB in lazy mode unless preload countries are configured.
   try {
     initPostalCodeDB();
   } catch (e) {
@@ -81,286 +170,6 @@ async function startServer() {
   });
   process.on('unhandledRejection', (reason, promise) => {
     console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
-  });
-
-  type AgidServerResult<T = unknown> = {
-    ok: boolean;
-    data?: T;
-    error?: string;
-    confidence?: number;
-    sources: string[];
-    warnings: string[];
-    cache?: 'hit' | 'miss' | 'stale' | 'none';
-    requestId: string;
-  };
-
-  function requestIdFor(req: express.Request) {
-    const fromHeader = req.header('X-AGID-Request-ID');
-    if (fromHeader) return fromHeader;
-    return `srv-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-  }
-
-  function sendAgidResult<T>(
-    req: express.Request,
-    res: express.Response,
-    result: Omit<AgidServerResult<T>, 'requestId'> & { requestId?: string },
-    status = result.ok ? 200 : 500,
-  ) {
-    const requestId = result.requestId || requestIdFor(req);
-    res.setHeader('X-AGID-Request-ID', requestId);
-    res.status(status).json({
-      ...result,
-      requestId,
-      sources: Array.isArray(result.sources) ? result.sources : [],
-      warnings: Array.isArray(result.warnings) ? result.warnings : [],
-    } satisfies AgidServerResult<T>);
-  }
-
-  // API Routes
-  app.get('/api/health', (_req, res) => {
-    console.log('[API] Health check');
-    res.json({ status: 'ok' });
-  });
-
-  app.get('/api/communication/health', (req, res) => {
-    sendAgidResult(req, res, {
-      ok: true,
-      data: {
-        rest: true,
-        sse: true,
-        localFirstSync: true,
-        externalApiProxy: true,
-      },
-      confidence: 1,
-      sources: ['agid-server'],
-      warnings: [],
-      cache: 'none',
-    });
-  });
-
-  app.post('/api/hybrid/quality', (req, res) => {
-    const workflow = req.body?.workflow;
-    if (!isHybridWorkflow(workflow)) {
-      return sendAgidResult(req, res, {
-        ok: false,
-        error: 'Unsupported hybrid workflow',
-        sources: ['agid-central-quality'],
-        warnings: ['workflow must be one of the AGID hybrid workflow ids'],
-        cache: 'none',
-      }, 400);
-    }
-
-    const confidence = Number(req.body?.centralConfidence);
-    const centralConfidence = Number.isFinite(confidence)
-      ? Math.max(0, Math.min(1, confidence))
-      : undefined;
-    const decision = resolveHybridRuntime({
-      workflow,
-      online: true,
-      centralConfidence,
-      hasLocalRecord: req.body?.hasLocalRecord === true,
-      hasOpenDataPack: req.body?.hasOpenDataPack === true,
-      userOptedInToSync: req.body?.userOptedInToSync === true,
-    });
-    const responseConfidence = {
-      verified: Math.max(0.9, centralConfidence ?? 0.9),
-      partial: Math.max(0.62, centralConfidence ?? 0.62),
-      local: Math.max(0.42, centralConfidence ?? 0.42),
-    }[decision.qualityTier];
-
-    sendAgidResult(req, res, {
-      ok: true,
-      data: {
-        decision,
-        policy: getHybridPolicy(workflow),
-      },
-      confidence: responseConfidence,
-      sources: ['agid-central-quality', 'hybrid-policy'],
-      warnings: decision.privacyScope === 'private-record' && req.body?.userOptedInToSync !== true
-        ? ['Private address sync is local-first unless the user explicitly opts in.']
-        : [],
-      cache: 'none',
-    });
-  });
-
-  app.get('/api/jobs/:jobId/events', (req, res) => {
-    const requestId = requestIdFor(req);
-    const jobId = String(req.params.jobId || '').slice(0, 80);
-
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-      'X-AGID-Request-ID': requestId,
-    });
-
-    const writeEvent = (event: string, data: unknown) => {
-      res.write(`event: ${event}\n`);
-      res.write(`data: ${JSON.stringify({ requestId, jobId, ...(data as object) })}\n\n`);
-    };
-
-    writeEvent('ready', {
-      ok: true,
-      sources: ['agid-server'],
-      warnings: [],
-      message: 'AGID job event stream is ready.',
-    });
-
-    const heartbeat = setInterval(() => {
-      writeEvent('heartbeat', { ok: true, timestamp: Date.now() });
-    }, 15000);
-
-    req.on('close', () => {
-      clearInterval(heartbeat);
-      res.end();
-    });
-  });
-
-  app.post('/api/address/parse', async (req, res) => {
-    const endpoint = process.env.LIBPOSTAL_PARSE_URL;
-    const text = typeof req.body?.text === 'string' ? req.body.text : '';
-    const countryCode = typeof req.body?.countryCode === 'string' ? req.body.countryCode : '';
-
-    if (!text.trim()) {
-      return res.status(400).json({ error: 'Missing address text' });
-    }
-
-    if (!endpoint) {
-      const canonical = parseAddressText(text);
-      if (countryCode && !canonical.country_code) canonical.country_code = countryCode.toLowerCase();
-      return res.json({
-        source: 'local-parser',
-        available: false,
-        canonical,
-        components: Object.entries(canonical).map(([label, value]) => ({ label, value: String(value) })),
-      });
-    }
-
-    try {
-      const response = await safeFetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, countryCode }),
-      });
-      if (!response.ok) {
-        return res.status(response.status).json({ error: 'Libpostal service failed' });
-      }
-      const data = await response.json();
-      res.json({
-        source: 'libpostal',
-        available: true,
-        components: Array.isArray(data.components) ? data.components : data,
-      });
-    } catch (error) {
-      console.error('[API] Libpostal Parse Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  app.post('/api/translate', async (req, res) => {
-    const endpoint = process.env.LIBRETRANSLATE_URL || process.env.ARGOS_TRANSLATE_URL || '';
-    const text = typeof req.body?.q === 'string'
-      ? req.body.q
-      : typeof req.body?.text === 'string'
-        ? req.body.text
-        : '';
-    const target = normalizeTranslationLanguage(req.body?.target);
-    const source = detectOpenSourceTranslationLanguage(text, req.body?.source);
-
-    if (!text.trim() || target === 'auto') {
-      return res.status(400).json({ error: 'Missing text or target language' });
-    }
-
-    if (!endpoint) {
-      return res.status(503).json({
-        error: 'Open-source translation service not configured',
-        fallback: 'client-libretranslate-compatible',
-        configure: 'Set LIBRETRANSLATE_URL or ARGOS_TRANSLATE_URL to a LibreTranslate-compatible /translate endpoint.',
-      });
-    }
-
-    try {
-      const response = await safeFetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          q: text,
-          source,
-          target,
-          format: 'text',
-        }),
-      });
-
-      if (!response.ok) {
-        return res.status(response.status).json({ error: 'Open-source translation service failed' });
-      }
-
-      const data = await response.json();
-      res.json({
-        translatedText: data.translatedText || data.translation || data.text || '',
-        source,
-        target,
-        provider: 'libretranslate-compatible',
-      });
-    } catch (error) {
-      console.error('[API] Translation Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // AI Data Quality Analysis Route (Stub)
-  app.get('/api/data-quality/report', async (_req, res) => {
-    res.json({ 
-      timestamp: Date.now(),
-      report: "Backend AI analysis is disabled. Please trigger this check from the frontend.",
-      stats: qualityStats,
-      continentQuality: continentQuality
-    });
-  });
-
-  app.get('/api/postal-code/nearest', async (req, res) => {
-    try {
-      const lat = parseFloat(req.query.lat as string);
-      const lon = parseFloat(req.query.lon as string);
-      const cc = (req.query.cc as string || '').toUpperCase();
-
-      if (isNaN(lat) || isNaN(lon) || !cc) {
-        return res.status(400).json({ error: 'Missing or invalid lat, lon, or cc' });
-      }
-
-      const result = await getNearestPostalCode(lat, lon, cc);
-      if (result) {
-        res.json(result);
-      } else {
-        res.status(404).json({ error: 'No postal code found nearby' });
-      }
-    } catch (error) {
-      console.error('API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // Zippopotam.us API Proxy (Free, No Key, Open Data)
-  // Provides postal code data for many countries
-  app.get('/api/postal-code/zippo', async (req, res) => {
-    const country = (req.query.cc as string || '').toLowerCase();
-    const postcode = req.query.pc as string;
-
-    if (!country || !postcode) {
-      return res.status(400).json({ error: 'Missing country code (cc) or postcode (pc)' });
-    }
-
-    try {
-      const response = await safeFetch(`https://api.zippopotam.us/${country}/${postcode}`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'Postal code not found in Zippopotam' });
-    } catch (error) {
-      console.error('Zippopotam API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
   });
 
   const USER_AGENT = 'AGID-Geogrid-Explorer/2.5.1 (kitaura.code@gmail.com; Geogrid Project)';
@@ -410,7 +219,7 @@ async function startServer() {
     for (const point of sweepPoints) {
       const issues: string[] = [];
       let successCount = 0;
-      
+
       // Test Elevation
       try {
         const start = Date.now();
@@ -440,15 +249,17 @@ async function startServer() {
     console.log('[Quality Monitor] Sweep Completed:', continentQuality);
   }
 
-  // Schedule sweep every 24 hours (and once on startup)
-  setInterval(runGlobalQualitySweep, 1000 * 60 * 60 * 24);
-  setTimeout(runGlobalQualitySweep, 5000); // 5s after boot
+  // Quality sweeps may call external geo services, so keep them opt-in for local and CI runs.
+  if (process.env.AGID_ENABLE_QUALITY_SWEEP === 'true') {
+    setInterval(runGlobalQualitySweep, 1000 * 60 * 60 * 24);
+    setTimeout(runGlobalQualitySweep, 5000);
+  }
 
   function updateQualityStats(type: string, success: boolean, duration: number, region: string = 'Global') {
     const stats = qualityStats[type] || { totalRequests: 0, successRequests: 0, failRequests: 0, avgResponseTime: 0, byRegion: {} };
     stats.totalRequests++;
     if (success) stats.successRequests++; else stats.failRequests++;
-    
+
     // Update moving average
     stats.avgResponseTime = (stats.avgResponseTime * (stats.totalRequests - 1) + duration) / stats.totalRequests;
 
@@ -459,63 +270,84 @@ async function startServer() {
     const rTotal = rStats.success + rStats.fail + 1;
     if (success) rStats.success++; else rStats.fail++;
     rStats.avgTime = (rStats.avgTime * (rTotal - 1) + duration) / rTotal;
-    
+
     qualityStats[type] = stats;
   }
 
-  /**
-   * Safe fetch with timeout and error handling for all proxy routes
-   * Includes internal retry for network-level failures
-   */
-  async function safeFetch(url: string, options: RequestInit = {}, timeoutMs = 60000, retries = 1): Promise<any> {
-    // Basic cache check
-    const cacheKey = `${url}-${JSON.stringify(options.body || '')}`;
-    const cached = apiCache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < API_CACHE_TTL) {
-      return {
-        ok: true,
-        status: 200,
-        json: async () => cached.data,
-        text: async () => JSON.stringify(cached.data),
-        headers: new Headers({ 
-          'x-cache': 'HIT',
-          'content-type': 'application/json'
-        })
-      } as any;
+  function requestMethod(options: RequestInit) {
+    return String(options.method ?? 'GET').trim().toUpperCase() || 'GET';
+  }
+
+  function mergeFetchHeaders(options: RequestInit, noCache: boolean) {
+    const headers: Record<string, string> = {
+      'User-Agent': USER_AGENT,
+      'Accept': 'application/json, text/plain, */*',
+    };
+
+    if (noCache) {
+      headers['Cache-Control'] = 'no-store';
+      headers.Pragma = 'no-cache';
     }
 
+    if (options.headers) {
+      Object.assign(headers, options.headers);
+    }
+
+    return headers;
+  }
+
+  async function networkFetch(
+    url: string,
+    options: RequestInit = {},
+    timeoutMs = 60000,
+    retries = 1,
+    mode: 'public-cacheable' | 'connector-no-cache',
+  ): Promise<Response> {
+    const method = requestMethod(options);
+    const canCache = mode === 'public-cacheable' && (method === 'GET' || method === 'HEAD');
+    const cacheKey = `${method}:${url}`;
+    if (canCache) {
+      const cached = apiCache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < API_CACHE_TTL) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => cached.data,
+          text: async () => JSON.stringify(cached.data),
+          headers: new Headers({
+            'x-cache': 'HIT',
+            'content-type': 'application/json',
+          }),
+        } as Response;
+      }
+    }
+
+    const safeRetries = mode === 'connector-no-cache' && method !== 'GET' && method !== 'HEAD'
+      ? 0
+      : retries;
     let lastError: any = null;
-    for (let attempt = 0; attempt <= retries; attempt++) {
+    for (let attempt = 0; attempt <= safeRetries; attempt++) {
       const start = Date.now();
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-      
-      // Merge headers carefully
-      const headers: Record<string, string> = {
-        'User-Agent': USER_AGENT,
-        'Accept': 'application/json, text/plain, */*'
-      };
-      
-      if (options.headers) {
-        Object.assign(headers, options.headers);
-      }
 
       try {
         const response = await fetch(url, {
           ...options,
-          headers,
+          method,
+          headers: mergeFetchHeaders(options, mode === 'connector-no-cache'),
           signal: controller.signal
         });
         clearTimeout(timeoutId);
-        
+
         const duration = Date.now() - start;
-        
+
         // Track quality based on URL pattern
         let qType = 'other';
         if (url.includes('elevation') || url.includes('met-no')) qType = 'elevation';
         else if (url.includes('nominatim') || url.includes('address') || url.includes('zippopotam')) qType = 'address';
         else if (url.includes('overpass')) qType = 'overpass';
-        
+
         updateQualityStats(qType, response.ok, duration);
 
         if (duration > 10000) {
@@ -523,39 +355,39 @@ async function startServer() {
         }
 
         // Cache successful JSON responses in background
-        if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+        if (canCache && response.ok && response.headers.get('content-type')?.includes('application/json')) {
           const cloned = response.clone();
           cloned.json().then(data => {
             apiCache.set(cacheKey, { data, timestamp: Date.now() });
           }).catch(() => {});
         }
-        
+
         return response;
       } catch (error: any) {
         clearTimeout(timeoutId);
         lastError = error;
         const duration = Date.now() - start;
-        
+
         const errorMsg = error?.message || String(error);
         const cause = error?.cause?.message || error?.cause?.code || error?.cause || '';
         const causeStr = cause.toString();
-        const isDnsError = errorMsg.includes('getaddrinfo') || errorMsg.includes('ENOTFOUND') || errorMsg.includes('EAI_AGAIN') || 
+        const isDnsError = errorMsg.includes('getaddrinfo') || errorMsg.includes('ENOTFOUND') || errorMsg.includes('EAI_AGAIN') ||
                           causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') || causeStr.includes('EHOSTUNREACH') ||
                           causeStr.includes('ECONNREFUSED');
         const isNetworkError = isDnsError || errorMsg.includes('fetch failed') || error?.name === 'TypeError';
-        
+
         // If it's a network/DNS error and we have retries left, wait a bit and try again
         // Longer wait for DNS errors (transient infrastructure issues)
-        if (isNetworkError && attempt < retries) {
+        if (isNetworkError && attempt < safeRetries) {
           const delay = isDnsError ? 1000 * (attempt + 1) : 300 * (attempt + 1);
-          console.log(`[API] ${isDnsError ? 'DNS/Connect' : 'Network'} failure for ${url}, retrying in ${delay}ms... (Attempt ${attempt + 1}/${retries})`);
+          console.log(`[API] ${isDnsError ? 'DNS/Connect' : 'Network'} failure for ${url}, retrying in ${delay}ms... (Attempt ${attempt + 1}/${safeRetries})`);
           await new Promise(r => setTimeout(r, delay));
           continue;
         }
 
         const fullError = cause ? `${errorMsg} (Cause: ${cause})` : errorMsg;
         const isMirrorUrl = url.includes('nominatim') || url.includes('overpass') || url.includes('photon');
-        
+
         if (error?.name === 'AbortError') {
           console.error(`[API] Timeout after ${duration}ms: ${url}`);
         } else if (isMirrorUrl) {
@@ -572,6 +404,42 @@ async function startServer() {
     }
     throw lastError;
   }
+
+  async function publicCachedGetFetch(url: string, options: RequestInit = {}, timeoutMs = 60000, retries = 1): Promise<Response> {
+    return networkFetch(url, options, timeoutMs, retries, 'public-cacheable');
+  }
+
+  async function connectorFetchNoCache(url: string, options: RequestInit = {}, timeoutMs = 60000, retries = 0): Promise<Response> {
+    return networkFetch(url, options, timeoutMs, retries, 'connector-no-cache');
+  }
+
+  registerCoreApiRoutes(app, {
+    publicCachedGetFetch,
+    connectorFetchNoCache,
+    qualityStats,
+    continentQuality,
+  });
+  registerCarrierWaybillAddressRoutes(app);
+  registerDhlCarrierRoutes(app, { metrics: veygritShipMetrics });
+  registerUpsCarrierRoutes(app, { metrics: veygritShipMetrics });
+  registerVeygritShipMetricsRoute(app, veygritShipMetrics);
+  registerExternalProxyRoutes(app, { publicCachedGetFetch });
+  let guestAccessPromise: ReturnType<typeof createGuestAccessServiceFromEnv> | undefined;
+  const guestAccess = () => {
+    guestAccessPromise ??= createGuestAccessServiceFromEnv();
+    return guestAccessPromise;
+  };
+  registerVeygritShipGuestRoutes(app, guestAccess);
+  registerSkipshipSandboxRoutes(app, { guestAccess, metrics: veygritShipMetrics });
+  registerTradeGatewayRoutes(app);
+  let veygritIdRuntime: Awaited<ReturnType<typeof createVeygritIdRuntimeFromEnv>>;
+  const veygritIdSecrets = createMultiCloudVeygritIdSecretResolverFromEnv();
+  try {
+    veygritIdRuntime = await createVeygritIdRuntimeFromEnv(veygritIdSecrets);
+  } catch (error) {
+    console.error('[Veygrit ID] Runtime initialization failed; identity endpoints remain unavailable.', error);
+  }
+  registerVeygritIdRoutes(app, { service: veygritIdRuntime?.service, verifySocialCallback: createVeygritSocialCallbackVerifierFromEnv(veygritIdSecrets), secureCookies: process.env.NODE_ENV === 'production' });
 
   // --- Nominatim Geocoding Mirrors ---
   const NOMINATIM_MIRRORS = [
@@ -591,23 +459,24 @@ async function startServer() {
    * Ultimate fallback using Gemini AI for reverse geocoding
    */
   async function performGeminiReverseGeocode(lat: number, lon: number, lang: string = 'en') {
+    if (!ai) return null;
     try {
       const prompt = `Reverse geocode these coordinates: latitude ${lat}, longitude ${lon}.
-Return a JSON object ONLY with the following structure: 
-{ 
-  "place_id": 0, 
-  "display_name": "Full address string, e.g., Tokyo Station, Marunouchi, Chiyoda City, Tokyo 100-0005, Japan", 
-  "address": { 
-    "road": "Street/Place name", 
-    "city": "City/Sub-area", 
-    "state": "Prefecture/State", 
-    "postcode": "Postcode", 
-    "country": "Country", 
-    "country_code": "2-letter country code" 
-  } 
-}. 
+Return a JSON object ONLY with the following structure:
+{
+  "place_id": 0,
+  "display_name": "Full address string, e.g., Tokyo Station, Marunouchi, Chiyoda City, Tokyo 100-0005, Japan",
+  "address": {
+    "road": "Street/Place name",
+    "city": "City/Sub-area",
+    "state": "Prefecture/State",
+    "postcode": "Postcode",
+    "country": "Country",
+    "country_code": "2-letter country code"
+  }
+}.
 The primary language for address names should matches ${lang}. Use empty strings for missing fields. Output ONLY valid JSON.`;
-      
+
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: prompt,
@@ -639,26 +508,27 @@ The primary language for address names should matches ${lang}. Use empty strings
    * Search fallback using Gemini AI
    */
   async function performGeminiSearch(q: string, lang: string = 'en', limit: number = 5) {
+    if (!ai) return [];
     try {
-      const prompt = `Geocode the following search query: "${q}". 
-Return a JSON array of objects (max ${limit}) with the following structure: 
+      const prompt = `Geocode the following search query: "${q}".
+Return a JSON array of objects (max ${limit}) with the following structure:
 [
-  { 
-    "place_id": 0, 
-    "display_name": "Full address string", 
-    "lat": "latitude as string", 
-    "lon": "longitude as string", 
+  {
+    "place_id": 0,
+    "display_name": "Full address string",
+    "lat": "latitude as string",
+    "lon": "longitude as string",
     "type": "place type (e.g., city, street, poi)",
-    "address": { 
-      "road": "Street/Place name", 
-      "city": "City", 
-      "state": "Province/State", 
-      "postcode": "Postcode", 
-      "country": "Country", 
-      "country_code": "2-letter CC" 
-    } 
+    "address": {
+      "road": "Street/Place name",
+      "city": "City",
+      "state": "Province/State",
+      "postcode": "Postcode",
+      "country": "Country",
+      "country_code": "2-letter CC"
+    }
   }
-]. 
+].
 Primary language: ${lang}. Output ONLY valid JSON.`;
 
       const response = await ai.models.generateContent({
@@ -718,15 +588,15 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         if (aMatch && !bMatch) return -1;
         if (!aMatch && bMatch) return 1;
       }
-      
+
       // 2. Official mirror is usually best but heavily rate limited
       if (aOfficial && !bOfficial) return -1;
       if (!aOfficial && bOfficial) return 1;
-      
+
       // 3. Photon is a fallback search engine, keep it last
       if (aPhoton && !bPhoton) return 1;
       if (!aPhoton && bPhoton) return -1;
-      
+
       // 4. Randomize the middle regional mirrors to distribute load
       return Math.random() - 0.5;
     });
@@ -735,24 +605,24 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     for (const mirror of mirrors) {
       try {
         const isPhoton = mirror.includes('photon');
-        const url = isPhoton 
+        const url = isPhoton
           ? `${mirror}?lat=${lat}&lon=${lon}`
           : `${mirror}?format=json&lat=${lat}&lon=${lon}&addressdetails=1&zoom=${zoom}&accept-language=${lang}`;
 
         // Add User-Agent and identifying headers
-        const res = await safeFetch(url, {
-          headers: { 
+        const res = await publicCachedGetFetch(url, {
+          headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; AGID-Geogrid-Explorer/2.5.1; +https://github.com/kitauracode/geogrid-explorer)',
             'Accept-Language': lang
           }
         }, isPhoton ? 10000 : 15000);
-        
+
         const contentType = res.headers.get('content-type') || '';
-        
+
         // Accept common JSON/GeoJSON content types
         if (res.ok && (contentType.includes('json') || contentType.includes('geojson'))) {
           const text = await res.text();
-          
+
           // Verify it's actually JSON and not HTML or plain text error
           const trimmed = text.trim();
           if (trimmed.startsWith('<!DOCTYPE html>') || trimmed.startsWith('<html') || !trimmed.startsWith('{')) {
@@ -787,7 +657,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
                 }
               };
             }
-            continue; 
+            continue;
           }
           return data;
         } else {
@@ -796,7 +666,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
           const isServerError = res.status >= 500;
           const isNotFound = res.status === 404;
           const isNotJson = res.ok && !(contentType.includes('json') || contentType.includes('geojson'));
-          
+
           if (isRateLimit || isServerError || isNotJson || isNotFound) {
             nominatimBlacklist.set(mirror, now + NOMINATIM_BLACKLIST_DURATION);
           }
@@ -807,23 +677,23 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         const msg = e.message || String(e);
         const cause = e?.cause?.message || e?.cause?.code || e?.cause || '';
         const causeStr = cause.toString();
-        const isDnsError = msg.includes('getaddrinfo') || msg.includes('ENOTFOUND') || msg.includes('EAI_AGAIN') || 
-                           causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') || 
+        const isDnsError = msg.includes('getaddrinfo') || msg.includes('ENOTFOUND') || msg.includes('EAI_AGAIN') ||
+                           causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') ||
                            causeStr.includes('EHOSTUNREACH') || causeStr.includes('ECONNREFUSED');
         const isNetworkError = isDnsError || msg.includes('fetch failed') || msg.includes('timeout') || msg.includes('aborted');
-        
+
         // Use 2 hours for DNS/Host issues, 60 seconds for other transient network issues
         const blacklistDuration = isDnsError ? 1000 * 60 * 120 : (isNetworkError ? 60000 : NOMINATIM_BLACKLIST_DURATION);
         nominatimBlacklist.set(mirror, now + blacklistDuration);
         errors.push(`${mirror} [${msg}]`);
-        
+
         // Silent mirror failures
         if (!isNetworkError && !msg.includes('429')) {
           console.debug(`[API] Reverse Mirror Failed: ${mirror} - ${msg}`);
         }
       }
     }
-    
+
     // AI Fallback before returning coordinate label
     const geminiResult = await performGeminiReverseGeocode(lat, lon, lang);
     if (geminiResult) {
@@ -864,22 +734,22 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
 
     // Try multiple sources in order of reliability
     const sources = [
-      { 
+      {
         name: 'open-meteo-europe',
         url: `https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`,
         timeout: 10000,
         parser: (data: any) => data?.elevation?.[0],
         regionBias: 'EU'
       },
-      { 
-        name: 'opentopodata-srtm30m', 
+      {
+        name: 'opentopodata-srtm30m',
         url: `https://api.opentopodata.org/v1/srtm30m?locations=${lat},${lon}`,
         timeout: 15000,
         parser: (data: any) => data?.results?.[0]?.elevation,
         regionBias: 'Global'
       },
-      { 
-        name: 'met-no-nordics', 
+      {
+        name: 'met-no-nordics',
         url: `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`,
         timeout: 12000,
         parser: (data: any) => data?.properties?.timeseries?.[0]?.data?.instant?.details?.altitude,
@@ -900,7 +770,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       if (blacklistUntil && now < blacklistUntil) continue;
 
       try {
-        const res = await safeFetch(source.url, {}, source.timeout);
+        const res = await publicCachedGetFetch(source.url, {}, source.timeout);
         if (res.ok) {
           const data = await res.json();
           const elev = source.parser(data);
@@ -920,7 +790,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       } catch (e: any) {
         // Blacklist on timeout/network error
         elevationMirrorBlacklist.set(source.name, now + ELEVATION_BLACKLIST_DURATION);
-        
+
         const isAbort = e instanceof Error && (e.name === 'AbortError' || e.message?.includes('aborted'));
         if (!isAbort) {
           console.warn(`[Elevation Proxy] Source ${source.name} failed (blacklisted for 15m):`, e.message || e);
@@ -976,9 +846,14 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   const CACHE_TTL = 1000 * 60 * 60 * 24;
 
   async function fetchFromOverpass(query: string) {
-    const cacheKey = query.trim();
+    const validation = validateOverpassProxyQuery(query);
+    if (validation.ok === false) {
+      throw new Error(validation.error);
+    }
+    const safeQuery = validation.normalizedQuery;
+    const cacheKey = safeQuery.trim();
     const now = Date.now();
-    
+
     // 1. Check Cache
     const cached = overpassCache.get(cacheKey);
     if (cached && (now - cached.timestamp < CACHE_TTL)) return cached.data;
@@ -1015,19 +890,19 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
 
     const errors: string[] = [];
     const maxAttempts = Math.min(mirrorsToTry.length, 6); // Reduced from 12 to 6 to prevent frontend timeouts
-    
+
     for (let i = 0; i < maxAttempts; i++) {
       const mirror = mirrorsToTry[i];
       try {
         const controller = new AbortController();
         // Individual mirror timeout reduced to failover faster
-        const timeoutDuration = i < 2 ? 15000 : 10000; 
+        const timeoutDuration = i < 2 ? 15000 : 10000;
         const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
 
         const response = await fetch(mirror, {
           method: 'POST',
-          body: new URLSearchParams({ data: query }).toString(),
-          headers: { 
+          body: new URLSearchParams({ data: safeQuery }).toString(),
+          headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'User-Agent': 'Mozilla/5.0 (compatible; AGID-Geogrid-Explorer/2.5.1; +https://github.com/kitauracode/geogrid-explorer)'
           },
@@ -1041,7 +916,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
           if (!text || text.trim().startsWith('<!DOCTYPE html>')) {
             throw new Error('Received HTML instead of JSON');
           }
-          
+
           try {
             const data = JSON.parse(text);
             if (data.remark && (data.remark.includes('runtime error') || data.remark.includes('timed out'))) {
@@ -1053,7 +928,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
             throw new Error('Invalid JSON');
           }
         }
-        
+
         if (response.status === 429) {
           mirrorBlacklist.set(mirror, Date.now() + BLACKLIST_DURATION_RATE_LIMIT);
           console.debug(`[Overpass] Mirror ${mirror} rate limited (429)`);
@@ -1069,15 +944,15 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         const msg = e.message || String(e);
         const cause = e?.cause?.message || e?.cause?.code || e?.cause || '';
         const causeStr = cause.toString();
-        
-        const isDnsError = msg.includes('getaddrinfo') || msg.includes('ENOTFOUND') || msg.includes('EAI_AGAIN') || 
-                          causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') || 
+
+        const isDnsError = msg.includes('getaddrinfo') || msg.includes('ENOTFOUND') || msg.includes('EAI_AGAIN') ||
+                          causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') ||
                           causeStr.includes('EHOSTUNREACH') || causeStr.includes('ECONNREFUSED');
         const isTimeout = e.name === 'AbortError' || msg.includes('timeout') || causeStr.includes('timeout');
-        
+
         const blacklistDuration = isDnsError ? BLACKLIST_DURATION_DNS : (isTimeout ? BLACKLIST_DURATION_TIMEOUT : BLACKLIST_DURATION_ERROR);
         mirrorBlacklist.set(mirror, Date.now() + blacklistDuration);
-        
+
         const errorDetail = isTimeout ? 'Timeout' : (isDnsError ? 'DNS/Connect Failure' : msg);
         console.debug(`[Overpass] Mirror failure for ${mirror}: ${errorDetail}`);
         errors.push(`${mirror}: ${errorDetail}`);
@@ -1101,7 +976,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       console.log(`[Proxy Fallback] Attempting Nominatim fallback for landmarks...`);
       // Search for points of interest nearby using Nominatim search
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=landmark+near+${lat},${lon}&limit=10&addressdetails=1`;
-      const res = await safeFetch(url);
+      const res = await publicCachedGetFetch(url);
       if (res.ok) {
         const data = await res.json();
         return {
@@ -1130,14 +1005,14 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       // 1. Primary: Marine Regions REST API
       async () => {
         const url = `https://www.marineregions.org/rest/getGazetteerRecordsByLatLong.json/${lat}/${lon}/0.5/0.5/`;
-        const response = await safeFetch(url, {}, 25000);
+        const response = await publicCachedGetFetch(url, {}, 25000);
         if (response.ok) return await response.json();
         throw new Error(`MarineRegions failed with ${response.status}`);
       },
       // 2. Secondary: http alternative (sometimes avoids SSL issues in containers)
       async () => {
         const url = `http://www.marineregions.org/rest/getGazetteerRecordsByLatLong.json/${lat}/${lon}/0.5/0.5/`;
-        const response = await safeFetch(url, {}, 25000);
+        const response = await publicCachedGetFetch(url, {}, 25000);
         if (response.ok) return await response.json();
         throw new Error(`MarineRegions HTTP failed with ${response.status}`);
       },
@@ -1308,7 +1183,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         url.searchParams.set('lon', String(lon));
         url.searchParams.set('radius', String(radius));
         url.searchParams.set('lang', lang);
-        const response = await safeFetch(url.toString(), {}, 45000, 0);
+        const response = await publicCachedGetFetch(url.toString(), {}, 45000, 0);
         if (!response.ok) {
           return res.status(response.status).json({ error: 'Overture upstream failed' });
         }
@@ -1352,7 +1227,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.post('/api/overpass', async (req, res) => {
     try {
       let query = '';
-      
+
       // Handle both JSON and text bodies
       if (req.headers['content-type']?.includes('application/json')) {
         query = req.body?.query;
@@ -1365,13 +1240,17 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       if (!query || typeof query !== 'string') {
         return res.status(400).json({ error: 'Invalid query body' });
       }
+      const validation = validateOverpassProxyQuery(query);
+      if (validation.ok === false) {
+        return res.status(400).json({ error: validation.error });
+      }
 
       try {
-        const data = await fetchFromOverpass(query);
+        const data = await fetchFromOverpass(validation.normalizedQuery);
         res.json(data);
       } catch (overpassError) {
         console.error('[API] Overpass Proxy Critical Failure:', overpassError);
-        
+
         // Try fallback if coordinates can be extracted from query
         const match = query.match(/around:(\d+),([-.\d]+),([-.\d]+)/);
         if (match) {
@@ -1380,182 +1259,16 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
           const fallbackData = await fetchLandmarksFallback(lat, lon);
           return res.json(fallbackData);
         }
-        
+
         const isQuota = overpassError instanceof Error && (overpassError.message.includes('Rate limited') || overpassError.message === 'Recently failed query');
         const errorMsg = overpassError instanceof Error ? overpassError.message : 'Overpass proxy failed';
-        
+
         // Ensure we always return JSON
         res.setHeader('Content-Type', 'application/json');
         res.status(isQuota ? 429 : 503).send(JSON.stringify({ error: errorMsg }));
       }
     } catch (error) {
       console.error('[API] Overpass Route Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // GEBCO WMS Proxy (General Bathymetric Chart of the Oceans)
-  app.get('/api/gebco', async (req, res) => {
-    const queryParams = new URLSearchParams(req.query as any).toString();
-    const gebcoUrl = `https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?${queryParams}`;
-
-    try {
-      const response = await safeFetch(gebcoUrl);
-
-      if (!response.ok) {
-        return res.status(response.status).send('GEBCO fetch failed');
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (contentType) res.setHeader('Content-Type', contentType);
-      
-      const arrayBuffer = await response.arrayBuffer();
-      res.send(Buffer.from(arrayBuffer));
-    } catch (error) {
-      console.error('GEBCO Proxy Error:', error);
-      res.status(500).send('GEBCO Proxy Internal Error');
-    }
-  });
-
-  // Brazil ViaCEP Proxy (Free, No Key)
-  app.get('/api/br-viacep/:cep', async (req, res) => {
-    const { cep } = req.params;
-    try {
-      const response = await safeFetch(`https://viacep.com.br/ws/${cep}/json/`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'CEP not found' });
-    } catch (error) {
-      console.error('ViaCEP API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // India Postal Pincode Proxy (Free, No Key)
-  app.get('/api/in-pincode/:pincode', async (req, res) => {
-    const { pincode } = req.params;
-    try {
-      const response = await safeFetch(`https://api.postalpincode.in/pincode/${pincode}`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'Pincode not found' });
-    } catch (error) {
-      console.error('Pincode API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // Zippopotam.us Proxy (Free, No Key)
-  app.get('/api/zippopotam/:country/:postcode', async (req, res) => {
-    const { country, postcode } = req.params;
-    try {
-      const response = await safeFetch(`https://api.zippopotam.us/${country}/${postcode}`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'Postcode not found' });
-    } catch (error) {
-      console.error('Zippopotam API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // Hong Kong OGCIO Address Lookup Service (Free, Public)
-  // Essential for HK which has no postal codes
-  app.get('/api/hk-als/lookup', async (req, res) => {
-    const { q, lat, lon } = req.query;
-    try {
-      let url = 'https://www.als.ogcio.gov.hk/lookup';
-      if (q) {
-        url += `?q=${encodeURIComponent(q as string)}`;
-      } else if (lat && lon) {
-        url += `?lat=${lat}&long=${lon}`;
-      } else {
-        return res.status(400).json({ error: 'Missing q or lat/lon' });
-      }
-
-      const response = await safeFetch(url, {
-        headers: { 'Accept': 'application/json' }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'HK ALS lookup failed' });
-    } catch (error) {
-      console.error('HK ALS Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // Global Plus Code (Open Location Code) API
-  // Universal addressing system for countries without postal codes
-  app.get('/api/plusmode/:action', async (req, res) => {
-    const { action } = req.params;
-    const { lat, lon, code } = req.query;
-    
-    try {
-      const { OpenLocationCode } = await import('open-location-code');
-      const olc = new OpenLocationCode();
-
-      if (action === 'encode') {
-        if (!lat || !lon) return res.status(400).json({ error: 'Missing lat/lon' });
-        const plusCode = olc.encode(parseFloat(lat as string), parseFloat(lon as string));
-        return res.json({ plusCode });
-      } else if (action === 'decode') {
-        if (!code) return res.status(400).json({ error: 'Missing code' });
-        const area = olc.decode(code as string);
-        return res.json(area);
-      }
-      res.status(404).json({ error: 'Action not found' });
-    } catch (error) {
-      console.error('PlusCode API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // UK Postcodes.io Proxy (Free, Open Data)
-  app.get('/api/uk-postcode/:postcode', async (req, res) => {
-    const { postcode } = req.params;
-    try {
-      const response = await safeFetch(`https://api.postcodes.io/postcodes/${postcode}`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'Postcode not found' });
-    } catch (error) {
-      console.error('Postcodes.io API Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // Nordic Met.no API Proxy (Free, Open Data - Norwegian Meteorological Institute)
-  // Provides high-quality weather data for the Nordic region
-  app.get('/api/nordic/weather', async (req, res) => {
-    const lat = parseFloat(req.query.lat as string);
-    const lon = parseFloat(req.query.lon as string);
-
-    if (isNaN(lat) || isNaN(lon)) {
-      return res.status(400).json({ error: 'Invalid coordinates' });
-    }
-
-    try {
-      const response = await safeFetch(`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`);
-
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'Weather data not found' });
-    } catch (error) {
-      console.error('Met.no API Error:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   });
@@ -1570,7 +1283,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
 
     try {
-      const response = await safeFetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${lon}&lat=${lat}`);
+      const response = await publicCachedGetFetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${lon}&lat=${lat}`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1592,7 +1305,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
 
     try {
-      const response = await safeFetch(`https://api.pdok.nl/bzk/locatieserver/v3_1/reverse?lat=${lat}&lon=${lon}&type=adres&fl=id,weergavenaam,postcode,huisnummer,straatnaam,woonplaatsnaam`);
+      const response = await publicCachedGetFetch(`https://api.pdok.nl/bzk/locatieserver/v3_1/reverse?lat=${lat}&lon=${lon}&type=adres&fl=id,weergavenaam,postcode,huisnummer,straatnaam,woonplaatsnaam`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1614,7 +1327,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
 
     try {
-      const response = await safeFetch(`https://dawa.aws.dk/adgangsadresser/reverse?x=${lon}&y=${lat}&format=json`);
+      const response = await publicCachedGetFetch(`https://dawa.aws.dk/adgangsadresser/reverse?x=${lon}&y=${lat}&format=json`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1636,7 +1349,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
 
     try {
-      const response = await safeFetch(`https://ws.geonorge.no/adresser/v1/punktsok?lat=${lat}&lon=${lon}&radius=50`);
+      const response = await publicCachedGetFetch(`https://ws.geonorge.no/adresser/v1/punktsok?lat=${lat}&lon=${lon}&radius=50`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1658,7 +1371,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
 
     try {
-      const response = await safeFetch(`https://api.digitransit.fi/geocoding/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1`);
+      const response = await publicCachedGetFetch(`https://api.digitransit.fi/geocoding/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1674,10 +1387,13 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/de-address', async (req, res) => {
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
+    if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Invalid coordinates' });
+
     try {
       const data = await performOsmReverse(lat, lon, 'de', 18, 'de');
       res.json(data);
     } catch (error: any) {
+      console.error('Germany API Error:', error);
       res.status(502).json({ error: error.message || 'German address not found' });
     }
   });
@@ -1699,7 +1415,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     try {
-      const response = await safeFetch(`https://api3.geo.admin.ch/rest/services/api/MapServer/identify?geometryType=esriGeometryPoint&geometry=${lon},${lat}&imageDisplay=0,0,0&mapExtent=0,0,0,0&tolerance=50&layers=all:ch.bfs.gebaeude_wohnungs_register&returnGeometry=false`);
+      const response = await publicCachedGetFetch(`https://api3.geo.admin.ch/rest/services/api/MapServer/identify?geometryType=esriGeometryPoint&geometry=${lon},${lat}&imageDisplay=0,0,0&mapExtent=0,0,0,0&tolerance=50&layers=all:ch.bfs.gebaeude_wohnungs_register&returnGeometry=false`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1786,10 +1502,13 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/it-address', async (req, res) => {
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
+    if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Invalid coordinates' });
+
     try {
       const data = await performOsmReverse(lat, lon, 'it', 18);
       res.json(data);
     } catch (error: any) {
+      console.error('Italy API Error:', error);
       res.status(502).json({ error: error.message || 'Italian address not found' });
     }
   });
@@ -1804,7 +1523,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
 
     try {
-      const response = await safeFetch(`https://www.cartociudad.es/CartoCiudad-webservices/api/reverGeocoding/getAddres?lat=${lat}&lon=${lon}`);
+      const response = await publicCachedGetFetch(`https://www.cartociudad.es/CartoCiudad-webservices/api/reverGeocoding/getAddres?lat=${lat}&lon=${lon}`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -1889,7 +1608,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const cc = req.query.cc as string;
-    
+
     let lang = 'en';
     switch(cc) {
       case 'ro': lang = 'ro'; break;
@@ -1935,36 +1654,6 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     } catch (error: any) {
       console.error('UK API Error:', error);
       res.status(502).json({ error: error.message || 'UK address not found' });
-    }
-  });
-
-  // Germany BKG-style Proxy (Bund - Open Data focus)
-  app.get('/api/de-address', async (req, res) => {
-    const lat = parseFloat(req.query.lat as string);
-    const lon = parseFloat(req.query.lon as string);
-    if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Invalid coordinates' });
-
-    try {
-      const data = await performOsmReverse(lat, lon, 'de', 18);
-      res.json(data);
-    } catch (error: any) {
-      console.error('Germany API Error:', error);
-      res.status(502).json({ error: error.message || 'German address not found' });
-    }
-  });
-
-  // Italy ISTAT Region Focused Proxy
-  app.get('/api/it-address', async (req, res) => {
-    const lat = parseFloat(req.query.lat as string);
-    const lon = parseFloat(req.query.lon as string);
-    if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Invalid coordinates' });
-
-    try {
-      const data = await performOsmReverse(lat, lon, 'it', 18);
-      res.json(data);
-    } catch (error: any) {
-      console.error('Italy API Error:', error);
-      res.status(502).json({ error: error.message || 'Italian address not found' });
     }
   });
 
@@ -2034,7 +1723,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/jp-postcode', async (req, res) => {
     const zipcode = req.query.zipcode as string;
     try {
-      const response = await safeFetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`);
+      const response = await publicCachedGetFetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2050,10 +1739,13 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/tianditu-address', async (req, res) => {
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
-    const url = `https://api.tianditu.gov.cn/geocoder?postStr={'lon':${lon},'lat':${lat},'ver':1}&type=geocode&tk=${process.env.TIANDITU_TOKEN || '70868a86707379768a8670737976'}`;
-    
+    const token = process.env.TIANDITU_TOKEN?.trim();
+    if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Invalid coordinates' });
+    if (!token) return res.status(503).json({ error: 'Tianditu token is not configured' });
+    const url = `https://api.tianditu.gov.cn/geocoder?postStr={'lon':${lon},'lat':${lat},'ver':1}&type=geocode&tk=${encodeURIComponent(token)}`;
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2104,7 +1796,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const { start, end } = req.query;
     try {
       const url = `https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=full&geometries=geojson`;
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2121,7 +1813,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const { path } = req.query;
     try {
       const url = `https://chromium-i18n.appspot.com/ssl-address/data/${path}`;
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2141,7 +1833,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       if (lat && lon) {
         url += `&lat=${lat}&lon=${lon}`;
       }
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2158,9 +1850,9 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const fallbackUrl = `https://geogratis.gc.ca/services/geolocation/en/locate?lat=${lat}&lon=${lon}`;
-    
+
     try {
-      const response = await safeFetch(fallbackUrl);
+      const response = await publicCachedGetFetch(fallbackUrl);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2175,10 +1867,13 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/mx-inegi-address', async (req, res) => {
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
-    const url = `https://www.inegi.org.mx/app/api/denue/v1/consulta/buscar/${lat},${lon}/100/${process.env.INEGI_TOKEN || 'token'}`;
-    
+    const token = process.env.INEGI_TOKEN?.trim();
+    if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Invalid coordinates' });
+    if (!token) return res.status(503).json({ error: 'INEGI token is not configured' });
+    const url = `https://www.inegi.org.mx/app/api/denue/v1/consulta/buscar/${lat},${lon}/100/${encodeURIComponent(token)}`;
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2195,9 +1890,9 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const url = `https://servicodados.ibge.gov.br/api/v1/localidades/distritos?lat=${lat}&lon=${lon}`;
-    
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2213,7 +1908,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const cc = req.query.cc as string;
     const pc = req.query.pc as string;
     try {
-      const response = await safeFetch(`https://api.zippopotam.us/${cc}/${pc}`);
+      const response = await publicCachedGetFetch(`https://api.zippopotam.us/${cc}/${pc}`);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2229,9 +1924,9 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const url = `https://geoservices.wallonie.be/arcgis/rest/services/APP_LOCALISATION/LOCALISATEUR_ADRESSE/GeocodeServer/reverseGeocode?location=${lon},${lat}&distance=100&outSR=4326&f=pjson`;
-    
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2247,9 +1942,9 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const url = `https://vdp.cuzk.cz/vdp/ruian/vse/Vyhledej?souradnice=${lat},${lon}&radius=50&f=json`;
-    
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2258,7 +1953,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     } catch (error) {
       const fallbackUrl = `https://api.mapy.cz/geocode?query=${lat},${lon}`;
       try {
-        const fbRes = await safeFetch(fallbackUrl);
+        const fbRes = await publicCachedGetFetch(fallbackUrl);
         if (fbRes.ok) {
           const fbData = await fbRes.json();
           return res.json(fbData);
@@ -2290,7 +1985,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     });
 
     const { limit, addressdetails, polygon_geojson, country, countrycodes, viewbox, bounded, accept_language } = options;
-    
+
     const params = new URLSearchParams();
     params.append('format', 'json');
     params.append('q', q);
@@ -2318,15 +2013,15 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     for (const mirror of mirrorsToTry) {
       try {
         const url = `${mirror}?${params.toString()}`;
-        const res = await safeFetch(url, {
-          headers: { 
+        const res = await publicCachedGetFetch(url, {
+          headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; AGID-Geogrid-Explorer/2.5.1; +https://github.com/kitauracode/geogrid-explorer)',
             'Accept-Language': accept_language || 'en'
           }
         }, 20000);
-        
+
         const contentType = res.headers.get('content-type') || '';
-        
+
         if (res.ok && contentType.includes('json')) {
           const text = await res.text();
           const trimmed = text.trim();
@@ -2344,7 +2039,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
           const isRateLimit = res.status === 429;
           const isServerError = res.status >= 500;
           const isNotFound = res.status === 404;
-          
+
           if (isRateLimit || isServerError || isNotFound) {
             nominatimBlacklist.set(mirror, now + NOMINATIM_BLACKLIST_DURATION);
           }
@@ -2354,29 +2049,29 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         const msg = e.message || String(e);
         const cause = e?.cause?.message || e?.cause?.code || e?.cause || '';
         const causeStr = cause.toString();
-        const isDnsError = msg.includes('getaddrinfo') || msg.includes('ENOTFOUND') || msg.includes('EAI_AGAIN') || 
-                           causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') || 
+        const isDnsError = msg.includes('getaddrinfo') || msg.includes('ENOTFOUND') || msg.includes('EAI_AGAIN') ||
+                           causeStr.includes('ENOTFOUND') || causeStr.includes('EAI_AGAIN') ||
                            causeStr.includes('EHOSTUNREACH') || causeStr.includes('ECONNREFUSED');
         const isNetworkError = isDnsError || msg.includes('fetch failed') || msg.includes('timeout') || msg.includes('aborted');
-        
+
         const blacklistDuration = isDnsError ? 1000 * 60 * 120 : (isNetworkError ? 60000 : NOMINATIM_BLACKLIST_DURATION);
         nominatimBlacklist.set(mirror, now + blacklistDuration);
         errors.push(`${mirror} [${msg}]`);
-        
+
         // Silent mirror failures
         if (!isNetworkError && !msg.includes('429')) {
           console.debug(`[API] Search Mirror Failed: ${mirror} - ${msg}`);
         }
       }
     }
-    
+
     // AI Fallback before failure
     const geminiResults = await performGeminiSearch(q, accept_language || 'en', limit || 5);
     if (geminiResults.length > 0) {
       console.log(`[API] Mirror failure for search "${q}". Recovered via Gemini AI.`);
       return geminiResults;
     }
-    
+
     console.warn(`[API] All search mirrors failed. Returning empty results.`);
     return [];
   }
@@ -2386,9 +2081,9 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const url = `https://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCallejero.asmx/Consulta_DNPLOC?Provincia=&Municipio=&Lon=${lon}&Lat=${lat}`;
-    
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const xmlText = await response.text();
         return res.send(xmlText);
@@ -2415,7 +2110,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     const cc = req.query.cc as string;
-    
+
     if (!lat || !lon || !cc) {
       return res.status(400).json({ error: 'Missing coordinates or country code' });
     }
@@ -2478,15 +2173,16 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/terrain/:z/:x/:y.png', async (req, res) => {
     const { z, x, y } = req.params;
     const url = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`;
-    
+
     try {
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
 
       if (response.ok) {
         const buffer = await response.arrayBuffer();
         res.set('Content-Type', 'image/png');
         res.set('Cache-Control', 'public, max-age=31536000, immutable');
-        res.set('Access-Control-Allow-Origin', '*');
+        const corsOrigin = allowedCorsOrigin(req.headers.origin, PORT);
+        if (corsOrigin) res.set('Access-Control-Allow-Origin', corsOrigin);
         return res.send(Buffer.from(buffer));
       }
       res.status(response.status).send('Tile not found');
@@ -2512,7 +2208,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         node["natural"="peak"](around:10000,${lat},${lon});
         out body qt;
       `;
-      
+
       let data;
       try {
         data = await fetchFromOverpass(overpassQuery);
@@ -2532,7 +2228,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         if (a.elevation && b.elevation) return b.elevation - a.elevation;
         return 0;
       });
-      
+
       return res.json({ peaks, source: 'OSM-Overpass' });
     } catch (error) {
       console.error('Mountain API Error:', error);
@@ -2564,7 +2260,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         );
         out tags;
       `;
-      
+
       let osmData;
       try {
         osmData = await fetchFromOverpass(overpassQuery);
@@ -2641,7 +2337,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         );
         out count qt;
       `;
-      
+
       let data;
       try {
         data = await fetchFromOverpass(overpassQuery);
@@ -2656,11 +2352,11 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       const waysCount = parseInt(data.elements?.[0]?.tags?.ways || '0', 10);
       const relsCount = parseInt(data.elements?.[0]?.tags?.relations || '0', 10);
       const waterCount = waysCount + relsCount;
-      
+
       let risk = 'Low';
       if (waterCount > 5) risk = 'High (Floodplain/Wetland)';
       else if (waterCount > 0) risk = 'Moderate (Near Water)';
-      
+
       return res.json({
         risk_level: risk,
         water_bodies_nearby: waterCount,
@@ -2697,11 +2393,11 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     const lat = parseFloat(req.query.lat as string);
     const lon = parseFloat(req.query.lon as string);
     if (isNaN(lat) || isNaN(lon)) return res.status(400).json({ error: 'Missing or invalid coordinates' });
-    
+
     const cacheKey = `marine_${lat.toFixed(4)}_${lon.toFixed(4)}`;
     const cached = getFromRegionalCache(cacheKey);
     if (cached) return res.json(cached);
-    
+
     try {
       const data = await fetchMarineRegionsWithFallback(lat, lon);
       setRegionalCache(cacheKey, data);
@@ -2721,19 +2417,19 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     if (cached) return res.json(cached);
 
     try {
-      const response = await safeFetch(`https://geoapi.heartrails.com/api/json?method=searchByGeoLocation&x=${lon}&y=${lat}`, {}, 25000);
-      
+      const response = await publicCachedGetFetch(`https://geoapi.heartrails.com/api/json?method=searchByGeoLocation&x=${lon}&y=${lat}`, {}, 25000);
+
       if (response.ok) {
         const data = await response.json();
         setRegionalCache(cacheKey, data);
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
         return res.json(data);
       }
-      
+
       // Retry for certain failures
       if (response.status >= 500 || response.status === 408 || response.status === 429) {
         console.log(`[API] Retrying HeartRails (${response.status})...`);
-        const retryRes = await safeFetch(`https://geoapi.heartrails.com/api/json?method=searchByGeoLocation&x=${lon}&y=${lat}`, {}, 30000);
+        const retryRes = await publicCachedGetFetch(`https://geoapi.heartrails.com/api/json?method=searchByGeoLocation&x=${lon}&y=${lat}`, {}, 30000);
         if (retryRes.ok) {
           const data = await retryRes.json();
           setRegionalCache(cacheKey, data);
@@ -2741,7 +2437,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         }
         return res.status(retryRes.status).json({ error: `HeartRails failed after retry: ${retryRes.status}` });
       }
-      
+
       res.status(response.status).json({ error: `HeartRails returned ${response.status}` });
     } catch (error: any) {
       console.error('[API] HeartRails Proxy Critical Error:', error.message || error);
@@ -2753,7 +2449,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/tw-nlsc', async (req, res) => {
     const { lat, lon } = req.query;
     try {
-      const response = await safeFetch(`https://api.nlsc.gov.tw/other/TownVillagePointQuery/${lon}/${lat}`);
+      const response = await publicCachedGetFetch(`https://api.nlsc.gov.tw/other/TownVillagePointQuery/${lon}/${lat}`);
       if (response.ok) {
         const xmlText = await response.text();
         return res.send(xmlText);
@@ -2767,14 +2463,15 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
 
   // Nominatim Search Proxy
   app.get('/api/osm-search', async (req, res) => {
-    const { q, viewbox, bounded, limit, polygon_geojson } = req.query as any;
+    const { q, viewbox, bounded, limit, polygon_geojson, accept_language, lang } = req.query as any;
     if (!q) return res.status(400).json({ error: 'Missing query' });
-    
+
     try {
-      const data = await performOsmSearch(q, { 
-        limit: limit || 10, 
-        addressdetails: 1, 
+      const data = await performOsmSearch(q, {
+        limit: limit || 10,
+        addressdetails: 1,
         polygon_geojson: polygon_geojson === '1' ? 1 : 0,
+        accept_language: accept_language || lang,
         viewbox,
         bounded
       });
@@ -2789,7 +2486,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/osm-reverse', async (req, res) => {
     const { lat, lon, lang, zoom, cc } = req.query;
     if (!lat || !lon) return res.status(400).json({ error: 'Missing coordinates' });
-    
+
     try {
       const l = parseFloat(lat as string);
       const n = parseFloat(lon as string);
@@ -2809,10 +2506,10 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/us-census', async (req, res) => {
     const { lat, lon } = req.query;
     if (!lat || !lon) return res.status(400).json({ error: 'Missing coordinates' });
-    
+
     try {
       const url = `https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=${lon}&y=${lat}&benchmark=Public_AR_Current&vintage=Current_Current&format=json`;
-      const response = await safeFetch(url);
+      const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();
         return res.json(data);
@@ -2828,7 +2525,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/country-boundary', async (req, res) => {
     const { cc } = req.query;
     if (!cc) return res.status(400).json({ error: 'Missing country code' });
-    
+
     try {
       const data = await performOsmSearch('', { country: cc, polygon_geojson: 1, limit: 1 });
       if (data && data[0] && data[0].geojson) {
@@ -2845,7 +2542,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/country-cities', async (req, res) => {
     const { cc } = req.query;
     if (!cc) return res.status(400).json({ error: 'Missing country code' });
-    
+
     // Query for cities, towns, and municipalities within the country area
     // Using a simpler query for speed
     const query = `
@@ -2857,7 +2554,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
       );
       out body qt;
     `;
-    
+
     try {
       let data;
       try {
@@ -2874,7 +2571,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
         lat: el.lat,
         lon: el.lon
       })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-      
+
       res.json(cities);
     } catch (error) {
       console.error('[API] Country Cities Error:', error);
@@ -2888,7 +2585,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     if (!cc) return res.status(400).json({ error: 'Missing country code' });
 
     try {
-      const response = await safeFetch(`https://restcountries.com/v3.1/alpha/${cc}`);
+      const response = await publicCachedGetFetch(`https://restcountries.com/v3.1/alpha/${cc}`);
       if (response.ok) {
         const data = await response.json();
         if (data && data[0]) {
@@ -2916,7 +2613,7 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
 
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`;
-      const response = await safeFetch(url, {}, 15000);
+      const response = await publicCachedGetFetch(url, {}, 15000);
       if (response.ok) {
         const contentType = response.headers.get('content-type');
         if (contentType?.includes('application/json')) {
@@ -2935,17 +2632,18 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/labels/:z/:x/:y.pbf', async (req, res) => {
     const { z, x, y } = req.params;
     const source = `https://tiles.openfreemap.org/planet/${z}/${x}/${y}.pbf`;
-    
+
     try {
-      const response = await fetch(source, { 
+      const response = await fetch(source, {
         headers: { 'User-Agent': 'AGID-Grid-Explorer/2.1' },
-        signal: AbortSignal.timeout(5000) 
+        signal: AbortSignal.timeout(5000)
       });
       if (response.ok) {
         const buffer = await response.arrayBuffer();
         res.setHeader('Content-Type', 'application/x-protobuf');
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        const corsOrigin = allowedCorsOrigin(req.headers.origin, PORT);
+        if (corsOrigin) res.setHeader('Access-Control-Allow-Origin', corsOrigin);
         return res.send(Buffer.from(buffer));
       }
       res.status(response.status).send('Label tile fail');
@@ -2954,44 +2652,12 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
   });
 
-  // Denmark DAWA Address Service (Official, Free)
-  app.get('/api/dk-address', async (req, res) => {
-    const { lat, lon } = req.query;
-    try {
-      const response = await safeFetch(`https://dawa.aws.dk/adgangsadresser/reverse?x=${lon}&y=${lat}&format=json`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'DAWA lookup failed' });
-    } catch (error) {
-      console.error('DAWA Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  // Norway Kartverket Address Service (Official, Free)
-  app.get('/api/no-address', async (req, res) => {
-    const { lat, lon } = req.query;
-    try {
-      const response = await safeFetch(`https://ws.geonorge.no/adresser/v1/punktsok?lon=${lon}&lat=${lat}&radius=50`);
-      if (response.ok) {
-        const data = await response.json();
-        return res.json(data);
-      }
-      res.status(response.status).json({ error: 'Kartverket lookup failed' });
-    } catch (error) {
-      console.error('Kartverket Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
   // Poland GUGiK Address Service (Official, Free)
   app.get('/api/pl-address', async (req, res) => {
     const { lat, lon } = req.query;
     try {
       // GUGiK UISL reverse search
-      const response = await safeFetch(`https://services.gugik.gov.pl/uisl/?request=getaddressbyxy&x=${lon}&y=${lat}`);
+      const response = await publicCachedGetFetch(`https://services.gugik.gov.pl/uisl/?request=getaddressbyxy&x=${lon}&y=${lat}`);
       if (response.ok) {
         const text = await response.text();
         // GUGiK often returns plain text or simple formatted strings
@@ -3004,13 +2670,26 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
     }
   });
 
+  app.get('/embed', (_req, res) => {
+    const embedPath = process.env.NODE_ENV === 'production'
+      ? path.join(process.cwd(), 'dist', 'embed.html')
+      : path.join(process.cwd(), 'embed.html');
+    res.sendFile(embedPath);
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
+    const hmrConfig = resolveViteHmrConfig(PORT);
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: hmrConfig,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
+    if (hmrConfig) console.log(`[Server] Vite HMR: ws://0.0.0.0:${hmrConfig.port}`);
+    else console.log('[Server] Vite HMR: disabled');
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
@@ -3021,7 +2700,10 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[Server] Running on http://0.0.0.0:${PORT}`);
-    console.log(`[Server] Overpass Proxy: http://0.0.0.0:${PORT}/api/overpass`);
+    console.log(`[Server] Workspace: ${process.cwd()}`);
+    console.log(`[Server] Process: pid=${process.pid} env=${process.env.NODE_ENV ?? 'development'}`);
+    console.log(`[Server] OpenAPI v1: http://0.0.0.0:${PORT}/api/v1/openapi.json`);
+    console.log(`[Server] Overpass Proxy v1: http://0.0.0.0:${PORT}/api/v1/overpass`);
   });
 }
 

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "DK",
+  "checkedAt": "2026-08-30T02:55:00.000Z",
+  "baseCommit": "333e2c364025439576957c2acd79b24daf1faa4b",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/dk-source-review-2026-08-30.json",
+    "digest": "sha256:b1db17c6298f16fbed53a9eee2e7cf0670006780a38406c18795c47ce4c7ff26"
+  },
+  "verification": [
+    {
+      "name": "official source byte and national GeoJSON audit",
+      "command": "node scripts/inspect-postal-context-dk-sources.mjs ../.m2-sources-dk reports/postal-context-m2/dk-source-review-2026-08-30.json",
+      "result": "pass",
+      "assertions": 11,
+      "officialFeatures": 1089,
+      "invalidGeometry": 39,
+      "ringIssuePostcodes": [
+        "4000",
+        "8543"
+      ],
+      "transactionId": 4141673
+    },
+    {
+      "name": "DK source inspector unit tests",
+      "command": "node --test scripts/inspect-postal-context-dk-sources.test.mjs",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "name": "DK repository, runtime, API and catalog regression tests",
+      "command": "tsx --test src/lib/postalContextCountryPolicy.test.ts src/lib/postalContextDenmarkRepository.test.ts src/lib/postalContextDenmarkRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts src/server/routes/postalContextDenmarkRoutes.test.ts src/data/denmarkOpenGeoSources.test.ts src/lib/officialPostalSourceCatalog.test.ts",
+      "result": "pass",
+      "tests": 71
+    },
+    {
+      "name": "shared postal-search and deterministic map rendering tests",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "result": "pass",
+      "tests": 23
+    },
+    {
+      "name": "DK M2 ledger fail-closed tests",
+      "command": "node --test scripts/postal-context-m2-dk-ledger.test.mjs",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "name": "TypeScript typecheck",
+      "command": "tsc --noEmit",
+      "result": "pass"
+    },
+    {
+      "name": "rollout status",
+      "command": "node scripts/postal-context-m2-rollout.mjs status",
+      "result": "pass",
+      "expectedNext": "EE",
+      "expectedStates": {
+        "pending": 189,
+        "in_progress": 0,
+        "blocked": 62,
+        "m2_verified": 1
+      }
+    }
+  ],
+  "applicationEvidence": {
+    "sharedSearchMapPathVerified": true,
+    "sharedTranslucentFillAndVisibleOutlineVerified": true,
+    "sharedClearAndResearchVerified": true,
+    "dkSpecificRuntimeUsesSyntheticFixtureOnly": true,
+    "syntheticPostcode": "0000",
+    "realDkArtifactLoaderVerified": false,
+    "realDkPostalApiVerified": false,
+    "realDkAppAreaVisualizationVerified": false
+  },
+  "sourceDataDisposition": {
+    "rawNationalBodiesCommittedToGit": 0,
+    "auditBodiesDeletedAfterRemoteVerification": true,
+    "observedLiveGeojsonDigest": "sha256:5f489e68f49f95fe8e89ec9cd38c7f8a93986b88a95a1b4233bf3bed22e2bbf2"
+  },
+  "executionNotes": [
+    "The npm launcher could not spawn child node because node was absent from the inherited PATH; the exact bundled Node.js executable ran the underlying scripts instead.",
+    "PostNord public finder automation returned HTTP 403 and was not bypassed.",
+    "No account, API key, OAuth token, payment, contract acceptance, repository, publication destination or deployment was created."
+  ],
+  "conclusion": {
+    "countryM2Achieved": false,
+    "reason": "Real current official MultiPolygons and reusable terms were confirmed, but no immutable artifact, complete gadepostnummer/bitemporal/non-area classification, fully valid national geometry set, real artifact-backed DK API, or real app visualization exists."
+  }
+}

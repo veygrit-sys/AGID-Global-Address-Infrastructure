@@ -81,6 +81,8 @@ test('builds display grid as one aligned lattice without railway-like duplicate 
 
   assert.equal(result.gridCells.length, 2);
   assert.equal(result.gridLines.length, 7);
+  assert.equal(result.gridCells[0].properties.absoluteAnchorVersion, 'agid-grid-anchors-v1');
+  assert.equal(result.gridCells[0].properties.absoluteAnchorId, 'antimeridian-face');
 
   const uniqueSegments = new Set(result.gridLines.map(line => {
     const [a, b] = line;
@@ -92,6 +94,25 @@ test('builds display grid as one aligned lattice without railway-like duplicate 
   assert.equal(uniqueSegments.size, result.gridLines.length);
   assert.equal(result.gridCells[0].geometry.coordinates[0][1][1], result.gridCells[1].geometry.coordinates[0][0][1]);
   assert.equal(result.gridCells[0].geometry.coordinates[0][1][0], result.gridCells[1].geometry.coordinates[0][0][0]);
+});
+
+test('marks Rust-packed display cells with their absolute anchor point', () => {
+  const result = buildGridFeaturesFromPackedCells({
+    packedCells: new Float64Array([
+      179.999, 0,
+      180.0001, 0,
+      180.0001, 0.001,
+      179.999, 0.001,
+    ]),
+    count: 1,
+    face: 1,
+    startQX: 10,
+    startQY: 20,
+    step: 1,
+  });
+
+  assert.equal(result.gridCells[0].properties.absoluteAnchorVersion, 'agid-grid-anchors-v1');
+  assert.equal(result.gridCells[0].properties.absoluteAnchorId, 'antimeridian-face');
 });
 
 test('builds a viewport-covering grid whose black cells match selected red cells', () => {

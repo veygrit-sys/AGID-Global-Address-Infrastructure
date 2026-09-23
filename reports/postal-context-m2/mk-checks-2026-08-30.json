@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "MK",
+  "observedAt": "2026-08-30T18:56:31.619Z",
+  "completedAt": "2026-08-30T19:19:25.3339490Z",
+  "baseCommit": "9244d56c8c395d88e3e4b77eb48ac327d91502ca",
+  "scope": "Country-specific M2 definition, current official source/rights reconciliation, deterministic locality-table and public facility-Point profiling and conservative blocker evidence; no raw source body, postal data pack, API geometry route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "north-macedonia-source-inspector",
+      "command": "node scripts/inspect-postal-context-mk-sources.mjs --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "eight byte/SHA-256-bound bodies reproduce the 1,831-row locality table, 331 facility Points, zero areas and 218/12/108 postcode set reconciliation"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "north-macedonia-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-mk-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, exact locality/Point set reconciliation, rights and prohibited proxy separation, report digests and Malta next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 6,
+    "testsPassed": 44,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialObservations": 6,
+    "exactBodiesByteAndSha256Bound": 8,
+    "operatorAddressingRows": 1831,
+    "operatorAddressingDistinctPostcodes": 230,
+    "operatorFacilityPoints": 331,
+    "locatorDistinctPostcodes": 326,
+    "sharedPostcodes": 218,
+    "addressingOnlyPostcodes": 12,
+    "locatorOnlyPostcodes": 108,
+    "publicOfficialPostcodePolygonRecords": 0,
+    "rightsClearedDerivedPostcodePolygonRecords": 0,
+    "rawSourceBodiesInGit": 0,
+    "operatorDatasetSpecificBulkProcessingAndRedistributionGrantEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realMkRuntimeVerified": false,
+    "realMkApiVerified": false,
+    "realMkAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no official or rights-cleared derived real MK Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "The current public operator addressing table is locality membership rather than postal-area geometry and does not document a complete exception denominator.",
+    "The operator locator is a facility-point product. Its postcode set differs materially from the addressing table and no versioned reconciliation was found.",
+    "The reviewed operator privacy/contact pages do not establish dataset-specific bulk processing, derivation, redistribution or public-serving rights.",
+    "Government open-data and NSDI requests timed out; the run records availability failure, not dataset nonexistence.",
+    "No real MK postcode Polygon/MultiPolygon can be exercised; country runtime, API map fit, translucent rendering and browser E2E remain unverified."
+  ],
+  "countryM2Achieved": false
+}

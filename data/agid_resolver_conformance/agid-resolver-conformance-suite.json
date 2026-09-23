@@ -1,0 +1,525 @@
+{
+  "manifest": {
+    "suiteId": "agid-resolver-conformance-tests",
+    "version": "agid-resolver-conformance-tests-v0.1",
+    "generatedAt": "2026-06-20T00:00:00.000Z",
+    "license": "CC0 for synthetic test cases; Apache-2.0 for harness code",
+    "redistributionPolicy": "The suite contains synthetic public fixtures and negative sentinels only. It does not bundle real user addresses, AGID-S plaintext, AOID secrets, phone numbers, emails, or third-party datasets.",
+    "privacyPolicy": "Resolver conformance fixtures must keep raw private address material local, expose only commitments where appropriate, and reject private material in public/server modes unless a domain-separated commitment path is available.",
+    "counts": {
+      "cases": 7,
+      "surfaces": {
+        "agid-local-resolver": 4,
+        "standard-library-resolver": 1,
+        "federated-resolver": 2,
+        "privacy-boundary": 7
+      },
+      "negativeCases": 1
+    },
+    "files": [
+      {
+        "path": "data/agid_resolver_conformance/manifest.json",
+        "role": "manifest",
+        "mediaType": "application/json",
+        "containsPersonalData": false,
+        "containsThirdPartyData": false,
+        "containsRealRawAddressData": false
+      },
+      {
+        "path": "data/agid_resolver_conformance/agid-resolver-conformance-suite.json",
+        "role": "suite",
+        "mediaType": "application/json",
+        "containsPersonalData": false,
+        "containsThirdPartyData": false,
+        "containsRealRawAddressData": false
+      },
+      {
+        "path": "data/agid_resolver_conformance/test-cases.json",
+        "role": "cases",
+        "mediaType": "application/json",
+        "containsPersonalData": false,
+        "containsThirdPartyData": false,
+        "containsRealRawAddressData": false
+      },
+      {
+        "path": "data/agid_resolver_conformance/checklists.json",
+        "role": "checklists",
+        "mediaType": "application/json",
+        "containsPersonalData": false,
+        "containsThirdPartyData": false,
+        "containsRealRawAddressData": false
+      },
+      {
+        "path": "data/agid_resolver_conformance/README.md",
+        "role": "documentation",
+        "mediaType": "text/markdown",
+        "containsPersonalData": false,
+        "containsThirdPartyData": false,
+        "containsRealRawAddressData": false
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "resolver-local-coordinates-to-agid-v1",
+      "kind": "coordinates-to-agid",
+      "title": "Local coordinates resolve to a deterministic AGID",
+      "surfaces": [
+        "agid-local-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "synthetic-public",
+      "description": "A local resolver must encode public synthetic coordinates without requiring network, ZK, Ethereum, or server registry calls.",
+      "input": {
+        "local": {
+          "coordinates": {
+            "lat": 1.25,
+            "lon": 1.75
+          }
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "agid-local-resolver-v1"
+        ],
+        "statusIn": [
+          "resolved",
+          "partial"
+        ],
+        "inputKind": "coordinates",
+        "agidId": "3B0203A58JVS",
+        "mode": "local-only",
+        "actionsInclude": [
+          "do-not-send-private-fields"
+        ],
+        "auditStepsInclude": [
+          "detect-input",
+          "decode-agid",
+          "evaluate-address-intelligence"
+        ],
+        "noRawPrivateMaterial": true,
+        "expectedFingerprint": "agid-resolver-conformance:d1bc47d0bcd5003c7ebc9bb5"
+      },
+      "requiredAssertions": [
+        "AGID id must match the deterministic encoder output",
+        "resolver mode must remain local-only",
+        "private-field egress action must be present"
+      ],
+      "license": "CC0"
+    },
+    {
+      "caseId": "resolver-local-agid-to-cell-v1",
+      "kind": "agid-to-cell",
+      "title": "Public AGID resolves back to cell coordinates",
+      "surfaces": [
+        "agid-local-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "synthetic-public",
+      "description": "A public AGID query must decode locally and expose the decoded cell result without server dependency.",
+      "input": {
+        "local": {
+          "query": "3B0203A58JVS"
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "agid-local-resolver-v1"
+        ],
+        "statusIn": [
+          "resolved",
+          "partial"
+        ],
+        "inputKind": "agid",
+        "agidId": "3B0203A58JVS",
+        "mode": "local-only",
+        "actionsInclude": [
+          "do-not-send-private-fields"
+        ],
+        "auditStepsInclude": [
+          "detect-input",
+          "decode-agid"
+        ],
+        "noRawPrivateMaterial": true,
+        "expectedFingerprint": "agid-resolver-conformance:194f696e6cdf0d897f494dc6"
+      },
+      "requiredAssertions": [
+        "AGID input must be detected as agid",
+        "decoded AGID id must equal the query id",
+        "local audit must include a decode step"
+      ],
+      "license": "CC0"
+    },
+    {
+      "caseId": "resolver-agid-s-needs-key-v1",
+      "kind": "agid-s-needs-key",
+      "title": "AGID-S never opens without a local key",
+      "surfaces": [
+        "agid-local-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "synthetic-public",
+      "description": "An encrypted AGID-S token-like value must return needs-key unless the local key ring can decrypt it.",
+      "input": {
+        "local": {
+          "query": "AGIDS1-INVALIDTOKEN"
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "agid-local-resolver-v1"
+        ],
+        "status": "needs-key",
+        "inputKind": "agid-s",
+        "mode": "local-only",
+        "actionsInclude": [
+          "request-agid-s-key",
+          "do-not-send-private-fields"
+        ],
+        "auditStepsInclude": [
+          "detect-input",
+          "open-agid-s"
+        ],
+        "noRawPrivateMaterial": true,
+        "expectedFingerprint": "agid-resolver-conformance:6b08b1fdb6dbd3d4f6b39746"
+      },
+      "requiredAssertions": [
+        "AGID-S input must be detected as encrypted",
+        "resolver must request a local key",
+        "resolver must not expose a plaintext AGID"
+      ],
+      "license": "CC0"
+    },
+    {
+      "caseId": "resolver-address-text-partial-v1",
+      "kind": "address-text-partial",
+      "title": "Free-form text stays partial until confirmed",
+      "surfaces": [
+        "agid-local-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "synthetic-public",
+      "description": "A synthetic free-form locality label must not be treated as a fully verified delivery address without evidence.",
+      "input": {
+        "local": {
+          "query": "Synthetic Central District",
+          "countryCode": "JP"
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "agid-local-resolver-v1"
+        ],
+        "statusIn": [
+          "partial",
+          "resolved"
+        ],
+        "inputKind": "address-text",
+        "mode": "local-only",
+        "actionsInclude": [
+          "do-not-send-private-fields"
+        ],
+        "auditStepsInclude": [
+          "detect-input",
+          "load-address-format",
+          "evaluate-address-intelligence"
+        ],
+        "noRawPrivateMaterial": true,
+        "expectedFingerprint": "agid-resolver-conformance:1824df4870db898d451676b9"
+      },
+      "requiredAssertions": [
+        "free-form text must be detected as address-text",
+        "private-field egress action must be present",
+        "implementations must not claim strong verification from text alone"
+      ],
+      "license": "CC0"
+    },
+    {
+      "caseId": "resolver-standard-library-free-local-first-v1",
+      "kind": "standard-library-plan",
+      "title": "Standard library plan is free and local-first",
+      "surfaces": [
+        "standard-library-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "synthetic-public",
+      "description": "The resolver plan must prefer local parser and Unicode normalizer before optional postal, geodata, and translation lookups.",
+      "input": {
+        "standardLibrary": {
+          "countryCode": "JP",
+          "targetCountries": [
+            "JP"
+          ],
+          "hasPostcode": true,
+          "hasCoordinates": true,
+          "lookupRequired": true,
+          "includeGlobalFallbacks": true,
+          "sourceLanguage": "ja",
+          "targetLanguage": "en",
+          "allowCredentialedSources": false,
+          "libpostalEndpointConfigured": false
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "address-standard-library-resolution-v1"
+        ],
+        "noRawPrivateMaterial": true,
+        "standardLibrary": {
+          "freeOnly": true,
+          "canParseLocally": true,
+          "primaryIdsInclude": [
+            "local-address-parser",
+            "local-unicode-address-normalizer"
+          ],
+          "requestedCapabilitiesInclude": [
+            "parse",
+            "normalize",
+            "format",
+            "postal",
+            "geodata",
+            "translation",
+            "transliteration"
+          ]
+        },
+        "expectedFingerprint": "agid-resolver-conformance:736c6d7d6c55bda6b893aeaa"
+      },
+      "requiredAssertions": [
+        "local parser must be primary",
+        "local Unicode normalizer must be primary",
+        "credentialed sources must not be required"
+      ],
+      "license": "CC0"
+    },
+    {
+      "caseId": "resolver-federated-consensus-v1",
+      "kind": "federated-consensus",
+      "title": "Federated resolver accepts matching public commitments",
+      "surfaces": [
+        "federated-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "synthetic-public",
+      "description": "Two independent synthetic sources agree on a public address-reference commitment without seeing raw address, raw AGID, raw AOID, or coordinates.",
+      "input": {
+        "federated": {
+          "mode": "hybrid",
+          "domain": "resolver-conformance:delivery",
+          "salt": "resolver-conformance-salt",
+          "now": "2026-06-20T00:00:00.000Z",
+          "quorum": 2,
+          "minResolvedConfidence": 0.55,
+          "payload": {
+            "addressReferenceCommitment": "addr_commitment_resolver_case_alpha",
+            "countryCode": "JP",
+            "purpose": "delivery",
+            "issuerId": "issuer-synthetic"
+          },
+          "sources": [
+            {
+              "sourceId": "local-cache-alpha",
+              "sourceKind": "local-cache",
+              "trustScore": 0.9,
+              "response": {
+                "status": "resolved",
+                "confidence": 0.9,
+                "addressReferenceCommitment": "addr_commitment_resolver_case_alpha",
+                "freshnessRoot": "fresh_root_alpha"
+              }
+            },
+            {
+              "sourceId": "official-source-beta",
+              "sourceKind": "official-source",
+              "trustScore": 0.82,
+              "response": {
+                "status": "resolved",
+                "confidence": 0.84,
+                "addressReferenceCommitment": "ADDR_COMMITMENT_RESOLVER_CASE_ALPHA",
+                "revocationRoot": "rev_root_beta"
+              }
+            }
+          ]
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "agid-federated-resolver-v1"
+        ],
+        "status": "resolved",
+        "decision": "accept",
+        "mode": "hybrid",
+        "actionsInclude": [
+          "use-federated-result",
+          "do-not-send-private-fields"
+        ],
+        "noRawPrivateMaterial": true,
+        "federated": {
+          "quorumMet": true,
+          "agreementCount": 2,
+          "sourceCount": 2,
+          "winningTargetKey": "addr_commitment_resolver_case_alpha",
+          "privacy": {
+            "rawAddressSentToFederation": false,
+            "rawAgidSentToFederation": false,
+            "rawAoidSentToFederation": false,
+            "rawCoordinatesSentToFederation": false,
+            "privatePayloadKeptLocal": true
+          }
+        },
+        "expectedFingerprint": "agid-resolver-conformance:70e6d6bf809dd224936e392c"
+      },
+      "requiredAssertions": [
+        "federated consensus must accept matching public commitments",
+        "raw address material must not be sent to resolver sources",
+        "quorum must be met before accepting"
+      ],
+      "license": "CC0"
+    },
+    {
+      "caseId": "resolver-federated-private-material-block-v1",
+      "kind": "federated-private-material-block",
+      "title": "Federated resolver blocks private material without commitment salt",
+      "surfaces": [
+        "federated-resolver",
+        "privacy-boundary"
+      ],
+      "privacyClass": "negative-synthetic-private-sentinel",
+      "description": "A negative synthetic sentinel verifies that public or federated modes reject private address fields when commitment salt is missing.",
+      "input": {
+        "federated": {
+          "mode": "server-registry",
+          "domain": "resolver-conformance:block-private",
+          "now": "2026-06-20T00:00:00.000Z",
+          "payload": {
+            "address": "synthetic private payload sentinel",
+            "issuerId": "issuer-synthetic"
+          },
+          "sources": [
+            {
+              "sourceId": "registry-unused",
+              "sourceKind": "registry-api",
+              "response": {
+                "status": "resolved",
+                "confidence": 0.8,
+                "addressReferenceCommitment": "unused_commitment"
+              }
+            }
+          ]
+        }
+      },
+      "expected": {
+        "resolverVersionsInclude": [
+          "agid-federated-resolver-v1"
+        ],
+        "status": "blocked",
+        "decision": "reject",
+        "mode": "server-registry",
+        "actionsInclude": [
+          "do-not-send-private-fields",
+          "request-more-evidence",
+          "queue-manual-review"
+        ],
+        "noRawPrivateMaterial": true,
+        "expectedRejectsPrivateMaterial": true,
+        "federated": {
+          "quorumMet": false,
+          "agreementCount": 0,
+          "sourceCount": 0,
+          "privacy": {
+            "rawAddressSentToFederation": false,
+            "rawAgidSentToFederation": false,
+            "rawAoidSentToFederation": false,
+            "rawCoordinatesSentToFederation": false,
+            "privatePayloadKeptLocal": true
+          }
+        },
+        "expectedFingerprint": "agid-resolver-conformance:cb4bc4eb19d2e5bf57b4c20c"
+      },
+      "requiredAssertions": [
+        "private material must block server-registry mode when salt is absent",
+        "sources must not be called after blocked separation",
+        "privacy flags must remain false for all raw material egress"
+      ],
+      "license": "CC0"
+    }
+  ],
+  "checklists": [
+    {
+      "checklistId": "local-resolver-minimum-behavior",
+      "title": "Local Resolver Minimum Behavior",
+      "appliesTo": [
+        "agid-local-resolver"
+      ],
+      "items": [
+        "Coordinates can be encoded to AGID without network access.",
+        "Public AGID can be decoded locally.",
+        "AGID-S requires a matching local key before plaintext access.",
+        "Free-form text does not become strong verification by itself.",
+        "Resolver actions include do-not-send-private-fields."
+      ]
+    },
+    {
+      "checklistId": "standard-library-local-first",
+      "title": "Standard Library Local-First Contract",
+      "appliesTo": [
+        "standard-library-resolver"
+      ],
+      "items": [
+        "Built-in parser and Unicode normalizer run before networked lookups.",
+        "Credentialed sources are never required for the default OSS plan.",
+        "Postal, geodata, translation, and transliteration capabilities are explicit."
+      ]
+    },
+    {
+      "checklistId": "federated-resolver-privacy-consensus",
+      "title": "Federated Resolver Privacy and Consensus",
+      "appliesTo": [
+        "federated-resolver",
+        "privacy-boundary"
+      ],
+      "items": [
+        "Federated sources receive commitments, roots, and metadata instead of raw private fields.",
+        "Quorum is required before an accept decision.",
+        "Private fields without commitment salt block public or server-registry modes.",
+        "Blocked requests do not call external resolver sources."
+      ]
+    }
+  ],
+  "conformance": {
+    "requiredChecks": [
+      "local coordinate encoding returns the expected AGID id",
+      "local AGID decoding returns the expected AGID id and audit steps",
+      "AGID-S token-like inputs require a local key",
+      "standard-library resolver uses a free local-first plan",
+      "federated resolver accepts only quorum-backed commitment consensus",
+      "federated resolver blocks private material without commitment salt",
+      "no real raw address material appears in distributable fixtures"
+    ],
+    "forbiddenPrivateKeys": [
+      "address",
+      "addressText",
+      "rawAddress",
+      "recipientName",
+      "phone",
+      "phoneNumber",
+      "email",
+      "proofCode",
+      "passkeyChallenge",
+      "aoidSecret",
+      "privateKey",
+      "secret",
+      "agidSPlaintext",
+      "credentialBody",
+      "passportNumber",
+      "lat",
+      "lon",
+      "lng",
+      "coordinates"
+    ],
+    "implementationNotes": [
+      "Use the complete JSON suite for automated SDK conformance and the checklists for manual audits.",
+      "Negative sentinel cases intentionally contain a private-field key with synthetic text and must be rejected by conforming implementations.",
+      "The suite is not a benchmark; latency, cache, and external registry behavior should be measured separately."
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "PL",
+  "observedAt": "2026-08-30T21:20:33.981Z",
+  "completedAt": "2026-08-30T21:51:04.7823527Z",
+  "baseCommit": "2d527216c5817dfa70f5e46296b8437ad1034703",
+  "scope": "Country-specific definition, current July 2026 Poczta PNA PDF/search rights and geometry audit, GUGiK authority-boundary/availability audit, deterministic exact-body inspection and conservative blocker evidence; no raw source body, real postcode row, geometry pack, API route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "poland-source-inspector",
+      "command": "node scripts/inspect-postal-context-pl-sources.mjs --source-dir <temporary-source-directory> --pdf-text <temporary-extracted-pdf-text>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "eight byte/SHA-256-bound official bodies reproduce the July 2026 1,786-page PDF, 121,627 PNA occurrences, 21,642 distinct codes, rights restrictions, 2026-08-30 search contract, six 00-940 rows, zero geometry terms and six Geoportal availability failures"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "poland-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-pl-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, July 2026 PDF/search metrics, rights and fixed-geometry gates, report digests and Portugal next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc -p .tmp-pl-tsconfig.json --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes with temporary paths matching the six repository workspace package public entries"
+    },
+    {
+      "id": "changed-javascript-and-json-syntax",
+      "command": "node --check for both changed JavaScript modules plus JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "the inspector and ledger test parse and the manifest, source profile, source report, checks report and rollout ledger are valid JSON"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 51,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 6,
+    "exactBodiesByteAndSha256Bound": 8,
+    "pdfEdition": "July 2026",
+    "pdfPages": 1786,
+    "pdfBytes": 7874157,
+    "pdfPnaOccurrences": 121627,
+    "pdfDistinctPnaCodes": 21642,
+    "minimumPna": "00-001",
+    "maximumPna": "99-440",
+    "publicSearchDatabaseDate": "2026-08-30",
+    "searchExamplePna": "00-940",
+    "searchExampleRows": 6,
+    "pdfGeometryTerms": 0,
+    "searchGeometryTokens": 0,
+    "fixedAuthoritativeGeometryArtifactsInspected": 0,
+    "polygonOrMultiPolygonFeaturesValidated": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0,
+    "pocztaAgidProcessingDerivationStorageRedistributionAndPublicServingPermissionEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realPlRuntimeVerified": false,
+    "realPlApiVerified": false,
+    "realPlAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no approved fixed authoritative PNA area artifact exists"
+  },
+  "knownLimitations": [
+    "The current July 2026 PNA PDF and 2026-08-30 public search are official operator references, but reviewed copyright and sales terms do not establish AGID processing, derivation, database storage, redistribution and public-serving permission.",
+    "Neither Poczta source contains postal-area geometry; 00-940 returned six membership rows and no area was invented from their envelope or administrative context.",
+    "GUGiK PRG/address sources are separate administrative/address authorities. Six direct Geoportal/WFS requests timed out, which is availability evidence only and not proof of absence.",
+    "No fixed authoritative postcode-area body, digest, CRS, topology, coverage or complete assignment-to-area/non-area reconciliation could be verified.",
+    "Poppler rendered the first PDF page, but the local image viewer returned Windows error 206 for both original and shortened paths; exact-body, pdfinfo and extracted-text checks passed and no visual-review claim is made.",
+    "A lockfile npm ci in the isolated worktree failed with ENOSPC. Tests reused an existing read-only dependency tree through a temporary junction. The standard typecheck then lacked four workspace symlinks; a temporary tsconfig mapped the six package names to their declared local src/index.ts public entries, and the full graph passed.",
+    "No real PL postcode runtime, API map fit, translucent rendering or browser E2E can be exercised without an approved fixed reconciled artifact."
+  ],
+  "countryM2Achieved": false
+}

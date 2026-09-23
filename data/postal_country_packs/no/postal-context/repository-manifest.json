@@ -1,0 +1,93 @@
+{
+  "schema_version": "agid-postal-no-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-no",
+    "country_code": "NO",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postnummer",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "official_kartverket_postcode_area_or_postbox_or_special_non_area",
+    "assignment_rule": "A pinned Posten Bring postcode-register row establishes the four-digit postcode, postal place, municipality reference and current G, P, B or S function category at the register's effective time. Syntax, locality, address point, municipality or polygon alone does not establish current operator assignment or delivery eligibility.",
+    "category_rule": "G is used for street addresses, P for post-office boxes, B for both street addresses and post-office boxes, and S for special service not used as an ordinary address. Category and validity are retained; no area is invented for a P or S code or for an unmatched code.",
+    "postcode_area_rule": "Kartverket Postnummerområder is the official areal extent of postcodes in its pinned release. Post-office-box codes are additional, and every area keeps code, source feature identity, release/reference time, licence, topology, coverage and lineage. Municipality polygons, buffers, nearest points and Voronoi cells never substitute for a missing official postcode feature.",
+    "address_rule": "Matrikkelen - Adresse supplies official address identity, public components, postcode-district membership and address point. An address can refer to a building, building part, dwelling unit, property or another object; an address point is not a building footprint, dwelling unit, occupant or delivery guarantee.",
+    "unit_rule": "Matrikkelen - Adresse Leilighetsnivå may add a dwelling-unit number. AddressId plus bruksenhetId, or their corresponding UUIDs, form composite unit identity when both exist; this is not occupant, recipient, household or ownership identity.",
+    "building_point_rule": "Matrikkelen - Bygningspunkt supplies building number, type, status, representation point and public address/property link identifiers. A representation point is not footprint geometry and does not prove address containment by itself.",
+    "building_footprint_rule": "FKB-Bygning provides detailed building geometry and a documented 1:1 link to Matrikkelen by building number, but its Norge digitalt/private-purchase access and redistribution terms are separately pinned. Exact footprint output requires that authoritative building-number link and a licensed source release; proximity, point containment and address text are candidate evidence only.",
+    "administrative_rule": "Kartverket official county and municipality units provide names, codes, hierarchy and geometry. Administrative polygons supply context and validation only and do not create postcode assignment, postal-area geometry, category, delivery eligibility or sovereignty conclusions.",
+    "api_rule": "Kartverket's public Address REST API supports individual official-address lookup. Large refreshes use pinned Geonorge distributions; an API convenience response is not a new authority, building footprint, bulk-extraction licence or current Posten assignment unless the underlying source and validity are retained.",
+    "licence_rule": "Each Postnummerområder, Matrikkelen and administrative distribution pins its exact CC BY 4.0 metadata, provider attribution, source URL, download time, reference/release time, schema, CRS, reviewed transform, coverage, digest and AGID changes. NLOD is not assumed merely because a source is public. Posten and FKB artifacts remain separately partitioned under their exact terms.",
+    "crs_rule": "Every geometry retains its source CRS and exact dataset metadata. WGS84 API output records the reviewed transform and version; coordinates are never relabelled without transformation.",
+    "territory_rule": "Every artifact states whether it covers mainland Norway, Svalbard or Jan Mayen. Posten's county-like codes 21 and 22 are operational classifications, not ordinary counties or permission to silently merge ISO SJ records into NO. Source coverage is not a sovereignty determination."
+  },
+  "integration": {
+    "agid_country_code": "NO",
+    "coordinate_flow": "coordinate -> pinned official Kartverket postcode area or explicit non-area -> Matrikkelen address point -> optional dwelling-unit identity -> building number and representation point -> separately licensed FKB footprint -> NO AGID cell",
+    "postcode_flow": "canonical four digits -> pinned Posten assignment and category -> matching official Kartverket area or explicit non-area -> Matrikkelen addresses -> building-number relation -> licensed FKB footprint -> AGID cells",
+    "building_output_gate": "official address/building identifier path and, for footprint output, a licensed FKB feature joined 1:1 by Matrikkelen building number"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode remains four-character text and preserves leading zeroes." },
+    { "id": "operator-assignment", "pass": "Every current assignment pins Posten register version/effective time, postal place, municipality reference, G/P/B/S category, terms, schema and digest." },
+    { "id": "official-area-or-non-area", "pass": "Area output is an exact pinned Postnummerområder feature under CC BY 4.0; post-office-box, special and absent features remain explicit non-areas." },
+    { "id": "official-address", "pass": "Every address pins Matrikkelen address ID, public components, point, postcode-district membership, source version, licence, schema, CRS and digest." },
+    { "id": "dwelling-unit-identity", "pass": "Unit display requires addressId plus bruksenhetId or corresponding UUIDs and never exposes an occupant, recipient or household." },
+    { "id": "building-identity", "pass": "Building identity uses a pinned Matrikkelen building number and explicit address linkage; a point, text or proximity match does not pass." },
+    { "id": "licensed-footprint", "pass": "Footprint output pins the exact FKB access/licence and joins 1:1 by building number; private purchase or Norge digitalt conditions remain enforceable." },
+    { "id": "territory", "pass": "Mainland Norway, Svalbard and Jan Mayen coverage is explicit and ISO NO/SJ records are never silently merged." },
+    { "id": "privacy", "pass": "No recipient, occupant, owner, rightsholder, personal contact, title/value record, credential, shipment or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_norway_assignment_and_official_area_visualization", "definition": "A current complete Posten four-digit assignment and G/P/B/S denominator is usable under reviewed AGID processing and public-serving terms and reconciled to a pinned current Kartverket Postnummerområder Polygon/MultiPolygon release under CC BY 4.0. Edition, effective date, attribution, byte length, SHA-256, CRS, topology, coverage, exclusions, territory handling and reproducible transformation are fixed in an approved immutable artifact. The real NO API/app normalizes NNNN, returns only valid real areas, fits and renders a translucent fill with clear outline and shows selected code, geometry kind, official/derived/virtual class, source, reference date and confidence; P/O-box, special and unmatched codes remain explicit non-areas and no municipality, point, building, buffer, hull, Voronoi/raster or synthetic proxy satisfies M2." },
+      { "id": "M3_address_building", "definition": "Matrikkelen address, dwelling-unit and building-point releases pass identifier, public-field, licence, privacy, CRS, coverage and correction gates." },
+      { "id": "M4_footprint", "definition": "Separately licensed FKB footprints pass access, redistribution, 1:1 building-number linkage, geometry and quality gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "post-office-box-or-special-code-given-invented-polygon",
+      "municipality-boundary-presented-as-postcode-area",
+      "unmatched-code-filled-by-nearest-area-buffer-or-voronoi",
+      "address-point-presented-as-building-footprint",
+      "dwelling-unit-presented-as-occupant-or-household",
+      "building-point-presented-as-footprint",
+      "fkb-visibility-presented-as-open-redistribution-right",
+      "building-proximity-presented-as-exact-link",
+      "no-and-sj-records-silently-merged",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "private-property-or-shipment-data-published",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_NO_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_NO_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_NO_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_NO_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-posten-kartverket-matrikkelen-or-fkb-rows",
+    "every-four-digit-code-is-a-polygon",
+    "post-office-box-is-area",
+    "address-point-is-building-footprint",
+    "building-point-is-footprint",
+    "nearest-footprint-is-exact-building",
+    "dwelling-unit-identifies-occupant",
+    "administrative-boundary-equals-postcode-area",
+    "posten-county-like-code-determines-iso-territory"
+  ]
+}

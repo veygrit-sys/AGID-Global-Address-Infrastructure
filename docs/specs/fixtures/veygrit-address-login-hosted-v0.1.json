@@ -1,0 +1,1445 @@
+{
+  "fixtureSet": "synthetic-veygrit-address-login-hosted-v0.1",
+  "version": "0.1.0",
+  "description": "Synthetic hosted Address Login contract vectors. These records use references, claims, hashes, and redacted display text only.",
+  "nonClaims": [
+    "The fixture set is not production data.",
+    "The fixture set does not prove residence, delivery success, legal identity, or carrier service-level performance.",
+    "The fixture set does not include audited zero-knowledge circuits.",
+    "Webhook signature and idempotency fixtures prove transport controls only, not address truth."
+  ],
+  "callbackContract": {
+    "version": "veygrit-address-login-callback-v0.1",
+    "canonicalParams": [
+      "code",
+      "state",
+      "iss",
+      "session_ref",
+      "credential_ref",
+      "proof_bundle_ref",
+      "carrier_handoff_ref",
+      "error",
+      "error_description"
+    ],
+    "aliases": {
+      "issuer": [
+        "issuer"
+      ],
+      "proofBundleRef": [
+        "proof_ref"
+      ],
+      "carrierHandoffRef": [
+        "handoff_ref"
+      ]
+    },
+    "forbiddenParams": [
+      "raw_address",
+      "address_line1",
+      "recipient",
+      "witness",
+      "private_key",
+      "proof_secret"
+    ],
+    "nonClaims": [
+      "Callback params are not address resolution evidence.",
+      "Callback params must not contain raw address, recipient, witness, private-key, or proof-secret material.",
+      "Carrier handoff refs authorize neither merchant decryption nor address storage."
+    ]
+  },
+  "callbackValidationVectors": [
+    {
+      "id": "callback_alias_refs_valid",
+      "endpoint": "GET merchant callback",
+      "input": {
+        "code": "code_ref_synthetic_shipping_001",
+        "state": "state_synthetic_shipping_001",
+        "issuer": "https://login.veygrit.example",
+        "session_ref": "session_ref_synthetic_shipping_001",
+        "credential_ref": "cred_ref_synthetic_address_001",
+        "proof_ref": "proof_ref_synthetic_shipping_001",
+        "handoff_ref": "handoff_ref_synthetic_shipping_001"
+      },
+      "options": {
+        "expectedState": "state_synthetic_shipping_001",
+        "allowedIssuer": "https://login.veygrit.example",
+        "requireCode": true,
+        "requireSessionRef": true,
+        "requireCredentialRef": true,
+        "requireProofBundleRef": true,
+        "requireCarrierHandoffRef": true
+      },
+      "expectedResult": "accepted",
+      "expectedNormalizedParams": {
+        "code": "code_ref_synthetic_shipping_001",
+        "state": "state_synthetic_shipping_001",
+        "iss": "https://login.veygrit.example",
+        "session_ref": "session_ref_synthetic_shipping_001",
+        "credential_ref": "cred_ref_synthetic_address_001",
+        "proof_bundle_ref": "proof_ref_synthetic_shipping_001",
+        "carrier_handoff_ref": "handoff_ref_synthetic_shipping_001"
+      },
+      "safeInputs": [
+        "callback query parameter names",
+        "expected state reference",
+        "issuer allowlist reference",
+        "redacted credential and proof references"
+      ]
+    },
+    {
+      "id": "callback_state_mismatch_negative",
+      "endpoint": "GET merchant callback",
+      "input": {
+        "code": "code_ref_synthetic_shipping_001",
+        "state": "state_synthetic_tampered_001",
+        "iss": "https://login.veygrit.example",
+        "credential_ref": "cred_ref_synthetic_address_001",
+        "proof_bundle_ref": "proof_ref_synthetic_shipping_001"
+      },
+      "options": {
+        "expectedState": "state_synthetic_shipping_001",
+        "allowedIssuer": "https://login.veygrit.example",
+        "requireCode": true,
+        "requireCredentialRef": true,
+        "requireProofBundleRef": true
+      },
+      "expectedResult": "rejected",
+      "expectedError": "state_mismatch",
+      "safeInputs": [
+        "callback query parameter names",
+        "expected state reference"
+      ]
+    },
+    {
+      "id": "callback_forbidden_param_negative",
+      "endpoint": "GET merchant callback",
+      "input": {
+        "code": "code_ref_synthetic_shipping_001",
+        "state": "state_synthetic_shipping_001",
+        "iss": "https://login.veygrit.example",
+        "raw_address": "blocked_fixture_value"
+      },
+      "options": {
+        "expectedState": "state_synthetic_shipping_001",
+        "allowedIssuer": "https://login.veygrit.example"
+      },
+      "expectedResult": "rejected",
+      "expectedError": "forbidden_callback_param",
+      "safeInputs": [
+        "callback parameter name fixture",
+        "blocked synthetic placeholder value"
+      ]
+    },
+    {
+      "id": "callback_private_material_param_negative",
+      "endpoint": "GET merchant callback",
+      "input": {
+        "code": "code_ref_synthetic_shipping_001",
+        "state": "state_synthetic_shipping_001",
+        "iss": "https://login.veygrit.example",
+        "private_key": "blocked_fixture_value",
+        "proof_secret": "blocked_fixture_value"
+      },
+      "options": {
+        "expectedState": "state_synthetic_shipping_001",
+        "allowedIssuer": "https://login.veygrit.example"
+      },
+      "expectedResult": "rejected",
+      "expectedError": "forbidden_callback_param",
+      "safeInputs": [
+        "blocked callback parameter fixtures",
+        "synthetic placeholder values"
+      ]
+    },
+    {
+      "id": "callback_forbidden_value_negative",
+      "endpoint": "GET merchant callback",
+      "input": {
+        "code": "code_ref_synthetic_shipping_001",
+        "state": "state_synthetic_shipping_001",
+        "iss": "https://login.veygrit.example",
+        "credential_ref": "proof_secret_fixture_value"
+      },
+      "options": {
+        "expectedState": "state_synthetic_shipping_001",
+        "allowedIssuer": "https://login.veygrit.example"
+      },
+      "expectedResult": "rejected",
+      "expectedError": "forbidden_callback_param",
+      "safeInputs": [
+        "accepted callback ref name",
+        "blocked synthetic placeholder value"
+      ]
+    },
+    {
+      "id": "callback_missing_code_negative",
+      "endpoint": "GET merchant callback",
+      "input": {
+        "state": "state_synthetic_shipping_001",
+        "iss": "https://login.veygrit.example",
+        "credential_ref": "cred_ref_synthetic_address_001",
+        "proof_bundle_ref": "proof_ref_synthetic_shipping_001"
+      },
+      "options": {
+        "expectedState": "state_synthetic_shipping_001",
+        "allowedIssuer": "https://login.veygrit.example",
+        "requireCode": true,
+        "requireCredentialRef": true,
+        "requireProofBundleRef": true
+      },
+      "expectedResult": "rejected",
+      "expectedError": "missing_code",
+      "safeInputs": [
+        "callback query parameter names",
+        "redacted credential and proof references"
+      ]
+    }
+  ],
+  "webhookContract": {
+    "algorithm": "hmac-sha256",
+    "signatureHeader": "x-veygrit-signature",
+    "timestampHeader": "x-veygrit-timestamp",
+    "replayWindowSeconds": 300,
+    "signedPayload": "timestamp.payloadText",
+    "eventIdIdempotencyRequired": true,
+    "keyIds": [
+      "whkey_fixture_2026_06",
+      "whkey_fixture_2026_07",
+      "whkey_fixture_2026_08"
+    ],
+    "keyLifecycle": [
+      {
+        "keyId": "whkey_fixture_2026_06",
+        "status": "retired",
+        "notBefore": "2026-06-01T00:00:00Z",
+        "notAfter": "2026-07-01T00:00:00Z"
+      },
+      {
+        "keyId": "whkey_fixture_2026_07",
+        "status": "active",
+        "notBefore": "2026-07-01T00:00:00Z",
+        "notAfter": "2026-08-01T00:00:00Z"
+      },
+      {
+        "keyId": "whkey_fixture_2026_08",
+        "status": "active",
+        "notBefore": "2026-07-02T21:30:00Z",
+        "notAfter": "2026-09-01T00:00:00Z"
+      }
+    ],
+    "nonClaims": [
+      "Webhook HMAC validation authenticates event transport, not address truth.",
+      "Webhook event id idempotency prevents duplicate side effects, not delivery success.",
+      "Webhook payload fingerprints are references for redacted logs, not raw address evidence."
+    ]
+  },
+  "privacyPosture": {
+    "rawAddressAccepted": false,
+    "merchantCanDecrypt": false,
+    "witnessAccepted": false,
+    "productionCredentialAccepted": false,
+    "acceptedMaterial": [
+      "credentialRef",
+      "proofBundleRef",
+      "consentEnvelopeRef",
+      "challengeHash",
+      "verifierPolicyHash",
+      "encryptedForCarrierRef",
+      "redactedDisplayLine"
+    ],
+    "rejectedMaterial": [
+      "raw address lines",
+      "recipient contact data",
+      "precise coordinates",
+      "proof witnesses",
+      "proof secrets",
+      "private keys"
+    ]
+  },
+  "merchantVisibleRedactionHostedRefSource": {
+    "source": "hosted-address-login-synthetic-flow-refs-v0.1",
+    "guestCheckoutAlias": "guest_checkout_alias_synthetic_hosted_001",
+    "nonClaims": [
+      "Guest checkout alias is a synthetic merchant-safe reference, not an account identifier.",
+      "Hosted redaction refs are generated from synthetic flow outputs and carrier handoff references only."
+    ]
+  },
+  "merchantVisibleRedactionDisplayContract": {
+    "sourceFixture": "docs/specs/fixtures/veygrit-id-core-v0.1.json#merchantVisibleRedactionDisplayContract",
+    "sdkPackage": "@veygrit/address-login-react",
+    "sdkHelper": "createMerchantVisibleRedactionDisplayModel",
+    "example": "sdk/veygrit-address-login-react/examples/merchant-visible-redaction/MerchantVisibleRedactionCard.tsx",
+    "boundaryGateId": "merchant-visible-redaction",
+    "displayFields": [
+      "pairwiseSubjectAlias",
+      "guestCheckoutAlias",
+      "walletConsentRef",
+      "addressCredentialRef",
+      "carrierHandoffRef"
+    ],
+    "displayRefsByField": {
+      "pairwiseSubjectAlias": "pairwise_sub_synthetic_shipping_001",
+      "guestCheckoutAlias": "guest_checkout_alias_synthetic_hosted_001",
+      "walletConsentRef": "ace_synthetic_shipping_001",
+      "addressCredentialRef": "cred_ref_synthetic_address_001",
+      "carrierHandoffRef": "carrier_blob_ref_synthetic_shipping_001"
+    },
+    "requiredNextAction": "create-guest-order-from-refs",
+    "blockedClassCount": 7,
+    "nonClaimCount": 1,
+    "renderedMaterialPolicy": {
+      "copyBlockedMaterialNames": false,
+      "copyNonClaimText": false,
+      "showCountsOnly": true
+    }
+  },
+  "authorizeRequests": [
+    {
+      "id": "auth_shipping_carrier_decryptable",
+      "endpoint": "GET /authorize",
+      "clientId": "merchant_demo_checkout",
+      "redirectUri": "https://merchant.example/callback",
+      "responseType": "code",
+      "scope": "address_login shipping_claim carrier_handoff",
+      "state": "state_synthetic_shipping_001",
+      "nonce": "nonce_synthetic_shipping_001",
+      "codeChallenge": "hash_pkce_synthetic_shipping_001",
+      "codeChallengeMethod": "S256",
+      "purpose": "shipping",
+      "disclosureMode": "carrier_decryptable",
+      "riskLevel": "standard",
+      "displayLanguageMode": "native_and_english",
+      "requestedClaims": [
+        "address_credential_valid",
+        "user_approved",
+        "deliverable",
+        "not_revoked",
+        "freshness",
+        "device_bound",
+        "carrier_decryptable_address"
+      ]
+    },
+    {
+      "id": "auth_identity_proof_only",
+      "endpoint": "GET /authorize",
+      "clientId": "merchant_demo_membership",
+      "redirectUri": "https://merchant.example/callback",
+      "responseType": "code",
+      "scope": "address_login proof_only",
+      "state": "state_synthetic_identity_001",
+      "nonce": "nonce_synthetic_identity_001",
+      "codeChallenge": "hash_pkce_synthetic_identity_001",
+      "codeChallengeMethod": "S256",
+      "purpose": "identity_verification",
+      "disclosureMode": "proof_only",
+      "riskLevel": "high",
+      "displayLanguageMode": "english",
+      "requestedClaims": [
+        "address_credential_valid",
+        "user_approved",
+        "country",
+        "quality_threshold",
+        "not_revoked",
+        "freshness",
+        "device_bound"
+      ]
+    }
+  ],
+  "tokenRequests": [
+    {
+      "id": "token_shipping_carrier_decryptable",
+      "endpoint": "POST /token",
+      "grantType": "authorization_code",
+      "code": "code_synthetic_shipping_001",
+      "redirectUri": "https://merchant.example/callback",
+      "clientId": "merchant_demo_checkout",
+      "codeVerifier": "verifier_synthetic_shipping_001_minimum_32_chars"
+    },
+    {
+      "id": "token_identity_proof_only",
+      "endpoint": "POST /token",
+      "grantType": "authorization_code",
+      "code": "code_synthetic_identity_001",
+      "redirectUri": "https://merchant.example/callback",
+      "clientId": "merchant_demo_membership",
+      "codeVerifier": "verifier_synthetic_identity_001_minimum_32_chars"
+    }
+  ],
+  "addressLoginResults": [
+    {
+      "id": "result_shipping_carrier_decryptable",
+      "endpoint": "POST /token",
+      "status": "approved",
+      "subjectAlias": "pairwise_sub_synthetic_shipping_001",
+      "consentEnvelopeRef": "ace_synthetic_shipping_001",
+      "credentialRef": "cred_ref_synthetic_address_001",
+      "proofBundleRef": "proof_ref_synthetic_shipping_001",
+      "publicClaims": {
+        "address_credential_valid": true,
+        "user_approved": true,
+        "deliverable": true,
+        "not_revoked": true,
+        "freshness_days": 12,
+        "device_bound": true
+      },
+      "encryptedForCarrierRef": "carrier_blob_ref_synthetic_shipping_001",
+      "safeDisplayLines": [
+        "Deliverable address credential approved",
+        "Carrier-only handoff required"
+      ],
+      "warnings": [],
+      "nextAction": "carrier_handoff",
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "credentialRef",
+          "proofBundleRef",
+          "consentEnvelopeRef",
+          "encryptedForCarrierRef"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    },
+    {
+      "id": "result_identity_proof_only",
+      "endpoint": "POST /token",
+      "status": "approved",
+      "subjectAlias": "pairwise_sub_synthetic_identity_001",
+      "consentEnvelopeRef": "ace_synthetic_identity_001",
+      "credentialRef": "cred_ref_synthetic_address_002",
+      "proofBundleRef": "proof_ref_synthetic_identity_001",
+      "publicClaims": {
+        "address_credential_valid": true,
+        "user_approved": true,
+        "country": "JP",
+        "quality_threshold": "verified",
+        "not_revoked": true,
+        "freshness_days": 7,
+        "device_bound": true
+      },
+      "safeDisplayLines": [
+        "Proof-only address claim approved"
+      ],
+      "warnings": [
+        "No delivery service-level claim is made"
+      ],
+      "nextAction": "continue_checkout",
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "credentialRef",
+          "proofBundleRef",
+          "consentEnvelopeRef",
+          "redactedDisplayLine"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    }
+  ],
+  "proofVerifyRequests": [
+    {
+      "id": "verify_shipping_carrier_decryptable",
+      "endpoint": "POST /proof/verify",
+      "proofBundleRef": "proof_ref_synthetic_shipping_001",
+      "credentialRef": "cred_ref_synthetic_address_001",
+      "consentEnvelopeRef": "ace_synthetic_shipping_001",
+      "verifierPolicyHash": "policy_hash_shipping_standard_001",
+      "challengeHash": "challenge_hash_shipping_001",
+      "nullifierHash": "nullifier_hash_shipping_001",
+      "requestedClaims": [
+        "address_credential_valid",
+        "deliverable",
+        "not_revoked",
+        "freshness",
+        "device_bound"
+      ],
+      "now": "2026-07-02T12:00:00Z"
+    },
+    {
+      "id": "verify_identity_proof_only",
+      "endpoint": "POST /proof/verify",
+      "proofBundleRef": "proof_ref_synthetic_identity_001",
+      "credentialRef": "cred_ref_synthetic_address_002",
+      "consentEnvelopeRef": "ace_synthetic_identity_001",
+      "verifierPolicyHash": "policy_hash_identity_high_001",
+      "challengeHash": "challenge_hash_identity_001",
+      "nullifierHash": "nullifier_hash_identity_001",
+      "requestedClaims": [
+        "address_credential_valid",
+        "country",
+        "quality_threshold",
+        "not_revoked",
+        "freshness",
+        "device_bound"
+      ],
+      "now": "2026-07-02T12:00:00Z"
+    }
+  ],
+  "proofVerifyResults": [
+    {
+      "id": "verified_shipping_carrier_decryptable",
+      "endpoint": "POST /proof/verify",
+      "verified": true,
+      "status": "valid",
+      "proofBundleRef": "proof_ref_synthetic_shipping_001",
+      "publicClaims": {
+        "deliverable": true,
+        "not_revoked": true,
+        "freshness_days": 12,
+        "device_bound": true
+      },
+      "errors": [],
+      "warnings": [],
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "proofBundleRef",
+          "challengeHash",
+          "verifierPolicyHash",
+          "nullifierHash"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    },
+    {
+      "id": "verified_identity_proof_only",
+      "endpoint": "POST /proof/verify",
+      "verified": true,
+      "status": "valid",
+      "proofBundleRef": "proof_ref_synthetic_identity_001",
+      "publicClaims": {
+        "country": "JP",
+        "quality_threshold": "verified",
+        "not_revoked": true,
+        "freshness_days": 7,
+        "device_bound": true
+      },
+      "errors": [],
+      "warnings": [
+        "Proof-only vector does not authorize carrier handoff"
+      ],
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "proofBundleRef",
+          "challengeHash",
+          "verifierPolicyHash",
+          "nullifierHash"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    }
+  ],
+  "carrierDecryptRequests": [
+    {
+      "id": "carrier_decrypt_shipping",
+      "endpoint": "POST /carrier/decrypt-request",
+      "carrierId": "carrier_demo_001",
+      "deliverySessionRef": "delivery_session_synthetic_shipping_001",
+      "consentEnvelopeRef": "ace_synthetic_shipping_001",
+      "encryptedForCarrierRef": "carrier_blob_ref_synthetic_shipping_001",
+      "purpose": "shipping",
+      "requestedAt": "2026-07-02T12:02:00Z",
+      "expiresAt": "2026-07-02T12:17:00Z"
+    }
+  ],
+  "carrierDecryptResults": [
+    {
+      "id": "carrier_authorized_shipping",
+      "endpoint": "POST /carrier/decrypt-request",
+      "authorized": true,
+      "carrierId": "carrier_demo_001",
+      "deliverySessionRef": "delivery_session_synthetic_shipping_001",
+      "decryptAuthorizationRef": "decrypt_auth_ref_synthetic_shipping_001",
+      "handoffReceiptRef": "handoff_receipt_ref_synthetic_shipping_001",
+      "expiresAt": "2026-07-02T12:17:00Z",
+      "warnings": [],
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "encryptedForCarrierRef",
+          "deliverySessionRef",
+          "consentEnvelopeRef",
+          "carrierAssertion"
+        ],
+        "rejectedMaterial": [
+          "merchant decrypt capability",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    }
+  ],
+  "friendDeliveryRequests": [
+    {
+      "id": "friend_delivery_request_gift_001",
+      "endpoint": "POST /friend-delivery/requests",
+      "purchaserSubjectAlias": "pairwise_sub_synthetic_buyer_001",
+      "friendAlias": "friend_alias_synthetic_001",
+      "cartRef": "cart_ref_synthetic_gift_001",
+      "purpose": "anonymous_shipping",
+      "requestedClaims": [
+        "address_credential_valid",
+        "user_approved",
+        "deliverable",
+        "not_revoked",
+        "freshness",
+        "carrier_decryptable_address"
+      ],
+      "disclosureMode": "carrier_decryptable",
+      "requestedAt": "2026-07-02T12:05:00Z"
+    }
+  ],
+  "friendDeliveryRequestResults": [
+    {
+      "id": "friend_delivery_notified_gift_001",
+      "endpoint": "POST /friend-delivery/requests",
+      "status": "notified",
+      "friendDeliveryRequestRef": "fdr_synthetic_gift_001",
+      "friendAlias": "friend_alias_synthetic_001",
+      "consentEnvelopeRef": "ace_synthetic_friend_delivery_001",
+      "notificationRef": "wallet_notification_ref_synthetic_gift_001",
+      "expiresAt": "2026-07-02T12:35:00Z",
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "friendDeliveryRequestRef",
+          "friendAlias",
+          "consentEnvelopeRef",
+          "notificationRef"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    }
+  ],
+  "friendDeliveryApprovals": [
+    {
+      "id": "friend_delivery_approval_gift_001",
+      "endpoint": "POST /friend-delivery/approvals",
+      "friendDeliveryRequestRef": "fdr_synthetic_gift_001",
+      "approvalRef": "approval_ref_synthetic_gift_001",
+      "selectedAddressRef": "address_ref_synthetic_friend_selected_001",
+      "consentEnvelopeRef": "ace_synthetic_friend_delivery_001",
+      "approvedClaims": [
+        "address_credential_valid",
+        "user_approved",
+        "deliverable",
+        "not_revoked",
+        "freshness",
+        "carrier_decryptable_address"
+      ],
+      "approvedAt": "2026-07-02T12:08:00Z"
+    }
+  ],
+  "friendDeliveryApprovalResults": [
+    {
+      "id": "friend_delivery_approved_gift_001",
+      "endpoint": "POST /friend-delivery/approvals",
+      "status": "approved",
+      "friendDeliveryRequestRef": "fdr_synthetic_gift_001",
+      "approvalRef": "approval_ref_synthetic_gift_001",
+      "carrierHandoffRef": "handoff_ref_synthetic_friend_delivery_001",
+      "deliveryReceiptRef": "delivery_receipt_ref_synthetic_friend_delivery_001",
+      "publicClaims": {
+        "address_credential_valid": true,
+        "user_approved": true,
+        "deliverable": true,
+        "not_revoked": true,
+        "freshness_days": 4
+      },
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "friendDeliveryRequestRef",
+          "approvalRef",
+          "selectedAddressRef",
+          "carrierHandoffRef",
+          "deliveryReceiptRef"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    }
+  ],
+  "friendDeliveryMerchantScenarios": [
+    {
+      "id": "friend_delivery_merchant_scenario_gift_001",
+      "endpoint": "SCENARIO /friend-delivery/merchant",
+      "purpose": "anonymous_shipping",
+      "disclosureMode": "carrier_decryptable_preferred",
+      "purchaserSubjectAlias": "pairwise_sub_synthetic_buyer_001",
+      "friendAlias": "friend_alias_synthetic_001",
+      "cartRef": "cart_ref_synthetic_gift_001",
+      "friendDeliveryRequestRef": "fdr_synthetic_gift_001",
+      "notificationRef": "wallet_notification_ref_synthetic_gift_001",
+      "approvalRef": "approval_ref_synthetic_gift_001",
+      "selectedAddressRef": "address_ref_synthetic_friend_selected_001",
+      "consentEnvelopeRef": "ace_synthetic_friend_delivery_001",
+      "carrierHandoffRef": "handoff_ref_synthetic_friend_delivery_001",
+      "deliveryReceiptRef": "delivery_receipt_ref_synthetic_friend_delivery_001",
+      "merchantVisibleRefs": [
+        "fdr_synthetic_gift_001",
+        "ace_synthetic_friend_delivery_001",
+        "handoff_ref_synthetic_friend_delivery_001",
+        "delivery_receipt_ref_synthetic_friend_delivery_001"
+      ],
+      "purchaserNeverSees": [
+        "selectedAddressRef",
+        "carrierHandoffRef",
+        "deliveryReceiptRef",
+        "addressCredentialBody"
+      ],
+      "steps": [
+        {
+          "id": "checkout-select-friend",
+          "actor": "purchaser",
+          "inputRefs": [
+            "pairwise_sub_synthetic_buyer_001",
+            "cart_ref_synthetic_gift_001"
+          ],
+          "outputRefs": [
+            "friend_alias_synthetic_001"
+          ]
+        },
+        {
+          "id": "server-create-request",
+          "actor": "merchant",
+          "inputRefs": [
+            "pairwise_sub_synthetic_buyer_001",
+            "friend_alias_synthetic_001",
+            "cart_ref_synthetic_gift_001"
+          ],
+          "outputRefs": [
+            "fdr_synthetic_gift_001"
+          ]
+        },
+        {
+          "id": "wallet-notify",
+          "actor": "address-wallet",
+          "inputRefs": [
+            "fdr_synthetic_gift_001"
+          ],
+          "outputRefs": [
+            "wallet_notification_ref_synthetic_gift_001"
+          ]
+        },
+        {
+          "id": "wallet-approve",
+          "actor": "recipient",
+          "inputRefs": [
+            "fdr_synthetic_gift_001",
+            "address_ref_synthetic_friend_selected_001"
+          ],
+          "outputRefs": [
+            "approval_ref_synthetic_gift_001",
+            "ace_synthetic_friend_delivery_001"
+          ]
+        },
+        {
+          "id": "server-receive-handoff",
+          "actor": "merchant",
+          "inputRefs": [
+            "approval_ref_synthetic_gift_001",
+            "ace_synthetic_friend_delivery_001"
+          ],
+          "outputRefs": [
+            "handoff_ref_synthetic_friend_delivery_001",
+            "delivery_receipt_ref_synthetic_friend_delivery_001"
+          ]
+        }
+      ]
+    }
+  ],
+  "consentRevocationRequests": [
+    {
+      "id": "revoke_consent_user_requested",
+      "endpoint": "POST /consent/revoke",
+      "consentEnvelopeRef": "ace_synthetic_identity_001",
+      "reason": "user_requested",
+      "requestedAt": "2026-07-02T12:20:00Z"
+    }
+  ],
+  "consentRevocationResults": [
+    {
+      "id": "revoked_consent_user_requested",
+      "endpoint": "POST /consent/revoke",
+      "status": "revoked",
+      "consentEnvelopeRef": "ace_synthetic_identity_001",
+      "revoked": true,
+      "revocationReceiptRef": "consent_revoke_receipt_synthetic_001",
+      "warnings": [],
+      "privacy": {
+        "rawAddressAccepted": false,
+        "merchantCanDecrypt": false,
+        "witnessAccepted": false,
+        "productionCredentialAccepted": false,
+        "acceptedMaterial": [
+          "consentEnvelopeRef",
+          "revocationReceiptRef"
+        ],
+        "rejectedMaterial": [
+          "raw address lines",
+          "recipient contact data",
+          "precise coordinates",
+          "proof witnesses",
+          "proof secrets",
+          "private keys"
+        ]
+      }
+    }
+  ],
+  "webhookTestVectors": [
+    {
+      "id": "webhook_result_issued_valid",
+      "endpoint": "POST merchant webhook",
+      "eventId": "evt_addrlogin_result_issued_001",
+      "eventType": "address_login.result_issued",
+      "payloadFingerprint": "payload_fp_addrlogin_result_001",
+      "timestamp": "2026-07-02T21:37:24Z",
+      "keyId": "whkey_fixture_2026_07",
+      "signatureHeader": "kid=whkey_fixture_2026_07,v1=3f208e47f15ccd44dd291ef3b661f4ec6f17acbf6872fe0cc0d186d262df5763",
+      "expectedResult": "accepted",
+      "safeInputs": [
+        "eventId",
+        "eventType",
+        "payloadFingerprint",
+        "timestamp",
+        "keyId",
+        "signatureHeader"
+      ]
+    },
+    {
+      "id": "webhook_signature_mismatch_negative",
+      "endpoint": "POST merchant webhook",
+      "eventId": "evt_addrlogin_result_issued_002",
+      "eventType": "address_login.result_issued",
+      "payloadFingerprint": "payload_fp_addrlogin_result_002",
+      "timestamp": "2026-07-02T21:37:24Z",
+      "keyId": "whkey_fixture_2026_07",
+      "signatureHeader": "kid=whkey_fixture_2026_07,v1=wrong_fixture_signature_ref",
+      "expectedResult": "rejected",
+      "expectedError": "signature_mismatch",
+      "safeInputs": [
+        "eventId",
+        "eventType",
+        "payloadFingerprint",
+        "timestamp",
+        "keyId",
+        "signatureHeader"
+      ]
+    },
+    {
+      "id": "webhook_duplicate_event_negative",
+      "endpoint": "POST merchant webhook",
+      "eventId": "evt_addrlogin_result_issued_001",
+      "eventType": "address_login.result_issued",
+      "payloadFingerprint": "payload_fp_addrlogin_result_001",
+      "timestamp": "2026-07-02T21:37:24Z",
+      "keyId": "whkey_fixture_2026_07",
+      "signatureHeader": "kid=whkey_fixture_2026_07,v1=3f208e47f15ccd44dd291ef3b661f4ec6f17acbf6872fe0cc0d186d262df5763",
+      "expectedResult": "rejected",
+      "expectedError": "duplicate_event_id",
+      "safeInputs": [
+        "eventId",
+        "eventType",
+        "payloadFingerprint",
+        "timestamp",
+        "keyId",
+        "signatureHeader"
+      ]
+    },
+    {
+      "id": "webhook_timestamp_replay_negative",
+      "endpoint": "POST merchant webhook",
+      "eventId": "evt_addrlogin_result_issued_003",
+      "eventType": "address_login.result_issued",
+      "payloadFingerprint": "payload_fp_addrlogin_result_003",
+      "timestamp": "2026-07-02T21:00:00Z",
+      "keyId": "whkey_fixture_2026_07",
+      "signatureHeader": "kid=whkey_fixture_2026_07,v1=a5f7ed0a1ca909704b134cc7e59b79b1320332da3d554ad76df58809d0fcdb86",
+      "expectedResult": "rejected",
+      "expectedError": "timestamp_replay",
+      "safeInputs": [
+        "eventId",
+        "eventType",
+        "payloadFingerprint",
+        "timestamp",
+        "keyId",
+        "signatureHeader"
+      ]
+    },
+    {
+      "id": "webhook_retired_key_negative",
+      "endpoint": "POST merchant webhook",
+      "eventId": "evt_addrlogin_result_issued_005",
+      "eventType": "address_login.result_issued",
+      "payloadFingerprint": "payload_fp_addrlogin_result_005",
+      "timestamp": "2026-07-02T21:37:24Z",
+      "keyId": "whkey_fixture_2026_06",
+      "signatureHeader": "kid=whkey_fixture_2026_06,v1=f150cef146edd1d8d3cf2d355833eaf04632fa734a3f61519be6ddfb9bc3c0bf",
+      "expectedResult": "rejected",
+      "expectedError": "retired_key",
+      "safeInputs": [
+        "eventId",
+        "eventType",
+        "payloadFingerprint",
+        "timestamp",
+        "keyId",
+        "signatureHeader"
+      ]
+    },
+    {
+      "id": "webhook_rotated_key_valid",
+      "endpoint": "POST merchant webhook",
+      "eventId": "evt_addrlogin_result_issued_004",
+      "eventType": "address_login.result_issued",
+      "payloadFingerprint": "payload_fp_addrlogin_result_004",
+      "timestamp": "2026-07-02T21:37:24Z",
+      "keyId": "whkey_fixture_2026_08",
+      "signatureHeader": "kid=whkey_fixture_2026_08,v1=12b7ee5adcf460fc14cba868607dbd7479817f79a2d73b2860f10bf086d46d7e",
+      "expectedResult": "accepted",
+      "safeInputs": [
+        "eventId",
+        "eventType",
+        "payloadFingerprint",
+        "timestamp",
+        "keyId",
+        "signatureHeader"
+      ]
+    }
+  ],
+  "testVectorResult": {
+    "endpoint": "GET /test-vectors",
+    "fixtureSet": "synthetic-veygrit-address-login-hosted-v0.1",
+    "callbackContract": {
+      "version": "veygrit-address-login-callback-v0.1",
+      "canonicalParams": [
+        "code",
+        "state",
+        "iss",
+        "session_ref",
+        "credential_ref",
+        "proof_bundle_ref",
+        "carrier_handoff_ref",
+        "error",
+        "error_description"
+      ],
+      "aliases": {
+        "issuer": [
+          "issuer"
+        ],
+        "proofBundleRef": [
+          "proof_ref"
+        ],
+        "carrierHandoffRef": [
+          "handoff_ref"
+        ]
+      },
+      "forbiddenParams": [
+        "raw_address",
+        "address_line1",
+        "recipient",
+        "witness",
+        "private_key",
+        "proof_secret"
+      ],
+      "nonClaims": [
+        "Callback params are not address resolution evidence.",
+        "Callback params must not contain raw address, recipient, witness, private-key, or proof-secret material.",
+        "Carrier handoff refs authorize neither merchant decryption nor address storage."
+      ]
+    },
+    "callbackValidationVectors": [
+      {
+        "id": "callback_alias_refs_valid",
+        "endpoint": "GET merchant callback",
+        "input": {
+          "code": "code_ref_synthetic_shipping_001",
+          "state": "state_synthetic_shipping_001",
+          "issuer": "https://login.veygrit.example",
+          "session_ref": "session_ref_synthetic_shipping_001",
+          "credential_ref": "cred_ref_synthetic_address_001",
+          "proof_ref": "proof_ref_synthetic_shipping_001",
+          "handoff_ref": "handoff_ref_synthetic_shipping_001"
+        },
+        "options": {
+          "expectedState": "state_synthetic_shipping_001",
+          "allowedIssuer": "https://login.veygrit.example",
+          "requireCode": true,
+          "requireSessionRef": true,
+          "requireCredentialRef": true,
+          "requireProofBundleRef": true,
+          "requireCarrierHandoffRef": true
+        },
+        "expectedResult": "accepted",
+        "expectedNormalizedParams": {
+          "code": "code_ref_synthetic_shipping_001",
+          "state": "state_synthetic_shipping_001",
+          "iss": "https://login.veygrit.example",
+          "session_ref": "session_ref_synthetic_shipping_001",
+          "credential_ref": "cred_ref_synthetic_address_001",
+          "proof_bundle_ref": "proof_ref_synthetic_shipping_001",
+          "carrier_handoff_ref": "handoff_ref_synthetic_shipping_001"
+        },
+        "safeInputs": [
+          "callback query parameter names",
+          "expected state reference",
+          "issuer allowlist reference",
+          "redacted credential and proof references"
+        ]
+      },
+      {
+        "id": "callback_state_mismatch_negative",
+        "endpoint": "GET merchant callback",
+        "input": {
+          "code": "code_ref_synthetic_shipping_001",
+          "state": "state_synthetic_tampered_001",
+          "iss": "https://login.veygrit.example",
+          "credential_ref": "cred_ref_synthetic_address_001",
+          "proof_bundle_ref": "proof_ref_synthetic_shipping_001"
+        },
+        "options": {
+          "expectedState": "state_synthetic_shipping_001",
+          "allowedIssuer": "https://login.veygrit.example",
+          "requireCode": true,
+          "requireCredentialRef": true,
+          "requireProofBundleRef": true
+        },
+        "expectedResult": "rejected",
+        "expectedError": "state_mismatch",
+        "safeInputs": [
+          "callback query parameter names",
+          "expected state reference"
+        ]
+      },
+      {
+        "id": "callback_forbidden_param_negative",
+        "endpoint": "GET merchant callback",
+        "input": {
+          "code": "code_ref_synthetic_shipping_001",
+          "state": "state_synthetic_shipping_001",
+          "iss": "https://login.veygrit.example",
+          "raw_address": "blocked_fixture_value"
+        },
+        "options": {
+          "expectedState": "state_synthetic_shipping_001",
+          "allowedIssuer": "https://login.veygrit.example"
+        },
+        "expectedResult": "rejected",
+        "expectedError": "forbidden_callback_param",
+      "safeInputs": [
+        "callback parameter name fixture",
+        "blocked synthetic placeholder value"
+      ]
+    },
+      {
+        "id": "callback_private_material_param_negative",
+        "endpoint": "GET merchant callback",
+        "input": {
+          "code": "code_ref_synthetic_shipping_001",
+          "state": "state_synthetic_shipping_001",
+          "iss": "https://login.veygrit.example",
+          "private_key": "blocked_fixture_value",
+          "proof_secret": "blocked_fixture_value"
+        },
+        "options": {
+          "expectedState": "state_synthetic_shipping_001",
+          "allowedIssuer": "https://login.veygrit.example"
+        },
+        "expectedResult": "rejected",
+        "expectedError": "forbidden_callback_param",
+        "safeInputs": [
+          "blocked callback parameter fixtures",
+          "synthetic placeholder values"
+        ]
+      },
+      {
+        "id": "callback_forbidden_value_negative",
+        "endpoint": "GET merchant callback",
+        "input": {
+          "code": "code_ref_synthetic_shipping_001",
+          "state": "state_synthetic_shipping_001",
+          "iss": "https://login.veygrit.example",
+          "credential_ref": "proof_secret_fixture_value"
+        },
+        "options": {
+          "expectedState": "state_synthetic_shipping_001",
+          "allowedIssuer": "https://login.veygrit.example"
+        },
+        "expectedResult": "rejected",
+        "expectedError": "forbidden_callback_param",
+        "safeInputs": [
+          "accepted callback ref name",
+          "blocked synthetic placeholder value"
+        ]
+      },
+      {
+        "id": "callback_missing_code_negative",
+        "endpoint": "GET merchant callback",
+        "input": {
+          "state": "state_synthetic_shipping_001",
+          "iss": "https://login.veygrit.example",
+          "credential_ref": "cred_ref_synthetic_address_001",
+          "proof_bundle_ref": "proof_ref_synthetic_shipping_001"
+        },
+        "options": {
+          "expectedState": "state_synthetic_shipping_001",
+          "allowedIssuer": "https://login.veygrit.example",
+          "requireCode": true,
+          "requireCredentialRef": true,
+          "requireProofBundleRef": true
+        },
+        "expectedResult": "rejected",
+        "expectedError": "missing_code",
+        "safeInputs": [
+          "callback query parameter names",
+          "redacted credential and proof references"
+        ]
+      }
+    ],
+    "webhookContract": {
+      "algorithm": "hmac-sha256",
+      "signatureHeader": "x-veygrit-signature",
+      "timestampHeader": "x-veygrit-timestamp",
+      "replayWindowSeconds": 300,
+      "signedPayload": "timestamp.payloadText",
+      "eventIdIdempotencyRequired": true,
+      "keyIds": [
+        "whkey_fixture_2026_06",
+        "whkey_fixture_2026_07",
+        "whkey_fixture_2026_08"
+      ],
+      "keyLifecycle": [
+        {
+          "keyId": "whkey_fixture_2026_06",
+          "status": "retired",
+          "notBefore": "2026-06-01T00:00:00Z",
+          "notAfter": "2026-07-01T00:00:00Z"
+        },
+        {
+          "keyId": "whkey_fixture_2026_07",
+          "status": "active",
+          "notBefore": "2026-07-01T00:00:00Z",
+          "notAfter": "2026-08-01T00:00:00Z"
+        },
+        {
+          "keyId": "whkey_fixture_2026_08",
+          "status": "active",
+          "notBefore": "2026-07-02T21:30:00Z",
+          "notAfter": "2026-09-01T00:00:00Z"
+        }
+      ],
+      "nonClaims": [
+        "Webhook HMAC validation authenticates event transport, not address truth.",
+        "Webhook event id idempotency prevents duplicate side effects, not delivery success.",
+        "Webhook payload fingerprints are references for redacted logs, not raw address evidence."
+      ]
+    },
+    "webhookVectors": [
+      {
+        "id": "webhook_result_issued_valid",
+        "endpoint": "POST merchant webhook",
+        "eventId": "evt_addrlogin_result_issued_001",
+        "eventType": "address_login.result_issued",
+        "payloadFingerprint": "payload_fp_addrlogin_result_001",
+        "timestamp": "2026-07-02T21:37:24Z",
+        "keyId": "whkey_fixture_2026_07",
+        "signatureHeader": "kid=whkey_fixture_2026_07,v1=3f208e47f15ccd44dd291ef3b661f4ec6f17acbf6872fe0cc0d186d262df5763",
+        "expectedResult": "accepted",
+        "safeInputs": [
+          "eventId",
+          "eventType",
+          "payloadFingerprint",
+          "timestamp",
+          "keyId",
+          "signatureHeader"
+        ]
+      },
+      {
+        "id": "webhook_signature_mismatch_negative",
+        "endpoint": "POST merchant webhook",
+        "eventId": "evt_addrlogin_result_issued_002",
+        "eventType": "address_login.result_issued",
+        "payloadFingerprint": "payload_fp_addrlogin_result_002",
+        "timestamp": "2026-07-02T21:37:24Z",
+        "keyId": "whkey_fixture_2026_07",
+        "signatureHeader": "kid=whkey_fixture_2026_07,v1=wrong_fixture_signature_ref",
+        "expectedResult": "rejected",
+        "expectedError": "signature_mismatch",
+        "safeInputs": [
+          "eventId",
+          "eventType",
+          "payloadFingerprint",
+          "timestamp",
+          "keyId",
+          "signatureHeader"
+        ]
+      },
+      {
+        "id": "webhook_duplicate_event_negative",
+        "endpoint": "POST merchant webhook",
+        "eventId": "evt_addrlogin_result_issued_001",
+        "eventType": "address_login.result_issued",
+        "payloadFingerprint": "payload_fp_addrlogin_result_001",
+        "timestamp": "2026-07-02T21:37:24Z",
+        "keyId": "whkey_fixture_2026_07",
+        "signatureHeader": "kid=whkey_fixture_2026_07,v1=3f208e47f15ccd44dd291ef3b661f4ec6f17acbf6872fe0cc0d186d262df5763",
+        "expectedResult": "rejected",
+        "expectedError": "duplicate_event_id",
+        "safeInputs": [
+          "eventId",
+          "eventType",
+          "payloadFingerprint",
+          "timestamp",
+          "keyId",
+          "signatureHeader"
+        ]
+      },
+      {
+        "id": "webhook_timestamp_replay_negative",
+        "endpoint": "POST merchant webhook",
+        "eventId": "evt_addrlogin_result_issued_003",
+        "eventType": "address_login.result_issued",
+        "payloadFingerprint": "payload_fp_addrlogin_result_003",
+        "timestamp": "2026-07-02T21:00:00Z",
+        "keyId": "whkey_fixture_2026_07",
+        "signatureHeader": "kid=whkey_fixture_2026_07,v1=a5f7ed0a1ca909704b134cc7e59b79b1320332da3d554ad76df58809d0fcdb86",
+        "expectedResult": "rejected",
+        "expectedError": "timestamp_replay",
+        "safeInputs": [
+          "eventId",
+          "eventType",
+          "payloadFingerprint",
+          "timestamp",
+          "keyId",
+          "signatureHeader"
+        ]
+      },
+      {
+        "id": "webhook_retired_key_negative",
+        "endpoint": "POST merchant webhook",
+        "eventId": "evt_addrlogin_result_issued_005",
+        "eventType": "address_login.result_issued",
+        "payloadFingerprint": "payload_fp_addrlogin_result_005",
+        "timestamp": "2026-07-02T21:37:24Z",
+        "keyId": "whkey_fixture_2026_06",
+        "signatureHeader": "kid=whkey_fixture_2026_06,v1=f150cef146edd1d8d3cf2d355833eaf04632fa734a3f61519be6ddfb9bc3c0bf",
+        "expectedResult": "rejected",
+        "expectedError": "retired_key",
+        "safeInputs": [
+          "eventId",
+          "eventType",
+          "payloadFingerprint",
+          "timestamp",
+          "keyId",
+          "signatureHeader"
+        ]
+      },
+      {
+        "id": "webhook_rotated_key_valid",
+        "endpoint": "POST merchant webhook",
+        "eventId": "evt_addrlogin_result_issued_004",
+        "eventType": "address_login.result_issued",
+        "payloadFingerprint": "payload_fp_addrlogin_result_004",
+        "timestamp": "2026-07-02T21:37:24Z",
+        "keyId": "whkey_fixture_2026_08",
+        "signatureHeader": "kid=whkey_fixture_2026_08,v1=12b7ee5adcf460fc14cba868607dbd7479817f79a2d73b2860f10bf086d46d7e",
+        "expectedResult": "accepted",
+        "safeInputs": [
+          "eventId",
+          "eventType",
+          "payloadFingerprint",
+          "timestamp",
+          "keyId",
+          "signatureHeader"
+        ]
+      }
+    ],
+    "merchantVisibleRedactionDisplayContract": {
+      "sourceFixture": "docs/specs/fixtures/veygrit-id-core-v0.1.json#merchantVisibleRedactionDisplayContract",
+      "sdkPackage": "@veygrit/address-login-react",
+      "sdkHelper": "createMerchantVisibleRedactionDisplayModel",
+      "example": "sdk/veygrit-address-login-react/examples/merchant-visible-redaction/MerchantVisibleRedactionCard.tsx",
+      "boundaryGateId": "merchant-visible-redaction",
+      "displayFields": [
+        "pairwiseSubjectAlias",
+        "guestCheckoutAlias",
+        "walletConsentRef",
+        "addressCredentialRef",
+        "carrierHandoffRef"
+      ],
+      "displayRefsByField": {
+        "pairwiseSubjectAlias": "pairwise_sub_synthetic_shipping_001",
+        "guestCheckoutAlias": "guest_checkout_alias_synthetic_hosted_001",
+        "walletConsentRef": "ace_synthetic_shipping_001",
+        "addressCredentialRef": "cred_ref_synthetic_address_001",
+        "carrierHandoffRef": "carrier_blob_ref_synthetic_shipping_001"
+      },
+      "requiredNextAction": "create-guest-order-from-refs",
+      "blockedClassCount": 7,
+      "nonClaimCount": 1,
+      "renderedMaterialPolicy": {
+        "copyBlockedMaterialNames": false,
+        "copyNonClaimText": false,
+        "showCountsOnly": true
+      }
+    },
+    "vectors": [
+      {
+        "id": "shipping_carrier_decryptable",
+        "purpose": "shipping",
+        "disclosureMode": "carrier_decryptable",
+        "riskLevel": "standard",
+        "expectedClaims": [
+          "address_credential_valid",
+          "user_approved",
+          "deliverable",
+          "not_revoked",
+          "freshness",
+          "device_bound",
+          "carrier_decryptable_address"
+        ],
+        "expectedNextAction": "carrier_handoff"
+      },
+      {
+        "id": "identity_proof_only",
+        "purpose": "identity_verification",
+        "disclosureMode": "proof_only",
+        "riskLevel": "high",
+        "expectedClaims": [
+          "address_credential_valid",
+          "user_approved",
+          "country",
+          "quality_threshold",
+          "not_revoked",
+          "freshness",
+          "device_bound"
+        ],
+        "expectedNextAction": "continue_checkout"
+      },
+      {
+        "id": "friend_delivery_sso_approval",
+        "purpose": "anonymous_shipping",
+        "disclosureMode": "carrier_decryptable",
+        "riskLevel": "high",
+        "expectedClaims": [
+          "address_credential_valid",
+          "user_approved",
+          "deliverable",
+          "not_revoked",
+          "freshness",
+          "carrier_decryptable_address"
+        ],
+        "expectedNextAction": "friend_delivery_approval"
+      },
+      {
+        "id": "carrier_handoff_shipping",
+        "purpose": "shipping",
+        "disclosureMode": "carrier_decryptable",
+        "riskLevel": "standard",
+        "expectedClaims": [
+          "carrier_decryptable_address"
+        ],
+        "expectedNextAction": "carrier_handoff"
+      },
+      {
+        "id": "consent_revocation",
+        "purpose": "identity_verification",
+        "disclosureMode": "proof_only",
+        "riskLevel": "high",
+        "expectedClaims": [
+          "not_revoked"
+        ],
+        "expectedNextAction": "revoke_consent"
+      }
+    ],
+    "privacy": {
+      "rawAddressAccepted": false,
+      "merchantCanDecrypt": false,
+      "witnessAccepted": false,
+      "productionCredentialAccepted": false,
+      "acceptedMaterial": [
+        "fixtureSet",
+        "vector id",
+        "purpose",
+        "disclosureMode",
+        "riskLevel",
+        "expectedClaims",
+        "expectedNextAction"
+      ],
+      "rejectedMaterial": [
+        "raw address lines",
+        "recipient contact data",
+        "precise coordinates",
+        "proof witnesses",
+        "proof secrets",
+        "private keys"
+      ]
+    },
+    "warnings": [
+      "Synthetic vectors are safe for OSS contract tests and unsuitable as production evidence."
+    ]
+  }
+}

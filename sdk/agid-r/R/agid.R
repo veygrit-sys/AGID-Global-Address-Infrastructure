@@ -10,3 +10,7 @@ agid_encode <- function(lat, lon) {
 agid_decode <- function(id) {
   NULL
 }
+
+agid_cellBounds <- function(id) {
+  stop("wire this package to the AGID reference implementation")
+}

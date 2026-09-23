@@ -1,0 +1,189 @@
+{
+  "schema_version": "agid-postal-sg-source-profile-v0.1",
+  "country_code": "SG",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_synthetic",
+      "meaning": "AGID-created metadata or synthetic fixtures only; no upstream facts or geometry."
+    },
+    {
+      "id": "R1_open_attribution",
+      "meaning": "A named data.gov.sg dataset is offered under the Singapore Open Data Licence; exact dataset, access date, attribution, and licence version travel with the artifact."
+    },
+    {
+      "id": "R2_public_reference_only",
+      "meaning": "Public documentation may define format or behavior, but it is not a licence to reproduce the underlying postal database."
+    },
+    {
+      "id": "R3_api_agreement_required",
+      "meaning": "API use requires registration, access credentials, and acceptance of provider terms; caching and redistribution remain blocked until reviewed."
+    },
+    {
+      "id": "R4_contract_or-validation-only",
+      "meaning": "Subscription or restricted evidence may be used only under a reviewed contract or isolated validation process and must not enter public artifacts by default."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "singpost-six-digit-postal-database",
+      "provider": "Singapore Post Limited",
+      "source_url": "https://www.singpost.com/dam/files/documents/2026-03/Reference_Offer-Section_1.4_Postal_Services_Operations_Code%28Updated_Nov_2009%29_1.pdf",
+      "role": [
+        "official-six-digit-postal-code-database",
+        "official-postal-assignment-reference",
+        "source-for-subscription-based-validation"
+      ],
+      "production_scope": "Only the scope licensed by a reviewed SingPost subscription agreement; no default public redistribution.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R4_contract_or-validation-only",
+      "terms_note": "SingPost describes the 6-Digit Postal Code database as a subscription database with customer and user conditions. Do not copy, publish, cache, or serve its rows without a contract-specific rights review.",
+      "expected_update_cadence": "subscription-option-dependent",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-contract-id-rights-and-expiry",
+        "pin-delivery-and-checksum",
+        "separate-validation-rights-from-redistribution-rights"
+      ],
+      "prohibited_claims": [
+        "public-redistribution-right",
+        "official-postal-polygon",
+        "building-footprint",
+        "unit-or-occupant",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "singpost-address-format-guide",
+      "provider": "Singapore Post Limited",
+      "source_url": "https://www.singpost.com/sites/default/files/2024-06/Parcel%2520Packing%2520Guide%2520Booklet_V202405_ver7.pdf",
+      "role": [
+        "official-six-digit-format-reference",
+        "official-address-line-order-reference",
+        "mail-label-conformance-reference"
+      ],
+      "production_scope": "Format and presentation rules only; not postal assignment data.",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_public_reference_only",
+      "terms_note": "Use the public guide as a cited conformance reference. It does not grant rights to reproduce the 6D postal database.",
+      "expected_update_cadence": "provider-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-document-version-and-access-date",
+        "keep-format-rules-separate-from-assignment-evidence"
+      ],
+      "prohibited_claims": [
+        "postal-assignment",
+        "postal-geometry",
+        "address-existence"
+      ]
+    },
+    {
+      "source_id": "sla-onemap-search-and-reverse-geocode",
+      "provider": "Singapore Land Authority",
+      "source_url": "https://www.onemap.gov.sg/apidocs/",
+      "role": [
+        "postal-code-to-address-search",
+        "address-to-coordinate-search",
+        "coordinate-to-nearby-address-candidates"
+      ],
+      "production_scope": "Credentialed request and response use under the registered OneMap developer agreement; no implicit bulk snapshot or redistribution right.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R3_api_agreement_required",
+      "terms_note": "OneMap is SLA's authoritative national map, but Search and Reverse Geocode require an API token. Registration and provider terms govern use. Reverse-geocode buffer output is nearby-candidate evidence, not geometric containment.",
+      "expected_update_cadence": "live-api-provider-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-api-doc-and-terms-snapshot",
+        "store-no-token-in-repository",
+        "record-request-time-and-normalized-fields",
+        "review-cache-retention-and-redistribution",
+        "calibrate-exact-and-nearest-result-policy"
+      ],
+      "prohibited_claims": [
+        "singpost-database-redistribution-right",
+        "official-full-code-polygon",
+        "nearest-result-is-exact",
+        "unit-or-occupant",
+        "unlimited-api-availability"
+      ]
+    },
+    {
+      "source_id": "data-gov-sg-sla-dwelling-information",
+      "provider": "Singapore Land Authority via data.gov.sg",
+      "source_url": "https://data.gov.sg/datasets/d_e4495201ba4f77fa2ef9855bad6d2cd1/view",
+      "role": [
+        "open-address-point-evidence-for-covered-dwellings",
+        "postal-code-block-road-cross-check",
+        "holdout-and-quality-evaluation"
+      ],
+      "production_scope": "Only the named dataset fields and coverage offered under the pinned Singapore Open Data Licence version; not a complete national postal database.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "The dataset page identifies SLA as agency and the Singapore Open Data Licence. Preserve dataset citation, access date, licence link, disclaimers, and field-level coverage limitations.",
+      "expected_update_cadence": "dataset-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-dataset-version-download-digest-and-access-date",
+        "include-required-attribution",
+        "measure-covered-dwelling-types-and-missingness",
+        "do-not-present-as-national-completeness"
+      ],
+      "prohibited_claims": [
+        "complete-six-digit-postal-database",
+        "official-full-code-polygon",
+        "non-dwelling-coverage",
+        "unit-or-occupant",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "sla-onemap-planning-area",
+      "provider": "Singapore Land Authority",
+      "source_url": "https://www.onemap.gov.sg/apidocs/",
+      "role": [
+        "planning-area-context",
+        "coarse-administrative-display",
+        "spatial-quality-cross-check"
+      ],
+      "production_scope": "Planning-area context under OneMap terms; never a postal-sector or full-code boundary substitute.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R3_api_agreement_required",
+      "terms_note": "Planning areas are administrative or statistical context. They do not define SingPost six-digit code geometry.",
+      "expected_update_cadence": "planning-release-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-planning-release-and-terms",
+        "label-as-planning-area-not-postal-area"
+      ],
+      "prohibited_claims": [
+        "postal-sector-boundary",
+        "full-code-boundary",
+        "postal-assignment"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "open-attribution",
+      "rule": "Only named Singapore Open Data Licence datasets with pinned versions, complete attribution, and compatible fields."
+    },
+    {
+      "id": "onemap-api-receipts",
+      "rule": "Credentialed OneMap observations remain outside public packs until cache, derivative, and redistribution rights are approved."
+    },
+    {
+      "id": "singpost-contract",
+      "rule": "SingPost subscription material remains isolated according to the reviewed customer agreement."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic synthetic fixtures only; never promotion evidence."
+    }
+  ]
+}

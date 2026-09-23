@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BF",
+  "observedAt": "2026-09-02T20:11:29.104Z",
+  "completedAt": "2026-09-02T20:50:00.000Z",
+  "baseCommit": "b56478c587b872f03f118f47d0ef734be005718c",
+  "scope": "BF-specific La Poste Burkina Faso, UPU, IGB, exact-body, rights, typed-address and no-proxy evidence plus actual-app fail-closed verification. No raw body, live result, real address, administrative proxy, Point, synthetic cell, production geometry or successful BF postal-area visual was promoted.",
+  "checks": [
+    {"id":"bf-source-inspector","command":"<bundled-python> scripts/inspect-postal-context-bf-sources.py --source-dir <temporary-exact-source-directory>","result":"pass","tests":1,"assertion":"ten exact official bodies reproduce current five-digit format, typed commune/quartier/agency examples, rights limitations and zero production rows or geometry"},
+    {"id":"bf-source-inspector-unit","command":"<bundled-python> scripts/inspect-postal-context-bf-sources.test.py","result":"pass","tests":4,"assertion":"digest, complete source-set and marker drift fail closed"},
+    {"id":"bf-address-metadata","command":"node --test scripts/postal-context-bf-address-metadata.test.mjs","result":"pass","tests":2,"assertion":"BF JSON and generated Africa hierarchy preserve detailed typed address fields, the five-digit rule and postal/address/building/AGID separation"},
+    {"id":"real-app-and-api","command":"GET http://127.0.0.1:3023/ and GET /api/v1/postal/BF/10000?geometry=geojson","result":"pass","tests":2,"assertion":"actual app HTTP 200; real unmocked BF postal API HTTP 404 unsupported and no fabricated geometry"},
+    {"id":"deterministic-browser-fallback","command":"temporary Playwright Chromium check against actual app","result":"pass-with-blocked-country","tests":1,"assertion":"actual Ouagadougou search produced AGID BF01RP0JZ6JW, detailed Address Context and map movement; two map canvases but no postal metadata or translucent postcode overlay; no successful BF postal E2E or manual visual claim"},
+    {"id":"shared-area-runtime-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts","result":"pass","tests":32,"assertion":"normalization, no-match, geometry validation, fit, translucent fill, outline, clear, non-area and routing stay fail closed"},
+    {"id":"official-catalog-and-address-formats","command":"node node_modules/tsx/dist/cli.mjs --test src/data/address_formats/addressFormatRulesJson.test.ts src/lib/officialPostalSourceCatalog.test.ts","result":"bf-pass-unrelated-existing-failure","testsPassed":121,"testsFailed":1,"assertion":"all BF-specific address-format and official-source assertions pass; only the pre-existing VC svg-post-post-codes catalog-registration assertion fails"},
+    {"id":"focused-typescript-and-committed-catalog-reader","command":"focused tsc noEmit; tsx --test src/server/postalContextResearchCatalog.test.ts","result":"pass","tests":3,"assertion":"shared postal graph type-checks and the committed public catalog safely parses with traversal rejection"},
+    {"id":"rollout-ledger-and-research-catalog","command":"node --test scripts/postal-context-m2-rollout.test.mjs scripts/postal-context-m2-bf-ledger.test.mjs scripts/build-postal-context-research-catalog.test.mjs; tsx --test src/server/postalContextResearchCatalog.test.ts src/server/postalContextPackStore.test.ts","result":"pass","tests":27,"assertion":"stable queue, BF blocker/report/artifact policy, regenerated catalog counts and next BI are deterministic"},
+    {"id":"changed-syntax-json-and-diff","command":"py_compile, node --check, JSON.parse and git diff --check","result":"pass","tests":12,"assertion":"changed Python, JavaScript, JSON, generated hierarchy and diff formatting validate"}
+  ],
+  "applicationVerification": {
+    "actualAppStarted": true,
+    "actualAppHttpStatus": 200,
+    "realBfApiStatus": 404,
+    "realBfApiMessage": "Postal Context country is not supported",
+    "realBfAppAreaVisualizationVerified": false,
+    "nonPostalAgidAddressContextObserved": true,
+    "nonPostalAgidId": "BF01RP0JZ6JW",
+    "inAppBrowser": "failed before navigation with Windows sandbox ACL helper error",
+    "deterministicPlaywrightFallback": "ran against the actual app with postal API unmocked; detailed non-postal AGID Address Context and map movement were visible, but no postcode polygon, metadata or overlay was produced",
+    "manualVisualInspection": false,
+    "browserE2eVerified": false
+  },
+  "environmentNotes": [
+    "The broad address-format/catalog suite has one unrelated pre-existing VC failure because svg-post-post-codes is referenced by VC metadata but not registered in the shared official-source catalog. Every BF-specific assertion passes.",
+    "In-app Browser and local PDF bitmap viewing failed at Windows ACL/path helper boundaries; deterministic checks are recorded without claiming manual visual inspection."
+  ],
+  "countryM2Achieved": false
+}

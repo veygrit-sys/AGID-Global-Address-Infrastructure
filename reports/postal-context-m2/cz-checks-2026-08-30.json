@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "CZ",
+  "checkedAt": "2026-08-30T01:51:48.061Z",
+  "baseCommit": "b015f3bcbc82a02640f8d8dba0b2a893b122db74",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/cz-source-review-2026-08-30.json",
+    "digest": "sha256:9294987fec574f1c44bdaee2fc3ff50904216fcf7bb4552287d40372feb4d684"
+  },
+  "verification": [
+    {
+      "name": "official source byte audit and operator-to-RUIAN membership comparison",
+      "command": "node scripts/inspect-postal-context-cz-sources.mjs .m2-sources-cz reports/postal-context-m2/cz-source-review-2026-08-30.json",
+      "passed": true,
+      "result": "Nine exact official bodies matched byte length and SHA-256; all 2,677 RUIAN PSČ values matched Czech Post classification, with zero source Polygon/MultiPolygon records."
+    },
+    {
+      "name": "CZ source, ledger and rollout tests",
+      "command": "node --test scripts/inspect-postal-context-cz-sources.test.mjs scripts/postal-context-m2-cz-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+      "testsPassed": 17,
+      "testsFailed": 0
+    },
+    {
+      "name": "existing Czechia Postal Context regression",
+      "command": "tsx --test <verify:postal-context-czechia file set>",
+      "testsPassed": 71,
+      "testsFailed": 0
+    },
+    {
+      "name": "shared postcode-search and translucent-area map regression",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "testsPassed": 23,
+      "testsFailed": 0
+    },
+    {
+      "name": "TypeScript",
+      "command": "tsc --noEmit",
+      "errors": 0
+    }
+  ],
+  "totals": {
+    "testsPassed": 111,
+    "testsFailed": 0,
+    "typeErrors": 0
+  },
+  "runtime": {
+    "packStatus": "metadata-only",
+    "operatorAddressPostcodeCodes": 15666,
+    "ruianAddressRows": 3020222,
+    "ruianPostcodes": 2677,
+    "operatorOfficialPolygonRecords": 0,
+    "ruianPolygonOrMultiPolygonRecords": 0,
+    "derivedPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "productionArtifactPublished": false,
+    "realCzechiaApiToAppToMapVerified": false,
+    "sharedAppAreaPathVerified": true,
+    "fitBoundsCapabilityVerified": true,
+    "translucentFillCapabilityVerified": true,
+    "outlineCapabilityVerified": true,
+    "clearAndResearchCapabilityVerified": true,
+    "currentCzechiaAreaVisualizationEnabled": false
+  },
+  "operations": {
+    "authenticatedRequests": 0,
+    "paidOperations": 0,
+    "contractAcceptances": 0,
+    "newDestinations": 0,
+    "deployments": 0,
+    "rawSourceBodiesCommitted": 0
+  },
+  "npmLauncher": {
+    "status": "environment-broken",
+    "detail": "The npm launcher could not supply Node on child PATH; the exact scripts were executed with the repository's shared Node, tsx and TypeScript binaries instead."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-runtime-release-ledger-v1.schema.json",
+  "title": "AddressQL Runtime Release Ledger v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "payload", "signatures", "releaseDigest"],
+  "properties": {
+    "version": {
+      "const": "addressql-runtime-release-ledger-v1"
+    },
+    "payload": {
+      "$ref": "#/$defs/payload"
+    },
+    "signatures": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/signature"
+      }
+    },
+    "releaseDigest": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "releaseId",
+        "sequence",
+        "previousReleaseDigest",
+        "configDigest",
+        "createdAt",
+        "validFrom",
+        "validUntil",
+        "minimumSignatures"
+      ],
+      "properties": {
+        "version": {
+          "const": "addressql-runtime-release-payload-v1"
+        },
+        "releaseId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "previousReleaseDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "configDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "minimumSignatures": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 10
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyId", "reviewerId", "signature"],
+      "properties": {
+        "keyId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "reviewerId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "signature": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+        }
+      }
+    }
+  }
+}

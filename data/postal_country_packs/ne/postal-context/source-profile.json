@@ -1,0 +1,118 @@
+{
+  "schema_version": "agid-postal-ne-source-profile-v0.1",
+  "country_code": "NE",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and synthetic fixtures only." },
+    { "id": "R2_public_reference_only", "meaning": "Public page or document may define behavior but does not imply bulk database redistribution rights." },
+    { "id": "R3_terms_unresolved", "meaning": "Caching, derivative and redistribution rights require provider-specific review." },
+    { "id": "R5_private_restricted", "meaning": "Commercial, contract, access-control, confidentiality or personal-data review required; not public by default." },
+    { "id": "R6_odbl_separate_partition", "meaning": "ODbL material remains in a separately attributed and compliant partition." }
+  ],
+  "sources": [
+    {
+      "source_id": "niger-poste",
+      "provider": "Niger Poste",
+      "source_url": "https://nigerposte.ne/code-postal/",
+      "role": ["current-four-digit-code-locality-region-reference", "routing-assignment-observation"],
+      "production_scope": "Pinned, terms-reviewed current code, locality and region observations only; no inferred catchment or bulk mirror.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_terms_unresolved",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-page-digest", "record-observed-at", "approve-field-level-redistribution", "preserve-code-locality-region-as-separate-fields"],
+      "prohibited_claims": ["official-postcode-polygon", "civic-address", "building", "deliverability"]
+    },
+    {
+      "source_id": "niger-poste-agencies",
+      "provider": "Niger Poste",
+      "source_url": "https://nigerposte.ne/agences/",
+      "role": ["agency-identity", "postal-network-context"],
+      "production_scope": "Terms-reviewed public agency identity fields only; exclude operational and personal contacts.",
+      "assignment_authority": "none_office_identity_only",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_terms_unresolved",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-observation", "review-field-rights", "exclude-staff-and-personal-contacts"],
+      "prohibited_claims": ["postal-code-assignment", "agency-catchment", "postcode-polygon", "customer-address", "building-assignment"]
+    },
+    {
+      "source_id": "upu-niger-addressing-2005",
+      "provider": "Universal Postal Union",
+      "source_url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nerEn.pdf",
+      "role": ["dated-address-format-semantics", "region-and-post-office-digit-method"],
+      "production_scope": "Format rules only; the dated P.O.-Box-only statement is not current service authority.",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_public_reference_only",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-document-digest-and-date", "cross-check-current-niger-poste-services"],
+      "prohibited_claims": ["current-assignment", "public-address-database", "postcode-geometry", "address-building-link"]
+    },
+    {
+      "source_id": "ignniger-national-geography",
+      "provider": "Institut Géographique National du Niger",
+      "source_url": "https://ignniger.org/domaines-de-competences-de-lign-n.html",
+      "role": ["official-administrative-and-cartographic-context", "land-and-spatial-product-discovery"],
+      "production_scope": "Named, licensed, versioned products only; personal and title-holder fields excluded.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_administrative_or_land_geometry",
+      "redistribution_class": "R5_private_restricted",
+      "bundled_here": false,
+      "promotion_requirements": ["record-product-contract-and-rights", "pin-edition-crs-digest", "label-admin-land-and-postal-separately", "remove-owner-and-personal-fields"],
+      "prohibited_claims": ["niger-poste-assignment", "postcode-polygon", "civic-address", "building-link", "owner-or-occupant"]
+    },
+    {
+      "source_id": "hapdp-niger-data-protection-2022",
+      "provider": "Haute Autorité de Protection des Données à caractère Personnel",
+      "source_url": "https://www.hapdp.ne/legislation-nationale",
+      "role": ["personal-data-law-and-amendment-register", "purpose-security-retention-governance"],
+      "production_scope": "Legal governance metadata only.",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_public_reference_only",
+      "bundled_here": false,
+      "promotion_requirements": ["current-legal-review", "purpose-and-proportionality-review", "security-retention-and-cross-border-review", "redaction-and-access-controls"],
+      "prohibited_claims": ["permission-to-publish-person-linked-addresses", "postal-address-or-building-dataset", "postal-or-geometry-authority"]
+    },
+    {
+      "source_id": "osm-niger",
+      "provider": "OpenStreetMap contributors",
+      "source_url": "https://wiki.openstreetmap.org/wiki/Niger",
+      "role": ["community-road-settlement-address-and-building-candidates", "coverage-and-discrepancy-review"],
+      "production_scope": "Separate ODbL-compliant attributed partition only.",
+      "assignment_authority": "none",
+      "geometry_authority": "community_geometry",
+      "redistribution_class": "R6_odbl_separate_partition",
+      "bundled_here": false,
+      "promotion_requirements": ["separate-odbl-partition", "preserve-attribution-and-lineage", "never-promote-community-evidence-to-postal-or-land-authority"],
+      "prohibited_claims": ["official-postal-assignment", "official-postcode-polygon", "cadastre", "deliverability", "exact-address-building-link-without-explicit-evidence"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "postal-routing-observations", "rule": "Pinned Niger Poste code, locality and region observations with approved fields only." },
+    { "id": "administrative-context", "rule": "Versioned official region, department, commune and map layers, never postcode geometry." },
+    { "id": "land-restricted", "rule": "IGN.N land and cadastral products remain controlled; no owner or title-holder data." },
+    { "id": "civic-address-and-building", "rule": "Only explicit rights-cleared address points and address-building relations." },
+    { "id": "derived-or-virtual-candidates", "rule": "Model, buffer, Voronoi and AGID covers are noncanonical candidates." },
+    { "id": "community-odbl", "rule": "ODbL content remains separately attributed and cannot borrow official authority." },
+    { "id": "private-and-query", "rule": "Recipients, holders, residents, owners, occupants, instructions and query trails are never public." },
+    { "id": "synthetic-conformance", "rule": "Synthetic values only; never production evidence." }
+  ],
+  "postal_assignment_promotion_gate": {
+    "required": ["current-niger-poste-row", "four-digits-with-current-region-prefix", "locality-and-region-fields", "source-and-terms-digest", "observed-at-and-valid-time"],
+    "failure_mode": "syntax-only-or-stale-candidate"
+  },
+  "postal_geometry_promotion_gate": {
+    "required": ["explicit-niger-poste-geographic-assignment-or-authorized-boundary-crosswalk", "dataset-specific-geometry", "reuse-rights", "independent-validation", "valid-time"],
+    "failure_mode": "full-code-remains-no-canonical-geometry"
+  },
+  "building_resolution_gate": {
+    "required": ["rights-cleared-civic-address-point", "explicit-address-building-relation", "matching-normalized-components", "building-geometry-rights", "no-personal-fields"],
+    "failure_mode": "stop-at-address-or-locality-without-exact-building"
+  },
+  "public_hosting_gate": {
+    "required": ["field-level-redistribution-rights", "non-personal-minimized-artifact", "source-and-terms-lineage", "digest-pinned-release", "odbl-separation", "rollback-and-correction-path"],
+    "failure_mode": "keep-artifact-off-cloudflare-and-hugging-face-public-hosting"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "agid-postal-mz-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-mz",
+    "country_code": "MZ",
+    "country_name": "Mozambique",
+    "maturity": "M1_metadata",
+    "integration_role": "external-country-pack-consumed-by-agid"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_upstream_rows": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_land_records": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "canonical_postcode_format": "NNNNN-NNN",
+    "current_rule": "Decreto n.º 74/2024 establishes eight digits separated into five and three groups, with general territorial and urban variants and a capital-city specificity. All digits and the exact rule/table edition remain strings and versioned assignment evidence.",
+    "migration_rule": "Decreto n.º 74/2024 revokes Decreto n.º 28/2019. The 2019 NNNN-NN six-digit CEP, the historical four-digit Correios directory and stale website footer examples are legacy observations only and must never be silently padded, truncated or promoted as current.",
+    "authority_rule": "INCM is the postal regulator under Postal Law n.º 1/2016. Correios de Moçambique E.P. was extinguished by Decreto n.º 32/2021, and CORRE received the universal postal operator licence in 2024. Regulator, designated operator and other licensed operators remain separate authority roles.",
+    "assignment_rule": "A production CEP assignment requires an exact digest-pinned Decreto 74/2024 table row or later INCM-authorized register with code, unit identity, variant, edition, observed-at and valid-time. Shape, a legacy directory, operator address, rollout report or licensed-operator list is insufficient.",
+    "geometry_rule": "The reviewed decree defines a numeric hierarchy but no canonical boundary coordinates for each full CEP. Default geometry is none. An exact version-aligned official territorial or urban boundary may support an explicitly official-derived crosswalk; an administrative map, office point, buffer, Voronoi surface, model result or AGID union is never an official postal polygon.",
+    "administrative_rule": "Province, district, city or town, administrative or municipal post, locality and bairro are versioned administrative or urban context. A code component does not prove that a separately published boundary has identical validity or postal authority.",
+    "address_rule": "CEP ends at a territorial, urban, locality or bairro context under the reviewed structure. Street, house number, entrance, unit and recipient remain separate evidence. The dated 2019-2022 pilots' georeferenced doors do not establish a current redistributable national civic-address database.",
+    "building_rule": "Exact building display requires a rights-cleared civic address point, matching normalized components, an explicit address-to-building relation and independently licensed building geometry. CEP containment, bairro membership, cadastral overlap, nearest building, street-text match and model score are insufficient.",
+    "land_rule": "National land-administration and Terra Segura systems provide controlled parcel and land-right context. Parcel geometry, DUAT or holder data is neither postcode assignment nor an automatic public address/building relation and remains restricted unless a named product and licence are approved.",
+    "privacy_rule": "As of the reviewed 2026 INTIC record, the standalone personal-data bill was still in the legislative process while constitutional, electronic-transaction and sector rules already protect private and individually identifiable data. Public packs exclude recipients, residents, occupants, owners, holders, contacts, correspondence and query histories regardless of legislative stage.",
+    "realtime_rule": "Live INCM or operator observations become bounded normalized receipts with URL, terms version, response digest, observed-at, valid-time and parser version. There is no invisible live fallback and no training mirror that can override the pinned legal assignment edition.",
+    "model_rule": "Models may rank candidates, detect migration conflicts, compress indexes or propose derived surfaces. They never confer official assignment, boundary, administrative identity, address, building, privacy permission or deliverability authority.",
+    "hosting_rule": "Cloudflare and Hugging Face may host only digest-pinned, rights-cleared, minimized, non-personal public artifacts. Controlled land, address, building and operator/customer evidence remains on authorized infrastructure.",
+    "agid_rule": "AGID is an independent spatial index and versioned crosswalk. An AGID cell or cell union is not an INCM CEP assignment, official postal polygon, administrative boundary, parcel, civic address or building."
+  },
+  "required_artifacts": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "fixtures/mozambique-synthetic.json",
+    "release-manifest.json",
+    "assignment-observations.parquet",
+    "derived-candidates.pmtiles",
+    "agid-crosswalk.parquet",
+    "validation-report.json"
+  ],
+  "validation_rules": [
+    { "id": "current-eight-digit-shape", "pass": "Every current canonical CEP is exactly eight digits formatted NNNNN-NNN; legacy four- and six-digit values stay in a separate non-current partition." },
+    { "id": "current-authority", "pass": "Every promoted assignment pins Decreto 74/2024 or a later INCM-authorized row, edition, digest, identity, variant and valid-time." },
+    { "id": "authority-separation", "pass": "INCM regulator, CORRE universal operator, other licensees and extinguished Correios evidence are not conflated." },
+    { "id": "assignment-versus-geometry", "pass": "Numeric administrative semantics and postal assignment remain separate from boundary-coordinate authority." },
+    { "id": "versioned-admin-crosswalk", "pass": "Any official-derived surface pins both code-table and boundary editions, identifiers, CRS, time and many-to-many relation." },
+    { "id": "explicit-address-building-link", "pass": "Exact building output has a rights-cleared civic-address point and explicit address-building relation." },
+    { "id": "privacy-land-and-licence", "pass": "No recipient, resident, occupant, holder, owner, correspondence, query or restricted land data is public and every field has approved rights." },
+    { "id": "synthetic-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Sources, migration, semantics, licences and blockers inventoried." },
+      { "id": "M1_metadata", "definition": "Contract, source profile and synthetic conformance fixtures reviewable." },
+      { "id": "M2_assignment", "definition": "A complete rights-cleared current eight-digit assignment table passes authority, validity, migration and digest gates." },
+      { "id": "M3_geometry_and_address", "definition": "Official-derived boundary crosswalks and public civic-address evidence pass CRS, time, ambiguity, privacy and licence gates." },
+      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity and quality gates." }
+    ],
+    "hard_blockers": [
+      "legacy-four-or-six-digit-code-presented-as-current-eight-digit-cep",
+      "extinguished-correios-directory-presented-as-current-operator-authority",
+      "code-shape-or-component-presented-as-current-assignment",
+      "administrative-boundary-office-point-buffer-voronoi-model-or-agid-presented-as-official-postal-polygon",
+      "mismatched-code-table-and-boundary-editions-or-validity",
+      "rollout-door-observation-presented-as-current-national-address-register",
+      "postcode-bairro-nearest-containment-or-text-match-presented-as-exact-building",
+      "land-right-holder-recipient-resident-owner-occupant-correspondence-or-query-data-published",
+      "unreviewed-source-or-licence-republished-on-public-hosting",
+      "missing-assignment-geometry-admin-time-operator-migration-or-licence-lineage"
+    ]
+  },
+  "non_guarantees": ["deliverability", "complete_current_assignment_register_without-refresh", "official_full-code_polygon", "postal_and_administrative_equivalence", "national_public_civic_address_database", "recipient_or_land-right_identity", "exact_building_without_explicit_link"]
+}

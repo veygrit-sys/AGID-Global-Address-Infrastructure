@@ -1,0 +1,29 @@
+{
+  "repository":{"name":"agid-postal-cd","country_code":"CD","maturity":"M1_metadata","schema_version":"postal-context-repository-manifest-v1"},
+  "release_scope":{"metadata_only":true,"contains_raw_source_data":false,"contains_real_addresses":false,"contains_personal_data":false,"contains_production_geometry":false},
+  "postal_system":{
+    "code_format":"NNNNNNN",
+    "assignment_rule":"SCPT assigns seven digits. UPU 09/2022 places them to the left of the province or city-province. Parsing 10-04-13-1 does not itself validate a current assignment; exact SCPT rows remain source-qualified.",
+    "geometry_rule":"A postcode may become drawable only from a valid Polygon/MultiPolygon at the exact delivery-area or neighbourhood granularity, reconciled to an authoritative assignment with compatible rights. Points, facilities, routes, buffers, hulls, cells and broader administrative areas are rejected.",
+    "address_rule":"Keep recipient, street/premises, neighbourhood/sector/village, commune/territory, postcode and province separate. P.O. box and poste restante remain delivery objects.",
+    "agid_rule":"An AGID cell or ID is independent spatial context. It may be shown beside a source-qualified search result but is not an SCPT postcode, assignment or postal boundary.",
+    "model_rule":"Hugging Face, libpostal and other models may parse or rank candidates only. They cannot create postal truth, geometry, licence or building identity.",
+    "building_rule":"Detailed place or building display requires its own source identity and relation. Postcode membership or proximity never identifies a building, resident, owner or delivery point.",
+    "licence_rule":"SCPT web/API, UPU and ARPTC bodies are reference evidence. SCPT all-rights-reserved and UPU/database conditions do not establish bulk AGID redistribution rights. OSM ODbL data remains a separate attributed partition.",
+    "jurisdiction_rule":"Preserve ISO CD and DR Congo territory; do not merge with CG or reinterpret foreign assignments.",
+    "temporal_rule":"Retain retrieval time, edition, exact bytes and SHA-256; re-check after the pending-country pass or a competent-authority release."
+  },
+  "promotion":{
+    "current_stage":"M1_metadata",
+    "hard_blockers":["no-complete-versioned-rights-cleared-national-assignment-denominator","scpt-public-api-has-no-geometry","no-exact-postal-polygon-or-multipolygon","osm-point-broader-admin-or-unrelated-feature-promoted","hf-or-model-output-promoted-to-postal-truth","real-cd-api-and-translucent-area-not-available"],
+    "target_stage":"M2_current_scpt_seven_digit_assignment_and_postal_area_visualization",
+    "stages":[
+      {"id":"M0_inventory","definition":"Legacy CD address metadata without the official seven-digit postcode format."},
+      {"id":"M1_metadata","definition":"Digest-bound SCPT, UPU and ARPTC postal evidence, corrected seven-digit address metadata, source/rights boundaries, OSM/Hugging Face candidate audit and a deterministic no-proxy quality gate."},
+      {"id":"M2_current_scpt_seven_digit_assignment_and_postal_area_visualization","definition":"M2 requires a current complete versioned SCPT or competent-authority denominator of every seven-digit assignment, stable row identity, alias, validity, correction, exception and explicit area/non-area object with compatible AGID processing, derivation, redistribution and public-serving rights. Each drawable code must reconcile to a real valid Polygon/MultiPolygon at the exact postal granularity with official/derived/virtual class, source, reference date, CRS, topology, method and confidence. Points, offices, routes, buffers, hulls, Voronoi/raster/AGID cells, broader province/city/commune geometry, unrelated features, model output and the existing synthetic CD planning pack are prohibited proxies. The immutable artifact must drive the real CD API/app through normalization, loading, no-match, multiple, failure, invalid geometry, map fit, translucent fill, clear outline, clear and re-search while showing code, geometry kind, class, source, date and confidence."}
+    ],
+    "data_completion_verified":false
+  },
+  "agid_integration":{"current_scope":"Seven-digit metadata, exact source rows, independently sourced search/place context and candidate rejection only; no CD Postal Context descriptor is enabled.","enablement_gate":"Complete rights-cleared assignments and exact postal Polygon/MultiPolygon artifacts must pass the CD quality gate and real API/app verification.","geometry_rule":"Do not manufacture a CD postal area. A separate civic place, point, building or AGID cell stays source-qualified and non-postal."},
+  "non_goals":["raw-source-or-personal-address-publication","new-repository-hosting-paid-service-contract-or-deployment","postal-area-from-point-buffer-admin-boundary-model-or-synthetic-cell","building-resident-owner-or-deliverability-inference"]
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "agid-postal-pt-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-pt",
+    "country_code": "PT",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Codigo Postal",
+    "full_code_format": "NNNN-NNN",
+    "full_code_default_geometry": "authoritative_portugal_postcode_area_or_explicit_non_area",
+    "assignment_rule": "A current CTT source establishes assignment, postal designation and exception semantics at its reference time. Syntax, a public search result, locality, parish, municipality, CAOP geometry, address or door point alone does not establish a current complete operator assignment denominator or an areal postal boundary.",
+    "normalization_rule": "Accept exactly seven ASCII digits with an optional single hyphen after the first four digits and canonicalize to NNNN-NNN. Preserve leading zeroes. Reject letters, extra digits and ambiguous partial codes. Postal designation is separate display/context data.",
+    "postcode_area_rule": "Area output requires an exact fixed authoritative postal-code Polygon/MultiPolygon feature matched to canonical NNNN-NNN and compatible reference time. Administrative, cadastral, address, street and door-point geometry, buffers, hulls, Voronoi/raster cells and synthetic fixtures never substitute for a missing postal area.",
+    "non_area_rule": "P.O.-box, organization, route, point, address-membership-only and unmatched records remain explicit non-areas unless an authoritative postal-area feature exists. A search result or postal designation does not authorize an envelope, union or administrative proxy to be presented as postal area.",
+    "rights_rule": "CTT describes database licensing, supplied portions of its address database and geographic webservices. Public pages and lookup availability are not treated as permission to bulk extract, transform, store in an AGID database, redistribute or publicly serve assignments, addresses, points or derivatives.",
+    "administrative_rule": "DGT states that CTT is responsible for assigning postcodes and DGT has no postcode-code creation or intervention role. DGT/CAOP and related open geodata may supply their declared context under pinned terms, but their geometry is not postal-code geometry.",
+    "crs_rule": "Every geometry retains source CRS, schema, feature identity and exact release metadata. WGS84 output records a reviewed transform and version; a CTT door coordinate in EPSG:4326 remains a point and is never inflated to an area.",
+    "privacy_rule": "Only public non-personal postal context may enter an approved artifact. Recipients, customers, occupants, owners, rightsholders, shipments, credentials and private property records are excluded."
+  },
+  "integration": {
+    "agid_country_code": "PT",
+    "coordinate_flow": "coordinate -> pinned authoritative postcode Polygon/MultiPolygon or explicit non-area -> separately sourced address context -> PT AGID cell",
+    "postcode_flow": "canonical NNNN-NNN -> current permitted CTT assignment/exception denominator -> exact authoritative area or explicit non-area -> separately sourced address context -> PT AGID cells",
+    "building_output_gate": "postal-area evidence never creates a building; building output requires a separate explicit address/building source and exact reviewed relation"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode is canonical NNNN-NNN text and preserves leading zeroes." },
+    { "id": "current-operator-assignment", "pass": "Every current assignment/exception pins source edition, reference date, terms, schema and digest under permission compatible with AGID processing and public serving." },
+    { "id": "authoritative-area-or-non-area", "pass": "Every areal result is an exact pinned authoritative postcode Polygon/MultiPolygon; P.O.-box, organization, route, point, membership-only and unmatched records remain explicit non-areas." },
+    { "id": "fixed-geometry", "pass": "The area artifact pins provider, URL, edition, reference date, licence, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage and exclusions." },
+    { "id": "assignment-area-reconciliation", "pass": "The complete current assignment/exception denominator is reconciled code by code to an authoritative area or explicit reasoned non-area." },
+    { "id": "authority-separation", "pass": "DGT/CAOP, parish, municipality, cadastral, address, street and door-point geometry remain context and never become postcode area by proxy." },
+    { "id": "privacy", "pass": "No recipient, customer, occupant, owner, rightsholder, shipment, credential or private property record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country policy and source boundary are reviewable; no production Portugal data or geometry is bundled." },
+      { "id": "M2_current_portugal_postcode_assignment_and_authoritative_area_visualization", "definition": "A current complete CTT NNNN-NNN assignment and exception denominator is usable under explicit reviewed permission for AGID processing, derivation, storage, redistribution and public serving, and is reconciled to a fixed authoritative Portugal postal-code Polygon/MultiPolygon release. Edition, reference date, provider, licence, attribution, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage, exclusions and reproducible conversion are fixed in an approved immutable artifact. The real PT API/app normalizes NNNN-NNN, returns only valid real areas, fits and renders translucent fill with a clear outline, and shows selected code, geometry kind, official/derived/virtual class, source, reference date and confidence; P.O.-box, organization, route, point, membership-only and unmatched codes remain explicit non-areas and no DGT/CAOP, parish, municipality, cadastral, address, street, door-point, buffer, hull, Voronoi/raster or synthetic proxy satisfies M2." },
+      { "id": "M3_address_building", "definition": "Separately authorized official address and building relations pass identity, licence, privacy, validity, CRS, coverage and correction gates." }
+    ],
+    "hard_blockers": [
+      "public-search-or-help-page-presented-as-redistribution-right",
+      "postcode-syntax-presented-as-current-complete-assignment",
+      "address-or-postal-designation-presented-as-postcode-area",
+      "po-box-organization-route-or-point-given-invented-polygon",
+      "dgt-caop-parish-municipality-or-cadastral-boundary-presented-as-postcode-area",
+      "address-street-or-door-point-buffered-into-postcode-area",
+      "unmatched-code-filled-by-hull-voronoi-or-raster",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "private-address-property-customer-or-shipment-data-published",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_PT_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PT_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_PT_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PT_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-ctt-search-results-licensed-address-databases-or-geographic-services",
+    "every-postcode-is-a-polygon",
+    "po-box-organization-route-or-point-is-area",
+    "door-point-address-or-administrative-boundary-is-postcode-area",
+    "nearest-area-buffer-hull-voronoi-or-raster-is-authoritative",
+    "postal-area-evidence-is-building-evidence"
+  ]
+}

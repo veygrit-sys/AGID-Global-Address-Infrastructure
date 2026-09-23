@@ -25,6 +25,17 @@ Have an idea to make GeoGrid Explorer better?
 
 ## Style Guide
 
+### Programming Language Selection
+- Default to TypeScript for UI, API orchestration, adapters, AddressIntent/Radar policy, and product-facing flows.
+- Use Rust/WASM for deterministic numeric AGID core work, hidden predicate geometry, and measured high-volume workers.
+- Use SQL/database-native features for persistence, spatial index, nullifier lookup, revocation lookup, audit queries, and cache/index logic.
+- Use Solidity only for minimal public verification state such as issuer, commitment, revocation, nullifier, verifier, and payment contracts.
+- Use Circom/ZK tooling for real proof circuits; TypeScript should prepare witnesses and orchestrate proofs, not replace circuits.
+- Use Lean for abstract mathematical safety or impossibility claims, not for empirical GIS accuracy.
+- Use Python for GIS experiments, document/PDF pipelines, and data analysis utilities, not as the main app runtime.
+- Keep generated SDKs spec-driven and parity-tested against `sdk/agid-spec/test-vectors.json`.
+- See `docs/programming-language-selection-policy-ja.md` and `src/lib/programmingLanguagePolicy.ts` before introducing a new runtime.
+
 ### JavaScript/TypeScript
 - Use functional components for UI.
 - Follow the existing Tailwind CSS naming patterns.

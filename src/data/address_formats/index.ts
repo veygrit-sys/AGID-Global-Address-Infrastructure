@@ -67,32 +67,61 @@ const formatModuleByCode = Object.fromEntries(
     return [fileName.replace(/\.json$/, '').toUpperCase(), path];
   }),
 ) as Record<string, string>;
+const addressFormatCache = new Map<string, Promise<AddressFormat | null>>();
+
+function resolveAddressFormatCode(countryCode: string) {
+  const code = countryCode.trim().toUpperCase();
+  if (!code || !isAddressFormatLookupCandidate(code)) {
+    return { code, path: undefined, shouldWarn: false };
+  }
+
+  const directPath = formatModuleByCode[code];
+  if (directPath) return { code, path: directPath, shouldWarn: true };
+
+  const baseCode = code.split(/[-_]/)[0];
+  const basePath = formatModuleByCode[baseCode];
+  if (basePath) return { code: baseCode, path: basePath, shouldWarn: true };
+
+  return { code, path: undefined, shouldWarn: true };
+}
+
+function isAddressFormatLookupCandidate(code: string) {
+  return /^[A-Z]{2,}(?:[-_][A-Z]{1,})*$/.test(code);
+}
 
 /**
  * Dynamically loads the address format for a given country code.
  * This improves initial loading speed by not bundling all formats at once.
  */
 export async function getAddressFormat(countryCode: string): Promise<AddressFormat | null> {
-  let code = countryCode.toUpperCase();
-  let path = formatModuleByCode[code];
-  
+  const requestedCode = countryCode.trim().toUpperCase();
+  const { code, path, shouldWarn } = resolveAddressFormatCode(countryCode);
+
   if (!path) {
-    // Try base code fallback for sub-regions (e.g. DE-BY -> DE, ES_BAL -> ES)
-    const baseCode = code.split(/[-_]/)[0];
-    const basePath = formatModuleByCode[baseCode];
-    if (basePath) {
-      path = basePath;
-    } else {
-      console.warn(`Address format for ${code} not found.`);
-      return null;
-    }
+    if (requestedCode && shouldWarn) console.warn(`Address format for ${requestedCode} not found.`);
+    return null;
   }
 
-  try {
-    const module = await formatModules[path]() as any;
-    return hydrateAddressFormat(module.default as AddressFormat);
-  } catch (error) {
-    console.warn(`Address format for ${code} failed to load:`, error);
-    return null;
+  const cached = addressFormatCache.get(code);
+  if (cached) return cached;
+
+  const loadFormat = (async () => {
+    try {
+      const module = await formatModules[path]() as any;
+      return hydrateAddressFormat(module.default as AddressFormat);
+    } catch (error) {
+      console.warn(`Address format for ${code} failed to load:`, error);
+      addressFormatCache.delete(code);
+      return null;
+    }
+  })();
+
+  addressFormatCache.set(code, loadFormat);
+  return loadFormat;
+}
+
+export function clearAddressFormatCacheForTests() {
+  if (import.meta.env?.MODE === 'test') {
+    addressFormatCache.clear();
   }
 }

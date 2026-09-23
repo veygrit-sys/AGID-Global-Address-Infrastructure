@@ -1,6 +1,6 @@
 # AGID Mathematical Model Resume
 
-Last updated: 2026-06-01
+Last updated: 2026-06-07
 
 ## Purpose
 
@@ -12,6 +12,28 @@ AGID's mathematical model has four jobs:
 2. Encode that cell into a stable 12-character AGID string.
 3. Decode the string back to the same cell center and polygon.
 4. Render grid lines and selected red cells from the same absolute cell geometry.
+
+## Scope Boundary
+
+This resume covers only the public AGID coordinate-to-cell model. It does not
+define AOID private records, PID issuance policy, ZK address predicates,
+postal deliverability, or AMN registry anchoring.
+
+Boundary rule:
+
+- AGID math defines `lat/lon -> cell -> 12-character AGID`.
+- AOID ID rules define owner-managed private address handles, currently using
+  9- to 16-character unambiguous Base32 with optional linked AGID hash anchor.
+- Address verification defines whether public postal/address evidence is good
+  enough for a country, language, city, rural area, island, mountain, desert,
+  wetland, ice field, or other special region.
+- AMT defines address semantics, candidates, clusters, unresolved outcomes,
+  history, and PID issuance.
+- ZK materials define selective disclosure of address-derived predicates.
+
+Keeping these layers separate prevents a mathematically valid AGID from being
+mistaken for a delivery guarantee, an AOID ownership proof, or a verified
+postal address.
 
 ## Core Contract
 
@@ -463,6 +485,66 @@ Add or keep tests for:
 4. Add an invariant test: selected-cell polygon boundaries must be present in the visible grid line set when the cell is visible.
 5. Add SDK golden tests generated from `agid-spec.json`.
 6. Add optional interoperability exports for Plus Code, geohash, H3, or S2 only as bridges, not as the AGID source of truth.
+
+## Companion Documents and Boundary Map
+
+The mathematical model resume is now in English and should stay narrowly focused
+on the coordinate-to-cell contract. The companion documents below carry the
+parts that should not be folded back into the AGID math resume:
+
+1. **Address Verification Engine Resume**
+   - Explain official postal sources, open-source fallback sources, country
+     coverage, postal-code matching, deliverability limits, and internal quality
+     scoring. This should be separate from the pure grid model because an AGID
+     can be mathematically valid even when address evidence is partial.
+   - Current reference: `docs/address-verification-competitor-comparison.md`.
+
+2. **Privacy and Zero-Knowledge Proof Resume**
+   - Summarize AOID ownership proofs, duplicate-registration nullifiers, PID
+     issuance audit proofs, region-membership proofs, revocation freshness,
+     consent scopes, and anonymous rate limits. This should avoid claiming full
+     cryptographic ZK unless the implementation uses a formal ZK circuit.
+   - Current references: `docs/address-morphism-theory-ii-zero-knowledge-address-predicates.md`
+     and `docs/zk-address-proof-materials-roadmap-ja.md`.
+
+3. **Natural Feature and Map Evidence Resume**
+   - Cover rivers, waterfalls, lakes, islands, deserts, salt lakes, wetlands,
+     ice fields, grasslands, forests, glaciers, caves, valleys, heritage sites,
+     research stations, and named public map features. This should define how
+     map evidence becomes display text without becoming a private address.
+   - Current reference: `docs/address-morphism-theory-verified-resume.md`.
+
+4. **Formal Verification and GIS Validation Resume**
+   - Connect Lean-level lemmas, SDK parity vectors, GIS sampling, distortion
+     reports, antimeridian/pole tests, face-edge tests, and grid-rendering
+     invariants. This is the right place to state which claims are proven and
+     which are empirically validated.
+   - Current references: `formal/`, `docs/address-morphism-lean-gis-cross-verification.md`,
+     and `docs/address-morphism-theory-verified-resume.md`.
+
+5. **Data License and Source Governance Resume**
+   - Summarize government, postal, OSM/OpenAddresses/Overture, NASA, space
+     agency, and map-provider source rules. This matters for open-source release
+     safety and for separating reusable open data from credentialed APIs.
+   - Current reference: `docs/data-licenses.md`.
+
+6. **AGID/AOID Communication and Audit Resume**
+   - Document public AGID surfaces, private AOID surfaces, registration flows,
+     sync boundaries, audit events, key rotation, revocation, and server-side
+     retention rules.
+   - Current references: `docs/agid-aoid-design.md`,
+     `docs/aoid-detailed-paper-ja.md`, and `docs/address-morphism-network-resume.md`.
+
+Recommended documentation corrections:
+
+- Keep `README_AGID_MODEL.md` and this resume aligned with the current
+  cubed-sphere + Hilbert model.
+- Avoid older claims based on equirectangular quantization, Morton ordering,
+  `2^25` axes, or `0.6 m` cells unless explicitly marked as historical.
+- Avoid exact equal-area claims until global distortion measurements are added.
+- Distinguish public AGID validity from address deliverability and AOID
+  ownership.
+- State that language tabs are address-language evidence, not app UI language.
 
 ## Summary
 

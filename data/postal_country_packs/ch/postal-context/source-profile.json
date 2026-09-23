@@ -1,0 +1,225 @@
+{
+  "schema_version": "agid-postal-source-profile-v0.1",
+  "country_code": "CH",
+  "artifact_scope": "metadata-only-contract-seed",
+  "rights_policy": {
+    "default": "pin-attribution-access-class-and-contract-before-publication",
+    "rule": "Swiss Post operator products, swisstopo PLZO and building-address directories, GWR identity, swissBUILDINGS3D and swissBOUNDARIES3D remain independently versioned evidence artifacts.",
+    "attribution": "Every public artifact records provider, dataset, edition or retrieval time, access class, schema, CRS, digest, transformation and required source reference; swisstopo publications use the mandatory swisstopo source attribution."
+  },
+  "sources": [
+    {
+      "source_id": "swiss-post-postcodes",
+      "provider": "Post CH Ltd (Swiss Post)",
+      "source_url": "https://www.post.ch/en/business-solutions/address-management/address-and-geodata",
+      "role": [
+        "official-postcode-and-locality-search",
+        "street-directory-and-sorting-assignment",
+        "npa4-npa6-and-postcode-type-reference",
+        "licensed-geopost-area-and-point-products"
+      ],
+      "production_scope": "Pinned public search receipts and explicitly contracted downloads; customer, recipient, forwarding, shipment and unlicensed GeoPost data remain outside public artifacts.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "licensed_operator_geometry_if_contract",
+      "redistribution_class": "R5_contract_partitioned",
+      "terms_note": "The postcode search is public and the sorting street directory is account-accessed; NPA6, GeoPost, coordinates, sorting and delivery products require per-product terms review.",
+      "expected_update_cadence": "search-current-and-street-directory-biweekly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-search-or-download-edition-retrieval-time-and-digest",
+        "record-product-contract-and-redistribution-rights",
+        "preserve-npa4-npa6-postcode-type-and-validity",
+        "exclude-recipient-forwarding-shipment-and-customer-data"
+      ],
+      "prohibited_claims": [
+        "unrestricted-geopost-redistribution",
+        "public-plzo-geometry-owned-by-swiss-post-product",
+        "deliverability-guarantee-from-postcode",
+        "recipient-occupant-or-owner"
+      ]
+    },
+    {
+      "source_id": "swisstopo-plzo-postal-localities",
+      "provider": "Federal Office of Topography swisstopo",
+      "source_url": "https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities",
+      "role": [
+        "official-locality-and-postcode-directory",
+        "official-npa4-and-npa6-perimeters",
+        "domicile-postcode-types-10-and-20",
+        "monthly-stac-and-bulk-open-data"
+      ],
+      "production_scope": "Pinned monthly PLZO_CH release filtered to Switzerland, with data model, NPA4, NPA6, locality, postcode type, municipality links, LV95 geometry, attribution and digest.",
+      "assignment_authority": "official_addressing_directory",
+      "geometry_authority": "official_public_postal_locality_geometry",
+      "redistribution_class": "R1_swisstopo_ogd_attribution",
+      "terms_note": "swisstopo OGD permits use, processing, distribution and commercial use with mandatory source attribution. PLZO covers domicile-address types and does not include every Swiss Post routing code.",
+      "expected_update_cadence": "monthly-first-day",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-model-crs-byte-length-and-digest",
+        "emit-swisstopo-source-attribution",
+        "preserve-npa4-npa6-locality-postcode-type-and-country-partition",
+        "validate-polygon-and-multipolygon-topology"
+      ],
+      "prohibited_claims": [
+        "all-swiss-post-codes-have-plzo-area",
+        "building-identity-from-postal-containment",
+        "municipality-boundary-equivalence",
+        "liechtenstein-is-switzerland"
+      ]
+    },
+    {
+      "source_id": "swisstopo-building-address-directory",
+      "provider": "Federal Office of Topography swisstopo with Federal Statistical Office and cantons",
+      "source_url": "https://www.swisstopo.admin.ch/en/official-directory-of-building-addresses",
+      "role": [
+        "official-building-address-directory",
+        "daily-building-entrance-point",
+        "egaid-egid-edid-address-identity",
+        "street-postcode-locality-and-municipality-link"
+      ],
+      "production_scope": "Pinned daily official address release filtered to Switzerland, with EGAID, EGID, EDID, status, street, house number, NPA4/locality, municipality, LV95 coordinate source, attribution and digest.",
+      "assignment_authority": "official_building_address_registry",
+      "geometry_authority": "official_cadastral_entrance_point",
+      "redistribution_class": "R1_swisstopo_ogd_attribution",
+      "terms_note": "The directory is published for free public and commercial use under swisstopo terms. Entrance coordinates can be more precise in storage than their measured accuracy; preserve provenance and do not claim false precision.",
+      "expected_update_cadence": "daily",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-model-crs-byte-length-and-digest",
+        "emit-swisstopo-source-attribution",
+        "preserve-egaid-egid-edid-status-and-coordinate-provenance",
+        "filter-country-and-exclude-private-person-data"
+      ],
+      "prohibited_claims": [
+        "entrance-point-is-building-footprint",
+        "millimetre-storage-is-measured-millimetre-accuracy",
+        "recipient-occupant-or-owner",
+        "delivery-guarantee"
+      ]
+    },
+    {
+      "source_id": "swiss-federal-gwr",
+      "provider": "Swiss Federal Statistical Office",
+      "source_url": "https://www.housing-stat.ch/",
+      "role": [
+        "official-federal-building-register",
+        "egid-building-identity-and-status",
+        "egid-plus-edid-entrance-identity",
+        "source-register-for-building-address-publication"
+      ],
+      "production_scope": "Pinned public GWR/geo.admin extract or query receipts limited to public building and entrance identity/status attributes, access class, release time, schema and digest.",
+      "assignment_authority": "official_federal_building_register",
+      "geometry_authority": "official_register_building_and_entrance_point",
+      "redistribution_class": "R2_public_register_terms_review",
+      "terms_note": "EGID identifies a building and EGID plus EDID uniquely identifies an entrance nationwide. GWR also contains dwelling data; public AGID artifacts exclude EWID, occupant and non-public attributes.",
+      "expected_update_cadence": "source-controlled-current-register",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-access-class-query-schema-release-and-digest",
+        "preserve-egid-edid-status-and-known-time",
+        "limit-fields-to-reviewed-public-building-and-entrance-data",
+        "exclude-ewid-occupant-owner-and-private-purpose-data"
+      ],
+      "prohibited_claims": [
+        "public-private-dwelling-context",
+        "occupant-owner-or-recipient",
+        "building-footprint-from-register-point",
+        "unreviewed-bulk-redistribution"
+      ]
+    },
+    {
+      "source_id": "swisstopo-swissbuildings3d",
+      "provider": "Federal Office of Topography swisstopo",
+      "source_url": "https://www.swisstopo.admin.ch/en/landscape-model-swissbuildings3d-3-0-beta",
+      "role": [
+        "official-3d-building-geometry",
+        "roof-facade-and-footprint-model",
+        "phased-egid-linked-building-unit",
+        "candidate-geometry-where-egid-is-absent"
+      ],
+      "production_scope": "Pinned canton/tile edition with model variant, flight year, publication date, LV95/LN02, EGID-coverage receipt, attribution, digest and geometry validation.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_3d_building_geometry",
+      "redistribution_class": "R1_swisstopo_ogd_attribution",
+      "terms_note": "The product is beta and EGID integration is phased by canton/tile. Only features carrying the identical EGID can become definitive building geometry; all others remain candidate geometry.",
+      "expected_update_cadence": "regional-three-year-cycle-with-biannual-publications",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-tile-model-flight-year-release-crs-and-digest",
+        "emit-swisstopo-source-attribution",
+        "record-egid-coverage-by-canton-and-tile",
+        "require-identical-egid-for-definitive-building-link"
+      ],
+      "prohibited_claims": [
+        "national-complete-egid-coverage-before-source-confirms-it",
+        "exact-address-link-from-proximity",
+        "beta-object-type-is-always-reliable",
+        "legal-cadastral-boundary"
+      ]
+    },
+    {
+      "source_id": "swisstopo-swissboundaries3d",
+      "provider": "Federal Office of Topography swisstopo with Federal Statistical Office",
+      "source_url": "https://www.swisstopo.admin.ch/en/landscape-model-swissboundaries3d",
+      "role": [
+        "national-canton-district-municipality-boundary",
+        "official-administrative-identity",
+        "country-and-liechtenstein-partition-context"
+      ],
+      "production_scope": "Pinned annual or special edition with municipality/canton identifiers, temporal status, LV95 geometry, attribution and digest.",
+      "assignment_authority": "official_administrative_registry",
+      "geometry_authority": "official_administrative_geometry",
+      "redistribution_class": "R1_swisstopo_ogd_attribution",
+      "terms_note": "Administrative geometry supplies context and partition validation. Locality/postcode perimeters are not congruent with municipalities and retain separate authority.",
+      "expected_update_cadence": "annual-plus-special-municipality-fusion-release",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-temporal-status-model-crs-and-digest",
+        "emit-swisstopo-source-attribution",
+        "preserve-municipality-canton-and-country-identifiers",
+        "keep-administrative-and-postal-locality-geometries-distinct"
+      ],
+      "prohibited_claims": [
+        "swiss-post-assignment",
+        "plzo-postcode-boundary",
+        "building-or-entrance-identity",
+        "liechtenstein-is-switzerland"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "swiss-post-contract-products",
+      "rule": "Search receipts, street/sorting directories, NPA6, GeoPost, coordinates and delivery products retain their own product contract and redistribution class."
+    },
+    {
+      "id": "plzo-official-perimeters",
+      "rule": "NPA4/NPA6 locality polygons retain PLZO edition, postcode type, source model, CRS, digest, attribution, topology and CH/LI partition."
+    },
+    {
+      "id": "official-building-addresses",
+      "rule": "Building-address rows retain EGAID, EGID, EDID, status, LV95 point provenance, release and mandatory attribution."
+    },
+    {
+      "id": "gwr-public-building-identity",
+      "rule": "Only reviewed public building and entrance attributes are retained; dwelling, occupant, owner and private-purpose fields stay outside the public pack."
+    },
+    {
+      "id": "swissbuildings3d-egid-coverage",
+      "rule": "Each tile records model edition and whether the feature contains EGID; no-EGID proximity output remains candidate-only."
+    },
+    {
+      "id": "administrative-context",
+      "rule": "swissBOUNDARIES3D geometry retains temporal edition and never inherits postcode assignment or PLZO authority."
+    },
+    {
+      "id": "ch-li-territory-boundary",
+      "rule": "Shared source distributions are filtered by authoritative country evidence; LI rows never ship in a CH artifact."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

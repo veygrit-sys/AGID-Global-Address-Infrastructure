@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "JE",
+  "observedAt": "2026-08-30T14:03:19.968Z",
+  "completedAt": "2026-08-30T14:33:18.8367685Z",
+  "baseCommit": "a04d369b68b6b91b4c947d475647798ea6c7b7c3",
+  "scope": "Country definition and conservative M2 blocker evidence; no real JE data pack, API route or browser geometry was promoted.",
+  "checks": [
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "jersey-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-je-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "unit and broader-context grain, complete coordinate-less ONSPD denominator, incomplete point-only JSearch separation, product-specific rights, source/report digests and next-country order"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draw, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "root TypeScript graph passes through a read-only existing dependency tree and temporary local @agid workspace junctions"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 5,
+    "testsPassed": 44,
+    "testsFailed": 0
+  },
+  "runtime": {
+    "node": "system Node v24.18.0",
+    "dependencies": "Read-only junctions to an existing dependency tree plus temporary junctions to the isolated repository workspaces; no install or package mutation was performed.",
+    "productionDependenciesChanged": false
+  },
+  "knownLimitations": [
+    "The npm wrapper could not expose node to package scripts in this shell, so status and refresh used the same rollout script through the explicit Node executable after the requested npm status command was attempted.",
+    "No real rights-cleared JE unit-postcode or broader postal-context Polygon/MultiPolygon exists, so real JE API, map fit, translucent rendering and browser E2E remain unverified.",
+    "PDF pages were rendered, but local image inspection failed with Windows os error 206 even on short C:\\tmp paths; no successful visual-review claim is made.",
+    "The uncatalogued JSearch service has blank licence/access fields; no product-specific redistribution or public-serving right is inferred."
+  ],
+  "countryM2Achieved": false
+}

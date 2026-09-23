@@ -1,4 +1,11 @@
 import type { SyncQueueAction,SyncQueueRecord } from './appDatabase';
+import {
+  buildAgidAoidAuditEvent,
+  evaluateAgidAoidOperation,
+  type AgidAoidLayer,
+  type AgidAoidSurface,
+} from './agidAoidGovernance';
+import { buildAOIDSyncQueuePayload } from './aoid';
 import { getHybridSyncEntityPolicy } from './hybridArchitecture';
 
 export type SyncQueueInput = {
@@ -7,25 +14,70 @@ export type SyncQueueInput = {
   action: SyncQueueAction;
   payload?: unknown;
   now?: number;
+  targetSurface?: AgidAoidSurface;
 };
 
 function cleanId(value: string) {
   return value.trim().replace(/\s+/g, '-');
 }
 
+function layerForEntity(entityType: SyncQueueRecord['entityType']): AgidAoidLayer {
+  return entityType === 'aoid' ? 'AOID' : 'AGID';
+}
+
+function payloadRecord(value: unknown) {
+  return value && typeof value === 'object' ? value as Record<string, unknown> : {};
+}
+
+function publicHandleFromPayload(payload: unknown) {
+  const record = payloadRecord(payload);
+  return typeof record.publicHandle === 'string' ? record.publicHandle : undefined;
+}
+
+function agidFromPayload(payload: unknown) {
+  const record = payloadRecord(payload);
+  return typeof record.agid === 'string' ? record.agid : undefined;
+}
+
 export function buildSyncQueueRecord(input: SyncQueueInput): SyncQueueRecord {
   const now = input.now ?? Date.now();
   const entityId = cleanId(input.entityId);
+  const payload = input.entityType === 'aoid'
+    ? buildAOIDSyncQueuePayload(input.payload)
+    : input.payload;
+  const layer = layerForEntity(input.entityType);
+  const surface = input.targetSurface ?? 'local-device';
+  const decision = evaluateAgidAoidOperation({
+    layer,
+    operation: 'sync',
+    surface,
+    payload,
+  });
+  if (!decision.allowed) {
+    throw new Error(`AGID/AOID sync policy blocked ${input.entityType} payload: ${decision.warnings.join(' ')}`);
+  }
+  const audit = buildAgidAoidAuditEvent({
+    layer,
+    operation: 'sync',
+    surface,
+    entityId,
+    agid: agidFromPayload(payload),
+    publicHandle: publicHandleFromPayload(payload),
+    payload,
+    now,
+  });
+
   return {
     id: `${input.entityType}:${entityId}:${input.action}:${now}`,
     entityType: input.entityType,
     entityId,
     action: input.action,
-    payload: input.payload,
+    payload,
     status: 'pending',
     attemptCount: 0,
     createdAt: now,
     updatedAt: now,
+    audit,
   };
 }
 

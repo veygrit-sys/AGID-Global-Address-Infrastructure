@@ -1,103 +1,309 @@
-# AGID (Address Grid ID) 数理モデル解説書
+# AGID Mathematical Model Guide
 
-このドキュメントでは、本アプリケーションで使用されている地理空間インデックスシステム「AGID」における、四角形（グリッドセル）を生成するための数理モデルについて詳細に記述します。
+This document summarizes the mathematical model used by AGID (Address Grid ID).
+It is intentionally aligned with the current implementation and the language-neutral
+specification in `sdk/agid-spec/agid-spec.json`.
 
-## 1. 概要
-AGID (Address Grid ID) は、地球表面を約 0.6m × 0.6m（赤道付近）の正方形のグリッドに分割し、12文字の英数字で表現するグローバル・ロケーション・エンコーディング・システムです。
+For the more detailed paper-oriented resume, see
+[`docs/agid-math-model-resume.md`](docs/agid-math-model-resume.md).
 
-システムは以下の 3 つの主要なステップで構成されます。
-1. **量子化 (Quantization)**: 緯度・経度を整数座標へマッピング。
-2. **モートン符号化 (Morton Encoding)**: 2次元座標を1次元の空間充填曲線へ変換。
-3. **Base32 エンコーディング**: 符号化したビット列を可読文字列へ変換。
+## 1. Overview
 
----
+AGID is a deterministic global location identifier. It maps a latitude/longitude
+coordinate to a global grid cell and encodes that cell as a 12-character string:
 
-## 2. 座標変換と量子化
-
-地球を正距円筒図法（Equirectangular Projection）に基づいて平面展開し、以下の定数 $K$ を用いて量子化を行います。
-
-### 定数定義
-- $K = 2^{25} = 33,554,432$
-- $M = K - 1 = 33,554,431$ (最大インデックス)
-
-### 量子化数式
-緯度 ($lat$) と経度 ($lon$) を 25ビットの整数座標 $(qx, qy)$ に変換します。
-
-$$qx = \lfloor \frac{lon + 180}{360} \cdot K \rfloor$$
-$$qy = \lfloor \frac{lat + 90}{180} \cdot K \rfloor$$
-
-※ 値は $0$ から $M$ の範囲にクランプされます。
-
----
-
-## 3. モートン符号化 (Z-Order Curve)
-
-空間的な近接性を維持したまま、2つの 25ビット整数 $(qx, qy)$ を 1つの 50ビット整数 (BigInt) に統合します。これは、各座標のビットを交互に配置することで行われます。
-
-### ビットインターリーブ
-$$morton = \sum_{i=0}^{24} (qx_i \cdot 2^{2i} + qy_i \cdot 2^{2i+1})$$
-
-ここで、$qx_i$ と $qy_i$ はそれぞれ $qx$ と $qy$ の $i$ 番目のビットを表します。これにより、二次元平面上の近接した点が、一次元のデータ配列上でも比較的近くに配置される特性（空間充填曲線）が得られます。
-
----
-
-## 4. 文字列情報の生成
-
-### 4.1 ハッシュ部の生成 (10文字)
-生成された 50ビットのモートン符号を、Base32 アルファベット（`0-9, A-Z` から `I, L, O, U` を除いた32文字）を用いて 10文字のハッシュに変換します。
-
-$$Base32Alphabet = \text{"0123456789ABCDEFGHJKMNPQRSTVWXYZ"}$$
-
-### 4.2 プレフィックスの生成 (2文字)
-位置の属性（陸地・領海・公海）に基づいて、先頭 2文字のプレフィックスを割り当てます。
-
-- **陸地 (ISO国名コード)**: ISO 3166-1 alpha-2 に準拠（例: `JP`, `US`, `FR`）。
-- **公海 (Open Ocean)**: 英字 + 数字（例: `A1`, `B5`）。
-- **沿岸・領海 (Coastal Sea)**: 数字 + 英字（例: `1A`, `5B`）。
-- **その他**: 数字 + 数字（例: `11`）。
-
-このルールにより、IDを見るだけでその場所の地理的属性を判別可能です。
-
----
-
-## 5. 解像度と精度
-
-ADIGの解像度は以下の通り計算されます。
-
-- **緯度方向の分解能**:
-  $$180^\circ / 2^{25} \approx 0.00000536^\circ \approx 0.596 \, m$$
-- **経度方向の分解能 (赤道上)**:
-  $$360^\circ / 2^{25} \approx 0.00001072^\circ \approx 1.192 \, m$$
-
-グリッドの平均面積は約 **0.6m²** となり、非常に高精度な位置特定（マイクロロケーション）が可能です。
-
----
-
-## 6. アルゴリズムの実装（疑似コード）
-
-```typescript
-// 1. 量子化
-const qx = Math.floor(((lon + 180) / 360) * Math.pow(2, 25));
-const qy = Math.floor(((lat + 90) / 180) * Math.pow(2, 25));
-
-// 2. モートン符号化
-let morton = 0n;
-for (let i = 0; i < 25; i++) {
-  morton |= (BigInt((qx >> i) & 1) << BigInt(2 * i));
-  morton |= (BigInt((qy >> i) & 1) << BigInt(2 * i + 1));
-}
-
-// 3. Base32変換
-const hash = morton.toExtendedBase32(10);
-
-// 4. 完成
-const agid = prefix + hash;
+```text
+AGID = 2-character region prefix + 10-character Base32 coordinate hash
 ```
 
-## 7. 応用：ポリゴン生成
-デコード時には、量子化インデックス $(qx, qy)$ から逆算してセルの 4 隅の座標を求め、地図上に描画するためのポリゴンを生成します。
+The current core model uses:
 
-$$lon_{min} = \frac{qx}{K} \cdot 360 - 180$$
-$$lat_{min} = \frac{qy}{K} \cdot 180 - 90$$
+- WGS84-like latitude/longitude input,
+- a six-face cubed-sphere projection,
+- tangent-corrected face coordinates,
+- `2^21` by `2^21` quantization per face,
+- Hilbert curve ordering inside each face,
+- 45 used packed bits encoded into a 10-character Base32 hash.
 
-隣接するインデックス $qx+1, qy+1$ を用いることで、隙間のない正方形のグリッドネットワークを構築しています。
+The average global cell size is approximately `4.4 m` per side. Exact cell
+dimensions vary by face position and should be reported through empirical
+distortion tests rather than overclaimed as perfectly equal-area.
+
+## 2. Coordinate Model
+
+Input coordinates are:
+
+```text
+latitude  lat in degrees
+longitude lon in degrees
+```
+
+They are converted to radians:
+
+```text
+phi   = lat * pi / 180
+theta = lon * pi / 180
+```
+
+Then to a unit-sphere vector:
+
+```text
+x = cos(phi) * cos(theta)
+y = cos(phi) * sin(theta)
+z = sin(phi)
+```
+
+Longitude is normalized for antimeridian-safe lookup and rendering.
+
+## 3. Cubed-Sphere Face Selection
+
+AGID maps the unit sphere to six cube faces. The selected face is determined by
+the dominant absolute vector component:
+
+```text
+absX = abs(x)
+absY = abs(y)
+absZ = abs(z)
+```
+
+Face assignment:
+
+```text
+0 = +X
+1 = -X
+2 = +Y
+3 = -Y
+4 = +Z
+5 = -Z
+```
+
+For the selected face, AGID derives local coordinates `(xi, eta)` in a range near
+`[-1, 1]`.
+
+## 4. Tangent Correction
+
+The implementation uses a tangent correction pair:
+
+```text
+E(t)     = tan(t * pi / 4)
+E_inv(a) = atan(a) * 4 / pi
+```
+
+Encoding applies the inverse correction:
+
+```text
+u = 0.5 * (E_inv(xi)  + 1)
+v = 0.5 * (E_inv(eta) + 1)
+```
+
+Decoding applies the forward correction:
+
+```text
+u_norm = (qx / K) * 2 - 1
+v_norm = (qy / K) * 2 - 1
+xi     = E(u_norm)
+eta    = E(v_norm)
+```
+
+This should be described as an equal-area-style or near-uniform correction until
+distortion measurements are documented.
+
+## 5. Quantization
+
+Current constants:
+
+```text
+L = 21
+K = 2^21 = 2,097,152
+M = K - 1 = 2,097,151
+```
+
+Quantization:
+
+```text
+qx = clamp(floor(u * K), 0, M)
+qy = clamp(floor(v * K), 0, M)
+```
+
+Each face has:
+
+```text
+K * K = 2^42 cells
+```
+
+All six faces have:
+
+```text
+6 * 2^42 = 26,388,279,017,472 cells
+```
+
+Using Earth radius `R = 6,371,000 m`, the average cell area is approximately:
+
+```text
+4 * pi * R^2 / (6 * 2^42)
+```
+
+The average side length is approximately `4.4 m`.
+
+## 6. Hilbert Ordering
+
+Inside each face, AGID uses a Hilbert curve:
+
+```text
+h = Hilbert_L(qx, qy)
+```
+
+Because `L = 21`, the Hilbert value uses:
+
+```text
+2 * L = 42 bits
+```
+
+Hilbert ordering is used because it preserves locality better than simple
+row-major ordering and is useful for nearby-cell operations, range scans, and
+SDK parity tests.
+
+The inverse operation must recover:
+
+```text
+(qx, qy) = Hilbert_L^-1(h)
+```
+
+## 7. Bit Packing and Base32
+
+AGID packs the face and Hilbert value:
+
+```text
+packed = (face << 42) | h
+```
+
+Used bits:
+
+```text
+face    = 3 bits
+hilbert = 42 bits
+total   = 45 bits
+```
+
+The 10-character hash has 50 bits of Base32 capacity:
+
+```text
+10 characters * 5 bits = 50 bits
+```
+
+The current Base32 alphabet is:
+
+```text
+0123456789ABCDEFGHJKMNPQRSTVWXYZ
+```
+
+It omits ambiguous letters such as `I`, `L`, `O`, and `U`.
+
+## 8. Prefix Model
+
+The two-character prefix is a region and routing hint. It is not the source of
+cell geometry.
+
+Prefix classes:
+
+- land: ISO 3166-1 alpha-2 where available,
+- open ocean: letter + number,
+- coastal or named sea: number + letter,
+- other fallback region: number + number.
+
+The prefix layer can require region datasets. The coordinate hash can be encoded
+and decoded without those datasets.
+
+## 9. Decoding
+
+Decoding reverses the process:
+
+```text
+prefix = id[0:2]
+hash   = id[2:12]
+packed = decodeBase32(hash)
+face   = packed >> 42
+h      = packed & ((1 << 42) - 1)
+qx,qy  = HilbertDecode(K, h)
+lat,lon = inverseCubedSphere(face, qx, qy)
+```
+
+The decoded point is a representative point of the quantized cell. For address,
+registration, and display correctness, callers should use the cell polygon or
+cell bounds instead of treating the decoded point as the entire address.
+
+## 10. Cell Polygon
+
+A selected cell polygon must be generated from the same quantized cell boundary
+used by the visible grid:
+
+```text
+p1 = inverse(face, qx,        qy)
+p2 = inverse(face, qx + step, qy)
+p3 = inverse(face, qx + step, qy + step)
+p4 = inverse(face, qx,        qy + step)
+polygon = [p1, p2, p3, p4, p1]
+```
+
+The practical rendering invariant is:
+
+```text
+black grid boundary = AGID cell boundary
+red selected fill   = same AGID cell boundary
+```
+
+If grid lines and selected-cell polygons come from different approximations,
+they can drift during pan, zoom, pitch, bearing, or device-pixel changes.
+
+## 11. SDK Contract
+
+Every SDK should implement the same core operations:
+
+```text
+encode(latitude, longitude) -> AgidResult
+decode(agid) -> AgidDecoded | null
+cellBounds(agid) -> bounds
+cellPolygon(agid) -> lon/lat polygon
+```
+
+Required invariants:
+
+- identical Base32 alphabet,
+- identical constants `L`, `K`, and `M`,
+- identical face selection,
+- identical tangent correction,
+- identical Hilbert encode/decode,
+- identical bit packing,
+- identical test vectors.
+
+## 12. Known Risks
+
+The current model should not overclaim:
+
+- The tangent correction should be validated empirically before claiming exact
+  equal-area behavior.
+- Face-edge neighbor generation must be face-aware.
+- Antimeridian polygons need longitude shifting.
+- Prefix collision rules must stay tested for land, sea, disputed territories,
+  and special regions.
+- Region lookup quality is a data problem, not pure grid-math correctness.
+
+## 13. Summary
+
+AGID's current mathematical identity is:
+
+```text
+WGS84-like lat/lon
+-> unit sphere
+-> cubed-sphere face
+-> tangent-corrected face coordinates
+-> 2^21 by 2^21 quantized cell
+-> Hilbert index
+-> 45-bit packed value
+-> 10-character Base32 hash
+-> 2-character region prefix + hash
+```
+
+This small deterministic core should remain separate from address quality,
+postal validation, natural-feature evidence, AOID privacy, and UI language
+handling.

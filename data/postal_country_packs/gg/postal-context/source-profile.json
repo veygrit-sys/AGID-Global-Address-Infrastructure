@@ -1,0 +1,273 @@
+{
+  "schema_version": "agid-postal-gg-source-profile-v0.1",
+  "country_code": "GG",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_metadata_only",
+      "meaning": "AGID-created source metadata, policy, and non-geographic synthetic fixtures only."
+    },
+    {
+      "id": "R1_open_attribution",
+      "meaning": "Open Government Licence material with all provider and third-party attribution."
+    },
+    {
+      "id": "R2_public_lookup_no_bulk_grant",
+      "meaning": "Public interactive lookup can support bounded observations but grants no bulk extraction, serving, derivation, or redistribution right."
+    },
+    {
+      "id": "R3_paid_or_authenticated",
+      "meaning": "A provider agreement, annual fee, API key, credentials, or reviewed contract controls acquisition and use."
+    },
+    {
+      "id": "R4_public_metadata_no_reuse_grant",
+      "meaning": "Public service metadata can establish layer type and grain, but no publication right is inferred for feature rows or geometry."
+    },
+    {
+      "id": "R5_validation_only",
+      "meaning": "The source may validate a candidate release but contributes no redistributable row or geometry."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "guernsey-post-address-and-postcode-finder",
+      "provider": "Guernsey Post Limited",
+      "source_url": "https://www.guernseypost.com/address-and-postcode-finder",
+      "role": [
+        "official-postal-operator-observation",
+        "bailiwick-address-postcode-lookup"
+      ],
+      "production_scope": "Interactive validation only unless Guernsey Post supplies an explicit bulk and publication agreement.",
+      "assignment_authority": "official_postal_operator_interactive",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_public_lookup_no_bulk_grant",
+      "terms_note": "The page searches Bailiwick addresses and postcodes. It exposes neither a bulk current denominator nor postcode Polygon/MultiPolygon geometry or an open data licence.",
+      "expected_update_cadence": "operator-live-service",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-explicit-bulk-assignment-and-serving-rights",
+        "pin-complete-current-denominator-and-exceptions",
+        "do-not-scrape-or-cache-addresses-without-authority"
+      ],
+      "prohibited_claims": [
+        "public-bulk-redistribution-right",
+        "postcode-polygon",
+        "address-or-building-geometry",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "guernsey-post-faq-and-po-box-policy",
+      "provider": "Guernsey Post Limited",
+      "source_url": "https://www.guernseypost.com/faqs",
+      "role": [
+        "postcode-grain-policy",
+        "large-user-and-po-box-exception-policy"
+      ],
+      "production_scope": "Policy evidence only.",
+      "assignment_authority": "official_postal_operator_policy",
+      "geometry_authority": "none",
+      "redistribution_class": "R5_validation_only",
+      "terms_note": "Guernsey Post says postcodes usually cover more than one address, some organizations have unique postcodes, and PO Boxes receive unique postcodes distinct from the actual address. None of these statements creates an area.",
+      "expected_update_cadence": "operator-policy-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "classify-small-user-large-user-and-po-box-exceptions",
+        "keep-po-box-and-organization-non-area-without-independent-geometry"
+      ],
+      "prohibited_claims": [
+        "postcode-is-one-address",
+        "po-box-area",
+        "organization-area",
+        "sorting-office-buffer"
+      ]
+    },
+    {
+      "source_id": "ons-postcode-directory-may-2026",
+      "provider": "Office for National Statistics and Gridlink consortium",
+      "source_url": "https://geoportal.statistics.gov.uk/datasets/ons::ons-postcode-directory-may-2026/about",
+      "role": [
+        "current-and-terminated-postcode-reference",
+        "small-and-large-user-classification",
+        "postcode-format-and-status-evidence"
+      ],
+      "production_scope": "Pinned ONSPD release under OGL and required Royal Mail, OS, and ONS attribution. Channel Islands geometry remains absent.",
+      "assignment_authority": "official_postal_operator_derived_reference",
+      "geometry_authority": "none_for_channel_islands",
+      "redistribution_class": "R1_open_attribution",
+      "terms_note": "The May 2026 User Guide lists 3,384 GY records, including 3,298 live and 86 terminated. All Channel Islands records are PQI 9, with no geographic coordinates; latitude and longitude are placeholders.",
+      "expected_update_cadence": "quarterly",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-item-user-guide-terms-and-digests",
+        "classify-live-and-terminated-records",
+        "emit-required-attribution",
+        "treat-pqi-9-and-placeholders-as-no-geometry"
+      ],
+      "prohibited_claims": [
+        "channel-islands-coordinate",
+        "unit-postcode-polygon",
+        "exact-delivery-point",
+        "official-guernsey-post-boundary"
+      ]
+    },
+    {
+      "source_id": "digimap-channel-islands-postcode-centroids",
+      "provider": "Digimap Limited and the governments of Guernsey and Jersey",
+      "source_url": "https://digimapci.com/products-and-services/data/postcodes-2/",
+      "role": [
+        "licensed-postcode-centroid",
+        "address-count-reference"
+      ],
+      "production_scope": "Only acquisition and uses authorized by a reviewed annual-fee product agreement.",
+      "assignment_authority": "government-licensed-postcode-reference",
+      "geometry_authority": "licensed_centroid_point_only",
+      "redistribution_class": "R3_paid_or_authenticated",
+      "terms_note": "The provider describes GPS coordinates of postcode-area centres and address counts, sold for an annual fee. The product is a centroid dataset, not a Polygon/MultiPolygon release.",
+      "expected_update_cadence": "provider-product-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-explicit-purchase-acquisition-and-serving-approval",
+        "record-contract-scope-expiry-and-attribution",
+        "retain-point-geometry-type"
+      ],
+      "prohibited_claims": [
+        "open-data-product",
+        "postcode-polygon",
+        "official-boundary",
+        "public-redistribution-right"
+      ]
+    },
+    {
+      "source_id": "digimap-corporate-address-file",
+      "provider": "Digimap Limited on behalf of the States of Guernsey",
+      "source_url": "https://cafv3.gov.gg/docs/home",
+      "role": [
+        "licensed-official-address-point-database",
+        "live-postcode-address-search"
+      ],
+      "production_scope": "Testing and production require credentials and a separately reviewed licence.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "licensed_address_point_only",
+      "redistribution_class": "R3_paid_or_authenticated",
+      "terms_note": "CAF is a licensed authenticated address-point API. Address rows, delivery-point identifiers, UPRNs, or coordinates are not open postal area geometry.",
+      "expected_update_cadence": "real-time-or-daily-provider-service",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-explicit-credential-and-licence-approval",
+        "record-field-level-storage-derivation-serving-and-publication-rights",
+        "keep-addresses-out-of-open-artifacts"
+      ],
+      "prohibited_claims": [
+        "public-address-dump",
+        "postcode-polygon",
+        "address-point-is-building",
+        "recipient-or-occupant"
+      ]
+    },
+    {
+      "source_id": "digimap-public-mapping-guernsey",
+      "provider": "Digimap Limited",
+      "source_url": "https://publicmapping.digimap.gg/Demo/API.html",
+      "role": [
+        "background-base-map-tiles"
+      ],
+      "production_scope": "Registration, an agreement, and an API key are required; use is limited to the returned mapping endpoint.",
+      "assignment_authority": "none",
+      "geometry_authority": "tiled_base_map_only",
+      "redistribution_class": "R3_paid_or_authenticated",
+      "terms_note": "The API returns a temporary REST endpoint for Guernsey Public Map image tiles. It does not provide postcode vector polygons.",
+      "expected_update_cadence": "live-endpoint",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-agreement-and-api-key-approval-before-use",
+        "use-only-as-background-map-under-recorded-terms"
+      ],
+      "prohibited_claims": [
+        "postcode-vector-layer",
+        "postal-assignment-authority",
+        "open-unrestricted-map-reuse",
+        "immutable-postcode-artifact"
+      ]
+    },
+    {
+      "source_id": "digimap-states-of-guernsey-land-parcels",
+      "provider": "States of Guernsey and Digimap Limited",
+      "source_url": "https://mapserver2.digimap.gg/arcgis/rest/services/StatesOfGuernsey/GuernseyMappingDynamicOL/MapServer/layers",
+      "role": [
+        "land-parcel-context",
+        "postcode-attribute-observation"
+      ],
+      "production_scope": "Metadata establishes parcel grain only. No feature acquisition, derivation, serving, or redistribution occurs without an explicit source licence and privacy/land-data review.",
+      "assignment_authority": "none_for_postal_assignment",
+      "geometry_authority": "cadastral_or_land_parcel_not_postal",
+      "redistribution_class": "R4_public_metadata_no_reuse_grant",
+      "terms_note": "Public service metadata shows Polygon land-parcel layers and postcode, UPRN, cadastre, address, or related fields. A parcel is not a postcode area, service metadata has no explicit reuse grant, and raw land/address rows are excluded from AGID Git.",
+      "expected_update_cadence": "service-defined",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-explicit-feature-and-derivative-rights-before-any-query-or-build",
+        "establish-a-complete-postal-member-denominator",
+        "validate-an-authorized-postal-derivation-with-road-gap-and-non-addressed-area-policy",
+        "exclude-cadastre-owner-address-and-land-right-fields-from-public-artifacts"
+      ],
+      "prohibited_claims": [
+        "parcel-is-postcode-boundary",
+        "parcel-dissolve-is-official-postal-area",
+        "postcode-attribute-is-deliverability",
+        "public-land-or-address-redistribution-right"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "official-postcode-assignment-denominator",
+      "required_authority": "Guernsey Post or an explicitly authorized complete derivative",
+      "current_status": "not-acquired-for-agid"
+    },
+    {
+      "id": "ons-open-directory-reference",
+      "required_authority": "ONSPD OGL plus required attribution",
+      "current_status": "reviewed-metadata-and-bounded-api-evidence-only"
+    },
+    {
+      "id": "licensed-centroid-and-address-products",
+      "required_authority": "Digimap contract, fee, credentials, and explicit serving scope",
+      "current_status": "not-acquired"
+    },
+    {
+      "id": "postcode-polygon-or-multipolygon-artifact",
+      "required_authority": "postal assignment plus source-linked area geometry and publication right",
+      "current_status": "missing"
+    },
+    {
+      "id": "land-parcel-building-and-cadastre-context",
+      "required_authority": "separate land/address/building licence and explicit graph relation",
+      "current_status": "excluded"
+    },
+    {
+      "id": "po-box-large-user-organization-and-non-area",
+      "required_authority": "operator classification",
+      "current_status": "policy-defined-no-invented-geometry"
+    },
+    {
+      "id": "agid-crosswalk",
+      "required_authority": "versioned relation to an eligible postal artifact",
+      "current_status": "not-built"
+    }
+  ],
+  "m2_definition": {
+    "id": "M2_current_guernsey_postcode_area_visualization",
+    "definition": "A current rights-cleared Bailiwick-wide Guernsey Post assignment denominator and full-code postcode-specific Polygon/MultiPolygon release is pinned by edition, validity, terms, SHA-256, island coverage and exception handling, published as an approved immutable artifact, and passes the real GG loader, API and app search-to-translucent-area path. ONSPD rows or coordinate placeholders, Digimap paid centroids or authenticated address results, cadastral parcels, base-map tiles, synthetic fixtures and invented non-area surfaces never satisfy M2."
+  },
+  "promotion_blockers": [
+    "no-authorized-current-complete-guernsey-post-assignment-denominator",
+    "no-rights-cleared-postcode-polygon-or-multipolygon-source",
+    "onspd-channel-islands-records-have-no-geographic-coordinates",
+    "digimap-postcode-product-is-paid-centroid-only",
+    "caf-requires-credentials-and-is-address-point-only",
+    "public-map-is-agreement-key-gated-tiled-base-map",
+    "land-parcels-are-not-postal-boundaries-and-have-no-recorded-reuse-grant",
+    "no-approved-immutable-artifact-or-real-gg-api-app-path"
+  ]
+}

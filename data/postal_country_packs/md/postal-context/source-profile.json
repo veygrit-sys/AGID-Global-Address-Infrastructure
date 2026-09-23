@@ -1,0 +1,99 @@
+{
+  "schema_version": "agid-postal-source-profile-v0.1",
+  "country_code": "MD",
+  "artifact_scope": "metadata-only-contract-seed",
+  "sources": [
+    {
+      "source_id": "posta-moldovei-current-public-map-api",
+      "provider": "Î.S. Poșta Moldovei",
+      "source_url": "https://posta.md/ro/map",
+      "api_url": "https://main-api.posta.md/nomenclatures/postal-offices",
+      "source_role": "current-facility-and-postcode-membership-reference",
+      "assignment_authority": "official_postal_operator_public_api",
+      "geometry_authority": "facility_point_only",
+      "redistribution_class": "R2_public_lookup_no-reviewed-bulk-serving-grant",
+      "reviewed_result": "1,164 active Point records, 1,144 distinct postal-code labels, zero Polygon/MultiPolygon; zip_code=2012 returns one Point plus 26 street/house membership rows",
+      "prohibited_claims": [
+        "facility-point-is-postcode-area",
+        "street-house-list-is-boundary",
+        "map-fit-is-postcode-area-fit"
+      ]
+    },
+    {
+      "source_id": "asp-legacy-postal-workbooks",
+      "provider": "Agenția Servicii Publice via dataset.gov.md",
+      "source_url": "https://dataset.gov.md/",
+      "source_role": "legacy-code-and-street-house-membership-reference",
+      "assignment_authority": "official_government_legacy_publication",
+      "geometry_authority": "none",
+      "redistribution_class": "R3_dataset_specific_licence_unspecified",
+      "reviewed_result": "three 2015 resources, metadata modified 2020, 4,873 code-bearing rows, zero geometry; every package says License Not Specified",
+      "prohibited_claims": [
+        "legacy-list-is-current-complete-denominator",
+        "street-house-range-is-polygon",
+        "general-portal-guidance-resolves-unspecified-licence"
+      ]
+    },
+    {
+      "source_id": "posta-quality-standard",
+      "provider": "Government of Moldova / Poșta Moldovei",
+      "source_url": "https://static-api.posta.md/api/v1/storage/18/02/2022/HG_1226_din_09.11_standarde_de_calitate_ro.pdf",
+      "source_role": "postal-code-semantics-and-service-quality-context",
+      "assignment_authority": "normative_semantics_only",
+      "geometry_authority": "none",
+      "redistribution_class": "R4_publication_reference",
+      "reviewed_result": "MD plus four internal digits and broad distribution zones defined; zones are service-quality groupings, not code areas",
+      "prohibited_claims": [
+        "distribution-zone-is-postcode-polygon"
+      ]
+    },
+    {
+      "source_id": "date-gov-open-data-guidance",
+      "provider": "Government of Moldova",
+      "source_url": "https://date.gov.md/?culture=ro",
+      "source_role": "general-open-data-rights-guidance",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_general_guidance_dataset_terms_still_required",
+      "reviewed_result": "general reuse is described, while dataset-specific licences remain controlling",
+      "prohibited_claims": [
+        "general-guidance-overrides-dataset-licence"
+      ]
+    },
+    {
+      "source_id": "posta-ecommerce-api",
+      "provider": "Î.S. Poșta Moldovei",
+      "source_url": "https://ecommerce-api-documentation.posta.md/",
+      "source_role": "authenticated-service-api-negative-review",
+      "assignment_authority": "none_for_public_postcode_area",
+      "geometry_authority": "none",
+      "redistribution_class": "R5_authenticated_contract_or_account_path",
+      "reviewed_result": "Authorization Token required; no authentication, contact or data request performed",
+      "prohibited_claims": [
+        "token-api-is-public-area-source"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "public-contracts-and-synthetic-fixtures",
+      "publication": "public",
+      "contains": "contracts, schemas, receipts and synthetic fixtures only"
+    },
+    {
+      "id": "operator-facility-reference",
+      "publication": "reference-only",
+      "contains": "digest-pinned public Point and membership observations, not raw rows"
+    },
+    {
+      "id": "legacy-government-workbooks",
+      "publication": "blocked-until-dataset-rights-currentness-and-geometry-resolved",
+      "contains": "no bundled workbook rows"
+    },
+    {
+      "id": "private-address-and-delivery-data",
+      "publication": "private-prohibited",
+      "contains": "recipient, resident, owner, customer, shipment, forwarding and non-public unit data"
+    }
+  ]
+}

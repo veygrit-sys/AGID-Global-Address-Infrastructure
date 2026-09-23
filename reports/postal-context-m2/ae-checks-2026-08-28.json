@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "AE",
+  "checkedOn": "2026-08-28",
+  "baseCommit": "88ac3e2047f8aecd13fc11421cd4c56b9a56cb8b",
+  "referenceReport": "reports/postal-context-m2/ae-reference-review-2026-08-28.json",
+  "focusedTests": {
+    "suite": "package.json scripts.verify:postal-context-ae",
+    "command": "node node_modules/tsx/dist/cli.mjs --test scripts/inspect-postal-context-ae-sources.test.mjs src/lib/postalContextUnitedArabEmiratesRepository.test.ts src/lib/officialPostalSourceCatalog.test.ts src/data/asiaOpenGeoSources.test.ts src/data/address_formats/addressFormatRulesJson.test.ts",
+    "passed": 138,
+    "failed": 0
+  },
+  "rolloutTests": {
+    "suite": "package.json scripts.verify:postal-context-m2",
+    "command": "node node_modules/tsx/dist/cli.mjs --test scripts/postal-context-m2-rollout.test.mjs scripts/intake-postal-context-jp-m2.test.mjs scripts/lib/postal-context-jp-m2-pack.test.ts",
+    "passed": 23,
+    "failed": 0
+  },
+  "sharedRuntimeTests": {
+    "suite": "package.json scripts.verify:postal-context-runtime",
+    "runner": "node node_modules/tsx/dist/cli.mjs with the exact test arguments from the package script",
+    "passed": 159,
+    "failed": 0
+  },
+  "sourceCatalogConsumerTests": {
+    "discovery": "rg -l 'officialPostalSourceCatalog|classifyPostalSourceTrust' src --glob '*.test.ts'",
+    "excludedAlreadyTestedFiles": ["src/lib/officialPostalSourceCatalog.test.ts", "src/lib/postalContextUnitedArabEmiratesRepository.test.ts"],
+    "command": "node node_modules/tsx/dist/cli.mjs --test --test-concurrency=4 <discovered files excluding the two files above>",
+    "testFiles": 105,
+    "passed": 308,
+    "failed": 0
+  },
+  "typecheck": {
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "exitCode": 0
+  },
+  "regressionReproduction": {
+    "case": "The exact historical UPU AE document URL initially inherited strong authority from the generic UPU alias.",
+    "before": "New AE suite: 7 passed, 1 failed.",
+    "after": "Exact registered IDs, URLs and names take precedence over broad aliases; focused and shared consumer checks passed."
+  },
+  "hostCaveat": "Windows npm command shims could not resolve the installed runners. The same Node/tsx runners and package-script suite arguments were invoked directly; host PATH and npm configuration were not changed.",
+  "publication": {
+    "dataArtifactsPublished": false,
+    "sourceDataRecords": 0,
+    "sourceDataSnapshotsPersisted": 0,
+    "countryM2Achieved": false,
+    "countryStage": "M1_metadata",
+    "productionDeploymentPerformed": false
+  }
+}

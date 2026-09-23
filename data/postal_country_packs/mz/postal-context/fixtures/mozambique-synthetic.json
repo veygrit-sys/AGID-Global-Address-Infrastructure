@@ -1,0 +1,34 @@
+{
+  "country_code": "MZ",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "current_cep_value": "99999-999",
+    "legacy_four_digit_value": "9999",
+    "legacy_six_digit_value": "9999-99",
+    "values_are_assignment_evidence": false,
+    "collision_requires_replacement_before_promotion": true,
+    "coordinates_are_upstream_observations": false,
+    "identifiers_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mz-current-shape-no-official-geometry",
+      "input": { "postcode": "99999-999", "country": "MZ" },
+      "expected": { "normalized_postcode": "99999-999", "geometry_type": "none", "must_not_assert": ["current_incm_assignment", "official_postcode_polygon", "administrative_identity", "deliverability", "address", "building"] }
+    },
+    {
+      "fixture_id": "mz-legacy-values-rejected",
+      "input": { "postcodes": ["9999", "9999-99"] },
+      "expected": { "normalized_postcode": null, "geometry_type": "none", "must_not_assert": ["current_incm_assignment", "automatic_migration", "official_postcode_polygon", "deliverability"] }
+    },
+    {
+      "fixture_id": "mz-explicit-synthetic-address-building-link",
+      "input": { "postcode": "99999-999", "synthetic_address_point": true, "synthetic_explicit_building_relation": true },
+      "expected": { "resolved_level": "building", "must_not_assert": ["real_address", "real_building", "current_incm_assignment", "postal_containment_building_link", "owner_or_occupant", "land_right"] }
+    }
+  ]
+}

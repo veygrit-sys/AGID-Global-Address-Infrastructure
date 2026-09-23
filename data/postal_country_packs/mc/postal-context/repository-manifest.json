@@ -1,0 +1,220 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-mc",
+    "country_code": "MC",
+    "country_name": "Monaco",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/mc/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "code_postal_or_cedex",
+    "full_code_format": "980NN",
+    "full_code_regex": "^980\\d{2}$",
+    "full_code_default_geometry": "routing_designator_or_derived_noncanonical_surface",
+    "full_code_rule": "Preserve exactly five digits. Structural validity, current allocation, routing class, geometry, address identity, building identity and AGID coverage remain independent evidence.",
+    "ordinary_code_rule": "The official La Poste code base may validate an ordinary Monaco postcode row such as 98000. It does not prove that every 980xx value is allocated or publish official postcode contours.",
+    "cedex_rule": "Classify CEDEX, organisation, service, post-office-box and special routing designators from pinned operator evidence. They are non-areal by default and never imply a residential delivery polygon.",
+    "postcode_area_rule": "La Poste explicitly states that postcode contours are not supplied in the official open dataset. Any surface inferred from licensed address points, delivery evidence or reviewed boundaries is derived_geometry, opt-in and never an official La Poste boundary.",
+    "address_rule": "Use a licensed, versioned DPUM address-base extract for official street and address identity. Preserve source identifier, street, entrance or civic number, building relationship, geocode, status and valid/known time while excluding apartment counts, residents, owners and private unit fields.",
+    "building_rule": "Promote a DPUM building only through a shared official identifier or reviewed explicit crosswalk from the address record. Point containment, nearest footprint, urban-plan linework and OSM proximity remain candidate evidence only.",
+    "district_rule": "Use dated Government ordinances, DPUM plans and pinned IMSEE publications for quartier and statistical context. District, urban-zone and Principality geometry never replace postcode assignment.",
+    "rights_rule": "Pin source release, terms, attribution, field allow-list, retrieval time, schema, CRS and digest for every artifact. Evidence that an internal DPUM system exists is not a public-access or redistribution grant.",
+    "privacy_rule": "Public AGID resolution excludes resident, occupant, household, apartment-count, owner, title, cadastral-party, recipient, forwarding, customer, shipment and non-public unit data.",
+    "territory_rule": "The MC pack covers only the Principality of Monaco. It remains separate from the FR pack even when La Poste distributes both scopes and must not absorb neighbouring French communes, addresses or geometry."
+  },
+  "address_graph": {
+    "node_types": [
+      "postcode_or_routing_designator",
+      "ordinary_postcode",
+      "cedex_or_special_routing",
+      "derived_postcode_surface",
+      "country",
+      "quartier",
+      "urban_zone",
+      "street",
+      "entrance_or_civic_number",
+      "address_record",
+      "building_name",
+      "dpum_building",
+      "building_footprint",
+      "organization_or_service",
+      "post_office_box",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "explicit_building_reference",
+      "candidate_building",
+      "part_of",
+      "derived_from",
+      "covered_by_agid"
+    ],
+    "cardinality_rules": [
+      "structural-980xx-does-not-prove-current-allocation",
+      "ordinary-code-may-cover-many-addresses-without-official-area",
+      "cedex-or-organization-code-may-have-no-area",
+      "postcode-may-have-no-production-geometry",
+      "address-geocode-is-not-building-footprint",
+      "exact-building-link-requires-source-id-or-reviewed-crosswalk",
+      "containment-or-proximity-is-candidate-only",
+      "quartier-or-urban-zone-is-not-postcode-boundary",
+      "france-and-monaco-scopes-remain-separate",
+      "agid-containment-is-not-source-identity"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "ordinary_98000",
+      "rule": "Treat 98000 as ordinary Monaco routing only when a pinned official row or operator receipt proves it. A locality-wide code does not automatically create a Principality polygon."
+    },
+    {
+      "id": "cedex_or_special_980xx",
+      "rule": "A 980xx code evidenced as CEDEX, organisation, service, BP or special routing remains a non-area delivery designator unless separate authoritative geometry exists."
+    },
+    {
+      "id": "derived_postcode_surface",
+      "rule": "Record method, parameters, source digests, accuracy and validity for every inferred surface; it never becomes an official La Poste boundary."
+    },
+    {
+      "id": "dpum_internal_system",
+      "rule": "Official material proving that DPUM maintains an address, building and parcel SIG is metadata only until a licensed release and field-level rights are obtained."
+    },
+    {
+      "id": "urban_plan_linework",
+      "rule": "A dated regulatory plan supplies urban-zone context, not necessarily a current building footprint, cadastral boundary or postal area."
+    },
+    {
+      "id": "cross_border_edge",
+      "rule": "Candidates in France remain outside MC resolution unless an explicit authoritative Monaco record links them; proximity across the border never changes country scope."
+    },
+    {
+      "id": "private_address_adjacent_data",
+      "rule": "Resident, occupant, owner, apartment, property-party and delivery-customer data never enter public address or building artifacts."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-rights-and-lineage",
+      "scope": "all",
+      "pass": "Every artifact records provider, release or receipt, retrieval time, terms, attribution, field allow-list, schema, CRS, digest and transformation method."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "postcode",
+      "metric": "canonical_five_digit_980_prefix_ratio",
+      "minimum": 1
+    },
+    {
+      "id": "allocation-classification",
+      "scope": "all-known-980xx",
+      "pass": "Every known code is classified as ordinary, CEDEX, organisation, service, BP, special, historical or unknown from pinned evidence; structurally possible codes are not auto-created."
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "La Poste assignment, DPUM address identity, DPUM building geometry, Government/IMSEE district context and AGID indexes remain separate evidence."
+    },
+    {
+      "id": "postal-geometry-classification",
+      "scope": "all-postal-features",
+      "pass": "Every postal feature is classified as non-area, official area or derived area; this seed accepts no official La Poste postcode polygon claim."
+    },
+    {
+      "id": "building-geometry-link",
+      "scope": "promoted-building-geometries",
+      "pass": "Every exact address-to-building edge has a shared DPUM identifier or reviewed explicit crosswalk; containment, nearest and plan-overlay matches remain candidates."
+    },
+    {
+      "id": "cross-border-country-scope",
+      "scope": "all-features",
+      "pass": "Every MC feature lies in the explicitly pinned Monaco scope or has an authoritative exception; no French address or geometry is silently imported."
+    },
+    {
+      "id": "public-privacy",
+      "scope": "public-resolution",
+      "pass": "Public results contain no resident, occupant, household, apartment-count, owner, title, cadastral-party, recipient, forwarding, customer, shipment or non-public unit data."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "postcode_assignment_reconciliation_minimum": 1,
+        "allocation_classification_ratio_minimum": 1,
+        "licensed_address_identity_precision_minimum": 1,
+        "explicit_building_link_precision_minimum": 1,
+        "cross_border_false_positive_maximum": 0
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Sources, routing classes, rights and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_monaco_postcode_area_visualization",
+        "definition": "A current complete rights-cleared Monaco ordinary-postcode and 980xx exception allocation denominator, plus real postcode Polygon/MultiPolygon surfaces, are pinned by edition or retrieval basis, effective date, terms, byte length and SHA-256, published as an approved immutable artifact, and loaded through the real MC API/app so a normalized 980NN search fits and renders a translucent area with a clear outline, selected code, geometry kind, official/derived/virtual classification, source, reference date and confidence. A La Poste assignment row, the Principality or commune boundary, a centroid, DPUM internal-system evidence, CEDEX/organization/service/PO-box endpoints, administrative/quartier/urban-plan/building/road proxies, point buffers, hulls, Voronoi/raster cells and synthetic fixtures never satisfy M2 by themselves. A derived surface is eligible only from an expressly authorized complete current postal-membership denominator with reproducible lineage, limitations and noncanonical status preserved."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Assignment, identity, geometry, privacy, border and independent holdout gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
+    ],
+    "hard_blockers": [
+      "unpinned-la-poste-dpum-government-or-imsee-source",
+      "structurally-valid-980xx-presented-as-currently-allocated",
+      "derived-surface-presented-as-la-poste-boundary",
+      "ordinary-postcode-presented-as-principality-boundary",
+      "cedex-organization-service-or-bp-given-residential-polygon",
+      "internal-dpum-system-presented-as-public-release",
+      "address-geocode-presented-as-building-footprint",
+      "building-proximity-or-plan-overlay-presented-as-exact-link",
+      "quartier-or-urban-zone-presented-as-postal-geometry",
+      "french-address-or-geometry-merged-into-monaco",
+      "resident-owner-apartment-recipient-or-delivery-data-exposed",
+      "missing-required-source-attribution-or-rights",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "current_allocation_from_structure_alone",
+    "recipient_identity",
+    "residency_household_occupancy_or_ownership",
+    "official_postcode_polygon",
+    "building_geometry_from_address_geocode",
+    "building_identity_from_containment_nearest_or_plan_overlay",
+    "legal-property-or-cadastral-survey-certification",
+    "quartier_or_principality_equals_postcode_area"
+  ]
+}

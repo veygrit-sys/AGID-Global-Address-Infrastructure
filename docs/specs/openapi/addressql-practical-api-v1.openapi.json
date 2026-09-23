@@ -1,0 +1,1746 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AddressQL Practical API",
+    "version": "1.0.0",
+    "description": "Self-hostable, privacy-bounded country capability and postal validation API. Format validation does not imply existence or delivery."
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Runtime and capability summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/countries": {
+      "get": {
+        "operationId": "listCountries",
+        "responses": {
+          "200": {
+            "description": "Bounded country and neutral-scope profile list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryListResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/countries/{countryCode}/capabilities": {
+      "get": {
+        "operationId": "getCountryCapabilities",
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 16,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_/-]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country capability and evidence-gate status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryCapabilityResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/countries/{countryCode}/promotions": {
+      "get": {
+        "operationId": "getCountryDataPromotion",
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 16,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_/-]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country data promotion evidence, blockers, and fail-closed status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryDataPromotionResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/promotions": {
+      "get": {
+        "operationId": "listCountryDataPromotions",
+        "responses": {
+          "200": {
+            "description": "Global country data promotion summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryDataPromotionSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/multilingual": {
+      "get": {
+        "operationId": "listMultilingualQuality",
+        "responses": {
+          "200": {
+            "description": "Global multilingual quality-gate summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultilingualQualitySummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/countries/{countryCode}/languages": {
+      "get": {
+        "operationId": "getCountryLanguages",
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 16,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_/-]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country language, script, adapter, and quality-gate metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryLanguageResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/multilingual/assess": {
+      "post": {
+        "operationId": "assessMultilingualRoute",
+        "parameters": [
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TechnicalId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultilingualAssessmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata-only route assessment; no place-name text is accepted or transformed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultilingualAssessmentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/delivery-points/assess": {
+      "post": {
+        "operationId": "assessSignedDeliveryPoint",
+        "summary": "Verify signed L5 carrier decisions over a delivery-point commitment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/L5DeliveryPointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed L5 decision; carrier disagreement returns conflict and stops processing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/L5DeliveryPointResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/postal/validate": {
+      "post": {
+        "operationId": "validatePostal",
+        "parameters": [
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TechnicalId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostalValidationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Purpose-bound validation result; unknown is a valid fail-closed outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostalValidationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/postal/validate/batch": {
+      "post": {
+        "operationId": "validatePostalBatch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostalValidationBatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item-isolated batch result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostalValidationBatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/v1/place-names/rank": {
+      "post": {
+        "operationId": "rankOfficialPlaceNames",
+        "description": "Ranks versioned official aliases and romanizations for a bounded public place-name token. Full addresses, recipients, coordinates, and automatic translation are not accepted.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaceNameRankingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Official-name candidate ranking or safe ambiguity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceNameRankingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "ApiError": {
+        "description": "Machine-readable bounded error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "TechnicalId": {
+        "type": "string",
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "CapabilityLevel": {
+        "type": "string",
+        "enum": [
+          "L0",
+          "L1",
+          "L2",
+          "L3",
+          "L4",
+          "L5"
+        ]
+      },
+      "CapabilityState": {
+        "type": "string",
+        "enum": [
+          "enabled",
+          "not_applicable",
+          "manual_review",
+          "blocked"
+        ]
+      },
+      "LanguageTag": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 35,
+        "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{2,8})*$"
+      },
+      "MultilingualLevel": {
+        "type": "string",
+        "enum": [
+          "M0",
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ]
+      },
+      "MultilingualQualityState": {
+        "type": "string",
+        "enum": [
+          "enabled",
+          "review_candidate",
+          "blocked",
+          "not_applicable"
+        ]
+      },
+      "MultilingualQualityGate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "level",
+          "capability",
+          "state",
+          "requiredEvidence",
+          "observedEvidence",
+          "approvedEvidence",
+          "missingEvidence"
+        ],
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/MultilingualLevel"
+          },
+          "capability": {
+            "type": "string",
+            "enum": [
+              "language-profile",
+              "native-format",
+              "international-english-format",
+              "source-gated-transliteration",
+              "verified-place-name-translation"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/MultilingualQualityState"
+          },
+          "requiredEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "observedEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "approvedEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MultilingualQualitySummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "multilingualVersion",
+          "countryCount",
+          "nativeFormatEnabledProfiles",
+          "internationalEnglishFormatEnabledProfiles",
+          "transliterationReviewCandidateProfiles",
+          "verifiedTranslationReviewCandidateProfiles",
+          "automaticPlaceNameTranslationEnabledProfiles",
+          "nonClaims"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "multilingualVersion": {
+            "const": "addressql-multilingual-quality-v0.1"
+          },
+          "countryCount": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nativeFormatEnabledProfiles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "internationalEnglishFormatEnabledProfiles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "transliterationReviewCandidateProfiles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "verifiedTranslationReviewCandidateProfiles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "automaticPlaceNameTranslationEnabledProfiles": {
+            "const": 0
+          },
+          "nonClaims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CountryLanguageResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "multilingualVersion",
+          "countryCode",
+          "languageCodes",
+          "scriptFamilies",
+          "adapterFamilies",
+          "highestEnabledLevel",
+          "highestReviewCandidateLevel",
+          "automaticPlaceNameTranslationEnabled",
+          "independentQualityAttestationVerified",
+          "gates",
+          "privacy",
+          "nonClaims"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "multilingualVersion": {
+            "const": "addressql-multilingual-quality-v0.1"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "languageCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LanguageTag"
+            }
+          },
+          "scriptFamilies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adapterFamilies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "highestEnabledLevel": {
+            "$ref": "#/components/schemas/MultilingualLevel"
+          },
+          "highestReviewCandidateLevel": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MultilingualLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "automaticPlaceNameTranslationEnabled": {
+            "const": false
+          },
+          "independentQualityAttestationVerified": {
+            "const": false
+          },
+          "gates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MultilingualQualityGate"
+            }
+          },
+          "privacy": {
+            "type": "object"
+          },
+          "nonClaims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MultilingualAssessmentRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "countryCode",
+          "sourceLanguage",
+          "targetLanguage"
+        ],
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_/-]*$"
+          },
+          "sourceLanguage": {
+            "$ref": "#/components/schemas/LanguageTag"
+          },
+          "targetLanguage": {
+            "$ref": "#/components/schemas/LanguageTag"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "domestic",
+              "international-shipping"
+            ],
+            "default": "international-shipping"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          }
+        }
+      },
+      "MultilingualRouteAssessment": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "countryCode",
+          "sourceLanguage",
+          "targetLanguage",
+          "purpose",
+          "status",
+          "mode",
+          "formatReady",
+          "automaticTransformationAllowed",
+          "humanReviewRequired",
+          "translationVerified",
+          "adapterFamilies",
+          "missingEvidence",
+          "reasonCode",
+          "nonClaims"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-multilingual-quality-v0.1"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "sourceLanguage": {
+            "$ref": "#/components/schemas/LanguageTag"
+          },
+          "targetLanguage": {
+            "$ref": "#/components/schemas/LanguageTag"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "domestic",
+              "international-shipping"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "review_required",
+              "blocked"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "identity-normalization",
+              "native-formatting",
+              "international-english-formatting",
+              "source-gated-transliteration"
+            ]
+          },
+          "formatReady": {
+            "type": "boolean"
+          },
+          "automaticTransformationAllowed": {
+            "type": "boolean"
+          },
+          "humanReviewRequired": {
+            "type": "boolean"
+          },
+          "translationVerified": {
+            "const": false
+          },
+          "adapterFamilies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reasonCode": {
+            "type": "string"
+          },
+          "nonClaims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MultilingualAssessmentResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "assessment",
+          "privacy"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "assessment": {
+            "$ref": "#/components/schemas/MultilingualRouteAssessment"
+          },
+          "privacy": {
+            "type": "object"
+          }
+        }
+      },
+      "Sha256Commitment": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
+      },
+      "L5CarrierAssertion": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "assertionId",
+          "carrierId",
+          "keyId",
+          "countryCode",
+          "deliveryPointCommitment",
+          "serviceLevel",
+          "decision",
+          "sourceVersion",
+          "evidenceDigest",
+          "assessedAt",
+          "expiresAt",
+          "signature"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-l5-carrier-assertion-v1"
+          },
+          "assertionId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "carrierId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "keyId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "deliveryPointCommitment": {
+            "$ref": "#/components/schemas/Sha256Commitment"
+          },
+          "serviceLevel": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "decision": {
+            "enum": [
+              "reachable",
+              "unreachable",
+              "unknown"
+            ]
+          },
+          "sourceVersion": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "evidenceDigest": {
+            "$ref": "#/components/schemas/Sha256Commitment"
+          },
+          "assessedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+          }
+        }
+      },
+      "L5DeliveryPointRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "countryCode",
+          "deliveryPointCommitment",
+          "serviceLevel",
+          "assertions"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-l5-delivery-point-request-v1"
+          },
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "deliveryPointCommitment": {
+            "$ref": "#/components/schemas/Sha256Commitment"
+          },
+          "serviceLevel": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "assertions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "$ref": "#/components/schemas/L5CarrierAssertion"
+            }
+          }
+        }
+      },
+      "L5DeliveryPointResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "countryCode",
+          "capability",
+          "decision"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "capability": {
+            "type": "object"
+          },
+          "decision": {
+            "type": "object",
+            "description": "L5-only signed decision metadata. The commitment value is intentionally not reflected."
+          }
+        }
+      },
+      "PostalValidationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "countryCode"
+        ],
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_/-]*$"
+          },
+          "postalCode": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "format",
+              "existence",
+              "delivery"
+            ],
+            "default": "format"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          }
+        }
+      },
+      "AddressValidationResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "purpose",
+          "status",
+          "confidence",
+          "source_refs",
+          "evidence_level",
+          "field_results",
+          "result_boundaries",
+          "privacy",
+          "non_claims"
+        ],
+        "properties": {
+          "version": {
+            "const": "address-validation-result-v0.1"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "format",
+              "existence",
+              "delivery"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "unknown",
+              "not_applicable",
+              "conflict"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "source_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "evidence_level": {
+            "type": "string",
+            "enum": [
+              "none",
+              "synthetic_conformance",
+              "independently_attested"
+            ]
+          },
+          "field_results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "field",
+                "status",
+                "reason_code"
+              ],
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "enum": [
+                    "country",
+                    "postal_code"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "unknown",
+                    "not_applicable",
+                    "conflict"
+                  ]
+                },
+                "reason_code": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "result_boundaries": {
+            "type": "object"
+          },
+          "privacy": {
+            "type": "object"
+          },
+          "non_claims": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PostalValidationResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "countryCode",
+          "highestEnabledLevel",
+          "capability",
+          "validation"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "highestEnabledLevel": {
+            "$ref": "#/components/schemas/CapabilityLevel"
+          },
+          "capability": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "requestedLevel",
+              "state",
+              "missingEvidence",
+              "adapterIds",
+              "liveRuntimeEvidence"
+            ],
+            "properties": {
+              "requestedLevel": {
+                "$ref": "#/components/schemas/CapabilityLevel"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "manual_review",
+                  "not_applicable",
+                  "blocked"
+                ]
+              },
+              "missingEvidence": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "adapterIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "liveRuntimeEvidence": {
+                "type": "boolean"
+              }
+            }
+          },
+          "validation": {
+            "$ref": "#/components/schemas/AddressValidationResult"
+          }
+        }
+      },
+      "PostalValidationBatchRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requests"
+        ],
+        "properties": {
+          "requests": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PostalValidationRequest"
+            }
+          }
+        }
+      },
+      "PostalValidationBatchResponse": {
+        "type": "object"
+      },
+      "CountryCapabilityResult": {
+        "type": "object"
+      },
+      "CountryDataPromotionState": {
+        "type": "string",
+        "enum": [
+          "blocked",
+          "review_candidate",
+          "enabled"
+        ]
+      },
+      "CountryDataPromotionTarget": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "level",
+          "capability",
+          "state",
+          "requiredEvidence",
+          "observedEvidence",
+          "approvedEvidence",
+          "missingEvidence",
+          "sourceIds",
+          "runtimeAdapterId",
+          "independentAttestationVerified"
+        ],
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": [
+              "L2",
+              "L3",
+              "L4",
+              "L5"
+            ]
+          },
+          "capability": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/CountryDataPromotionState"
+          },
+          "requiredEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "observedEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "approvedEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "runtimeAdapterId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "independentAttestationVerified": {
+            "type": "boolean"
+          },
+          "adapterIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidenceLevel": {
+            "type": "string",
+            "enum": [
+              "none",
+              "synthetic_conformance",
+              "independently_attested"
+            ]
+          }
+        }
+      },
+      "CountryDataPromotionResult": {
+        "type": "object",
+        "required": [
+          "version",
+          "promotionVersion",
+          "countryCode",
+          "highestReviewCandidateLevel",
+          "highestEnabledLevel",
+          "targets",
+          "blockers",
+          "privacy",
+          "nonClaims"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "promotionVersion": {
+            "const": "addressql-country-data-promotion-v0.1"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "highestReviewCandidateLevel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "highestEnabledLevel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "L2",
+              "L3",
+              "L4",
+              "L5",
+              null
+            ]
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryDataPromotionTarget"
+            }
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "privacy": {
+            "type": "object"
+          },
+          "nonClaims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CountryDataPromotionSummary": {
+        "type": "object",
+        "required": [
+          "version",
+          "promotionVersion",
+          "countryCount",
+          "reviewCandidateCountryCodes",
+          "enabledCountryCodes",
+          "enabledByLevel",
+          "nonClaims"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "promotionVersion": {
+            "const": "addressql-country-data-promotion-v0.1"
+          },
+          "countryCount": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reviewCandidateCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabledCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabledByLevel": {
+            "type": "object"
+          },
+          "nonClaims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PlaceNameRankingRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "countryCode",
+          "query",
+          "targetLanguage"
+        ],
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "A public place-name token, never a full address."
+          },
+          "targetLanguage": {
+            "$ref": "#/components/schemas/LanguageTag"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "domestic",
+              "international-shipping"
+            ],
+            "default": "international-shipping"
+          },
+          "hierarchyLevel": {
+            "type": "string",
+            "enum": [
+              "country",
+              "admin1",
+              "admin2",
+              "admin3",
+              "locality"
+            ]
+          },
+          "parentPlaceIds": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/TechnicalId"
+            }
+          },
+          "maxCandidates": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "default": 20
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          }
+        }
+      },
+      "PlaceNameCandidate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "placeId",
+          "countryCode",
+          "hierarchyLevel",
+          "parentPlaceIds",
+          "displayName",
+          "displayLanguage",
+          "displayNameKind",
+          "matchedNameKinds",
+          "sourceIds",
+          "sourceVersions",
+          "sourceState",
+          "score",
+          "reasonCodes",
+          "officialAliasPreferred",
+          "generatedTransliterationUsed",
+          "translationUsed",
+          "automaticUseAllowed"
+        ],
+        "properties": {
+          "placeId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "hierarchyLevel": {
+            "type": "string",
+            "enum": [
+              "country",
+              "admin1",
+              "admin2",
+              "admin3",
+              "locality"
+            ]
+          },
+          "parentPlaceIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TechnicalId"
+            }
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "displayLanguage": {
+            "$ref": "#/components/schemas/LanguageTag"
+          },
+          "displayNameKind": {
+            "type": "string",
+            "enum": [
+              "official-native",
+              "official-alias",
+              "official-romanization",
+              "standardized-transliteration",
+              "generated-transliteration",
+              "compatibility-search-alias"
+            ]
+          },
+          "matchedNameKinds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "official-native",
+                "official-alias",
+                "official-romanization",
+                "standardized-transliteration",
+                "generated-transliteration",
+                "compatibility-search-alias"
+              ]
+            }
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TechnicalId"
+            }
+          },
+          "sourceVersions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceState": {
+            "type": "string",
+            "enum": [
+              "active",
+              "review-required",
+              "conformance-only"
+            ]
+          },
+          "score": {
+            "type": "number"
+          },
+          "reasonCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "officialAliasPreferred": {
+            "type": "boolean"
+          },
+          "generatedTransliterationUsed": {
+            "type": "boolean"
+          },
+          "translationUsed": {
+            "const": false
+          },
+          "automaticUseAllowed": {
+            "const": false
+          }
+        }
+      },
+      "AddressMorphismCompatibility": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "researchBasis",
+          "catalog",
+          "task",
+          "candidateSet",
+          "evidence",
+          "resolution",
+          "preservation",
+          "loss",
+          "disclosure",
+          "nonClaims"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-address-morphism-compatibility-v0.1"
+          },
+          "researchBasis": {
+            "type": "object",
+            "description": "Research maturity and permitted compatibility use."
+          },
+          "catalog": {
+            "type": "object",
+            "description": "Versioned catalog receipt and compatibility evidence state."
+          },
+          "task": {
+            "type": "object",
+            "description": "Country, language, and public rendering purpose metadata."
+          },
+          "candidateSet": {
+            "type": "object",
+            "description": "Candidate identifiers, coverage state, and a non-identity policy gate."
+          },
+          "evidence": {
+            "type": "object",
+            "description": "Public source version, freshness, reuse, and correction-route metadata."
+          },
+          "resolution": {
+            "type": "object",
+            "description": "Name-resolution conclusion kept separate from delivery and identity decisions."
+          },
+          "preservation": {
+            "type": "object",
+            "description": "Authority, hierarchy, and temporal preservation states."
+          },
+          "loss": {
+            "type": "object",
+            "description": "Explicit deferral and transformation-loss reasons."
+          },
+          "disclosure": {
+            "type": "object",
+            "description": "Public metadata-only disclosure boundary."
+          },
+          "nonClaims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PlaceNameRankingResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "ranking",
+          "addressMorphism",
+          "privacy"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/TechnicalId"
+          },
+          "ranking": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "version",
+              "catalogId",
+              "catalogVersion",
+              "catalogDigest",
+              "countryCode",
+              "targetLanguage",
+              "purpose",
+              "status",
+              "candidates",
+              "requiresReview",
+              "issues",
+              "translationUsed",
+              "automaticUseAllowed",
+              "nonClaims"
+            ],
+            "properties": {
+              "version": {
+                "const": "addressql-official-place-name-catalog-v1"
+              },
+              "catalogId": {
+                "$ref": "#/components/schemas/TechnicalId"
+              },
+              "catalogVersion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "catalogDigest": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "countryCode": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              },
+              "targetLanguage": {
+                "$ref": "#/components/schemas/LanguageTag"
+              },
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "domestic",
+                  "international-shipping"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ranked",
+                  "ambiguous",
+                  "unmatched"
+                ]
+              },
+              "candidates": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PlaceNameCandidate"
+                }
+              },
+              "requiresReview": {
+                "type": "boolean"
+              },
+              "issues": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "translationUsed": {
+                "const": false
+              },
+              "automaticUseAllowed": {
+                "const": false
+              },
+              "nonClaims": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "addressMorphism": {
+            "$ref": "#/components/schemas/AddressMorphismCompatibility"
+          },
+          "privacy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "acceptsPublicPlaceName",
+              "acceptsRawAddress",
+              "storesPlaceName",
+              "logsPlaceName"
+            ],
+            "properties": {
+              "acceptsPublicPlaceName": {
+                "const": true
+              },
+              "acceptsRawAddress": {
+                "const": false
+              },
+              "storesPlaceName": {
+                "const": false
+              },
+              "logsPlaceName": {
+                "const": false
+              }
+            }
+          }
+        }
+      },
+      "CountryListResult": {
+        "type": "object"
+      },
+      "HealthResult": {
+        "type": "object"
+      },
+      "ApiError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "error",
+          "privacy"
+        ],
+        "properties": {
+          "version": {
+            "const": "addressql-practical-api-v1"
+          },
+          "error": {
+            "type": "object"
+          },
+          "privacy": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

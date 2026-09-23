@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/addressql-postal-validation-negative-claims-v0.1.schema.json",
+  "title": "AddressQL Postal Validation Negative Claims Fixture v0.1",
+  "description": "Synthetic fixture shape for unsafe PostalValidationResult claim examples and their required non-claim boundaries.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_id",
+    "status",
+    "purpose",
+    "privacy",
+    "cases"
+  ],
+  "properties": {
+    "fixture_id": {
+      "const": "addressql-postal-validation-negative-claims-v0.1"
+    },
+    "status": {
+      "const": "synthetic-negative-fixture"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_raw_address",
+        "synthetic_only",
+        "production_traffic"
+      ],
+      "properties": {
+        "contains_raw_address": {
+          "const": false
+        },
+        "synthetic_only": {
+          "const": true
+        },
+        "production_traffic": {
+          "const": false
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "blocked_claim",
+          "required_boundary",
+          "safe_replacement",
+          "expected_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "blocked_claim": {
+            "type": "string",
+            "minLength": 12
+          },
+          "required_boundary": {
+            "type": "string",
+            "enum": [
+              "format_pass_does_not_imply_existence",
+              "existence_pass_does_not_imply_delivery",
+              "delivery_pass_does_not_imply_identity",
+              "identity_pass_does_not_disclose_full_address"
+            ]
+          },
+          "safe_replacement": {
+            "type": "string",
+            "minLength": 12,
+            "pattern": "(does not|must not)"
+          },
+          "expected_status": {
+            "const": "blocked"
+          }
+        }
+      }
+    }
+  }
+}

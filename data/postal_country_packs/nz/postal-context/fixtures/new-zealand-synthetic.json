@@ -1,0 +1,193 @@
+{
+  "schema_version": "agid-postal-nz-synthetic-fixtures-v0.1",
+  "fixture_set_id": "new-zealand-like-contract-cases-v0.1",
+  "country_code": "NZ",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthetic",
+    "rule": "No value is an NZ Post assignment, LINZ address, LINZ building, Stats NZ area, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-nz-post-network",
+      "models_source_role": "nz-post-pnf",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-nz-post-address",
+      "models_source_role": "nz-post-paf-address-checker",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-linz-address",
+      "models_source_role": "linz-nz-addresses",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-linz-building",
+      "models_source_role": "linz-nz-building-outlines",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "nz-syn-urban-building",
+      "exception_class": "urban_delivery",
+      "synthetic_address": {
+        "house_number": "1",
+        "street": "Synthetic Road",
+        "suburb": "Synthetic Suburb",
+        "mailtown": "Synthetic City",
+        "postcode": "0000",
+        "building_name": "Synthetic Building"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-nz-post-network",
+          "assertion": "urban-postcode-assignment-and-area",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        },
+        {
+          "source_id": "synthetic-linz-address",
+          "assertion": "address-point",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        },
+        {
+          "source_id": "synthetic-nz-post-address",
+          "assertion": "address-record-supplies-building-name",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "resolved_level": "building",
+        "postal_geometry": "polygon",
+        "address_geometry": "point",
+        "must_not_assert": [
+          "recipient-or-occupant",
+          "legal-building-boundary",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nz-syn-rural-delivery",
+      "exception_class": "rural_delivery",
+      "synthetic_address": {
+        "house_number": "2",
+        "street": "Synthetic Valley Road",
+        "rural_delivery": "RD 1",
+        "mailtown": "Synthetic Mailtown",
+        "postcode": "0001"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-nz-post-network",
+          "assertion": "multipart-rural-delivery-area",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_type": "multipolygon",
+        "must_not_assert": [
+          "rd-number-is-house-number",
+          "mailtown-is-physical-locality",
+          "unrestricted-rural-api-cache",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nz-syn-po-box",
+      "exception_class": "po_box_or_private_bag",
+      "synthetic_address": {
+        "po_box": "PO Box 7",
+        "box_lobby": "Synthetic Lobby",
+        "mailtown": "Synthetic City",
+        "postcode": "0002"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-nz-post-network",
+          "assertion": "box-lobby-routing",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_type": "point",
+        "must_not_assert": [
+          "surrounding-residential-area",
+          "street-premise",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nz-syn-private-bag",
+      "exception_class": "po_box_or_private_bag",
+      "synthetic_address": {
+        "private_bag": "Private Bag 8",
+        "mailtown": "Synthetic City",
+        "postcode": "0003"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-nz-post-address",
+          "assertion": "private-bag-routing",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": [
+          "surrounding-postcode-polygon",
+          "building-or-entrance",
+          "public-api-cache",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "nz-syn-leading-zero",
+      "exception_class": "leading_zero",
+      "synthetic_address": {
+        "postcode": "0004"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-nz-post-network",
+          "assertion": "four-character-postcode",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "normalized_postcode": "0004",
+        "must_not_assert": [
+          "numeric-postcode-4",
+          "leading-zero-dropped",
+          "building-from-postcode-alone",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

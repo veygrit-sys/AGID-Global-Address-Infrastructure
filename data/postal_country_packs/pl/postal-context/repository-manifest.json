@@ -1,0 +1,80 @@
+{
+  "schema_version": "agid-postal-pl-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-pl",
+    "country_code": "PL",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Pocztowy Numer Adresowy (PNA)",
+    "full_code_format": "NN-NNN",
+    "full_code_default_geometry": "authoritative_poland_postcode_area_or_explicit_non_area",
+    "assignment_rule": "A current Poczta Polska PNA source establishes the five-digit hyphenated code and its published locality/address membership at the source reference time. Syntax, TERYT locality, address point, municipality, district or voivodeship geometry alone does not establish current operator assignment or an areal postal boundary.",
+    "normalization_rule": "Accept exactly five ASCII digits with an optional single hyphen after the first two digits and canonicalize to NN-NNN. Preserve leading zeroes. Reject letters, extra digits and ambiguous partial codes.",
+    "postcode_area_rule": "Area output requires an exact fixed authoritative postal-code Polygon/MultiPolygon feature matched to the canonical PNA and compatible reference time. Administrative boundaries, address/streets points, buffers, hulls, Voronoi/raster cells and synthetic fixtures never substitute for a missing postal area.",
+    "non_area_rule": "Organization, route, P.O.-box, point, address-membership-only and unmatched PNA records remain explicit non-areas unless an authoritative postal-area feature exists. Multiple official search rows do not authorize their envelope or administrative union to be presented as a postal polygon.",
+    "rights_rule": "Poczta Polska states that it owns economic copyrights in System PNA and that electronic PNA lists are sold for defined customer uses with quarterly updates. Public access, a search response or a PDF is not treated as permission to reproduce, transform, store in an AGID database, redistribute or publicly serve the underlying assignment dataset or a derivative.",
+    "administrative_rule": "GUGiK PRG and related official administrative/address sources supply administrative or address context under their own terms. Their geometry is not postal-code geometry and may not be relabelled as PNA area.",
+    "crs_rule": "Every geometry retains source CRS, schema, feature identity and exact release metadata. WGS84 output records a reviewed transform and version; coordinates are never relabelled without transformation.",
+    "privacy_rule": "Only public non-personal postal context may enter an approved artifact. Recipients, customers, occupants, owners, rightsholders, shipment details, credentials and private property records are excluded."
+  },
+  "integration": {
+    "agid_country_code": "PL",
+    "coordinate_flow": "coordinate -> pinned authoritative PNA Polygon/MultiPolygon or explicit non-area -> separately sourced address context -> PL AGID cell",
+    "postcode_flow": "canonical NN-NNN -> current permitted Poczta assignment/exception denominator -> exact authoritative area or explicit non-area -> separately sourced address context -> PL AGID cells",
+    "building_output_gate": "postal-area evidence never creates a building; building output requires a separate explicit address/building source and exact reviewed relation"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every PNA is canonical NN-NNN text and preserves leading zeroes." },
+    { "id": "current-operator-assignment", "pass": "Every current assignment/exception pins source edition, reference date, terms, schema and digest under permission compatible with AGID processing and public serving." },
+    { "id": "authoritative-area-or-non-area", "pass": "Every areal result is an exact pinned authoritative PNA Polygon/MultiPolygon; organization, route, P.O.-box, point, membership-only and unmatched records remain explicit non-areas." },
+    { "id": "fixed-geometry", "pass": "The area artifact pins provider, URL, edition, reference date, licence, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage and exclusions." },
+    { "id": "assignment-area-reconciliation", "pass": "The complete current assignment/exception denominator is reconciled code by code to an authoritative area or explicit reasoned non-area." },
+    { "id": "administrative-separation", "pass": "Voivodeship, district, commune, PRG and address geometry remain context and never become postcode area by proxy." },
+    { "id": "privacy", "pass": "No recipient, customer, occupant, owner, rightsholder, shipment, credential or private property record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country policy, source boundary and synthetic conformance contracts are reviewable; no production Poland data is bundled." },
+      { "id": "M2_current_poland_pna_assignment_and_postcode_area_visualization", "definition": "A current complete Poczta Polska PNA assignment and exception denominator is usable under explicit reviewed permission for AGID processing, derivation, storage, redistribution and public serving, and is reconciled to a fixed authoritative Poland postal-code Polygon/MultiPolygon release. Edition, reference date, provider, licence, attribution, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage, exclusions and reproducible conversion are fixed in an approved immutable artifact. The real PL API/app normalizes NN-NNN, returns only valid real areas, fits and renders translucent fill with a clear outline, and shows selected code, geometry kind, official/derived/virtual class, source, reference date and confidence; organization, route, P.O.-box, point, membership-only and unmatched codes remain explicit non-areas and no administrative, address, building, buffer, hull, Voronoi/raster or synthetic proxy satisfies M2." },
+      { "id": "M3_address_building", "definition": "Separately authorized official address and building relations pass identity, licence, privacy, validity, CRS, coverage and correction gates." }
+    ],
+    "hard_blockers": [
+      "public-search-or-pdf-presented-as-redistribution-right",
+      "postcode-syntax-presented-as-current-complete-assignment",
+      "address-membership-presented-as-postcode-area",
+      "organization-route-or-po-box-given-invented-polygon",
+      "voivodeship-district-commune-or-prg-boundary-presented-as-postcode-area",
+      "address-or-building-point-buffered-into-postcode-area",
+      "unmatched-code-filled-by-hull-voronoi-or-raster",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "private-address-property-customer-or-shipment-data-published",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_PL_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PL_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_PL_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PL_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-poczta-pna-pdf-search-results-or-paid-lists",
+    "every-pna-is-a-polygon",
+    "organization-route-or-po-box-is-area",
+    "address-point-or-administrative-boundary-is-postcode-area",
+    "nearest-area-buffer-hull-voronoi-or-raster-is-authoritative",
+    "postal-area-evidence-is-building-evidence"
+  ]
+}

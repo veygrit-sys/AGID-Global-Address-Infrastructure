@@ -1,0 +1,222 @@
+{
+  "schema_version": "agid-postal-source-profile-v0.1",
+  "country_code": "EE",
+  "artifact_scope": "metadata-only-contract-seed",
+  "rights_policy": {
+    "default": "pin-attribution-and-interface-before-publication",
+    "rule": "Omniva operator publications, AKS postal assignments and areas, ADS address/building objects, and EHAK boundaries remain independently versioned evidence artifacts.",
+    "attribution": "Every public artifact records provider, dataset or service, edition or retrieval time, validity date, schema, CRS, digest, transformation and requested attribution."
+  },
+  "sources": [
+    {
+      "source_id": "omniva-estonia-postcodes",
+      "provider": "AS Eesti Post (Omniva)",
+      "source_url": "https://www.omniva.ee/en/zip-codes/",
+      "role": [
+        "official-postal-operator-search",
+        "address-to-postcode-reference",
+        "operator-postcode-download",
+        "addressing-and-facility-routing-rules"
+      ],
+      "production_scope": "Pinned operator pages, downloads and query receipts within applicable terms; shipment, recipient and customer data are outside the pack.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_operator_reference_terms_review",
+      "terms_note": "Omniva is the postal-code manager. Public search and downloads establish operator evidence but do not by themselves grant unrestricted bulk redistribution or define geometry.",
+      "expected_update_cadence": "operator-controlled",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-page-or-download-edition-retrieval-time-and-digest",
+        "record-terms-review-and-permitted-caching",
+        "separate-premise-and-offload-postcodes",
+        "exclude-recipient-shipment-and-customer-data"
+      ],
+      "prohibited_claims": [
+        "unrestricted-bulk-redistribution",
+        "postal-area-geometry-authority",
+        "address-or-building-authority",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "estonia-aks-postal-codes",
+      "provider": "Estonian Land and Spatial Development Board",
+      "source_url": "https://geoportaal.maaamet.ee/eng/spatial-data/address-data/postal-codes-p661.html",
+      "role": [
+        "official-open-address-postcode-assignment",
+        "monthly-current-address-extract",
+        "adr-id-query-and-reference-point"
+      ],
+      "production_scope": "Pinned monthly current-address CSV and versioned AKS query receipts with provider attribution, extraction date, schema and digest.",
+      "assignment_authority": "official_postal_registry_mirror",
+      "geometry_authority": "official_address_reference_point",
+      "redistribution_class": "R1_open_address_data_attribution",
+      "terms_note": "Postal codes are managed by Omniva and attached to official addresses according to Omniva zones. The monthly CSV contains only current address versions.",
+      "expected_update_cadence": "monthly-fifth-day-plus-current-query",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-extract-date-schema-byte-length-and-digest",
+        "emit-provider-and-extraction-date-attribution",
+        "preserve-adr-id-full-address-postcode-and-coordinate-axis-semantics",
+        "use-history-services-for-non-current-queries"
+      ],
+      "prohibited_claims": [
+        "omniva-deliverability-guarantee",
+        "historical-completeness-from-current-only-extract",
+        "address-point-is-building-footprint",
+        "recipient-or-occupant"
+      ]
+    },
+    {
+      "source_id": "estonia-aks-postal-areas",
+      "provider": "Estonian Land and Spatial Development Board",
+      "source_url": "https://geoportaal.maaamet.ee/eng/services/public-wms-wfs-p346.html",
+      "role": [
+        "official-public-postal-code-area",
+        "polygon-and-multipolygon-geometry",
+        "aks-ogc-sihtnumbri-alad"
+      ],
+      "production_scope": "Pinned AKS OGC postal-area snapshot with service generation, layer name, schema, CRS, retrieval time, attribution, digest and topology report.",
+      "assignment_authority": "official_postal_registry_mirror",
+      "geometry_authority": "official_public_postal_geometry",
+      "redistribution_class": "R1_open_spatial_data_attribution",
+      "terms_note": "AKS publishes postal-code areas based on Omniva-managed zones. Geometry and address assignments are still validated and versioned as separate artifacts.",
+      "expected_update_cadence": "service-controlled",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-ogc-generation-layer-schema-crs-time-and-digest",
+        "emit-provider-and-extraction-date-attribution",
+        "validate-polygon-and-multipolygon-topology",
+        "cross-check-current-address-postcodes-without-overwriting-source"
+      ],
+      "prohibited_claims": [
+        "delivery-point-or-recipient-authority",
+        "building-identity-from-postal-containment",
+        "ehak-boundary-equivalence",
+        "legal-survey-boundary"
+      ]
+    },
+    {
+      "source_id": "estonia-aks-address-objects",
+      "provider": "Estonian Land and Spatial Development Board",
+      "source_url": "https://geoportaal.maaamet.ee/eng/spatial-data/address-data-p313.html",
+      "role": [
+        "official-national-address-register",
+        "parcel-building-and-building-part-address-object",
+        "stable-ads-oid-and-version-adob-id",
+        "history-successor-and-legal-basis"
+      ],
+      "production_scope": "Pinned monthly open-data extracts and versioned AKS REST or query receipts with provider attribution, object types, history and digest.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_object_geometry",
+      "redistribution_class": "R1_open_address_data_attribution",
+      "terms_note": "ADS/AKS contains official addresses based on local-government administrative acts. ADS_OID identifies an object across versions; ADOB_ID identifies a version.",
+      "expected_update_cadence": "monthly-bulk-nightly-search-and-change-services",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-interface-generation-schema-release-and-digest",
+        "preserve-ads-oid-adob-id-object-type-status-validity-and-history",
+        "emit-provider-attribution",
+        "exclude-occupant-owner-shipment-and-private-purpose-data"
+      ],
+      "prohibited_claims": [
+        "omniva-deliverability-guarantee",
+        "building-identity-without-object-path",
+        "recipient-occupant-or-owner",
+        "legal-cadastral-survey"
+      ]
+    },
+    {
+      "source_id": "estonia-aks-building-shapes",
+      "provider": "Estonian Land and Spatial Development Board",
+      "source_url": "https://geoportaal.maaamet.ee/eng/services/public-wms-wfs-p346.html",
+      "role": [
+        "official-ads-building-point-and-polygon",
+        "residential-and-non-residential-building-geometry",
+        "source-linked-address-building-path"
+      ],
+      "production_scope": "Pinned AKS OGC building snapshot with object identifiers, service generation, layer schema, CRS, retrieval time, attribution and digest.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_addressed_building_geometry",
+      "redistribution_class": "R1_open_spatial_data_attribution",
+      "terms_note": "ADS building geometry can be definitive when the address and shape follow the same source object. Nearest geometry without that path stays a candidate.",
+      "expected_update_cadence": "service-controlled",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-layer-generation-schema-crs-time-and-digest",
+        "preserve-ads-oid-adob-id-and-building-type",
+        "require-coherent-address-object-path-for-definitive-display",
+        "keep-building-parts-and-private-units-purpose-scoped"
+      ],
+      "prohibited_claims": [
+        "exact-address-link-from-proximity",
+        "occupant-owner-or-private-unit",
+        "postal-assignment-from-building-shape",
+        "legal-property-boundary"
+      ]
+    },
+    {
+      "source_id": "estonia-ehak-admin-boundaries",
+      "provider": "Estonian Land and Spatial Development Board and Statistics Estonia",
+      "source_url": "https://geoportaal.maaamet.ee/eng/Spatial-Data/Administrative-and-Settlement-Division-p312.html",
+      "role": [
+        "county-municipality-and-settlement-boundary",
+        "ehak-code-and-classification",
+        "administrative-and-settlement-context"
+      ],
+      "production_scope": "Pinned monthly 1:10,000 administrative and settlement edition with EHAK codes, provider and validity-date attribution, CRS and digest.",
+      "assignment_authority": "official_administrative_registry",
+      "geometry_authority": "official_administrative_geometry",
+      "redistribution_class": "R1_unrestricted_with_attribution",
+      "terms_note": "EHAK attribute data and administrative geometry provide context. They neither assign postcodes nor replace AKS postal areas.",
+      "expected_update_cadence": "monthly-plus-event-driven",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-validity-date-scale-schema-crs-and-digest",
+        "emit-provider-and-validity-date-attribution",
+        "preserve-ehak-code-level-and-history",
+        "keep-administrative-and-postal-geometries-distinct"
+      ],
+      "prohibited_claims": [
+        "omniva-postcode-assignment",
+        "postal-code-boundary",
+        "address-or-building-identity",
+        "deliverability-guarantee"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "omniva-operator-reference",
+      "rule": "Operator search, downloads, addressing rules and facility routing remain separately rights-reviewed receipts and artifacts."
+    },
+    {
+      "id": "aks-current-postcode-assignment",
+      "rule": "Monthly current-only assignments retain ADR_ID, full address, postcode, reference coordinate semantics, release date, digest and attribution."
+    },
+    {
+      "id": "aks-postal-area-geometry",
+      "rule": "Postal polygons retain OGC generation, layer schema, CRS, retrieval time, digest, attribution and topology report."
+    },
+    {
+      "id": "aks-address-object-history",
+      "rule": "Address objects retain ADS_OID, ADOB_ID, type, status, legal basis, validity, predecessor and successor without destructive overwrite."
+    },
+    {
+      "id": "aks-building-geometry",
+      "rule": "Building points and polygons retain object identifiers and are definitive only through a coherent address-object path."
+    },
+    {
+      "id": "ehak-administrative-context",
+      "rule": "Administrative geometry retains EHAK edition and attribution and never inherits postal authority."
+    },
+    {
+      "id": "public-private-boundary",
+      "rule": "Public artifacts exclude occupants, owners, recipient data, private unit context, shipment data and delivery instructions."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

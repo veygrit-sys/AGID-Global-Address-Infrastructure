@@ -1,0 +1,40 @@
+{
+  "schema_version": "agid-postal-ua-synthetic-fixtures-v0.1",
+  "country_code": "UA",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "0000",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "ua-syn-derived-postal-surface",
+      "synthetic_address": { "street": "Тестова вулиця", "house_number": "1", "settlement": "Тестове", "postcode": "00000" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["official-postcode-polygon", "real-address", "deliverability"] }
+    },
+    {
+      "fixture_id": "ua-syn-building-link",
+      "synthetic_address": { "street": "Тестова вулиця", "house_number": "2", "postcode": "00001" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["real-register-address", "real-building", "nearest-building-is-exact-link"] }
+    },
+    {
+      "fixture_id": "ua-syn-service-route",
+      "synthetic_address": { "organization": "Тестова організація", "postcode": "00002" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "must_not_assert": ["post-office-point-is-postcode-area", "temporary-closure-deletes-postcode", "addressee-identity"] }
+    },
+    {
+      "fixture_id": "ua-syn-territorial-partition",
+      "synthetic_address": { "postcode": "00003" },
+      "evidence": [{ "assignment_authority": "none", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["disputed-feature-auto-reclassified", "postal-evidence-proves-sovereignty", "foreign-route-changes-country"] }
+    }
+  ]
+}

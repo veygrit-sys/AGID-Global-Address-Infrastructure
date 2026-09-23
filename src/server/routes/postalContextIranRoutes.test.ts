@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { after, before, test } from 'node:test';
+import express from 'express';
+import type { Server } from 'node:http';
+import { PostalContextPackRuntime } from '../../lib/postalContextPackRuntime';
+import { IRAN_POSTAL_CONTEXT_TEST_INSTANT, IRAN_POSTAL_CONTEXT_TEST_POINT, createIranPostalContextRuntimeTestPack } from '../../testFixtures/postalContextIranRuntimeFixture';
+import { createInMemoryPostalContextPackStore } from '../postalContextPackStore';
+import { registerPostalContextRoutes } from './postalContextRoutes';
+let server:Server; let baseUrl:string;
+before(async()=>{ const app=express(); app.use(express.json()); registerPostalContextRoutes(app,{store:createInMemoryPostalContextPackStore(new PostalContextPackRuntime(createIranPostalContextRuntimeTestPack()))}); server=app.listen(0); await new Promise<void>(resolve=>server.once('listening',resolve)); const address=server.address(); assert.ok(address&&typeof address==='object'); baseUrl='http://127.0.0.1:'+address.port; });
+after(async()=>{ await new Promise<void>((resolve,reject)=>{server.close(error=>error?reject(error):resolve());}); });
+test('Iran resolve route returns explicitly linked building and IR AGID',async()=>{ const response=await fetch(baseUrl+'/api/postal/resolve',{method:'POST',headers:{'Content-Type':'application/json','X-AGID-Request-ID':'ir-resolve-test'},body:JSON.stringify({countryCode:'IR',...IRAN_POSTAL_CONTEXT_TEST_POINT,purpose:'display',validAt:IRAN_POSTAL_CONTEXT_TEST_INSTANT})}); const body=await response.json() as any; assert.equal(response.status,200); assert.equal(body.ok,true); assert.equal(body.data.countryCode,'IR'); assert.equal(body.data.resolvedLevel,'building'); assert.ok(body.data.agid.cellId); assert.equal(body.data.agid.canonicalPostalGeometry,false); });
+test('Iran postcode route canonicalizes ten digits and gates synthetic derived geometry',async()=>{ const query=new URLSearchParams({validAt:IRAN_POSTAL_CONTEXT_TEST_INSTANT,geometry:'geojson'}); const response=await fetch(baseUrl+'/api/postal/IR/'+encodeURIComponent('۹۹۹۹۹۹۹۹۹۹')+'?'+query,{headers:{'X-AGID-Request-ID':'ir-postcode-test'}}); const body=await response.json() as any; assert.equal(response.status,200); assert.equal(body.ok,true); assert.equal(body.data.normalizedPostalCode,'9999999999'); assert.equal(body.data.geometries[0].geometry.type,'Polygon'); assert.equal(body.data.geometries[0].source.sourceId,'ir-synthetic-derived-postal-context-surface'); });

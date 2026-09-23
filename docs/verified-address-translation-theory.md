@@ -124,6 +124,123 @@ VATT translation must preserve these invariants.
    Switching between a native tab and English tab should use the same canonical
    graph, not translate the already-rendered string again.
 
+## Three-Layer Translation Model
+
+Address translation is not ordinary sentence translation. It is a controlled
+reconstruction of address structure for a specific operational purpose. VATT
+therefore separates the task into three layers.
+
+### 1. Semantic Layer
+
+The system first extracts address elements without translating them:
+
+```text
+country
+postal_code
+admin_level1
+admin_level2
+locality
+block_or_house_number
+building
+unit_or_floor
+coordinate_or_agid
+```
+
+For a Japanese address such as `東京都渋谷区神南1-19-11`, the semantic layer
+must preserve `東京都`, `渋谷区`, `神南`, and `1-19-11` as components. It must
+not treat the whole string as prose.
+
+### 2. Institutional Layer
+
+The canonical components are then interpreted under the country or territory
+address model:
+
+```text
+JP: prefecture -> city/ward -> town -> chome/block/lot -> building
+US: street address -> city -> state -> ZIP
+CN: province -> city -> district/county -> street/town -> building/unit
+No-postal areas: AGID/coordinate -> admin context -> geographic feature
+```
+
+This layer is where postal-code rules, administrative boundaries, official
+address metadata, open geographic evidence, and disputed-territory policies
+are evaluated.
+
+### 3. Output Layer
+
+Finally, the same canonical graph is rendered for the requested purpose:
+
+```text
+international_shipping
+domestic_delivery
+ecommerce_form
+identity_verification
+map_search
+zk_address_proof
+```
+
+The output layer may reorder components, romanize local names, add country
+labels, or suppress fields for privacy. It must not invent missing postal
+codes, buildings, or administrative levels.
+
+## API Contract
+
+A VATT API should accept ordinary text, structured fields, or both. The public
+contract should make purpose explicit and return verification metadata, not
+only the translated string.
+
+Example request:
+
+```json
+{
+  "input_address": "東京都渋谷区神南1-19-11",
+  "input_language": "ja",
+  "target_language": "en",
+  "purpose": "international_shipping",
+  "country_model": "JP",
+  "output_format": "shipping_label"
+}
+```
+
+Example response:
+
+```json
+{
+  "normalized": {
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "150-0041",
+    "adminLevel1": "Tokyo",
+    "adminLevel2": "Shibuya-ku",
+    "locality": "Jinnan",
+    "houseNumber": "1-19-11"
+  },
+  "formatted": [
+    "1-19-11 Jinnan, Shibuya-ku",
+    "Tokyo 150-0041",
+    "Japan"
+  ],
+  "confidence": 0.97,
+  "postalCodeMatch": "valid",
+  "deliveryRisk": "low",
+  "unverifiedFields": [],
+  "warnings": []
+}
+```
+
+Required response metadata:
+
+- `confidence`: summary confidence for the rendered result.
+- `warnings`: human/actionable warnings.
+- `unverifiedFields`: fields that need evidence or user confirmation.
+- `postalCodeMatch`: `valid`, `invalid`, `missing`, `unverified`, or
+  `not_applicable`.
+- `deliveryRisk`: `low`, `medium`, or `high`.
+
+This contract is intentionally more conservative than a generic translation
+API. It exposes uncertainty and prevents a fluent-looking but undeliverable
+address from being treated as verified.
+
 ## Address Machine Translation
 
 VATT defines address machine translation as a constrained pipeline:
@@ -142,6 +259,17 @@ VATT(input, country, language, purpose)
 ```
 
 The renderer is the final step, not the first step.
+
+The Japanese companion note [Address Machine Translation Theory](./address-machine-translation-theory-ja.md)
+expands this into a five-stage model:
+
+```text
+parse → normalize → verify → transform through AGID interlingua → render
+```
+
+That separation matters because AGID treats machine translation as a delivery,
+form-fill, evidence, and privacy-preserving transformation problem rather than
+as a fluent text-generation task.
 
 ### Direct Translation Is a Fallback Only
 

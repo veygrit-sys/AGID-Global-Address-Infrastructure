@@ -1,0 +1,124 @@
+{
+  "schema_version": "agid-postal-kw-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-kw",
+    "country_code": "KW",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "current_code_name": "Kuwait five-digit postal code",
+    "current_code_format": "NNNNN",
+    "current_code_default_geometry": "mixed_block_or_po_box_routing_assignment",
+    "legal_rule": "The Kuwait Ministry of Communications publishes official five-digit postal-code tables by governorate, area and block number and separately by P.O. box-number range. The UPU Kuwait addressing sheet specifies five digits to the left of the locality name and explains coding through P.O. box or block, zone and sector. These public references establish current syntax and typed routing semantics, not a single universal area meaning, bulk licence, polygon or complete assignment history.",
+    "assignment_rule": "A pinned Ministry table row may establish a current five-digit relationship to a governorate, area and block number, or to a P.O. box-number range. Those assignment classes remain distinct: a block row can support a derived block membership surface only with separate geometry evidence, while a P.O. box range is non-spatial routing evidence and never becomes a catchment or building.",
+    "geometry_rule": "No reviewed Ministry of Communications canonical national postcode polygon artifact is bundled. Official postal geometry requires an exact postal-authority boundary artifact with edition, coverage, assignment relation, licence, CRS, topology and digest pinned. Joining a Ministry block row to a rights-cleared PACI, Municipality or statistical block boundary creates only a derived, uncertainty-bearing surface; viewer boundaries, parcels, census blocks, geocoding, interpolation, Voronoi and model output never become official postal polygons.",
+    "address_rule": "Governorate, area or district, block, street or lane, building number, floor or unit, PACI automated address or property number, postcode and P.O. box evidence remain typed. A postcode, P.O. box, block, parcel or automated number alone does not identify an occupant, owner, tenant, exact entrance, unit or building footprint.",
+    "building_rule": "Exact building display requires rights-cleared authoritative building geometry and a source-defined stable relation, common PACI or Municipality identifier, or reviewed explicit crosswalk to the exact civic address. PACI registration, postal or block containment, parcel overlap, street-text match, map selection, proximity or nearest-building logic creates candidates only.",
+    "administration_rule": "PACI address areas, Kuwait Municipality parcels and base maps, and CSB governorate, settlement and municipal-block statistical geography refresh independently. They require explicit editioned identifiers and crosswalks and never become Ministry postal assignment or canonical geometry through matching names, block labels or spatial overlap.",
+    "licence_rule": "Ministry tables, PACI services and Kuwait Finder, Municipality ArcGIS services and CSB census maps are artifact-specific. A public webpage, query response, viewer, service endpoint, downloadable map, government authorship or absent licence field never by itself grants bulk extraction or repository redistribution. Every production artifact pins provider, dataset, terms or permission, attribution, edition, coverage, schema, CRS and digest.",
+    "privacy_rule": "Civil IDs, recipients, contacts, correspondence, shipment and tracking records, query history, owners, tenants, residents, household or unit rosters, leases, property documents, mobile numbers, private access instructions and personal address-registration applications are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, datum, axis order, epoch, scale and accuracy. Kuwait Municipality services may publish Kuwait-specific projected CRS such as KUDAMS-based KTM; no coordinates are relabelled WGS84. Reprojection requires reviewed parameters, axis order and an accuracy statement.",
+    "territory_rule": "The repository uses ISO code KW and exact source-stated coverage. Postal, civil-information, municipal and statistical coverage is recorded as source metadata and is not used to decide sovereignty, jurisdiction or borders; source gaps and disputed areas are not model-filled as official.",
+    "freshness_rule": "Ministry block and P.O. box assignments, PACI address and automated-number records, Municipality parcels and buildings, CSB statistical geography, licences and AGID releases refresh independently. Mixed-edition joins fail closed unless validity, known-time, identifiers and an explicit relation overlap."
+  },
+  "integration": {
+    "agid_country_code": "KW",
+    "coordinate_flow": "coordinate -> exact official postal surface or permitted PACI civic-address point -> five-digit block assignment or non-spatial P.O. box evidence -> block/area/governorate -> street/building/automated-number evidence -> explicit address-building relation -> KW AGID cell",
+    "postcode_flow": "canonical five digits -> pinned Ministry assignment class -> governorate/area/block or P.O. box range -> official surface or no canonical geometry -> optional derived block surface -> explicit PACI civic-address/building relation -> AGID cells",
+    "building_output_gate": "rights-cleared source-defined PACI or Municipality address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "current-five-digit-code",
+      "pass": "Current runtime accepts exactly five digits as a string, preserves leading zeroes and rejects prefixes, punctuation and four- or six-digit values."
+    },
+    {
+      "id": "block-versus-po-box",
+      "pass": "Every assignment records block-based or P.O.-box-range class; P.O. box evidence never produces a polygon, catchment or building."
+    },
+    {
+      "id": "assignment-versus-geometry",
+      "pass": "Ministry assignment authority and official or derived geometry authority are recorded independently."
+    },
+    {
+      "id": "derived-block-surface",
+      "pass": "Generated surfaces record assignment rows, boundary inputs, method, uncertainty, exclusions, topology, version, validity, CRS and digest and remain non-canonical."
+    },
+    {
+      "id": "paci-identifier-separation",
+      "pass": "PACI automated numbers, parcels, buildings, units and personal Civil IDs remain separate namespaces and evidence classes."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has a permitted stable relation or reviewed crosswalk; containment, text, viewer selection and proximity never pass."
+    },
+    {
+      "id": "licence-crs-territory-privacy",
+      "pass": "Artifact-specific rights, attribution, CRS, scale, coverage and privacy exclusions are pinned without geopolitical inference."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "Complete rights-cleared current block and P.O. box assignment tables pass authority, class, coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived postal geometry and public PACI civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "ministry-web-table-presented-as-bulk-redistributable-directory",
+      "po-box-range-presented-as-polygon-catchment-or-building",
+      "block-row-paci-boundary-parcel-or-census-block-presented-as-official-postal-polygon",
+      "kuwait-finder-boundary-presented-as-legal-survey-or-canonical-postal-geometry",
+      "viewer-arcgis-endpoint-download-or-government-authorship-presented-as-redistribution-right",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-postal-polygon",
+      "paci-automated-number-presented-as-public-building-footprint-or-occupant",
+      "postcode-block-parcel-or-proximity-presented-as-exact-address-building-link",
+      "civil-id-recipient-contact-tracking-query-owner-tenant-resident-unit-or-private-access-data-published",
+      "source-crs-axis-scale-or-datum-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "postcode-po-box-block-building-or-automated-number-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_KW_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_KW_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_KW_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_KW_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-po-box-address-building-parcel-civil-id-tracking-or-query-rows",
+    "all-five-digit-codes-have-polygons",
+    "po-box-range-is-geographic-catchment",
+    "block-parcel-or-census-boundary-is-official-postal-area",
+    "paci-automated-number-is-public-footprint-or-person",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ]
+}

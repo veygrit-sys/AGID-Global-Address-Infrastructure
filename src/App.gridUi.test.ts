@@ -17,8 +17,20 @@ test('does not show grid area size metrics in the user map UI', () => {
 test('does not enable geography point overlays by default', () => {
   assert.match(source, /const \[isSystematicMode, setIsSystematicMode\] = useState\(\(\) => \{\s*return false;\s*\}\);/);
   assert.match(source, /const \[isRegionalMode, setIsRegionalMode\] = useState\(\(\) => \{\s*return false;\s*\}\);/);
+  assert.match(source, /readMapOverlayModeDefault\('agid_nautical_mode'\)/);
+  assert.match(source, /readMapOverlayModeDefault\('agid_sea_type_mode'\)/);
   assert.doesNotMatch(source, /'physical', '#10b981'/);
   assert.doesNotMatch(source, /regionalType === 'static' \? '#059669'/);
+});
+
+test('does not paint large nautical region polygons over the base map', () => {
+  assert.match(source, /'nautical-regions-land-mask-layer'/);
+  assert.match(source, /'nautical-regions-outline-layer'/);
+  assert.doesNotMatch(source, /'nautical-regions-layer-land-mask'/);
+  assert.doesNotMatch(source, /'fill-opacity': isSeaTypeMode \? 0\.3 : 0\.1/);
+  assert.doesNotMatch(source, /'fill-color': \['get', 'color'\]/);
+  assert.match(source, /'fill-opacity': 0/);
+  assert.match(source, /'line-color': '#38bdf8'/);
 });
 
 test('keeps a manual search selection stable while the map is panned', () => {
@@ -50,6 +62,13 @@ test('draws red cell fills from rendered black grid cells below the black line l
   assert.match(source, /findContainingGridCellPolygon/);
   assert.match(source, /renderedGridCellsRef\.current = gridCells;/);
   assert.match(source, /ensureSourceAndLayer\(selectedSourceId, 'fill', selectedData, getAgidSelectionFillPaint\(\), \{\}, undefined, `\$\{sourceId\}-layer`\)/);
+});
+
+test('keeps the black grid line layer above red cell fills after style refreshes', () => {
+  const refreshGridOrderBlock = source.match(/const refreshGridOrder = \(\) => \{[\s\S]*?\n    \};/);
+
+  assert.ok(refreshGridOrderBlock, 'refreshGridOrder should exist');
+  assert.match(refreshGridOrderBlock[0], /'selected-cell-layer',\s*'agid-grid-layer',\s*'active-cell-outline-layer'/);
 });
 
 test('uses full viewport bounds and clears old partial grids before showing a refreshed grid', () => {
@@ -87,15 +106,37 @@ test('tracks pending grid request bounds to avoid replacing in-flight pan update
   assert.match(source, /pendingGridBoundsRef\.current = null/);
 });
 
-test('hides every grid layer when the viewport width exceeds 200m', () => {
-  assert.match(source, /shouldShowGridForViewport/);
-  assert.match(source, /const shouldShow = shouldShowDisplayGrid\(\{ zoom: gridZoom, isGridVisible, gridOpacityLevel \}\) && shouldShowGridForViewport\(viewportPoints\)/);
+test('uses what3words-style zoom gating instead of a hard 200m viewport gate', () => {
+  assert.doesNotMatch(source, /shouldShowGridForViewport\(viewportPoints\)/);
+  assert.match(source, /const shouldShow = shouldShowDisplayGrid\(\{ zoom: gridZoom, isGridVisible, gridOpacityLevel \}\)/);
+  assert.match(source, /shouldHidePartialGridForViewport\(renderedGridCellsRef\.current, visibleBounds\)/);
 });
 
 test('keeps checking grid coverage inside throttled pan updates', () => {
   const throttledMoveBranch = source.match(/if \(now - lastMoveUpdate < 100\) \{[\s\S]*?return;\s*\}/);
 
   assert.ok(throttledMoveBranch, 'throttled move branch should exist');
-  assert.match(throttledMoveBranch[0], /const selectedResult = isManualSelectionRef\.current \? clickedAgidRef\.current \|\| undefined : undefined;/);
+  assert.match(throttledMoveBranch[0], /const selectedResult = clickedAgidRef\.current \|\| undefined;/);
   assert.match(throttledMoveBranch[0], /updateGridRef\.current\?\.\(result, selectedResult, 4, false\)/);
+});
+
+test('keeps AGID display click-committed while hover and pan only update the preview square', () => {
+  const moveBlock = source.match(/map\.current\.on\('move', \(\) => \{[\s\S]*?\n    \}\);/);
+  const mouseMoveBlock = source.match(/map\.current\.on\('mousemove', \(e\) => \{[\s\S]*?\n    \}\);/);
+  const clickBlock = source.match(/map\.current\.on\('click', \(e\) => \{[\s\S]*?\n    \}\);/);
+
+  assert.ok(moveBlock, 'move handler should exist');
+  assert.ok(mouseMoveBlock, 'mousemove handler should exist');
+  assert.ok(clickBlock, 'click handler should exist');
+  assert.doesNotMatch(moveBlock[0], /setClickedAgid/);
+  assert.doesNotMatch(mouseMoveBlock[0], /setClickedAgid/);
+  assert.match(mouseMoveBlock[0], /updateGridRef\.current\?\.\(result, clickedAgidRef\.current \|\| undefined, 4, false\)/);
+  assert.match(clickBlock[0], /setClickedAgid\(result\)/);
+});
+
+test('draws hover target as a pale pink outline layer without binding it to the AGID label', () => {
+  assert.match(source, /getAgidHoverCellFillPaint/);
+  assert.match(source, /getAgidHoverCellOutlinePaint/);
+  assert.match(source, /ensureSourceAndLayer\(`\$\{activeSourceId\}-outline`, 'line'/);
+  assert.doesNotMatch(source, /properties: \{ title: activeResult\.id \}/);
 });

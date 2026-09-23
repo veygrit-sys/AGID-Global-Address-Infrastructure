@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-l5-carrier-assertion-v1.schema.json",
+  "title": "AddressQL L5 Carrier Assertion v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "assertionId",
+    "carrierId",
+    "keyId",
+    "countryCode",
+    "deliveryPointCommitment",
+    "serviceLevel",
+    "decision",
+    "sourceVersion",
+    "evidenceDigest",
+    "assessedAt",
+    "expiresAt",
+    "signature"
+  ],
+  "properties": {
+    "version": {
+      "const": "addressql-l5-carrier-assertion-v1"
+    },
+    "assertionId": {
+      "$ref": "#/$defs/technicalId"
+    },
+    "carrierId": {
+      "$ref": "#/$defs/technicalId"
+    },
+    "keyId": {
+      "$ref": "#/$defs/technicalId"
+    },
+    "countryCode": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "deliveryPointCommitment": {
+      "$ref": "#/$defs/digest"
+    },
+    "serviceLevel": {
+      "$ref": "#/$defs/technicalId"
+    },
+    "decision": {
+      "enum": ["reachable", "unreachable", "unknown"]
+    },
+    "sourceVersion": {
+      "$ref": "#/$defs/technicalId"
+    },
+    "evidenceDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "assessedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+    }
+  },
+  "$defs": {
+    "technicalId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}

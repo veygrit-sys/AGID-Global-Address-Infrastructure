@@ -16,7 +16,15 @@ struct Result {
   int face;
 };
 
+struct Bounds {
+  double minLat;
+  double maxLat;
+  double minLon;
+  double maxLon;
+};
+
 std::optional<Result> encode(double lat, double lon);
 std::optional<Result> decode(const std::string& id);
+std::optional<Bounds> cellBounds(const std::string& id);
 
 } // namespace agid

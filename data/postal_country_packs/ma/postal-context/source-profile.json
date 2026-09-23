@@ -1,0 +1,89 @@
+{
+  "schema_version": "agid-postal-ma-source-profile-v0.1",
+  "country_code": "MA",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
+    { "id": "R1_public_reference", "meaning": "Public official standards, pages, directories, services or viewers retained as references; access does not imply row or redistribution rights." },
+    { "id": "R2_source_specific_reuse", "meaning": "An exact artifact whose dataset-specific licence permits recorded fields and derivatives, with ODbL or other duties, owner, edition, coverage, schema, CRS, validity, attribution and digest pinned." },
+    { "id": "R3_controlled_approval_or_contract", "meaning": "Ordered, paid, registered, request-delivered, licensed or restricted material used and redistributed only as specifically permitted." },
+    { "id": "R4_validation_only", "meaning": "Personal, query, cadastral-right, unclear-license, search-only, viewer-only or non-redistributable evidence may detect discrepancies but cannot become public output." }
+  ],
+  "sources": [
+    {
+      "source_id": "upu-morocco-postcode-manual",
+      "provider": "Universal Postal Union with Barid Al-Maghrib",
+      "source_url": "https://www.upu.int/UPU/media/upu/publications/manualAddressingAddressingAndPostcodeManualEn.pdf",
+      "role": ["official-five-digit-structure", "routing-zone-and-province-semantics", "code-type-endings"],
+      "production_scope": "The Morocco case study defines five digits, nine routeing zones, province positions, and sector, agency/centre and large-volume-recipient endings. It supplies no complete current assignment table, official surface or building relation.",
+      "assignment_authority": "official_postal_system_semantics_only",
+      "geometry_authority": "none",
+      "validation_readiness": "metadata_only_not_assignment_evidence",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "prohibited_claims": ["manual-is-current-code-database", "sector-diagram-is-official-polygon", "all-five-digit-codes-are-areas"]
+    },
+    {
+      "source_id": "poste-maroc-codepostal",
+      "provider": "Barid Al-Maghrib / Poste Maroc",
+      "source_url": "https://www.codepostal.ma/search.aspx",
+      "role": ["official-postcode-search", "address-locality-district-street-and-agency-validation"],
+      "production_scope": "A pinned operator-controlled search or directory record may validate the stated code, locality, district, street, agency or centre at capture time. Search access and the downloadable directory do not themselves establish completeness, geometry, history, automation or redistribution rights.",
+      "assignment_authority": "official_postal_record_when_exact_record_is_pinned",
+      "geometry_authority": "none_unless_exact_product_explicitly_defines_geometry",
+      "validation_readiness": "record_and_terms_required",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "prohibited_claims": ["search-page-is-live-bulk-api", "directory-row-is-postal-polygon", "office-or-po-box-code-is-area"]
+    },
+    {
+      "source_id": "morocco-open-data-postal",
+      "provider": "Barid Al-Maghrib via Morocco Open Data Portal",
+      "source_url": "https://www.data.gov.ma/data/fr/organization/poste-maroc",
+      "role": ["open-postcode-locality-and-district-lists", "agency-codes", "postal-agency-points"],
+      "production_scope": "The portal lists locality, district, agency-code, agency-address and agency-coordinate datasets; the postcode lists state a September 2018 update. Each exact resource, portal metadata, ODbL terms, edition, checksum and field allow-list must be pinned. Agency coordinates are points and postcode tables are assignments, not surfaces.",
+      "assignment_authority": "official_open_dataset_for_exact_pinned_edition",
+      "geometry_authority": "agency_point_only_for_exact_licensed_coordinate_resource",
+      "validation_readiness": "stale_until_freshness_assessed",
+      "redistribution_class": "R2_source_specific_reuse",
+      "bundled_here": false,
+      "prohibited_claims": ["2018-list-is-current-without-check", "odbl-applies-to-unlisted-products", "agency-point-is-home-delivery-sector"]
+    },
+    {
+      "source_id": "morocco-open-data-license",
+      "provider": "Morocco Open Data Portal",
+      "source_url": "https://www.data.gov.ma/fr/la-licence",
+      "role": ["dataset-reuse-policy", "attribution-share-alike-and-open-access-obligations"],
+      "production_scope": "The portal licence is adapted from ODbL and requires attribution, licence notice and share-alike/open-access handling for covered databases and adaptations. It governs only the exact portal dataset that declares it and is not postal, geometry or building evidence.",
+      "assignment_authority": "none_legal_framework_only",
+      "geometry_authority": "none",
+      "validation_readiness": "legal_metadata_only",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "prohibited_claims": ["portal-policy-is-postal-assignment", "policy-covers-ancfcc-products", "attribution-alone-satisfies-all-odbl-duties"]
+    },
+    {
+      "source_id": "ancfcc-morocco-cartography",
+      "provider": "Agence Nationale de la Conservation Foncière, du Cadastre et de la Cartographie",
+      "source_url": "https://www.ancfcc.gov.ma/nos-m%C3%A9tiers/cartographie/produits/",
+      "role": ["national-topographic-authority", "administrative-cartography", "cadastral-and-building-candidate-context", "geodetic-governance"],
+      "production_scope": "ANCFCC states it is the exclusive producer of topographic maps and offers topographic, administrative, city-plan, imagery, cadastral and geodetic products. Exact ordered product, payment or permission, edition, coverage, CRS and digest must be pinned; public catalogue or cadastral consultation is not feature redistribution.",
+      "assignment_authority": "official_geospatial_context_only",
+      "geometry_authority": "official_product_geometry_only_when_exact_artifact_is_licensed_and_pinned",
+      "validation_readiness": "metadata_only_until_product_pinned",
+      "redistribution_class": "R3_controlled_approval_or_contract",
+      "bundled_here": false,
+      "prohibited_claims": ["topographic-or-administrative-map-is-postal-sector", "cadastral-overlap-is-address-building-link", "catalogue-or-payment-grants-public-redistribution"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "typed-five-digit-assignment", "contents": "Pinned code, routeing zone, province component, ending type, locality/district or agency/recipient semantics and validity." },
+    { "id": "official-home-delivery-sector-surface", "contents": "Exact rights-cleared Barid Al-Maghrib sector geometry, separate from assignments and non-area codes." },
+    { "id": "derived-home-delivery-sector-surface", "contents": "Optional versioned, uncertainty-bearing, non-canonical surfaces for eligible sector endings only." },
+    { "id": "agency-centre-and-po-box", "contents": "Agency/centre assignments and permitted points; never converted into surrounding polygons." },
+    { "id": "large-volume-recipient", "contents": "Organization routing code metadata without recipient, account, contact or building inference." },
+    { "id": "physical-address-and-building", "contents": "Civic address evidence and exact rights-cleared building joins separate from postcode membership." },
+    { "id": "administrative-cadastral-and-cartographic-context", "contents": "Separately licensed ANCFCC context with source CRS and edition; never silently treated as postal geometry." },
+    { "id": "territory-and-private-restricted", "contents": "MA/EH source coverage tracked separately; holders, recipients, correspondence, residence, ownership, title, rights and queries excluded." }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": "agid-postal-bh-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-bh",
+    "country_code": "BH",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "current_code_name": "Bahrain three- or four-digit postcode and block routing code",
+    "current_code_format": "NNN or NNNN (1XX-12XX)",
+    "current_code_default_geometry": "block_routing_area_with_nonspatial_po_box_delivery",
+    "legal_rule": "The UPU Bahrain addressing sheet specifies three or four digits to the right of the locality, a valid range from 1XX to 12XX, and separate home and P.O. box examples. Bahrain Post service-center references concern office addressing; the current directory bytes were not reachable in this review. These references establish syntax and addressing semantics, not a complete current allocation table, history, canonical area polygon, bulk licence or delivery guarantee.",
+    "assignment_rule": "Bahrain uses postcode and block identifiers in the same geographic routing namespace, but every production code-to-block relation must be explicit in a pinned authoritative artifact and never inferred from equal digits, a locality name or coordinates alone. A P.O. box remains non-spatial delivery-receptacle evidence; it does not identify a home, subscriber, catchment or building.",
+    "geometry_rule": "No reviewed canonical national postcode polygon artifact is bundled. Official geometry requires an exact postal or block boundary artifact with authority, edition, coverage, identifier relation, licence, CRS, topology and digest pinned. Joining a rights-cleared block boundary to an explicit postcode-block relation creates only a derived uncertainty-bearing postal surface unless the source itself declares postal authority; points, parcels, viewers, interpolation, Voronoi and model output never become official polygons.",
+    "address_rule": "Governorate, municipality or locality, block, road name or number, building number, flat or unit, postcode, P.O. box and iGA address-certificate evidence remain typed. A postcode, block, P.O. box, public-place point, parcel or address certificate alone does not identify a person, occupant, owner, exact entrance, unit or building footprint.",
+    "building_rule": "Exact building display requires a permitted iGA address certificate or stable civic-address identifier, separately rights-cleared building geometry, and a source-defined stable relation, common identifier or reviewed explicit crosswalk. Postcode or block containment, parcel overlap, text match, viewer selection, coordinates, proximity and nearest-building logic create candidates only.",
+    "administration_rule": "Governorates, municipalities, localities, blocks, roads, open-data public-place points, municipal maps, SLRB parcels and postal assignments refresh independently. Each requires editioned identifiers and explicit crosswalks; matching digits, labels, parcels or spatial overlap does not merge their authorities.",
+    "licence_rule": "The Bahrain Open Data Portal links the Bahrain Open Government Data License v1.0 (20 May 2025), allowing royalty-free reuse of officially published government open datasets on the portal or other government websites, with source/extraction-date attribution, transformation notice, prescribed disclaimer, sublicence propagation, removal handling and privacy exclusions. The October 2025 portal terms also cover linked iGA-owned websites; both documents must be pinned and reviewed for the exact artifact. These grants do not automatically cover UPU documents, controlled iGA certificates, personal or restricted data, municipal viewers or SLRB products merely because they are government references. Null dataset licence metadata is not proof of no rights. Every production artifact pins its own applicable grant, provider, edition, coverage, schema, CRS, validity and obligations.",
+    "privacy_rule": "CPR and national IDs, recipients, P.O. box subscribers, contacts, correspondence, shipment and tracking records, query history, owners, occupants, residents, tenants, household or unit rosters, deeds, rights, restrictions, applications, phone numbers and private access instructions are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, datum, axis order, epoch, scale and accuracy. Geographic-looking coordinates are not assumed to be WGS84, and cadastral or municipal coordinates are never relabelled. Reprojection requires reviewed parameters, axis order and an accuracy statement.",
+    "territory_rule": "The repository uses ISO code BH and exact source-stated coverage. Postal, civil-address, municipal, cadastral and open-data coverage is metadata and is not used to decide sovereignty, jurisdiction, maritime limits or borders; source gaps are not model-filled as official.",
+    "freshness_rule": "Bahrain Post references, postcode-block relations, iGA address certificates, portal datasets, municipal maps, SLRB parcels, licences and AGID releases refresh independently. Mixed-edition joins fail closed unless validity, known-time, identifiers, rights and an explicit relation overlap."
+  },
+  "integration": {
+    "agid_country_code": "BH",
+    "coordinate_flow": "coordinate -> exact official postal/block surface or permitted iGA civic-address point -> explicit three/four-digit postcode-block relation -> locality/governorate -> road/building/unit evidence -> explicit address-building relation -> BH AGID cell",
+    "postcode_flow": "canonical code in 1XX-12XX -> pinned postcode-block relation -> official surface or no canonical geometry -> optional derived block surface -> explicit iGA civic address -> exact permitted building relation -> AGID cells",
+    "building_output_gate": "permitted iGA civic-address evidence plus rights-cleared geometry and source-defined stable relation, common identifier or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "current-code-range",
+      "pass": "Runtime accepts only three-digit 100-999 or four-digit 1000-1299 strings after Unicode and whitespace normalization and rejects prefixes, punctuation, leading zeroes and out-of-range values."
+    },
+    {
+      "id": "postcode-block-relation",
+      "pass": "Every production postcode-block relation is explicitly source-backed; equal digits, names and coordinates alone never establish it."
+    },
+    {
+      "id": "po-box-separation",
+      "pass": "P.O. box delivery evidence never produces a home, subscriber, catchment, address point or building."
+    },
+    {
+      "id": "assignment-versus-geometry",
+      "pass": "Postcode/block assignment authority and official or derived geometry authority are recorded independently."
+    },
+    {
+      "id": "derived-block-surface",
+      "pass": "Generated surfaces record assignment, boundary inputs, method, uncertainty, exclusions, topology, version, validity, CRS, licence and digest and remain non-canonical."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has permitted iGA civic-address evidence, rights-cleared geometry and a stable explicit relation; containment, text and proximity never pass."
+    },
+    {
+      "id": "portal-licence-obligations",
+      "pass": "Every reused artifact establishes exact applicability of the portal terms and government open-data licence, pins both applicable versions, and preserves attribution, extraction date, transformation notice, prescribed disclaimer, sublicence, removal and privacy obligations. Other-government-site open datasets are not categorically excluded, and controlled records are not automatically included."
+    },
+    {
+      "id": "licence-crs-territory-privacy",
+      "pass": "Artifact-specific rights, attribution, CRS, scale, coverage and privacy exclusions are pinned without geopolitical inference."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "Complete rights-cleared postcode-block assignment and non-spatial P.O. box-delivery rules pass authority, range, coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived block-postal geometry and public iGA civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "upu-or-service-directory-presented-as-complete-current-postcode-directory",
+      "postcode-block-syntax-or-equal-digits-presented-as-canonical-polygon",
+      "po-box-presented-as-home-subscriber-catchment-or-building",
+      "open-data-point-with-block-tag-presented-as-block-or-postcode-boundary",
+      "municipal-viewer-or-slrb-parcel-presented-as-postal-surface-or-building",
+      "iga-address-certificate-presented-as-open-building-footprint",
+      "postcode-block-parcel-text-or-proximity-presented-as-exact-address-building-link",
+      "portal-terms-applied-without-covered-site-and-dataset-evidence",
+      "portal-attribution-transformation-disclaimer-sublicence-or-removal-obligation-omitted",
+      "viewer-api-download-or-government-authorship-presented-as-redistribution-right",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-postal-polygon",
+      "cpr-recipient-po-box-subscriber-contact-tracking-query-owner-occupant-tenant-resident-deed-right-or-private-access-data-published",
+      "source-crs-axis-scale-or-datum-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "postcode-block-building-unit-or-po-box-stored-as-number-or-inferred-from-location",
+      "landmark-block-label-used-as-explicit-postcode-block-assignment",
+      "dataset-bbox-used-as-postal-boundary",
+      "presentation-counter-used-as-stable-civic-or-building-id",
+      "complete-landmark-response-used-as-complete-national-assignment",
+      "null-dataset-licence-field-used-as-proof-of-no-open-data-rights",
+      "government-open-data-licence-used-to-release-controlled-or-personal-data"
+    ],
+    "m2_review": {
+      "definition_unchanged": true,
+      "source_review": "m2-source-review.json",
+      "reviewed_on": "2026-08-28",
+      "status": "blocked-not-m2",
+      "required_evidence": [
+        "complete-current-source-defined-postcode-block-assignment-and-coverage",
+        "source-qualified-nonspatial-po-box-delivery-rules-without-subscribers",
+        "exact-source-applicable-rights-and-licence-removal-governance",
+        "provider-assignment-edition-validity-and-correction-policy",
+        "retained-digest-pinned-snapshots-and-reproducible-conversion-outside-agid-git",
+        "published-immutable-artifacts-at-explicitly-approved-destination",
+        "real-agid-loader-and-api-verification-not-only-synthetic-fixtures"
+      ],
+      "stage_boundary": "M2 is complete assignment and nonspatial P.O. box semantics. M3 geometry/address and M4 exact-building evidence remain separate."
+    }
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_BH_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BH_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_BH_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BH_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-block-po-box-address-building-parcel-cpr-tracking-or-query-rows",
+    "syntax-or-equal-digits-prove-current-postcode-block-assignment",
+    "all-valid-codes-have-official-polygons",
+    "po-box-is-home-address-or-geographic-catchment",
+    "public-place-point-parcel-or-viewer-is-postal-boundary-or-building",
+    "address-certificate-is-public-footprint-or-person",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ]
+}

@@ -68,22 +68,23 @@ test('allows only Southern Europe domestic language pairs and native-to-English 
 
 test('translates representative Southern Europe native address fields to English', async () => {
   const cases = [
-    ['IT', 'it', 'city', 'Roma', 'Rome', 'italian-poste-italiane-international-shipping'],
-    ['IT', 'it', 'street', 'Via', 'Street', 'italian-poste-italiane-international-shipping'],
-    ['ES', 'es', 'state', 'España', 'Spain', 'spain-multilingual-address'],
-    ['ES', 'es', 'street', 'Calle', 'Street', 'spain-multilingual-address'],
-    ['PT', 'pt', 'city', 'Lisboa', 'Lisbon', 'portugal-ctt-international-shipping'],
+    ['IT', 'it', 'city', 'Roma', 'Roma', 'italian-poste-italiane-international-shipping'],
+    ['IT', 'it', 'street', 'Via', 'Via', 'italian-poste-italiane-international-shipping'],
+    ['ES', 'es', 'country', 'España', 'Spain', 'spain-multilingual-address'],
+    ['ES', 'es', 'street', 'Calle', 'Calle', 'spain-multilingual-address'],
+    ['PT', 'pt', 'city', 'Lisboa', 'Lisboa', 'portugal-ctt-international-shipping'],
     ['GR', 'el', 'city', 'Αθήνα', 'Athens', 'greek-elta-romanization'],
     ['MT', 'mt', 'street', 'Triq', 'Street', 'malta-maltese-english-address'],
-    ['SM', 'it', 'city', 'Città di San Marino', 'San Marino City', 'san-marino-italian-address'],
+    ['SM', 'it', 'city', 'Città di San Marino', 'Città di San Marino', 'san-marino-italian-address'],
     ['MC', 'fr', 'city', 'Monaco', 'Monaco', 'monaco-french-address'],
-    ['VA', 'it', 'state', 'Città del Vaticano', 'Vatican City', 'vatican-italian-address'],
+    ['MC', 'fr', 'street', 'Rue des Roses', 'Rue des Roses', 'monaco-french-address'],
+    ['VA', 'it', 'state', 'Città del Vaticano', 'Città del Vaticano', 'vatican-italian-address'],
     ['AD', 'ca', 'city', 'Andorra la Vella', 'Andorra la Vella', 'andorra-catalan-address'],
     ['CY', 'el', 'city', 'Λευκωσία', 'Nicosia', 'cyprus-greek-turkish-bilingual-address'],
-    ['ES_BAL', 'ca', 'state', 'Illes Balears', 'Balearic Islands', 'spain-balearic-catalan-spanish-address'],
-    ['ES_CAN', 'es', 'state', 'Islas Canarias', 'Canary Islands', 'spain-canary-spanish-address'],
-    ['PT_AZO', 'pt', 'state', 'Açores', 'Azores', 'portugal-azores-address'],
-    ['PT_MAD', 'pt', 'state', 'Região Autónoma da Madeira', 'Madeira', 'portugal-madeira-address'],
+    ['ES_BAL', 'ca', 'state', 'Illes Balears', 'Illes Balears', 'spain-balearic-catalan-spanish-address'],
+    ['ES_CAN', 'es', 'state', 'Islas Canarias', 'Islas Canarias', 'spain-canary-spanish-address'],
+    ['PT_AZO', 'pt', 'state', 'Açores', 'Açores', 'portugal-azores-address'],
+    ['PT_MAD', 'pt', 'state', 'Região Autónoma da Madeira', 'Região Autónoma da Madeira', 'portugal-madeira-address'],
   ] as const;
 
   for (const [countryCode, sourceLanguage, fieldKey, text, expected, algorithm] of cases) {

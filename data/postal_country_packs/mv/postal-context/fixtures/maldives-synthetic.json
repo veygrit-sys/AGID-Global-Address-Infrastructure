@@ -1,0 +1,78 @@
+{
+  "schema_version": "agid-postal-mv-synthetic-fixtures-v0.1",
+  "country_code": "MV",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "99999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mv-syn-five-digit-assignment",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "typed_current_postcode_assignment",
+        "administrative_atoll": "Synthetic Atoll",
+        "island_or_city": "Synthetic Island"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-five-digit-string",
+          "assignment-object-may-be-area-or-non-area"
+        ],
+        "must_not_assert": [
+          "syntax-or-prefix-proves-current-assignment",
+          "maldives-post-or-upu-row-is-official-postal-boundary",
+          "postal-service-object-is-area",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "mv-syn-island-administrative-join",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "explicit_synthetic_island_administrative_join",
+        "island_id": "MV-SYN-ISLAND",
+        "ld_code": "MV-SYN-LD"
+      },
+      "expected": {
+        "must_assert": [
+          "island-administrative-join-remains-derived",
+          "ld-code-remains-island-only"
+        ],
+        "must_not_assert": [
+          "ld-code-or-fcode-is-postcode",
+          "island-boundary-join-is-postal-authority-polygon",
+          "island-overlap-proves-delivery",
+          "onemap-layer-is-postcode-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "mv-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "MV-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "land-registry-survey-or-census-row-is-public-address-data",
+          "onemap-building-or-plot-is-civic-address-link",
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-recipient-or-household",
+          "viewer-api-survey-submission-or-attribution-is-redistribution-right"
+        ]
+      }
+    }
+  ]
+}

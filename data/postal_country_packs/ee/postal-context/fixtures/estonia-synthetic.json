@@ -1,0 +1,186 @@
+{
+  "schema_version": "agid-postal-ee-synthetic-fixtures-v0.1",
+  "fixture_set_id": "estonia-like-contract-cases-v0.1",
+  "country_code": "EE",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "0000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthetic",
+    "rule": "No value is an Omniva assignment, AKS postal area, ADS address object, EHAK area, building, facility, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-omniva-postcode",
+      "models_source_role": "omniva-estonia-postcodes",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-aks-postal-area",
+      "models_source_role": "estonia-aks-postal-areas",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-aks-address",
+      "models_source_role": "estonia-aks-address-objects",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-aks-building",
+      "models_source_role": "estonia-aks-building-shapes",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "ee-syn-address-building",
+      "exception_class": "ads_building_address",
+      "synthetic_address": {
+        "house_number": "1",
+        "street": "Synthetic Street",
+        "settlement": "Synthetic Settlement",
+        "postcode": "00000",
+        "ads_oid": "EE00000000",
+        "adob_id": "SYN-V1",
+        "building_name": "Synthetic ADS Building"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-aks-postal-area",
+          "assertion": "official-style-postal-area",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        },
+        {
+          "source_id": "synthetic-aks-building",
+          "assertion": "shared-ads-object-address-and-building-path",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "building",
+        "postal_geometry": "polygon",
+        "address_geometry": "point",
+        "must_not_assert": [
+          "recipient-or-occupant",
+          "private-building-part",
+          "legal-property-boundary",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "ee-syn-current-only-postcode",
+      "exception_class": "address_postcode_assignment",
+      "synthetic_address": {
+        "postcode": "00001",
+        "adr_id": "SYN-ADR-CURRENT"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-aks-address",
+          "assertion": "monthly-current-address-postcode",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "validity": "current-release-only",
+        "must_not_assert": [
+          "historical-completeness",
+          "address-point-is-building-footprint",
+          "recipient-or-occupant",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "ee-syn-building-part-private",
+      "exception_class": "building_part_or_private_unit",
+      "synthetic_address": {
+        "postcode": "00002",
+        "ads_object_type": "ER",
+        "unit": "Synthetic Unit"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-aks-address",
+          "assertion": "privacy-scoped-building-part",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "public_resolved_level": "building",
+        "must_not_assert": [
+          "public-private-unit-context",
+          "occupant-or-owner",
+          "household-inference",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "ee-syn-postal-facility",
+      "exception_class": "parcel_machine_post_office_or_poste_restante",
+      "synthetic_address": {
+        "postcode": "00003",
+        "delivery_facility": "Synthetic Parcel Machine"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-omniva-postcode",
+          "assertion": "facility-offload-postcode",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "geometry_type": "point",
+        "must_not_assert": [
+          "facility-is-residence",
+          "facility-overwrites-premise-postcode",
+          "surrounding-residential-polygon",
+          "occupant-or-recipient"
+        ]
+      }
+    },
+    {
+      "fixture_id": "ee-syn-version-successor",
+      "exception_class": "historical_address_object",
+      "synthetic_address": {
+        "postcode": "00004",
+        "ads_oid": "EE00000004",
+        "adob_id": "SYN-V2"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-aks-address",
+          "assertion": "stable-object-new-version",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "status": "time-dependent",
+        "must_not_assert": [
+          "ads-oid-changes-with-version",
+          "adob-id-is-stable-object-id",
+          "destructive-history-overwrite",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

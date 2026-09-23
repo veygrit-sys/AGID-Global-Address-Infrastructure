@@ -1,0 +1,172 @@
+openapi: 3.1.0
+info:
+  title: Veygrit ID Production API
+  version: 0.2.0
+  summary: Pairwise OpenID Connect provider for Address Wallet, Veygrit Store, Veygrit -ship, and connected EC clients.
+servers:
+  - url: https://id.veygrit.example
+paths:
+  /.well-known/openid-configuration:
+    get:
+      operationId: getOpenIdConfiguration
+      responses:
+        '200': { description: OIDC discovery metadata }
+  /.well-known/jwks.json:
+    get:
+      operationId: getJsonWebKeySet
+      responses:
+        '200': { description: Public signing keys only }
+  /veygrit/oauth/authorize:
+    get:
+      operationId: authorize
+      parameters:
+        - { name: client_id, in: query, required: true, schema: { type: string } }
+        - { name: redirect_uri, in: query, required: true, schema: { type: string, format: uri } }
+        - { name: response_type, in: query, required: true, schema: { const: code } }
+        - { name: scope, in: query, required: true, schema: { type: string } }
+        - { name: state, in: query, required: true, schema: { type: string, minLength: 16 } }
+        - { name: nonce, in: query, required: true, schema: { type: string, minLength: 16 } }
+        - { name: code_challenge, in: query, required: true, schema: { type: string, minLength: 43 } }
+        - { name: code_challenge_method, in: query, required: true, schema: { const: S256 } }
+        - { name: origin, in: query, required: false, schema: { type: string, format: uri } }
+      responses:
+        '302': { description: Redirect to Veygrit login and consent }
+        '400': { $ref: '#/components/responses/OAuthError' }
+  /veygrit/oauth/approve:
+    post:
+      operationId: approveAuthorization
+      summary: Approve a pending request using an HttpOnly Veygrit session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [request_ref, state]
+              properties:
+                request_ref: { type: string, pattern: '^vey_auth_req_' }
+                state: { type: string, minLength: 16 }
+                wallet_consent_ref: { type: string }
+      responses:
+        '302': { description: Redirect to the allowlisted client URI with one-time code and state }
+  /veygrit/social/{provider}/callback:
+    post:
+      operationId: completeGoogleAppleSocialCallback
+      summary: Complete a Google or Apple social callback for a pending Vey ID authorization request.
+      description: >
+        Social account bootstrap is limited to Google and Apple. Unsupported
+        providers are rejected before provider code exchange, secret lookup, or
+        Veygrit session creation. Provider tokens are verified only in memory and
+        are never stored or returned.
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [google, apple]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [request_ref, state, code]
+              properties:
+                request_ref: { type: string, pattern: '^vey_auth_req_' }
+                state: { type: string, minLength: 16 }
+                code: { type: string, minLength: 1 }
+                code_verifier: { type: string, minLength: 43, maxLength: 128 }
+                nonce: { type: string, minLength: 8 }
+      responses:
+        '200':
+          description: HttpOnly Veygrit session cookie plus a safe session reference.
+          headers:
+            Cache-Control: { schema: { const: no-store } }
+        '400':
+          description: Privacy-safe rejection such as unsupported_social_provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthErrorBody'
+  /veygrit/oauth/token:
+    post:
+      operationId: exchangeToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/AuthorizationCodeGrant'
+                - $ref: '#/components/schemas/RefreshTokenGrant'
+      responses:
+        '200':
+          description: Opaque access/refresh tokens plus EdDSA-signed ID token.
+          headers:
+            Cache-Control: { schema: { const: no-store } }
+        '400': { $ref: '#/components/responses/OAuthError' }
+  /veygrit/oauth/userinfo:
+    get:
+      operationId: getUserInfo
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Pairwise subject and granted scope; no provider token or raw address }
+        '401': { description: Invalid or expired access token }
+  /veygrit/oauth/introspect:
+    post:
+      operationId: introspectToken
+      responses:
+        '200': { description: RFC 7662-style active state }
+  /veygrit/oauth/revoke:
+    post:
+      operationId: revokeTokenFamily
+      responses:
+        '200': { description: Idempotent token-family revocation }
+  /v1/navigation-handoffs:
+    post:
+      operationId: createNavigationHandoff
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201': { description: Short-lived one-time Wallet/Store/Ship handoff }
+  /v1/navigation-handoffs/consume:
+    post:
+      operationId: consumeNavigationHandoff
+      responses:
+        '200': { description: Pairwise subject, source, target, and relative return path }
+        '400': { description: Expired, unknown, or replayed handoff }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  responses:
+    OAuthError:
+      description: Privacy-safe OAuth error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthErrorBody'
+  schemas:
+    OAuthErrorBody:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        error_description: { type: string }
+    AuthorizationCodeGrant:
+      type: object
+      required: [grant_type, code, client_id, redirect_uri, code_verifier]
+      properties:
+        grant_type: { const: authorization_code }
+        code: { type: string }
+        client_id: { type: string }
+        redirect_uri: { type: string, format: uri }
+        code_verifier: { type: string, minLength: 43, maxLength: 128 }
+    RefreshTokenGrant:
+      type: object
+      required: [grant_type, refresh_token, client_id]
+      properties:
+        grant_type: { const: refresh_token }
+        refresh_token: { type: string }
+        client_id: { type: string }

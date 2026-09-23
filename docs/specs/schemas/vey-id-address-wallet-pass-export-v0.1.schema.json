@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/vey-id-address-wallet-pass-export-v0.1.schema.json",
+  "title": "Vey ID Address Wallet Pass Export Fixture v0.1",
+  "description": "Synthetic local fixture shape for Wallet pass and QR export redaction audit metadata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "fixtureId",
+    "status",
+    "source",
+    "boundaryGateId",
+    "privacy",
+    "audit"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../schemas/vey-id-address-wallet-pass-export-v0.1.schema.json"
+    },
+    "fixtureId": {
+      "const": "vey-id-address-wallet-pass-export-v0.1"
+    },
+    "status": {
+      "const": "synthetic-local-fixture"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "builder",
+        "verifier"
+      ],
+      "properties": {
+        "builder": {
+          "const": "buildVeyIdAddressWalletPassExportAudit"
+        },
+        "verifier": {
+          "const": "npm run verify:vey-id-address-wallet-pass-export-fixture-schema"
+        }
+      }
+    },
+    "boundaryGateId": {
+      "const": "wallet-pass-short-lived-ref"
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "localOnly",
+        "productionTraffic",
+        "containsRawAddress",
+        "privateMaterialExposed"
+      ],
+      "properties": {
+        "localOnly": {
+          "const": true
+        },
+        "productionTraffic": {
+          "const": false
+        },
+        "containsRawAddress": {
+          "const": false
+        },
+        "privateMaterialExposed": {
+          "const": false
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "artifactCount",
+        "artifacts",
+        "forbiddenValueMarkers",
+        "localOnly",
+        "productionTraffic",
+        "privateMaterialExposed",
+        "validationErrors"
+      ],
+      "properties": {
+        "version": {
+          "const": "vey-id-address-wallet-foundation-v0.1"
+        },
+        "artifactCount": {
+          "const": 3
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "artifactId",
+              "displayName",
+              "safePayloadRefs",
+              "blockedPayload",
+              "expiryPolicy",
+              "rotationPolicy",
+              "nonClaims",
+              "localOnly",
+              "productionTraffic",
+              "privateMaterialExposed",
+              "forbiddenValueMarkersFound"
+            ],
+            "properties": {
+              "artifactId": {
+                "type": "string",
+                "enum": [
+                  "apple-wallet-pass",
+                  "google-wallet-pass",
+                  "qr-token"
+                ]
+              },
+              "displayName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "safePayloadRefs": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "applePassRef",
+                    "googlePassRef",
+                    "qrTokenRef",
+                    "walletSubjectAlias",
+                    "walletOpenRef",
+                    "approvalRequestRef",
+                    "recipient_id",
+                    "expiry"
+                  ]
+                }
+              },
+              "blockedPayload": {
+                "type": "array",
+                "minItems": 5,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "rawAddress",
+                    "recipientName",
+                    "recipientPhone",
+                    "privateDeliveryNotes",
+                    "selectedAddressBody",
+                    "proofWitness",
+                    "proofSecret",
+                    "privateKey",
+                    "devicePrivateKey",
+                    "carrierApiKey",
+                    "carrierCredential",
+                    "rawQrPayload",
+                    "unscopedPassPayload"
+                  ]
+                }
+              },
+              "expiryPolicy": {
+                "type": "string",
+                "pattern": "Short-lived|Minutes"
+              },
+              "rotationPolicy": {
+                "type": "string",
+                "pattern": "Rotate|rotat|invalidates"
+              },
+              "nonClaims": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string",
+                  "pattern": "local-only evidence|not raw address disclosure|long-lived bearer address token"
+                }
+              },
+              "localOnly": {
+                "const": true
+              },
+              "productionTraffic": {
+                "const": false
+              },
+              "privateMaterialExposed": {
+                "const": false
+              },
+              "forbiddenValueMarkersFound": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        "forbiddenValueMarkers": {
+          "type": "array",
+          "minItems": 24,
+          "items": {
+            "type": "string",
+            "enum": [
+              "rawAddressValue",
+              "recipientNameValue",
+              "recipientPhoneValue",
+              "privateDeliveryNotesValue",
+              "selectedAddressBodyValue",
+              "proofWitnessValue",
+              "proofSecretValue",
+              "privateKeyValue",
+              "devicePrivateKeyValue",
+              "carrierApiKeyValue",
+              "carrierCredentialValue",
+              "rawQrPayloadValue",
+              "unscopedPassPayloadValue",
+              "raw_address_value",
+              "recipient_phone_value",
+              "proof_secret_value",
+              "private_key_value",
+              "device_private_key_value",
+              "carrier_api_key_value",
+              "carrier_credential_value",
+              "raw_qr_payload_value",
+              "unscoped_pass_payload_value",
+              "sk_live_",
+              "pk_live_"
+            ]
+          }
+        },
+        "localOnly": {
+          "const": true
+        },
+        "productionTraffic": {
+          "const": false
+        },
+        "privateMaterialExposed": {
+          "const": false
+        },
+        "validationErrors": {
+          "type": "array",
+          "maxItems": 0
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,7 @@ export type OpenSourceAddressResolutionStepKind =
   | 'postal-api'
   | 'postal-dataset'
   | 'geodata'
+  | 'space-agency-geodata'
   | 'machine-translation'
   | 'transliteration'
   | 'format-rules'
@@ -26,6 +27,8 @@ export type OpenSourceAddressResolutionPipelineInput = {
   sourceLanguage?: string;
   targetLanguage?: string;
   hasCustomTranslator?: boolean;
+  needsNaturalGeographyContext?: boolean;
+  sparseOrRemoteArea?: boolean;
 };
 
 export type OpenSourceTranslationPriorityInput = {
@@ -99,6 +102,14 @@ const BASE_STEPS = {
     openSourceOrFree: true,
     dictionaryDependent: false,
   },
+  spaceAgencyGeodata: {
+    id: 'space-agency-open-geodata',
+    kind: 'space-agency-geodata',
+    label: 'NASA / ESA / Copernicus / JAXA open Earth-observation sources',
+    networked: true,
+    openSourceOrFree: true,
+    dictionaryDependent: false,
+  },
   openSourceTranslation: {
     id: 'open-source-translation-api',
     kind: 'machine-translation',
@@ -156,6 +167,9 @@ export function buildOpenSourceAddressResolutionPipeline(
   }
   if (input.hasCoordinates) {
     steps.push(BASE_STEPS.openGeodata);
+    if (input.needsNaturalGeographyContext || input.sparseOrRemoteArea) {
+      steps.push(BASE_STEPS.spaceAgencyGeodata);
+    }
   }
   if (needsInternationalEnglish(input)) {
     steps.push(BASE_STEPS.openSourceTranslation, BASE_STEPS.openSourceTransliteration);

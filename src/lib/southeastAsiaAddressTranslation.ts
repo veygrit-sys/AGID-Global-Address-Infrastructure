@@ -1,7 +1,7 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
-import { normalizeMainlandChineseAddressPart } from './chineseAddressUtils';
+import { normalizeChineseRegionalAddressPart } from './chineseAddressUtils';
 
 export type SoutheastAsiaAddressTopology =
   | 'burmese-abugida'
@@ -273,8 +273,7 @@ function normalizeSoutheastAsiaEnglish(text: string, countryCode: string, fieldK
   if (aliases[text]) return aliases[text];
 
   if (code === 'SG' && /[\u3400-\u9fff]/.test(text)) {
-    const chinese = normalizeMainlandChineseAddressPart(text);
-    if (chinese) return chinese;
+    return normalizeChineseRegionalAddressPart(text, code);
   }
 
   if (shouldUseBuildingEnglish(fieldKey)) {

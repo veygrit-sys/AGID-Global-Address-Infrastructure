@@ -1,0 +1,87 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-am",
+    "country_code": "AM",
+    "country_name": "Armenia",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postal index",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "postal_region_and_post_office_assignment_with_optional_derived_surface",
+    "assignment_rule": "Pinned HayPost index results or permitted releases establish a current four-digit postal-region and post-office assignment. UPU format guidance and four-digit syntax do not establish allocation.",
+    "perimeter_rule": "No nationwide official postcode-polygon source is assumed. A surface is derived only from rights-cleared, versioned official address membership and compatible boundaries and remains explicitly derived.",
+    "address_rule": "Cadastre Committee real-estate address registration is based on authorized community address decisions. Public search or geoportal visibility is not a bulk redistribution license.",
+    "building_rule": "Exact building display requires the same official address or cadastral object identifier, or a reviewed explicit crosswalk. Address points, parcels, containment, and proximity remain candidates.",
+    "administrative_rule": "Cadastre Committee and National Geoportal administrative geometry supplies jurisdiction and clipping context but never creates postal membership.",
+    "territory_rule": "Postal assignment never determines sovereignty or a legal boundary. Country and disputed-feature classification must cite a separately pinned boundary authority, policy, and vintage; routing, language, locality names, or proximity never assign AM identity."
+  },
+  "temporal_model": {
+    "valid_time": "Postal, address, cadastral, building, and boundary validity when supplied by the source.",
+    "known_time": "Source publication, capture, ingest, correction, and release timestamps retained independently.",
+    "history_rule": "Later postal or registry evidence appends a versioned assertion and never silently rewrites an earlier release."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each postcode assignment references a pinned HayPost result, directory, or permitted release and retains postal-region or post-office class, locality, capture time, rights, and digest." },
+    { "id": "derived-perimeter", "pass": "Every derived surface retains member addresses, algorithm, parameters, boundary clips, validation metrics, source releases, rights, and digest and is never labelled official." },
+    { "id": "official-address", "pass": "Each address assertion retains the community decision or official registry object identifier, hierarchy, status, coordinate provenance, release, and permitted public fields." },
+    { "id": "building-link", "pass": "An exact building has the same official address/cadastral object identifier or a reviewed explicit crosswalk; spatial proximity is candidate-only." },
+    { "id": "coverage-and-boundary", "pass": "Each Cadastre Committee or National Geoportal layer retains coverage and vintage; no unsourced gap or disputed feature is assigned AM identity by postal evidence." },
+    { "id": "privacy", "pass": "No recipient, resident, owner, rightsholder, tenant, occupant, phone, credential, title, restriction, or protected registry field is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "m2_review": {
+      "profile": "m2-source-review.json",
+      "definition_unchanged": true,
+      "required_evidence": [
+        "provider-permitted-current-assignment-snapshot-with-edition-capture-time-and-digest",
+        "retention-transformation-and-redistribution-rights-for-each-source-and-public-field",
+        "all-directory-row-identities-preserved-without-postcode-only-deduplication",
+        "explicit-scope-temporal-lineage-and-reproducible-conversion",
+        "independent-geometry-and-civic-address-building-identity-evidence-if-present",
+        "immutable-approved-publication-with-remote-hash-verification",
+        "real-agid-loader-and-api-verification-not-only-synthetic-fixtures"
+      ]
+    },
+    "hard_blockers": [
+      "post-office-address-used-as-civic-address-of-postcode",
+      "directory-postcode-used-as-unique-object-key",
+      "pdf-metadata-date-used-as-assignment-validity",
+      "postcode-syntax-presented-as-current-allocation",
+      "postal-region-or-post-office-point-presented-as-postcode-area",
+      "derived-surface-presented-as-official-postcode-boundary",
+      "special-routing-record-given-invented-polygon",
+      "address-point-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postal-evidence-presented-as-sovereignty-or-boundary-evidence",
+      "disputed-feature-auto-assigned-to-am",
+      "postcode-stored-as-number",
+      "recipient-owner-rightsholder-occupant-or-protected-registry-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "recipient_identity", "occupancy", "ownership", "building_identity_from_proximity", "every_postcode_is_a_polygon", "special_code_is_a_residential_area", "sovereignty_or_legal_boundary", "survey_certification"
+  ]
+}

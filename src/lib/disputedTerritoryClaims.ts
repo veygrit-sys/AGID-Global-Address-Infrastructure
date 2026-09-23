@@ -8,11 +8,51 @@ export type TerritoryClaimOption = {
   postalGuidance: string;
 };
 
+export type TerritoryClaimDisplayPolicy =
+  | 'neutral-first'
+  | 'administration-first'
+  | 'claim-first'
+  | 'logistics-first';
+
+export const TERRITORY_CLAIM_DISPLAY_POLICIES: Array<{
+  id: TerritoryClaimDisplayPolicy;
+  label: string;
+  shortLabel: string;
+  description: string;
+}> = [
+  {
+    id: 'neutral-first',
+    label: '中立優先',
+    shortLabel: '中立',
+    description: 'Start with neutral or unclaimed display where available.',
+  },
+  {
+    id: 'administration-first',
+    label: '実効支配 / 現地運用優先',
+    shortLabel: '現地',
+    description: 'Start with the administration or locally operated route view.',
+  },
+  {
+    id: 'claim-first',
+    label: '主張優先',
+    shortLabel: '主張',
+    description: 'Start with claimant-state display options.',
+  },
+  {
+    id: 'logistics-first',
+    label: '物流ルート優先',
+    shortLabel: '物流',
+    description: 'Start with practical carrier or field logistics route views.',
+  },
+];
+
 type TerritoryClaimLookupInput = {
   regionCode?: string;
   countryCode?: string;
   regionName?: string;
 };
+
+const JAPANESE_CLAIM_TERRITORY_CODES = new Set(['JP_TK', 'JP_SK', 'JP_NT']);
 
 const japanClaim = (overrides: Partial<TerritoryClaimOption> = {}): TerritoryClaimOption => ({
   id: 'jp',
@@ -346,6 +386,76 @@ const nameMatchers: Array<[RegExp, string]> = [
 const normalizeTerritoryCode = (code?: string) =>
   (code || '').trim().replace(/-/g, '_').toUpperCase();
 
+export function isJapaneseClaimTerritory(code?: string | null): boolean {
+  return JAPANESE_CLAIM_TERRITORY_CODES.has(normalizeTerritoryCode(code || undefined));
+}
+
+export function orderTerritoryClaimOptionsForDisplay(
+  code: string | null,
+  options: TerritoryClaimOption[],
+): TerritoryClaimOption[] {
+  const normalizedCode = normalizeTerritoryCode(code || undefined);
+  const copiedOptions = [...options];
+  if (!isJapaneseClaimTerritory(normalizedCode)) return copiedOptions;
+
+  return copiedOptions.sort((left, right) => {
+    if (left.id === 'jp' && right.id !== 'jp') return -1;
+    if (left.id !== 'jp' && right.id === 'jp') return 1;
+    return 0;
+  });
+}
+
+function territoryClaimPolicyRank(
+  policy: TerritoryClaimDisplayPolicy,
+  status: TerritoryClaimOption['status'],
+) {
+  const neutralRank = status === 'neutral' || status === 'unclaimed';
+  if (policy === 'neutral-first') {
+    if (neutralRank) return 0;
+    if (status === 'administration') return 1;
+    if (status === 'logistics-route') return 2;
+    return 3;
+  }
+
+  if (policy === 'administration-first') {
+    if (status === 'administration') return 0;
+    if (status === 'logistics-route') return 1;
+    if (neutralRank) return 2;
+    return 3;
+  }
+
+  if (policy === 'claim-first') {
+    if (status === 'claim') return 0;
+    if (status === 'administration') return 1;
+    if (status === 'logistics-route') return 2;
+    return 3;
+  }
+
+  if (status === 'logistics-route') return 0;
+  if (status === 'administration') return 1;
+  if (neutralRank) return 2;
+  return 3;
+}
+
+export function orderTerritoryClaimOptionsByPolicy(
+  code: string | null,
+  options: TerritoryClaimOption[],
+  policy: TerritoryClaimDisplayPolicy = 'neutral-first',
+): TerritoryClaimOption[] {
+  const baseOptions = orderTerritoryClaimOptionsForDisplay(code, options);
+  const normalizedCode = normalizeTerritoryCode(code || undefined);
+  if (isJapaneseClaimTerritory(normalizedCode)) return baseOptions;
+
+  return baseOptions
+    .map((option, index) => ({ option, index }))
+    .sort((left, right) => {
+      const rankDelta = territoryClaimPolicyRank(policy, left.option.status)
+        - territoryClaimPolicyRank(policy, right.option.status);
+      return rankDelta || left.index - right.index;
+    })
+    .map(item => item.option);
+}
+
 export function resolveTerritoryClaimKey(input: TerritoryClaimLookupInput): string | null {
   const candidates = [
     normalizeTerritoryCode(input.regionCode),
@@ -364,13 +474,16 @@ export function resolveTerritoryClaimKey(input: TerritoryClaimLookupInput): stri
   return null;
 }
 
-export function getTerritoryClaimOptions(input: string | TerritoryClaimLookupInput | null | undefined): TerritoryClaimOption[] {
+export function getTerritoryClaimOptions(
+  input: string | TerritoryClaimLookupInput | null | undefined,
+  policy: TerritoryClaimDisplayPolicy = 'neutral-first',
+): TerritoryClaimOption[] {
   const key = typeof input === 'string'
     ? resolveTerritoryClaimKey({ regionCode: input })
     : input
       ? resolveTerritoryClaimKey(input)
       : null;
-  return key ? territoryClaimsByCode[key] || [] : [];
+  return key ? orderTerritoryClaimOptionsByPolicy(key, territoryClaimsByCode[key] || [], policy) : [];
 }
 
 export function formatTerritoryClaimSummary(option: TerritoryClaimOption): string {

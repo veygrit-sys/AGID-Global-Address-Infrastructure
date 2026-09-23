@@ -1,5 +1,6 @@
 import { agidFetch } from '../lib/agidHttpClient';
 import { apiEndpoints } from '../lib/apiEndpoints';
+import { buildPlaceSearchLanguageProfile } from '../lib/placeSearchLanguage';
 import type { Coordinates,NamedCoordinates,OsrmRoute,PhotonFeature } from '../types/navigation';
 
 type PhotonResponse = {
@@ -58,13 +59,31 @@ export function photonFeatureToNamedCoordinates(feature: PhotonFeature): Require
 }
 
 export async function fetchPhotonFeatures(query: string, limit = 5, options: FetchOptions = {}) {
-  const response = await agidFetch<PhotonResponse>(apiEndpoints.photonSearch(query, limit), {
-    source: 'photon',
-    timeoutMs: 8000,
-    retries: 1,
-    fetcher: options.fetcher,
-  });
-  return response.data?.features || [];
+  const profile = buildPlaceSearchLanguageProfile(query);
+  const variants = profile.queryVariants.length ? profile.queryVariants.slice(0, 3) : [query];
+  const seen = new Set<string>();
+  const features: PhotonFeature[] = [];
+
+  for (const variant of variants) {
+    const response = await agidFetch<PhotonResponse>(apiEndpoints.photonSearch(variant, limit), {
+      source: 'photon',
+      timeoutMs: 8000,
+      retries: 1,
+      fetcher: options.fetcher,
+    });
+
+    for (const feature of response.data?.features || []) {
+      const [lng, lat] = feature.geometry.coordinates;
+      const key = `${lat.toFixed(6)}|${lng.toFixed(6)}|${feature.properties.name || ''}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      features.push(feature);
+    }
+
+    if (features.length > 0) break;
+  }
+
+  return features.slice(0, limit);
 }
 
 export async function fetchOsrmRoute(

@@ -1,0 +1,141 @@
+{
+  "schema_version": "agid-postal-pk-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-pk",
+    "country_code": "PK",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "current_code_name": "Pakistan five-digit postcode",
+    "current_code_format": "NNNNN",
+    "current_code_default_geometry": "delivery_network_assignment_with_nonspatial_office_types",
+    "legal_rule": "The UPU Pakistan addressing sheet specifies exactly five digits to the right of the locality: the first two identify a routing district and the last three a delivery post office. Pakistan Post publishes separate delivery and non-delivery directories and amendments. These sources establish syntax and typed assignments, not a canonical polygon, exact delivery point, building relation, complete history or blanket redistribution licence.",
+    "assignment_rule": "Delivery post office, non-delivery post office, account office, province and attached branch-office code remain distinct source fields. Codes are five-character strings and retain leading zeroes. A directory or amendment row is assignment and routing evidence only; office labels, shared digits, coordinates or administrative overlap do not create a postal area.",
+    "geometry_rule": "No reviewed canonical national postcode polygon artifact is bundled. Official geometry requires an exact postal boundary artifact and postcode relation with authority, edition, coverage, applicable Survey of Pakistan registration, vetting or licence, source-specific redistribution rights, CRS, topology and digest pinned. A generated surface remains derived and uncertainty-bearing; office points, PBS census blocks, administrative boundaries, interpolation, Voronoi and model output never become official postal polygons.",
+    "address_rule": "House or building, street, sector or locality, delivery post office, city, district, province or territory and five-digit postcode remain typed. A postcode, office record, census block, coordinate, parcel or map feature alone does not identify a recipient, owner, occupant, entrance, unit or building footprint.",
+    "building_rule": "Exact building display requires a rights-cleared civic-address point or stable address identifier, separately rights-cleared building geometry, and a source-defined stable relation, common identifier or reviewed explicit crosswalk. Postcode containment, census-block membership, administrative overlap, text match, coordinates, proximity and nearest-building logic create candidates only.",
+    "administration_rule": "Pakistan Post routing districts and office networks, PBS census blocks and administrative units, Survey of Pakistan products, NSDI layers, civic addresses and buildings refresh independently. PBS describes census blocks as enumerator-workload units; they are not postal regions. Every join requires editioned identifiers and an explicit source-qualified relation.",
+    "licence_rule": "Survey of Pakistan guidance under the Surveying and Mapping Act and Rules records registration, official-base-map, vetting and licensing requirements for covered mapping activity, while products may be supplied by request or payment. Public access, government authorship, a viewer, an API or mathematical generation is not a data or map redistribution grant. Every artifact pins provider, terms, approval or licence, edition, coverage, schema, CRS, scale, validity, attribution and digest.",
+    "privacy_rule": "Recipients, senders, delivery or non-delivery customers, post-office box holders, contacts, correspondence, shipment and tracking records, query history, owners, occupants, residents, tenants, household or unit rosters, national identifiers, phone numbers and private access instructions are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, datum, axis order, epoch, scale and accuracy. Geographic-looking coordinates are not assumed to be WGS84 and official maps are never relabelled. Reprojection requires reviewed parameters, axis order and an accuracy statement.",
+    "territory_rule": "The repository uses ISO code PK and exact source-stated coverage. Postal, census, administrative, NSDI and mapping-product coverage is metadata and is not used to decide sovereignty, jurisdiction, maritime limits or borders; source gaps are not model-filled as official.",
+    "freshness_rule": "Postal directories, amendments, delivery status, administrative and census editions, Survey of Pakistan approvals or products, NSDI layers, civic addresses, buildings, licences and AGID releases refresh independently. Mixed-edition joins fail closed unless validity, known-time, identifiers, rights and an explicit relation overlap.",
+    "m2_exception_rule": "Preserve source office class; a zero prefix is not a complete classifier. Shared-code rows need explicit source resolution, never automatic deduplication. Do not truncate six-digit source exceptions or calculate attached branch codes. Distinguish base edition, notice date, effectivity and PDF/upload timestamps; require a complete amendment reconciliation."
+  },
+  "integration": {
+    "agid_country_code": "PK",
+    "coordinate_flow": "coordinate -> exact official postal surface or permitted civic-address point -> typed delivery/non-delivery post-office assignment -> locality/district/province-or-territory -> explicit address-building relation -> PK AGID cell",
+    "postcode_flow": "canonical five-character string -> pinned Pakistan Post directory plus amendments -> typed office network -> official postal surface or no canonical geometry -> optional derived surface -> explicit civic-address/building evidence -> AGID cells",
+    "building_output_gate": "rights-cleared civic-address evidence plus building geometry and source-defined stable relation, common identifier or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "five-character-code",
+      "pass": "Runtime accepts exactly five digits after Unicode and whitespace normalization, retains leading zeroes, and rejects prefixes, punctuation and other lengths."
+    },
+    {
+      "id": "typed-office-assignment",
+      "pass": "Delivery, non-delivery, account and attached branch-office records remain typed, editioned and source-linked."
+    },
+    {
+      "id": "assignment-versus-geometry",
+      "pass": "Postcode and office assignment authority is recorded independently from official or derived geometry authority."
+    },
+    {
+      "id": "survey-mapping-compliance",
+      "pass": "Any published geometry pins applicable registration, official-base-map, vetting, licence, product and redistribution requirements before release."
+    },
+    {
+      "id": "census-block-separation",
+      "pass": "PBS census and administrative features remain context and never become postal areas, addresses or buildings by overlap."
+    },
+    {
+      "id": "derived-postal-surface",
+      "pass": "Generated surfaces record inputs, explicit assignment relation, method, uncertainty, exclusions, topology, version, validity, CRS, rights and digest and remain non-canonical."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has permitted civic-address evidence, rights-cleared geometry and a stable explicit relation; containment, text and proximity never pass."
+    },
+    {
+      "id": "licence-crs-territory-privacy",
+      "pass": "Artifact-specific rights, approval, attribution, CRS, scale, coverage and privacy exclusions are pinned without geopolitical inference."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "A complete rights-cleared delivery and non-delivery postcode-office assignment with amendments passes authority, coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived postal geometry and public civic-address artifacts pass authority, mapping-law, uncertainty, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "directory-or-amendment-row-presented-as-official-postcode-polygon",
+      "delivery-nondelivery-account-or-branch-office-types-collapsed",
+      "routing-prefix-or-office-suffix-presented-as-geometric-boundary",
+      "pbs-census-block-or-administrative-boundary-presented-as-postal-area",
+      "survey-or-nsdi-map-presence-presented-as-open-redistribution-right",
+      "applicable-mapping-registration-vetting-licence-or-official-base-map-requirement-omitted",
+      "postcode-office-coordinate-text-overlap-or-proximity-presented-as-exact-address-building-link",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-postal-polygon",
+      "recipient-sender-customer-po-box-holder-contact-tracking-query-owner-occupant-tenant-resident-id-phone-or-private-access-data-published",
+      "source-crs-axis-scale-or-datum-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "postcode-office-building-or-delivery-point-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_PK_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PK_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_PK_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PK_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-office-address-building-census-map-tracking-or-query-rows",
+    "all-five-digit-postcodes-have-polygons",
+    "office-point-census-block-or-administrative-boundary-is-postal-area",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ],
+  "m2_review": {
+    "status": "blocked",
+    "country_m2_achieved": false,
+    "reviewed_at": "2026-08-28T22:55:37.259Z",
+    "config": "m2-source-review.json",
+    "source_report": "reports/postal-context-m2/pk-source-review-2026-08-28.json",
+    "source_report_digest": "sha256:6c51f5a4e8e947810e54c1236e23b0c7db381266d2ef91909122f6b5b6a21491",
+    "engineering_report": "reports/postal-context-m2/pk-checks-2026-08-28.json",
+    "current_assignment_artifacts": 0,
+    "production_geometry_records": 0,
+    "published_immutable_data_artifacts": 0,
+    "real_agid_runtime_verified": false,
+    "next_review_after": "2026-09-04T22:55:37.259Z"
+  }
+}

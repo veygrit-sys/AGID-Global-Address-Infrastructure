@@ -1,0 +1,70 @@
+{
+  "schema_version": "agid-postal-synthetic-fixtures-v0.1",
+  "country_code": "DE",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "0000",
+    "coordinates_are_geographic": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "de-syn-delivery-area",
+      "synthetic_address": { "postcode": "00000", "locality": "Teststadt", "street": "Prüfstraße", "house_number": "1" },
+      "evidence": [
+        { "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }
+      ],
+      "expected": {
+        "geometry_type": "polygon",
+        "must_not_assert": ["real-address", "deliverability", "municipality-is-postcode-area"]
+      }
+    },
+    {
+      "fixture_id": "de-syn-large-recipient",
+      "synthetic_address": { "postcode": "00001", "organization": "Testempfänger" },
+      "evidence": [
+        { "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }
+      ],
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": ["synthetic-residential-polygon", "recipient-identity", "deliverability"]
+      }
+    },
+    {
+      "fixture_id": "de-syn-house-coordinate",
+      "synthetic_address": { "postcode": "00002", "locality": "Teststadt", "street": "Messweg", "house_number": "2" },
+      "evidence": [
+        { "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }
+      ],
+      "expected": {
+        "geometry_type": "point",
+        "must_not_assert": ["house-coordinate-is-building-footprint", "nearest-building-is-exact-link", "resident-or-owner"]
+      }
+    },
+    {
+      "fixture_id": "de-syn-derived-surface",
+      "synthetic_address": { "postcode": "00003", "locality": "Modellort" },
+      "evidence": [
+        { "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }
+      ],
+      "expected": {
+        "geometry_type": "multipolygon",
+        "must_not_assert": ["deutsche-post-official-polygon", "bkg-plz-official-polygon", "production-ready"]
+      }
+    },
+    {
+      "fixture_id": "de-syn-cross-border-routing",
+      "synthetic_address": { "postcode": "00004", "locality": "Grenztest" },
+      "evidence": [
+        { "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }
+      ],
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": ["foreign-routing-area-is-german-territory", "de-agid-sovereignty", "deliverability"]
+      }
+    }
+  ]
+}

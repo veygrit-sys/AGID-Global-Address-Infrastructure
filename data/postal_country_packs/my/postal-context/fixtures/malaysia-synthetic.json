@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-my-synthetic-fixtures-v0.1",
+  "country_code": "MY",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "99999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "my-syn-five-digit-assignment",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "typed_current_postcode_assignment",
+        "state_or_federal_territory": "Synthetic State",
+        "locality": "Synthetic Locality"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-five-digit-string",
+          "assignment-object-may-be-area-or-non-area"
+        ],
+        "must_not_assert": [
+          "syntax-proves-current-assignment",
+          "postcode-finder-mygdx-or-upu-row-is-official-postal-boundary",
+          "postal-service-object-is-area",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "my-syn-administrative-join",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "explicit_synthetic_administrative_join",
+        "administrative_id": "MY-SYN-ADMIN"
+      },
+      "expected": {
+        "must_assert": [
+          "administrative-join-remains-derived"
+        ],
+        "must_not_assert": [
+          "administrative-boundary-join-is-postal-authority-polygon",
+          "administrative-overlap-proves-delivery",
+          "mygeo-layer-is-postcode-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "my-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "99999",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "MY-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "upi-parcel-is-civic-address-or-building",
+          "mygos-map-building-or-parcel-is-civic-address-link",
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-recipient-or-account-holder",
+          "portal-query-registration-request-or-payment-is-redistribution-right"
+        ]
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
+import { isMajorEuropeanShippingCountry,normalizeMajorEuropeanShippingField } from './majorEuropeanShippingAddress';
 
 export type EasternEuropeAddressTopology =
   | 'latin-address'
@@ -300,6 +301,14 @@ function shouldUseBuildingEnglish(fieldKey: string) {
 
 function normalizeEasternEuropeEnglish(text: string, countryCode: string, fieldKey: string) {
   const code = countryCodeOf(countryCode);
+  if (isMajorEuropeanShippingCountry(code)) {
+    return normalizeMajorEuropeanShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
   const aliases = EASTERN_EUROPE_ENGLISH_ALIASES[code] || {};
   if (aliases[text]) return aliases[text];
   if (COMMON_EASTERN_EUROPE_ADDRESS_TERMS[text]) return COMMON_EASTERN_EUROPE_ADDRESS_TERMS[text];

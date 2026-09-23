@@ -1,11 +1,24 @@
-import {
-normalizeEnglishAddressBuildingName,
-normalizeEnglishAddressPart,
-renderDomesticEnglishPostalAddress,
-renderEnglishPostalAddress,
-} from './addressEnglish';
 import type { CanonicalAddress } from './addressRendering';
+import {
+buildEnglishShippingAddress,
+normalizeEnglishShippingField,
+} from './englishShippingAddress';
 import { getEnglishAddressCircle,type EnglishAddressCircle } from './languageTabs';
+
+export {
+buildEnglishShippingAddress,
+EXTENDED_ENGLISH_SHIPPING_COUNTRIES,
+getEnglishShippingProfile,
+normalizeEnglishShippingField,
+} from './englishShippingAddress';
+export type {
+EnglishShippingAddressResult,
+EnglishShippingLayout,
+EnglishShippingPostcodePolicy,
+EnglishShippingProfile,
+EnglishShippingProfileId,
+EnglishShippingWarning,
+} from './englishShippingAddress';
 
 export type EnglishAddressMode = 'domestic' | 'international-shipping';
 
@@ -20,19 +33,9 @@ export type EnglishAddressModeProfile = {
   internationalIncludesCountry: true;
 };
 
-const BUILDING_FIELD_KEYS = new Set([
-  'building',
-  'organization',
-  'company',
-  'poi',
-  'amenity',
-  'shop',
-  'office',
-  'tourism',
-]);
-
 export function getEnglishAddressModeProfile(countryCode: string): EnglishAddressModeProfile {
-  const country = countryCode.toUpperCase();
+  const requestedCountry = countryCode.toUpperCase();
+  const country = requestedCountry === 'UK' ? 'GB' : requestedCountry;
 
   return {
     countryCode: country,
@@ -56,13 +59,13 @@ export function normalizeEnglishAddressModeField(input: {
   const text = String(input.text ?? '').trim();
   if (!text) return '';
 
-  return BUILDING_FIELD_KEYS.has(input.fieldKey)
-    ? normalizeEnglishAddressBuildingName(text, country)
-    : normalizeEnglishAddressPart(text, country);
+  return normalizeEnglishShippingField({
+    countryCode: country,
+    fieldKey: input.fieldKey,
+    text,
+  });
 }
 
 export function renderEnglishAddressMode(data: CanonicalAddress, mode: EnglishAddressMode) {
-  return mode === 'domestic'
-    ? renderDomesticEnglishPostalAddress(data)
-    : renderEnglishPostalAddress(data, { includeCountry: true });
+  return buildEnglishShippingAddress(data, mode).formatted;
 }

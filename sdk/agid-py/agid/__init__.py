@@ -8,3 +8,6 @@ def encode(lat: float, lon: float):
 
 def decode(agid: str):
     return None
+
+def cell_bounds(agid: str):
+    raise NotImplementedError("wire this package to the AGID reference implementation")

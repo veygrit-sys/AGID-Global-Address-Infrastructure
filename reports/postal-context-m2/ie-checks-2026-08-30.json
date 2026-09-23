@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "IE",
+  "observedAt": "2026-08-30T10:32:18.330Z",
+  "completedAt": "2026-08-30T11:02:24.8649279Z",
+  "baseCommit": "873bbe605633444b844bdacd434de9023d2e6a04",
+  "scope": "Country definition and conservative M2 blocker evidence; no real IE data pack, API route or browser geometry was promoted.",
+  "checks": [
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "ireland-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-ie-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "full-code non-area semantics, D6W, public TERCET non-promotion, licensed/confidential source gates, report digests and next-country order"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draw, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "root TypeScript graph passes after linking the repository's local @agid workspaces into the isolated temporary dependency tree"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 5,
+    "testsPassed": 43,
+    "testsFailed": 0
+  },
+  "runtime": {
+    "node": "bundled Codex primary runtime",
+    "dependencies": "npm ci --ignore-scripts in a run-specific untracked directory, with temporary junctions to the isolated repository workspaces",
+    "productionDependenciesChanged": false
+  },
+  "knownLimitations": [
+    "The first npx --no-install tsx attempt could not resolve the executable; direct invocation of node_modules/tsx/dist/cli.mjs passed.",
+    "The first TypeScript attempt could not resolve six local @agid workspaces because npm ci ran in a separate short directory; after temporary workspace junctions were added, the unchanged type graph passed.",
+    "npm audit reported 10 pre-existing dependency findings in the temporary install (1 moderate, 9 high); no audit fix or dependency mutation was authorized or performed.",
+    "No real rights-cleared IE Routing Key Polygon/MultiPolygon exists, so real IE API, map fit, translucent rendering and browser E2E remain unverified.",
+    "PDF pages were rendered, but local image inspection failed with Windows os error 206; no successful visual-review claim is made."
+  ],
+  "countryM2Achieved": false
+}

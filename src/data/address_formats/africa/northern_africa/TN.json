@@ -3,7 +3,7 @@
   "name": "Tunisia",
   "native": {
     "name": "تونس",
-    "addressFormat": "{{recipient}}\n{{street}}\n{{postcode}} {{city}}",
+    "addressFormat": "{{recipient}}\n{{building}}\n{{houseNumber}} {{street}}\n{{postcode}} {{city}}\n{{delegation}}\n{{governorate}}",
     "ordering": "small-to-big",
     "fields": [
       {
@@ -14,9 +14,21 @@
         "type": "text"
       },
       {
+        "key": "building",
+        "label": "المبنى / المدخل / الدرج / الشقة",
+        "placeholder": "مبنى تجريبي، مدخل أ، الطابق ٢",
+        "type": "text"
+      },
+      {
+        "key": "houseNumber",
+        "label": "رقم المبنى",
+        "placeholder": "٤٥",
+        "type": "text"
+      },
+      {
         "key": "street",
         "label": "العنوان",
-        "placeholder": "٤٥ شارع الحبيب بورقيبة",
+        "placeholder": "شارع الحبيب بورقيبة",
         "required": true,
         "type": "text"
       },
@@ -29,15 +41,27 @@
       },
       {
         "key": "city",
-        "label": "المدينة / الولاية",
+        "label": "المحلية / مكتب أو مركز التوزيع",
         "placeholder": "تونس",
         "required": true,
+        "type": "text"
+      },
+      {
+        "key": "delegation",
+        "label": "المعتمدية",
+        "placeholder": "معتمدية تجريبية",
+        "type": "text"
+      },
+      {
+        "key": "governorate",
+        "label": "الولاية",
+        "placeholder": "تونس",
         "type": "text"
       }
     ]
   },
   "english": {
-    "addressFormat": "{{recipient}}\n{{street}}\n{{postcode}} {{city}}\nTunisia",
+    "addressFormat": "{{recipient}}\n{{building}}\n{{houseNumber}} {{street}}\n{{postcode}} {{city}}\n{{delegation}}\n{{governorate}}\nTUNISIA",
     "ordering": "small-to-big",
     "fields": [
       {
@@ -48,9 +72,21 @@
         "type": "text"
       },
       {
+        "key": "building",
+        "label": "Building / entrance / staircase / unit",
+        "placeholder": "Example Building, entrance A, floor 2",
+        "type": "text"
+      },
+      {
+        "key": "houseNumber",
+        "label": "Building or street number",
+        "placeholder": "45",
+        "type": "text"
+      },
+      {
         "key": "street",
         "label": "Street Address",
-        "placeholder": "45 Ave Habib Bourguiba",
+        "placeholder": "Ave Habib Bourguiba",
         "required": true,
         "type": "text"
       },
@@ -63,9 +99,21 @@
       },
       {
         "key": "city",
-        "label": "City / Governorate",
+        "label": "Locality / delivery office or centre",
         "placeholder": "Tunis",
         "required": true,
+        "type": "text"
+      },
+      {
+        "key": "delegation",
+        "label": "Delegation",
+        "placeholder": "Synthetic Delegation",
+        "type": "text"
+      },
+      {
+        "key": "governorate",
+        "label": "Governorate",
+        "placeholder": "Tunis",
         "type": "text"
       }
     ]
@@ -73,8 +121,8 @@
   "postalCode": {
     "format": "NNNN",
     "regex": "^\\d{4}$",
-    "api": null,
-    "source": "No free postal OSS source configured"
+    "api": "https://www.poste.tn/codes.php",
+    "source": "La Poste Tunisienne current search plus UPU Tunisia April 2014 addressing semantics; four-digit syntax does not prove a current assignment, catchment, address or building"
   },
   "addressRules": {
     "languages": [
@@ -89,33 +137,62 @@
     ],
     "nativeOrder": [
       "name",
-      "street",
+      "building",
+      "entrance",
+      "staircase",
+      "floor",
+      "unit",
       "houseNumber",
+      "street",
       "postcode",
-      "city",
+      "localityOrDeliveryOffice",
+      "delegation",
       "governorate",
       "country"
     ],
     "englishOrder": [
       "name",
-      "street",
+      "building",
+      "entrance",
+      "staircase",
+      "floor",
+      "unit",
       "houseNumber",
+      "street",
       "postcode",
-      "city",
+      "localityOrDeliveryOffice",
+      "delegation",
       "governorate",
       "country"
     ],
     "regionalHierarchy": [
-      "villeOrCommune",
-      "governorate"
+      "governorate",
+      "delegation",
+      "communeOrLocality",
+      "deliveryOfficeOrCentre",
+      "officialFourDigitAssignment",
+      "officialPostalSurfaceOrNoCanonicalGeometry",
+      "explicitCivicAddressPoint",
+      "explicitAddressLinkedBuildingFeature",
+      "exactRightsClearedBuilding",
+      "agidCell"
     ],
     "postalCode": {
-      "label": "4 digits required",
+      "label": "4 digits; current La Poste assignment required; no automatic polygon or building",
       "required": true,
       "usage": "required"
     }
   },
   "openSourceIds": [
+    "la-poste-tunisienne-codes",
+    "upu-tunisia-addressing-2014",
+    "tunisian-open-data-national-license",
+    "tunisian-open-data-delegations-2025",
+    "tunisian-open-data-governorates-2025",
+    "otc-tunisia-cadastral-geoportal",
+    "inpdp-tunisia-law-2004-63",
+    "la-poste-tunisienne-privacy",
+    "osm-tunisia",
     "osm-nominatim",
     "osm-overpass",
     "openaddresses",

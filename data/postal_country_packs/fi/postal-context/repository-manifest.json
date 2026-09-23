@@ -1,0 +1,105 @@
+{
+  "schema_version": "agid-postal-fi-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-fi",
+    "country_code": "FI",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "current-posti-pcf-assignment-plus-paavo-2026-official-derived-statistical-area"
+  },
+  "postal_system": {
+    "full_code_name": "Postinumero / postnummer",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "operator_assignment_plus_separate_statistical_or_non_area_geometry",
+    "assignment_rule": "A pinned Posti Postal Code Data File row establishes a five-digit address postcode assignment at its effective time. The Basic Address File can establish municipality, street and house-number-selection membership outside Aland. Syntax, a Paavo area, a municipality or a geocoder result does not establish Posti assignment or deliverability.",
+    "paavo_rule": "Statistics Finland Paavo areas are annual statistical postcode areas generalized from building-address postcodes in the Population Information System. An individual address postcode does not itself form an area and a building's statistical area may differ from its address postcode. Paavo geometry is official-derived statistical evidence, never a Posti delivery perimeter or canonical postal polygon; release year and sea-extended versus coastline-clipped variant are mandatory.",
+    "special_code_rule": "PO-box, corporate, dedicated and other special routing codes remain endpoint or non-area records unless independent authoritative area evidence exists. A code occurrence never authorizes a buffer, Voronoi cell, municipality fill or nearest-area assignment.",
+    "address_rule": "Posti Basic Address File supplies routing membership, while the DVV Population Information System Building and Dwelling Register supplies authoritative building, dwelling and address identities under controlled access. NLS road addresses are calculated or interpolated locations, not exact entrances. Address components never identify a resident, recipient, household, owner or rightsholder.",
+    "building_rule": "Exact building output requires an explicit source relation or common permanent building identifier between an allowed address record and an exact rights-cleared building feature. Ryhti open completed-building and address data may satisfy this gate only with pinned coverage, transition status, identifier, geometry, licence and source relation. NLS topographic buildings are independent features; proximity, containment, parcel or text matching creates candidates only.",
+    "administrative_rule": "Official region, subregion and municipality data add context only. Administrative or Paavo boundaries do not create postal assignment, delivery eligibility, address identity or building identity.",
+    "licence_rule": "Every Posti, Statistics Finland, DVV, Ryhti and NLS artifact pins the exact provider page, file or API, service terms or CC BY 4.0 notice, release/edition, capture time, coverage, schema, CRS, reviewed transform and digest. Public lookup, an open interface or statutory authority is not by itself unrestricted bulk redistribution permission.",
+    "crs_rule": "Paavo, Ryhti, NLS and other geometries retain their published source CRS. ETRS89-TM35FIN (EPSG:3067) is transformed to WGS84 only through a reviewed versioned transform. Coastline-clipped and sea-extended Paavo products remain distinct.",
+    "territory_rule": "The FI pack records mainland Finland and Aland scope explicitly. Posti Basic Address File excludes Aland and its Postal Code Data File carries only postcode-level information there. Aland Post evidence is partitioned as AX; FI processing never invents Aland street membership or silently merges FI and AX address/building geometry."
+  },
+  "integration": {
+    "agid_country_code": "FI",
+    "coordinate_flow": "coordinate -> pinned Paavo statistical area or honest non-area -> explicit Posti/DVV/Ryhti/NLS address evidence -> allowed apartment components -> permanent building identifier -> exact rights-cleared building -> FI AGID cell",
+    "postcode_flow": "canonical five digits -> pinned Posti assignment or special endpoint -> optional Paavo statistical relation -> address membership -> explicit address/building relation -> AGID cells",
+    "building_output_gate": "exact allowed DVV or Ryhti address identity plus a common permanent building identifier or source-defined relation to an exact rights-cleared building feature"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode is five-character text and preserves leading zeroes." },
+    { "id": "operator-assignment", "pass": "Every current assignment pins Posti service terms, exact file URL, edition/effective time, scope, schema and digest." },
+    { "id": "statistical-area-separation", "pass": "Every Paavo area is marked official-derived statistical, pins year and geometry variant, and is never called a Posti delivery perimeter or canonical postal geometry." },
+    { "id": "special-non-area", "pass": "PO-box and dedicated/special codes remain non-area unless independent area evidence passes its own gate." },
+    { "id": "authoritative-address", "pass": "Every address states whether it is Posti routing membership, DVV identity, Ryhti open data or NLS interpolation and retains source identifiers and coordinate semantics." },
+    { "id": "unit-privacy", "pass": "Apartment or stairway display requires an exact allowed address record and never exposes occupants, residents, recipients, owners or rightsholders." },
+    { "id": "building-link", "pass": "Exact building output requires a common permanent building identifier or reviewed explicit crosswalk; nearest geometry, containment and text matching do not pass." },
+    { "id": "coverage-and-rights", "pass": "Ryhti transition coverage, Paavo vintage/variant, Posti Aland exclusion, DVV access and every licence are enforced per artifact." },
+    { "id": "fi-ax-partition", "pass": "Aland scope is explicit and no mainland street, postcode-area or building assumption is extended into AX." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M3_statistical_geometry",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_posti_assignment_and_paavo_statistical_area_visualization", "definition": "Pinned current Posti assignments, explicit non-area and FI/AX classifications, Paavo statistical-area semantics and rights, reproducible immutable runtime artifacts, and real app search-to-translucent-area verification pass time, schema, digest, topology and authority-separation gates." },
+      { "id": "M3_statistical_geometry", "definition": "Pinned Paavo releases pass statistical semantics, vintage, geometry-variant, topology, coverage, CRS and attribution gates." },
+      { "id": "M4_address_building", "definition": "Allowed DVV/Ryhti/NLS evidence passes address semantics, permanent-ID, exact-building, privacy, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "paavo-presented-as-posti-official-polygon",
+      "paavo-presented-as-delivery-perimeter",
+      "paavo-vintage-or-geometry-variant-missing",
+      "special-or-postbox-code-given-invented-polygon",
+      "municipality-buffer-or-voronoi-substituted-for-postal-evidence",
+      "nls-interpolated-road-address-presented-as-exact-entrance",
+      "address-point-presented-as-building-footprint",
+      "nearest-or-contained-building-presented-as-exact-address-link",
+      "ryhti-transition-coverage-presented-as-national-completeness",
+      "dvv-controlled-data-presented-as-public-bulk-data",
+      "owner-resident-recipient-or-title-data-published",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "fi-and-ax-scope-silently-merged",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_FI_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_FI_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_FI_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_FI_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "m2_release": {
+    "release_id": "fi-posti-pcf-20260829-paavo-pno-2026",
+    "descriptor": "m2/descriptor.json",
+    "descriptor_digest": "sha256:1080c3d5e9bb32894fd398eb30dd21cfde5c73bbdd98826bdd41f136cc72f004",
+    "assignment_rows": 3747,
+    "statistical_area_features": 2976,
+    "non_area_assignments": 771,
+    "aland_rows_excluded": 37,
+    "source_notice": "M2-SOURCE-NOTICE.md",
+    "source_review": "../../../../reports/postal-context-m2/fi-source-review-2026-08-30.json",
+    "app_verification": "../../../../reports/postal-context-m2/fi-checks-2026-08-30.json",
+    "authority_note": "Posti establishes current assignment; Paavo supplies official-derived statistical display geometry and is not a Posti delivery perimeter."
+  },
+  "non_goals": [
+    "bundling-current-posti-paavo-dvv-ryhti-or-nls-rows",
+    "every-five-digit-code-is-a-polygon",
+    "paavo-is-delivery-perimeter",
+    "postbox-or-corporate-code-is-area",
+    "interpolated-road-location-is-exact-entrance",
+    "address-point-is-building-footprint",
+    "nearest-footprint-is-exact-building",
+    "unit-address-identifies-occupant",
+    "fi-and-ax-are-one-unqualified-address-partition"
+  ]
+}

@@ -54,7 +54,7 @@ test('hybrid quality service calls central quality for online verification workf
     },
   );
 
-  assert.deepEqual(calls, ['/api/hybrid/quality']);
+  assert.deepEqual(calls, ['/api/v1/hybrid/quality']);
   assert.equal(result.ok, true);
   assert.equal(result.data?.decision.qualityTier, 'verified');
   assert.deepEqual(result.sources, ['agid-central-quality']);

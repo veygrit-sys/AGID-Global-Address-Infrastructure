@@ -1,0 +1,69 @@
+{
+  "schema_version": "agid-postal-xu-source-profile-v0.1",
+  "country_code": "XU",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
+    { "id": "R1_public_reference", "meaning": "Public official pages or metadata used as validation receipts; access does not imply bulk redistribution or public-serving rights." },
+    { "id": "R2_open_resource", "meaning": "An exact official open resource whose licence, attribution, version, schema, coverage, CRS and digest are pinned." },
+    { "id": "R4_validation_only", "meaning": "Unclear-rights, authority-incomplete or unreconciled evidence may validate but cannot become public output." }
+  ],
+  "sources": [
+    {
+      "source_id": "govuk-bfpo-akrotiri-current",
+      "provider": "UK Ministry of Defence / GOV.UK",
+      "source_url": "https://www.gov.uk/bfpo/find-a-bfpo-number",
+      "role": ["current-bfpo-route-assignment", "shadow-postcode-equivalence", "bfpo-addressing-rule"],
+      "production_scope": "Current GOV.UK pages establish Akrotiri as BFPO 57 with shadow postcode BF1 2AT and instruct senders to use the BFPO number rather than a town or country. OGL v3 permits reuse of GOV.UK content subject to its terms, but these route/format pages contain no postal area geometry.",
+      "assignment_authority": "official_bfpo_operator_reference",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_open_resource",
+      "bundled_here": false,
+      "prohibited_claims": ["bfpo-route-is-area", "shadow-postcode-is-xu-territory", "bfpo-office-is-polygon"]
+    },
+    {
+      "source_id": "govuk-akrotiri-identity-current",
+      "provider": "UK Ministry of Defence / GOV.UK",
+      "source_url": "https://www.gov.uk/government/publications/permanent-joint-operating-bases-pjobs/fd",
+      "role": ["current-akrotiri-and-sba-identity-context", "current-raf-akrotiri-bfpo-57-address-corroboration"],
+      "production_scope": "Current OGL GOV.UK material identifies Akrotiri within the Sovereign Base Areas, and the Security Services page independently uses RAF Akrotiri, BFPO 57. This identity/address context never supplies a postal perimeter.",
+      "assignment_authority": "supporting_official_identity_and_address_reference",
+      "geometry_authority": "none_for_postal_context",
+      "redistribution_class": "R2_open_resource",
+      "bundled_here": false,
+      "prohibited_claims": ["combined-sba-territory-is-postcode-area", "raf-address-is-bfpo-area", "administration-is-postal-authority"]
+    },
+    {
+      "source_id": "cyprus-dls-postal-sectors-september-2025",
+      "provider": "Cyprus Department of Lands and Surveys",
+      "source_url": "https://portal.dls.moi.gov.cy/wp-content/uploads/2025/09/ORIA_TAXYDROMIKON_KODIKON_Shapefile.zip",
+      "role": ["fixed-official-postal-sector-geometry-reference", "akrotiri-4640-polygon-validation"],
+      "production_scope": "The official September 2025 ZIP contains 870 valid Polygon features and one 1,285-point Akrotiri/4640 Polygon in CGRS93 LTM. It is a Cyprus DLS postal-sector assertion, not proof that 4640 equals BFPO 57, BF1 2AT, all XU territory or all eligible users. No resource-specific compatible processing, storage, derivation, redistribution and public-serving licence was established.",
+      "assignment_authority": "supporting_official_mapping_reference",
+      "geometry_authority": "official_validation_only_pending_rights_and_operator_reconciliation",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "prohibited_claims": ["akrotiri-name-match-is-bfpo-crosswalk", "dls-sector-is-xu-territory", "public-zip-is-open-license", "one-feature-proves-complete-denominator"]
+    },
+    {
+      "source_id": "cyprus-dls-api-and-disclaimer-current",
+      "provider": "Cyprus Department of Lands and Surveys",
+      "source_url": "https://portal.dls.moi.gov.cy/alles-ypiresies/katalogos-apis/",
+      "role": ["postal-code-area-api-access-control", "rights-and-disclaimer-review"],
+      "production_scope": "The current API catalog lists postal-code areas under CadastralMap but directs users to contact the portal manager for access. The disclaimer describes site information as advisory and not legal text; it does not grant AGID-compatible processing, derivation, redistribution or public-serving rights. No contact or API access request was made.",
+      "assignment_authority": "none",
+      "geometry_authority": "access-controlled-reference_only",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "prohibited_claims": ["public-catalog-is-api-authorization", "disclaimer-is-open-license", "contact-required-api-is-public-artifact"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "bfpo-route", "rule": "BFPO 57, BF1 2AT, eligibility and routing retain MOD provenance and explicit route/non-area semantics unless postal authority supplies area geometry." },
+    { "id": "cyprus-postal-assignment", "rule": "4640 retains Cyprus postal-operator provenance and cannot be inferred solely from a DLS name/code feature." },
+    { "id": "dls-postal-sector", "rule": "The DLS Akrotiri/4640 Polygon remains external validation until compatible rights and operator/XU reconciliation are fixed." },
+    { "id": "territory-and-identity", "rule": "XU, Cyprus, Dhekelia, Episkopi, Ayios Nikolaos and combined SBA context remain distinct." },
+    { "id": "address-building", "rule": "Addresses, routes, offices and buildings remain separate and are not buffered into geometry." },
+    { "id": "synthetic-conformance", "rule": "Non-production fixture metadata only; never promotion evidence." }
+  ]
+}

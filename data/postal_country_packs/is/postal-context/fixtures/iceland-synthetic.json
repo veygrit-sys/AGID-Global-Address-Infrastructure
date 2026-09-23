@@ -1,0 +1,191 @@
+{
+  "schema_version": "agid-postal-is-synthetic-fixtures-v0.1",
+  "fixture_set_id": "iceland-like-contract-cases-v0.1",
+  "country_code": "IS",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "00",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthetic",
+    "rule": "No value is a Byggðastofnun postcode row, Pósturinn assignment, IS 50V building, HMS address, Statistics Iceland area, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-posturinn-routing",
+      "models_source_role": "posturinn-iceland-postcodes",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-byggdastofnun-postcode",
+      "models_source_role": "byggdastofnun-iceland-postcode-register",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-hms-address",
+      "models_source_role": "hms-iceland-address-register",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-is50v-building",
+      "models_source_role": "natt-is50v-buildings",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "is-syn-address-building",
+      "exception_class": "official_postcode_area",
+      "synthetic_address": {
+        "house_number": "1",
+        "street": "Synthetic Street",
+        "municipality": "Synthetic Municipality",
+        "postcode": "000",
+        "building_name": "Synthetic Building"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-byggdastofnun-postcode",
+          "assertion": "postcode-area",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        },
+        {
+          "source_id": "synthetic-hms-address",
+          "assertion": "address-point-and-explicit-building-link",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "building",
+        "postal_geometry": "polygon",
+        "address_geometry": "point",
+        "must_not_assert": [
+          "recipient-or-occupant",
+          "legal-building-boundary",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "is-syn-rural-island-area",
+      "exception_class": "rural_or_island_area",
+      "synthetic_address": {
+        "place_name": "Synthetic Farm",
+        "municipality": "Synthetic Rural Municipality",
+        "postcode": "001"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-posturinn-routing",
+          "assertion": "rural-service-classification",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-byggdastofnun-postcode",
+          "assertion": "multipart-postcode-area",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_type": "multipolygon",
+        "must_not_assert": [
+          "single-road-or-farm",
+          "building-from-rural-area",
+          "delivery-frequency-guarantee",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "is-syn-postbox-selection",
+      "exception_class": "postbox_or_collection",
+      "synthetic_address": {
+        "postcode": "002",
+        "delivery_facility": "Synthetic Póstbox"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-posturinn-routing",
+          "assertion": "user-selected-collection-facility",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "geometry_type": "point",
+        "must_not_assert": [
+          "facility-is-residence",
+          "facility-overwrites-premise-postcode",
+          "surrounding-postcode-polygon-from-locker",
+          "occupant-or-recipient"
+        ]
+      }
+    },
+    {
+      "fixture_id": "is-syn-coordinate-type",
+      "exception_class": "address_coordinate_type",
+      "synthetic_address": {
+        "house_number": "3",
+        "street": "Synthetic Road",
+        "postcode": "003",
+        "coordinate_type": "main_entrance",
+        "review_status": "reviewed",
+        "accuracy_meters": 2
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-hms-address",
+          "assertion": "typed-reviewed-address-coordinate",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_type": "point",
+        "must_not_assert": [
+          "point-is-building-footprint",
+          "point-is-legal-parcel-boundary",
+          "recipient-or-occupant",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "is-syn-building-candidate",
+      "exception_class": "building_without_registry_link",
+      "synthetic_address": {
+        "postcode": "004"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-is50v-building",
+          "assertion": "nearby-building-candidate",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_type": "polygon",
+        "must_not_assert": [
+          "exact-address-link-from-proximity",
+          "building-name-from-footprint",
+          "postal-assignment-authority",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

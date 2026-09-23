@@ -1,0 +1,77 @@
+groups:
+  - name: veygrit-ship-recording
+    interval: 30s
+    rules:
+      - record: carrier:veygrit_ship_success_ratio:rate5m
+        expr: |
+          sum by (carrier) (rate(veygrit_ship_carrier_requests_total{outcome="success"}[5m]))
+          /
+          clamp_min(sum by (carrier) (rate(veygrit_ship_carrier_requests_total[5m])), 0.000001)
+      - record: carrier:veygrit_ship_label_failure_ratio:rate10m
+        expr: |
+          sum by (carrier) (rate(veygrit_ship_label_creation_total{outcome="failure"}[10m]))
+          /
+          clamp_min(sum by (carrier) (rate(veygrit_ship_label_creation_total[10m])), 0.000001)
+
+  - name: veygrit-ship-alerts
+    interval: 30s
+    rules:
+      - alert: VeygritShipCarrierSuccessRateLow
+        expr: |
+          carrier:veygrit_ship_success_ratio:rate5m < 0.99
+          and on (carrier)
+          sum by (carrier) (increase(veygrit_ship_carrier_requests_total[10m])) >= 20
+        for: 10m
+        labels:
+          severity: warning
+          service: veygrit-ship
+        annotations:
+          summary: "{{ $labels.carrier }} success rate is below 99%"
+          runbook: "docs/ops/veygrit-ship-incident-response.md#carrier-failure"
+
+      - alert: VeygritShipRateLatencyHigh
+        expr: |
+          histogram_quantile(0.95,
+            sum by (carrier, le) (rate(veygrit_ship_rate_duration_seconds_bucket[10m]))) > 2
+        for: 10m
+        labels:
+          severity: warning
+          service: veygrit-ship
+        annotations:
+          summary: "{{ $labels.carrier }} rating p95 exceeds 2 seconds"
+          runbook: "docs/ops/veygrit-ship-incident-response.md#carrier-failure"
+
+      - alert: VeygritShipLabelCreationFailureRateHigh
+        expr: |
+          carrier:veygrit_ship_label_failure_ratio:rate10m > 0.01
+          and on (carrier)
+          sum by (carrier) (increase(veygrit_ship_label_creation_total[10m])) >= 10
+        for: 10m
+        labels:
+          severity: critical
+          service: veygrit-ship
+        annotations:
+          summary: "{{ $labels.carrier }} label creation failures exceed 1%"
+          runbook: "docs/ops/veygrit-ship-incident-response.md#unknown-label-outcome"
+
+      - alert: VeygritShipWebhookDelayHigh
+        expr: |
+          histogram_quantile(0.95,
+            sum by (carrier, le) (rate(veygrit_ship_webhook_delay_seconds_bucket[10m]))) > 60
+        for: 10m
+        labels:
+          severity: warning
+          service: veygrit-ship
+        annotations:
+          summary: "{{ $labels.carrier }} webhook delay p95 exceeds 60 seconds"
+          runbook: "docs/ops/veygrit-ship-incident-response.md#webhook-delay"
+
+      - alert: VeygritShipMetricsMissing
+        expr: absent(veygrit_ship_observability_up) or veygrit_ship_observability_up != 1
+        for: 15m
+        labels:
+          severity: critical
+          service: veygrit-ship
+        annotations:
+          summary: "Veygrit -ship metrics are missing"
+          runbook: "docs/ops/veygrit-ship-incident-response.md#observability-failure"

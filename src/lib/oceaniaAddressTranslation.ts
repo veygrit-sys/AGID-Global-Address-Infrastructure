@@ -1,6 +1,7 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
+import { isFrenchShippingCountry,normalizeFrenchShippingField } from './frenchShippingAddress';
 
 export type OceaniaAddressTopology =
   | 'english-address'
@@ -36,7 +37,7 @@ const OCEANIA_ADDRESS_TRANSLATION_PROFILES: Record<string, OceaniaAddressTransla
   AU: { countryCode: 'AU', nativeLanguages: ['en'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'australia-domestic-international' },
   NZ: { countryCode: 'NZ', nativeLanguages: ['en', 'mi'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'new-zealand-maori-english-address' },
   FJ: { countryCode: 'FJ', nativeLanguages: ['en', 'fj', 'hi'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'fiji-english-fijian-hindi-address' },
-  PG: { countryCode: 'PG', nativeLanguages: ['en', 'tpi'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'papua-new-guinea-tok-pisin-address' },
+  PG: { countryCode: 'PG', nativeLanguages: ['en', 'tpi', 'ho'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'papua-new-guinea-tok-pisin-address' },
   WS: { countryCode: 'WS', nativeLanguages: ['sm', 'en'], defaultLanguage: 'sm', defaultTopology: 'latin-polynesian', englishAlgorithm: 'samoa-samoan-english-address' },
   TO: { countryCode: 'TO', nativeLanguages: ['to', 'en'], defaultLanguage: 'to', defaultTopology: 'latin-polynesian', englishAlgorithm: 'tonga-tongan-english-address' },
   VU: { countryCode: 'VU', nativeLanguages: ['bi', 'en', 'fr'], defaultLanguage: 'bi', defaultTopology: 'latin-melanesian', englishAlgorithm: 'vanuatu-bislama-english-french-address' },
@@ -45,6 +46,13 @@ const OCEANIA_ADDRESS_TRANSLATION_PROFILES: Record<string, OceaniaAddressTransla
   TK: { countryCode: 'TK', nativeLanguages: ['tkl', 'en'], defaultLanguage: 'tkl', defaultTopology: 'latin-polynesian', englishAlgorithm: 'pacific-islands-english-local-address' },
   NU: { countryCode: 'NU', nativeLanguages: ['niu', 'en'], defaultLanguage: 'niu', defaultTopology: 'latin-polynesian', englishAlgorithm: 'pacific-islands-english-local-address' },
   PN: { countryCode: 'PN', nativeLanguages: ['en'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'pacific-islands-english-local-address' },
+  PF: { countryCode: 'PF', nativeLanguages: ['fr', 'ty'], defaultLanguage: 'fr', defaultTopology: 'latin-french', englishAlgorithm: 'french-pacific-international-address' },
+  NC: { countryCode: 'NC', nativeLanguages: ['fr'], defaultLanguage: 'fr', defaultTopology: 'latin-french', englishAlgorithm: 'french-pacific-international-address' },
+  WF: { countryCode: 'WF', nativeLanguages: ['fr', 'wls', 'fud'], defaultLanguage: 'fr', defaultTopology: 'latin-french', englishAlgorithm: 'french-pacific-international-address' },
+  AS: { countryCode: 'AS', nativeLanguages: ['en', 'sm'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'pacific-islands-english-local-address' },
+  GU: { countryCode: 'GU', nativeLanguages: ['en', 'ch'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'pacific-islands-english-local-address' },
+  MP: { countryCode: 'MP', nativeLanguages: ['en', 'ch'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'pacific-islands-english-local-address' },
+  UM: { countryCode: 'UM', nativeLanguages: ['en'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'pacific-islands-english-local-address' },
   ...Object.fromEntries(AUSTRALIAN_TERRITORY_CODES.map(code => [
     code,
     { countryCode: code, nativeLanguages: ['en'], defaultLanguage: 'en', defaultTopology: 'english-address', englishAlgorithm: 'australia-domestic-international' as const },
@@ -73,13 +81,20 @@ const OCEANIA_TOPOLOGY_BY_LANGUAGE: Record<string, OceaniaAddressTopology> = {
   tpi: 'latin-melanesian',
   bi: 'latin-melanesian',
   pis: 'latin-melanesian',
+  ho: 'latin-melanesian',
   pau: 'latin-micronesian',
   mh: 'latin-micronesian',
   gil: 'latin-micronesian',
   tvl: 'latin-micronesian',
   na: 'latin-micronesian',
   chk: 'latin-micronesian',
+  pon: 'latin-micronesian',
+  kos: 'latin-micronesian',
   yap: 'latin-micronesian',
+  ch: 'latin-micronesian',
+  ty: 'latin-polynesian',
+  wls: 'latin-polynesian',
+  fud: 'latin-polynesian',
   fr: 'latin-french',
   hi: 'indic-address',
 };
@@ -240,11 +255,39 @@ const OCEANIA_ENGLISH_ALIASES: Record<string, Record<string, string>> = {
     Niue: 'Niue',
     Alofi: 'Alofi',
   },
+  PF: {
+    'Polynésie française': 'French Polynesia',
+    Papeete: 'Papeete',
+  },
+  NC: {
+    'Nouvelle-Calédonie': 'New Caledonia',
+    Nouméa: 'Noumea',
+  },
+  WF: {
+    'Wallis-et-Futuna': 'Wallis and Futuna',
+    'Wallis mo Futuna': 'Wallis and Futuna',
+    'Mata-Utu': 'Mata-Utu',
+  },
+  AS: {
+    'American Samoa': 'American Samoa',
+    Pago: 'Pago Pago',
+    'Pago Pago': 'Pago Pago',
+  },
+  GU: {
+    Guam: 'Guam',
+    Guåhan: 'Guam',
+    Hagatna: 'Hagatna',
+    Hagåtña: 'Hagatna',
+  },
+  MP: {
+    'Northern Mariana Islands': 'Northern Mariana Islands',
+    Saipan: 'Saipan',
+  },
 };
 
 function nativeLanguagesForMicronesia(countryCode: string) {
   const code = countryCodeOf(countryCode);
-  if (code === 'FM') return ['en', 'chk', 'yap'];
+  if (code === 'FM') return ['en', 'chk', 'pon', 'kos', 'yap'];
   if (code === 'PW') return ['en', 'pau'];
   if (code === 'MH') return ['mh', 'en'];
   if (code === 'KI') return ['gil', 'en'];
@@ -314,8 +357,21 @@ function shouldUseBuildingEnglish(fieldKey: string) {
   return isAddressBuildingField(fieldKey);
 }
 
-function normalizeOceaniaEnglish(text: string, countryCode: string, fieldKey: string) {
+function normalizeOceaniaEnglish(
+  text: string,
+  countryCode: string,
+  fieldKey: string,
+  sourceLanguage: string,
+) {
   const code = countryCodeOf(countryCode);
+  if (sourceLanguage === 'fr' && isFrenchShippingCountry(code)) {
+    return normalizeFrenchShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
   const aliases = OCEANIA_ENGLISH_ALIASES[code] || {};
   if (aliases[text]) return aliases[text];
   if (COMMON_OCEANIA_ADDRESS_TERMS[text]) return COMMON_OCEANIA_ADDRESS_TERMS[text];
@@ -354,7 +410,12 @@ export async function translateOceaniaAddressField(options: {
     fieldKey: options.fieldKey,
     sourceLanguage,
     targetLanguage,
-    normalizeEnglish: value => normalizeOceaniaEnglish(value, profile.countryCode, options.fieldKey),
+    normalizeEnglish: value => normalizeOceaniaEnglish(
+      value,
+      profile.countryCode,
+      options.fieldKey,
+      sourceLanguage,
+    ),
     translator: options.translator,
     normalizeEnglishIdentity: true,
   });

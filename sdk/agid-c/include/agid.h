@@ -16,8 +16,16 @@ typedef struct agid_result {
   int face;
 } agid_result;
 
+typedef struct agid_bounds {
+  double min_lat;
+  double max_lat;
+  double min_lon;
+  double max_lon;
+} agid_bounds;
+
 int agid_encode(double lat, double lon, agid_result* out);
 int agid_decode(const char* id, agid_result* out);
+int agid_cell_bounds(const char* id, agid_bounds* out);
 
 #ifdef __cplusplus
 }

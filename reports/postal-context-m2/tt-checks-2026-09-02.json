@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "postal-context-tt-engineering-checks/v1",
+  "countryCode": "TT",
+  "observedAt": "2026-09-02T10:14:29.837Z",
+  "completedAt": "2026-09-02T10:42:18.9044904Z",
+  "baseCommit": "6edb8078ac068472dc711dbe28198d5786b9f442",
+  "outcome": "blocked",
+  "scope": "TTPost/UPU exact-body, six-digit, mixed postal-object, rights, address-format, ID separation and no-proxy fail-closed evidence. No source body, address row, postcode row, district/loop/route/zone/point/building proxy, production pack, real TT API response or browser area was promoted.",
+  "checks": [
+    {
+      "id": "tt-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-tt-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "five exact official bodies reproduce current six-digit national completion, dated address examples and mixed area/non-area semantics without rows or geometry"
+    },
+    {
+      "id": "tt-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-tt-sources.test.py -v",
+      "result": "pass",
+      "tests": 4,
+      "assertion": "exact set, changed body, missing/extra body and HTML marker drift fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "tt-ledger-address-and-evidence",
+      "command": "node --test scripts/postal-context-m2-tt-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country definition, exact receipts, corrected six-digit address metadata, no-proxy/ID contract, report digests and next US"
+    },
+    {
+      "id": "agid-research-catalog",
+      "command": "node scripts/build-postal-context-research-catalog.mjs; node --test scripts/build-postal-context-research-catalog.test.mjs",
+      "result": "pass",
+      "tests": 2,
+      "assertion": "TT source and blocker research are deterministically integrated while runtime-artifact and linked-ID boundaries remain explicit"
+    },
+    {
+      "id": "syntax-json-status-and-diff",
+      "command": "python compileall for changed Python; JSON.parse for changed JSON; rollout refresh/status; git diff --check",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "changed executable and JSON files parse, generated documents are current, rollout selects US and diff has no whitespace errors"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 6,
+    "testsPassed": 21,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "exactOfficialBodies": 5,
+    "exactOfficialBodiesBytes": 2571401,
+    "currentCompleteAssignmentsValidated": 0,
+    "compatibleAgidProcessingStorageDerivationRedistributionAndPublicServingRightsEstablished": false,
+    "rawSourceBodiesInGit": 0
+  },
+  "qualityBoundary": {
+    "productionEligibleTtRecords": 0,
+    "officialPostalGeometryRecords": 0,
+    "derivedOrVirtualPostalGeometryRecords": 0,
+    "administrativeRoutePointBuildingOrSyntheticProxiesPromoted": 0,
+    "exactAddressOrBuildingIdsInferred": 0
+  },
+  "applicationAttempts": {
+    "inAppBrowser": {
+      "success": false,
+      "reason": "node_repl kernel exited while Windows sandbox deny-read ACL setup returned non-zero before browser connection"
+    },
+    "isolatedAppStarted": false,
+    "isolatedAppReason": "No TT runtime descriptor or eligible geometry exists, and the existing dependency directories contain no tsx/vite executable; no dependency download was attempted under the 245 MiB disk constraint.",
+    "realTtPostalContextApiVerified": false,
+    "realTtTranslucentAreaVisualVerified": false,
+    "visualSuccessClaimed": false
+  },
+  "unavailableScopedChecks": {
+    "command": "Node 24 native TypeScript test attempt for addressFormatRulesJson, postalSearchArea and postalContextPackRuntime",
+    "result": "environment-unavailable-not-counted-as-product-failure-or-pass",
+    "reason": "tsx was absent and native Node ESM does not resolve the repository's extensionless TypeScript imports. The first native attempt failed at module resolution before loading test bodies."
+  },
+  "conclusion": "The official format and M1 guardrails are reproducible. TT M2 remains blocked because no complete typed assignment denominator, compatible data rights, eligible Polygon/MultiPolygon artifact, real API path or visual app result was established."
+}

@@ -126,6 +126,34 @@ test('uses English pivot for Singapore domestic languages with different topolog
   assert.deepEqual(calls, ['en->zh-Hans:Singapore']);
 });
 
+test('uses established Singapore English place names instead of Mandarin Pinyin', async () => {
+  const chinatown = await translateSoutheastAsiaAddressField({
+    countryCode: 'SG',
+    fieldKey: 'district',
+    text: '牛車水',
+    sourceLanguage: 'zh-Hans',
+    targetLanguage: 'en',
+  });
+  const bukitTimah = await translateSoutheastAsiaAddressField({
+    countryCode: 'SG',
+    fieldKey: 'district',
+    text: '武吉知馬',
+    sourceLanguage: 'zh-Hans',
+    targetLanguage: 'en',
+  });
+  const unknown = await translateSoutheastAsiaAddressField({
+    countryCode: 'SG',
+    fieldKey: 'district',
+    text: '合成區',
+    sourceLanguage: 'zh-Hans',
+    targetLanguage: 'en',
+  });
+
+  assert.equal(chinatown?.text, 'Chinatown');
+  assert.equal(bukitTimah?.text, 'Bukit Timah');
+  assert.equal(unknown, null);
+});
+
 test('uses direct native translation for same-topology Timor-Leste address languages', async () => {
   const calls: string[] = [];
   const translated = await translateSoutheastAsiaAddressField({

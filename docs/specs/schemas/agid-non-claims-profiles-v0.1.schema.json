@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/agid-non-claims-profiles-v0.1.schema.json",
+  "title": "AGID Non-Claims Profiles v0.1",
+  "description": "Local-only profile registry for OpenAPI evidence extension non-claims. Profiles are referenced by x-agid-evidence-fixtures.nonClaimsProfile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact",
+    "version",
+    "localOnly",
+    "description",
+    "requiredBaseNonClaims",
+    "profiles"
+  ],
+  "properties": {
+    "artifact": {
+      "const": "agid-non-claims-profiles"
+    },
+    "version": {
+      "const": "v0.1"
+    },
+    "localOnly": {
+      "const": true
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20
+    },
+    "requiredBaseNonClaims": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "not-raw-address-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-proof-witness-intake"
+          }
+        }
+      ]
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "description",
+          "requiredNonClaims"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "agid-generic-evidence-v0.1",
+              "playlist-commerce-webhook-v0.1",
+              "veygrit-address-login-hosted-v0.1",
+              "delivery-gateway-sandbox-carrier-v0.1",
+              "merchant-console-onboarding-v0.1",
+              "trade-gateway-idempotency-v0.1"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20
+          },
+          "openApiEvidenceSchema": {
+            "type": "string",
+            "pattern": "^docs/specs/schemas/.+\\.schema\\.json$"
+          },
+          "requiredNonClaims": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "const": "agid-generic-evidence-v0.1"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "id",
+              "openApiEvidenceSchema"
+            ],
+            "properties": {
+              "id": {
+                "const": "playlist-commerce-webhook-v0.1"
+              },
+              "openApiEvidenceSchema": {
+                "const": "docs/specs/schemas/playlist-commerce-openapi-evidence-extension-v0.1.schema.json"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "id",
+              "openApiEvidenceSchema"
+            ],
+            "properties": {
+              "id": {
+                "const": "veygrit-address-login-hosted-v0.1"
+              },
+              "openApiEvidenceSchema": {
+                "const": "docs/specs/schemas/veygrit-address-login-hosted-openapi-evidence-extension-v0.1.schema.json"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "id",
+              "openApiEvidenceSchema"
+            ],
+            "properties": {
+              "id": {
+                "const": "delivery-gateway-sandbox-carrier-v0.1"
+              },
+              "openApiEvidenceSchema": {
+                "const": "docs/specs/schemas/delivery-gateway-openapi-evidence-extension-v0.1.schema.json"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "id",
+              "openApiEvidenceSchema"
+            ],
+            "properties": {
+              "id": {
+                "const": "merchant-console-onboarding-v0.1"
+              },
+              "openApiEvidenceSchema": {
+                "const": "docs/specs/schemas/merchant-console-openapi-evidence-extension-v0.1.schema.json"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "id",
+              "openApiEvidenceSchema"
+            ],
+            "properties": {
+              "id": {
+                "const": "trade-gateway-idempotency-v0.1"
+              },
+              "openApiEvidenceSchema": {
+                "const": "docs/specs/schemas/trade-gateway-openapi-evidence-extension-v0.1.schema.json"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

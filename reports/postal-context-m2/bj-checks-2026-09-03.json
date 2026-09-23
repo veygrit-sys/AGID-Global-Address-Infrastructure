@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BJ",
+  "observedAt": "2026-09-02T21:28:30.369Z",
+  "completedAt": "2026-09-02T22:03:43.590Z",
+  "baseCommit": "2a2914b7454554ddbff3365696d5d32629387a51",
+  "scope": "BJ-specific La Poste du Bénin and UPU no-postcode, exact-body, rights, address-metadata and no-proxy evidence plus real-app fail-closed verification. No raw body, real address, administrative/delivery proxy, Point, synthetic planning code, production geometry or successful BJ postal-area visual was promoted.",
+  "checks": [
+    {"id":"bj-source-inspector","command":"<bundled-python> scripts/inspect-postal-context-bj-sources.py --source-dir <temporary-source-directory>","result":"pass","tests":1,"assertion":"six exact official bodies reproduce operator identity, current UPU no-postcode/address format and rights evidence without rows or geometry"},
+    {"id":"bj-source-inspector-unit","command":"<bundled-python> scripts/inspect-postal-context-bj-sources.test.py -v","result":"pass","tests":4,"assertion":"digest, source-set and marker drift fail closed"},
+    {"id":"bj-address-metadata","command":"node --test scripts/postal-context-bj-address-metadata.test.mjs","result":"pass","tests":2,"assertion":"BJ JSON and Africa hierarchy represent no postcode and separate delivery-office/P.O.-box and detailed civic-address fields"},
+    {"id":"real-app-and-api","command":"GET http://127.0.0.1:3025/ and GET /api/v1/postal/BJ/1000?geometry=geojson","result":"pass","tests":2,"assertion":"actual app HTTP 200; real unmocked BJ postal API HTTP 404 unsupported and no fake geometry"},
+    {"id":"deterministic-browser-fallback","command":"temporary Playwright Chromium check against actual app","result":"pass-with-blocked-country","tests":1,"assertion":"title/page, two canvases and no framework overlay; explicit OSM Cotonou candidate produced BJ020HHY1WZV and detailed civic context while postal geometry and translucent overlay remained absent; merged suggestion ordering exposed unrelated Photon false positives; no successful BJ postal E2E or manual visual inspection is claimed"},
+    {"id":"shared-area-runtime-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts","result":"pass","tests":32,"assertion":"normalization, no-match, geometry validation, fit, translucent fill, outline, clear, non-area and routing stay fail closed"},
+    {"id":"official-source-catalog","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/officialPostalSourceCatalog.test.ts","result":"pass","tests":54,"assertion":"La Poste du Bénin remains official context-only metadata and does not become postcode-reference or geometry authority"},
+    {"id":"rollout-invariants-and-ledger","command":"node --test scripts/postal-context-m2-rollout.test.mjs scripts/postal-context-m2-bj-ledger.test.mjs","result":"pass","tests":14,"assertion":"stable queue, blocker policy, BJ no-postcode evidence/report digests and next BW"},
+    {"id":"research-catalog","command":"node --test scripts/build-postal-context-research-catalog.test.mjs","result":"pass","tests":2,"assertion":"rebuilt catalog is deterministic and reflects BJ blocker while preserving runtime separation"},
+    {"id":"changed-syntax-json-and-types","command":"in-memory Python compile, node --check, JSON.parse, YAML.parse and focused tsc","result":"pass","tests":12,"assertion":"changed code/data parse and focused source-registry/catalog type-check passes"}
+  ],
+  "totals": {"assertionGroups":10,"testsPassed":124,"testsFailed":0},
+  "applicationVerification": {
+    "actualAppStarted": true,
+    "actualAppHttpStatus": 200,
+    "realBjApiStatus": 404,
+    "realBjApiMessage": "Postal Context country is not supported",
+    "realBjAppAreaVisualizationVerified": false,
+    "inAppBrowser": "failed before navigation with Windows sandbox ACL helper error",
+    "deterministicPlaywrightFallback": "ran against the actual app using live app search proxies and an unmocked postal API; after explicit OSM candidate selection BJ020HHY1WZV and Cotonou/Littoral context were visible, but no successful postcode-area overlay was produced",
+    "searchRankingIssueObserved": "unrelated Photon false positives ranked above the exact Cotonou OSM result; explicit candidate selection was required",
+    "manualVisualInspection": false,
+    "browserE2eVerified": false
+  },
+  "environmentNotes": [
+    "The focused 68-test address-format-rules suite passes all 67 checks unrelated to a pre-existing VC registration mismatch. The sole existing VC failure is svg-post-post-codes missing from the Americas source registry; BJ itself and all West Africa checks pass.",
+    "A broader 84-test address-format sweep also exposed pre-existing KM duplicate-source, missing EH/HM YAML and malformed BY YAML failures; none is changed by this BJ work.",
+    "The repository-wide typecheck cannot resolve workspace package aliases through the reused dependency junction. Focused typechecking of the changed TypeScript source registries passes.",
+    "In-app Browser and local image viewing failed at the Windows ACL/path helper boundary; deterministic checks are recorded without claiming manual visual inspection."
+  ],
+  "countryM2Achieved": false
+}

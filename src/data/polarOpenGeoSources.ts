@@ -1,4 +1,5 @@
 export type PolarOpenGeoSourceId =
+  | 'australian-antarctic-program-himi'
   | 'nsidc-polar-data'
   | 'gebco-bathymetry'
   | 'gmrt-topography'
@@ -14,6 +15,8 @@ export type PolarOpenGeoSourceId =
   | 'ibcso-southern-ocean'
   | 'measures-antarctic-grounding-line'
   | 'ats-antarctic-protected-areas'
+  | 'comnap-antarctic-facilities'
+  | 'bas-antarctic-station-map'
   | 'arcticdem'
   | 'ibcao-arctic-ocean'
   | 'glims-glacier-db'
@@ -32,6 +35,7 @@ export interface PolarOpenGeoSource {
     | 'marine'
     | 'cryosphere'
     | 'protected-area'
+    | 'facility'
     | 'biodiversity'
     | 'topography';
   coverage: 'polar' | 'antarctic' | 'arctic' | 'greenland' | 'global';
@@ -41,6 +45,15 @@ export interface PolarOpenGeoSource {
 }
 
 export const POLAR_OPEN_GEO_SOURCES: Record<PolarOpenGeoSourceId, PolarOpenGeoSource> = {
+  'australian-antarctic-program-himi': {
+    id: 'australian-antarctic-program-himi',
+    name: 'Australian Antarctic Program HIMI',
+    url: 'https://www.antarctica.gov.au/about-antarctica/australia-in-antarctica/the-territory-of-heard-island-and-mcdonald-islands/',
+    kind: 'data-catalog',
+    coverage: 'antarctic',
+    usage: 'reference',
+    notes: 'Official Australian Antarctic Program territory and governance reference for Heard Island and McDonald Islands context, protection status, and current administration.',
+  },
   'nsidc-polar-data': {
     id: 'nsidc-polar-data',
     name: 'National Snow and Ice Data Center',
@@ -181,6 +194,26 @@ export const POLAR_OPEN_GEO_SOURCES: Record<PolarOpenGeoSourceId, PolarOpenGeoSo
     usage: 'reference',
     notes: 'Official Antarctic Treaty access point for ASPA, ASMA, and historic-site management-plan references.',
   },
+  'comnap-antarctic-facilities': {
+    id: 'comnap-antarctic-facilities',
+    name: 'COMNAP Antarctic Facilities',
+    url: 'https://github.com/PolarGeospatialCenter/comnap-antarctic-facilities',
+    kind: 'facility',
+    coverage: 'antarctic',
+    usage: 'primary',
+    license: 'Educational and non-commercial use only; preserve COMNAP attribution',
+    notes: 'Normalized station, camp, refuge, laboratory, depot, and airfield-camp metadata for Antarctic research-facility address candidates.',
+  },
+  'bas-antarctic-station-map': {
+    id: 'bas-antarctic-station-map',
+    name: 'BAS Antarctic Research Stations Map',
+    url: 'https://data.bas.ac.uk/items/a4560740-70bb-4a2a-8ba5-ff4cc1774178/',
+    kind: 'facility',
+    coverage: 'antarctic',
+    usage: 'validation',
+    license: 'Open Government Licence 3.0 for BAS map product; underlying station list cites COMNAP',
+    notes: 'BAS map product for validating year-round and seasonal Antarctic station placement and cartographic station labels.',
+  },
   arcticdem: {
     id: 'arcticdem',
     name: 'ArcticDEM',
@@ -249,6 +282,11 @@ export const ANTARCTIC_NATURAL_OPEN_SOURCE_IDS = [
   'ats-antarctic-protected-areas',
 ] as const satisfies readonly PolarOpenGeoSourceId[];
 
+export const ANTARCTIC_FACILITY_OPEN_SOURCE_IDS = [
+  'comnap-antarctic-facilities',
+  'bas-antarctic-station-map',
+] as const satisfies readonly PolarOpenGeoSourceId[];
+
 export const ARCTIC_NATURAL_OPEN_SOURCE_IDS = [
   'arcticdem',
   'ibcao-arctic-ocean',
@@ -268,19 +306,20 @@ export const POLAR_NATURAL_OPEN_SOURCE_IDS = [
 ] as const satisfies readonly PolarOpenGeoSourceId[];
 
 export const POLAR_REGION_CODES = [
-  'AQ', 'TF', 'BV', 'GS', 'GL', 'SJ', 'SJ_SVA', 'SJ_JAN',
+  'AQ', 'TF', 'BV', 'GS', 'HM', 'GL', 'SJ', 'SJ_SVA', 'SJ_JAN',
 ] as const;
 
 export type PolarRegionCode = (typeof POLAR_REGION_CODES)[number];
 
-const ANTARCTIC_AND_SUBANTARCTIC_CODES = new Set<PolarRegionCode>(['AQ', 'TF', 'BV', 'GS']);
+const ANTARCTIC_AND_SUBANTARCTIC_CODES = new Set<PolarRegionCode>(['AQ', 'TF', 'BV', 'GS', 'HM']);
 const ARCTIC_CODES = new Set<PolarRegionCode>(['GL', 'SJ', 'SJ_SVA', 'SJ_JAN']);
 
 const COUNTRY_SOURCE_IDS: Record<PolarRegionCode, readonly PolarOpenGeoSourceId[]> = {
-  AQ: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
+  AQ: [...ANTARCTIC_NATURAL_OPEN_SOURCE_IDS, ...ANTARCTIC_FACILITY_OPEN_SOURCE_IDS],
   TF: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
   BV: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
   GS: ANTARCTIC_NATURAL_OPEN_SOURCE_IDS,
+  HM: ['australian-antarctic-program-himi', ...ANTARCTIC_NATURAL_OPEN_SOURCE_IDS],
   GL: [...ARCTIC_NATURAL_OPEN_SOURCE_IDS, ...GREENLAND_NATURAL_OPEN_SOURCE_IDS],
   SJ: ARCTIC_NATURAL_OPEN_SOURCE_IDS,
   SJ_SVA: ARCTIC_NATURAL_OPEN_SOURCE_IDS,

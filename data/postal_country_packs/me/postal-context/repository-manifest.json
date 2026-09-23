@@ -1,0 +1,120 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-me",
+    "country_code": "ME",
+    "country_name": "Montenegro",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/me/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Poštanski broj",
+    "full_code_format": "NNNNN",
+    "full_code_regex": "^\\d{5}$",
+    "canonical_form": "NNNNN",
+    "normalization_rule": "Accept exactly five ASCII digits, preserve leading zeroes and reject ME prefixes, separators and the six-digit PAK. Structural validity never proves current allocation.",
+    "pak_name": "Poštanski adresni kod (PAK)",
+    "pak_format": "NNNNNN",
+    "assignment_rule": "A pinned Pošta Crne Gore source may establish a five-digit destination-office assignment at its capture time. An office, address, delivery-office flag or PAK alone does not establish a complete current allocation denominator or postal perimeter.",
+    "pak_rule": "Pošta Crne Gore defines the six-digit PAK as a code for a part of a street visited by a postal carrier. It is route or address-range evidence, not the five-digit postcode, a guaranteed polygon, a building, a household or a resident.",
+    "exception_rule": "Delivery and non-delivery offices, PO boxes, poste restante, PAK route or street-part records, organizations and special or non-geographic endpoints remain explicit and non-areal unless an authoritative source supplies truthful geometry.",
+    "geometry_rule": "The public operator directory exposes facility points, not postcode areas. Office points, routes, PAK street parts, municipalities, spatial units, addresses, cadastral parcels, buildings, buffers, hulls, Voronoi or raster cells and interpolation never become official postcode geometry.",
+    "rights_rule": "Pin provider, edition or retrieval time, dataset-specific terms, attribution, schema, CRS, byte length, digest and transformation for every artifact. Public viewing, general open-data guidance, a paid receipt or statutory access does not imply bulk extraction, derivative or redistribution rights.",
+    "privacy_rule": "Exclude recipient, customer, resident, occupant, owner, rightsholder, personal identifier, title, encumbrance, value, tax, contact and shipment data.",
+    "territory_rule": "Keep Montenegro identity and scope independent; administrative, statistical, cadastral or postal coverage does not alter source identity or determine sovereignty."
+  },
+  "quality_gates": [
+    {
+      "id": "metadata-rights-and-lineage",
+      "scope": "all",
+      "pass": "Every artifact has provider, edition or retrieval time, dataset-specific terms, attribution, schema, CRS, byte length, digest and reproducible transformation."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "postcode",
+      "metric": "canonical_me_five_digit_ratio",
+      "minimum": 1
+    },
+    {
+      "id": "pak-is-separate",
+      "scope": "all-postal-identifiers",
+      "pass": "Six-digit PAK remains route or street-part evidence and is never stored as the five-digit postcode or assumed to be an area."
+    },
+    {
+      "id": "assignment-and-exception-completeness",
+      "scope": "all-known-codes",
+      "pass": "Ordinary and exception classes reconcile against a complete current denominator; syntax and facility listings do not auto-create allocation."
+    },
+    {
+      "id": "postal-geometry-classification",
+      "scope": "all-postal-features",
+      "pass": "Every feature is non-area, official area or derived area; facility points, route or street-part records and address membership stay non-area."
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Postal assignment, facility, PAK, address, administration, building or parcel context and AGID containment remain separate."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Sources, routing classes, rights and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_montenegro_postcode_area_visualization",
+        "definition": "A current complete rights-cleared Pošta Crne Gore five-digit postcode and six-digit PAK/exception denominator, including delivery and non-delivery offices, PO boxes, poste restante, route or street-part, organization and other special or non-geographic classes, and real postcode Polygon/MultiPolygon surfaces are pinned by edition or retrieval basis, effective date, terms, byte length, SHA-256, coverage and exceptions, published as an approved immutable artifact, and loaded through the real ME API/app so a normalized NNNNN search fits and renders a translucent area with a clear outline, selected code, geometry kind, official/derived/virtual classification, source, reference date and confidence. Facility points or addresses, PAK alone, municipalities or spatial units, cadastral parcels or buildings, route or street buffers, hulls, Voronoi or raster cells and synthetic fixtures never satisfy M2 by themselves. A derived surface is eligible only from an expressly authorized complete current postal-membership denominator with reproducible lineage, limitations and noncanonical status preserved."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Assignment, geometry, rights, privacy and independent holdout gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
+    ],
+    "hard_blockers": [
+      "postcode-or-post-office-row-presented-as-polygon",
+      "pak-presented-as-five-digit-postcode-or-universal-polygon",
+      "office-point-route-street-part-municipality-spatial-unit-address-parcel-or-building-proxy-promoted",
+      "buffer-hull-voronoi-raster-or-synthetic-geometry-promoted",
+      "missing-complete-current-assignment-and-exception-denominator",
+      "missing-dataset-specific-rights",
+      "geoportal-view-paid-receipt-or-statutory-access-presented-as-redistribution-right",
+      "private-property-or-recipient-fields-published",
+      "missing-real-api-app-area-verification"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "current_allocation_from_structure_alone",
+    "pak-is-five-digit-postcode",
+    "recipient-or-property-right-identity",
+    "official-postcode-polygon",
+    "building-or-parcel-identity",
+    "administrative-or-cadastral-unit-equals-postcode-area"
+  ]
+}

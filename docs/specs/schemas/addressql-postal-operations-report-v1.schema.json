@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://address-grid-id.github.io/schemas/addressql-postal-operations-report-v1.schema.json",
+  "title": "AddressQL Postal Operations Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "generatedAt",
+    "inputVersion",
+    "reportDigest",
+    "sourceSummary",
+    "sources",
+    "correctionSla",
+    "countries",
+    "privacy",
+    "nonClaims"
+  ],
+  "properties": {
+    "version": {
+      "const": "addressql-postal-operations-report-v1"
+    },
+    "generatedAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "inputVersion": {
+      "const": "addressql-postal-operations-input-v1"
+    },
+    "reportDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "sourceSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "active",
+        "checkDue",
+        "reviewRequired",
+        "expired",
+        "invalid",
+        "automaticallyDisabledAdapterIds"
+      ],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "active": { "type": "integer", "minimum": 0 },
+        "checkDue": { "type": "integer", "minimum": 0 },
+        "reviewRequired": { "type": "integer", "minimum": 0 },
+        "expired": { "type": "integer", "minimum": 0 },
+        "invalid": { "type": "integer", "minimum": 0 },
+        "automaticallyDisabledAdapterIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceResult"
+      }
+    },
+    "correctionSla": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetHours", "aggregate", "byCountry", "bySource"],
+      "properties": {
+        "targetHours": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 2160
+        },
+        "aggregate": {
+          "$ref": "#/$defs/slaAggregate"
+        },
+        "byCountry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slaAggregate"
+          }
+        },
+        "bySource": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slaAggregate"
+          }
+        }
+      }
+    },
+    "countries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/countryResult"
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "containsRawAddress",
+        "containsRecipientData",
+        "containsPreciseCoordinates",
+        "containsCorrectionContent",
+        "containsQueryLogs",
+        "aggregateSlaOnly"
+      ],
+      "properties": {
+        "containsRawAddress": { "const": false },
+        "containsRecipientData": { "const": false },
+        "containsPreciseCoordinates": { "const": false },
+        "containsCorrectionContent": { "const": false },
+        "containsQueryLogs": { "const": false },
+        "aggregateSlaOnly": { "const": true }
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "nullableLevel": {
+      "anyOf": [
+        {
+          "enum": ["L2", "L3", "L4"]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableHours": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sourceResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "countryCode",
+        "capabilityLevel",
+        "purpose",
+        "sourceVersion",
+        "correctionUrl",
+        "state",
+        "adapterState",
+        "versionChanged",
+        "correctionRouteChanged",
+        "promotionEligible",
+        "hardBlocked",
+        "reasons",
+        "lastCheckedAt",
+        "nextCheckAt",
+        "validUntil",
+        "adapterId"
+      ],
+      "properties": {
+        "sourceId": { "type": "string" },
+        "countryCode": {
+          "type": "string"
+        },
+        "capabilityLevel": {
+          "enum": ["L2", "L3", "L4"]
+        },
+        "purpose": {
+          "enum": [
+            "postal-existence",
+            "admin-locality-consistency",
+            "delivery-area"
+          ]
+        },
+        "sourceVersion": { "type": "string" },
+        "correctionUrl": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "check_due",
+            "review_required",
+            "expired",
+            "invalid"
+          ]
+        },
+        "adapterState": {
+          "enum": [
+            "active",
+            "expired",
+            "unverified",
+            "conformance_only",
+            "invalid"
+          ]
+        },
+        "versionChanged": { "type": "boolean" },
+        "correctionRouteChanged": { "type": "boolean" },
+        "promotionEligible": { "type": "boolean" },
+        "hardBlocked": { "type": "boolean" },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "lastCheckedAt": {
+          "type": "string"
+        },
+        "nextCheckAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "validUntil": {
+          "type": "string"
+        },
+        "adapterId": { "type": "string" }
+      }
+    },
+    "slaAggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "countryCode",
+        "sourceId",
+        "state",
+        "receivedCount",
+        "publishedCount",
+        "openCount",
+        "withinTargetCount",
+        "breachCount",
+        "p50Hours",
+        "p95Hours",
+        "maxHours",
+        "oldestOpenHours"
+      ],
+      "properties": {
+        "countryCode": {
+          "type": "string"
+        },
+        "sourceId": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "null" }
+          ]
+        },
+        "state": {
+          "enum": ["met", "breached", "insufficient"]
+        },
+        "receivedCount": { "type": "integer", "minimum": 0 },
+        "publishedCount": { "type": "integer", "minimum": 0 },
+        "openCount": { "type": "integer", "minimum": 0 },
+        "withinTargetCount": { "type": "integer", "minimum": 0 },
+        "breachCount": { "type": "integer", "minimum": 0 },
+        "p50Hours": { "$ref": "#/$defs/nullableHours" },
+        "p95Hours": { "$ref": "#/$defs/nullableHours" },
+        "maxHours": { "$ref": "#/$defs/nullableHours" },
+        "oldestOpenHours": { "$ref": "#/$defs/nullableHours" }
+      }
+    },
+    "countryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "countryCode",
+        "currentLevel",
+        "recommendedLevel",
+        "highestOperationalLevel",
+        "highestPromotionEligibleLevel",
+        "action",
+        "sourceIds",
+        "reasons"
+      ],
+      "properties": {
+        "countryCode": {
+          "type": "string"
+        },
+        "currentLevel": { "$ref": "#/$defs/nullableLevel" },
+        "recommendedLevel": { "$ref": "#/$defs/nullableLevel" },
+        "highestOperationalLevel": {
+          "$ref": "#/$defs/nullableLevel"
+        },
+        "highestPromotionEligibleLevel": {
+          "$ref": "#/$defs/nullableLevel"
+        },
+        "action": {
+          "enum": [
+            "promotion_candidate",
+            "demotion_required",
+            "review_required",
+            "hold",
+            "blocked"
+          ]
+        },
+        "sourceIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

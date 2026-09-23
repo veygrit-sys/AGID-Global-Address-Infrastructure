@@ -1,0 +1,225 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-cz",
+    "country_code": "CZ",
+    "country_name": "Czechia",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/cz/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "PSČ",
+    "full_code_format": "NNN NN",
+    "full_code_regex": "^\\d{3}\\s?\\d{2}$",
+    "full_code_default_geometry": "routing_assignment_or_derived_address_surface",
+    "full_code_rule": "Preserve PSČ as five digits rendered NNN NN, including leading zeroes. Česká pošta assignment, RÚIAN address identity, building geometry and any derived surface remain independent evidence.",
+    "postcode_area_rule": "Česká pošta postcode and address exports establish routing assignments, not nationwide official postal polygons. A surface generated from RÚIAN address points may be published only as opt-in derived_geometry with its method, release and uncertainty.",
+    "address_rule": "Use the RÚIAN address-place code as the stable civic-address identity and preserve municipality, municipal district, municipality part, street, building number, orientation number, PSČ, definition point, validity and source edition. A definition point is not a building footprint.",
+    "building_rule": "Promote RÚIAN VFR or INSPIRE building geometry as an exact building only through the source-defined parent Stavební objekt code, ISKN building identifier or a reviewed explicit crosswalk. Point containment and nearest distance are candidate evidence only.",
+    "admin_rule": "Use RÚIAN territorial identifiers and boundaries for country, region, district, ORP, municipality and cadastral context. Administrative geometry never becomes postal geometry.",
+    "reference_status_rule": "VDP is a free informational publication surface. Claims requiring legally referenceable basic-register data must use the authorized reference-system path and retain that status separately.",
+    "privacy_rule": "Public AGID resolution may display public civic-address and building context but excludes recipient, resident, owner, forwarding, shipment, customer and non-public register data.",
+    "rights_rule": "Pin every Česká pošta and ČÚZK artifact, source date, digest, attribution and license. Public RÚIAN open data remains CC BY 4.0 attributed; postal infrastructure or customer outputs without an explicit redistribution grant remain isolated.",
+    "territory_rule": "The CZ pack covers Czech sovereign territory. Cross-border routing and foreign addresses remain in their sovereign country packs."
+  },
+  "address_graph": {
+    "node_types": [
+      "psc",
+      "routing_assignment",
+      "derived_postal_surface",
+      "country",
+      "region",
+      "district",
+      "municipality_with_extended_competence",
+      "municipality",
+      "municipality_part",
+      "street",
+      "ruian_address_place",
+      "civic_address",
+      "ruian_building_object",
+      "building_footprint",
+      "postal_facility",
+      "organization_or_addressee_code",
+      "no_delivery_service_location",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "same_source_object",
+      "candidate_building",
+      "part_of",
+      "postal_contains",
+      "covered_by_agid",
+      "succeeds",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "psc-to-locality-is-many-to-many",
+      "routing-assignment-does-not-imply-polygon",
+      "derived-surface-is-not-operator-boundary",
+      "address-place-has-one-stable-ruian-code-per-version",
+      "building-may-have-many-address-places",
+      "address-point-is-not-building-footprint",
+      "exact-building-link-requires-source-identifier-or-explicit-crosswalk",
+      "containment-or-proximity-is-candidate-only",
+      "administrative-boundary-is-not-postal-boundary",
+      "agid-containment-is-not-source-identity"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "operator_routing_assignment",
+      "rule": "Keep Česká pošta PSČ-to-address or PSČ-to-locality assignment as non-geometric routing evidence unless independent geometry authority is pinned."
+    },
+    {
+      "id": "address_or_addressee_code",
+      "rule": "Represent PSČ assigned to a specific address, organization or addressee as a non-area record; never invent a surrounding residential polygon."
+    },
+    {
+      "id": "postal_facility",
+      "rule": "Represent post offices and other facilities as points or non-area routing records unless an authoritative source supplies a geographic area for that exact class."
+    },
+    {
+      "id": "no_delivery_service_location",
+      "rule": "Preserve Česká pošta no-delivery-service classification and never turn it into a deliverability claim."
+    },
+    {
+      "id": "ruian_address_place",
+      "rule": "Preserve the RÚIAN address-place code, source edition, definition point and validity; do not present its point as a building outline."
+    },
+    {
+      "id": "ruian_building_geometry",
+      "rule": "Use a source-defined parent building code, ISKN building identifier or reviewed crosswalk for exact linkage. Containing and nearby buildings remain candidates."
+    },
+    {
+      "id": "derived_postcode_surface",
+      "rule": "A Voronoi, union, hull, interpolation or administrative clip generated from RÚIAN address points is derived_geometry, opt-in and never branded as a Česká pošta official polygon."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-rights-and-attribution-lineage",
+      "scope": "all",
+      "pass": "Every artifact has a pinned release or retrieval receipt, digest, provider, license, required attribution, schema, CRS and transformation method."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "psc",
+      "metric": "normalized_exact_five_digit_string_ratio",
+      "minimum": 1
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Česká pošta assignment, RÚIAN address identity, RÚIAN building geometry, administration, derived surfaces and AGID indexes remain separate evidence."
+    },
+    {
+      "id": "derived-surface-topology",
+      "scope": "derived-postal-surfaces",
+      "pass": "Geometry is valid, clipped to Czech territory and checked for unexplained overlaps, gaps, islands, invalid PSČ, multipart loss and national-border leakage."
+    },
+    {
+      "id": "postcode-class-coverage",
+      "scope": "all-known-postcodes",
+      "pass": "Every code is classified as address/locality routing, addressee/organization, postal facility, no-delivery-service, derived-area-eligible, historical or unknown."
+    },
+    {
+      "id": "address-identity-quality",
+      "scope": "ruian-address-places",
+      "pass": "Every promoted address preserves its RÚIAN code, parent territorial and building references, address numbers, PSČ, definition-point lineage, validity and release."
+    },
+    {
+      "id": "building-geometry-link",
+      "scope": "promoted-building-geometries",
+      "pass": "Every exact address-to-building edge has a source-defined building code, ISKN identifier or reviewed explicit crosswalk; containment and proximity remain candidates."
+    },
+    {
+      "id": "reference-status",
+      "scope": "public-resolution",
+      "pass": "Informational VDP evidence is not represented as legally referenceable basic-register evidence."
+    },
+    {
+      "id": "public-privacy",
+      "scope": "public-resolution",
+      "pass": "Public results contain no recipient, resident, owner, forwarding, shipment, customer or non-public register attributes."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "operator_assignment_match_minimum": 0.999,
+        "postcode_classification_ratio_minimum": 1,
+        "explicit_building_link_precision_minimum": 1,
+        "country_partition_accuracy_minimum": 1
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, PSČ classes and legal blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_assignment_and_derived_postcode_area_visualization",
+        "definition": "A current rights-reviewed Czech Post PSČ assignment denominator and current postcode-specific Polygon/MultiPolygon, or a complete permitted RÚIAN address-member relation from which a reproducible derived surface is built, is pinned by edition, validity, schema, coverage, authority, rights and SHA-256; special and non-area classes remain explicit, and a real CZ AGID loader, API and app path verifies normalization, geometry, fit, translucent fill, outline, provenance, ambiguity, failure, clear and re-search. Synthetic fixtures and metadata alone never establish M2."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Topology, identity, privacy, reference-status, freshness and holdout gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
+    ],
+    "hard_blockers": [
+      "unpinned-ceska-posta-or-ruian-release",
+      "derived-surface-presented-as-official-ceska-posta-boundary",
+      "special-postcode-given-invented-polygon",
+      "address-point-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-ruian-link",
+      "informational-vdp-presented-as-reference-data",
+      "administrative-boundary-presented-as-postal-geometry",
+      "missing-required-cc-by-attribution",
+      "restricted-source-redistributed-without-rights-receipt",
+      "recipient-resident-or-owner-data-exposed",
+      "postcode-stored-as-number",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "residency_occupancy_or_ownership",
+    "official_postcode_polygon_from_assignment",
+    "building_geometry_from_address_point",
+    "building_identity_from_containment_or_proximity",
+    "legal_property_or_cadastral_survey_certification",
+    "municipality_equals_postcode_area"
+  ]
+}

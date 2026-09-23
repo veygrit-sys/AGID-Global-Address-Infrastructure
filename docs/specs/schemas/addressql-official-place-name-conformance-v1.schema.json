@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-official-place-name-conformance-v1.schema.json",
+  "title": "AddressQL official place-name conformance fixture v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog", "holdout"],
+  "properties": {
+    "catalog": { "$ref": "#/$defs/catalog" },
+    "holdout": { "$ref": "#/$defs/holdout" }
+  },
+  "$defs": {
+    "technicalId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+    },
+    "countryCode": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:+/-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "languageTag": {
+      "type": "string",
+      "maxLength": 35,
+      "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{2,8})*$"
+    },
+    "hierarchyLevel": {
+      "type": "string",
+      "enum": ["country", "admin1", "admin2", "admin3", "locality"]
+    },
+    "nameKind": {
+      "type": "string",
+      "enum": [
+        "official-native",
+        "official-alias",
+        "official-romanization",
+        "standardized-transliteration",
+        "generated-transliteration",
+        "compatibility-search-alias"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "authority",
+        "countryCodes",
+        "sourceVersion",
+        "releaseUrl",
+        "termsUrl",
+        "correctionUrl",
+        "checkedAt",
+        "validUntil",
+        "reuseStatus",
+        "datasetDigest",
+        "attestationVerified",
+        "holdoutVerified"
+      ],
+      "properties": {
+        "sourceId": { "$ref": "#/$defs/technicalId" },
+        "authority": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "countryCodes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/countryCode" }
+        },
+        "sourceVersion": { "$ref": "#/$defs/version" },
+        "releaseUrl": { "$ref": "#/$defs/httpsUrl" },
+        "termsUrl": { "$ref": "#/$defs/httpsUrl" },
+        "correctionUrl": { "$ref": "#/$defs/httpsUrl" },
+        "checkedAt": { "type": "string", "format": "date-time" },
+        "validUntil": { "type": "string", "format": "date-time" },
+        "reuseStatus": {
+          "type": "string",
+          "enum": [
+            "approved-open-data",
+            "official-reference-only",
+            "synthetic-conformance"
+          ]
+        },
+        "datasetDigest": { "$ref": "#/$defs/digest" },
+        "attestationVerified": { "type": "boolean" },
+        "holdoutVerified": { "type": "boolean" }
+      }
+    },
+    "name": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "languageTag", "kind", "usage", "sourceId"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "languageTag": { "$ref": "#/$defs/languageTag" },
+        "kind": { "$ref": "#/$defs/nameKind" },
+        "usage": {
+          "type": "string",
+          "enum": ["domestic", "international", "both", "search-only"]
+        },
+        "sourceId": { "$ref": "#/$defs/technicalId" }
+      }
+    },
+    "place": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "placeId",
+        "countryCode",
+        "hierarchyLevel",
+        "parentPlaceIds",
+        "names"
+      ],
+      "properties": {
+        "placeId": { "$ref": "#/$defs/technicalId" },
+        "countryCode": { "$ref": "#/$defs/countryCode" },
+        "hierarchyLevel": { "$ref": "#/$defs/hierarchyLevel" },
+        "parentPlaceIds": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/technicalId" }
+        },
+        "names": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": { "$ref": "#/$defs/name" }
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "catalogId",
+        "catalogVersion",
+        "generatedAt",
+        "sources",
+        "places"
+      ],
+      "properties": {
+        "version": {
+          "const": "addressql-official-place-name-catalog-v1"
+        },
+        "catalogId": { "$ref": "#/$defs/technicalId" },
+        "catalogVersion": { "$ref": "#/$defs/version" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10000,
+          "items": { "$ref": "#/$defs/source" }
+        },
+        "places": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000000,
+          "items": { "$ref": "#/$defs/place" }
+        }
+      }
+    },
+    "expectedRanked": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "placeId",
+        "displayName",
+        "displayNameKind"
+      ],
+      "properties": {
+        "status": { "const": "ranked" },
+        "placeId": { "$ref": "#/$defs/technicalId" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "displayNameKind": { "$ref": "#/$defs/nameKind" }
+      }
+    },
+    "expectedDeferred": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "const": "deferred" }
+      }
+    },
+    "vector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vectorId",
+        "countryCode",
+        "query",
+        "targetLanguage",
+        "purpose",
+        "caseClass",
+        "expected"
+      ],
+      "properties": {
+        "vectorId": { "$ref": "#/$defs/technicalId" },
+        "countryCode": { "$ref": "#/$defs/countryCode" },
+        "query": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "targetLanguage": { "$ref": "#/$defs/languageTag" },
+        "purpose": {
+          "type": "string",
+          "enum": ["domestic", "international-shipping"]
+        },
+        "hierarchyLevel": { "$ref": "#/$defs/hierarchyLevel" },
+        "parentPlaceIds": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/technicalId" }
+        },
+        "caseClass": {
+          "type": "string",
+          "enum": [
+            "english-label",
+            "same-script-different-reading",
+            "official-alias-priority",
+            "safe-deferral"
+          ]
+        },
+        "expected": {
+          "oneOf": [
+            { "$ref": "#/$defs/expectedRanked" },
+            { "$ref": "#/$defs/expectedDeferred" }
+          ]
+        }
+      }
+    },
+    "holdout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "fixtureId",
+        "fixtureVersion",
+        "curatorId",
+        "evaluatorId",
+        "vectors"
+      ],
+      "properties": {
+        "version": { "const": "addressql-place-name-holdout-v1" },
+        "fixtureId": { "$ref": "#/$defs/technicalId" },
+        "fixtureVersion": { "$ref": "#/$defs/version" },
+        "curatorId": { "$ref": "#/$defs/technicalId" },
+        "evaluatorId": { "$ref": "#/$defs/technicalId" },
+        "vectors": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100000,
+          "items": { "$ref": "#/$defs/vector" }
+        }
+      }
+    }
+  }
+}

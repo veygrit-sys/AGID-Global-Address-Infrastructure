@@ -13,17 +13,38 @@ export interface CaribbeanContext {
   }[];
 }
 
+const ISLAND_PLACE_VALUES = new Set([
+  'island',
+  'islands',
+  'isle',
+  'islet',
+  'islets',
+  'archipelago',
+  'atoll',
+  'cay',
+  'cays',
+  'cayo',
+  'caye',
+  'key',
+  'keys',
+]);
+
 /**
  * Fetches regional context for the Caribbean using Overpass API.
  */
 export async function fetchCaribbeanContext(lat: number, lon: number): Promise<CaribbeanContext | null> {
   const radius = 3000;
-  
+
   // Query for islands, beaches, resorts, and administrative boundaries (Parish/District)
   const query = `
     [out:json][timeout:25];
     (
-      node["place"="island"](around:${radius*5},${lat},${lon});
+      node["place"~"island|islet|archipelago|atoll|cay|key|cayo|caye"](around:${radius*5},${lat},${lon});
+      way["place"~"island|islet|archipelago|atoll|cay|key|cayo|caye"](around:${radius*5},${lat},${lon});
+      relation["place"~"island|islet|archipelago|atoll|cay|key|cayo|caye"](around:${radius*5},${lat},${lon});
+      node["natural"~"island|islet|archipelago|atoll|cay|key"](around:${radius*5},${lat},${lon});
+      way["natural"~"island|islet|archipelago|atoll|cay|key"](around:${radius*5},${lat},${lon});
+      relation["natural"~"island|islet|archipelago|atoll|cay|key"](around:${radius*5},${lat},${lon});
       node["natural"="beach"](around:${radius},${lat},${lon});
       node["tourism"~"resort|hotel"](around:${radius},${lat},${lon});
       way["boundary"="administrative"]["admin_level"~"4|6|8"](around:200,${lat},${lon});
@@ -44,11 +65,12 @@ export async function fetchCaribbeanContext(lat: number, lon: number): Promise<C
     const data = await response.json();
 
     const context: CaribbeanContext = { landmarks: [] };
-    
+
     data.elements.forEach((el: any) => {
       if (el.tags) {
-        if (el.tags.place === 'island') {
-          context.island = el.tags.name;
+        const islandType = el.tags.place || el.tags.natural || el.tags['island:type'];
+        if (ISLAND_PLACE_VALUES.has(islandType) && el.tags.name) {
+          context.island = context.island || el.tags.name;
         } else if (el.tags.boundary === 'administrative') {
           // Many Caribbean countries use Parish (admin_level 6 or 4)
           if (el.tags.admin_level === '6' || el.tags.admin_level === '4') {
@@ -58,7 +80,7 @@ export async function fetchCaribbeanContext(lat: number, lon: number): Promise<C
             context.district = el.tags.name;
           }
         } else if (el.tags.name) {
-          const type = el.tags.natural || el.tags.tourism || 'Landmark';
+          const type = el.tags.place || el.tags.natural || el.tags.tourism || 'Landmark';
           context.landmarks.push({
             name: el.tags.name,
             type: type.charAt(0).toUpperCase() + type.slice(1),
@@ -83,7 +105,7 @@ export async function fetchCaribbeanOfficialAddress(lat: number, lon: number, cc
   // For Puerto Rico, we already use US Census.
   // For others, we can use specialized Nominatim queries or local open data if available.
   // Many Caribbean countries rely on descriptive addresses.
-  
+
   try {
     // Placeholder for future official Caribbean APIs (e.g. ONE for Dominican Republic)
     if (cc === 'do') {
@@ -100,7 +122,7 @@ export async function fetchCaribbeanOfficialAddress(lat: number, lon: number, cc
         };
       }
     }
-    
+
     if (cc === 'jm') {
       // Jamaica specialized
       const url = `/api/osm-reverse?lat=${lat}&lon=${lon}&lang=en`;

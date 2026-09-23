@@ -116,9 +116,14 @@ test('adds domestic and international shipping English for Outer Circle address 
     'er', 'et', 'ke', 'mu', 'rw', 'sc', 'so', 'ss', 'tz', 'ug',
     'za', 'zw', 'zm', 'bw', 'na', 'mw', 'ls', 'sz',
     'jm', 'tt', 'bb', 'bs', 'bz', 'gy', 'ag', 'lc', 'gd', 'dm', 'vc', 'kn',
+    'bm', 'ai', 'ky', 'ms', 'tc', 'vg', 'vi',
     'pg', 'fj', 'sb', 'vu', 'ws', 'to',
     'fm', 'pw', 'mh', 'ki', 'tv', 'nr',
     'nf', 'cx', 'cc', 'ck', 'tk', 'nu', 'pn', 'aq',
+    'as', 'gu', 'mp', 'um',
+    'fk', 'gs',
+    'gg', 'im', 'je', 'gi', 'sba',
+    'io', 'sh', 'ac', 'ta',
     'ae', 'qa', 'bh',
   ]);
 
@@ -156,8 +161,8 @@ test('keeps native-language tabs for English-primary countries that also use loc
     sg: {
       countryLanguages: ['en-SG', 'en', 'zh-Hans', 'ms', 'ta'],
       knownLanguageCodes: ['en', 'zh-Hans', 'ms', 'ta'],
-      languages: ['en', 'zh-Hans', 'ms', 'ta', 'en_domestic'],
-      displayTabs: ['en_domestic', 'zh-Hans', 'ms', 'ta', 'en'],
+      languages: ['en', 'ms', 'zh-Hans', 'ta', 'en_domestic'],
+      displayTabs: ['en_domestic', 'ms', 'zh-Hans', 'ta', 'en'],
     },
     za: {
       countryLanguages: ['en-ZA', 'en', 'af', 'zu', 'xh'],
@@ -242,11 +247,11 @@ test('adds English tabs for Myanmar, Thailand, Vietnam, Cambodia, Laos, and Mala
 
 test('adds English tabs for Singapore, Indonesia, Philippines, Brunei, and Timor-Leste from country code defaults', () => {
   const expectedByCountry: Record<string, { languages: string[]; displayTabs: string[] }> = {
-    sg: { languages: ['en', 'en_domestic'], displayTabs: ['en_domestic', 'en'] },
+    sg: { languages: ['en', 'ms', 'en_domestic'], displayTabs: ['en_domestic', 'ms', 'en'] },
     id: { languages: ['id', 'en'], displayTabs: ['id', 'en'] },
     ph: { languages: ['tl', 'en', 'en_domestic'], displayTabs: ['tl', 'en_domestic', 'en'] },
     bn: { languages: ['ms', 'en', 'en_domestic'], displayTabs: ['ms', 'en_domestic', 'en'] },
-    tl: { languages: ['tet', 'en'], displayTabs: ['tet', 'en'] },
+    tl: { languages: ['tet', 'pt', 'en'], displayTabs: ['tet', 'pt', 'en'] },
   };
 
   for (const [countryCode, expected] of Object.entries(expectedByCountry)) {
@@ -263,14 +268,17 @@ test('adds English tabs for Singapore, Indonesia, Philippines, Brunei, and Timor
 
 test('adds strengthened English tabs for South Asia from country code defaults', () => {
   const expectedByCountry: Record<string, { languages: string[]; displayTabs: string[] }> = {
-    in: { languages: ['en', 'en_domestic'], displayTabs: ['en_domestic', 'en'] },
+    in: {
+      languages: ['en', 'bn', 'ur', 'en_domestic'],
+      displayTabs: ['en_domestic', 'bn', 'ur', 'en'],
+    },
     pk: { languages: ['ur', 'en', 'en_domestic'], displayTabs: ['ur', 'en_domestic', 'en'] },
     bd: { languages: ['bn', 'en', 'en_domestic'], displayTabs: ['bn', 'en_domestic', 'en'] },
     np: { languages: ['ne', 'en', 'en_domestic'], displayTabs: ['ne', 'en_domestic', 'en'] },
     lk: { languages: ['si', 'en', 'en_domestic'], displayTabs: ['si', 'en_domestic', 'en'] },
     bt: { languages: ['dz', 'en', 'en_domestic'], displayTabs: ['dz', 'en_domestic', 'en'] },
     mv: { languages: ['dv', 'en', 'en_domestic'], displayTabs: ['dv', 'en_domestic', 'en'] },
-    af: { languages: ['ps', 'en'], displayTabs: ['ps', 'en'] },
+    af: { languages: ['ps', 'fa', 'en'], displayTabs: ['ps', 'fa', 'en'] },
   };
 
   for (const [countryCode, expected] of Object.entries(expectedByCountry)) {
@@ -600,13 +608,13 @@ test('adds Caucasus native plus English tabs from country code defaults', () => 
 test('adds North Africa native plus English tabs from country code defaults', () => {
   const expectedByCountry: Record<string, { languages: string[]; displayTabs: string[] }> = {
     eg: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
-    dz: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
-    ma: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
+    dz: { languages: ['ar', 'fr', 'en'], displayTabs: ['ar', 'fr', 'en'] },
+    ma: { languages: ['ar', 'fr', 'en'], displayTabs: ['ar', 'fr', 'en'] },
     tn: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
     ly: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
     sd: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
     mr: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
-    eh: { languages: ['ar', 'en'], displayTabs: ['ar', 'en'] },
+    eh: { languages: ['ar', 'fr', 'en'], displayTabs: ['ar', 'fr', 'en'] },
   };
 
   for (const [countryCode, expected] of Object.entries(expectedByCountry)) {
@@ -682,8 +690,8 @@ test('adds East Africa domestic and international English tabs where English is 
   const expectedByCountry: Record<string, { languages: string[]; displayTabs: string[] }> = {
     km: { languages: ['fr', 'ar', 'en'], displayTabs: ['fr', 'ar', 'en'] },
     dj: { languages: ['fr', 'ar', 'en'], displayTabs: ['fr', 'ar', 'en'] },
-    er: { languages: ['ti', 'en', 'en_domestic'], displayTabs: ['ti', 'en_domestic', 'en'] },
-    et: { languages: ['am', 'en', 'en_domestic'], displayTabs: ['am', 'en_domestic', 'en'] },
+    er: { languages: ['ti', 'en', 'ar', 'en_domestic'], displayTabs: ['ti', 'en_domestic', 'ar', 'en'] },
+    et: { languages: ['am', 'en', 'ti', 'so', 'en_domestic'], displayTabs: ['am', 'en_domestic', 'ti', 'so', 'en'] },
     ke: { languages: ['en', 'sw', 'en_domestic'], displayTabs: ['en_domestic', 'sw', 'en'] },
     mg: { languages: ['fr', 'en'], displayTabs: ['fr', 'en'] },
     mw: { languages: ['en', 'ny', 'en_domestic'], displayTabs: ['en_domestic', 'ny', 'en'] },
@@ -695,7 +703,7 @@ test('adds East Africa domestic and international English tabs where English is 
     ss: { languages: ['en', 'en_domestic'], displayTabs: ['en_domestic', 'en'] },
     tz: { languages: ['sw', 'en', 'en_domestic'], displayTabs: ['sw', 'en_domestic', 'en'] },
     ug: { languages: ['en', 'sw', 'en_domestic'], displayTabs: ['en_domestic', 'sw', 'en'] },
-    zm: { languages: ['en', 'bem', 'en_domestic'], displayTabs: ['en_domestic', 'bem', 'en'] },
+    zm: { languages: ['en', 'bem', 'ny', 'en_domestic'], displayTabs: ['en_domestic', 'bem', 'ny', 'en'] },
   };
 
   for (const [countryCode, expected] of Object.entries(expectedByCountry)) {
@@ -712,13 +720,16 @@ test('adds East Africa domestic and international English tabs where English is 
 
 test('adds Southern Africa and Indian Ocean delivery-language tabs from country code defaults', () => {
   const expectedByCountry: Record<string, { languages: string[]; displayTabs: string[] }> = {
-    za: { languages: ['en', 'af', 'zu', 'xh', 'en_domestic'], displayTabs: ['en_domestic', 'af', 'zu', 'xh', 'en'] },
+    za: {
+      languages: ['en', 'af', 'zu', 'xh', 'st', 'tn', 'ss', 'en_domestic'],
+      displayTabs: ['en_domestic', 'af', 'zu', 'xh', 'st', 'tn', 'ss', 'en'],
+    },
     na: { languages: ['en', 'af', 'kj', 'en_domestic'], displayTabs: ['en_domestic', 'af', 'kj', 'en'] },
     bw: { languages: ['en', 'tn', 'en_domestic'], displayTabs: ['en_domestic', 'tn', 'en'] },
     zw: { languages: ['en', 'sn', 'nd', 'en_domestic'], displayTabs: ['en_domestic', 'sn', 'nd', 'en'] },
     mz: { languages: ['pt', 'en'], displayTabs: ['pt', 'en'] },
     mw: { languages: ['en', 'ny', 'en_domestic'], displayTabs: ['en_domestic', 'ny', 'en'] },
-    zm: { languages: ['en', 'bem', 'en_domestic'], displayTabs: ['en_domestic', 'bem', 'en'] },
+    zm: { languages: ['en', 'bem', 'ny', 'en_domestic'], displayTabs: ['en_domestic', 'bem', 'ny', 'en'] },
     ls: { languages: ['en', 'st', 'en_domestic'], displayTabs: ['en_domestic', 'st', 'en'] },
     sz: { languages: ['en', 'ss', 'en_domestic'], displayTabs: ['en_domestic', 'ss', 'en'] },
     ao: { languages: ['pt', 'en'], displayTabs: ['pt', 'en'] },

@@ -1,0 +1,22 @@
+name: Veygrit Sites presave fixture
+on: [workflow_dispatch]
+
+env:
+  VEYGRIT_SITES_PRESAVE_MULTI_SOURCE: "true"
+  VEYGRIT_SITES_SOURCE_ROOT: ${{ github.workspace }}/veygrit-app
+
+jobs:
+  presave:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/checkout@v4
+        with:
+          repository: rei-k/Veygrit-US
+          path: veygrit-app
+          persist-credentials: false
+
+      - run: npm run verify:veygrit-sites-presave

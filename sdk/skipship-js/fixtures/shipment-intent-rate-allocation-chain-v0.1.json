@@ -1,0 +1,131 @@
+{
+  "fixtureId": "skipship-shipment-intent-rate-allocation-chain-v0.1",
+  "openApiPaths": [
+    "POST /v1/shipment-intents",
+    "POST /v1/delivery/rates",
+    "POST /v1/delivery/allocate"
+  ],
+  "developerCalls": [
+    "skipship.createShipmentIntent",
+    "skipship.quoteRates",
+    "skipship.createCarrierAllocation"
+  ],
+  "localOnly": true,
+  "productionTraffic": false,
+  "rawAddressFixtures": false,
+  "shipmentIntentRequest": {
+    "merchantRef": "merchant_synthetic_demo",
+    "recipientTokenRef": "rectok_synthetic_friend_001",
+    "parcelProfileRef": "parcel_profile_synthetic_small_001",
+    "addressValidationRef": "addrval_synthetic_001",
+    "walletConsentRef": "consent_synthetic_001",
+    "servicePreference": "cheapest"
+  },
+  "shipmentIntentResponse": {
+    "version": "shipment-intent-v0.1",
+    "intent_id": "shipintent_sandbox_3eea447b",
+    "merchant_ref": "merchant_synthetic_demo",
+    "recipient_token_ref": "rectok_synthetic_friend_001",
+    "parcel_profile_ref": "parcel_profile_synthetic_small_001",
+    "service_preference": "cheapest",
+    "address_validation_ref": "addrval_synthetic_001",
+    "wallet_consent_ref": "consent_synthetic_001",
+    "status": "ready_for_rate_quote",
+    "required_next_action": "quote_rates",
+    "privacy": {
+      "contains_raw_address": false,
+      "production_traffic": false,
+      "carrier_credentials_present": false,
+      "log_safe": true
+    },
+    "blocked_material": [
+      "rawAddress",
+      "raw_address",
+      "recipientPhone",
+      "recipient_phone",
+      "recipientName",
+      "carrierApiKey",
+      "carrier_api_key",
+      "carrierCredential",
+      "commercialRateSecret",
+      "proofWitness",
+      "proof_witness",
+      "privateKey",
+      "private_key",
+      "proofSecret",
+      "proof_secret",
+      "rawLabelPayload",
+      "rawQrPayload",
+      "doorCode"
+    ],
+    "local_only": true,
+    "non_claims": [
+      "ShipmentIntent sandbox output is not a carrier label purchase.",
+      "AddressQL validation is not wallet consent, proof of residence, carrier support, or delivery guarantee.",
+      "Sandbox shipment intents do not send production carrier traffic."
+    ]
+  },
+  "rateQuoteRequest": {
+    "addressAliasRef": "addr_alias_synthetic_friend_001",
+    "parcelProfileRef": "parcel_profile_synthetic_small_001",
+    "objective": "cheapest",
+    "requestedServiceLevels": [
+      "economy",
+      "standard"
+    ],
+    "policyRef": "merchant_policy_demo"
+  },
+  "rateQuoteResponse": {
+    "rateRef": "rate_7eb8d3eb15d13887b5d7b9ab",
+    "carrierAlias": "sandbox-carrier",
+    "serviceLevel": "economy",
+    "objective": "cheapest",
+    "etaWindow": {
+      "earliest": "2026-07-04T09:00:00.000Z",
+      "latest": "2026-07-05T18:00:00.000Z"
+    },
+    "priceQuote": {
+      "amount": 499,
+      "currency": "USD"
+    },
+    "capabilityWarnings": [
+      "Synthetic sandbox quote only",
+      "Rate quote does not reserve live carrier capacity"
+    ]
+  },
+  "carrierAllocationRequest": {
+    "rateRef": "rate_7eb8d3eb15d13887b5d7b9ab",
+    "walletConsentRef": "consent_synthetic_001",
+    "objective": "cheapest",
+    "merchantPolicyRef": "merchant_policy_demo"
+  },
+  "carrierAllocationResponse": {
+    "allocationRef": "alloc_0c95f28511c2e196f7010e93",
+    "selectedCarrierAlias": "sandbox-carrier",
+    "objective": "cheapest",
+    "selectionReasonCodes": [
+      "objective_cheapest",
+      "wallet_consent_ref_present",
+      "sandbox_capability_match"
+    ]
+  },
+  "forbiddenPublicMaterial": [
+    "rawAddress",
+    "recipientName",
+    "recipientPhone",
+    "carrierApiKey",
+    "carrierCredential",
+    "commercialRateSecret",
+    "proofWitness",
+    "rawLabelPayload",
+    "privateKey",
+    "proofSecret"
+  ],
+  "nonClaims": [
+    "This fixture does not call a production carrier.",
+    "This fixture does not buy a real label.",
+    "This fixture does not contain raw address or recipient contact material.",
+    "The quoted rate is synthetic and does not reserve carrier capacity.",
+    "The carrier allocation is not final settlement or proof of delivery."
+  ]
+}

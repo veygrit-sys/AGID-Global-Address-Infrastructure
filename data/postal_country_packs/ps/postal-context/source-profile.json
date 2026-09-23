@@ -1,0 +1,95 @@
+{
+  "schema_version": "agid-postal-ps-source-profile-v0.1",
+  "country_code": "PS",
+  "artifact_scope": "metadata-and-review-aggregates-only",
+  "sources": [
+    {
+      "source_id": "palestine-open-data-postcodes",
+      "provider": "Ministry of Telecommunications & Digital Economy",
+      "url": "https://opendata.ps/dataset/postcodes",
+      "metadata_api": "https://opendata.ps/api/3/action/package_show?id=postcodes",
+      "roles": [
+        "P3-locality-assignments",
+        "P3-official-polygon-catalog",
+        "P7-delivery-point-catalog"
+      ],
+      "assignment_authority": "official source rows in pinned edition; current validity unconfirmed",
+      "geometry_authority": "official P3 polygons declared by catalog; full artifact not retrieved",
+      "redistribution_class": "publisher-cc-by-version-and-artifact-scope-unconfirmed",
+      "bundled_here": false
+    },
+    {
+      "source_id": "upu-addressing",
+      "provider": "Universal Postal Union",
+      "url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/pseEn.pdf",
+      "edition": "05/2025",
+      "roles": [
+        "P7-syntax",
+        "P3-and-final-delivery-point-semantics",
+        "address-order"
+      ],
+      "assignment_authority": "syntax/reference only",
+      "geometry_authority": "none",
+      "redistribution_class": "public-reference-not-source-data-grant",
+      "bundled_here": false
+    },
+    {
+      "source_id": "palestine-post",
+      "provider": "Palestine Post / MTDE",
+      "url": "https://www.palpost.ps/home/postalCodesPages?culture=ar-SA",
+      "ministry_url": "https://mtde.gov.ps/home/PostalCodes?culture=en-US",
+      "roles": [
+        "official-postal-directory-reference"
+      ],
+      "assignment_authority": "source-qualified public reference; complete current edition not established",
+      "geometry_authority": "none from selector pages",
+      "redistribution_class": "public-reference-only",
+      "bundled_here": false
+    },
+    {
+      "source_id": "palestine-postcode-viewer",
+      "provider": "MTDE",
+      "url": "https://postcode.palestine.ps/",
+      "roles": [
+        "official-postal-viewer-reference"
+      ],
+      "assignment_authority": "not verified in this run",
+      "geometry_authority": "not verified in this run",
+      "redistribution_class": "viewer-access-does-not-grant-bulk-rights",
+      "bundled_here": false
+    }
+  ],
+  "partitions": [
+    {
+      "id": "P3-assignment",
+      "grain": "code/locality/coverage relation",
+      "geometry": "none without explicit polygon join"
+    },
+    {
+      "id": "P3-geometry",
+      "grain": "source official area feature",
+      "geometry": "polygon or multipolygon with pinned CRS and topology"
+    },
+    {
+      "id": "P7-point",
+      "grain": "source final delivery point",
+      "geometry": "point only when explicitly supplied"
+    },
+    {
+      "id": "civic-address-building",
+      "grain": "source-qualified address and building relation",
+      "geometry": "separate permitted geometry"
+    }
+  ],
+  "prohibited_joins": [
+    "code-prefix-as-proven-point-containment",
+    "same-locality-name-as-identity",
+    "P7-suffix-as-house-number",
+    "nearest-building-as-exact-address",
+    "administrative-boundary-as-postal-boundary",
+    "missing-coverage-as-zero",
+    "sample-as-complete-release"
+  ],
+  "review_config": "m2-source-review.json",
+  "source_report": "reports/postal-context-m2/ps-source-review-2026-08-28.json"
+}

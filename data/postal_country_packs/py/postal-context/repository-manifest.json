@@ -1,0 +1,57 @@
+{
+  "repository": {
+    "name": "agid-postal-py",
+    "country_code": "PY",
+    "maturity": "M2_national_derived_visualization",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true
+  },
+  "postal_system": {
+    "code_format": "NNNNNN",
+    "assignment_rule": "Correo Paraguayo documents six digits: two department digits, two district digits and two barrio digits. The fixed DINACOPA ZONA POSTAL PARAGUAY release contains 8,646 official source areas and 2,887 distinct six-digit codes. Syntax alone is not assignment evidence.",
+    "geometry_rule": "Only the digest-pinned DINACOPA EPSG:32721 Polygon source may feed this release. Five invalid source rings are repaired, official source areas are unioned by postal code before a 20-metre simplify, transformed to EPSG:4326, snapped to a 1e-7-degree grid and zero-width repaired. Sixty-three closed hole rings below 1e-12 square degrees that collapsed under display precision are removed as numerical noise. The public output is derived MultiPolygon display context, never an assertion that the simplified geometry is an unsimplified official boundary.",
+    "identity_rule": "Department and district codes remain separate administrative IDs. Every postal-code context label preserves all source cod_bar, BARLOC, barrio or locality names and official exception notes. Repeated cod_bar values are never treated as globally unique or collapsed across postal codes.",
+    "address_format_rule": "Recipient, organization, street, house number, unit, locality, district, department and postcode remain separate. No address, building, person, customer, parcel or land-right record is published in this release.",
+    "postal_object_rule": "Point, route, P.O. box and organization objects do not receive fabricated surfaces. The two official future industrial-island rows without cod_bar retain their source note and BARLOC state rather than receiving invented barrio IDs.",
+    "agid_rule": "AGID remains an independent spatial and identity layer. The release may crosswalk the official postal, locality, district and department identifiers, but does not relabel them as AGID cells or infer an address or building.",
+    "licence_rule": "The Paraguayan public-information use licence under Decree 4064 and Law 5282/2014 permits free, perpetual, non-exclusive copying, extraction, reproduction, distribution, public communication, adaptation and transformation. Reuse cites the public source and licence, cites the last update when known and must not imply official or state-sponsored use.",
+    "temporal_rule": "The source DBF date is 2018-02-19, datos.gov.py metadata was modified 2023-11-08 and current Correo Paraguayo material was observed 2026-09-02. These dates remain separate and future drift requires a new release and supersession review.",
+    "privacy_rule": "The release contains only public postal context and no recipient, customer, household, address, building, parcel, ownership or query-log data."
+  },
+  "promotion": {
+    "current_stage": "M2_national_derived_visualization",
+    "stages": [
+      {
+        "id": "M2_current_national_dinacopa_postal_zone_derived_area_visualization",
+        "definition": "A fixed current-available DINACOPA national assignment and Polygon release must reconcile every six-digit code, department, district, barrio or locality context and documented exception under reusable rights. A deterministic, topology-valid Polygon/MultiPolygon derived only from those official source areas must drive the real PY API and app, preserve detailed source IDs and show derived provenance, source date and confidence. Points, routes, P.O. boxes, organizations, addresses, buildings, administrative substitutes, buffers, models and AGID cells receive no invented postal area."
+      }
+    ],
+    "hard_blockers": [
+      "six-digit-syntax-presented-as-assignment-without-dinacopa-row",
+      "source-cod-bar-collapsed-as-globally-unique-across-postal-codes",
+      "administrative-point-route-po-box-organization-buffer-model-or-agid-cell-presented-as-postal-area",
+      "simplified-derived-display-presented-as-unsimplified-official-boundary",
+      "address-building-recipient-customer-parcel-or-land-right-inferred-from-postal-area",
+      "raw-source-dump-committed-to-agid",
+      "reuse-without-source-licence-and-update-attribution",
+      "paraguay-identity-or-territory-merged-with-neighbouring-source"
+    ],
+    "last_verified": "2026-09-02T05:02:03.144Z"
+  },
+  "m2_release": {
+    "release_id": "py-dinacopa-national-postal-zones-20260902",
+    "scope": "8,646 official source areas grouped into 2,887 national six-digit postal-code MultiPolygons with department, district and detailed barrio/locality source IDs",
+    "source_date": "2018-02-19",
+    "metadata_modified": "2023-11-08",
+    "provenance": "derived",
+    "confidence": 0.98,
+    "descriptor": "data/postal_country_packs/py/postal-context/m2/descriptor.json",
+    "source_report": "reports/postal-context-m2/py-source-review-2026-09-02.json"
+  }
+}

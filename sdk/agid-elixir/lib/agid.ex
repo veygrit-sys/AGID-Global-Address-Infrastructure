@@ -14,4 +14,6 @@ defmodule Agid do
   end
 
   def decode(_id), do: nil
+
+  def cellBounds(_id), do: {:error, :not_implemented}
 end

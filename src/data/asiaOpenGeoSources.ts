@@ -17,6 +17,13 @@ export type AsiaOpenGeoSourceId =
   | 'landsd-hk'
   | 'csdi-hk'
   | 'osm-hong-kong'
+  | 'ctt-macao-no-postcode'
+  | 'dsscu-macao'
+  | 'macao-dsscu-regulation-2026'
+  | 'macao-mapping-reproduction-2026'
+  | 'macao-data-portal'
+  | 'macao-data-terms'
+  | 'dscc-macao-migration-notice'
   | 'dscc-macao'
   | 'geoguide-macao'
   | 'osm-macau'
@@ -29,24 +36,64 @@ export type AsiaOpenGeoSourceId =
   | 'geolonia-addresses'
   | 'osm-japan'
   | 'china-postal-code'
+  | 'upu-china-addressing-2013'
+  | 'china-postal-and-address-code-response-2025'
+  | 'china-universal-delivery-address-code-gbt41832'
+  | 'china-address-geocode-gbt39609'
+  | 'china-geographical-names-regulation-2022'
+  | 'tianditu-china'
+  | 'china-geospatial-platform-management-2019'
+  | 'china-real-estate-query-rules-2024'
+  | 'osm-china'
   | 'epost-kr'
   | 'ngii-korea'
   | 'lx-korea'
   | 'juso-kr'
   | 'osm-korea'
+  | 'korea-post-postcode-system'
+  | 'korea-post-postcode-api'
+  | 'mois-juso-basic-districts'
+  | 'mois-juso-road-address-api'
+  | 'mois-juso-building-db'
+  | 'mois-juso-electronic-map'
+  | 'molit-korea-gis-integrated-buildings'
+  | 'molit-korea-continuous-cadastral-map'
   | 'post-tw'
   | 'nlsc-taiwan'
   | 'tgos-taiwan'
   | 'osm-taiwan'
   | 'g0v-taiwan'
+  | 'chunghwa-post-3plus3-data'
+  | 'chunghwa-post-3plus3-lookup'
+  | 'chunghwa-post-3plus3-license'
+  | 'moi-taiwan-national-doorplate-location'
+  | 'nlsc-taiwan-emap-buildings'
+  | 'nlsc-taiwan-emap-doorplates'
+  | 'nlsc-taiwan-administrative-boundaries'
+  | 'nlsc-taiwan-cadastral-map'
   | 'alamgc-mongolia'
   | 'nsdi-mongolia'
   | 'zipcode-mn'
+  | 'crc-mongolia-postcode-2025'
+  | 'crc-mongolia-postal-directory-2024'
   | 'hot-osm-mongolia'
   | 'osm-mongolia'
+  | 'crc-mongolia-unified-postcode-2019'
+  | 'upu-mongolia-addressing'
+  | 'crc-mongolia-postal-regulation'
+  | 'gazar-mongolia-address-system'
+  | 'gazar-mongolia-spatial-data-standards'
+  | 'gazar-mongolia-boundaries'
+  | 'gazar-mongolia-open-spatial-data'
+  | 'nso-mongolia-administrative-units'
+  | 'india-post-regulations-2024'
   | 'postalpincode-in'
   | 'data-gov-in-pincode'
+  | 'data-gov-in-pincode-boundary'
+  | 'data-gov-in-godl'
+  | 'india-lgd-pin-crosswalk'
   | 'india-digipin'
+  | 'survey-of-india-abdb'
   | 'india-pincode-api-oss'
   | 'survey-of-india'
   | 'datameet-maps'
@@ -57,25 +104,77 @@ export type AsiaOpenGeoSourceId =
   | 'pak-nsdi'
   | 'pbs-gis-pakistan'
   | 'osm-pakistan'
+  | 'pakistan-post-postcode-directory'
+  | 'upu-pakistan-addressing'
+  | 'pakistan-post-postcode-amendments'
+  | 'survey-of-pakistan-mapping-law'
+  | 'survey-of-pakistan-geospatial-products'
+  | 'pakistan-nsdi'
+  | 'pakistan-pbs-census-gis'
+  | 'bangladesh-post-postcode-tables'
+  | 'upu-bangladesh-addressing'
+  | 'survey-of-bangladesh-gis-services'
+  | 'bangladesh-nsdi-geoportal'
+  | 'bangladesh-nsdi-data-catalog'
+  | 'bbs-bangladesh-census-2022'
+  | 'dlrs-bangladesh-map-portal'
   | 'bd-post'
   | 'survey-bangladesh'
   | 'osm-bangladesh'
   | 'hot-osm-bangladesh'
+  | 'nepalpost-legacy-pdf'
+  | 'nepal-digital-data-directive-pdf'
+  | 'nepal-gpo-federal-postcodes'
+  | 'nepal-jhapa-postcodes'
+  | 'nepal-rasuwa-federal-notice'
+  | 'nepal-federal-postcodes-pdf'
+  | 'nepal-upu-addressing-2012'
+  | 'nepal-digital-data-directive'
   | 'postalservice-np'
   | 'national-geoportal-nepal'
   | 'survey-department-nepal'
   | 'osm-nepal'
   | 'hot-osm-nepal'
+  | 'cambodia-post'
+  | 'mptc-cambodia-prakas-77-2025'
+  | 'upu-cambodia-addressing-2018'
+  | 'ncdd-cambodia-gazetteer'
+  | 'mlmupc-cambodia-cadastral-services'
+  | 'mlmupc-cambodia-building-services'
+  | 'odc-cambodia-postal-codes'
+  | 'osm-cambodia'
+  | 'lao-post-postcode'
+  | 'laos-postal-service-law-2013'
+  | 'laopedia-laos-postcodes'
+  | 'nfms-laos-administrative-boundaries'
+  | 'lsb-laos-phc-2025'
+  | 'laolandreg-laos'
+  | 'laos-electronic-data-law'
+  | 'osm-laos'
   | 'slpost'
+  | 'slpost-postcode-search'
+  | 'sri-lanka-nsdi-boundaries'
+  | 'sri-lanka-nsdi-data-classification'
+  | 'sri-lanka-nsdi-boundary-service'
+  | 'sri-lanka-data-protection'
   | 'survey-department-sri-lanka'
   | 'data-gov-lk'
   | 'osm-sri-lanka'
   | 'maldives-post'
   | 'mlsa-maldives'
   | 'onemap-maldives'
+  | 'upu-maldives-addressing-2004'
+  | 'maldives-onemap-island-api-2024'
+  | 'maldives-geomatics-land-survey-standard-2025'
+  | 'maldives-land-registration-survey-guideline-2020'
+  | 'maldives-bureau-statistics-gis-maps'
+  | 'maldives-census-island-atoll-2022'
   | 'osm-maldives'
   | 'afghan-post'
   | 'afghan-postal-code-system'
+  | 'upu-afghanistan-addressing-2025'
+  | 'afghan-post-policy'
+  | 'ocha-afghanistan-admin-boundaries-2026'
   | 'hot-osm-afghanistan'
   | 'osm-afghanistan'
   | 'nlcs-bhutan'
@@ -83,47 +182,176 @@ export type AsiaOpenGeoSourceId =
   | 'osm-bhutan'
   | 'thailand-post'
   | 'vietnam-postcode'
+  | 'vietnam-national-postcode-portal'
+  | 'vietnam-postcode-decision-2334-2025'
+  | 'vnpost-two-tier-postcode-notice'
+  | 'upu-vietnam-addressing'
+  | 'vnpost-vpostcode-digital-address'
+  | 'vietnam-nso-administrative-units'
+  | 'vietnam-nsdi-portal'
+  | 'vietnam-survey-map-data-service'
+  | 'pos-malaysia-postcode-finder'
+  | 'upu-malaysia-addressing'
+  | 'malaysia-mygdx-postcode-catalog'
+  | 'malaysia-mygeo-fundamental-data-2026'
+  | 'malaysia-mygos-data-services'
+  | 'malaysia-mygeo-upi'
+  | 'malaysia-mygdi-licensing-2024'
+  | 'malaysia-mygeoname'
+  | 'myanmar-post-postcode-lookup'
+  | 'myanmar-national-portal-post-services'
+  | 'upu-myanmar-addressing-2022'
+  | 'myanmar-survey-department'
+  | 'myanmar-one-map-geodatabase-2024'
+  | 'mimu-place-codes-v9-6-2025'
+  | 'mimu-geospatial-data'
+  | 'mimu-terms-and-conditions'
+  | 'ycdc-land-building-services'
   | 'pos-malaysia'
   | 'onemap-sg'
+  | 'indonesia-post-law-2009'
+  | 'indonesia-post-regulation-2025'
   | 'pos-indonesia'
+  | 'upu-indonesia-addressing'
+  | 'sdi-indonesia-village-postcode'
+  | 'kemendagri-indonesia-admin-codes'
+  | 'bps-indonesia-statistical-area-codes'
+  | 'big-indonesia-village-boundaries'
+  | 'big-indonesia-rbi-buildings'
+  | 'phlpost-zip-code-locator'
+  | 'upu-philippines-addressing'
+  | 'psa-philippine-standard-geographic-code'
+  | 'geoportal-philippines-data-inventory'
+  | 'geoportal-philippines-download-policy'
+  | 'namria-topographic-mapping'
+  | 'psa-popcen-cbms-geotagging'
+  | 'philippines-lra-land-registration'
   | 'phlpost'
   | 'post-gov-bn'
+  | 'brunei-posbru-current-operator'
+  | 'brunei-aiti-postal-licence'
+  | 'brunei-mtic-posbru-transition'
+  | 'brunei-skn-postcode-booklet'
+  | 'brunei-deps-terms'
+  | 'brunei-post-postcode-booklet'
+  | 'upu-brunei-addressing'
+  | 'brunei-survey-house-numbering'
+  | 'brunei-survey-digital-map-products'
+  | 'brunei-survey-geoportal'
+  | 'brunei-survey-geoportal-user-guide'
+  | 'brunei-deps-bpp-2021'
+  | 'brunei-land-registration-framework'
   | 'bhutan-post'
+  | 'bhutan-post-postcode-finder'
+  | 'bhutan-post-domestic-footprint'
+  | 'upu-bhutan-addressing'
+  | 'bhutan-nlcs-geoportal'
+  | 'bhutan-nlcs-map-products'
+  | 'bhutan-nlcs-cadastral-information'
+  | 'bhutan-nsb-phcb-2017'
+  | 'bhutan-esakor-land-building-transactions'
   | 'turkiye-ptt'
   | 'osm-turkey'
+  | 'iran-post'
+  | 'iran-post-gnaf'
   | 'gavahi-post-ir'
+  | 'upu-iran-addressing-2023'
   | 'iran-nsdi'
   | 'iran-open-data'
   | 'osm-iran'
   | 'iraq-post'
+  | 'iraq-post-platform'
+  | 'iraq-post-privacy-2025'
+  | 'upu-iraq-addressing-2005'
+  | 'iraq-post-2004-code-announcement'
+  | 'iraq-post-new-code-storymap-2025'
+  | 'iraq-open-government-portal'
+  | 'iraq-open-government-data-policy'
+  | 'iraq-geographic-portal'
+  | 'iraq-statistics-gis'
   | 'osm-iraq'
   | 'syria-post'
   | 'osm-syria'
   | 'hot-osm-west-asia'
   | 'libanpost'
+  | 'libanpost-address-and-nac'
+  | 'upu-lebanon-addressing'
+  | 'upu-lebanon-postcode-formats-2025'
+  | 'moph-lebanon-administrative-zones'
+  | 'lebanon-atlas-admin-boundaries-2026'
+  | 'dlrc-lebanon-cadastre'
+  | 'lebanon-law-81-2018-personal-data'
   | 'osm-lebanon'
   | 'jordanpost'
   | 'rjgc-jordan'
+  | 'upu-jordan-addressing-2004'
+  | 'modee-jordan-postal-policy-2025'
+  | 'trc-jordan-postal-sector'
+  | 'jordan-post-offices-open-data-2023'
+  | 'jordan-open-government-data-license-v1'
+  | 'rjgc-jordan-eservices'
+  | 'rjgc-gam-building-mou'
+  | 'dls-jordan-village-codes-2022'
+  | 'gam-jordan-streets-2019'
+  | 'jordan-digital-mailbox-pilot-2026'
   | 'osm-jordan'
   | 'israel-post'
+  | 'israel-post-mail-guide-2020'
+  | 'israel-post-terms'
+  | 'upu-israel-addressing-2022'
   | 'govmap-israel'
+  | 'population-authority-israel-street-list'
+  | 'cbs-israel-geography'
   | 'data-gov-il'
+  | 'data-gov-il-terms-2025'
   | 'osm-israel'
   | 'palestine-open-data-postcodes'
   | 'palestine-post'
   | 'osm-palestine'
   | 'spl-sa'
   | 'spl-national-address-api'
+  | 'spl-national-address-components'
+  | 'spl-national-address-api-v31'
+  | 'spl-national-address-api-terms'
+  | 'spl-national-address-short-address'
+  | 'geosa-saudi-geospatial-foundation-themes'
+  | 'rega-saudi-geospatial-real-estate-portal'
+  | 'rega-saudi-real-estate-registration-framework'
   | 'saudi-gis-national-platform'
   | 'osm-saudi-arabia'
   | 'makani-dubai-open-data'
+  | 'emirates-post-po-box'
+  | 'dmt-onwani-addressing'
+  | 'dmt-onwani-terms'
+  | 'upu-uae-addressing-2014'
   | 'osm-uae'
   | 'qatar-gis-geoportal'
   | 'osm-qatar'
   | 'bahrain-open-data'
+  | 'bahrain-post-services-directory'
+  | 'upu-bahrain-addressing'
+  | 'iga-bahrain-address-services'
+  | 'bahrain-open-data-terms'
+  | 'bahrain-open-data-geographic-locations'
+  | 'bahrain-municipal-geographic-explorer'
+  | 'slrb-bahrain-cadastre'
   | 'osm-bahrain'
   | 'kuwait-post'
+  | 'upu-kuwait-addressing'
+  | 'paci-kuwait-finder'
+  | 'paci-kuwait-address-services'
+  | 'paci-kuwait-building-register'
+  | 'kuwait-municipality-parcels'
+  | 'kuwait-csb-census-gis'
   | 'osm-kuwait'
+  | 'upu-oman-postal-addressing'
+  | 'oman-post-office-locator'
+  | 'oman-post-website-terms'
+  | 'gov-oman-building-addressing-service'
+  | 'ncsi-oman-wilayat-boundaries'
+  | 'ncsi-oman-open-government-data-policy'
+  | 'nsgia-oman-geospatial-governance'
+  | 'nsgia-oman-portal-terms'
   | 'nsgia-oman'
   | 'oman-post'
   | 'osm-oman'
@@ -134,7 +362,10 @@ export type AsiaOpenGeoSourceId =
   | 'cadastre-armenia'
   | 'haypost-address-reference'
   | 'geonames-armenia'
+  | 'armenia-real-estate-address-register'
+  | 'armenia-national-geoportal-buildings'
   | 'azerbaijan-state-committee-property'
+  | 'azerbaijan-address-register'
   | 'azerbaijan-open-data'
   | 'azerpost-address-reference'
   | 'geonames-azerbaijan'
@@ -143,8 +374,31 @@ export type AsiaOpenGeoSourceId =
   | 'gdi-georgia'
   | 'gpost-address-reference'
   | 'geonames-georgia'
+  | 'georgian-post-postcode-finder'
+  | 'georgian-post-addressing-guide'
+  | 'napr-georgia-address-registry'
+  | 'nsdi-georgia-address-layer'
+  | 'nsdi-georgia-registered-buildings'
+  | 'nsdi-georgia-registered-parcels'
+  | 'nsdi-georgia-administrative-boundaries'
+  | 'geostat-georgia-administrative-classification'
   | 'post-kz'
+  | 'upu-kazakhstan-addressing-2025'
+  | 'kazakhstan-postal-index-rules-2026'
+  | 'kazakhstan-post-law'
+  | 'kazakhstan-addressing-rules-2026'
+  | 'kazakhstan-address-register'
+  | 'kazakhstan-nsdi-use-rules-2023'
+  | 'kazakhstan-public-cadastral-map'
+  | 'kazakhstan-real-estate-rights-register'
   | 'pochta-uz'
+  | 'uzpost-index-map'
+  | 'upu-uzbekistan-addressing-2019'
+  | 'uzbekistan-postal-index-open-data-2019'
+  | 'uzbekistan-open-data-terms'
+  | 'uzbekistan-open-data-registry-2026'
+  | 'uzbekistan-cadastre-agency'
+  | 'uzbekistan-state-real-estate-register'
   | 'datahub-postal-kz'
   | 'kazakhstan-nsdi'
   | 'qazpost-open-api'
@@ -152,6 +406,12 @@ export type AsiaOpenGeoSourceId =
   | 'uzbekistan-open-data-geo'
   | 'uzbekistan-state-urban-cadastre'
   | 'osm-uzbekistan'
+  | 'kyrgyz-post-new-postal-codes-2025'
+  | 'kyrgyz-post-address-guidance'
+  | 'upu-kyrgyzstan-addressing-2019'
+  | 'upu-kyrgyzstan-designated-operators'
+  | 'gosreg-kyrgyz-address-register'
+  | 'cadastre-kyrgyz-property-portal'
   | 'nsdi-kyrgyzstan'
   | 'data-gov-kg'
   | 'caiag-geonode-kg'
@@ -170,6 +430,7 @@ export interface AsiaOpenGeoSource {
   kind:
     | 'postal-code'
     | 'address'
+    | 'building'
     | 'geocoding'
     | 'admin-boundary'
     | 'gazetteer'
@@ -181,7 +442,7 @@ export interface AsiaOpenGeoSource {
     | 'land-cover'
     | 'protected-area'
     | 'biodiversity';
-  coverage: 'global' | 'asia' | 'country';
+  coverage: 'global' | 'asia' | 'country' | 'subnational';
   usage: 'primary' | 'fallback' | 'validation' | 'reference';
   license?: string;
   notes: string;
@@ -365,6 +626,13 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'High-density Hong Kong OSM building, POI, road, and local-name data for address fallback and validation.',
   },
+  'ctt-macao-no-postcode': { id: 'ctt-macao-no-postcode', name: 'Macao CTT no-postcode policy', url: 'https://www.ctt.gov.mo/MacauPost/Contents/faq.aspx?lang=en-us', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'CTT policy only; 000000 is a form placeholder, not an assignment.' },
+  'dsscu-macao': { id: 'dsscu-macao', name: 'Macao DSSCU mapping and doorplate authority', url: 'https://www.dsscu.gov.mo/', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Current publisher discovery; retrieved SPA shell contains no reviewed data or terms.' },
+  'macao-dsscu-regulation-2026': { id: 'macao-dsscu-regulation-2026', name: 'Macao DSSCU Administrative Regulation 16/2026', url: 'https://bo.dsaj.gov.mo/bo/i/2026/21/regadm16_cn.asp', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Authority transition from 2026-06-01, including DSCC and municipal naming/doorplate responsibilities; no data reuse grant.' },
+  'macao-mapping-reproduction-2026': { id: 'macao-mapping-reproduction-2026', name: 'Macao mapping reproduction Order 102/2026', url: 'https://bo.dsaj.gov.mo/bo/i/2026/21/despce_cn.asp?printer=1', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Mapping-product publication/reproduction requires DSSCU permission and may incur fees. No permission requested or obtained.' },
+  'macao-data-portal': { id: 'macao-data-portal', name: 'Macao Government Open Data portal', url: 'https://data.gov.mo/', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Discovery only; HTTP 200 shell does not verify a dataset, licence or API availability.' },
+  'macao-data-terms': { id: 'macao-data-terms', name: 'Macao Government Open Data terms reference', url: 'https://data.gov.mo/UseClause', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Terms body not present in retrieved shell; exact dataset conditions remain unresolved.' },
+  'dscc-macao-migration-notice': { id: 'dscc-macao-migration-notice', name: 'Macao DSCC domain migration notice', url: 'https://www.dscc.gov.mo/redirect/redirect.html', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Verified HTTPS notice points to DSSCU, not a dataset, licence or transferred source row.' },
   'dscc-macao': {
     id: 'dscc-macao',
     name: 'Cartography and Cadastre Bureau Macao',
@@ -372,7 +640,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Macao cartography and cadastre source for cadastral data, administrative boundaries, roads, buildings, and geospatial services.',
+    notes: 'Legacy DSCC identifier retained. Regulation 16/2026 transfers mapping and municipal naming/doorplate functions to DSSCU from 2026-06-01. Current product rights and source-specific geometry remain unverified; no cadastral or personal data redistribution.',
   },
   'geoguide-macao': {
     id: 'geoguide-macao',
@@ -381,7 +649,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'geocoding',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Macao public map search and GIS service for local place, road, building, and public-data lookup.',
+    notes: 'Macao legacy public map discovery; current HTTPS acquisition failed. Viewer status does not establish a working public API, rights-cleared building/doorplate data or postal geometry.',
   },
   'osm-macau': {
     id: 'osm-macau',
@@ -469,13 +737,123 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     notes: 'Japan OSM community data for buildings, shops, POI, roads, and fallback address tags.',
   },
   'china-postal-code': {
-    id: 'china-postal-code',
-    name: 'China Post / EMS Postal Code Reference',
-    url: 'http://www.ems.com.cn/',
-    kind: 'postal-code',
+    id: 'china-postal-code', name: 'China Post universal-service supervision reference', url: 'https://www.chinapost.com.cn/cn/report/1813/134220-1.htm', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The linked article republishes 2015 universal-service supervision measures on 2018-10-22. Operator identity does not publish a current bulk assignment, polygon or building relation. The separate live outlet directory remains a bounded source-review sample, not national postal coverage.',
+  },
+  'upu-china-addressing-2013': {
+    id: 'upu-china-addressing-2013', name: 'UPU China addressing sheet 09/2013', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/chnEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The UPU 09/2013 sheet documents six digits before the province, delivery-region and destination-county coding context, Chinese big-to-small and Latin small-to-big order, and door, floor, building, complex, P.O. Box and poste-restante elements. Examples are not current assignments or reusable address data.',
+  },
+  'china-postal-and-address-code-response-2025': {
+    id: 'china-postal-and-address-code-response-2025', name: 'State Post Bureau response on postal and universal delivery address codes 2025', url: 'https://www.spb.gov.cn/gjyzj/c200041/202510/745c2008e015403eb27fd9726f6bea07.shtml', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Confirms the 1986 four-level six-digit delivery-region code used for sorting and distinguishes the separate high-precision universal delivery address code. Neither statement publishes current assignments, polygons or address-building relations.',
+  },
+  'china-universal-delivery-address-code-gbt41832': {
+    id: 'china-universal-delivery-address-code-gbt41832', name: 'GB/T 41832-2022 Universal delivery address coding rule', url: 'https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=173DB35E1CA95C7EF9CCA37E7E4C1A4E', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current national standard for a separate universal delivery address code. The standard abstract and code concept are not postcode assignments, AGID cells, an invertible public algorithm, bulk address data or a redistribution licence.',
+  },
+  'china-address-geocode-gbt39609': {
+    id: 'china-address-geocode-gbt39609', name: 'GB/T 39609-2020 Rules for geocode of address', url: 'https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=277CC47971433149B62E57A37C295168', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'National geocoding rules provide a semantic framework only. They do not publish address rows, coordinates, postal geometry, building links or reuse rights.',
+  },
+  'china-geographical-names-regulation-2022': {
+    id: 'china-geographical-names-regulation-2022', name: 'China Geographical Names Regulation 2022', url: 'https://xzfg.moj.gov.cn/front/law/detail?LawID=1479&Query=', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Defines standard geographical names and requires local authorities to compile standard addresses in their responsibilities. Legal naming authority is not an open national address, doorplate or building corpus.',
+  },
+  'tianditu-china': {
+    id: 'tianditu-china', name: 'National Platform for Common Geospatial Information Services (Tianditu)', url: 'https://www.tianditu.gov.cn/', kind: 'geocoding', coverage: 'country', usage: 'reference',
+    notes: 'Official online geospatial, place-name and address service candidate. Pin exact layer or API owner, key, quota, terms, attribution, jurisdiction, validity, CRS, topology and digest; service visibility is not a postal assignment or bulk redistribution licence.',
+  },
+  'china-geospatial-platform-management-2019': {
+    id: 'china-geospatial-platform-management-2019', name: 'China geospatial public-service platform management framework', url: 'https://www.ngcc.cn/xwzx/bnyw/202401/t20240110_2222.html', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Describes Tianditu as the national portal and online services as free to use. Free online access is not a blanket licence and does not override exact dataset, API, attribution, map-review, security or redistribution conditions.',
+  },
+  'china-real-estate-query-rules-2024': {
+    id: 'china-real-estate-query-rules-2024', name: 'China real-estate registration query rules 2024', url: 'https://f.mnr.gov.cn/202405/t20240523_2846208.html', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Current rules preserve purpose-limited access to real-estate registration materials and electronic query results. Rights, right-holder, parcel and unit records are not an open address or building corpus and must not be republished as household data.',
+  },
+  'osm-china': {
+    id: 'osm-china', name: 'OpenStreetMap China', url: 'https://wiki.openstreetmap.org/wiki/WikiProject_China', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, places, addresses and buildings under ODbL. OSM does not provide China Post assignment authority, canonical postal geometry, exact civic identity, resident data, delivery entitlement or territorial authority.',
+  },
+  'korea-post-postcode-system': {
+    id: 'korea-post-postcode-system',
+    name: 'Korea Post Five-digit Postcode System',
+    url: 'https://www.koreapost.go.kr/kpost/subIndex/134.do?pSiteIdx=125',
+    kind: 'standard',
     coverage: 'country',
     usage: 'reference',
-    notes: 'China postal-code reference source for mainland delivery validation.',
+    notes: 'Official system reference: since 1 August 2015 the five-digit National Basic District Number is the postcode. Digit structure is not current assignment or geometry evidence.',
+  },
+  'korea-post-postcode-api': {
+    id: 'korea-post-postcode-api',
+    name: 'Korea Post Postcode API',
+    url: 'https://www.data.go.kr/data/15056971/openapi.do?recommendDataYn=Y',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Credentialed public-data API; service-key, approval, traffic, field and redistribution terms apply',
+    notes: 'Official service-key API returns a five-digit postcode with road-name and land-lot addresses. A query receipt is assignment evidence, not geometry or a bulk redistribution licence.',
+  },
+  'mois-juso-basic-districts': {
+    id: 'mois-juso-basic-districts',
+    name: 'MOIS Juso National Basic Districts',
+    url: 'https://eng.juso.go.kr/addrlink/adresInfoProvd/guidance/provdAdresInfo.do',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'KOGL Type 1 attribution shown for the electronic-map product; application approval and exact product-specific terms still apply',
+    notes: 'The exact current official Polygon or MultiPolygon carrying the same five-digit National Basic District Number is canonical postal geometry. Every layer pins product-specific CRS: EPSG:5179 or EPSG:5186 is verified rather than assumed.',
+  },
+  'mois-juso-road-address-api': {
+    id: 'mois-juso-road-address-api',
+    name: 'MOIS Juso Real-time Road Address API',
+    url: 'https://www.data.go.kr/data/15057017/openapi.do?recommendDataYn=Y',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Credentialed public-data API; exact approval, purpose, fields and reuse terms apply',
+    notes: 'Official road-address API can return five-digit postcode, public address components, road-address management number and 25-digit building management number. The response is not a building footprint.',
+  },
+  'mois-juso-building-db': {
+    id: 'mois-juso-building-db',
+    name: 'MOIS Juso Public Building DB',
+    url: 'https://eng.juso.go.kr/addrlink/adresInfoProvd/guidance/othbcAdresInfo.do',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact public-address artifact terms, edition, public-field allowlist and attribution required',
+    notes: 'Official building-level address and 25-digit building-management identity. One road address can relate to multiple buildings; a DB row supplies no geometry and no resident or household identity.',
+  },
+  'mois-juso-electronic-map': {
+    id: 'mois-juso-electronic-map',
+    name: 'MOIS Juso Electronic Map',
+    url: 'https://www.data.go.kr/tcs/dss/selectFileDataDetailView.do?publicDataPk=15050413',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Application, identity and purpose approval with exact KOGL, derivative and redistribution terms per layer',
+    notes: 'Official buildings, building groups, entrances, roads, National Basic Districts and administrative geometry. Exact building output needs an explicit source-defined identifier or documented join; approval is not unrestricted vector redistribution.',
+  },
+  'molit-korea-gis-integrated-buildings': {
+    id: 'molit-korea-gis-integrated-buildings',
+    name: 'MOLIT GIS Integrated Building Information',
+    url: 'https://www.data.go.kr/data/15052097/fileData.do?recommendDataYn=Y',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'No use restriction recorded for the exact portal product; edition, schema, fields, attribution and third-party rights still pinned',
+    notes: 'Official topographic building geometry integrated with public building-register attributes. Exact Juso linkage requires a stable identifier or reviewed crosswalk; spatial overlap is not a crosswalk and private register fields stay excluded.',
+  },
+  'molit-korea-continuous-cadastral-map': {
+    id: 'molit-korea-continuous-cadastral-map',
+    name: 'MOLIT Nationwide Continuous Cadastral Map',
+    url: 'https://www.data.go.kr/data/15125044/fileData.do?recommendDataYn=Y',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'KOGL Type 4: attribution, non-commercial use and no modification for the exact nationwide snapshot',
+    notes: 'Official reference-only continuous cadastral drawing, not survey data. A parcel is not a building, postcode area or exact address link; owner and rights data are excluded.',
   },
   'epost-kr': {
     id: 'epost-kr',
@@ -522,6 +900,84 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'validation',
     license: 'ODbL',
     notes: 'Korean OSM community data for roads, POI, buildings, and fallback address tags.',
+  },
+  'chunghwa-post-3plus3-data': {
+    id: 'chunghwa-post-3plus3-data',
+    name: 'Chunghwa Post 3+3 Postal Code Open Data',
+    url: 'https://data.gov.tw/dataset/150689',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Taiwan Open Government Data License v1 with exact Chunghwa Post public authorization review',
+    notes: 'Official six-digit 3+3 address-range and delivery-specific assignment data. The first three digits are an administrative prefix and the last three are a delivery district or specific code; rows are not official polygons.',
+  },
+  'chunghwa-post-3plus3-lookup': {
+    id: 'chunghwa-post-3plus3-lookup',
+    name: 'Chunghwa Post 3+3 Postal Code Lookup',
+    url: 'https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=208&list=3',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address lookup uses county or city, district, road or place, section, lane, alley, house number, floor, room, odd-even and range semantics. The registered Web Service is single-query and access-controlled; lookup is not bulk data or geometry.',
+  },
+  'chunghwa-post-3plus3-license': {
+    id: 'chunghwa-post-3plus3-license',
+    name: 'Chunghwa Post 3+3 Public Authorization',
+    url: 'https://www.post.gov.tw/post/internet/Download/all_list.jsp',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official legal and download reference for exact covered 3+3 artifacts and third-party-rights review. License metadata is not postal assignment, address, geometry or deliverability evidence.',
+  },
+  'moi-taiwan-national-doorplate-location': {
+    id: 'moi-taiwan-national-doorplate-location',
+    name: 'MOI Nationwide Doorplate Location Coordination',
+    url: 'https://maps.nlsc.gov.tw/pro/get_map_message.jsp',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled/query or exact local-government terms; no blanket national bulk grant assumed',
+    notes: 'Local governments maintain and upload doorplate locations; NLSC obtains nationwide positions every two months for map and search functions. A doorplate is a point, not a building footprint, and public positioning is not blanket bulk permission; household data stays private.',
+  },
+  'nlsc-taiwan-emap-buildings': {
+    id: 'nlsc-taiwan-emap-buildings',
+    name: 'NLSC Taiwan eMap Building Frames',
+    url: 'https://www.nlsc.gov.tw/cp.aspx?n=1549',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Controlled, fee or subscription product; exact derivative and redistribution rights required',
+    notes: 'Official Taiwan eMap building geometry requires an explicit address relation or common stable identifier for exact output. Viewer, WMS, WMTS or government WFS eligibility is not an open reusable vector licence.',
+  },
+  'nlsc-taiwan-emap-doorplates': {
+    id: 'nlsc-taiwan-emap-doorplates',
+    name: 'NLSC Taiwan eMap Doorplate Layer',
+    url: 'https://maps.nlsc.gov.tw/S09SOA/pro/wfs.jsp',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Viewer/WMS or controlled government-unit WFS; exact vector rights required',
+    notes: 'Official doorplate layer is point and address evidence, not a building or postal polygon. Public image display and government-unit WFS application do not automatically authorize public vector redistribution.',
+  },
+  'nlsc-taiwan-administrative-boundaries': {
+    id: 'nlsc-taiwan-administrative-boundaries',
+    name: 'NLSC Taiwan Administrative Boundary Downloads',
+    url: 'https://maps.nlsc.gov.tw/pro/download.jsp',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Taiwan Open Government Data License v1; exact edition and attribution required',
+    notes: 'Official county or city, township or district, and village or li boundaries retain TWD97 EPSG:3824, TM2 zone 121 EPSG:3826 or zone 119 EPSG:3825 source metadata. They are not postal areas and coverage is not a sovereignty conclusion.',
+  },
+  'nlsc-taiwan-cadastral-map': {
+    id: 'nlsc-taiwan-cadastral-map',
+    name: 'NLSC Taiwan Cadastral Map',
+    url: 'https://maps.nlsc.gov.tw/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Viewer or source-specific controlled access; no blanket vector redistribution right assumed',
+    notes: 'Official cadastral viewer and services provide parcel validation context. Viewer pixels are not reusable vectors, parcels are not buildings or exact address links, and owner or rights information is excluded.',
   },
   'post-tw': {
     id: 'post-tw',
@@ -571,30 +1027,104 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'alamgc-mongolia': {
     id: 'alamgc-mongolia',
-    name: 'Agency for Land Administration and Management, Geodesy and Cartography Mongolia',
-    url: 'https://www.gazar.gov.mn/',
+    name: 'Mongolia General Authority for Land Administration, Geodesy and Cartography',
+    url: 'https://en.gazar.gov.mn/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Mongolia land administration, geodesy, cartography, cadastre, and administrative geography reference.',
+    notes: 'Official land, mapping, address and administrative-geography authority. Authority status does not make every viewer, cadastral record, building or service output openly redistributable or postal.',
   },
   'nsdi-mongolia': {
     id: 'nsdi-mongolia',
-    name: 'Mongolia National Spatial Data Infrastructure',
-    url: 'https://nsdi.gov.mn/',
+    name: 'Mongolia National Spatial Data Infrastructure Geoportal',
+    url: 'https://en.gazar.gov.mn/p/500',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Mongolia national spatial data infrastructure for official geospatial layers and administrative validation.',
+    usage: 'reference',
+    notes: 'Official Geoportal supports searching, viewing and purchasing spatial products under access levels. Exact layer, edition, rights, CRS, scale and digest are required; portal access is not a postcode relation or blanket reuse right.',
   },
   'zipcode-mn': {
     id: 'zipcode-mn',
-    name: 'Mongolia ZipCode',
-    url: 'https://zipcode.mn/',
+    name: 'CRC Mongolia Unified Postal Code map and list',
+    url: 'https://www.zipcode.mn/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Mongolia 5-digit postal-code lookup for aimag, sum, bag, and delivery-area validation.',
+    notes: 'Official CRC map, search and list reference for five-digit zones and version-qualified nine-digit unified codes. Current 2025 and 2024 sources conflict with another live CRC count and 2019 standard explanation. An exact result is assignment evidence, not automatically reusable bulk rows, a canonical postcode polygon, a civic-address licence or proof of delivery.',
+  },
+  'crc-mongolia-postcode-2025': { id: 'crc-mongolia-postcode-2025', name: 'CRC Mongolia dated 2025 postal explanation', url: 'https://admin.crc.gov.mn/list/shuudan/mn', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Dated reference only. Conflicting live CRC counts and standard descriptions require reconciliation; public document access is not data redistribution, validated assignments or geometry.' },
+  'crc-mongolia-postal-directory-2024': { id: 'crc-mongolia-postal-directory-2024', name: 'CRC Mongolia postal directory 2024', url: 'https://zipcode.mn/page/docs/1.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Dated reference only. Conflicting live CRC counts and standard descriptions require reconciliation; public document access is not data redistribution, validated assignments or geometry.' },
+  'crc-mongolia-unified-postcode-2019': {
+    id: 'crc-mongolia-unified-postcode-2019',
+    name: 'CRC Mongolia unified postal-code introduction and MNS 6775:2019',
+    url: 'https://old.crc.gov.mn/articles/slug12105/en',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CRC explanation distinguishes a five-digit zone from a nine-digit code formed by appending four digits and assigned to a building. It is syntax and policy evidence, not current rows, geometry or a redistribution licence.',
+  },
+  'upu-mongolia-addressing': {
+    id: 'upu-mongolia-addressing',
+    name: 'UPU Mongolia addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mngEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'UPU documents five digits to the right of province or capital and urban, rural, P.O. Box and organization examples including extended codes. Examples and codification are not a current national allocation set or polygon release.',
+  },
+  'crc-mongolia-postal-regulation': {
+    id: 'crc-mongolia-postal-regulation',
+    name: 'CRC Mongolia postal regulation',
+    url: 'https://www.crc.gov.mn/postal-regulation',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official current postal regulator mandate and service-network framework. Regulatory authority is not a postcode row, postal boundary, building relation or data reuse permission.',
+  },
+  'gazar-mongolia-address-system': {
+    id: 'gazar-mongolia-address-system',
+    name: 'Mongolia government coordinate-based address system',
+    url: 'https://address.gazar.gov.mn/mn',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official system reports standardized coordinate-based addresses and hierarchical grids down to 10 metres. Its grid code is distinct from CRC postal codes and AGID; viewer and service access do not establish public address or building reuse rights.',
+  },
+  'gazar-mongolia-spatial-data-standards': {
+    id: 'gazar-mongolia-spatial-data-standards',
+    name: 'Mongolia spatial-data standards including address and boundary themes',
+    url: 'https://gazar.gov.mn/service/spatial-data',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official page lists MNS 6925-15 address and MNS 6925-16 boundary spatial-data specifications. Standards define schemas, not released address, parcel, building or postal data and not a reuse licence.',
+  },
+  'gazar-mongolia-boundaries': {
+    id: 'gazar-mongolia-boundaries',
+    name: 'Mongolia official boundaries theme',
+    url: 'https://en.gazar.gov.mn/service/9',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official administrative-boundary theme uses point and polygon geodatabases with open and ordered distribution and access levels. An exact permitted product may support a derived join, but a boundary is not a postal polygon or building address.',
+  },
+  'gazar-mongolia-open-spatial-data': {
+    id: 'gazar-mongolia-open-spatial-data',
+    name: 'Mongolia Gazar open spatial data programme',
+    url: 'https://en.gazar.gov.mn/p/oron-zajn-neelttej-g-gd-l',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official programme describes usable and redistributable government open data. Each exact portal artifact still requires its own item, licence, edition, fields, coverage and digest; programme status alone does not license viewer outputs.',
+  },
+  'nso-mongolia-administrative-units': {
+    id: 'nso-mongolia-administrative-units',
+    name: 'Mongolia NSO administrative and territorial units',
+    url: 'https://data.1212.mn/pxweb/en/NSO/NSO__Regional%20development__Territory%2C%20administrative%20units/DT_NSO_0100_001V1.px/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official annual aggregate statistics validate aimag, capital, soum, district, bag and khoroo context and change timing. Counts and areas do not establish postal assignments, boundaries, civic addresses or buildings.',
   },
   'hot-osm-mongolia': {
     id: 'hot-osm-mongolia',
@@ -616,23 +1146,59 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Mongolia OSM roads, settlements, POI, local names, and fallback address tags for sparse-address areas.',
   },
+  'india-post-regulations-2024': {
+    id: 'india-post-regulations-2024',
+    name: 'India Post Office Regulations 2024 – PIN definition',
+    url: 'https://www.indiapost.gov.in/documents/actsandpolicies',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official six-digit PIN maps a particular area to the post office receiving mail for delivery; these semantics are not a current directory, PIN polygon, address, or building relation.',
+  },
   'postalpincode-in': {
     id: 'postalpincode-in',
-    name: 'India Postal PIN Code API',
+    name: 'Third-party India Postal PIN Code API',
     url: 'https://api.postalpincode.in/',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Public India PIN code lookup API for post office and locality validation.',
+    usage: 'fallback',
+    notes: 'Public third-party lookup for discrepancy validation only; it is not an official India Post source, geometry authority, or bulk redistribution grant.',
   },
   'data-gov-in-pincode': {
     id: 'data-gov-in-pincode',
-    name: 'Data.gov.in All India Pincode Directory',
-    url: 'https://www.data.gov.in/catalog/all-india-pincode-directory-through-webservice',
+    name: 'Department of Posts All India Pincode Directory',
+    url: 'https://www.data.gov.in/resource/all-india-pincode-directory-till-last-month',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    notes: 'Official monthly OGD PIN directory with circle, region, division, office, office type, Delivery or Non Delivery status, district and state. Multiple typed office rows may share a PIN; rows are assignments, not geometry.',
+  },
+  'data-gov-in-pincode-boundary': {
+    id: 'data-gov-in-pincode-boundary',
+    name: 'Department of Posts All India Pincode Boundary GeoJSON catalog',
+    url: 'https://sikkim.data.gov.in/catalog/all-india-pincode-boundary-geo-json',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official catalog metadata states that PIN boundary GeoJSON exists; the exact resource, edition, licence, coverage, CRS, topology, join key and digest are required. Catalog metadata is not geometry.',
+  },
+  'data-gov-in-godl': {
+    id: 'data-gov-in-godl',
+    name: 'Government Open Data License – India',
+    url: 'https://ap.data.gov.in/godl',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Reuse framework for an exact covered dataset whose metadata declares GODL-India; it is legal metadata, not postal assignment, PIN geometry, address, or building evidence.',
+  },
+  'india-lgd-pin-crosswalk': {
+    id: 'india-lgd-pin-crosswalk',
+    name: 'Local Government Directory PIN crosswalk',
+    url: 'https://data.gov.in/catalog/local-government-directory-lgd',
+    kind: 'admin-boundary',
+    coverage: 'country',
     usage: 'validation',
-    notes: 'Government open-data webservice for India PIN, post office, district, and state validation.',
+    notes: 'Official village and local-body administrative crosswalk with PIN context; it is not Department of Posts assignment authority, PIN geometry, civic-address geometry, or a building relation.',
   },
   'india-digipin': {
     id: 'india-digipin',
@@ -641,7 +1207,16 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'geocoding',
     coverage: 'country',
     usage: 'reference',
-    notes: 'India Post digital address code reference for location-linked delivery and address precision.',
+    notes: 'Official ten-character location grid with approximately four-metre cells under a pinned specification and encoder version; a parallel location layer, not a six-digit PIN, address, building, person, or postal-booking entitlement.',
+  },
+  'survey-of-india-abdb': {
+    id: 'survey-of-india-abdb',
+    name: 'Survey of India Administrative Boundary Database',
+    url: 'https://surveyofindia.gov.in/pages/administrative-boundary-data-base-abdb-',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official state, district, subdistrict and village administrative geometry under exact product terms; administrative context is not PIN geometry or an address-building relation.',
   },
   'india-pincode-api-oss': {
     id: 'india-pincode-api-oss',
@@ -691,6 +1266,69 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Humanitarian OSM mapping reference for disaster, rural, and low-address-density areas across South Asia.',
   },
+  'pakistan-post-postcode-directory': {
+    id: 'pakistan-post-postcode-directory',
+    name: 'Pakistan Post Post Code Directory',
+    url: 'https://pakpost.gov.pk/postcodes.php',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official searchable and downloadable delivery and non-delivery post-office directories expose five-digit strings, delivery post office, account office, province and attached branch-office code. A pinned row is assignment and routing evidence, not a postal polygon, delivery entitlement, building relation, complete history or blanket redistribution licence.',
+  },
+  'upu-pakistan-addressing': {
+    id: 'upu-pakistan-addressing',
+    name: 'UPU Pakistan addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/pakEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official addressing metadata defines exactly five digits to the right of the locality, with the first two digits identifying a routing district and the last three a delivery post office. The 2004 sheet establishes syntax and address order, not a current allocation table, polygon, delivery point or building.',
+  },
+  'pakistan-post-postcode-amendments': {
+    id: 'pakistan-post-postcode-amendments',
+    name: 'Pakistan Post National Post Code Directory amendments',
+    url: 'https://www.pakpost.gov.pk/pdfForms/2024-5-16-Director-General-Circular-02-4-2022-under-the-DGPPO-IBD.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official circular records additions and amendments to delivery and non-delivery post-office entries. It proves allocations change by effective edition and must be overlaid explicitly; it is not a consolidated current directory, polygon release or reuse grant.',
+  },
+  'survey-of-pakistan-mapping-law': {
+    id: 'survey-of-pakistan-mapping-law',
+    name: 'Survey of Pakistan mapping-law and registration guidance',
+    url: 'https://www.surveyofpakistan.gov.pk/detail/MDRlMTFkMjktMDRiMy00MDAyLTkzOTQtNGZjYmFlN2ZkNTdi',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official guidance under the Surveying and Mapping Act and Rules requires applicable registration, approved official base mapping and vetting or licensing for covered geospatial production. Public access or mathematical generation is not permission to distribute a map, and generated postal surfaces remain non-official unless all legal and source-specific gates pass.',
+  },
+  'survey-of-pakistan-geospatial-products': {
+    id: 'survey-of-pakistan-geospatial-products',
+    name: 'Survey of Pakistan geospatial products',
+    url: 'https://www.surveyofpakistan.gov.pk/Detail/ZWU5ZmYxYmQtZWJhMy00MjNiLWFmMTktMmE0OTMwYTAzMTE1',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The national mapping authority supplies maps and digital geospatial products by request and applicable terms. Product availability is not an open licence, postal-code boundary authority, civic-address register or building relation; exact product, approval, edition, CRS, scale, rights and digest must be pinned.',
+  },
+  'pakistan-nsdi': {
+    id: 'pakistan-nsdi',
+    name: 'Pakistan National Spatial Data Infrastructure',
+    url: 'https://nsdi.gov.pk/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Survey of Pakistan leads the NSDI for spatial-data coordination and access. Portal or map presence is context only until an exact permitted layer, authoritative identifiers, edition, coverage, CRS, licence and digest are pinned; NSDI context is not automatically postal geometry.',
+  },
+  'pakistan-pbs-census-gis': {
+    id: 'pakistan-pbs-census-gis',
+    name: 'Pakistan Bureau of Statistics GIS and Digital Census 2023',
+    url: 'https://www.pbs.gov.pk/gis/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official census GIS provides separately versioned administrative and census context. Census blocks are enumerator-workload units, not postal areas, delivery points or buildings, and administrative overlap never proves a postcode boundary or address-building link.',
+  },
   pakpost: {
     id: 'pakpost',
     name: 'Pakistan Post Postcode Lookup',
@@ -737,6 +1375,69 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Pakistan OSM roads, places, POI, and multilingual names for address lookup fallback.',
   },
+  'bangladesh-post-postcode-tables': {
+    id: 'bangladesh-post-postcode-tables',
+    name: 'Bangladesh Post official postcode tables',
+    url: 'https://bdpost.gov.bd/pages/static-pages/6922dc7d933eb65569e10a5f',
+    kind: 'postal-code',
+    coverage: 'subnational',
+    usage: 'reference',
+    notes: 'The Dhaka district reference table has Upazila, English and Bengali post-office name columns; its Bengali column is empty in the inspected edition. Explicit office classes and four-digit postcodes are separate source fields. GPO, HO, TSO, UPO, SO, EDSO and EDBO labels and rows with no code remain typed. A pinned page row is assignment evidence, not a polygon, delivery point, building, complete current bulk directory or redistribution licence.',
+  },
+  'upu-bangladesh-addressing': {
+    id: 'upu-bangladesh-addressing',
+    name: 'UPU Bangladesh addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/bgdEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official 2014 addressing metadata defines four digits to the right of the locality, a routing hierarchy through the main regional head office, thana and secondary post office, and village, delivery-post-office and optional thana address lines. It is not a current allocation database, polygon, delivery point or building relation.',
+  },
+  'survey-of-bangladesh-gis-services': {
+    id: 'survey-of-bangladesh-gis-services',
+    name: 'Survey of Bangladesh GIS services and products',
+    url: 'https://sob.portal.gov.bd/pages/static-pages/6922dd32933eb65569e13e50',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The national mapping authority supplies photogrammetric GIS products under existing policy, including Building and Structure, administrative and topographic features in source-declared scales and BUTM2010. Product availability is not an open licence, postal boundary, civic-address register or address-building relation; exact product, terms, edition, scale, CRS and digest are required.',
+  },
+  'bangladesh-nsdi-geoportal': {
+    id: 'bangladesh-nsdi-geoportal',
+    name: 'Bangladesh National Spatial Data Infrastructure',
+    url: 'https://new.nsdi.gov.bd/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Survey of Bangladesh leads the national geoportal for discovery, access and sharing. Public information may not require sign-in and portal data may be free to use, but the official FAQ says provider-specific terms vary. Portal presence never proves postal authority, exact-layer completeness, building identity or blanket redistribution rights.',
+  },
+  'bangladesh-nsdi-data-catalog': {
+    id: 'bangladesh-nsdi-data-catalog',
+    name: 'Bangladesh NSDI official data catalog',
+    url: 'https://new.nsdi.gov.bd/datacatalog/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The official catalog lists editioned SoB geodatabases, coverage, scale, security classification and BUTM2010 CRS, including city and nationwide products. Catalog metadata or a non-restricted label is not the dataset, postal-code crosswalk or reuse licence; the exact layer and provider terms must be pinned.',
+  },
+  'bbs-bangladesh-census-2022': {
+    id: 'bbs-bangladesh-census-2022',
+    name: 'Bangladesh Bureau of Statistics Population and Housing Census 2022',
+    url: 'https://bbs.gov.bd/pages/static-pages/6922e073933eb65569e27220',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official census publications describe GIS and geocode-based enumeration-area maps for complete population counting and separately versioned administrative context. Enumeration areas are census operations, not postcode areas, delivery surfaces, civic addresses or buildings; individual census information is never public AGID output.',
+  },
+  'dlrs-bangladesh-map-portal': {
+    id: 'dlrs-bangladesh-map-portal',
+    name: 'Bangladesh DLRS integrated map purchase portal',
+    url: 'https://map.settlement.gov.bd/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The Department of Land Records and Surveys sells official CS, SA, RS, BRS and BDS mouza maps by district, upazila, mouza and sheet. A purchased or viewed mouza or cadastral map is controlled land evidence, not a postcode polygon, building footprint, civic address relation or permission to publish ownership and occupant data.',
+  },
   'bd-post': {
     id: 'bd-post',
     name: 'Bangladesh Postcode Lookup',
@@ -744,7 +1445,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Bangladesh Post official portal, including postcode-search services, for district and local delivery validation.',
+    notes: 'Legacy Bangladesh Post portal reference only; access and an exact current assignment source require review. A portal URL is not validation of a postcode or local delivery.',
   },
   'survey-bangladesh': {
     id: 'survey-bangladesh',
@@ -775,14 +1476,46 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'HOT/OSM humanitarian mapping reference for flood-prone, coastal, rural, and disaster-response address context in Bangladesh.',
   },
+  'nepalpost-legacy-pdf': { id: 'nepalpost-legacy-pdf', name: "Nepal Post historical code PDF", url: "https://giwmscdnone.gov.np/media/app/public/4/posts/1672221109_65.pdf", kind: 'postal-code', coverage: 'country', usage: 'reference', notes: "Embedded in the legacy Nepal Post page; acquisition exceeded the fixed 4 MiB bound. Body, complete contents and reuse terms are unverified." },
+  'nepal-digital-data-directive-pdf': { id: 'nepal-digital-data-directive-pdf', name: "Nepal Digital Data Directive 2069 PDF", url: "https://giwmscdnone.gov.np/media/pdf_upload/downloads-20210602055447-8g7tq-Digital-Data-2069_xarejqg.pdf", kind: 'standard', coverage: 'country', usage: 'reference', notes: "Historical directive PDF; reviewed purpose, transfer, attribution and agreement provisions, not a current postal-data or geometry reuse grant." },
+  'nepal-gpo-federal-postcodes': {
+    id: 'nepal-gpo-federal-postcodes', name: "Nepal GPO federal local-unit and ward table",
+    url: "https://gpo.gov.np/pages/postal-code-1259614658/", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Five-digit office/local-unit and seven-digit ward table; current public HTML structurally profiled, reuse rights and effective edition unverified. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-jhapa-postcodes': {
+    id: 'nepal-jhapa-postcodes', name: "Nepal Jhapa district postcode reference",
+    url: "https://jhapa.nepalpost.gov.np/pages/postal-codes-of-jhapa-district-17/", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "District postal page; direct acquisition failed. Search excerpts are not verified rows or rights. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-rasuwa-federal-notice': {
+    id: 'nepal-rasuwa-federal-notice', name: "Nepal Rasuwa federal postcode notice",
+    url: "https://rasuwa.nepalpost.gov.np/content/20/a-new-postal-code-that-has-changed/", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Dated notice links a federal code PDF; notice date, PDF creation date and assignment validity remain distinct. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-federal-postcodes-pdf': {
+    id: 'nepal-federal-postcodes-pdf', name: "Nepal federal office and ward code PDF",
+    url: "https://giwmscdnone.gov.np/media/files/postal%20code_ywg9tx8_lntcpor.pdf", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Linked by official Rasuwa notice; first page visually confirms separate office and ward columns. No complete PDF-row parity or reuse licence verified. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-upu-addressing-2012': {
+    id: 'nepal-upu-addressing-2012', name: "UPU Nepal addressing sheet 2012",
+    url: "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nplEn.pdf", kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Printed June 2012 five-digit format is a historical reference; 2020 PDF metadata is not a federal code edition. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
+  'nepal-digital-data-directive': {
+    id: 'nepal-digital-data-directive', name: "Nepal Digital Data Distribution Use and Regulation Directive 2069",
+    url: "https://www.dos.gov.np/content/5/distritor--use-and-regulation-directory-2069/", kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "Historical directive and organisation agreement distinguish purpose-limited data from attributed value-added work; current product applicability and permissions need review. Metadata only; rights, edition and real AGID data verification remain gated.",
+  },
   'postalservice-np': {
     id: 'postalservice-np',
     name: 'Nepal Postal Service Postcode',
     url: 'https://nepalpost.gov.np/content/1716/1716-postal-codes-of-nepal/',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Nepal Post official postal-codes reference page under the current nepalpost.gov.np domain.',
+    usage: 'reference',
+    notes: "Legacy landing page and oversized embedded PDF are not the current federal assignment release. Metadata only; no source-name validation authority.",
   },
   'national-geoportal-nepal': {
     id: 'national-geoportal-nepal',
@@ -790,8 +1523,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://nationalgeoportal.gov.np/',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Nepal national spatial data platform for basemaps, map layers, and administrative geospatial validation.',
+    usage: 'reference',
+    notes: "Acquired HTML is a viewer shell, not a feature dataset, postal crosswalk or data reuse grant. Metadata only; no source-name validation authority.",
   },
   'survey-department-nepal': {
     id: 'survey-department-nepal',
@@ -799,8 +1532,86 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://dos.gov.np/',
     kind: 'admin-boundary',
     coverage: 'country',
+    usage: 'reference',
+    notes: "Official mapping source; country/source/layer/edition and product rights required. No postal boundary or building relation follows from the agency name. Metadata only; no source-name validation authority.",
+  },
+  'cambodia-post': {
+    id: 'cambodia-post',
+    name: 'Cambodia Post',
+    url: 'https://cambodiapost.com.kh/',
+    kind: 'postal-code',
+    coverage: 'country',
     usage: 'primary',
-    notes: 'Nepal official survey department reference for topographic and administrative geography.',
+    notes: 'UPU-designated national operator and current service/address reference. The public site is not a bulk postcode, polygon, civic-address, or building corpus.',
+  },
+  'mptc-cambodia-prakas-77-2025': {
+    id: 'mptc-cambodia-prakas-77-2025',
+    name: 'MPTC Prakas No. 77 Postal Codes (2025)',
+    url: 'https://file.go.gov.kh/mptc/prakas-postal-codes.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Official reference; no reusable data licence stated on the 59-page PDF',
+    notes: 'Signed and effective 30 December 2025. It explicitly assigns six-digit PP0000, PPDD00, and PPDDCC codes to province/capital, municipality/district/khan, and commune/sangkat postal areas, but publishes no coordinate geometry or address-building relation.',
+  },
+  'upu-cambodia-addressing-2018': {
+    id: 'upu-cambodia-addressing-2018',
+    name: 'UPU Cambodia Addressing Sheet 11/2018',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/khmEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Documents six digits as province, district or municipality, and commune components plus urban/rural address elements. Dated examples are not current Prakas 77 assignments, reusable addresses, geometry, or buildings.',
+  },
+  'ncdd-cambodia-gazetteer': {
+    id: 'ncdd-cambodia-gazetteer',
+    name: 'NCDD Cambodia Gazetteer Database Online',
+    url: 'https://db.ncdd.gov.kh/gazetteer/view/index.castle',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public official viewer/download reference; exact artifact reuse terms must be pinned',
+    notes: 'Lists Khmer and Latin names, codes, references, and GIS for provinces, municipalities/districts/khans, communes/sangkats, and villages. Administrative code equality or containment is only derivation evidence, never proof of official postal geometry.',
+  },
+  'mlmupc-cambodia-cadastral-services': {
+    id: 'mlmupc-cambodia-cadastral-services',
+    name: 'MLMUPC Cambodia Cadastral Services',
+    url: 'https://mlmupc.gov.kh/cadastral-services/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Purpose-limited paid/request service; not open bulk data',
+    notes: 'Electronic cadastral information, parcel, map-copy, orthophoto and survey services are request- and fee-based. Parcel or rights information is not postal geometry, an open address corpus, or a resident/building relation.',
+  },
+  'mlmupc-cambodia-building-services': {
+    id: 'mlmupc-cambodia-building-services',
+    name: 'MLMUPC Cambodia Construction and Land Online Services',
+    url: 'https://service.mlmupc.gov.kh/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Authenticated/request public service; no open national building-data licence',
+    notes: 'The government portal accepts construction, cadastral, licence and other service requests. Portal availability does not publish reusable building identities, footprints, entrances, civic-address joins, owners, occupants, or postal assignments.',
+  },
+  'odc-cambodia-postal-codes': {
+    id: 'odc-cambodia-postal-codes',
+    name: 'Open Development Cambodia Postal Codes',
+    url: 'https://data.opendevelopmentcambodia.net/en/dataset/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY-SA 4.0 for ODC-published material; pin source-PDF and transformation rights separately',
+    notes: 'ODC extracted Prakas No. 77 into Khmer and English CSV tables and records the 30 December 2025 lineage. It is independently transformed validation data, not MPTC geometry or a building corpus.',
+  },
+  'osm-cambodia': {
+    id: 'osm-cambodia',
+    name: 'OpenStreetMap Cambodia',
+    url: 'https://wiki.openstreetmap.org/wiki/WikiProject_Cambodia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL',
+    notes: 'Community roads, settlements, Khmer names, address tags and buildings for independent validation. OSM does not supply MPTC assignment, official postal geometry, exact civic-to-building identity, cadastre, or delivery entitlement.',
   },
   'osm-nepal': {
     id: 'osm-nepal',
@@ -822,32 +1633,109 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'HOT Nepal humanitarian mapping reference for mountain, disaster, rural road, and building completeness checks.',
   },
-  slpost: {
-    id: 'slpost',
-    name: 'Sri Lanka Post Code Search',
-    url: 'https://slpost.gov.lk/si/information/postcodes/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Sri Lanka Post postcode search for locality validation.',
+  'lao-post-postcode': {
+    id: 'lao-post-postcode', name: 'Lao Postal Service postcode reference', url: 'https://www.laopost.com.la/about/postcode', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official current five-digit postcode search and list reference. Pin the exact result, validity, schema, rights and digest; public access is not bulk reuse, canonical polygon, exact civic address, building relation, complete history or delivery entitlement.',
+  },
+  'laos-postal-service-law-2013': {
+    id: 'laos-postal-service-law-2013', name: 'Laos Postal Services Law No. 45/NA (2013)', url: 'https://www.laotradeportal.gov.la/en-gb/site/display/1164', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Articles 9 and 11 define postcode as a location and delivery scope indicator, and the postal network as post office, mail exchange centre and mail route. Law is not an assignment row, polygon, address, building or reuse grant.',
+  },
+  'laopedia-laos-postcodes': {
+    id: 'laopedia-laos-postcodes', name: 'Laopedia Laos postcode reference', url: 'https://laopedia.gov.la/index.php/%E0%BA%A5%E0%BA%B0%E0%BA%AB%E0%BA%B1%E0%BA%94%E0%BB%84%E0%BA%9B%E0%BA%AA%E0%BA%B0%E0%BA%99%E0%BA%B5', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Official explanatory and public allocation reference. An exact pinned result may support validation, but the page is not canonical geometry, full history, exact address/building data or a blanket reuse licence.',
+  },
+  'nfms-laos-administrative-boundaries': {
+    id: 'nfms-laos-administrative-boundaries', name: 'Lao MAF NFMS administrative boundaries', url: 'https://nfms.maf.gov.la/arcgis/rest/services/thematic/NFMSLayer/MapServer/245', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official public ArcGIS country, province and district service. Pin exact layer, edition, CRS, topology, terms and digest; blank copyright text is not an open licence, and the service supplies no postcode assignment or postal relation.',
+  },
+  'lsb-laos-phc-2025': {
+    id: 'lsb-laos-phc-2025', name: 'Lao Statistics Bureau Population and Housing Census 2025', url: 'https://www.lsb.gov.la/phc/?lang=en&p=600', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official aggregate province, district, village, population and housing context. Household, dwelling, individual, building-location and other census microdata are excluded without an exact public licensed artifact and privacy basis.',
+  },
+  'laolandreg-laos': {
+    id: 'laolandreg-laos', name: 'LaoLandReg and cadastral digitisation context', url: 'https://ppmd.mof.gov.la/storage/1718004313REOI%20LaoLanReg%20and%20Data%20Digitization%20Administrator.pdf', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Institutional restricted land-register, textual, cadastral-map, plot-plan, owner and address context. Project documentation is not public parcel, civic-address or building data and grants no redistribution permission.',
+  },
+  'laos-electronic-data-law': {
+    id: 'laos-electronic-data-law', name: 'Laos Electronic Data Law', url: 'https://lsp.moic.gov.la/?id=289&r=site%2Fdisplaylegal', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Legal gate for non-general, personal and official electronic data access and transfer, including permission requirements. Law is not postal, address, geometry or building data.',
+  },
+  'osm-laos': {
+    id: 'osm-laos', name: 'OpenStreetMap Laos', url: 'https://wiki.openstreetmap.org/wiki/Laos', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Laos OSM roads, places, names, POI, fallback address tags and buildings; never Lao Postal Service assignment, canonical postal geometry, exact legal civic address or delivery proof.',
+  },
+  'slpost': {
+    "id": "slpost",
+    "name": "Sri Lanka Post postcode explanation",
+    "url": "https://slpost.gov.lk/si/information/postcodes/",
+    "kind": "postal-code",
+    "coverage": "country",
+    "usage": "reference",
+    "notes": "Five-digit operator syntax and sorting explanation, not a machine API or current rights-cleared assignment release. Same-name places require source identity; do not infer geometry or civic/building relations."
   },
   'survey-department-sri-lanka': {
-    id: 'survey-department-sri-lanka',
-    name: 'Survey Department of Sri Lanka',
-    url: 'https://www.survey.gov.lk/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Sri Lanka official survey department for national maps, topographic data, and authoritative geospatial reference.',
+    "id": "survey-department-sri-lanka",
+    "name": "Survey Department of Sri Lanka",
+    "url": "https://www.survey.gov.lk/",
+    "kind": "admin-boundary",
+    "coverage": "country",
+    "usage": "reference",
+    "notes": "National survey, cadastral and mapping reference. Root retrieval returned 406; NSDI agency profile is not exact geometry rights, postal assignment or a civic/building dataset."
   },
   'data-gov-lk': {
-    id: 'data-gov-lk',
-    name: 'Sri Lanka Open Data Portal',
-    url: 'https://data.gov.lk/',
-    kind: 'gazetteer',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Government open-data portal for Sri Lanka datasets and validation references.',
+    "id": "data-gov-lk",
+    "name": "Sri Lanka Open Data Portal",
+    "url": "https://data.gov.lk/",
+    "kind": "gazetteer",
+    "coverage": "country",
+    "usage": "reference",
+    "notes": "Discovery reference only; live portal and draft policy retrieval unverified. A portal or draft does not grant per-dataset reuse rights."
+  },
+  'slpost-postcode-search': {
+    "id": "slpost-postcode-search",
+    "name": "Sri Lanka Post public postcode search",
+    "url": "https://slpost.gov.lk/postcode_new/",
+    "kind": "postal-code",
+    "notes": "Public initial HTML options only; not a machine API, current national assignment release or bulk reuse permission. Preserve leading zeros, bind by form name and never infer postal areas, civic numbers or buildings.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-nsdi-boundaries': {
+    "id": "sri-lanka-nsdi-boundaries",
+    "name": "Sri Lanka NSDI boundary reference",
+    "url": "https://nsdi.gov.lk/boundaries",
+    "kind": "admin-boundary",
+    "notes": "Administrative boundary discovery only. No postal crosswalk, exact geometry rights or real features verified.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-nsdi-data-classification': {
+    "id": "sri-lanka-nsdi-data-classification",
+    "name": "Sri Lanka NSDI data classification",
+    "url": "https://nsdi.gov.lk/what-are-classifications-data",
+    "kind": "standard",
+    "notes": "Shareable/non-shareable classification and access policy context; not blanket redistribution permission.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-nsdi-boundary-service': {
+    "id": "sri-lanka-nsdi-boundary-service",
+    "name": "Sri Lanka NSDI administrative boundary metadata",
+    "url": "https://gisapps.nsdi.gov.lk/server/rest/services/SLNSDI/Boundary/MapServer?f=pjson",
+    "kind": "admin-boundary",
+    "notes": "Administrative layer schemas only; GN/DS/census codes are not postcodes. GN schema includes officer name/phone: no feature or private-record queries; blank copyright grants no licence.",
+    "coverage": "country",
+    "usage": "reference"
+  },
+  'sri-lanka-data-protection': {
+    "id": "sri-lanka-data-protection",
+    "name": "Sri Lanka Data Protection Authority",
+    "url": "https://www.dpa.gov.lk/index.php",
+    "kind": "standard",
+    "notes": "Legal-review reference for 2022 Act and 2025 amendment; current commencement/applicability unverified. No licence or private-record permission.",
+    "coverage": "country",
+    "usage": "reference"
   },
   'osm-sri-lanka': {
     id: 'osm-sri-lanka',
@@ -866,16 +1754,16 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Maldives postcode finder for island and atoll delivery.',
+    notes: 'Official five-digit postcode finder for island and atoll delivery. A pinned result is assignment evidence, not a canonical polygon, civic-address registry, building relation, complete history or bulk reuse licence.',
   },
   'mlsa-maldives': {
     id: 'mlsa-maldives',
     name: 'Maldives Land and Survey Authority',
-    url: 'https://www.mlsa.gov.mv/',
+    url: 'https://www.geomatics.gov.mv/nationalmapping.php',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Maldives official mapping and island registry authority for base maps, land registry, islands, and atolls.',
+    usage: 'reference',
+    notes: 'Official authority for the national map, authoritative boundary maps, island registry, geographic feature names and NSDI. Exact layer, rights, edition, scale, CRS and digest are required; land-registry context does not create a postcode or civic-address relation.',
   },
   'onemap-maldives': {
     id: 'onemap-maldives',
@@ -883,9 +1771,15 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://onemap.mv/',
     kind: 'map-tile',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'National map of Maldives maintained by the Maldives Land and Survey Authority for island and address context.',
+    usage: 'reference',
+    notes: 'Authoritative national map maintained by the Geomatics Department. Public viewing does not establish a postal-code relation, civic address, building identity, exact layer reuse rights or blanket redistribution permission.',
   },
+  'upu-maldives-addressing-2004': { id: 'upu-maldives-addressing-2004', name: 'UPU Maldives addressing sheet 2004', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mdvEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Documents five digits to the right of locality, Malé-region and atoll prefix structures, and a centered address example. The September 2004 sheet is dated syntax, not current allocations, geometry, civic addresses or buildings.' },
+  'maldives-onemap-island-api-2024': { id: 'maldives-onemap-island-api-2024', name: 'OneMap Maldives island FeatureServer 2024', url: 'https://services7.arcgis.com/yvCbn3q8PPtPLZIM/arcgis/rest/services/island_20240509/FeatureServer', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official linked island layer endpoint. An exact layer may provide island geometry and identifiers when item metadata and reuse rights are pinned; it is not a postcode polygon, civic-address registry or building relation.' },
+  'maldives-geomatics-land-survey-standard-2025': { id: 'maldives-geomatics-land-survey-standard-2025', name: 'Maldives Land Survey Submission Standard 2025', url: 'https://geomatics.gov.mv/uploads/Land%20Survey%20Submission%20Standards_SRVY2025-1.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Defines WGS 84, UTM Zone 43N, survey exchange files and plot, reef and island feature codes. A submission standard is not public cadastral data, postcode authority, civic-address data, building geometry or a reuse licence.' },
+  'maldives-land-registration-survey-guideline-2020': { id: 'maldives-land-registration-survey-guideline-2020', name: 'Maldives land-registration survey guideline 2020', url: 'https://geomatics.gov.mv/uploads/Guidelines%20for%20Land%20Registration%20Survey%20of%20Islands_20201015%20V1_1.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Requires atoll, island name, FCode, surveyor, shoreline and survey-map details for island registration. It is a controlled survey workflow, not a public parcel, postcode, address or building dataset.' },
+  'maldives-bureau-statistics-gis-maps': { id: 'maldives-bureau-statistics-gis-maps', name: 'Maldives Bureau of Statistics GIS Maps', url: 'https://statisticsmaldives.gov.mv/quicklink/gis-maps/', kind: 'admin-boundary', coverage: 'country', usage: 'validation', notes: 'Official Census and statistics map entry point. The map disclaimer makes data informational, dynamic and unsuitable without independent verification for legal, engineering, navigational or precision use; it is not postal, civic-address or building authority.' },
+  'maldives-census-island-atoll-2022': { id: 'maldives-census-island-atoll-2022', name: 'Maldives Census 2022 island and atoll indicators', url: 'https://statisticsmaldives.gov.mv/census-2022-island-and-atoll-level-indicator-sheets/', kind: 'gazetteer', coverage: 'country', usage: 'validation', notes: 'Official aggregate island and atoll indicator sheets for administrative-name and coverage validation. Census aggregates do not establish postcode assignments, household addresses, building relations or postal polygons.' },
   'osm-maldives': {
     id: 'osm-maldives',
     name: 'OpenStreetMap Maldives',
@@ -898,12 +1792,12 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'afghan-post': {
     id: 'afghan-post',
-    name: 'Afghan Post Postal Code Reference',
-    url: 'http://afghanpost.gov.af/',
+    name: 'Afghan Post',
+    url: 'https://afghanpost.gov.af/en',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'reference',
-    notes: 'Afghanistan postal-code reference from Afghan Post.',
+    usage: 'primary',
+    notes: 'Official postal-operator and online-service reference linking the current Postal Code System. The website states all rights reserved; public viewing is not bulk postcode, address, geometry or building redistribution permission.',
   },
   'afghan-postal-code-system': {
     id: 'afghan-postal-code-system',
@@ -912,7 +1806,35 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Afghan Post postal-code search interface with road and locality lookup for 4-digit postcode validation.',
+    notes: 'Current Afghan Post map searches an address or six-digit postcode and can return postal-area GeoJSON, coordinates, province, city or rural district, localities, roads, home numbers and post-office context. Exact response, schema, validity, terms and digest are required; interactive access is not a bulk-data or personal-address licence.',
+  },
+  'upu-afghanistan-addressing-2025': {
+    id: 'upu-afghanistan-addressing-2025',
+    name: 'UPU Afghanistan addressing sheet (07/2025)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/afgEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official sheet states that a new six-digit system took effect on 1 October 2024: province 10-43, city district 01-50 or rural district 51-99, and delivery zone 01-99. Address examples are not reusable production records, current bulk assignments, geometry, building relations or delivery proof.',
+  },
+  'afghan-post-policy': {
+    id: 'afghan-post-policy',
+    name: 'Afghan Post postal reform and address standardization policy',
+    url: 'https://afghanpost.gov.af/en/afghan-post-policy-0',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official policy describes standardizing postal addresses, completing postal numbering and expanding the post-office network. Policy intent is not a current assignment row, postal polygon, address register, building dataset or reuse grant.',
+  },
+  'ocha-afghanistan-admin-boundaries-2026': {
+    id: 'ocha-afghanistan-admin-boundaries-2026',
+    name: 'OCHA Afghanistan COD-AB administrative boundaries',
+    url: 'https://data.humdata.org/dataset/cod-ab-afg',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 3.0 IGO',
+    notes: 'OCHA/HDX version 03 is sourced from AGCHO and NSIA and publishes 34 provinces and 401 humanitarian-use districts under CC BY 3.0 IGO. The 2026 metadata warns that 457 districts are designated but boundary data are unavailable; administrative P-codes and boundaries are not postcodes or postal geometry.',
   },
   'hot-osm-afghanistan': {
     id: 'hot-osm-afghanistan',
@@ -952,32 +1874,307 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'primary',
     notes: 'Vietnam Post national postal-address code platform and postcode lookup reference.',
   },
-  'pos-malaysia': {
-    id: 'pos-malaysia',
-    name: 'Pos Malaysia Postcode Finder',
-    url: 'https://www.pos.com.my/postcode-finder',
+  'vietnam-national-postcode-portal': {
+    id: 'vietnam-national-postcode-portal',
+    name: 'Vietnam National Postcode Portal',
+    url: 'https://mabuuchinh.vn/Default.aspx',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Malaysia postcode finder.',
+    notes: 'The Ministry of Science and Technology portal is the current lookup and download entry point for five-digit national postcode assignments. A pinned result proves a dated assignment only; it is not a polygon, delivery entitlement, civic address, building relation, complete history or blanket redistribution licence.',
+  },
+  'vietnam-postcode-decision-2334-2025': {
+    id: 'vietnam-postcode-decision-2334-2025',
+    name: 'Vietnam Decision 2334/QD-BKHCN postcode amendment',
+    url: 'https://cspl.mic.gov.vn/Pages/TinTuc/tinchitiet.aspx?tintucid=139048',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The Ministry legal-policy notice records the 2025 amendment for wards, communes and equivalent units under the new two-tier administration and confirms a five-character structure. Legal structure and assignment tables do not themselves publish postal geometry, civic addresses or building links.',
+  },
+  'vnpost-two-tier-postcode-notice': {
+    id: 'vnpost-two-tier-postcode-notice',
+    name: 'Vietnam Post two-tier postcode notice',
+    url: 'https://vnpost.vn/en/hoat-dong-nganh/thong-bao-sua-doi-ma-buu-chinh-quoc-gia-theo-don-vi-hanh-chinh-2-cap',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Vietnam Post confirms Decision 2334, five-digit lookup through the national portal and alignment to the two-tier administrative system. The notice is routing and transition evidence, not a bulk allocation licence, polygon set, address registry or building database.',
+  },
+  'upu-vietnam-addressing': {
+    id: 'upu-vietnam-addressing',
+    name: 'UPU Viet Nam addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/vnmEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The 2021 UPU sheet defines five digits, position beside the province name, house, alley, lane, street, ward, district, province, rural and post-office formats, and non-area assignments to service or special-delivery objects. It predates the 2025 two-tier reform and is not current allocation data, geometry or a building relation.',
+  },
+  'vnpost-vpostcode-digital-address': {
+    id: 'vnpost-vpostcode-digital-address',
+    name: 'Vietnam Post Vpostcode digital address platform',
+    url: 'https://vnpost.vn/vi/hoat-dong-nganh/ra-mat-nen-tang-ma-dia-chi-buu-chinh-vpostcode',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Vietnam Post describes a national digital address platform built from digital maps and national postcodes for location codes. A viewed or queried code is not automatically a legal civic address, postal polygon, building footprint, occupant record or reusable bulk dataset; exact API and reuse terms are required.',
+  },
+  'vietnam-nso-administrative-units': {
+    id: 'vietnam-nso-administrative-units',
+    name: 'Vietnam NSO administrative-unit directory and crosswalk',
+    url: 'https://danhmuchanhchinh.nso.gov.vn/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The National Statistics Office directory exposes current units, new-to-old conversion, comparison and history. Identifiers and names support temporal administrative validation; directory rows are not boundary geometry, postcode assignments, civic addresses, buildings or redistribution permission.',
+  },
+  'vietnam-nsdi-portal': {
+    id: 'vietnam-nsdi-portal',
+    name: 'Vietnam National Spatial Data Infrastructure portal',
+    url: 'https://vnsdi.mae.gov.vn/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official NSDI portal advertises administrative maps, base maps and registered data access. Registration, viewing or attribution does not prove reuse rights, postal authority, a current postcode relation, civic address or exact address-building link; exact product, edition, CRS, scale and terms must be pinned.',
+  },
+  'vietnam-survey-map-data-service': {
+    id: 'vietnam-survey-map-data-service',
+    name: 'Vietnam official surveying and mapping data service',
+    url: 'https://dichvucong.monre.gov.vn/pages/ChiTietThuTucHanhChinh.aspx?tt=129',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The ministry procedure governs requests for surveying, mapping and geospatial products and excludes state-secret material. A supplied product remains subject to exact request, product, scale, CRS, fee and rights; roads, parcels or buildings do not become postcode surfaces or civic-address links by containment or proximity.',
+  },
+  'pos-malaysia-postcode-finder': {
+    id: 'pos-malaysia-postcode-finder',
+    name: 'Pos Malaysia Postcode Finder',
+    url: 'https://www.pos.com.my/postal-services/quick-access/?postcode-finder',
+    kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official five-digit postcode and locality lookup. A pinned result is dated assignment evidence, not a canonical polygon, civic-address registry, building relation, complete history or blanket redistribution licence.',
+  },
+  'upu-malaysia-addressing': {
+    id: 'upu-malaysia-addressing', name: 'UPU Malaysia addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mysEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Documents five digits before locality, address-line order, 13 states and three federal territories, plus P.O. box, locked bag, poste restante and window-ticket delivery. The 2010 sheet is not current allocations, geometry, addresses or buildings.',
+  },
+  'malaysia-mygdx-postcode-catalog': {
+    id: 'malaysia-mygdx-postcode-catalog', name: 'MyGDX Malaysian Postcode catalog',
+    url: 'https://jombelajar.mygdx.gov.my/en/landing-page/listCatalog/256063c2-dbf9-4765-8d84-47a60db3c742?theme=third-theme',
+    kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Government exchange catalog describes Malaysian postcode and locality data sourced from Pos Malaysia. Provider approval and exact API terms are required; catalog visibility is not bulk reuse permission, postal geometry, civic-address or building evidence.',
+  },
+  'malaysia-mygeo-fundamental-data-2026': {
+    id: 'malaysia-mygeo-fundamental-data-2026', name: 'MyGeoportal Fundamental Data List 2026',
+    url: 'https://www.mygeoportal.gov.my/sites/default/files/Dokumen_MyGeoportal/Senarai_Data_Fundamental_2026.pdf',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Lists state, division, district or jajahan, mukim, town and pekan fundamental layers. Release follows each provider agency; an administrative layer is not a postal boundary, address registry or building relation.',
+  },
+  'malaysia-mygos-data-services': {
+    id: 'malaysia-mygos-data-services', name: 'MyGeo Data Services / MyGOS',
+    url: 'https://www.mygeoportal.gov.my/en/applications/mygeo-data-services',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Secure G2G services expose fundamental geospatial themes, lot finding and map views to approved users. Access does not confer public reuse, postal authority, a civic address, building identity or address-building relation.',
+  },
+  'malaysia-mygeo-upi': {
+    id: 'malaysia-mygeo-upi', name: 'Malaysia Unique Parcel Identifier (UPI)',
+    url: 'https://www.mygeoportal.gov.my/index.php/en/unique-parcel-identifier-upi',
+    kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'UPI composes state, district or division, subdistrict or town, section, lot and grant identifiers. Public codes and parcel context do not establish postcode assignment, postal geometry, civic address, building footprint, owner or occupant.',
+  },
+  'malaysia-mygdi-licensing-2024': {
+    id: 'malaysia-mygdi-licensing-2024', name: 'MyGDI geospatial pricing and copyright guideline',
+    url: 'https://www.mygeoportal.gov.my/sites/default/files/Dokumen_MyGeoportal/Garis%20Panduan%20MyGDI.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Documents provider-specific pricing, copyright and licence agreements under Malaysian law. Viewing, requesting, paying or attributing is not blanket redistribution permission.',
+  },
+  'malaysia-mygeoname': {
+    id: 'malaysia-mygeoname', name: 'MyGeoName geographical names portal',
+    url: 'https://mygeoname.mygeoportal.gov.my/index.jsp?lang=en',
+    kind: 'gazetteer', coverage: 'country', usage: 'validation',
+    notes: 'Official geographical-name reference for locality validation. Portal labels are not legal evidence, postcode assignments, boundary geometry, civic addresses or exact building links.',
+  },
+  'myanmar-post-postcode-lookup': { id: 'myanmar-post-postcode-lookup', name: 'Myanmar Post Postcode Lookup', url: 'https://www.myanmarpost.com.mm/postcode?tab=information', kind: 'postal-code', coverage: 'country', usage: 'primary', notes: 'Official seven-digit Quarter and Village Tract postcode lookup. A pinned result is assignment evidence, not a canonical polygon, civic-address registry, building relation, complete history or bulk reuse licence.' },
+  'myanmar-national-portal-post-services': { id: 'myanmar-national-portal-post-services', name: 'Myanmar National Portal postal services', url: 'https://myanmar.gov.mm/-/myanmar-post-services', kind: 'postal-code', coverage: 'country', usage: 'reference', notes: 'Government service page identifies Myanmar Post postcode information, door-to-door, smart-locker and postal-agent services. Service availability does not make every postal object an area or grant output redistribution rights.' },
+  'upu-myanmar-addressing-2022': { id: 'upu-myanmar-addressing-2022', name: 'UPU Myanmar addressing sheet 2022', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/mmrEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Documents seven digits for Quarter and Village Tract, address-line order, 14 states and regions plus Nay Pyi Taw Union Territory, and home, rural, P.O. Box and building formats. It is not current allocations, geometry or a civic-address registry.' },
+  'myanmar-survey-department': { id: 'myanmar-survey-department', name: 'Myanmar Survey Department', url: 'https://surveydepartment.gov.mm/', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official topographic mapping and aerial-photography authority. Exact product, permission, edition, scale, CRS and digest are required; maps do not create postcode boundaries, civic addresses or building links.' },
+  'myanmar-one-map-geodatabase-2024': { id: 'myanmar-one-map-geodatabase-2024', name: 'One Map Myanmar Geo Database platform', url: 'https://surveydepartment.gov.mm/news/930', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official platform context for standardized inter-agency geospatial information. A news or platform page is not public data, a reuse licence, postal authority, civic-address registry or building relation.' },
+  'mimu-place-codes-v9-6-2025': { id: 'mimu-place-codes-v9-6-2025', name: 'MIMU Place Codes (v9.7 listed January 2026)', url: 'https://www.themimu.info/place-codes', kind: 'gazetteer', coverage: 'country', usage: 'validation', notes: 'Administrative place identifiers for state or region, district, township, village tract and village. MIMU PCodes are not Myanmar Post postcodes and cannot create postal assignments or postal boundaries.' },
+  'mimu-geospatial-data': { id: 'mimu-geospatial-data', name: 'MIMU GIS Resources', url: 'https://www.themimu.info/gis-resources', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Operational 1:250,000 WGS84 administrative and thematic layers for humanitarian and development work. Geospatial datasets require source-specific permission and are not postal boundaries, civic addresses or exact building links.' },
+  'mimu-terms-and-conditions': { id: 'mimu-terms-and-conditions', name: 'MIMU data terms and conditions', url: 'https://www.themimu.info/mimu-terms-conditions', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Records attribution, non-sale and non-commercial constraints, as-is disclaimers and special written permission for MIMU geospatial data. Attribution or access alone is not blanket redistribution permission. Automated collection/database compilation and online embedding require separate written permission; collection is disabled.' },
+  'ycdc-land-building-services': { id: 'ycdc-land-building-services', name: 'Yangon City Development Committee land and building services', url: 'https://myanmar.gov.mm/yangon-city-development-council', kind: 'building', coverage: 'subnational', usage: 'validation', notes: 'Local controlled land, building and property-service context. Forms and tax records may contain private evidence and are not a national public address registry, postal geometry release or exact reusable address-building relation.' },
+  'pos-malaysia': {
+    id: 'pos-malaysia',
+    name: 'Pos Malaysia Postcode Finder',
+    url: 'https://www.pos.com.my/postal-services/quick-access/?postcode-finder',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Legacy registry alias for the official Pos Malaysia finder; lookup rows require pinned retrieval metadata and do not constitute postcode polygons, civic addresses, buildings or redistribution rights.',
   },
   'onemap-sg': {
     id: 'onemap-sg',
     name: 'Singapore OneMap Search API',
-    url: 'https://www.onemap.gov.sg/docs/',
+    url: 'https://www.onemap.gov.sg/apidocs/',
     kind: 'geocoding',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Singapore public search API with postal-code and address details.',
+    notes: 'Authoritative Singapore address and postal search; current API access requires a registered bearer token.',
+  },
+  'indonesia-post-law-2009': {
+    id: 'indonesia-post-law-2009',
+    name: 'Indonesia Postal Law 38/2009',
+    url: 'https://jdih.komdigi.go.id/produk_hukum/view/id/155/t/undangundang%20nomor%2038%20tahun%202009%20tanggal%2014%20oktober%202009',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official definition permits numbers, letters, or their combination and uses kode pos to identify an address or area; the law is not a current directory, polygon, or building relation.',
+  },
+  'indonesia-post-regulation-2025': {
+    id: 'indonesia-post-regulation-2025',
+    name: 'Indonesia Ministerial Regulation 8/2025 – postal code system',
+    url: 'https://jdih.komdigi.go.id/produk_hukum/view/id/967/t/peraturan%2Bmenteri%2Bkomunikasi%2Bdan%2Bdigital%2Bnomor%2B8%2Btahun%2B2025',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official 2025 scheme permits numeric, alphabetic, or combined codes down to the smallest area; the regulation is not an assignment schedule, postal geometry, or proof that future codes remain five digits.',
   },
   'pos-indonesia': {
     id: 'pos-indonesia',
-    name: 'Pos Indonesia Postcode Search',
-    url: 'https://www.posindonesia.co.id/id',
+    name: 'Pos Indonesia Kodepos Search',
+    url: 'https://kodepos.posindonesia.co.id/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Indonesia postcode lookup.',
+    notes: 'Official current postcode and locality lookup at capture time; search access is not a documented bulk API, complete history, postal geometry, delivery entitlement, or redistribution grant.',
+  },
+  'upu-indonesia-addressing': {
+    id: 'upu-indonesia-addressing',
+    name: 'UPU Indonesia Addressing Sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/idnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official addressing reference shows five digits after the locality and province, city or regency, district, village or urban village and RT/RW context; it is not a current assignment database or geometry.',
+  },
+  'sdi-indonesia-village-postcode': {
+    id: 'sdi-indonesia-village-postcode',
+    name: 'Satu Data village and urban-village postcode crosswalk',
+    url: 'https://data.go.id/dataset/dataset/kode-pos-desa-kelurahan-di-indonesia',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Provincial dataset crosswalks postcode with BPS and Kemendagri identifiers and is marked as still fulfilling Satu Data principles; it is not a national Pos Indonesia directory or postal geometry.',
+  },
+  'kemendagri-indonesia-admin-codes': {
+    id: 'kemendagri-indonesia-admin-codes',
+    name: 'Kemendagri administrative area codes 2025',
+    url: 'https://ditjenbinaadwil.kemendagri.go.id/peraturan/keputusan-menteri-dalam-negeri-300.2.2-2430-2025-228',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official province, city or regency, district, village and island identifiers for a pinned edition; administrative codes require an explicit crosswalk and are not postcodes or postal geometry.',
+  },
+  'bps-indonesia-statistical-area-codes': {
+    id: 'bps-indonesia-statistical-area-codes',
+    name: 'BPS statistical work-area codes',
+    url: 'https://ppid.bps.go.id/app/konten/1202/Unduh.html',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official statistical-area and village identifiers for pinned regulations or master editions; BPS codes need explicit crosswalks and are not Pos Indonesia assignments or geometry.',
+  },
+  'big-indonesia-village-boundaries': {
+    id: 'big-indonesia-village-boundaries',
+    name: 'BIG village and urban-village administrative boundaries',
+    url: 'https://tanahair.indonesia.go.id/sdi/dataset/administrasi_ar_desakel',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'BIG metadata warns that non-definitive boundaries are not an official reference and documents equal-distance gap allocation in an edition; administrative geometry is not postal geometry and exact rights must be pinned.',
+  },
+  'big-indonesia-rbi-buildings': {
+    id: 'big-indonesia-rbi-buildings',
+    name: 'BIG RBI building and public-facility layers',
+    url: 'https://tanahair.indonesia.go.id/sdi/id/organization/badan-informasi-geospasial',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Regional, scale- and edition-specific RBI building or public-facility features require an exact layer, licence, CRS and digest plus an explicit civic-address relation; proximity is not an address link.',
+  },
+  'phlpost-zip-code-locator': {
+    id: 'phlpost-zip-code-locator',
+    name: 'PHLPost official ZIP Code Locator',
+    url: 'https://phlpost.gov.ph/zip-code-locator/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The official locator publishes Region, Province, City/Municipality and four-digit ZIP Code rows. A locator row is postal assignment and routing evidence, not barangay coverage, a canonical polygon, delivery point, civic address, building, complete version history or blanket redistribution licence.',
+  },
+  'upu-philippines-addressing': {
+    id: 'upu-philippines-addressing',
+    name: 'UPU Philippines addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/phlEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official addressing sheet places four digits to the left of the locality or province and describes zone, province/district/city and municipality/delivery-office digit roles. Digit hierarchy and address examples are semantics, not current allocation, boundaries, deliverability, address points or building relations.',
+  },
+  'psa-philippine-standard-geographic-code': {
+    id: 'psa-philippine-standard-geographic-code',
+    name: 'PSA Philippine Standard Geographic Code',
+    url: 'https://psa.gov.ph/classification/psgc',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0 unless otherwise stated by PSA',
+    notes: 'The versioned PSGC classifies regions, provinces, highly urbanized cities, cities, municipalities and barangays and publishes dated masterlists and an API. A PSGC code or administrative unit is not a PHLPost assignment, postal polygon, street address or building relation; exact edition and any content-specific exception must be pinned.',
+  },
+  'geoportal-philippines-data-inventory': {
+    id: 'geoportal-philippines-data-inventory',
+    name: 'Geoportal Philippines data inventory',
+    url: 'https://www.geoportal.gov.ph/gpresources/GP_DataInventory.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The March 2025 official inventory records providers, uploaded layers, metadata and restriction classes including no restriction/open, conditional downloading, restricted and not indicated. Inventory metadata is not the dataset, a common licence, postal authority, civic-address register or address-building crosswalk.',
+  },
+  'geoportal-philippines-download-policy': {
+    id: 'geoportal-philippines-download-policy',
+    name: 'Geoportal Philippines download procedure',
+    url: 'https://www.geoportal.gov.ph/gpresources/How%20to%20Download%20data%20from%20Geoportal%20Philippines.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official procedure requires requestor identity, agency, purpose, contact details and acceptance of terms and privacy provisions for downloadable layers. Portal access or download success is not blanket redistribution, postal authority, address authority or permission to publish personal or restricted attributes.',
+  },
+  'namria-topographic-mapping': {
+    id: 'namria-topographic-mapping',
+    name: 'NAMRIA topographic mapping roadmap and products',
+    url: 'https://www.namria.gov.ph/jdownloads/Info_Mapper/Infomapper_2024_NAMRIA_Advancing_Geospatial_Information_Management_through_Innovation.pdf',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'NAMRIA documents nationwide and selected urban topographic map series, digital line maps, orthoimages, administrative maps and varying production and update coverage. Topographic roads or buildings are geometry, not PHLPost polygons or civic-address identities; exact product, rights, scale, epoch, CRS, coverage and digest are required.',
+  },
+  'psa-popcen-cbms-geotagging': {
+    id: 'psa-popcen-cbms-geotagging',
+    name: 'PSA POPCEN-CBMS geotagging and building-construction listing',
+    url: 'https://psa.gov.ph/content/psa-clears-2024-popcen-cbms-geotagging-service-facilities-and-government-projects',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'PSA geotags service facilities, government projects and ongoing building constructions for statistics and planning. Census and CBMS collection is not a public national civic-address or building register, postal geometry or delivery evidence; confidential household, respondent, permit and establishment details never become public AGID output.',
+  },
+  'philippines-lra-land-registration': {
+    id: 'philippines-lra-land-registration',
+    name: 'Philippines Land Registration Authority',
+    url: 'https://lra.gov.ph/message-from-the-administrator/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'LRA registers transactions involving titled and untitled land and provides controlled title and registered-document services. A title, parcel or recorded interest is not a postal surface, building footprint, civic-address relation or public owner/occupant dataset; exact service terms, authority and privacy controls apply.',
   },
   phlpost: {
     id: 'phlpost',
@@ -994,8 +2191,105 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://www.post.gov.bn/SitePages/Postcodes.aspx',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Brunei official postcode reference.',
+    usage: 'reference',
+    notes: 'Legacy Postal Services postcode reference; current postal operations moved to PosBru in January 2026. This URL is not a current validated dataset.',
+  },
+  'brunei-posbru-current-operator': {
+    id: 'brunei-posbru-current-operator', name: "PosBru current postal operator and transition", url: 'https://www.posbru.com.bn/about/',
+    kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Current successor to Postal Services from 1 January 2026, corroborated by MTIC and the AITI public-postal licence register. The public website is service metadata, not a complete postcode allocation, postal polygon, civic-address dataset or reuse licence.",
+  },
+  'brunei-aiti-postal-licence': {
+    id: 'brunei-aiti-postal-licence', name: "AITI public postal licence register", url: 'https://www.aiti.gov.bn/licences/postal-licence/',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "Lists PosBru public postal licence effective 1 January 2026 for 15 years. Operator authority and effective date are not postcode data or blanket redistribution rights.",
+  },
+  'brunei-mtic-posbru-transition': {
+    id: 'brunei-mtic-posbru-transition', name: "MTIC PosBru transition announcement", url: 'https://www.mtic.gov.bn/Lists/News/NewDisplay.aspx?ID=318',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "10 December 2025 ministry announcement transfers postal operations to PosBru effective 1 January 2026. It does not republish current routing rows or grant data reuse rights.",
+  },
+  'brunei-skn-postcode-booklet': {
+    id: 'brunei-skn-postcode-booklet', name: "SKN public mirror of the Postal Services second-edition booklet", url: 'https://www.skn.gov.bn/Help/Buku_Poskod_Edisi_ke2.pdf',
+    kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: "Public SKN user guide links a 52-page 2018 booklet containing separate organization, locality and postal-branch tables. Current validity, reuse rights and equality with the unreachable Postal Services original remain unverified; 2026 HTTP modification is not an allocation edition.",
+  },
+  'brunei-deps-terms': {
+    id: 'brunei-deps-terms', name: "DEPS site terms of use", url: 'https://deps.mofe.gov.bn/terms-of-use/',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: "Clause 2.1 permits covered-site content reuse with attribution, change notice and no endorsement, subject to privacy, third-party rights and the other site terms. It is not a cross-government postal, SKN or Survey data licence.",
+  },
+  'brunei-post-postcode-booklet': {
+    id: 'brunei-post-postcode-booklet',
+    name: 'Brunei Postal Services Postcode Booklet, second edition',
+    url: 'https://www.post.gov.bn/Documents/Buku%20Poskod%20Edisi%20ke%202%20%28Kemaskini%2026122018%29.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official dated booklet lists Mukim, Kampong and six-character postcode rows and shows addressing examples. A pinned row is assignment and routing evidence, not a polygon, delivery entitlement, exact house or building relation, complete current history or blanket redistribution licence.',
+  },
+  'upu-brunei-addressing': {
+    id: 'upu-brunei-addressing',
+    name: 'UPU Brunei Darussalam addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/brnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines six alphanumeric characters without an internal space, district, Mukim, village and delivery-point routing roles, and house, floor, building, Simpang, Jalan, Kampong, town or district and P.O. box address formats. Routing roles and examples are not geographic boundaries, current assignments or building identities.',
+  },
+  'brunei-survey-house-numbering': {
+    id: 'brunei-survey-house-numbering',
+    name: 'Brunei Survey Department House Numbering',
+    url: 'https://www.survey.gov.bn/permohonan-maklumat-peralamatan/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official house, building and unit address-information and verification applications require site plan, land title or TOL, applicant identity and a fee. An exact authorized result can support a civic address, but application access is not a public address register, building geometry, owner relation or redistribution licence.',
+  },
+  'brunei-survey-digital-map-products': {
+    id: 'brunei-survey-digital-map-products',
+    name: 'Brunei Survey Department digital map products',
+    url: 'https://www.survey.gov.bn/peta/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official paid products include roads, settlements, administrative boundaries, cadastral lots and public and private buildings at declared scales and coverage. Exact product, layer, price, restriction, edition, scale, CRS and rights are required; a mapped feature is not postcode geometry or a civic-address link.',
+  },
+  'brunei-survey-geoportal': {
+    id: 'brunei-survey-geoportal',
+    name: 'Brunei Survey Department Geoportal',
+    url: 'https://geoportal.survey.gov.bn/start',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official portal separates public and registered capabilities for LOT, TOL, Gazette, plans, imagery and certified-plan access. Search, viewing, purchase or registration does not create postal authority, an address-building relation or blanket redistribution rights.',
+  },
+  'brunei-survey-geoportal-user-guide': {
+    id: 'brunei-survey-geoportal-user-guide',
+    name: 'Brunei Survey Geoportal user guide and restriction-of-use gate',
+    url: 'https://geoportal.survey.gov.bn/pdf/GeoportalUserGuide.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official guide requires acceptance of restriction-of-use terms and documents GDBD2009/Brunei BRSO map context, lot search and viewer workflows. The guide and displayed parcel examples are legal and access metadata, not reusable geometry, postcode assignment, civic address or building evidence.',
+  },
+  'brunei-deps-bpp-2021': {
+    id: 'brunei-deps-bpp-2021',
+    name: 'Brunei DEPS Population and Housing Census 2021',
+    url: 'https://deps.mofe.gov.bn/census-and-survey/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official published aggregates describe population, households and occupied housing units by district, Mukim and village. Census geography and housing statistics are not postcode boundaries, public household or address records, building identities or exact address-building relations.',
+  },
+  'brunei-land-registration-framework': {
+    id: 'brunei-land-registration-framework',
+    name: 'Brunei Land Department registration framework',
+    url: 'https://www.land.gov.bn/undang-undang/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The official land framework governs titles, registers, ownership, leases, mortgages, strata and certified survey plans. Land titles, lot searches, owners and transactions are controlled property-rights evidence, not public postcode polygons, building footprints, civic-address links or reusable personal data.',
   },
   'bhutan-post': {
     id: 'bhutan-post',
@@ -1005,6 +2299,78 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'primary',
     notes: 'Bhutan Post postcode finder.',
+  },
+  'bhutan-post-postcode-finder': {
+    id: 'bhutan-post-postcode-finder',
+    name: 'Bhutan Post Postcode Finder',
+    url: 'https://bhutanpost.bt/postcode/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit locator exposes Dzongkhag, Gewog, Post Office and Postal Code rows. A pinned row is routing-assignment evidence, not a polygon, delivery entitlement, exact address, building relation, complete history or blanket redistribution licence.',
+  },
+  'bhutan-post-domestic-footprint': {
+    id: 'bhutan-post-domestic-footprint',
+    name: 'Bhutan Post domestic postal footprint',
+    url: 'https://bhutanpost.bt/forms/ar2023.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The official annual report maps post offices and codes across the domestic network. Office symbols and labels describe service footprint; they are not catchment polygons, address points, building links or a reusable boundary dataset.',
+  },
+  'upu-bhutan-addressing': {
+    id: 'upu-bhutan-addressing',
+    name: 'UPU Bhutan addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/btnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines five digits to the right of the locality and routing semantics for Dzongdey, Dzongkhag, Dungkhag and delivery area, plus building, flat, shop, village, Gewog, P.O. box and organization formats. Digit roles and examples are not boundaries, current assignments, civic-address records or building identities.',
+  },
+  'bhutan-nlcs-geoportal': {
+    id: 'bhutan-nlcs-geoportal',
+    name: 'Bhutan NLCS Geo-Portal',
+    url: 'https://www.nlcs.gov.bt/dz/?page_id=38',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official portal coordinates map, data and metadata sharing. Portal discovery does not create postal authority, guarantee nationwide layer coverage or grant common download and redistribution rights.',
+  },
+  'bhutan-nlcs-map-products': {
+    id: 'bhutan-nlcs-map-products',
+    name: 'Bhutan NLCS map services and access rules',
+    url: 'https://www.nlcs.gov.bt/dz/?page_id=203',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official topographic and administrative map products require exact applications, approval, payment or use agreements as applicable, and cadastral maps are not public. Product access is not an open licence or postal, civic-address or building relation.',
+  },
+  'bhutan-nlcs-cadastral-information': {
+    id: 'bhutan-nlcs-cadastral-information',
+    name: 'Bhutan NLCS Cadastral Information Division',
+    url: 'https://web.nlcs.gov.bt/cadastral-information-division/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'NLCS manages cadastral surveys, maps, geodatabases and eSakor. Parcels, Thrams and map features remain controlled land evidence and do not become postal surfaces, public civic addresses, buildings or owner and occupant relations.',
+  },
+  'bhutan-nsb-phcb-2017': {
+    id: 'bhutan-nsb-phcb-2017',
+    name: 'Bhutan NSB 2017 Population and Housing Census mapping',
+    url: 'https://www.nsb.gov.bt/wp-content/uploads/2020/10/PHCB2017_national.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official house listing and mapping created urban and rural enumeration areas for statistics. Enumeration areas, household listings and mapped structures are not postal boundaries, public address points or exact address-building relations, and confidential records stay excluded.',
+  },
+  'bhutan-esakor-land-building-transactions': {
+    id: 'bhutan-esakor-land-building-transactions',
+    name: 'Bhutan eSakor land, flat and building transactions',
+    url: 'https://esakor.nlcs.gov.bt/faq_eSakor',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'The controlled NDI-linked transaction service handles land, flat and building records plus identity, permanent-address, party, witness, Thram and plot information. It is private rights evidence, not a public address or building API, postcode polygon or redistribution source.',
   },
   'nlcs-bhutan': {
     id: 'nlcs-bhutan',
@@ -1053,51 +2419,123 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Turkey OSM roads, buildings, POI, Turkish names, and fallback address tags.',
   },
+  'iran-post': {
+    id: 'iran-post', name: 'National Post Company of Iran', url: 'https://post.ir/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official operator and ten-digit postcode reference. No public current bulk assignment or geometry release is established; a place identifier is not automatically a polygon or building relation.',
+  },
+  'iran-post-gnaf': {
+    id: 'iran-post-gnaf', name: 'Iran Post GNAF standard-address service', url: 'https://gnaf.post.ir/', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Operational standard-address, postcode and geocoding evidence source, not open bulk address data. Exact response terms, purpose, retention, privacy and display rights must be pinned.',
+  },
   'gavahi-post-ir': {
-    id: 'gavahi-post-ir',
-    name: 'Iran Post Postal Code Service',
-    url: 'https://gavahi.post.ir/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Iran Post 10-digit postal-code validation reference.',
+    id: 'gavahi-post-ir', name: 'Iran Post postcode certificate service', url: 'https://gavahi.post.ir/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official interactive certificate and validation reference. A query or certificate is not bulk assignment, public household address, geometry or redistribution permission.',
+  },
+  'upu-iran-addressing-2023': {
+    id: 'upu-iran-addressing-2023', name: 'UPU Iran addressing sheet 10/2023', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/irnEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'UPU 10/2023 documents ten digits, zone through identification and forwarding-code components, address elements, and no postcode for P.O. Box or poste restante. Dated examples are not current assignments or reusable address data.',
   },
   'iran-nsdi': {
-    id: 'iran-nsdi',
-    name: 'Iran National Data Infrastructure Geoportal',
-    url: 'https://iransdi.ir/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Iran national spatial data infrastructure reference for geospatial layers and administrative validation.',
+    id: 'iran-nsdi', name: 'Iran national spatial data infrastructure geoportal', url: 'https://iransdi.ir/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Government spatial and administrative context candidate. Pin exact layer, publisher, authority, jurisdiction, terms, validity, CRS, topology and digest; administrative geometry is not postal geometry.',
   },
   'iran-open-data': {
-    id: 'iran-open-data',
-    name: 'Iran Open Data',
-    url: 'https://iranopendata.org/en/map/',
-    kind: 'gazetteer',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Iran open-data map and public-data reference for place-name and regional checks.',
+    id: 'iran-open-data', name: 'Iran Open Data independent map', url: 'https://iranopendata.org/en/map/', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Independent contextual reference, not Iran Post or government authority. Pin the exact item, publisher, method, date, licence and digest before use.',
   },
   'osm-iran': {
-    id: 'osm-iran',
-    name: 'OpenStreetMap Iran',
-    url: 'https://wiki.openstreetmap.org/wiki/Iran',
-    kind: 'address',
-    coverage: 'country',
-    usage: 'validation',
-    license: 'ODbL',
-    notes: 'Iran OSM roads, settlements, Persian names, POI, and fallback address data.',
+    id: 'osm-iran', name: 'OpenStreetMap Iran', url: 'https://wiki.openstreetmap.org/wiki/Iran', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'Community roads, places, addresses and buildings under ODbL; not Iran Post assignment authority, canonical postal geometry, private civic identity, delivery entitlement or territorial authority.',
   },
   'iraq-post': {
     id: 'iraq-post',
-    name: 'Iraq Post',
-    url: 'https://www.iraqpost.net/',
+    name: 'Iraq Post and Savings Company',
+    url: 'https://post.iq/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official operator domain and service reference. No public current bulk postcode assignment, object-type, validity, polygon, address register or building relation is bundled; exact written data and redistribution rights are required.',
+  },
+  'iraq-post-platform': {
+    id: 'iraq-post-platform',
+    name: 'Iraq Post delivery platform',
+    url: 'https://iq-post-platform.post.iq/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official operational delivery platform. Account, merchant, office, address and location input are operational/private records, not an open postcode, address or building dataset.',
+  },
+  'iraq-post-privacy-2025': {
+    id: 'iraq-post-privacy-2025',
+    name: 'Iraq Post app privacy policy 2025',
+    url: 'https://app.post.iq/pages/privacypolicy.html',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Policy updated 2025-05-25 identifies name, email, phone and permitted location as personal data. It is a privacy boundary, not a reuse licence or postal assignment source.',
+  },
+  'upu-iraq-addressing-2005': {
+    id: 'upu-iraq-addressing-2005',
+    name: 'UPU Iraq addressing sheet 03/2005',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/irqEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Documents a five-digit postcode below the locality and labels region, province, delivery type and post-office-number components. The dated sheet and its real examples or contacts are not current assignments, geometry, addresses or reuse permission.',
+  },
+  'iraq-post-2004-code-announcement': {
+    id: 'iraq-post-2004-code-announcement',
+    name: 'Iraqi Post and Ministry of Communications 2004 code announcement',
+    url: 'https://govinfo.library.unt.edu/cpa-iraq/pressreleases/20040524_postal.html',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Historical scheme provenance for five digits covering region, province, post office and office-level delivery categories. It is not a current assignment release, current coverage proof, geometry or licence.',
+  },
+  'iraq-post-new-code-storymap-2025': {
+    id: 'iraq-post-new-code-storymap-2025',
+    name: 'Iraqi postal zone-sector ArcGIS StoryMap 2025',
+    url: 'https://storymaps.arcgis.com/stories/71daa78e94c94969a080c6aecace4f57',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Iraq postal-service reference for local postal-code and delivery validation.',
+    notes: 'Describes converting five-digit post-office numbers to zones and adding a three-character sector derived from roads and streets. ArcGIS metadata shows owner fatima_atlasgis with no licence or access-information statement; Iraq Post authorship, deployment, coverage and reuse rights are unverified, so this is migration-candidate evidence only.',
+  },
+  'iraq-open-government-portal': {
+    id: 'iraq-open-government-portal',
+    name: 'Iraq National Open Government Portal',
+    url: 'https://nogp.gov.iq/',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official public-data catalog. Catalog presence does not make a record postal authority; pin the exact dataset, resource, publisher, schema, update, policy and digest.',
+  },
+  'iraq-open-government-data-policy': {
+    id: 'iraq-open-government-data-policy',
+    name: 'Iraq National Open Government Portal policies',
+    url: 'https://nogp.gov.iq/POLICIES.aspx',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Policy aims to enable reuse and redistribution of public government data subject to data protection, privacy and information-security law. Apply only to an exact published resource and pin policy version and exceptions.',
+  },
+  'iraq-geographic-portal': {
+    id: 'iraq-geographic-portal',
+    name: 'Iraq Geographic Portal',
+    url: 'https://igp.ur.gov.iq/Default.aspx',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Government spatial-data infrastructure coordinated for controlled exchange and public services. Exact layer access, authority, jurisdiction, terms, CRS, topology, validity and digest are required; administrative geometry is not postal geometry.',
+  },
+  'iraq-statistics-gis': {
+    id: 'iraq-statistics-gis',
+    name: 'Iraq Commission of Statistics and GIS',
+    url: 'https://cosit.gov.iq/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Ministry of Planning statistical and GIS authority for administrative and statistical context. Exact artifact, year, definitions, licence and digest are required; statistical boundaries do not establish postal assignments or delivery zones.',
   },
   'osm-iraq': {
     id: 'osm-iraq',
@@ -1141,11 +2579,74 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   libanpost: {
     id: 'libanpost',
     name: 'LibanPost',
-    url: 'https://www.libanpost.com/',
+    url: 'https://www.libanpost.com/english/individuals',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Lebanon postal-service and postal-code reference.',
+    notes: 'Official postal-operator service reference. An exact current response may support postal or P.O. Box context, but the public site is not bulk assignment data, a canonical national postal polygon, complete history, exact building data, delivery entitlement or a blanket reuse licence.',
+  },
+  'libanpost-address-and-nac': {
+    id: 'libanpost-address-and-nac',
+    name: 'LibanPost address details and NAC location service',
+    url: 'https://www.libanpost.com/AddressDetails.aspx?homeService=1&lang=2',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The official workflow captures governorate, district, area, street, building, floor, block, apartment, P.O. Box or ZIP code, map pin and NAC. NAC is a coordinate-derived location token distinct from postcode and AGID; the form is not public bulk address, person, building or geometry data or reuse permission.',
+  },
+  'upu-lebanon-addressing': {
+    id: 'upu-lebanon-addressing',
+    name: 'UPU Lebanon addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/lbnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Documents recipient, organisation, building name or number, floor, apartment or block, location information, street or area, city or village and district (kaza) address structure. Its examples are not current assignments, reusable addresses, postal polygons, building relations or delivery proof.',
+  },
+  'upu-lebanon-postcode-formats-2025': {
+    id: 'upu-lebanon-postcode-formats-2025',
+    name: 'UPU General Addressing Issues Lebanon postcode formats (August 2026 sections)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The reviewed August 2026 Lebanon sections of the Universal POST*CODE reference list Lebanon formats 9999 and 99 999 999. Format evidence does not identify current rows, assignment scope, canonical geometry, addresses, buildings or reuse rights.',
+  },
+  'moph-lebanon-administrative-zones': {
+    id: 'moph-lebanon-administrative-zones',
+    name: 'Lebanon Ministry of Public Health Administrative Zones',
+    url: 'https://maps.moph.gov.lb/server/rest/services/Administrative_Zones/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official ArcGIS governorate, district and cadaster layers require exact layer, edition, CRS, topology, attribution, terms and digest. PCODE fields are administrative identifiers, not postcodes; blank copyright text is not an open licence and no postal relation is supplied.',
+  },
+  'lebanon-atlas-admin-boundaries-2026': {
+    id: 'lebanon-atlas-admin-boundaries-2026',
+    name: 'Lebanon Atlas national and subnational administrative boundaries (2026)',
+    url: 'https://services7.arcgis.com/OixUjmnC9qQkjog0/ArcGIS/rest/services/Lebanon_Atlas_%E2%80%93_National_and_Subnational_Administrative_Boundaries/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'OCHA, HDX, CDR and CAS lineage can validate versioned administrative context, with noted P-code consistency caveats. Exact item rights and digest are mandatory; an administrative P-code or boundary is not a postcode, postal polygon, address or building.',
+  },
+  'dlrc-lebanon-cadastre': {
+    id: 'dlrc-lebanon-cadastre',
+    name: 'Lebanon Directorate General of Land Registry and Cadastre',
+    url: 'https://www.lrc.gov.lb/en/content/work-cadastre-offices',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official cadastral offices maintain demarcation, survey, parcel, map and title-register context through controlled or paid services. Province, caza, cadastral zone, parcel, unit, owner and title data are not public civic-address or building data, a postal relation or redistribution permission.',
+  },
+  'lebanon-law-81-2018-personal-data': {
+    id: 'lebanon-law-81-2018-personal-data',
+    name: 'Lebanon Law 81/2018 personal-data framework',
+    url: 'https://economy.gov.lb/ar/services/%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA-%D8%B0%D8%A7%D8%AA-%D8%A7%D9%84%D8%B7%D8%A7%D8%A8%D8%B9-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Ministry of Economy guidance cites Law 81/2018 and Article 98 for personal-data processing. Recipient, account, address, location pin, NAC, coordinates, P.O. Box holder, owner, parcel, unit and title data require an exact lawful basis and approval before access, linkage or publication.',
   },
   'osm-lebanon': {
     id: 'osm-lebanon',
@@ -1164,7 +2665,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Jordan postal-code and post-office delivery reference.',
+    notes: 'Jordan postal-operator reference. A current pinned Jordan Post result may support a five-digit routing assignment, but it is not a canonical polygon, exact civic address, building relation, delivery entitlement, complete history, or blanket reuse licence.',
   },
   'rjgc-jordan': {
     id: 'rjgc-jordan',
@@ -1173,7 +2674,37 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Jordan national geospatial and cartographic authority reference for maps, imagery, and survey data.',
+    notes: 'Jordan national mapping and survey authority. Exact product, edition, CRS, scale, access terms and rights are mandatory; official mapping does not itself create a postcode assignment, postal polygon, civic address, or public building relation.',
+  },
+  'upu-jordan-addressing-2004': {
+    id: 'upu-jordan-addressing-2004', name: 'UPU Jordan Addressing Sheet 2004', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/jorEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Dated September 2004 syntax evidence for five digits to the right of the locality and the region-department-zone-sector-unit coding description. It is not current assignment rows, postal geometry, civic addresses, buildings, or reuse permission.'
+  },
+  'modee-jordan-postal-policy-2025': {
+    id: 'modee-jordan-postal-policy-2025', name: 'Jordan ICT and Postal Policy 2025', url: 'https://www.modee.gov.jo/EBV4.0/Root_Storage/AR/EB_News/ICTP_Policy_2025.pdf', kind: 'standard', coverage: 'country', usage: 'primary', notes: 'The PDF titled 2025 calls for completion of physical street/building addressing in sections 104 and 131; its 2019 HTTP modification time and planning targets do not establish current implementation. The earlier carrier-route sorting attribution is not supported by the reviewed PDF. Policy evidence is not a postcode polygon, address registry, or building dataset.'
+  },
+  'trc-jordan-postal-sector': {
+    id: 'trc-jordan-postal-sector', name: 'Jordan TRC Postal Sector', url: 'https://trc.gov.jo/EN/ListDetails/Postal_Sector/1289/1', kind: 'standard', coverage: 'country', usage: 'reference', notes: 'Official regulator context for Jordan Post as the public postal operator. Regulatory status does not publish current assignments, geometry, civic addresses, or buildings.'
+  },
+  'jordan-post-offices-open-data-2023': {
+    id: 'jordan-post-offices-open-data-2023', name: 'Jordan Post Offices Open Data', url: 'https://opendata.gov.jo/en/dataset/jordan-post-offices-1661-2023', kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'Jordan Open Government Data License when attached to the exact artifact', notes: 'Official post-office rows include governorate, directorate, address, hours, postal code and property status. They are point or service-routing references, not postal polygons, civic-address coverage, delivery points, or buildings; pin the exact artifact, license, dates, schema, attribution and digest.'
+  },
+  'jordan-open-government-data-license-v1': {
+    id: 'jordan-open-government-data-license-v1', name: 'Jordan Open Government Data License v1.0', url: 'https://www.modee.gov.jo/ebv4.0/root_storage/en/eb_list_page/ogd-license_en.pdf', kind: 'standard', coverage: 'country', usage: 'reference', license: 'Jordan Open Government Data License v1.0', notes: 'Permits reuse of data expressly published under it with required attribution, non-endorsement and disclaimers. A portal page, map, service or institutional source is not covered unless the exact artifact carries the license; Arabic prevails.'
+  },
+  'rjgc-jordan-eservices': {
+    id: 'rjgc-jordan-eservices', name: 'RJGC Geospatial E-services', url: 'https://rjgc.gov.jo/eservices/index.php', kind: 'admin-boundary', coverage: 'country', usage: 'reference', notes: 'Official maps, imagery and geospatial products use account, application and payment workflows. Access is product-specific and does not grant a postal relation or blanket redistribution rights.'
+  },
+  'rjgc-gam-building-mou': {
+    id: 'rjgc-gam-building-mou', name: 'RJGC and Greater Amman Municipality geospatial MoU', url: 'https://www.rjgc.gov.jo/index.php/ar/node/607', kind: 'building', coverage: 'country', usage: 'reference', notes: 'The institutional MoU mentions numbered building points, neighbourhoods, districts, streets and boundaries exchanged with Greater Amman Municipality. Controlled exchange is not a public building/address artifact or reuse licence.'
+  },
+  'dls-jordan-village-codes-2022': {
+    id: 'dls-jordan-village-codes-2022', name: 'Jordan DLS Village Codes Open Data', url: 'https://opendata.gov.jo/en/dataset/dlsvillagecode-1344-2022', kind: 'gazetteer', coverage: 'country', usage: 'reference', license: 'Jordan Open Government Data License when attached to the exact artifact', notes: 'Official village-code administrative and cadastral context. Village codes are not postcodes, postal assignments, civic addresses, building identifiers, or geometry.'
+  },
+  'gam-jordan-streets-2019': {
+    id: 'gam-jordan-streets-2019', name: 'Greater Amman Streets Open Data', url: 'https://opendata.gov.jo/en/dataset/streets-inside-and-outside-265-2019', kind: 'address', coverage: 'country', usage: 'reference', license: 'Jordan Open Government Data License when attached to the exact artifact', notes: 'Official street and planning-area context for the exact licensed spreadsheet. It is not national address coverage, postcode geometry, a civic-address registry, or a building relation.'
+  },
+  'jordan-digital-mailbox-pilot-2026': {
+    id: 'jordan-digital-mailbox-pilot-2026', name: 'Jordan Digital Postal Box Pilot 2026', url: 'https://petra.gov.jo/gweb/index.php/en/news/jordan-post-digital-mailbox-strategic-project-to-build-integrated-national-database', kind: 'address', coverage: 'country', usage: 'reference', notes: 'Official-news evidence of a pilot linking a digital postal box, postal code and home location, with planned Sanad integration. No public production schema, API, bulk dataset, personal-address permission or geometry licence is established.'
   },
   'osm-jordan': {
     id: 'osm-jordan',
@@ -1187,30 +2718,84 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'israel-post': {
     id: 'israel-post',
-    name: 'Israel Post Postal Code Lookup',
-    url: 'https://israelpost.co.il/',
+    name: 'Israel Post postcode lookup',
+    url: 'https://israelpost.co.il/שירותים/איתור-מיקוד/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Israel Post postcode lookup for Hebrew, Arabic, and English address rendering.',
+    notes: 'Official current seven-digit postcode lookup. Israel Post terms say site information is informational only, must not be relied upon for official or commercial use, and all rights are reserved; no responses, addresses, assignments, geometry or building data are bundled or scraped.',
+  },
+  'israel-post-mail-guide-2020': {
+    id: 'israel-post-mail-guide-2020',
+    name: 'Israel Post mail guide 2020',
+    url: 'https://israelpost.co.il/media/2640/149869-002.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Section 7.1 defines a postcode as seven digits representing the mail-delivery address, assigned by the company and updated from time to time. Section 8 defines a separate nine-digit distribution code. The guide is semantics, not a current bulk assignment, postal polygon, address register, building relation or reuse licence.',
+  },
+  'israel-post-terms': {
+    id: 'israel-post-terms',
+    name: 'Israel Post website terms of use',
+    url: 'https://israelpost.co.il/pages/termsofuse',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The current terms state that site information is informational only, is not binding, may not be relied on for official or commercial use, and all rights are reserved. The lookup is therefore reference-only unless a separate written licence is pinned.',
+  },
+  'upu-israel-addressing-2022': {
+    id: 'upu-israel-addressing-2022',
+    name: 'UPU Israel addressing sheet (10/2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/isrFr.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The UPU sheet places seven digits to the left of the locality and documents recipient, house number and street, postcode and locality, and country lines. Its routing note for items to localities under the Palestinian Authority is not an IL assignment, boundary, coverage or sovereignty claim; real examples are not reusable records.',
   },
   'govmap-israel': {
     id: 'govmap-israel',
-    name: 'Govmap Israel API',
-    url: 'https://api.govmap.gov.il/',
+    name: 'Survey of Israel GovMap',
+    url: 'https://www.govmap.gov.il/',
     kind: 'geocoding',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Israel government map API and national geospatial reference for addresses, places, and map layers.',
+    usage: 'validation',
+    notes: 'Survey of Israel government map for address, locality, block and parcel search and map layers. API use can require registration and exact terms; map or search output is a spatial candidate, not Israel Post assignment, licensed postal geometry, exact civic-address relation, building relation or territorial authority.',
+  },
+  'population-authority-israel-street-list': {
+    id: 'population-authority-israel-street-list',
+    name: 'Population and Immigration Authority Israel street list',
+    url: 'https://data.gov.il/he/datasets/population_authority/321',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Periodically published government locality and street reference. Pin the exact resource, publisher metadata, schema, update time, item-specific licence or applicable Data.gov.il terms and digest. Street names do not prove house numbers, postcodes, postal geometry, buildings or delivery.',
+  },
+  'cbs-israel-geography': {
+    id: 'cbs-israel-geography',
+    name: 'Israel Central Bureau of Statistics geography',
+    url: 'https://www.cbs.gov.il/he/cbsNewBrand/Pages/שכבות-ממג-מערכת-מידע-גאוגרפית-GIS.aspx',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official locality and statistical-area GIS layers plus locality, district and region dictionaries. Exact year, artifact, definitions, licence, CRS and digest must be pinned. Statistical and administrative geography is not a postcode, postal polygon, address or building relation.',
   },
   'data-gov-il': {
     id: 'data-gov-il',
-    name: 'Israel Open Government Data',
+    name: 'Israel Government Data Portal',
     url: 'https://data.gov.il/',
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Israel open-government data portal for datasets and administrative validation references.',
+    notes: 'Government open-data catalog. Each production artifact must pin its exact dataset, resource, publisher, schema, update time, item-specific licence or applicable portal terms and digest; catalog presence alone is not postal or building authority.',
+  },
+  'data-gov-il-terms-2025': {
+    id: 'data-gov-il-terms-2025',
+    name: 'Data.gov.il open-data terms updated 2025-08-30',
+    url: 'https://data.gov.il/terms-of-use',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The default portal licence allows worldwide royalty-free commercial and non-commercial copying, distribution and derivatives with source attribution, subject to dataset-specific overrides and restrictions including privacy, misleading use, unlawful use, third-party rights, protected systems and software. Pin the terms effective at retrieval.',
   },
   'osm-israel': {
     id: 'osm-israel',
@@ -1220,7 +2805,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     coverage: 'country',
     usage: 'validation',
     license: 'ODbL',
-    notes: 'Israel OSM address, road, building, Hebrew/Arabic/English names, and fallback data.',
+    notes: 'OSM road, address and building validation under ODbL. OSM never supplies Israel Post assignment, canonical postal geometry, legal civic-address identity, delivery entitlement or territorial authority.',
   },
   'palestine-open-data-postcodes': {
     id: 'palestine-open-data-postcodes',
@@ -1229,7 +2814,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Palestine open-data postal-code dataset for P3/P7 postal zones and delivery validation.',
+    notes: 'MTDE catalog separates P3 postal-area lists/polygons and P7 delivery-point coordinates. Reviewed resources are dated 2021; current validity, exact CC BY version, CRS and complete geometry need verification. Samples, P7 suffixes and locality names do not establish exact house numbers or building relations.',
   },
   'palestine-post': {
     id: 'palestine-post',
@@ -1238,7 +2823,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Palestine postal-service reference for postal-code and delivery metadata.',
+    notes: 'Palestine Post / MTDE official postal reference. P3 postal areas and P7 final delivery points remain distinct; public lookup is not a complete current polygon artifact or building/address relation.',
   },
   'osm-palestine': {
     id: 'osm-palestine',
@@ -1249,6 +2834,71 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'validation',
     license: 'ODbL',
     notes: 'Palestine OSM roads, places, Arabic/English names, POI, and fallback address tags.',
+  },
+  'spl-national-address-components': {
+    id: 'spl-national-address-components',
+    name: 'SPL National Address Components',
+    url: 'https://narg.address.gov.sa/en/national-address-1/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official semantics define a five-digit postal code plus Building Number, Street, District, City and four-digit Secondary or Additional Number. Component semantics alone are not current assignment, polygon, footprint, unit or deliverability evidence.',
+  },
+  'spl-national-address-api-v31': {
+    id: 'spl-national-address-api-v31',
+    name: 'SPL National Address API v3.1',
+    url: 'https://api.address.gov.sa/apidocumentation',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Credentialed, purpose-limited SPL API; exact product, plan, terms, display, retention and redistribution conditions apply',
+    notes: 'Pinned responses can supply public National Address components, opaque PKAddressID, BuildingNumber, PostCode, AdditionalNumber, optional UnitNumber and a point. A point or nullable PolygonString is not a postal polygon, parcel or building footprint.',
+  },
+  'spl-national-address-api-terms': {
+    id: 'spl-national-address-api-terms',
+    name: 'SPL National Address API Terms of Use',
+    url: 'https://api.address.gov.sa/termsofuse',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Limited non-exclusive non-sublicensable API licence; exact current terms control',
+    notes: 'Legal boundary only: credentials, purpose limits, privacy disclosure, requested removal, rate limits and restricted resale or sublicensing do not grant bulk harvesting or repository redistribution rights.',
+  },
+  'spl-national-address-short-address': {
+    id: 'spl-national-address-short-address',
+    name: 'SPL National Address Short Address',
+    url: 'https://narg.address.gov.sa/en/door-step/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Short Address has four letters and four numbers and resolves through SPL. It is a typed lookup identifier, not geometry, a reusable building footprint, a unit, or permission to expose account identity.',
+  },
+  'geosa-saudi-geospatial-foundation-themes': {
+    id: 'geosa-saudi-geospatial-foundation-themes',
+    name: 'GEOSA National Geospatial Foundation Themes and Governance',
+    url: 'https://www.geoportal.sa/Geoportal/pdf/Saudi%20Arabian%20National%20Geospatial%20Governance.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official governance defines separate Buildings, Land Parcels, National Address and administrative themes under SANSRS. A standard or theme listing is metadata, not a redistributable dataset or cross-theme join.',
+  },
+  'rega-saudi-geospatial-real-estate-portal': {
+    id: 'rega-saudi-geospatial-real-estate-portal',
+    name: 'REGA Geospatial Real Estate Portal',
+    url: 'https://rega.gov.sa/en/rega-services/platforms/geospatial-real-estate-portal/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official viewer can validate regions, cities, neighborhoods, land plots and registration areas. Viewer visibility is not reusable vector, parcel-to-address, building, ownership or redistribution authority.',
+  },
+  'rega-saudi-real-estate-registration-framework': {
+    id: 'rega-saudi-real-estate-registration-framework',
+    name: 'REGA Real Estate Registration Law and Implementing Regulations',
+    url: 'https://rega.gov.sa/en/laws-and-decisions/regulations-and-by-laws/regulations/implementing-regulations-of-the-law-of-real-estate-registration/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Legal and cadastral semantics describe Real Estate Maps and Sheets. They do not publish parcel vectors or authorize public owner, rightsholder, title, encumbrance, value or transaction output.',
   },
   'spl-sa': {
     id: 'spl-sa',
@@ -1292,9 +2942,46 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     name: 'Dubai Makani Open Data',
     url: 'https://www.dm.gov.ae/open-data2/open-data-for-makani/',
     kind: 'geocoding',
+    coverage: 'subnational',
+    usage: 'reference',
+    license: 'Conditional Dubai Municipality Makani reuse policy; not unrestricted OSS',
+    notes: 'Dubai entrance-location reference only. No verified current API, national coverage, postal polygon or building-name relation; transformation and redistribution clearance is pending.',
+  },
+  'emirates-post-po-box': {
+    id: 'emirates-post-po-box',
+    name: 'Emirates Post branch-scoped PO Box service reference',
+    url: 'https://www.emiratespost.ae/faq',
+    kind: 'standard',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Dubai Makani smart geo-tagging open data for precise building/location addressing in the UAE.',
+    usage: 'reference',
+    notes: 'Service documentation is not a current box-assignment dataset. PO Box identity requires its operator and branch; no subscriber or recipient records are public evidence.',
+  },
+  'dmt-onwani-addressing': {
+    id: 'dmt-onwani-addressing',
+    name: 'Abu Dhabi DMT Onwani addressing reference',
+    url: 'https://pages.dmt.gov.ae/en/onwani',
+    kind: 'address',
+    coverage: 'subnational',
+    usage: 'reference',
+    notes: 'Onwani includes postal codes within Abu Dhabi addressing. The public page is not an editioned assignment export, geometry or a licence to republish address data.',
+  },
+  'dmt-onwani-terms': {
+    id: 'dmt-onwani-terms',
+    name: 'Abu Dhabi DMT website terms and privacy notice',
+    url: 'https://www.dmt.gov.ae/en/Terms-and-Conditions',
+    kind: 'standard',
+    coverage: 'subnational',
+    usage: 'reference',
+    notes: 'A general website privacy notice does not clear dataset-specific transformation and redistribution rights.',
+  },
+  'upu-uae-addressing-2014': {
+    id: 'upu-uae-addressing-2014',
+    name: 'UPU United Arab Emirates addressing guide (09/2014)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/areEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Historical PO Box addressing reference, not a current dataset or evidence that municipal postal codes do not exist. Do not override current Onwani documentation.',
   },
   'osm-uae': {
     id: 'osm-uae',
@@ -1312,8 +2999,8 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     url: 'https://geoportal.gisqatar.org.qa/',
     kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Qatar national GIS geoportal for zones, streets, buildings, and administrative spatial validation.',
+    usage: 'validation',
+    notes: 'Official viewer and discovery metadata only. Current QARS/road service rights, coverage and explicit address-building relations are unverified; no postal polygon or exact building inference is permitted.',
   },
   'osm-qatar': {
     id: 'osm-qatar',
@@ -1334,6 +3021,71 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'reference',
     notes: 'Bahrain open-data portal and map reference for public geodata and regional validation.',
   },
+  'bahrain-post-services-directory': {
+    id: 'bahrain-post-services-directory',
+    name: 'Bahrain Post Services Directory',
+    url: 'https://www.bahrainpost.gov.bh/en/images/pdf/services-directory-eng.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Bahrain Post directory reference concerns three- and four-digit locality postcodes; current document bytes were not obtained in the 2026-08-28 review. Directory examples are not a complete postcode-block assignment release, canonical boundary, delivery entitlement or bulk redistribution grant.',
+  },
+  'upu-bahrain-addressing': {
+    id: 'upu-bahrain-addressing',
+    name: 'UPU Bahrain addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/bhrEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official addressing metadata defines three or four digits to the right of the locality, valid range 1XX to 12XX, and home versus P.O. box examples. Syntax and examples do not establish a complete allocation table, polygon, box subscriber or building.',
+  },
+  'iga-bahrain-address-services': {
+    id: 'iga-bahrain-address-services',
+    name: 'Bahrain iGA Building and Establishment Address Services',
+    url: 'https://www.iga.gov.bh/en/category/building-and-establishment-address-services',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official iGA services issue, modify and delete building address certificates and numbers. A certificate or registered building number is strong civic-address evidence, but not an unrestricted footprint; CPR, owners, occupants, deeds, applications and contact data are excluded.',
+  },
+  'bahrain-open-data-terms': {
+    id: 'bahrain-open-data-terms',
+    name: 'Bahrain Open Data Portal Terms of Use',
+    url: 'https://www.data.gov.bh/pages/terms-and-conditions/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Bahrain Open Data Portal Terms of Use',
+    notes: 'Portal datasets permit royalty-free copying, distribution, adaptation and applications subject to source/date attribution, transformation notice, prescribed disclaimer, sublicence propagation and removal on iGA request. These portal terms cover this site and linked iGA-owned sites. The linked government licence v1.0 (20 May 2025) also covers officially published open datasets on other government sites, not every webpage, viewer or controlled record.',
+  },
+  'bahrain-open-data-geographic-locations': {
+    id: 'bahrain-open-data-geographic-locations',
+    name: 'Bahrain Open Data Geographic Locations',
+    url: 'https://www.data.gov.bh/explore/dataset/geographical-locations-of-landmarks/api/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Bahrain Open Government Data License v1.0 and applicable portal terms',
+    notes: 'The inspected public-place points contain 27 rows and 20 distinct block labels, with no explicit postcode field. Their labels and coordinates are not a complete address register, block polygon, building footprint or postcode boundary. The metadata bbox is an envelope; null licence fields do not negate the portal-linked government licence.',
+  },
+  'bahrain-municipal-geographic-explorer': {
+    id: 'bahrain-municipal-geographic-explorer',
+    name: 'Bahrain Municipal Geographic Explorer',
+    url: 'https://www.mun.gov.bh/newportal/ar/municipal-affairs/services/almstkshf-albldy-aljghrafy',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official interactive map supports location, area classification and road reference. Viewer availability is not a vector licence, exact block-postcode crosswalk, canonical postal surface or legal survey.',
+  },
+  'slrb-bahrain-cadastre': {
+    id: 'slrb-bahrain-cadastre',
+    name: 'Bahrain Survey and Land Registration Bureau Cadastre',
+    url: 'https://www.slrb.gov.bh/en/cadastralsurveys',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'SLRB is the cadastral authority for property boundaries and paid/requested maps. A parcel or deed map is not a postal block, public building footprint or address-building relation, and owner, CPR, title, right and restriction data are never public AGID output.',
+  },
   'osm-bahrain': {
     id: 'osm-bahrain',
     name: 'OpenStreetMap Bahrain',
@@ -1346,12 +3098,66 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   },
   'kuwait-post': {
     id: 'kuwait-post',
-    name: 'Kuwait Ministry Postal Services',
-    url: 'https://www.moc.gov.kw/en/important-links?tab=3',
+    name: 'Kuwait Ministry of Communications postal-code tables',
+    url: 'https://www.moc.gov.kw/en/important-links?tab=2',
     kind: 'postal-code',
     coverage: 'country',
+    usage: 'primary',
+    notes: 'Official tables distinguish governorate, area and block-number assignments from P.O. box-number ranges. A row is current assignment evidence when captured and pinned; it is not a polygon, complete history, public bulk API or redistribution grant.',
+  },
+  'upu-kuwait-addressing': {
+    id: 'upu-kuwait-addressing',
+    name: 'UPU Kuwait addressing sheet',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kwtEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
     usage: 'reference',
-    notes: 'Kuwait Ministry of Communications page listing postal codes and post-office numbers.',
+    notes: 'Official addressing reference specifies five digits to the left of KUWAIT and separates P.O. box or block, zone and sector coding. Its examples are not a current assignment database, postal surface or building relation.',
+  },
+  'paci-kuwait-finder': {
+    id: 'paci-kuwait-finder',
+    name: 'PACI Kuwait Finder',
+    url: 'https://pacigis.github.io/?language=en',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official PACI address and landmark viewer with informational-only, as-is and boundary-accuracy disclaimers. View access is not bulk redistribution permission; map boundaries are not legal, engineering, survey or canonical postal geometry.',
+  },
+  'paci-kuwait-address-services': {
+    id: 'paci-kuwait-address-services',
+    name: 'PACI address availability and civil-address services',
+    url: 'https://services.paci.gov.kw/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official services register and validate civil addresses and automated unit or property numbers. Personal Civil ID, tenancy, owner and resident records are restricted and never public AGID output.',
+  },
+  'paci-kuwait-building-register': {
+    id: 'paci-kuwait-building-register',
+    name: 'PACI building and automated-number services',
+    url: 'https://services.paci.gov.kw/applications-guide',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official workflows add or update buildings and issue automated parcel or address numbers. A registered identifier is address evidence, not a public building footprint, ownership record or redistribution permission; exact geometry needs a permitted stable relation.',
+  },
+  'kuwait-municipality-parcels': {
+    id: 'kuwait-municipality-parcels',
+    name: 'Kuwait Municipality GIS parcel service',
+    url: 'https://gismaps.baladia.gov.kw/arcgis/rest/services/KM/KM_Dynamic_All_Parcels/MapServer/layers',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Municipality ArcGIS layers expose parcel and base-map metadata in Kuwait-specific CRS. Endpoint queryability is not licence or topology approval; a parcel is not a postal block, civic building or ownership output.',
+  },
+  'kuwait-csb-census-gis': {
+    id: 'kuwait-csb-census-gis',
+    name: 'Kuwait CSB Census 2011 GIS',
+    url: 'https://gis.csb.gov.kw/en/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official 2011 census portal provides historical governorate, population-settlement and municipal-block statistical context with accuracy, timeliness and completeness disclaimers. It is not current postal assignment, canonical postal geometry or unrestricted redistribution authority.',
   },
   'osm-kuwait': {
     id: 'osm-kuwait',
@@ -1362,6 +3168,80 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     usage: 'validation',
     license: 'ODbL',
     notes: 'Kuwait OSM roads, blocks, areas, POI, and fallback address tags.',
+  },
+  'upu-oman-postal-addressing': {
+    id: 'upu-oman-postal-addressing',
+    name: 'UPU Oman Postal Addressing System',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/omnEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The January 2026 UPU/Oman Post sheet defines three digits coded by post office and region and placed above the locality for P.O. box delivery. It is format metadata, not a current code table, subscriber record, office catchment or polygon.',
+  },
+  'oman-post-office-locator': {
+    id: 'oman-post-office-locator',
+    name: 'Oman Post Office Locator',
+    url: 'https://www.omanpost.om/index.php/office-locator',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Oman Post website terms; exact record reuse and redistribution permission must be separately pinned',
+    notes: 'Pinned records can validate a displayed office, three-digit code and office point. A locator point is not a service catchment, postal polygon, P.O. box subscriber, building or delivery entitlement.',
+  },
+  'oman-post-website-terms': {
+    id: 'oman-post-website-terms',
+    name: 'Oman Post Website Terms and Privacy Policy',
+    url: 'https://website.omanpost.om/index.php/privacy-and-policy',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Website viewing only; republishing and data harvesting are restricted unless separate permission controls',
+    notes: 'Legal boundary only. Public page access does not authorize scraping, bulk reuse, derivative publication or redistribution of office, address, P.O. box or subscriber records.',
+  },
+  'gov-oman-building-addressing-service': {
+    id: 'gov-oman-building-addressing-service',
+    name: 'Gov.om Building Addressing or Numbering Service',
+    url: 'https://gov.om/en/w/request-building-addressing-or-numbering',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Muscat Governorate workflow metadata confirms a building-addressing or numbering service. The service page is not a reusable address register, building footprint source or claim of national coverage.',
+  },
+  'ncsi-oman-wilayat-boundaries': {
+    id: 'ncsi-oman-wilayat-boundaries',
+    name: 'NCSI Oman Wilayat Boundaries',
+    url: 'https://ncsigeostatportal.ncsi.gov.om/server/rest/services/NCSIData/WilayatB/FeatureServer/layers',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official metadata names the Ministry of Interior as owner and NCSI as alternative source. Exact edition, owner permission, dataset licence, fields, CRS and digest must be pinned; a wilayat is not a postal catchment.',
+  },
+  'ncsi-oman-open-government-data-policy': {
+    id: 'ncsi-oman-open-government-data-policy',
+    name: 'Oman Open Government Data Policy',
+    url: 'https://data.ncsi.gov.om/sites/default/files/documents/Open%20_Government_data_policy.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'The national policy governs data actually published as open data. It is not the dataset licence for every portal layer and does not validate postal, address or building records.',
+  },
+  'nsgia-oman-geospatial-governance': {
+    id: 'nsgia-oman-geospatial-governance',
+    name: 'NSGIA Oman Geospatial Governance and ONGD17',
+    url: 'https://nsaomangeoportal.gov.om/en/about-nsa',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'NSGIA governs national geospatial standards and ONGD17. Governance, map indexes and datum pages are not postal assignments, building datasets, product licences or automatic WGS84 transform attestations.',
+  },
+  'nsgia-oman-portal-terms': {
+    id: 'nsgia-oman-portal-terms',
+    name: 'NSGIA Geoportal Terms and Conditions',
+    url: 'https://gisserver.nsaomangeoportal.gov.om/en/node/83',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Registration, authorization and portal access terms are legal metadata. Viewer or query access is not a postal assignment, feature licence or repository redistribution permission.',
   },
   'nsgia-oman': {
     id: 'nsgia-oman',
@@ -1417,7 +3297,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Armenia official postal-index search.',
+    notes: 'Official HayPost four-digit postal-region and post-office assignment search. Syntax or a post-office point is not a canonical postcode polygon, and public search does not establish bulk reuse rights.',
   },
   'armstat-geodata': {
     id: 'armstat-geodata',
@@ -1431,20 +3311,38 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'cadastre-armenia': {
     id: 'cadastre-armenia',
     name: 'Cadastre Committee of Armenia',
-    url: 'https://www.cadastre.am/',
+    url: 'https://www.cadastre.am/index.php/en/cadastre_mapping',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Armenian cadastral and map reference for parcels, communities, roads, and address-adjacent geography.',
+    notes: 'Official cadastral-map and boundary authority. Review every layer, access class, license or fee terms, schema, coverage, territorial vintage, CRS, and digest; it is not postal assignment authority.',
   },
   'haypost-address-reference': {
     id: 'haypost-address-reference',
     name: 'HayPost Address and Postal Index Reference',
-    url: 'https://www.haypost.am/en/find-index',
+    url: 'https://www.haypost.am/image/Editor/d/3/d3cded6c5e6205e50a54b3c9d7018e78.pdf',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Armenian postal-index lookup and delivery reference for settlement and postal-code validation.',
+    notes: 'Official HayPost post-office directory mapping four-digit codes to regions, offices, and office addresses; it is delivery-network evidence, not an official postcode-area dataset or bulk license.',
+  },
+  'armenia-real-estate-address-register': {
+    id: 'armenia-real-estate-address-register',
+    name: 'Armenia Real Estate Address Registration',
+    url: 'https://www.cadastre.am/index.php/en/real-estate-registration',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Cadastre Committee address registration based on authorized community decisions. Public search does not establish bulk reuse rights, and an address point is not a building footprint.',
+  },
+  'armenia-national-geoportal-buildings': {
+    id: 'armenia-national-geoportal-buildings',
+    name: 'Armenia National Geoportal Buildings',
+    url: 'https://www.cadastre.am/news/1786',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official National Geoportal building and cadastral layers. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; containment and proximity remain candidates and layer rights require review.',
   },
   'geonames-armenia': {
     id: 'geonames-armenia',
@@ -1459,29 +3357,38 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   'azerbaijan-state-committee-property': {
     id: 'azerbaijan-state-committee-property',
     name: 'Azerbaijan State Service on Property Issues',
-    url: 'https://emlak.gov.az/',
+    url: 'https://emlak.gov.az/az/news/view/5733-Da%C5%9F%C4%B1nmaz-%C9%99mlak-nec%C9%99-kadastr-u%C3%A7otuna-al%C4%B1n%C4%B1r',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Azerbaijani cadastral and property reference for administrative geography and address-adjacent validation.',
+    notes: 'Official cadastral and property authority for parcel, building-object, and jurisdiction context. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; proximity is insufficient.',
+  },
+  'azerbaijan-address-register': {
+    id: 'azerbaijan-address-register',
+    name: 'Azerbaijan Address Register Information System (ÜRIS)',
+    url: 'https://emlak.gov.az/az/news/view/9349-%C3%9Cnvan-Reyestri-%C4%B0nformasiya-Sistemi-n%C9%99dir-v%C9%99-sistemin-hans%C4%B1-%C3%BCst%C3%BCnl%C3%BCkl%C9%99ri-var',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address-register reference for settlements, postcodes, transport infrastructure, and immovable-property addresses with source object identifiers; portal visibility is not a bulk redistribution license.',
   },
   'azerbaijan-open-data': {
     id: 'azerbaijan-open-data',
     name: 'Azerbaijan Open Data Portal',
-    url: 'https://www.opendata.az/',
+    url: 'https://opendata.az/en',
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Azerbaijan open-data reference for public administrative and geographic datasets where available.',
+    notes: 'Dataset-discovery and validation only until each publisher, license, schema, coverage, territorial vintage, update date, and digest passes dataset-by-dataset review.',
   },
   'azerpost-address-reference': {
     id: 'azerpost-address-reference',
     name: 'Azerpost Postal Reference',
-    url: 'https://www.azerpost.az/',
+    url: 'https://www.azerpost.az/az/tez-tez-verilen-suallar/umumi-br-suallar/yasadigim-unvanin-poct-indeksini-nece-oyrene-bilerem',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Azerbaijan postal and delivery reference for postcode and locality validation.',
+    notes: 'Official postcode, branch, and locality assignment reference. Search results and office points are not canonical postcode polygons, and public search does not imply bulk reuse rights.',
   },
   'geonames-azerbaijan': {
     id: 'geonames-azerbaijan',
@@ -1539,23 +3446,145 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'CC BY 4.0',
     notes: 'Open gazetteer fallback for Georgian alternate settlement names and coordinates.',
   },
-  'post-kz': {
-    id: 'post-kz',
-    name: 'Kazpost',
-    url: 'https://post.kz/',
+  'georgian-post-postcode-finder': {
+    id: 'georgian-post-postcode-finder',
+    name: 'Georgian Post Postcode Finder',
+    url: 'https://www.gpost.ge/help/postal-codes',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Kazakhstan postcode lookup and postal reference.',
+    notes: 'Official four-digit operator assignment lookup; returned post office or locality is not a postcode polygon, and a public finder is not an open bulk release.',
+  },
+  'georgian-post-addressing-guide': {
+    id: 'georgian-post-addressing-guide',
+    name: 'Georgian Post Addressing Guide',
+    url: 'https://www.gpost.ge/Content/ContentFiles/addressingRule24125.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official format guidance places the postcode before the locality; examples and syntax are not evidence of current allocation, address existence, geometry, or deliverability.',
+  },
+  'napr-georgia-address-registry': {
+    id: 'napr-georgia-address-registry',
+    name: 'NAPR Georgia Address Registry',
+    url: 'https://www.napr.gov.ge/en/page/frequently-asked-questions/address-registration',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address identity is a unique text record for a building, structure, parcel, apartment, or other object; the public FAQ or search is not a bulk release, and address identity is not a building footprint or postcode assignment.',
+  },
+  'nsdi-georgia-address-layer': {
+    id: 'nsdi-georgia-address-layer',
+    name: 'Georgian NSDI Address Layer and Named Streets',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official spatial address context requires the exact resource-specific access licence, metadata, endpoint, schema, coverage, validity, CRS, and digest; portal visibility is not a blanket open licence.',
+  },
+  'nsdi-georgia-registered-buildings': {
+    id: 'nsdi-georgia-registered-buildings',
+    name: 'Georgian NSDI Registered Buildings',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Exact address-to-building output needs an explicit relationship, common authoritative identifier, or reviewed crosswalk; footprint, containment, parcel overlap, and proximity remain candidate evidence only.',
+  },
+  'nsdi-georgia-registered-parcels': {
+    id: 'nsdi-georgia-registered-parcels',
+    name: 'Georgian NSDI Registered Parcels',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'A registered parcel is not a building, address link, or postcode area and never authorizes publication of an owner, rightsholder, occupant, title, or restriction record.',
+  },
+  'nsdi-georgia-administrative-boundaries': {
+    id: 'nsdi-georgia-administrative-boundaries',
+    name: 'Georgian NSDI Administrative and Settlement Boundaries',
+    url: 'https://nsdi.gov.ge/en/geoportal',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official administrative and settlement boundaries never create postcode membership, delivery coverage, sovereignty, or permission to fill a coverage gap from the nearest feature.',
+  },
+  'geostat-georgia-administrative-classification': {
+    id: 'geostat-georgia-administrative-classification',
+    name: 'GeoStat Georgia Administrative Classification',
+    url: 'https://www.geostat.ge/index.php/en/modules/categories/738/the-geographical-distribution-of-the-population-and-internal-migration',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official statistical and administrative classification is not postal assignment evidence and is not geometry unless a separate rights-cleared spatial release is pinned.',
+  },
+  'post-kz': {
+    id: 'post-kz', name: 'Kazpost / QazPost', url: 'https://post.kz/?lang=en', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official national postal operator and current postcode-search reference. No public current bulk assignment, address, polygon or automatic building relation is established.',
+  },
+  'upu-kazakhstan-addressing-2025': {
+    id: 'upu-kazakhstan-addressing-2025', name: 'UPU Kazakhstan addressing sheet 07/2025', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kazEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 07/2025 sheet documents coexistence of seven-character alphanumeric codes and legacy six-digit numeric indices during transition, plus home, rural, organisation, P.O. Box and parcel-locker address forms. Its real examples are not reusable assignments, geometry or building relations.',
+  },
+  'kazakhstan-postal-index-rules-2026': {
+    id: 'kazakhstan-postal-index-rules-2026', name: 'Kazakhstan postal-index assignment rules 2026', url: 'https://adilet.zan.kz/rus/docs/V1600014158', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current rules define a first Latin capital/region/city code, two-digit address block and final letter-digit real-estate-object sequence. Composition and database access language are legal context, not a row, geometry or bulk redistribution licence.',
+  },
+  'kazakhstan-post-law': {
+    id: 'kazakhstan-post-law', name: 'Kazakhstan Post Law', url: 'https://www.adilet.zan.kz/eng/docs/Z1600000498', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Defines national-operator duties to use the Address Register, assign codes to real-estate objects and maintain the unified database. Statutory duties do not themselves publish rows, geometry or reuse rights.',
+  },
+  'kazakhstan-addressing-rules-2026': {
+    id: 'kazakhstan-addressing-rules-2026', name: 'Kazakhstan real-estate addressing rules 2026', url: 'https://adilet.zan.kz/rus/docs/V2600038643', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Defines Digital Address Register registration and the separate 16-character RKA. RKA is not a postcode, AGID cell, cadastral identifier, footprint, owner or blanket-public record.',
+  },
+  'kazakhstan-address-register': {
+    id: 'kazakhstan-address-register', name: 'Kazakhstan address certificate and RKA service', url: 'https://www.gov.kz/services/3690?lang=en', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'A separate 16-character RKA and an authenticated government response may establish response-specific registered-address evidence. The service is not an open national address or building corpus and needs lawful purpose, privacy and display rights.',
+  },
+  'kazakhstan-nsdi-use-rules-2023': {
+    id: 'kazakhstan-nsdi-use-rules-2023', name: 'Kazakhstan NSDI use rules', url: 'https://adilet.zan.kz/rus/docs/V2300032134', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Rules provide search, view, download and copy services and generally accessible data without charge. The exact dataset, owner, metadata, access class and reuse conditions still must be pinned; this is not a postal licence.',
+  },
+  'kazakhstan-public-cadastral-map': {
+    id: 'kazakhstan-public-cadastral-map', name: 'Kazakhstan public cadastral map', url: 'https://map.gov4c.kz/egkn/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official interactive parcel and cadastre context requires exact layer rights, schema, CRS, validity and digest. A parcel is not postal geometry and does not establish an address-building relation.',
+  },
+  'kazakhstan-real-estate-rights-register': {
+    id: 'kazakhstan-real-estate-rights-register', name: 'Kazakhstan legal cadastre and real-estate rights register', url: 'https://www.gov.kz/memleket/entities/adilet-mng/activities/11887', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'The legal cadastre includes property rights and rights holders. It is purpose-limited and potentially personal, not an open address corpus, postcode assignment, building crosswalk or public household data.',
   },
   'pochta-uz': {
-    id: 'pochta-uz',
-    name: 'Uzbekiston Pochtasi Postal Index Search',
-    url: 'https://www.uz.post/',
-    kind: 'postal-code',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Uzbekistan official postal-index lookup.',
+    id: 'pochta-uz', name: 'O‘zbekiston pochtasi AJ / UzPost', url: 'https://uz.post/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official operator and six-digit postal-index reference. No public page alone grants current bulk assignments, canonical polygons, address harvesting or automatic building relations.',
+  },
+  'uzpost-index-map': {
+    id: 'uzpost-index-map', name: 'UzPost address and postal-index map', url: 'https://uz.post/map', kind: 'geocoding', coverage: 'country', usage: 'primary',
+    notes: 'Current operational address and index search with post-office categories and points; pin exact responses and terms. Interactive access is not permission to harvest addresses or turn an office point into a delivery polygon.',
+  },
+  'upu-uzbekistan-addressing-2019': {
+    id: 'upu-uzbekistan-addressing-2019', name: 'UPU Uzbekistan addressing sheet 07/2019', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/uzbEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 07/2019 sheet documents six digits before locality, delivery-post-office or hub and regional components, separate Tashkent coding and address elements. Dated examples are not current assignments, geometry or building relations.',
+  },
+  'uzbekistan-postal-index-open-data-2019': {
+    id: 'uzbekistan-postal-index-open-data-2019', name: 'Uzbekistan official postal-index open data 2019', url: 'https://olddata.gov.uz/en/datasets/7048', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Official dated branch, post-office name and postal-index list last modified in 2019. It has no geometry and requires exact-version provenance, attribution and current operator validation before production use.',
+  },
+  'uzbekistan-open-data-terms': {
+    id: 'uzbekistan-open-data-terms', name: 'Uzbekistan Open Data Portal reuse terms', url: 'https://olddata.gov.uz/en/pages/copyright', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Portal open data may be reused, modified and used commercially with lawful use, no distortion and source attribution; pin the terms snapshot and any exact-resource override.',
+  },
+  'uzbekistan-open-data-registry-2026': {
+    id: 'uzbekistan-open-data-registry-2026', name: 'Uzbekistan government open-data registry 2026', url: 'https://gov.uz/en/digital/pages/open_data_registry', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Current government catalog lists “Zip Code Addresses”; catalog presence is discovery metadata, not a postal assignment, row, geometry, exact licence or current validation artifact.',
+  },
+  'uzbekistan-cadastre-agency': {
+    id: 'uzbekistan-cadastre-agency', name: 'Cadastre Agency of Uzbekistan', url: 'https://gov.uz/en/kadastr', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official cadastral and spatial context requires exact resource, authority, jurisdiction, access, terms, validity, privacy, CRS and digest; cadastral or administrative geometry is not postal geometry.',
+  },
+  'uzbekistan-state-real-estate-register': {
+    id: 'uzbekistan-state-real-estate-register', name: 'Uzbekistan state register of rights to real estate', url: 'https://gov.uz/en/pages/kochmas_mulklarga_bolgan_huquqlar_reyestri', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Official register concerns real estate, rights and rights holders. It is potentially personal and purpose-limited, not an open address or building corpus and not a postcode-to-building crosswalk.',
   },
   'datahub-postal-kz': {
     id: 'datahub-postal-kz',
@@ -1564,7 +3593,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Open Kazakhstan postal-code dataset useful as a validation fallback.',
+    notes: 'Third-party validation candidate with no current official-assignment or geometry authority; excluded from the KZ production source profile until exact provenance, update and licence are reviewed.',
   },
   'kazakhstan-nsdi': {
     id: 'kazakhstan-nsdi',
@@ -1573,7 +3602,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Kazakhstan national spatial data infrastructure geoportal for open geospatial data, administrative layers, and official map validation.',
+    notes: 'Government NSDI supports spatial search, view, download and geoservices. Pin the exact dataset, owner, metadata, access class, terms, validity, CRS, topology and digest; portal visibility is not postal assignment, building linkage or blanket redistribution permission.',
   },
   'qazpost-open-api': {
     id: 'qazpost-open-api',
@@ -1582,7 +3611,7 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Kazakhstan postal address search API for postcode, street, and locality validation.',
+    notes: 'Bearer-token API service 26 searches address, new postcode or RKA and returns multilingual address fields. A pinned response is operational evidence only; access is not open bulk address, customer or geometry data.',
   },
   'osm-kazakhstan': {
     id: 'osm-kazakhstan',
@@ -1622,42 +3651,45 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
     license: 'ODbL',
     notes: 'Uzbekistan OSM streets, settlements, local Uzbek/Russian names, POI, and fallback address data.',
   },
+  'kyrgyz-post-new-postal-codes-2025': {
+    id: 'kyrgyz-post-new-postal-codes-2025', name: 'Kyrgyz Post New Postal Codes', url: 'https://post.kg/language/en/new-postal-codes/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Current operator directory published 16 October 2025 and updated 28 October 2025. It presents six-digit codes with branch and address context; one code may have multiple rows, and the non-numeric mobile post office is a route-like postal object. It supplies no official polygon or building relation and states no reusable bulk-data licence.',
+  },
+  'kyrgyz-post-address-guidance': {
+    id: 'kyrgyz-post-address-guidance', name: 'Kyrgyz Post Address and Postcode Guidance', url: 'https://post.kg/language/en/frequently-asked-questions/', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Current operator guidance describes locality, district, region, street, house or building, apartment, P.O. Box and postcode fields and lookup by street plus house or building. It is guidance, not a public address corpus, building relation or geometry dataset.',
+  },
+  'upu-kyrgyzstan-addressing-2019': {
+    id: 'upu-kyrgyzstan-addressing-2019', name: 'UPU Kyrgyzstan Addressing Sheet 03/2019', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kgzEn.pdf', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Dated UPU 03/2019 sheet documents six digits as country, three region digits and two post office digits plus urban, rural and P.O. Box address elements. Its examples supply no current assignment, coordinate geometry, building relation or redistribution right.',
+  },
+  'upu-kyrgyzstan-designated-operators': {
+    id: 'upu-kyrgyzstan-designated-operators', name: 'UPU Kyrgyzstan Designated Operator Directory', url: 'https://www.upu.int/en/universal-postal-union/about-upu/member-countries?ccid=80&csid=-1', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Current intergovernmental operator-status reference. It does not define postcode rows, universal operator coverage, delivery entitlement, postal geometry, addresses or buildings.',
+  },
+  'gosreg-kyrgyz-address-register': {
+    id: 'gosreg-kyrgyz-address-register', name: 'Kyrgyz State Agency Address Register and GIS', url: 'https://gosreg.gov.kg/ru/', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'The current State Agency site identifies the Address Register, National Integrated Cadastral System and GIS in the Address Register. Register identity and GIS are not postal assignment or geometry; exact artifact rights and licence are required.',
+  },
+  'cadastre-kyrgyz-property-portal': {
+    id: 'cadastre-kyrgyz-property-portal', name: 'Kyrgyz Cadastre Service Portal', url: 'https://www.cadastre.kg/svc-portal/main/index.do', kind: 'building', coverage: 'country', usage: 'reference',
+    notes: 'Official portal searches property, parcel, street, building, apartment, person and organization contexts; some services require contract, account or fee. Query visibility is not open address or building data and cannot publish people, owners, property geometry or postal relations.',
+  },
   'nsdi-kyrgyzstan': {
-    id: 'nsdi-kyrgyzstan',
-    name: 'Kyrgyz Republic Geoportal',
-    url: 'https://www.nsdi.kg/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'primary',
-    notes: 'Kyrgyz Republic geoinformation and climate data portal with map interface, metadata catalog, and spatial layers.',
+    id: 'nsdi-kyrgyzstan', name: 'Legacy Kyrgyz NSDI Domain Safety Tombstone', url: 'https://www.nsdi.kg/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Legacy hostname retained only to prevent unsafe reuse. As observed 26 August 2026 it resolves to an unrelated gambling site, not the historic geoportal; never ingest it and never include it in active Kyrgyzstan source lists.',
   },
   'data-gov-kg': {
-    id: 'data-gov-kg',
-    name: 'Kyrgyz Republic Open Data Portal',
-    url: 'https://data.gov.kg/en/',
-    kind: 'gazetteer',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Kyrgyz government open-data portal for public datasets, statistics, and geography-linked validation references.',
+    id: 'data-gov-kg', name: 'Kyrgyz Republic Open Data Portal', url: 'https://data.gov.kg/', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official CKAN portal with dataset-specific metadata and licences. The administrative classifier observed is dated 2019 and lacks a stated licence; portal presence is not current postal authority, geometry or blanket redistribution permission.',
   },
   'caiag-geonode-kg': {
-    id: 'caiag-geonode-kg',
-    name: 'CAIAG GeoNode Kyrgyzstan',
-    url: 'https://geonode.caiag.kg/',
-    kind: 'admin-boundary',
-    coverage: 'country',
-    usage: 'reference',
-    notes: 'Kyrgyzstan GeoNode instance for geospatial layers, documents, and climate/geography reference data.',
+    id: 'caiag-geonode-kg', name: 'CAIAG GeoNode Kyrgyzstan', url: 'https://geonode.caiag.kg/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Research and community geospatial catalog with layer-specific rights and provenance. It is not postal assignment authority; any layer used for derived validation requires an exact licence, version, CRS and digest.',
   },
   'osm-kyrgyzstan': {
-    id: 'osm-kyrgyzstan',
-    name: 'OpenStreetMap Kyrgyzstan',
-    url: 'https://wiki.openstreetmap.org/wiki/Kyrgyzstan',
-    kind: 'address',
-    coverage: 'country',
-    usage: 'validation',
-    license: 'ODbL',
-    notes: 'Kyrgyzstan OSM roads, settlements, mountain/rural place names, POI, and fallback address tags.',
+    id: 'osm-kyrgyzstan', name: 'OpenStreetMap Kyrgyzstan', url: 'https://wiki.openstreetmap.org/wiki/Kyrgyzstan', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL',
+    notes: 'ODbL community roads, places, addresses and building features for validation only; not operator assignment, official postal geometry, cadastre, exact civic identity or delivery entitlement.',
   },
   'tajik-post': {
     id: 'tajik-post',
@@ -1700,11 +3732,11 @@ export const ASIA_OPEN_GEO_SOURCES: Record<AsiaOpenGeoSourceId, AsiaOpenGeoSourc
   turkmenpost: {
     id: 'turkmenpost',
     name: 'Turkmenpost',
-    url: 'https://www.turkmenpost.gov.tm/',
+    url: 'https://post.tm/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Turkmenistan postal-service reference for 6-digit postal-index validation.',
+    notes: 'Current Turkmenistan postal-service reference for 6-digit office-index validation; office points are not postal areas.',
   },
   'osm-turkmenistan': {
     id: 'osm-turkmenistan',
@@ -1747,31 +3779,46 @@ const BASE_OPEN_SOURCE_IDS: AsiaOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>> = {
-  AF: ['afghan-post', 'afghan-postal-code-system', 'hot-osm-afghanistan', 'osm-afghanistan'],
-  AM: ['haypost-am', 'armstat-geodata', 'cadastre-armenia', 'haypost-address-reference', 'geonames-armenia'],
-  AZ: ['geonames-postal', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'azerpost-address-reference', 'geonames-azerbaijan'],
-  BD: ['bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
-  BN: ['post-gov-bn'],
-  BT: ['bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
-  CN: ['china-postal-code'],
-  GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia'],
+  AF: ['afghan-post', 'afghan-postal-code-system', 'upu-afghanistan-addressing-2025', 'afghan-post-policy', 'ocha-afghanistan-admin-boundaries-2026', 'hot-osm-afghanistan', 'osm-afghanistan'],
+  AM: ['haypost-am', 'haypost-address-reference', 'armenia-real-estate-address-register', 'armenia-national-geoportal-buildings', 'cadastre-armenia', 'armstat-geodata', 'geonames-armenia'],
+  AZ: ['azerpost-address-reference', 'azerbaijan-address-register', 'azerbaijan-state-committee-property', 'azerbaijan-open-data', 'geonames-azerbaijan', 'geonames-postal'],
+  BD: ['bangladesh-post-postcode-tables', 'upu-bangladesh-addressing', 'survey-of-bangladesh-gis-services', 'bangladesh-nsdi-geoportal', 'bangladesh-nsdi-data-catalog', 'bbs-bangladesh-census-2022', 'dlrs-bangladesh-map-portal', 'bd-post', 'survey-bangladesh', 'osm-bangladesh', 'hot-osm-bangladesh'],
+  BN: ['brunei-posbru-current-operator', 'brunei-aiti-postal-licence', 'brunei-mtic-posbru-transition', 'brunei-skn-postcode-booklet', 'brunei-deps-terms', 'brunei-post-postcode-booklet', 'upu-brunei-addressing', 'brunei-survey-house-numbering', 'brunei-survey-digital-map-products', 'brunei-survey-geoportal', 'brunei-survey-geoportal-user-guide', 'brunei-deps-bpp-2021', 'brunei-land-registration-framework', 'post-gov-bn'],
+  BT: ['bhutan-post-postcode-finder', 'bhutan-post-domestic-footprint', 'upu-bhutan-addressing', 'bhutan-nlcs-geoportal', 'bhutan-nlcs-map-products', 'bhutan-nlcs-cadastral-information', 'bhutan-nsb-phcb-2017', 'bhutan-esakor-land-building-transactions', 'bhutan-post', 'nlcs-bhutan', 'bhutan-geoportal', 'osm-bhutan'],
+  CN: ['china-postal-code', 'upu-china-addressing-2013', 'china-postal-and-address-code-response-2025', 'china-universal-delivery-address-code-gbt41832', 'china-address-geocode-gbt39609', 'china-geographical-names-regulation-2022', 'tianditu-china', 'china-geospatial-platform-management-2019', 'china-real-estate-query-rules-2024', 'osm-china'],
+  GE: ['gpost-ge', 'napr-georgia', 'gdi-georgia', 'gpost-address-reference', 'geonames-georgia', 'georgian-post-postcode-finder', 'georgian-post-addressing-guide', 'napr-georgia-address-registry', 'nsdi-georgia-address-layer', 'nsdi-georgia-registered-buildings', 'nsdi-georgia-registered-parcels', 'nsdi-georgia-administrative-boundaries', 'geostat-georgia-administrative-classification'],
   HK: ['landsd-hk', 'csdi-hk', 'osm-hong-kong'],
-  ID: ['pos-indonesia'],
-  AE: ['makani-dubai-open-data', 'osm-uae'],
-  BH: ['bahrain-open-data', 'osm-bahrain'],
-  IL: ['israel-post', 'govmap-israel', 'data-gov-il', 'osm-israel'],
+  ID: [
+    'indonesia-post-law-2009',
+    'indonesia-post-regulation-2025',
+    'pos-indonesia',
+    'upu-indonesia-addressing',
+    'sdi-indonesia-village-postcode',
+    'kemendagri-indonesia-admin-codes',
+    'bps-indonesia-statistical-area-codes',
+    'big-indonesia-village-boundaries',
+    'big-indonesia-rbi-buildings',
+  ],
+  AE: ['makani-dubai-open-data', 'emirates-post-po-box', 'dmt-onwani-addressing', 'dmt-onwani-terms', 'upu-uae-addressing-2014', 'osm-uae'],
+  BH: ['bahrain-post-services-directory', 'upu-bahrain-addressing', 'iga-bahrain-address-services', 'bahrain-open-data-terms', 'bahrain-open-data-geographic-locations', 'bahrain-municipal-geographic-explorer', 'slrb-bahrain-cadastre', 'bahrain-open-data', 'osm-bahrain'],
+  IL: ['israel-post', 'israel-post-mail-guide-2020', 'israel-post-terms', 'upu-israel-addressing-2022', 'govmap-israel', 'population-authority-israel-street-list', 'cbs-israel-geography', 'data-gov-il', 'data-gov-il-terms-2025', 'osm-israel'],
   IN: [
-    'postalpincode-in',
+    'india-post-regulations-2024',
     'data-gov-in-pincode',
+    'data-gov-in-pincode-boundary',
+    'data-gov-in-godl',
+    'india-lgd-pin-crosswalk',
     'india-digipin',
+    'survey-of-india-abdb',
+    'postalpincode-in',
     'india-pincode-api-oss',
     'survey-of-india',
     'datameet-maps',
     'osm-india',
     'hot-osm-south-asia',
   ],
-  IQ: ['iraq-post', 'osm-iraq'],
-  IR: ['gavahi-post-ir', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
+  IQ: ['iraq-post', 'iraq-post-platform', 'iraq-post-privacy-2025', 'upu-iraq-addressing-2005', 'iraq-post-2004-code-announcement', 'iraq-post-new-code-storymap-2025', 'iraq-open-government-portal', 'iraq-open-government-data-policy', 'iraq-geographic-portal', 'iraq-statistics-gis', 'osm-iraq'],
+  IR: ['iran-post', 'iran-post-gnaf', 'gavahi-post-ir', 'upu-iran-addressing-2023', 'iran-nsdi', 'iran-open-data', 'osm-iran'],
   JP: [
     'zipcloud-jp',
     'gsi-japan-tiles',
@@ -1782,33 +3829,36 @@ const COUNTRY_SOURCE_IDS: Partial<Record<AsiaCountryCode, AsiaOpenGeoSourceId[]>
     'geolonia-addresses',
     'osm-japan',
   ],
-  KR: ['epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
-  KG: ['nsdi-kyrgyzstan', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
-  KZ: ['post-kz', 'datahub-postal-kz', 'kazakhstan-nsdi', 'qazpost-open-api', 'osm-kazakhstan'],
-  LK: ['slpost', 'survey-department-sri-lanka', 'data-gov-lk', 'osm-sri-lanka'],
-  MV: ['maldives-post', 'mlsa-maldives', 'onemap-maldives', 'osm-maldives'],
-  MN: ['alamgc-mongolia', 'nsdi-mongolia', 'zipcode-mn', 'hot-osm-mongolia', 'osm-mongolia'],
-  MO: ['dscc-macao', 'geoguide-macao', 'osm-macau'],
-  MY: ['pos-malaysia'],
-  NP: ['postalservice-np', 'national-geoportal-nepal', 'survey-department-nepal', 'osm-nepal', 'hot-osm-nepal'],
-  PH: ['phlpost'],
-  PK: ['pakpost', 'survey-of-pakistan', 'pak-nsdi', 'pbs-gis-pakistan', 'osm-pakistan'],
-  JO: ['jordanpost', 'rjgc-jordan', 'osm-jordan'],
-  KW: ['kuwait-post', 'osm-kuwait'],
-  LB: ['libanpost', 'osm-lebanon'],
-  OM: ['nsgia-oman', 'oman-post', 'osm-oman'],
+  KR: ['korea-post-postcode-system', 'korea-post-postcode-api', 'mois-juso-basic-districts', 'mois-juso-road-address-api', 'mois-juso-building-db', 'mois-juso-electronic-map', 'molit-korea-gis-integrated-buildings', 'molit-korea-continuous-cadastral-map', 'epost-kr', 'ngii-korea', 'lx-korea', 'juso-kr', 'osm-korea'],
+  KG: ['kyrgyz-post-new-postal-codes-2025', 'kyrgyz-post-address-guidance', 'upu-kyrgyzstan-addressing-2019', 'upu-kyrgyzstan-designated-operators', 'gosreg-kyrgyz-address-register', 'cadastre-kyrgyz-property-portal', 'data-gov-kg', 'caiag-geonode-kg', 'osm-kyrgyzstan'],
+  KH: ['cambodia-post', 'mptc-cambodia-prakas-77-2025', 'upu-cambodia-addressing-2018', 'ncdd-cambodia-gazetteer', 'mlmupc-cambodia-cadastral-services', 'mlmupc-cambodia-building-services', 'odc-cambodia-postal-codes', 'osm-cambodia'],
+  KZ: ["post-kz","qazpost-open-api","upu-kazakhstan-addressing-2025","kazakhstan-postal-index-rules-2026","kazakhstan-post-law","kazakhstan-addressing-rules-2026","kazakhstan-address-register","kazakhstan-nsdi","kazakhstan-nsdi-use-rules-2023","kazakhstan-public-cadastral-map","kazakhstan-real-estate-rights-register","osm-kazakhstan"],
+  LA: ['lao-post-postcode', 'laos-postal-service-law-2013', 'laopedia-laos-postcodes', 'nfms-laos-administrative-boundaries', 'lsb-laos-phc-2025', 'laolandreg-laos', 'laos-electronic-data-law', 'osm-laos'],
+  LK: ["slpost","survey-department-sri-lanka","data-gov-lk","slpost-postcode-search","sri-lanka-nsdi-boundaries","sri-lanka-nsdi-data-classification","sri-lanka-nsdi-boundary-service","sri-lanka-data-protection","osm-sri-lanka"],
+  MV: ['maldives-post', 'upu-maldives-addressing-2004', 'mlsa-maldives', 'onemap-maldives', 'maldives-onemap-island-api-2024', 'maldives-geomatics-land-survey-standard-2025', 'maldives-land-registration-survey-guideline-2020', 'maldives-bureau-statistics-gis-maps', 'maldives-census-island-atoll-2022', 'osm-maldives'],
+  MN: ['crc-mongolia-postcode-2025', 'crc-mongolia-postal-directory-2024', 'zipcode-mn', 'crc-mongolia-unified-postcode-2019', 'upu-mongolia-addressing', 'crc-mongolia-postal-regulation', 'alamgc-mongolia', 'nsdi-mongolia', 'gazar-mongolia-address-system', 'gazar-mongolia-spatial-data-standards', 'gazar-mongolia-boundaries', 'gazar-mongolia-open-spatial-data', 'nso-mongolia-administrative-units', 'hot-osm-mongolia', 'osm-mongolia'],
+  MO: ['dscc-macao', 'geoguide-macao', 'osm-macau', 'ctt-macao-no-postcode', 'dsscu-macao', 'macao-dsscu-regulation-2026', 'macao-mapping-reproduction-2026', 'macao-data-portal', 'macao-data-terms', 'dscc-macao-migration-notice'],
+  MM: ['myanmar-post-postcode-lookup', 'myanmar-national-portal-post-services', 'upu-myanmar-addressing-2022', 'myanmar-survey-department', 'myanmar-one-map-geodatabase-2024', 'mimu-place-codes-v9-6-2025', 'mimu-geospatial-data', 'mimu-terms-and-conditions', 'ycdc-land-building-services'],
+  MY: ['pos-malaysia-postcode-finder', 'upu-malaysia-addressing', 'malaysia-mygdx-postcode-catalog', 'malaysia-mygeo-fundamental-data-2026', 'malaysia-mygos-data-services', 'malaysia-mygeo-upi', 'malaysia-mygdi-licensing-2024', 'malaysia-mygeoname', 'pos-malaysia'],
+  NP: ["postalservice-np","nepal-gpo-federal-postcodes","nepal-jhapa-postcodes","nepal-rasuwa-federal-notice","nepal-federal-postcodes-pdf","nepal-upu-addressing-2012","national-geoportal-nepal","survey-department-nepal","nepal-digital-data-directive","osm-nepal","hot-osm-nepal","nepalpost-legacy-pdf","nepal-digital-data-directive-pdf"],
+  PH: ['phlpost-zip-code-locator', 'upu-philippines-addressing', 'psa-philippine-standard-geographic-code', 'geoportal-philippines-data-inventory', 'geoportal-philippines-download-policy', 'namria-topographic-mapping', 'psa-popcen-cbms-geotagging', 'philippines-lra-land-registration', 'phlpost'],
+  PK: ['pakistan-post-postcode-directory', 'upu-pakistan-addressing', 'pakistan-post-postcode-amendments', 'survey-of-pakistan-mapping-law', 'survey-of-pakistan-geospatial-products', 'pakistan-nsdi', 'pakistan-pbs-census-gis', 'osm-pakistan'],
+  JO: ['jordanpost', 'upu-jordan-addressing-2004', 'modee-jordan-postal-policy-2025', 'trc-jordan-postal-sector', 'jordan-post-offices-open-data-2023', 'jordan-open-government-data-license-v1', 'rjgc-jordan', 'rjgc-jordan-eservices', 'rjgc-gam-building-mou', 'dls-jordan-village-codes-2022', 'gam-jordan-streets-2019', 'jordan-digital-mailbox-pilot-2026', 'osm-jordan'],
+  KW: ['kuwait-post', 'upu-kuwait-addressing', 'paci-kuwait-finder', 'paci-kuwait-address-services', 'paci-kuwait-building-register', 'kuwait-municipality-parcels', 'kuwait-csb-census-gis', 'osm-kuwait'],
+  LB: ['libanpost', 'libanpost-address-and-nac', 'upu-lebanon-addressing', 'upu-lebanon-postcode-formats-2025', 'moph-lebanon-administrative-zones', 'lebanon-atlas-admin-boundaries-2026', 'dlrc-lebanon-cadastre', 'lebanon-law-81-2018-personal-data', 'osm-lebanon'],
+  OM: ['upu-oman-postal-addressing', 'oman-post-office-locator', 'oman-post-website-terms', 'gov-oman-building-addressing-service', 'ncsi-oman-wilayat-boundaries', 'ncsi-oman-open-government-data-policy', 'nsgia-oman-geospatial-governance', 'nsgia-oman-portal-terms', 'nsgia-oman', 'oman-post', 'osm-oman'],
   PS: ['palestine-open-data-postcodes', 'palestine-post', 'osm-palestine'],
   QA: ['qatar-gis-geoportal', 'osm-qatar'],
-  SA: ['spl-sa', 'spl-national-address-api', 'saudi-gis-national-platform', 'osm-saudi-arabia'],
+  SA: ['spl-national-address-components', 'spl-national-address-api-v31', 'spl-national-address-api-terms', 'spl-national-address-short-address', 'geosa-saudi-geospatial-foundation-themes', 'rega-saudi-geospatial-real-estate-portal', 'rega-saudi-real-estate-registration-framework', 'spl-sa', 'spl-national-address-api', 'saudi-gis-national-platform', 'osm-saudi-arabia'],
   SG: ['onemap-sg'],
   SY: ['syria-post', 'osm-syria', 'hot-osm-west-asia'],
   TH: ['thailand-post'],
   TR: ['turkiye-ptt', 'osm-turkey'],
-  TW: ['post-tw', 'nlsc-taiwan', 'tgos-taiwan', 'osm-taiwan', 'g0v-taiwan'],
+  TW: ['chunghwa-post-3plus3-data', 'chunghwa-post-3plus3-lookup', 'chunghwa-post-3plus3-license', 'moi-taiwan-national-doorplate-location', 'nlsc-taiwan-emap-buildings', 'nlsc-taiwan-emap-doorplates', 'nlsc-taiwan-administrative-boundaries', 'nlsc-taiwan-cadastral-map', 'post-tw', 'nlsc-taiwan', 'tgos-taiwan', 'osm-taiwan', 'g0v-taiwan'],
   TJ: ['tajik-post', 'osm-tajikistan', 'openaerialmap-tajikistan', 'hot-osm-central-asia'],
   TM: ['turkmenpost', 'osm-turkmenistan', 'hot-osm-central-asia'],
-  UZ: ['pochta-uz', 'uzbekistan-open-data-geo', 'uzbekistan-state-urban-cadastre', 'osm-uzbekistan'],
-  VN: ['vietnam-postcode'],
+  UZ: ['pochta-uz', 'uzpost-index-map', 'upu-uzbekistan-addressing-2019', 'uzbekistan-postal-index-open-data-2019', 'uzbekistan-open-data-terms', 'uzbekistan-open-data-registry-2026', 'uzbekistan-cadastre-agency', 'uzbekistan-state-real-estate-register', 'osm-uzbekistan'],
+  VN: ['vietnam-national-postcode-portal', 'vietnam-postcode-decision-2334-2025', 'vnpost-two-tier-postcode-notice', 'upu-vietnam-addressing', 'vnpost-vpostcode-digital-address', 'vietnam-nso-administrative-units', 'vietnam-nsdi-portal', 'vietnam-survey-map-data-service', 'vietnam-postcode'],
   YE: ['yemen-post', 'osm-yemen', 'hot-osm-west-asia'],
 };
 

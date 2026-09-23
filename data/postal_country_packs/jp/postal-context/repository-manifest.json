@@ -1,0 +1,220 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-jp",
+    "country_code": "JP",
+    "country_name": "Japan",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/jp/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "contract_files": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "README.md",
+    "fixtures/tokyo-synthetic.json"
+  ],
+  "authority_model": {
+    "rule": "Every assertion must record assignment_authority and geometry_authority independently. An authoritative assignment does not make a derived geometry authoritative, and an authoritative geometry does not prove a postal or civic assignment.",
+    "required_fields": [
+      "assignment_authority",
+      "geometry_authority",
+      "source_ids",
+      "source_release",
+      "method_id",
+      "observed_at",
+      "valid_from",
+      "valid_to"
+    ],
+    "geometry_authority_values": [
+      "official_postal_geometry",
+      "official_address_registry_geometry",
+      "official_municipal_civic_geometry",
+      "official_cadastral_geometry",
+      "official_mapping_geometry",
+      "official_3d_city_model_geometry",
+      "derived_geometry",
+      "virtual_geometry",
+      "synthetic_fixture_geometry",
+      "none"
+    ],
+    "assignment_authority_values": [
+      "official_postal_operator",
+      "official_address_registry",
+      "official_municipal_civic_address",
+      "official_land_registry",
+      "derived_spatial_assignment",
+      "virtual_assignment",
+      "synthetic_fixture_assignment",
+      "none"
+    ]
+  },
+  "address_graph": {
+    "node_types": [
+      "postal_code",
+      "municipality",
+      "town_aza",
+      "civic_block",
+      "residence_number",
+      "parcel",
+      "building",
+      "entrance",
+      "unit",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "serves",
+      "contains",
+      "assigned_to",
+      "addressed_by",
+      "located_on",
+      "has_entrance",
+      "inside",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "postal_code_to_town_aza_is_many_to_many",
+      "building_to_parcel_is_many_to_many",
+      "residence_number_to_building_may_be_many_to_many",
+      "cadastral_number_and_residence_number_are_not_interchangeable"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "regular_whole_town",
+      "rule": "A town geometry may be dissolved into a postal region only when evidence states that the assignment covers the whole town."
+    },
+    {
+      "id": "partial_town",
+      "rule": "Do not publish town-wide containment when a postal code applies only to an unknown subset, number range, floor range, or named exception."
+    },
+    {
+      "id": "large_user",
+      "rule": "An organization-specific postal code is a large-user assignment, not an area assignment; attach geometry only after an independently licensed building match."
+    },
+    {
+      "id": "residential_display",
+      "rule": "Municipal block symbols and residence numbers are civic assignments. Residence numbers may follow an entrance and must not be inferred from cadastral parcels."
+    },
+    {
+      "id": "cadastral",
+      "rule": "A land number identifies a parcel in a non-residential-display path. It does not by itself identify a building, entrance, civic residence number, or deliverability."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source and output field has a pinned source release, terms snapshot, redistribution class, attribution rule, and transformation method."
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Every assertion has both authority dimensions and no pipeline copies assignment authority into geometry authority."
+    },
+    {
+      "id": "exception-classification",
+      "scope": "postal-source-records",
+      "metric": "classified_record_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "geometry-validity",
+      "scope": "published-geometries",
+      "metric": "valid_geometry_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "normal-record-town-link",
+      "scope": "classifiable-regular-records",
+      "metric": "abr_town_join_ratio",
+      "minimum": 0.995
+    },
+    {
+      "id": "stable-postal-holdout",
+      "scope": "stable-polygon-candidates",
+      "metrics": {
+        "top_1_postal_match_ratio_minimum": 0.98,
+        "top_k_postal_match_ratio_minimum": 0.995
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "residence-entrance-building-link",
+      "scope": "residential-display-building-links",
+      "metric": "contained_or_within_15m_ratio",
+      "minimum": 0.95
+    },
+    {
+      "id": "freshness",
+      "scope": "japan-post-derived-release",
+      "metric": "days_since_current_official_source_release",
+      "maximum": 45
+    },
+    {
+      "id": "material-drift-review",
+      "scope": "release-diff",
+      "manual_review_when": {
+        "feature_count_change_ratio_greater_than": 0.05,
+        "covered_area_change_ratio_greater_than": 0.1
+      }
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures may validate contract behavior but never satisfy a production promotion gate."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles and known legal blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "The repository contract, source profiles, and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_experimental",
+        "definition": "License-cleared source snapshots reproduce experimental artifacts with complete lineage."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Independent holdout, exception handling, geometry, freshness, and drift gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two consecutive source refreshes pass all gates and monitored correction and rollback paths are operating."
+      }
+    ],
+    "hard_blockers": [
+      "unknown_or_incompatible_redistribution_terms",
+      "synthetic_or_unlicensed_evidence_used_as_production_truth",
+      "partial_town_promoted_to_whole_town_polygon",
+      "large_user_code_promoted_to_neighborhood_polygon",
+      "cadastral_number_presented_as_residence_number",
+      "building_name_inferred_from_proximity_only",
+      "missing_assignment_or_geometry_authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "household_or_unit_occupancy",
+    "building_name_when_no_named_source_exists",
+    "legal_boundary_or_survey_certification",
+    "parcel_to-civic-address_equivalence"
+  ]
+}

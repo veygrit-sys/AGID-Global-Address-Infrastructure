@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "AW",
+  "observedAt": "2026-08-31T08:45:47.702Z",
+  "completedAt": "2026-08-31T09:09:11.4618269Z",
+  "baseCommit": "cf7e08184d2b540f21c133fac96fb1e6f317f3ab",
+  "scope": "AW-specific official no-postcode, exact-body, rights, identity and no-proxy fail-closed evidence plus shared application contracts. No raw source body, address, postal row, district/locality/address/route/service-area/parcel/building proxy, Point, synthetic planning code, production pack, real AW API response or browser area was promoted.",
+  "checks": [
+    {
+      "id": "aw-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-aw-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "four exact official bodies reproduce Post Aruba no-postcode, operator, copyright and UPU September 2025 no-postcode-list evidence without source rows or geometry"
+    },
+    {
+      "id": "aw-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-aw-sources.test.py -v",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "complete set, changed body, missing/extra/renamed body, HTML marker and PDF signature/page/marker drift conditions fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "aw-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-aw-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country definition, no-postcode authority, exact receipts, rights/no-proxy boundary, report digests and next BB"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 57,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 4,
+    "exactBodiesByteAndSha256Bound": 4,
+    "exactOfficialBodiesBytes": 839174,
+    "sourceReviewDigest": "sha256:67b439cef18bee4ddef3e40c7f2660afa3a31430f2e44d13456acec50f9c7b77",
+    "currentPostalCodeFormat": "none",
+    "postArubaStatesArubaHasNoPostalCode": true,
+    "upuEdition": "Sep. 2025",
+    "upuListsArubaAsNotRequiringPostalCodes": true,
+    "currentCompletePostalCodeAssignmentsValidated": 0,
+    "currentCompleteAssignmentAliasValidityExceptionAndExplicitNonAreaDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "fixedOfficialPostalGeometryArtifactsInspected": 0,
+    "officialPostalPolygonOrMultiPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realAwRuntimeVerified": false,
+    "realAwApiVerified": false,
+    "realAwAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because Aruba has no valid postcode input or eligible real postal Polygon/MultiPolygon artifact"
+  },
+  "knownLimitations": [
+    "Current authoritative absence of postal codes is represented as none and cannot be promoted into an island-wide placeholder code or polygon.",
+    "Post Aruba site copyright was recorded; no open postal dataset licence or compatible public-serving right was found.",
+    "Draft AW country-pack localities, planning cells and test vectors are synthetic and not Post Aruba assignments.",
+    "No district, locality, neighbourhood, address, route, service area, parcel, building, Point, buffer, hull, Voronoi/raster cell, AGID cell, commerce ZIP placeholder or synthetic AW code was promoted."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "The UPU PDF physical page 4 was rendered to a non-empty 1158x1638 RGB PNG, but the local image-view helper returned Windows error 206 even at C:\\tmp\\i.png. Exact PDF bytes, 12-page count, page markers, render dimensions and render SHA-256 were validated; no image was committed.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

@@ -1,0 +1,644 @@
+openapi: 3.1.0
+info:
+  title: Vey ID Core API
+  version: veygrit-id-core-v0.1
+  summary: Google/Apple-backed Vey ID account, pairwise merchant subject, token-ref exchange, and wallet-side revocation.
+  description: >
+    Vey ID Core is the identity layer that lets merchants add Continue with
+    Veygrit without receiving raw address material or upstream provider tokens.
+    Account creation is limited to Google and Apple in this profile. Merchants
+    receive scoped references such as pairwiseSubjectAlias, authorizationCodeRef,
+    accessTokenRef, idTokenRef, and addressCredentialRef.
+servers:
+  - url: https://api.veygrit.example
+    description: Placeholder host. Deployments must configure their own hosted or private endpoint.
+tags:
+  - name: Authorization
+  - name: Token
+  - name: Guest Checkout
+  - name: Revocation
+  - name: Discovery
+externalDocs:
+  description: Vey ID core local fixtures, schema, verifier command, and non-claims.
+  url: ./README.md#vey-id-core-api-contract
+paths:
+  /veygrit/oauth/authorize:
+    get:
+      operationId: startVeyIdAuthorization
+      tags: [Authorization]
+      summary: Start Google/Apple-backed Vey ID authorization for one merchant client.
+      description: >
+        Starts an OAuth/OIDC-style authorization request with PKCE. The hosted
+        wallet creates or resumes a Vey ID session, checks wallet consent, and
+        returns only a short authorizationCodeRef to the merchant redirect URI.
+      x-agid-contract-id: vey-id-core-authorize
+      x-agid-source-contract: src/lib/veygritId.ts#issueVeygritIdAuthorizationCode
+      x-agid-required-controls:
+        - google-apple-account-only
+        - pkce-s256-required
+        - state-hash-bound
+        - nonce-hash-bound
+        - redirect-uri-allowlist
+        - pairwise-subject-alias
+        - wallet-consent-preflight
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-residence-proof
+        - not-upstream-provider-token-storage
+      parameters:
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 3
+        - name: redirect_uri
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+        - name: response_type
+          in: query
+          required: true
+          schema:
+            type: string
+            const: code
+        - name: scope
+          in: query
+          required: true
+          description: Space-separated requested scopes.
+          schema:
+            type: string
+            examples:
+              - openid address:read address:autofill
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 8
+        - name: nonce
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 8
+        - name: code_challenge
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 32
+        - name: code_challenge_method
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [S256]
+        - name: origin
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+      responses:
+        '302':
+          description: Redirects to wallet consent or to merchant callback with authorizationCodeRef or a redacted error.
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+  /veygrit/oauth/token:
+    post:
+      operationId: exchangeVeyIdAuthorizationCode
+      tags: [Token]
+      summary: Exchange authorizationCodeRef and PKCE verifier for Vey ID token refs.
+      description: >
+        Exchanges a short authorizationCodeRef for merchant-scoped token refs.
+        The response contains reference identifiers and pairwise claims only.
+        It does not return Google/Apple tokens, raw address data, refresh tokens,
+        proof witnesses, or production credentials.
+      x-agid-contract-id: vey-id-core-token-exchange
+      x-agid-source-contract: src/lib/veygritId.ts#exchangeVeygritIdAuthorizationCode
+      x-agid-required-controls:
+        - pkce-verifier-match
+        - redirect-uri-match
+        - client-id-match
+        - authorization-code-expiry
+        - token-ref-only-response
+        - no-refresh-token-in-mvp
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-carrier-api-credential
+        - not-upstream-provider-token-storage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VeyIdTokenRequest'
+            examples:
+              codeExchange:
+                value:
+                  grantType: authorization_code
+                  authorizationCodeRef: vey_auth_code_synthetic_001
+                  clientId: merchant_demo
+                  redirectUri: https://merchant.example/veygrit/callback
+                  pkceVerifier: pkce_verifier_synthetic_001
+      responses:
+        '200':
+          description: Vey ID token refs returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VeyIdTokenExchangeResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+  /veygrit/guest-checkout/handoff:
+    post:
+      operationId: createVeyIdGuestCheckoutHandoff
+      tags: [Guest Checkout]
+      summary: Create a ref-only handoff for EC guest checkout.
+      description: >
+        Creates a short-lived guest checkout handoff from an issued token
+        exchange and wallet consent. The merchant can create a guest order
+        without forcing EC account creation or password setup, while Veygrit
+        still requires Google/Apple wallet login and explicit address consent.
+        The response contains only refs and never raw address, phone, carrier
+        credentials, provider tokens, proof secrets, or production credentials.
+      x-agid-contract-id: vey-id-core-guest-checkout-handoff
+      x-agid-source-contract: src/lib/veygritId.ts#buildVeygritIdGuestCheckoutHandoff
+      x-agid-required-controls:
+        - issued-token-exchange-required
+        - address-consent-required
+        - guest-checkout-ref-only
+        - merchant-account-creation-not-required
+        - wallet-login-required
+        - one-time-carrier-handoff-ref
+      x-agid-privacy-boundary-gate:
+        id: merchant-visible-redaction
+        source: src/lib/veyIdAddressWalletFoundation.ts#privacyThreatBoundaryGates
+        owner: merchant-app
+        safeEvidenceRefs:
+          - pairwiseSubjectAlias
+          - guestCheckoutAlias
+          - walletConsentRef
+          - addressCredentialRef
+          - carrierHandoffRef
+        requiredBlockedMaterial:
+          - rawAddress
+          - recipientName
+          - recipientPhone
+          - privateDeliveryNotes
+          - proofWitness
+          - proofSecret
+          - privateKey
+        nonClaims:
+          - Merchant-visible refs are not raw address disclosure, residence proof, or reusable marketing consent.
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-carrier-api-credential
+        - not-production-carrier-traffic
+        - not-ec-account-creation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VeyIdGuestCheckoutHandoffRequest'
+            examples:
+              guestCheckout:
+                value:
+                  clientId: merchant_demo
+                  pairwiseSubjectAlias: pairwise_synthetic_001
+                  walletConsentRef: wallet_consent_synthetic_001
+                  addressCredentialRef: addr_cred_synthetic_001
+                  accessTokenRef: vey_access_synthetic_001
+                  orderRef: order_ref_synthetic_001
+      responses:
+        '200':
+          description: Guest checkout refs returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VeyIdGuestCheckoutHandoffResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+  /veygrit/connections/revoke:
+    post:
+      operationId: revokeVeyIdMerchantConnection
+      tags: [Revocation]
+      summary: Revoke a merchant connection from the wallet side.
+      description: >
+        Revokes a merchant connection and returns deletion refs for merchant
+        cleanup. Address Wallet remains the primary place where users can stop
+        reuse of addressCredentialRef, walletConsentRef, pairwiseSubjectAlias,
+        and carrier handoff refs.
+      x-agid-contract-id: vey-id-core-connection-revocation
+      x-agid-source-contract: src/lib/veygritId.ts#revokeVeygritIdConnection
+      x-agid-required-controls:
+        - wallet-side-primary-revocation
+        - pairwise-alias-invalidated
+        - wallet-consent-invalidated
+        - address-credential-invalidated
+        - merchant-deletion-receipt
+      x-agid-non-claims:
+        - not-raw-address-deletion-api
+        - not-proof-witness-intake
+        - not-production-carrier-traffic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VeyIdConnectionRevocationRequest'
+      responses:
+        '200':
+          description: Revocation accepted and deletion refs returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VeyIdConnectionRevocationResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+  /.well-known/veygrit-client.json:
+    get:
+      operationId: readVeyIdClientDiscovery
+      tags: [Discovery]
+      summary: Read merchant-side Vey ID client metadata.
+      description: >
+        Lets Veygrit validate redirect URIs, origins, webhook destinations,
+        and supported Address Wallet claim kinds before enabling a merchant.
+      x-agid-contract-id: vey-id-client-discovery
+      x-agid-required-controls:
+        - redirect-uri-allowlist
+        - origin-allowlist
+        - webhook-destination-allowlist
+        - address-wallet-claim-kind-allowlist
+      responses:
+        '200':
+          description: Merchant client metadata returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VeyIdClientDiscovery'
+components:
+  responses:
+    ClientAuthRequired:
+      description: Client authentication, assertion, or merchant registration is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VeyIdError'
+    RejectedPrivateMaterial:
+      description: Request was rejected because it included private or raw material.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VeyIdError'
+  schemas:
+    VeyIdTokenRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - grantType
+        - authorizationCodeRef
+        - clientId
+        - redirectUri
+        - pkceVerifier
+      properties:
+        grantType:
+          type: string
+          const: authorization_code
+        authorizationCodeRef:
+          type: string
+          pattern: '^vey_auth_code_[A-Za-z0-9_-]+$'
+        clientId:
+          type: string
+          minLength: 3
+        redirectUri:
+          type: string
+          format: uri
+        pkceVerifier:
+          type: string
+          minLength: 32
+    VeyIdTokenExchangeResult:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - tokenType
+        - accessTokenRef
+        - idTokenRef
+        - expiresAt
+        - claims
+        - privacy
+      properties:
+        status:
+          type: string
+          enum: [issued, blocked]
+        tokenType:
+          type: string
+          const: bearer-ref
+        accessTokenRef:
+          type: string
+          pattern: '^vey_access_[A-Za-z0-9_-]+$'
+        idTokenRef:
+          type: string
+          pattern: '^vey_id_[A-Za-z0-9_-]+$'
+        addressCredentialRef:
+          type: string
+          pattern: '^addr_cred_[A-Za-z0-9_-]+$'
+        expiresAt:
+          type: string
+          format: date-time
+        claims:
+          $ref: '#/components/schemas/VeyIdPairwiseClaims'
+        privacy:
+          $ref: '#/components/schemas/VeyIdPrivacyFlags'
+    VeyIdGuestCheckoutHandoffRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - clientId
+        - pairwiseSubjectAlias
+        - walletConsentRef
+        - addressCredentialRef
+        - accessTokenRef
+      properties:
+        clientId:
+          type: string
+          minLength: 3
+        pairwiseSubjectAlias:
+          type: string
+          pattern: '^pairwise_[A-Za-z0-9_-]+$'
+        walletConsentRef:
+          type: string
+          pattern: '^wallet_consent_[A-Za-z0-9_-]+$'
+        addressCredentialRef:
+          type: string
+          pattern: '^addr_cred_[A-Za-z0-9_-]+$'
+        accessTokenRef:
+          type: string
+          pattern: '^vey_access_[A-Za-z0-9_-]+$'
+        orderRef:
+          type: string
+          minLength: 3
+          description: Merchant-local synthetic order reference. Must not contain personal address, email, phone, carrier credential, or proof material.
+    VeyIdGuestCheckoutHandoffResult:
+      type: object
+      additionalProperties: false
+      required:
+        - mode
+        - status
+        - nextAction
+        - guestCheckoutAlias
+        - walletConsentRef
+        - addressCredentialRef
+        - carrierHandoffRef
+        - merchantAccountCreationRequired
+        - ecPasswordRequired
+        - walletLoginRequired
+        - ttlSeconds
+        - privacy
+      properties:
+        mode:
+          type: string
+          const: ec-guest-checkout
+        status:
+          type: string
+          enum: [ready, blocked]
+        nextAction:
+          type: string
+          enum: [create-guest-order, repair-token-exchange, request-address-consent, deny]
+        guestCheckoutAlias:
+          type: string
+          pattern: '^vey_guest_checkout_[A-Za-z0-9_-]+$'
+        walletConsentRef:
+          type: string
+          pattern: '^wallet_consent_[A-Za-z0-9_-]+$'
+        addressCredentialRef:
+          type: string
+          pattern: '^addr_cred_[A-Za-z0-9_-]+$'
+        carrierHandoffRef:
+          type: string
+          pattern: '^carrier_handoff_[A-Za-z0-9_-]+$'
+        merchantAccountCreationRequired:
+          type: boolean
+          const: false
+        ecPasswordRequired:
+          type: boolean
+          const: false
+        walletLoginRequired:
+          type: boolean
+          const: true
+        ttlSeconds:
+          type: integer
+          minimum: 1
+          maximum: 600
+        privacy:
+          $ref: '#/components/schemas/VeyIdGuestCheckoutPrivacyFlags'
+    VeyIdPairwiseClaims:
+      type: object
+      additionalProperties: false
+      required:
+        - iss
+        - sub
+        - aud
+        - authTime
+        - addressWalletLinked
+      properties:
+        iss:
+          type: string
+          const: https://id.veygrit.example
+        sub:
+          type: string
+          pattern: '^pairwise_[A-Za-z0-9_-]+$'
+        aud:
+          type: string
+          minLength: 3
+        authTime:
+          type: string
+          format: date-time
+        addressWalletLinked:
+          type: boolean
+    VeyIdConnectionRevocationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - clientId
+        - pairwiseSubjectAlias
+        - reason
+      properties:
+        clientId:
+          type: string
+          minLength: 3
+        pairwiseSubjectAlias:
+          type: string
+          pattern: '^pairwise_[A-Za-z0-9_-]+$'
+        walletConsentRef:
+          type: string
+          pattern: '^consent_[A-Za-z0-9_-]+$'
+        reason:
+          type: string
+          enum: [user_wallet_unlink, merchant_disconnect, account_close, security_event]
+    VeyIdConnectionRevocationResult:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - revocationRef
+        - pairwiseSubjectAlias
+        - merchantDeletionRefs
+        - walletEffects
+        - privacy
+      properties:
+        status:
+          type: string
+          enum: [revoked, blocked]
+        revocationRef:
+          type: string
+          pattern: '^vey_revoke_[A-Za-z0-9_-]+$'
+        pairwiseSubjectAlias:
+          type: string
+          pattern: '^pairwise_[A-Za-z0-9_-]+$'
+        merchantDeletionRefs:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+              - pairwiseSubjectAlias
+              - walletConsentRef
+              - addressCredentialRef
+              - carrierHandoffRef
+        walletEffects:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        privacy:
+          $ref: '#/components/schemas/VeyIdPrivacyFlags'
+    VeyIdClientDiscovery:
+      type: object
+      additionalProperties: false
+      required:
+        - clientId
+        - redirectUris
+        - allowedOrigins
+        - supportedScopes
+      properties:
+        clientId:
+          type: string
+          minLength: 3
+        redirectUris:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uri
+        allowedOrigins:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uri
+        supportedScopes:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+              - openid
+              - address:read
+              - address:autofill
+              - friend_delivery:request
+        webhookUrl:
+          type: string
+          format: uri
+    VeyIdGuestCheckoutPrivacyFlags:
+      type: object
+      additionalProperties: false
+      required:
+        - rawAddressSharedWithMerchant
+        - rawPhoneSharedWithMerchant
+        - globalSubjectIdExposedToMerchant
+        - merchantCanCreateAccountSilently
+        - carrierCredentialsSharedWithMerchant
+        - oneTimeUse
+      properties:
+        rawAddressSharedWithMerchant:
+          type: boolean
+          const: false
+        rawPhoneSharedWithMerchant:
+          type: boolean
+          const: false
+        globalSubjectIdExposedToMerchant:
+          type: boolean
+          const: false
+        merchantCanCreateAccountSilently:
+          type: boolean
+          const: false
+        carrierCredentialsSharedWithMerchant:
+          type: boolean
+          const: false
+        oneTimeUse:
+          type: boolean
+          const: true
+    VeyIdPrivacyFlags:
+      type: object
+      additionalProperties: false
+      required:
+        - rawAddressExposed
+        - providerIdTokenStored
+        - providerAccessTokenStored
+        - providerRefreshTokenStored
+        - rawProviderProfileStored
+        - proofSecretExposed
+      properties:
+        rawAddressExposed:
+          type: boolean
+          const: false
+        providerIdTokenStored:
+          type: boolean
+          const: false
+        providerAccessTokenStored:
+          type: boolean
+          const: false
+        providerRefreshTokenStored:
+          type: boolean
+          const: false
+        rawProviderProfileStored:
+          type: boolean
+          const: false
+        proofSecretExposed:
+          type: boolean
+          const: false
+    VeyIdError:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - errors
+      properties:
+        status:
+          type: string
+          const: blocked
+        errors:
+          type: array
+          minItems: 1
+          items:
+            type: string

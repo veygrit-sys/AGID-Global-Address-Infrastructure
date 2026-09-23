@@ -217,6 +217,68 @@ test('marks Outer Circle English address countries separately from Inner Circle 
   assert.deepEqual(tabs.map(tab => tab.englishCircle || null), [null, 'outer', null]);
 });
 
+test('adds domestic and international English for Outer Circle countries even when native metadata omits English', () => {
+  const bruneiFormat = {
+    countryCode: 'BN',
+    name: 'Brunei',
+    native: {
+      name: 'Brunei Darussalam',
+      addressFormat: '',
+      ordering: 'small-to-big',
+      fields: [{ key: 'street', label: 'Street' }],
+    },
+    english: {
+      name: 'International English',
+      addressFormat: '',
+      ordering: 'small-to-big',
+      fields: [{ key: 'street', label: 'Street' }],
+    },
+    addressRules: {
+      languages: [{ code: 'ms', name: 'Malay' }],
+      nativeOrder: [],
+      englishOrder: [],
+      regionalHierarchy: [],
+      postalCode: null,
+    },
+  } as const;
+
+  const tabs = buildRegistrationAddressLanguageTabs(bruneiFormat);
+
+  assert.deepEqual(tabs.map(tab => tab.code), ['ms', 'en_domestic', 'en']);
+  assert.deepEqual(tabs.map(tab => tab.englishCircle || null), [null, 'outer', null]);
+});
+
+test('splits English domestic and international tabs for English-language territories', () => {
+  const caymanFormat = {
+    countryCode: 'KY',
+    name: 'Cayman Islands',
+    native: {
+      name: 'Cayman Islands',
+      addressFormat: '',
+      ordering: 'small-to-big',
+      fields: [{ key: 'street', label: 'Street' }],
+    },
+    english: {
+      name: 'International English',
+      addressFormat: '',
+      ordering: 'small-to-big',
+      fields: [{ key: 'street', label: 'Street' }],
+    },
+    addressRules: {
+      languages: [{ code: 'en', name: 'English' }],
+      nativeOrder: [],
+      englishOrder: [],
+      regionalHierarchy: [],
+      postalCode: null,
+    },
+  } as const;
+
+  const tabs = buildRegistrationAddressLanguageTabs(caymanFormat);
+
+  assert.deepEqual(tabs.map(tab => tab.code), ['en_domestic', 'en']);
+  assert.deepEqual(tabs.map(tab => tab.englishCircle || null), ['outer', null]);
+});
+
 test('keeps all address-used languages for multilingual countries', () => {
   const belgiumFormat = {
     countryCode: 'BE',

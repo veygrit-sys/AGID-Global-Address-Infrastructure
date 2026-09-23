@@ -1,0 +1,151 @@
+{
+  "schema_version": "agid-postal-bd-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-bd",
+    "country_code": "BD",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "current_code_name": "Bangladesh four-digit postcode",
+    "current_code_format": "NNNN (1000-9999)",
+    "current_code_default_geometry": "delivery_post_office_network_assignment",
+    "legal_rule": "The UPU Bangladesh addressing sheet specifies four digits to the right of the locality and depicts routing through the main regional head office, thana and secondary post office. Bangladesh Post publishes district pages containing Upazila, bilingual post-office name and postcode columns. These references establish syntax, address order and typed office assignment, not a canonical polygon, delivery point, building relation, complete current bulk history or blanket redistribution licence.",
+    "assignment_rule": "GPO, HO, TSO, UPO, SO, EDSO and EDBO office classes remain distinct source values. A four-character code in the range 1000-9999 is stored as text. A row with a blank Post Code stays unassigned or subordinate evidence and never inherits the preceding code automatically. Equal names, office class, digit groups, coordinates or administrative overlap do not create a postal area.",
+    "geometry_rule": "No reviewed canonical national postcode polygon artifact is bundled. Official geometry requires an exact postal boundary artifact and code relation with authority, edition, coverage, provider-specific rights, CRS, topology and digest pinned. A generated delivery surface remains derived and uncertainty-bearing; office points, SoB topographic features, NSDI layers, BBS enumeration areas, DLRS mouza maps, interpolation, Voronoi and model output never become official postcode polygons.",
+    "address_rule": "House or building, street or village, area, delivery post office, optional thana, district, division and postcode remain typed. A postcode, post-office row, census enumeration area, topographic building, mouza or cadastral map, coordinate or map feature alone does not identify a recipient, owner, occupant, entrance, unit or exact civic address.",
+    "building_rule": "Exact building display requires a rights-cleared civic-address point or stable address identifier, separately permitted building geometry, and a source-defined stable relation, common identifier or reviewed explicit crosswalk. SoB Building and Structure geometry alone is topographic evidence; postcode containment, mouza or parcel overlap, text match, coordinates, proximity and nearest-building logic create candidates only.",
+    "administration_rule": "Bangladesh Post office assignments, divisions, districts, upazilas or thanas, unions, municipalities and wards, BBS enumeration areas, SoB products, NSDI layers, DLRS maps, civic addresses and buildings refresh independently. Census and administrative boundaries are not postal areas unless an exact postal source explicitly publishes the relation.",
+    "licence_rule": "The NSDI FAQ says portal data may be free to download and use while provider-specific terms can vary. SoB supplies GIS products under existing policy, and DLRS sells official survey maps. Public access, a portal, a non-restricted catalog label, government authorship, payment or mathematical generation is not a blanket data or derivative-map redistribution grant. Every artifact pins provider, terms, permission, edition, coverage, schema, scale, CRS, validity, attribution and digest.",
+    "privacy_rule": "Recipients, senders, P.O. box holders, contacts, correspondence, shipment and tracking records, query history, census microdata, landholders, owners, occupants, residents, tenants, household or unit rosters, national identifiers, phone numbers and private access instructions are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, datum, axis order, epoch, scale and accuracy. SoB products may use BUTM2010 with stated WGS84 datum and Transverse Mercator projection; they are not relabelled geographic WGS84. Reprojection requires reviewed parameters, axis order and an accuracy statement.",
+    "territory_rule": "The repository uses ISO code BD and exact source-stated coverage. Postal, census, administrative, NSDI, SoB and DLRS coverage is metadata and is not used to decide sovereignty, jurisdiction, maritime limits or borders; source gaps are not model-filled as official.",
+    "freshness_rule": "Postcode pages, office classes, administrative and census editions, SoB products, NSDI layers, DLRS surveys, civic addresses, buildings, licences and AGID releases refresh independently. Mixed-edition joins fail closed unless validity, known-time, identifiers, rights and an explicit relation overlap."
+  },
+  "integration": {
+    "agid_country_code": "BD",
+    "coordinate_flow": "coordinate -> exact official postal surface or permitted civic-address point -> typed Bangladesh Post office assignment -> village-or-area/upazila-or-thana/district/division -> explicit address-building relation -> BD AGID cell",
+    "postcode_flow": "canonical four-character string -> pinned Bangladesh Post district-page row -> typed office network -> official postal surface or no canonical geometry -> optional derived delivery surface -> explicit civic-address/building evidence -> AGID cells",
+    "building_output_gate": "rights-cleared civic-address evidence plus building geometry and source-defined stable relation, common identifier or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "four-character-code",
+      "pass": "Runtime normalizes Bengali or ASCII digits and whitespace to exactly four ASCII digits from 1000 through 9999 and rejects prefixes, punctuation and other lengths."
+    },
+    {
+      "id": "typed-office-assignment",
+      "pass": "GPO, HO, TSO, UPO, SO, EDSO, EDBO and blank-code rows remain typed, editioned and source-linked without automatic inheritance."
+    },
+    {
+      "id": "assignment-versus-geometry",
+      "pass": "Postcode and office assignment authority is recorded independently from official or derived geometry authority."
+    },
+    {
+      "id": "derived-delivery-surface",
+      "pass": "Generated surfaces record inputs, explicit assignment relation, method, uncertainty, exclusions, topology, version, validity, CRS, rights and digest and remain non-canonical."
+    },
+    {
+      "id": "census-and-administration-separation",
+      "pass": "BBS enumeration areas and administrative boundaries remain context and never become postal areas, addresses or buildings by overlap."
+    },
+    {
+      "id": "topographic-building-separation",
+      "pass": "A SoB Building and Structure feature remains geometry until an explicit permitted civic-address relation is proven."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has permitted civic-address evidence, rights-cleared geometry and a stable explicit relation; containment, text and proximity never pass."
+    },
+    {
+      "id": "licence-crs-territory-privacy",
+      "pass": "Provider-specific rights, permission, attribution, CRS, scale, coverage and privacy exclusions are pinned without geopolitical inference."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "A complete rights-cleared, editioned postcode and typed office assignment passes authority, coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived postal geometry and public civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "district-page-row-or-office-point-presented-as-official-postcode-polygon",
+      "gpo-ho-tso-upo-so-edso-edbo-or-blank-code-classes-collapsed",
+      "blank-code-row-inherits-neighbor-postcode-without-explicit-source-relation",
+      "upu-digit-hierarchy-presented-as-geometric-boundary",
+      "bbs-enumeration-area-or-administrative-boundary-presented-as-postal-area",
+      "sob-topographic-building-presented-as-exact-civic-address-link",
+      "nsdi-catalog-portal-or-non-restricted-label-presented-as-blanket-reuse-right",
+      "dlrs-mouza-cadastral-or-purchased-map-presented-as-postal-surface-building-or-public-ownership-data",
+      "postcode-office-coordinate-text-overlap-or-proximity-presented-as-exact-address-building-link",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-postal-polygon",
+      "recipient-sender-box-holder-contact-tracking-query-census-person-landholder-owner-occupant-tenant-resident-id-phone-or-private-access-data-published",
+      "source-crs-axis-scale-or-datum-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "postcode-office-building-or-delivery-point-stored-as-number-or-inferred-from-location",
+      "three-page-sample-presented-as-complete-national-m2-assignment",
+      "site-footer-update-used-as-office-assignment-validity",
+      "tls-verification-disabled-to-ingest-official-data",
+      "unknown-office-type-guessed-from-blank-code-or-adjacent-row",
+      "same-office-label-or-postcode-used-as-stable-object-identity"
+    ],
+    "m2_review": {
+      "definition_unchanged": true,
+      "source_review": "m2-source-review.json",
+      "reviewed_on": "2026-08-28",
+      "status": "blocked-not-m2",
+      "required_evidence": [
+        "complete-current-national-assignment-coverage-not-three-page-sample",
+        "exact-source-acquisition-retention-transformation-and-redistribution-rights",
+        "provider-assignment-edition-validity-and-correction-policy",
+        "typed-offices-and-explicit-blank-code-semantics-without-forward-fill",
+        "review-code-sentinels-duplicate-rows-and-ambiguous-office-identities",
+        "retained-digest-pinned-snapshots-and-reproducible-conversion-outside-agid-git",
+        "published-immutable-artifacts-at-explicitly-approved-destination",
+        "real-agid-loader-and-api-verification-not-only-synthetic-fixtures"
+      ],
+      "stage_boundary": "M2 is assignment completeness, not mandatory polygons, civic addresses or exact buildings. M3 and M4 remain separate."
+    }
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_BD_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BD_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_BD_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_BD_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-office-address-building-census-cadastral-tracking-or-query-rows",
+    "all-four-digit-postcodes-have-polygons",
+    "office-point-enumeration-area-administrative-boundary-or-mouza-is-postal-area",
+    "topographic-building-is-civic-address",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ]
+}

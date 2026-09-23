@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://address-grid-id.github.io/schemas/addressql-postal-operations-input-v1.schema.json",
+  "title": "AddressQL Postal Operations Input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "monitorIntervalHours",
+    "correctionSlaTargetHours",
+    "currentCountryLevels",
+    "sources",
+    "corrections"
+  ],
+  "properties": {
+    "version": {
+      "const": "addressql-postal-operations-input-v1"
+    },
+    "monitorIntervalHours": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 720
+    },
+    "correctionSlaTargetHours": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 2160
+    },
+    "currentCountryLevels": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Z]{2}$"
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "enum": ["L2", "L3", "L4"]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "corrections": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/correction"
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "countryCode",
+        "capabilityLevel",
+        "purpose",
+        "sourceVersion",
+        "releaseUrl",
+        "termsUrl",
+        "correctionUrl",
+        "retrievedAt",
+        "lastCheckedAt",
+        "validUntil",
+        "datasetDigest",
+        "holdoutDigest",
+        "reportDigest",
+        "adapterId",
+        "adapterMode",
+        "attestationVerified"
+      ],
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "countryCode": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "capabilityLevel": {
+          "enum": ["L2", "L3", "L4"]
+        },
+        "purpose": {
+          "enum": [
+            "postal-existence",
+            "admin-locality-consistency",
+            "delivery-area"
+          ]
+        },
+        "sourceVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "releaseUrl": {
+          "$ref": "#/$defs/httpsUrl"
+        },
+        "termsUrl": {
+          "$ref": "#/$defs/httpsUrl"
+        },
+        "correctionUrl": {
+          "$ref": "#/$defs/httpsUrl"
+        },
+        "retrievedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "lastCheckedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "validUntil": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "datasetDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "holdoutDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "reportDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "adapterId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "adapterMode": {
+          "enum": ["approved", "conformance"]
+        },
+        "attestationVerified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "correctionRef",
+        "countryCode",
+        "sourceId",
+        "receivedAt",
+        "publishedAt"
+      ],
+      "properties": {
+        "correctionRef": {
+          "$ref": "#/$defs/digest"
+        },
+        "countryCode": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "sourceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "receivedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "publishedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

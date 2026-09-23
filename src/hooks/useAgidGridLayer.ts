@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import React from 'react';
 
 import { type AGIDResult } from '../lib/agid';
@@ -22,9 +22,10 @@ import {
 getAgidGridCellFillPaint,
 getAgidGridFocusFillPaint,
 getAgidGridLinePaint,
+getAgidHoverCellFillPaint,
+getAgidHoverCellOutlinePaint,
 getAgidSelectionFillPaint,
 } from '../lib/gridPaint';
-import { shouldShowGridForViewport } from '../lib/gridViewport';
 import {
 getMapViewportPoints,
 getPaddedGridBounds,
@@ -93,12 +94,11 @@ export function useAgidGridLayer({
     const viewportPoints = getCurrentViewportPoints();
 
     const effectiveGridOpacityLevel = getEffectiveGridOpacityLevel({ zoom: gridZoom, isGridVisible, gridOpacityLevel });
-    const shouldShow = shouldShowDisplayGrid({ zoom: gridZoom, isGridVisible, gridOpacityLevel }) && shouldShowGridForViewport(viewportPoints);
+    const shouldShow = shouldShowDisplayGrid({ zoom: gridZoom, isGridVisible, gridOpacityLevel });
     const shouldShowHighlight = shouldShow;
 
     const isSatellite = mapStyle === 'satellite';
     const isDark = mapStyle.includes('dark');
-    const isSeaGrid = activeResult?.isSea && gridZoom < 15;
     const currentGridFrame = { anchorLat: gridLat, zoom: gridZoom };
 
     const clearGridLayers = (options: { preservePendingBounds?: boolean } = {}) => {
@@ -118,8 +118,12 @@ export function useAgidGridLayer({
         frame.zoom,
         frame.anchorLat,
       );
-      const renderedActivePolygon = findContainingGridCellPolygon(renderedGridCellsRef.current, activeResult) || activePolygon;
-      const renderedSelectedPolygon = findContainingGridCellPolygon(renderedGridCellsRef.current, selectedResult) || selectedPolygon;
+      const renderedActivePolygon = activePolygon
+        ? findContainingGridCellPolygon(renderedGridCellsRef.current, activeResult)
+        : null;
+      const renderedSelectedPolygon = selectedPolygon
+        ? findContainingGridCellPolygon(renderedGridCellsRef.current, selectedResult)
+        : null;
 
       const activeData: any = (showHighlight && renderedActivePolygon) ? {
         type: 'Feature',
@@ -127,11 +131,12 @@ export function useAgidGridLayer({
         properties: {},
       } : { type: 'FeatureCollection', features: [] };
 
-      ensureSourceAndLayer(activeSourceId, 'fill', activeData, {
-        'fill-color': isSeaGrid ? '#ffffff' : '#ef4444',
-        'fill-opacity': isSeaGrid ? 0.35 : 0.4,
-        'fill-outline-color': isSeaGrid ? '#cbd5e1' : '#dc2626',
-      }, {}, undefined, `${sourceId}-layer`);
+      ensureSourceAndLayer(activeSourceId, 'fill', activeData, getAgidHoverCellFillPaint(), {}, undefined, `${sourceId}-layer`);
+      ensureSourceAndLayer(`${activeSourceId}-outline`, 'line', (showHighlight && renderedActivePolygon) ? {
+        type: 'Feature',
+        geometry: { type: 'LineString', coordinates: renderedActivePolygon },
+        properties: {},
+      } : { type: 'FeatureCollection', features: [] }, getAgidHoverCellOutlinePaint());
 
       const selectedData: any = (showHighlight && renderedSelectedPolygon) ? {
         type: 'Feature',
@@ -204,12 +209,13 @@ export function useAgidGridLayer({
     }
 
     const opacityMultiplier = (effectiveGridOpacityLevel / 3) * getCloseDistanceGridFade(gridZoom);
+    const safeOpacityMultiplier = Number.isFinite(opacityMultiplier) ? opacityMultiplier : 1;
     const gridLinePaint = getAgidGridLinePaint({
       isSatelliteOrDark: isSatellite || isDark,
       isCloseDistanceGrid: gridZoom >= W3W_STYLE_GRID_MIN_ZOOM,
     });
-    const dynamicGridOpacity = ['interpolate', ['linear'], ['zoom'], 1, 0.3 * opacityMultiplier, 8, 0.4 * opacityMultiplier, 14, 0.5 * opacityMultiplier, 18, 0.7 * opacityMultiplier, 20, 0.8 * opacityMultiplier];
-    const dynamicGridWidth = ['interpolate', ['linear'], ['zoom'], 1, 0.2, 10, 0.4, 15, 0.6, 18, 0.8, 20, 1.2];
+    const dynamicGridOpacity = ['interpolate', ['linear'], ['zoom'], 1, 0.3 * safeOpacityMultiplier, 8, 0.45 * safeOpacityMultiplier, 14, 0.6 * safeOpacityMultiplier, 18, 0.82 * safeOpacityMultiplier, 20, 0.92 * safeOpacityMultiplier];
+    const dynamicGridWidth = ['interpolate', ['linear'], ['zoom'], 1, 0.2, 10, 0.45, 15, 0.75, 18, 1.15, 20, 1.8];
 
     if (!gridWorker.current) return;
 
@@ -270,12 +276,12 @@ export function useAgidGridLayer({
 
       ensureSourceAndLayer('grid-cells', 'fill', cellsData, getAgidGridCellFillPaint({
         isSatelliteOrDark: isSatellite || isDark,
-        opacityMultiplier,
+        opacityMultiplier: safeOpacityMultiplier,
       }), {}, ['!=', ['get', 'isFocus'], true], `${activeSourceId}-layer`);
 
       ensureSourceAndLayer('grid-cells-focus', 'fill', cellsData, getAgidGridFocusFillPaint({
         isSatelliteOrDark: isSatellite || isDark,
-        opacityMultiplier,
+        opacityMultiplier: safeOpacityMultiplier,
       }), {}, ['==', ['get', 'isFocus'], true], `${activeSourceId}-layer`);
 
       renderedGridFrameRef.current = requestedGridFrame;

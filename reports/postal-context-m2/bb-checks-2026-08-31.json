@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BB",
+  "observedAt": "2026-08-31T09:32:18.170Z",
+  "completedAt": "2026-08-31T10:03:03.8852522Z",
+  "baseCommit": "32400deea330fd8296e33256e939912f0a258ad9",
+  "scope": "BB-specific BPS format, search, copyright, UPU, public BBID item/WebMap/service/layer metadata and no-proxy fail-closed evidence plus shared application contracts. No postal search term, feature row, address, building, parcel, person, protected record, raw body or geometry was queried, transformed or promoted.",
+  "checks": [
+    {
+      "id": "bb-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-bb-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "eleven exact official publication and public metadata bodies reproduce BPS, UPU and BBID rights/schema evidence without feature rows or promotion"
+    },
+    {
+      "id": "bb-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-bb-sources.test.py -v",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "complete set, changed body, missing/extra/renamed body, HTML marker, PDF signature/page/marker and JSON path/value/field drift conditions fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "bb-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-bb-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, BPS rights, BBID building-layer boundary, report digests, no real runtime claim and next BL"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 59,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialPublicationAndMetadataReferencesReviewed": 11,
+    "exactBodiesByteAndSha256Bound": 11,
+    "exactOfficialBodiesBytes": 1951330,
+    "sourceReviewDigest": "sha256:186fd27b7c3dc22c39a1ecce191a613a178e16090f523b032f31905bf0407928",
+    "currentPostalCodeFormats": ["BBNNNNN", "BBNNNNN-AAAAA"],
+    "currentCompleteLegacyAndUpdatedAssignmentsValidated": 0,
+    "completeAssignmentAliasValidityCorrectionExceptionAndExplicitNonAreaDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "publicBbidBuildingPolygonLayerMetadataValidated": 1,
+    "rightsClearedPostalAreaOrBuildingLinkedArtifacts": 0,
+    "officialLegacyPostalAreaPolygonOrMultiPolygonRecords": 0,
+    "featureRowsQueried": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBbRuntimeVerified": false,
+    "realBbApiVerified": false,
+    "realBbAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no rights-cleared immutable BB assignment-and-geometry artifact can drive a real application path"
+  },
+  "knownLimitations": [
+    "The current BBID layer is a building Polygon layer with ShortPosta and LongPostal fields, not a rights-cleared legacy postcode-area release.",
+    "BPS copyright terms and empty or absent ArcGIS rights metadata do not authorize bulk data reuse or public serving.",
+    "No locality, parish, building-footprint dissolve, Point, buffer, hull, Voronoi/raster cell, AGID cell or synthetic fixture was promoted as a postcode area.",
+    "The Government BBID launch article returned HTTP 403 to the reproducible shell fetch and remains reference-only rather than digest-bound evidence."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "The UPU PDF physical page 1 was rendered to a non-empty 1241x1754 RGB PNG, but the local image-view helper returned Windows error 206 even at C:\\tmp\\b.png. Exact PDF bytes, one-page count, markers, render dimensions, non-white bounds and render SHA-256 were validated; no image was committed.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

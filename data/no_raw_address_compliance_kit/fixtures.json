@@ -1,0 +1,66 @@
+[
+  {
+    "fixtureId": "no-raw-address-safe-release-v1",
+    "expectedValid": true,
+    "purpose": "A publishable release and audit fixture using only commitments, aliases, roots, and redacted refs.",
+    "payload": {
+      "releaseText": "No raw address by default. Public release stores commitments, short aliases, roots, and redacted evidence references only.",
+      "highRiskMode": true,
+      "terminalSignature": {
+        "terminalId": "POS-AUDIT-ALPHA",
+        "signature": "SIGSAFEAABBCCDDEEFF",
+        "signedAt": "2026-06-20T00:00:00.000Z",
+        "algorithm": "ed25519-terminal-receipt-v1"
+      },
+      "alias": {
+        "value": "WBA-AABBCCDDEEFF",
+        "issuedAt": "2026-06-20T00:00:00.000Z",
+        "expiresAt": "2026-06-20T00:04:00.000Z"
+      },
+      "auditLog": {
+        "redactionApplied": true,
+        "redactionVersion": "no-raw-address-compliance-kit-v0.1",
+        "event": {
+          "eventType": "handoff.completed",
+          "waybillAlias": "WBA-AABBCCDDEEFF",
+          "addressCommitment": "addr_commitment_synthetic_alpha",
+          "issuerRef": "issuer_ref_synthetic_alpha",
+          "nullifierHash": "nullifier_hash_synthetic_alpha",
+          "terminalReceiptRoot": "receipt_root_synthetic_alpha",
+          "outcome": "accepted"
+        }
+      }
+    }
+  },
+  {
+    "fixtureId": "no-raw-address-unsafe-release-v1",
+    "expectedValid": false,
+    "purpose": "A negative fixture that must be blocked because it includes forbidden raw-address, proof-code, phone-number, and unredacted audit event fields. Values are non-real sentinel strings.",
+    "payload": {
+      "releaseText": "{\"rawAddress\":\"UNSAFE_NONPUBLIC_RAW_ADDRESS_FIXTURE\",\"proofCode\":\"UNSAFE_NONPUBLIC_PROOF_VALUE\"}",
+      "highRiskMode": true,
+      "terminalSignature": {
+        "terminalId": "POS-AUDIT-BETA",
+        "signature": "SIGSAFEFFEEDDCCBBAA",
+        "signedAt": "2026-06-20T00:00:00.000Z",
+        "algorithm": "ed25519-terminal-receipt-v1"
+      },
+      "alias": {
+        "value": "WBA-FFEEDDCCBBAA",
+        "issuedAt": "2026-06-20T00:00:00.000Z",
+        "expiresAt": "2026-06-20T00:04:00.000Z"
+      },
+      "auditLog": {
+        "redactionApplied": false,
+        "redactionVersion": "",
+        "event": {
+          "eventType": "handoff.completed",
+          "rawAddress": "UNSAFE_NONPUBLIC_RAW_ADDRESS_FIXTURE",
+          "proofCode": "UNSAFE_NONPUBLIC_PROOF_VALUE",
+          "phoneNumber": "UNSAFE_NONPUBLIC_PHONE_VALUE",
+          "outcome": "accepted"
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/agid-openapi-evidence-extension-v0.1.schema.json",
+  "title": "AGID OpenAPI Evidence Fixtures Extension v0.1",
+  "description": "Generic schema for the x-agid-evidence-fixtures OpenAPI extension. Product-specific profiles may further constrain exact fixture paths, verifier commands, and non-claims.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "preflightFixture",
+    "historyFixture",
+    "evidenceFixture",
+    "evidenceSchema",
+    "verifierCommand",
+    "aggregateVerifierCommand",
+    "managedServiceBoundary",
+    "localOnly",
+    "forbiddenMaterial",
+    "nonClaims",
+    "nonClaimsProfile"
+  ],
+  "properties": {
+    "preflightFixture": {
+      "type": "string",
+      "pattern": "^docs/specs/fixtures/.+\\.json$"
+    },
+    "historyFixture": {
+      "type": "string",
+      "pattern": "^docs/specs/fixtures/.+\\.json$"
+    },
+    "evidenceFixture": {
+      "type": "string",
+      "pattern": "^docs/specs/fixtures/.+\\.json$"
+    },
+    "evidenceSchema": {
+      "type": "string",
+      "pattern": "^docs/specs/schemas/.+\\.schema\\.json$"
+    },
+    "verifierCommand": {
+      "type": "string",
+      "pattern": "^npm run verify:[a-z0-9:-]+$"
+    },
+    "aggregateVerifierCommand": {
+      "type": "string",
+      "pattern": "^npm run verify:[a-z0-9:-]+$"
+    },
+    "managedServiceBoundary": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "localOnly": {
+      "const": true
+    },
+    "forbiddenMaterial": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "raw_address"
+          }
+        },
+        {
+          "contains": {
+            "const": "proof_witness"
+          }
+        },
+        {
+          "contains": {
+            "const": "private_key"
+          }
+        },
+        {
+          "contains": {
+            "const": "production_webhook_secret"
+          }
+        }
+      ]
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "not-raw-address-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-proof-witness-intake"
+          }
+        }
+      ]
+    },
+    "nonClaimsProfile": {
+      "type": "string",
+      "enum": [
+        "agid-generic-evidence-v0.1",
+        "playlist-commerce-webhook-v0.1",
+        "veygrit-address-login-hosted-v0.1",
+        "delivery-gateway-sandbox-carrier-v0.1",
+        "merchant-console-onboarding-v0.1",
+        "trade-gateway-idempotency-v0.1"
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "agid-postal-synthetic-fixtures-v0.1",
+  "country_code": "CZ",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "coordinates_are_geographic": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "cz-syn-routing-assignment",
+      "synthetic_address": { "postcode": "000 00", "locality": "Testov", "street": "Zkušební", "house_number": "1" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "geometry_type": "none", "must_not_assert": ["official-ceska-posta-polygon", "deliverability", "recipient-identity"] }
+    },
+    {
+      "fixture_id": "cz-syn-address-place",
+      "synthetic_address": { "postcode": "000 01", "locality": "Testov", "street": "Měřicí", "house_number": "2" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "point", "must_not_assert": ["address-point-is-building-footprint", "resident-or-owner", "reference-system-proof"] }
+    },
+    {
+      "fixture_id": "cz-syn-explicit-building-link",
+      "synthetic_address": { "postcode": "000 02", "locality": "Testov", "street": "Spojovací", "house_number": "3" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "polygon", "must_not_assert": ["nearest-building-is-exact-link", "legal-property-boundary", "deliverability"] }
+    },
+    {
+      "fixture_id": "cz-syn-derived-surface",
+      "synthetic_address": { "postcode": "000 03", "locality": "Modelov" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "multipolygon", "must_not_assert": ["official-ceska-posta-polygon", "administrative-boundary-is-psc", "production-ready"] }
+    },
+    {
+      "fixture_id": "cz-syn-no-delivery-service",
+      "synthetic_address": { "postcode": "000 04", "locality": "Bezrozvozu" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "geometry_type": "none", "must_not_assert": ["delivery-service-available", "synthetic-residential-polygon", "deliverability"] }
+    }
+  ]
+}

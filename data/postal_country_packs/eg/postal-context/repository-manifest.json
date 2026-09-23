@@ -1,0 +1,83 @@
+{
+  "schema_version": "agid-postal-eg-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-eg", "country_code": "EG", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Egypt seven-digit postcode",
+    "full_code_format": "NNNNNNN",
+    "full_code_default_geometry": "building_group_assignment_with_official_or_derived_surface",
+    "assignment_rule": "The July 2023 UPU/Egypt Post sheet defines seven digits below the locality: two province digits, one locality digit, two neighbourhood digits and two community digits. Egypt Post GIS guidance resolves the new code from GPS or a structured address. A code remains text assignment evidence; a syntax match, map click or third-party row does not prove current assignment or polygon membership.",
+    "legacy_rule": "The UPU Universal DataBase Aug. 2026 table still lists both 99999 and 9999999 for Egypt. Five- or six-digit values are retained only in a separately versioned alias or historical crosswalk when an authoritative source supplies the exact old-to-new relation and validity. They are never padded, truncated or guessed into seven digits.",
+    "geometry_rule": "The new code may identify a group of buildings, but canonical geometry requires an exact official rights-cleared Egypt Post surface. GPS results, address points, building clusters, CAPMAS geography, governorate or shiakha boundaries, Egyptian Survey maps, interpolation, Voronoi and model output remain points, candidates or derived non-canonical surfaces with uncertainty and lineage.",
+    "address_rule": "Building number, street, village, locality, governorate, postcode and P.O. Box or post-office fields remain typed evidence. A postcode or P.O. Box does not identify a recipient, occupant, owner or exact building footprint.",
+    "building_rule": "Exact building display requires a rights-cleared authoritative building feature and a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address. A building-group code, GPS point, CAPMAS building-level statistical product, cadastral or topographic feature, containment, overlap, text match or nearest-building result creates candidates only.",
+    "administration_rule": "CAPMAS, governorate and Egyptian Survey products provide separately licensed statistical, administrative or mapping context. Governorate, locality, neighbourhood, community, shiakha, village and markaz names or boundaries are not postal geometry unless Egypt Post explicitly defines the relation.",
+    "licence_rule": "Public app access, a government-hosted guide, a search or map viewer, portal queryability, free viewing or government authorship never by themselves grant bulk extraction or repository redistribution. Every artifact pins owner, product licence, access, attribution, derivative rights, retention, edition, coverage, schema, CRS and digest.",
+    "privacy_rule": "Recipients, contacts, account, correspondence, shipment, saved locations, device or query history, P.O. Box holder, residence, occupants, owners, tenants, title and rights are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, axis order, zone, epoch and accuracy. Egypt 1907, Red Belt, Blue Belt, Purple Belt, UTM or product-specific CRS is never relabelled WGS84. EPSG:4326 output requires a reviewed transform and accuracy statement.",
+    "territory_rule": "The repository uses ISO code EG and exact source-stated Arab Republic of Egypt coverage. Postal, statistical, survey or map coverage does not decide sovereignty or jurisdiction; borders, desert, islands, disputed areas and gaps are not model-filled as official.",
+    "freshness_rule": "Seven-digit assignments, legacy crosswalks, app results, offices, civic addresses, buildings, administration, survey products and licences refresh independently. Mixed-edition joins fail closed unless valid-time, known-time and explicit relationship overlap."
+  },
+  "integration": {
+    "agid_country_code": "EG",
+    "coordinate_flow": "coordinate -> pinned Egypt Post result or exact permitted civic-address point -> seven-digit building-group candidate -> locality/neighbourhood/community/governorate -> explicit address-building relation -> EG AGID cell",
+    "postcode_flow": "canonical seven digits -> pinned Egypt Post assignment -> official area or no canonical geometry -> optional derived building-group surface -> administrative context -> explicit civic-address/building relation -> AGID cells",
+    "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Exactly seven digits remain text; five, six or eight digits, prefixes and punctuation are rejected." },
+    { "id": "legacy-migration", "pass": "Old values require an authoritative versioned crosswalk and are never inferred by digit manipulation." },
+    { "id": "assignment-versus-geometry", "pass": "Egypt Post assignment and geometry authority are recorded independently." },
+    { "id": "derived-surface", "pass": "Inputs, method, uncertainty, exclusions, topology, version, time and digest are recorded; output stays derived and non-canonical." },
+    { "id": "explicit-building-link", "pass": "Exact building output has an authoritative relation or reviewed crosswalk; group membership and proximity alone never pass." },
+    { "id": "licence-and-crs", "pass": "Exact licence, access, source CRS, zone, transform, attribution and redistribution conditions are pinned." },
+    { "id": "privacy", "pass": "No recipient, holder, saved location, correspondence, resident, occupant, owner, title or query data is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "target_stage": "M2_current_egypt_post_assignments_migration_and_postal_area_visualization",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_egypt_post_assignments_migration_and_postal_area_visualization", "definition": "M2 requires a complete current finite denominator for every Egypt Post five- and seven-digit assignment, alias, migration relation, validity, correction, exception and area/non-area type plus exact corresponding Polygon/MultiPolygon geometry, all in immutable versioned artifacts under rights compatible with AGID processing, storage, derivation, redistribution and public serving. The real EG API/app must expose normalization, loading, no-match, multiple, failure and invalid-geometry states; fit a valid surface; render translucent fill and clear outline over a base map; show selected postcode, geometry type, official/derived/virtual class, source, date and confidence; clear and re-search; and keep address, building and AGID identity separately sourced." },
+      { "id": "M3_geometry_and_address", "definition": "Official or derived geometry and public address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates." },
+      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "five-or-six-digit-legacy-code-silently-padded-truncated-or-treated-as-current-seven-digit-code",
+      "seven-digit-code-gps-result-building-group-or-administrative-boundary-presented-as-official-postal-polygon",
+      "derived-building-group-surface-published-without-derived-noncanonical-label-uncertainty-lineage-and-version",
+      "postcode-po-box-or-building-group-presented-as-building-recipient-or-delivery-entitlement",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "app-guide-search-viewer-free-service-or-government-authorship-presented-as-redistribution-right",
+      "recipient-contact-correspondence-saved-location-resident-occupant-owner-title-right-or-query-data-published",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-po-box-building-or-delivery-point-stored-as-number-or-inferred-from-location",
+      "complete-current-five-and-seven-digit-assignment-and-migration-denominator-unavailable",
+      "official-rights-cleared-postal-polygon-or-multipolygon-release-unavailable"
+    ],
+    "data_completion_verified": false
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_EG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_EG_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_EG_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_EG_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-address-building-administrative-recipient-or-query-rows",
+    "all-seven-digit-codes-have-official-polygons",
+    "capmas-or-survey-boundary-is-postal-area",
+    "legacy-code-is-current-code-with-digit-padding",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link"
+  ]
+}

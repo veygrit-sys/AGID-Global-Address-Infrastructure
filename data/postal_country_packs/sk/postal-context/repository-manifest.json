@@ -1,0 +1,78 @@
+{
+  "schema_version": "agid-postal-sk-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-sk",
+    "country_code": "SK",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "PSČ",
+    "full_code_format": "NNN NN",
+    "full_code_default_geometry": "routing_assignment_or_derived_address_membership_surface_or_non_area",
+    "assignment_rule": "A pinned Slovenská pošta postcode-search receipt or separately permitted release establishes a five-digit PSČ assignment to the returned street, municipality, delivery office, or routing context at capture time. Syntax, a post-office location, access point, or municipality name does not establish current assignment or deliverability.",
+    "postcode_area_rule": "No nationwide official Slovenská pošta postcode-polygon source is assumed. Register adries address Points and null geometry do not establish an area and are never buffered, hulled, tessellated, clipped, or substituted with administration, parcels, buildings, offices, or access points. A separately reviewed rights-cleared polygon product may be published only with its true official/derived/virtual class, complete assignment/non-area reconciliation, method, members, exclusions, uncertainty, validity, and lineage.",
+    "address_rule": "The Ministry of Interior Register adries is the address-identity authority. Its address-point and street identifiers, building identifier, descriptive and orientation numbers, municipality hierarchy, validity, API or release terms, schema, coverage, CRS, and digest remain separate from Slovenská pošta PSČ assignment evidence.",
+    "building_rule": "Exact building display requires a distributable Register adries building relationship or common authoritative building identifier joined to a rights-cleared ZBGIS/INSPIRE building feature. A footprint, parcel, containment, or nearest feature is candidate evidence only.",
+    "parcel_rule": "Cadastral parcel geometry is validation context only. A parcel is not a building, address relationship, PSČ perimeter, delivery guarantee, or permission to publish owners, rightsholders, occupants, title, or restriction records.",
+    "administrative_rule": "Regions, districts, municipalities, municipality parts, streets, and cadastral territories remain separately sourced context and never create postal membership or delivery coverage.",
+    "service_status_rule": "Post-office and access-point operation, route availability, postcode-search availability, and delivery eligibility are time-stamped operational assertions separate from assignment, geometry, address identity, and administration."
+  },
+  "integration": {
+    "agid_country_code": "SK",
+    "coordinate_flow": "coordinate -> rights-cleared address point or derived PSČ surface -> address graph -> explicit building relation -> AGID cell",
+    "postcode_flow": "canonical PSČ -> operator assignment evidence -> optional derived membership surface -> address hierarchy -> explicit building relation -> AGID cells",
+    "building_output_gate": "explicit distributable relation, common authoritative identifier, or reviewed crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-psc", "pass": "PSČ is stored as five-character text and rendered NNN NN without losing leading zeroes." },
+    { "id": "operator-address-separation", "pass": "Slovenská pošta assignment and Register adries identity remain independent assertions." },
+    { "id": "derived-surface-label", "pass": "Every inferred PSČ surface is marked derived with members, exclusions, uncertainty, method, validation, and lineage." },
+    { "id": "explicit-building-link", "pass": "Building output has a source-defined or reviewed identifier relation; proximity alone never passes." },
+    { "id": "resource-rights", "pass": "Every Register adries, ZBGIS, INSPIRE, and cadastral resource pins its exact access or reuse terms and digest." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_slovakia_psc_assignment_and_area_visualization", "definition": "A current complete Slovenská pošta five-digit PSČ assignment and exception denominator is pinned under explicit reviewed AGID processing, storage, derivation, redistribution and public-serving permission. Every drawable code is reconciled to a valid fixed Polygon/MultiPolygon whose official/derived/virtual status, provider, edition, reference date, rights, attribution, bytes, SHA-256, schema, CRS, topology, coverage, method, confidence and exceptions are recorded; point, route, P.O.-box, organization, office and otherwise non-area codes retain an explicit source-grounded reason. Register adries address Points and null geometry remain address membership only and are never buffered, hulled, tessellated or replaced by administration, cadastre, buildings, offices or synthetic geometry. The approved immutable artifact drives the real SK API/app, which normalizes five text digits and NNN NN display, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_address", "definition": "Register adries identifiers and points pass licence, schema, coverage, validity, privacy, and correction gates." },
+      { "id": "M4_geometry", "definition": "Derived PSČ surfaces and building joins pass topology, ambiguity, identifier, licence, and quality gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "postcode-search-result-presented-as-open-bulk-data",
+      "post-office-or-access-point-presented-as-postcode-area",
+      "derived-surface-presented-as-official-slovenska-posta-boundary",
+      "address-point-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-register-link",
+      "cadastral-parcel-presented-as-address-building-or-postcode-area",
+      "portal-or-service-access-substituted-for-resource-specific-license",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_SK_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SK_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_SK_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SK_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-or-address-rows",
+    "every-psc-is-a-polygon",
+    "post-office-or-access-point-equals-psc-perimeter",
+    "administrative-boundary-equals-psc",
+    "nearest-building-is-exact-address-link",
+    "parcel-is-building-or-address",
+    "public-portal-access-is-blanket-redistribution-license"
+  ]
+}

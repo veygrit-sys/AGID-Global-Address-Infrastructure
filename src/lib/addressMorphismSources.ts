@@ -191,7 +191,7 @@ export function detectNaturalAddressContext({
   if (/\b(water|river|stream|lake|wetland|canal)\b/.test(joined)) {
     return { kind: 'water', name, sourceIds: ['osm-overpass'] };
   }
-  if (/\b(island|islet|atoll)\b/.test(joined)) {
+  if (/\b(island|islands|isle|islet|islets|atoll|archipelago|cay|cays|cayo|caye|key|keys|holm|skerry|ait|eyot)\b/.test(joined) || /島|離島|小島|島嶼|諸島|群島|列島|環礁/.test(joined)) {
     return { kind: 'island', name, sourceIds: ['osm-overpass', 'geonames-gazetteer'] };
   }
   return null;

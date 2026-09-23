@@ -8,6 +8,22 @@ interface AgidWasmExports {
   agid_decode_hilbert_y(hi: number, lo: number): number;
   agid_get_lat(face: number, qx: number, qy: number): number;
   agid_get_lon(face: number, qx: number, qy: number): number;
+  agid_zkp_quality_threshold_satisfied?(scorePercent: number, thresholdPercent: number): number;
+  agid_zkp_point_in_bbox?(
+    lat: number,
+    lon: number,
+    north: number,
+    south: number,
+    west: number,
+    east: number
+  ): number;
+  agid_zkp_point_in_circle?(
+    lat: number,
+    lon: number,
+    centerLat: number,
+    centerLon: number,
+    radiusMeters: number
+  ): number;
 }
 
 let wasmCore: AgidWasmExports | null = null;

@@ -39,7 +39,7 @@ test('samples corners, edge midpoints, and center so viewport grid bounds cover 
   ]);
 });
 
-test('allows grid by viewport width only and does not hide it because of height over 200m', () => {
+test('uses what3words-style zoom gating by default instead of a hard 200m viewport gate', () => {
   const smallViewport = [
     { lng: 0, lat: 0 },
     { lng: 0.001, lat: 0 },
@@ -64,6 +64,7 @@ test('allows grid by viewport width only and does not hide it because of height 
   assert.ok(smallSpan.widthMeters < 200);
   assert.ok(smallSpan.heightMeters < 200);
   assert.equal(shouldShowGridForViewport(smallViewport), true);
-  assert.equal(shouldShowGridForViewport(wideViewport), false);
+  assert.equal(shouldShowGridForViewport(wideViewport), true);
   assert.equal(shouldShowGridForViewport(tallViewport), true);
+  assert.equal(shouldShowGridForViewport(wideViewport, 200), false);
 });

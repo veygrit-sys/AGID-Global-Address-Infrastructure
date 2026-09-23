@@ -3,34 +3,41 @@
   "name": "Bahrain",
   "native": {
     "name": "البحرين",
-    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}",
+    "addressFormat": "{{unit}}\n{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}",
     "ordering": "small-to-big",
     "fields": [
       {
         "key": "organization",
-        "label": "اسم المبنى",
+        "label": "اسم المبنى أو المؤسسة",
         "placeholder": "",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "unit",
+        "label": "رقم الشقة/الوحدة",
+        "placeholder": "1",
         "required": false,
         "type": "text"
       },
       {
         "key": "houseNumber",
         "label": "رقم المبنى",
-        "placeholder": "123",
+        "placeholder": "100",
         "required": true,
         "type": "text"
       },
       {
         "key": "street",
-        "label": "رقم الطريق",
-        "placeholder": "456",
+        "label": "اسم/رقم الطريق",
+        "placeholder": "1000",
         "required": true,
         "type": "text"
       },
       {
         "key": "suburb",
         "label": "رقم المجمع",
-        "placeholder": "789",
+        "placeholder": "100",
         "required": true,
         "type": "text"
       },
@@ -43,66 +50,87 @@
       },
       {
         "key": "postcode",
-        "label": "الرمز البريدي",
-        "placeholder": "301",
+        "label": "الرمز البريدي (رقم المجمع)",
+        "placeholder": "100",
+        "required": true,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "مرجع شهادة العنوان",
+        "placeholder": "",
         "required": false,
         "type": "text"
       }
     ]
   },
   "english": {
-    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}\n{{country}}",
+    "addressFormat": "{{unit}}\n{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}\n{{country}}",
     "ordering": "small-to-big",
     "fields": [
       {
         "key": "organization",
-        "label": "Building Name",
+        "label": "Building or Establishment Name",
         "placeholder": "",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "unit",
+        "label": "Flat / Unit No.",
+        "placeholder": "1",
         "required": false,
         "type": "text"
       },
       {
         "key": "houseNumber",
         "label": "Building No.",
-        "placeholder": "123",
+        "placeholder": "100",
         "required": true,
         "type": "text"
       },
       {
         "key": "street",
-        "label": "Road No.",
-        "placeholder": "456",
+        "label": "Road Name / No.",
+        "placeholder": "1000",
         "required": true,
         "type": "text"
       },
       {
         "key": "suburb",
         "label": "Block No.",
-        "placeholder": "789",
+        "placeholder": "100",
         "required": true,
         "type": "text"
       },
       {
         "key": "city",
-        "label": "Area/City",
+        "label": "Area / City",
         "placeholder": "Manama",
         "required": true,
         "type": "text"
       },
       {
         "key": "postcode",
-        "label": "Postal Code",
-        "placeholder": "301",
+        "label": "Postcode (Block Code)",
+        "placeholder": "100",
+        "required": true,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "iGA Address Certificate Reference",
+        "placeholder": "",
         "required": false,
         "type": "text"
       }
     ]
   },
   "postalCode": {
-    "format": "NNN (or NNNN)",
-    "regex": "^\\d{3,4}$",
-    "api": "https://www.bahrainpost.gov.bh/",
-    "source": "Bahrain Post"
+    "format": "NNN or NNNN (1XX-12XX)",
+    "regex": "^(?:[1-9]\\d{2}|1[0-2]\\d{2})$",
+    "api": "https://www.bahrainpost.gov.bh/en/images/pdf/services-directory-eng.pdf",
+    "source": "Bahrain Post; UPU; iGA; Bahrain Open Data Portal; Municipalities; SLRB"
   },
   "addressRules": {
     "languages": [
@@ -117,25 +145,51 @@
     ],
     "nativeOrder": [
       "governorate",
-      "area",
-      "street",
-      "building",
+      "municipalityOrLocality",
+      "blockNumber",
+      "roadNameOrNumber",
+      "buildingNumber",
+      "unitOrFlat",
       "name"
     ],
     "englishOrder": [
       "governorate",
-      "area",
-      "street",
-      "building",
+      "municipalityOrLocality",
+      "blockNumber",
+      "roadNameOrNumber",
+      "buildingNumber",
+      "unitOrFlat",
       "name"
     ],
     "regionalHierarchy": [
       "governorate",
-      "area"
+      "municipalityOrLocality",
+      "blockNumber",
+      "roadNameOrNumber",
+      "buildingNumber",
+      "unitOrFlat",
+      "currentThreeOrFourDigitPostcode",
+      "explicitPostcodeBlockRelation",
+      "officialBlockPostalSurfaceOrNoCanonicalGeometry",
+      "optionalDerivedBlockSurface",
+      "explicitIgaAddressCertificate",
+      "explicitAddressLinkedBuildingOrParcel",
+      "exactRightsClearedBuildingGeometry"
     ],
-    "postalCode": null
+    "postalCode": {
+      "label": "Current 3 or 4 digits in UPU range 1XX-12XX; Bahrain routes by the block/postcode namespace, but every code-block relation needs explicit authority. P.O. boxes remain non-building delivery evidence. Geometry is official only when an exact postal/block boundary artifact says so; otherwise a rights-cleared block join is derived and non-canonical. Exact buildings require an iGA address relation plus separately permitted geometry.",
+      "required": true,
+      "usage": "required"
+    }
   },
   "openSourceIds": [
+    "bahrain-post-services-directory",
+    "upu-bahrain-addressing",
+    "iga-bahrain-address-services",
+    "bahrain-open-data-terms",
+    "bahrain-open-data-geographic-locations",
+    "bahrain-municipal-geographic-explorer",
+    "slrb-bahrain-cadastre",
     "bahrain-open-data",
     "osm-bahrain",
     "osm-nominatim",

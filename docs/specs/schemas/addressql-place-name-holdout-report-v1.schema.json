@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-place-name-holdout-report-v1.schema.json",
+  "title": "AddressQL place-name holdout aggregate report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "catalogId",
+    "catalogVersion",
+    "catalogDigest",
+    "fixtureId",
+    "fixtureVersion",
+    "holdoutDigest",
+    "total",
+    "correct",
+    "incorrect",
+    "top1Accuracy",
+    "expectedRanked",
+    "expectedDeferrals",
+    "safeDeferrals",
+    "safeDeferralRate",
+    "officialAliasPriorityCases",
+    "officialAliasPriorityPassed",
+    "sameScriptDifferentReadingCases",
+    "sameScriptDifferentReadingPassed",
+    "unsafeAutomaticSelections",
+    "byCountry",
+    "byHierarchy",
+    "privacy",
+    "nonClaims"
+  ],
+  "properties": {
+    "version": { "const": "addressql-place-name-holdout-report-v1" },
+    "catalogId": { "$ref": "#/$defs/technicalId" },
+    "catalogVersion": { "$ref": "#/$defs/version" },
+    "catalogDigest": { "$ref": "#/$defs/digest" },
+    "fixtureId": { "$ref": "#/$defs/technicalId" },
+    "fixtureVersion": { "$ref": "#/$defs/version" },
+    "holdoutDigest": { "$ref": "#/$defs/digest" },
+    "total": { "type": "integer", "minimum": 1 },
+    "correct": { "type": "integer", "minimum": 0 },
+    "incorrect": { "type": "integer", "minimum": 0 },
+    "top1Accuracy": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Correct top-ranked candidates divided by expectedRanked; expected deferrals are excluded."
+    },
+    "expectedRanked": { "type": "integer", "minimum": 0 },
+    "expectedDeferrals": { "type": "integer", "minimum": 0 },
+    "safeDeferrals": { "type": "integer", "minimum": 0 },
+    "safeDeferralRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Safe non-ranked outcomes divided by expectedDeferrals."
+    },
+    "officialAliasPriorityCases": { "type": "integer", "minimum": 0 },
+    "officialAliasPriorityPassed": { "type": "integer", "minimum": 0 },
+    "sameScriptDifferentReadingCases": { "type": "integer", "minimum": 0 },
+    "sameScriptDifferentReadingPassed": { "type": "integer", "minimum": 0 },
+    "unsafeAutomaticSelections": { "const": 0 },
+    "byCountry": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slice" }
+    },
+    "byHierarchy": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slice" }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "containsVectorText",
+        "containsRawAddress",
+        "containsRecipientData",
+        "aggregateOnly"
+      ],
+      "properties": {
+        "containsVectorText": { "const": false },
+        "containsRawAddress": { "const": false },
+        "containsRecipientData": { "const": false },
+        "aggregateOnly": { "const": true }
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "technicalId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:+/-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "slice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "total", "correct", "incorrect", "accuracy"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "total": { "type": "integer", "minimum": 1 },
+        "correct": { "type": "integer", "minimum": 0 },
+        "incorrect": { "type": "integer", "minimum": 0 },
+        "accuracy": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

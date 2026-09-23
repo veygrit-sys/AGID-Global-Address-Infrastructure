@@ -1,0 +1,111 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-tc-upu-decr-shoreline",
+    "country_code": "TC",
+    "country_name": "Turks and Caicos Islands",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "current-official-single-postcode-with-derived-government-land-extent-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Turks and Caicos Islands postcode",
+    "full_code_format": "TKCA 1ZZ",
+    "full_code_default_geometry": "single-postcode-derived-government-land-extent-by-source-region",
+    "assignment_rule": "The UPU Turks and Caicos Islands addressing sheet dated 10/2025 states that TKCA 1ZZ is the single postcode for the whole territory; whitespace-free TKCA1ZZ is accepted only as an input alias and normalizes to TKCA 1ZZ.",
+    "geometry_rule": "The UPU source supplies no postal polygon. The government DECR 2020 shoreline and land-extent MultiPolygons are repaired only where declared, dissolved by their 27 source Region values, topology-preserving simplified at 0.0005 degrees, and published only as derived display geometry. They are not official postal, legal, survey, cadastral or delivery boundaries.",
+    "id_rule": "The public runtime result links postal-tc-tkca-1zz, country-tc, 2 runtime geometry bundle identifiers, the official country assertion and the pinned release. The graph retains 27 stable admin-tc-decr-region-* identifiers and their derived audit assertions without promoting them as definitive public lookup contexts. Five missing source OBJECTIDs and the repeated OBJECTID 853 never become ambiguous AGID IDs because the fixed zero-based source index is retained in the reproducible transform.",
+    "non_area_rule": "No Point, route, P.O. box or organisation object is expanded into an area.",
+    "address_rule": "No address, building, parcel, recipient, customer, population or land-rights row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The region links and geometry IDs are public spatial context only. AGID identity, addresses and buildings require independent explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "The assignment is represented from the 10/2025 UPU country sheet; geometry is referenced to the DECR 2020 data release.",
+    "known_time": "Retrieval time, exact source bodies, edition, byte count, digests, transformation and AGID release time are recorded separately.",
+    "history_rule": "A later assignment or geometry edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": [
+    "multipolygon",
+    "point",
+    "route",
+    "po_box",
+    "organization",
+    "unknown"
+  ],
+  "quality_gates": [
+    {
+      "id": "complete-assignment-denominator",
+      "pass": "The current country-specific UPU sheet defines one postcode, TKCA 1ZZ, for the whole territory."
+    },
+    {
+      "id": "official-open-geometry-source",
+      "pass": "The Turks and Caicos Government Data Portal package and GeoJSON resource are fixed by official IDs, byte counts and SHA-256; CKAN declares Creative Commons Attribution Share-Alike."
+    },
+    {
+      "id": "geometry-quality",
+      "pass": "All 39 source-aligned output surfaces are bundled into 2 runtime MultiPolygons that pass Turf, JSTS and shared topology checks; 7,838 positions and 857 closed rings stay within pack limits, and repaired-source versus output area differs by 0.0641 percent."
+    },
+    {
+      "id": "id-linkage",
+      "pass": "Lookup exposes the postal ID, official country context ID, geometry feature IDs, official assertion ID, source digest and pinned release. Twenty-seven source-region IDs remain reviewable graph audit metadata without being promoted as definitive lookup contexts, and no population or address attributes are published."
+    },
+    {
+      "id": "runtime",
+      "pass": "The real pack passes normalization, API lookup, metadata, bounds fit, translucent paint, clear, re-search, no-match and invalid-code tests."
+    },
+    {
+      "id": "privacy",
+      "pass": "No address, building, parcel, population, recipient, customer or land-rights data is published."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_upu_single_postcode_decr_derived_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Country-specific contracts and provenance are reviewable."
+      },
+      {
+        "id": "M2_current_upu_single_postcode_decr_derived_visualization",
+        "definition": "The current 10/2025 UPU country sheet proves that TKCA 1ZZ is the whole-territory postcode; fixed CC BY-SA government DECR shoreline data supplies real valid MultiPolygons through a documented repair, region dissolve and topology-preserving simplification; the shared API/app path exposes stable postal, official country, official assertion, geometry and release IDs, renders and fits the derived surface, clears and re-searches it, and rejects invalid or fabricated areas. Source-region IDs and derived audit assertions remain reviewable in the graph without being promoted as definitive public lookup contexts."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "A source refresh and independent review pass without authority drift."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass with monitored rollback."
+      }
+    ],
+    "hard_blockers": [
+      "derived-land-contour-presented-as-official-postal-geometry",
+      "incomplete-official-assignment-denominator",
+      "postcode-or-boundary-presented-as-address-building-parcel-population-or-deliverability",
+      "source-repair-or-simplification-undocumented",
+      "missing-edition-digest-rights-or-reproducible-join",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": [
+    "official_postal_boundary",
+    "legal_or_survey_boundary",
+    "cadastral_boundary",
+    "delivery_zone",
+    "deliverability",
+    "address_or_building_identity",
+    "population_identity",
+    "recipient_identity"
+  ]
+}

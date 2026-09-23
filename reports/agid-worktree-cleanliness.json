@@ -1,0 +1,164 @@
+{
+  "schema": "agid-worktree-cleanliness-report-v1",
+  "generatedAt": "2026-06-28T23:32:46.670Z",
+  "totalChangedEntries": 1141,
+  "statusCounts": {
+    "M": 244,
+    "D": 22,
+    "??": 875
+  },
+  "categoryCounts": {
+    "root-allowed": 18,
+    "data": 31,
+    "documentation": 196,
+    "specialized-runtime": 4,
+    "tooling": 60,
+    "sdk": 124,
+    "backend": 2,
+    "source": 698,
+    "uncategorized": 3,
+    "root-needs-triage": 1,
+    "public-assets": 4
+  },
+  "extensionCounts": {
+    ".example": 1,
+    "(none)": 58,
+    ".md": 220,
+    ".zip": 21,
+    ".html": 2,
+    ".rs": 2,
+    ".json": 88,
+    ".ts": 635,
+    ".h": 1,
+    ".c": 1,
+    ".hpp": 1,
+    ".cpp": 1,
+    ".dart": 1,
+    ".yaml": 21,
+    ".csproj": 1,
+    ".cs": 1,
+    ".ex": 1,
+    ".exs": 1,
+    ".go": 2,
+    ".xml": 1,
+    ".java": 2,
+    ".toml": 4,
+    ".jl": 1,
+    ".kts": 1,
+    ".kt": 1,
+    ".rockspec": 2,
+    ".lua": 1,
+    ".nimble": 1,
+    ".nim": 1,
+    ".php": 1,
+    ".py": 5,
+    ".r": 1,
+    ".gemspec": 1,
+    ".rb": 1,
+    ".swift": 1,
+    ".zig": 2,
+    ".tsx": 46,
+    ".css": 1,
+    ".txt": 1,
+    ".png": 3,
+    ".jpg": 1,
+    ".ps1": 1,
+    ".cjs": 2
+  },
+  "cleanupClassCounts": {
+    "review-in-place": 492,
+    "externalize-heavy-data": 21,
+    "bucket-docs": 190,
+    "move-out-of-root": 1,
+    "avoid-new-src-lib-root": 437
+  },
+  "findings": [
+    {
+      "id": "root-needs-triage",
+      "severity": "medium",
+      "title": "Root-level files should be allowlisted or moved",
+      "count": 1,
+      "recommendation": "Move ad-hoc root files into docs/ops, docs/research, reports, scripts, public, or data. Keep root for package/build/license entrypoints only.",
+      "examples": [
+        "pos-measuring-instrument-check.png"
+      ]
+    },
+    {
+      "id": "direct-doc-bucketing",
+      "severity": "high",
+      "title": "Direct docs/*.md files need category buckets",
+      "count": 190,
+      "recommendation": "Bucket docs into docs/specs, docs/research, docs/product, docs/ops, or docs/archive. Move in small PRs grouped by topic.",
+      "examples": [
+        "docs/agid-math-model-resume.md -> docs/research/",
+        "docs/hybrid-architecture.md -> docs/archive/",
+        "docs/project-resume.md -> docs/archive/",
+        "docs/verified-address-translation-theory.md -> docs/research/",
+        "docs/README.md -> docs/archive/",
+        "docs/accessibility-hardening-ja.md -> docs/archive/",
+        "docs/address-access-auth.md -> docs/archive/",
+        "docs/address-communication-engineering-theory-ja.md -> docs/research/"
+      ]
+    },
+    {
+      "id": "new-src-lib-root",
+      "severity": "high",
+      "title": "New files directly under src/lib break the current organization policy",
+      "count": 437,
+      "recommendation": "Place new code under src/address, src/agid, src/grid, src/postal, src/zk, src/web3, src/pos, or src/integrations before adding more src/lib root files.",
+      "examples": [
+        "src/lib/accessibilityHardening.test.ts",
+        "src/lib/accessibilityHardening.ts",
+        "src/lib/address/",
+        "src/lib/addressAccessAuth.test.ts",
+        "src/lib/addressAccessAuth.ts",
+        "src/lib/addressConnect.test.ts",
+        "src/lib/addressConnect.ts",
+        "src/lib/addressConnectOperations.test.ts"
+      ]
+    },
+    {
+      "id": "generated-runtime-files",
+      "severity": "info",
+      "title": "Generated/runtime files should stay ignored or be removed after use",
+      "count": 0,
+      "recommendation": "Keep logs, dist, outputs, tmp, test-results, and runtime artifacts out of commits. If a generated report is useful, export a compact report under reports/.",
+      "examples": []
+    },
+    {
+      "id": "heavy-data-externalization",
+      "severity": "medium",
+      "title": "Heavy zip datasets should be externalized",
+      "count": 21,
+      "recommendation": "Do not keep postal ZIPs or third-party extracts in the app bundle. Prefer country packs, external storage, or generated manifests.",
+      "examples": [
+        "data/postal_codes/AR.zip",
+        "data/postal_codes/BR.zip",
+        "data/postal_codes/CH.zip",
+        "data/postal_codes/CL.zip",
+        "data/postal_codes/CN.zip",
+        "data/postal_codes/CO.zip",
+        "data/postal_codes/DZ.zip",
+        "data/postal_codes/ES.zip"
+      ]
+    },
+    {
+      "id": "deleted-postal-zips",
+      "severity": "low",
+      "title": "Postal ZIP deletions should be recorded as an intentional data slimming decision",
+      "count": 21,
+      "recommendation": "If these deletions are intended, document the replacement source or country-pack path before merging.",
+      "examples": [
+        "data/postal_codes/AR.zip",
+        "data/postal_codes/BR.zip",
+        "data/postal_codes/CH.zip",
+        "data/postal_codes/CL.zip",
+        "data/postal_codes/CN.zip",
+        "data/postal_codes/CO.zip",
+        "data/postal_codes/DZ.zip",
+        "data/postal_codes/ES.zip"
+      ]
+    }
+  ],
+  "strictStatus": "pass"
+}

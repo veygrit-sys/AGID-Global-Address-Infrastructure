@@ -1,0 +1,143 @@
+{
+  "schema_version": "agid-postal-ph-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ph",
+    "country_code": "PH",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "current_code_name": "Philippines four-digit ZIP code",
+    "current_code_format": "NNNN",
+    "current_code_default_geometry": "delivery_network_assignment",
+    "legal_rule": "The UPU Philippines addressing sheet specifies four digits to the left of the locality or province and describes zone, province/district/city and municipality/delivery-office digit roles. PHLPost publishes Region, Province, City/Municipality and ZIP Code rows. These establish syntax, address order and routing assignment, not a canonical polygon, barangay coverage, delivery point, building relation, complete version history or blanket redistribution licence.",
+    "assignment_rule": "Every ZIP code is stored as a four-character text value so leading zeroes remain possible. PHLPost locator rows retain source region, province and city-or-municipality labels and retrieval time. Equal digits, names, PSGC codes, administrative overlap, office points, coordinates or nearest features do not create a postal area or prove delivery to an address.",
+    "geometry_rule": "No reviewed canonical national ZIP-code polygon artifact is bundled. Official geometry requires an exact PHLPost-authorized boundary artifact and code relation with authority, edition, coverage, rights, CRS, topology and digest pinned. A generated delivery surface remains derived and uncertainty-bearing; UPU digit groups, PHLPost table rows, PSGC units, Geoportal layers, NAMRIA topography, PSA census or CBMS features, LRA records, interpolation, Voronoi and model output never become official ZIP-code polygons.",
+    "address_rule": "House, building or unit, street, subdivision or district, barangay, city or municipality, province or highly urbanized city, region and ZIP code remain typed. A ZIP row, PSGC barangay, census building point, topographic feature, title, parcel, coordinate or map label alone does not identify a recipient, owner, occupant, entrance, unit or exact civic address.",
+    "building_rule": "Exact building display requires a rights-cleared civic-address point or stable address identifier, separately permitted building geometry, and a source-defined stable relation, common identifier or reviewed explicit crosswalk. NAMRIA topography, Geoportal features, PSA building or construction geotags, LRA parcels and titles, ZIP containment, barangay overlap, text match, coordinates, proximity and nearest-building logic create candidates only.",
+    "administration_rule": "PHLPost ZIP assignments, PSA PSGC regions, provinces, highly urbanized cities, cities, municipalities and barangays, NAMRIA products, Geoportal layers, PSA POPCEN-CBMS artifacts, LRA records, civic addresses and buildings refresh independently. Administrative and census geography is not postal geography without an exact postal-source relation.",
+    "licence_rule": "A public PHLPost page is retained as a reference and no reviewed bulk-row redistribution licence is assumed. PSA website material is CC BY 4.0 unless otherwise stated, while exact attachments and exceptions remain pinned. Geoportal inventory records open, conditional, restricted and unspecified layers and its download procedure requires identity, purpose, terms and privacy acceptance. NAMRIA products, PSA restricted microdata and LRA services keep artifact-specific rights. Public access, government authorship, portal download or mathematical generation is not blanket derivative-map redistribution permission. The reviewed locator also contains a positive public-domain-with-exceptions notice and a copyright footer. Government-work profit-exploitation and third-party-rights conditions require artifact-specific review; public-domain evidence is not ignored or silently relabelled CC BY.",
+    "privacy_rule": "Recipients, senders, P.O. box holders, contacts, correspondence, shipment and tracking records, query history, census or CBMS respondents, households, building serial numbers, permit applicants, establishments, landowners, title holders, occupants, tenants, residents, national identifiers, phone numbers and private access instructions are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, datum, axis order, epoch, map scale and accuracy. NAMRIA, Geoportal, PSA, LGU and LRA artifacts are not relabelled geographic WGS84. Reprojection requires reviewed source metadata, parameters, axis order, transformation accuracy and digest.",
+    "territory_rule": "The repository uses ISO code PH and exact source-stated coverage. Postal, PSGC, Geoportal, NAMRIA, census, land and local-government coverage is metadata and is not used to decide sovereignty, jurisdiction, maritime limits or borders; source gaps are not model-filled as official.",
+    "freshness_rule": "PHLPost locator rows, UPU metadata, PSGC editions, Geoportal restrictions, NAMRIA products, PSA census or CBMS releases, LRA records, civic addresses, buildings, licences and AGID releases refresh independently. Mixed-edition joins fail closed unless validity, known-time, identifiers, rights and an explicit relation overlap.",
+    "namespace_transition_rule": "The reviewed PHLPost locator uses the four-digit namespace. A separate official 2024-03-06 announcement describes seven-character alphanumeric ZIP Code PH; no complete allocation, effective transition date or four-to-seven-character crosswalk was obtained. Do not coerce, generate, replace or merge these namespaces, or use Postal ID records to fill gaps."
+  },
+  "integration": {
+    "agid_country_code": "PH",
+    "coordinate_flow": "coordinate -> exact official postal surface or permitted civic-address point -> typed PHLPost ZIP assignment -> barangay/city-or-municipality/province-or-HUC/region -> explicit address-building relation -> PH AGID cell",
+    "postcode_flow": "canonical four-character string -> pinned PHLPost locator row -> routing locality -> official postal surface or no canonical geometry -> optional derived delivery surface -> explicit civic-address/building evidence -> AGID cells",
+    "building_output_gate": "rights-cleared civic-address evidence plus building geometry and source-defined stable relation, common identifier or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "four-character-code",
+      "pass": "Runtime normalizes full-width or ASCII digits and whitespace to exactly four ASCII digits, preserves leading zeroes and rejects prefixes, punctuation and other lengths."
+    },
+    {
+      "id": "locator-assignment",
+      "pass": "Region, Province, City/Municipality and ZIP Code fields remain typed, retrieval-timed and source-linked without treating labels as geometry."
+    },
+    {
+      "id": "assignment-versus-geometry",
+      "pass": "PHLPost assignment authority is recorded independently from official or derived geometry authority."
+    },
+    {
+      "id": "derived-delivery-surface",
+      "pass": "Generated surfaces record inputs, explicit assignment relation, method, uncertainty, exclusions, topology, version, validity, CRS, rights and digest and remain non-canonical."
+    },
+    {
+      "id": "administration-separation",
+      "pass": "PSGC and LGU units remain administrative context and never become postal areas by code, name or overlap."
+    },
+    {
+      "id": "statistical-building-separation",
+      "pass": "PSA census, CBMS, service-facility and building-construction geotags remain protected statistical evidence, not public addresses or exact buildings."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Exact building output has permitted civic-address evidence, rights-cleared geometry and a stable explicit relation; title, containment, text and proximity never pass."
+    },
+    {
+      "id": "licence-crs-territory-privacy",
+      "pass": "Artifact-specific restrictions, permission, attribution, CRS, scale, coverage and privacy exclusions are pinned without geopolitical inference."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment",
+        "definition": "A complete rights-cleared, editioned PHLPost ZIP assignment passes authority, coverage, freshness, licence and digest gates."
+      },
+      {
+        "id": "M3_geometry_and_address",
+        "definition": "Official or derived postal geometry and public civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "phlpost-locator-row-or-city-label-presented-as-official-zip-polygon",
+      "upu-digit-hierarchy-presented-as-geometric-boundary",
+      "psgc-barangay-city-municipality-province-or-region-presented-as-postal-area",
+      "geoportal-layer-or-open-label-presented-as-common-postal-authority-or-blanket-reuse-right",
+      "namria-topographic-feature-presented-as-civic-address-link",
+      "psa-popcen-cbms-building-facility-project-or-respondent-data-published-as-address-or-building-register",
+      "lra-title-parcel-owner-or-recorded-interest-presented-as-postal-surface-building-or-public-address-data",
+      "zip-barangay-coordinate-text-overlap-or-proximity-presented-as-exact-address-building-link",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-zip-polygon",
+      "recipient-sender-box-holder-contact-tracking-query-census-respondent-household-building-serial-permit-establishment-owner-title-holder-occupant-tenant-resident-id-phone-or-private-access-data-published",
+      "source-crs-axis-scale-or-datum-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "zip-address-building-or-delivery-point-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_PH_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PH_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_PH_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_PH_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-phlpost-zip-address-building-census-cbms-title-tracking-or-query-rows",
+    "all-four-digit-zip-codes-have-polygons",
+    "city-barangay-enumeration-area-or-parcel-is-postal-area",
+    "topographic-or-statistical-building-is-civic-address",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ],
+  "m2_review": {
+    "status": "blocked",
+    "country_m2_achieved": false,
+    "reviewed_at": "2026-08-28T22:27:15.802Z",
+    "config": "m2-source-review.json",
+    "source_report": "reports/postal-context-m2/ph-source-review-2026-08-28.json",
+    "source_report_digest": "sha256:bccc8aeeac0767a95c5f9c158e2a4b517aefb0f0a793d3927da9d9a42e59b7ae",
+    "engineering_report": "reports/postal-context-m2/ph-checks-2026-08-28.json",
+    "current_assignment_artifacts": 0,
+    "production_geometry_records": 0,
+    "published_immutable_data_artifacts": 0,
+    "real_agid_runtime_verified": false,
+    "next_review_after": "2026-09-04T22:27:15.802Z"
+  }
+}

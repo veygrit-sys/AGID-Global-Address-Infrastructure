@@ -243,3 +243,14 @@ test('builds safe postcode input configs for every country and region JSON file'
 
   assert.deepEqual(failures, []);
 });
+
+test('rejects descriptive or oversized fallbacks while keeping a safely parsed regex', () => {
+  const input = (format: string, regex: string | null) => getPostcodeInputConfig({
+    countryCode: 'KP', name: 'Synthetic input-control test',
+    postalCode: { format, regex, api: null, source: 'synthetic-not-data' },
+  });
+  assert.equal(input('NNN (assignment evidence required)', null).kind, 'none');
+  assert.equal(input('NNNNNNNNNNNNN', null).kind, 'none');
+  assert.equal(input('NNN (assignment evidence required)', '^\\d{3}$').pattern, 'NNN');
+  assert.equal(input('NNN (multiple scopes)', '^(?:[1-8]\\d{3}|X[0-9]{3})$').kind, 'none');
+});

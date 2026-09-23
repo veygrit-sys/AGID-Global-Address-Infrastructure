@@ -1,0 +1,151 @@
+{
+  "artifact": "playlist-commerce-webhook-preflight-fixture",
+  "version": "v0.1",
+  "generatedAt": "2026-07-01T00:00:30.000Z",
+  "source": {
+    "helper": "runPlaylistCommerceWebhookPreflight",
+    "safeCommand": "npm run verify:playlist-commerce",
+    "localOnly": true
+  },
+  "report": {
+    "version": "playlist-commerce-webhook-preflight-report-v0.1",
+    "localOnly": true,
+    "routeId": "merchant-webhook-route",
+    "generatedAt": "2026-07-01T00:00:30.000Z",
+    "safeCommand": "npm run verify:playlist-commerce",
+    "eventId": "evt_pc_synthetic_ping_001",
+    "topic": "checkout.alias_created",
+    "keyId": "pc_ping_key_active",
+    "expectedStatuses": {
+      "accepted": 202,
+      "replay": 401
+    },
+    "responseSummary": {
+      "acceptedStatus": 202,
+      "acceptedResultRef": "pc_webhook_result_evt_pc_synthetic_ping_001",
+      "replayStatus": 401,
+      "replayErrors": [
+        "duplicate-event-id"
+      ]
+    },
+    "activationBlockNegativeCase": {
+      "id": "provider-token-raw-carrier-payload-negative",
+      "expectedStatus": 401,
+      "actualStatus": 401,
+      "blockedKeys": [
+        "providerIdToken",
+        "rawCarrierPayload"
+      ],
+      "errors": [
+        "forbidden-field:$.providerIdToken",
+        "forbidden-field:$.rawCarrierPayload"
+      ],
+      "nonClaims": [
+        "not-payment-settlement",
+        "not-raw-address-intake",
+        "not-proof-witness-intake",
+        "not-provider-token-intake",
+        "not-raw-carrier-payload-intake",
+        "not-merchant-identity-verification"
+      ]
+    },
+    "checks": [
+      {
+        "id": "local-only-boundary",
+        "label": "Local-only boundary",
+        "status": "pass",
+        "detail": "Preflight must run from the local verification command and never target production traffic."
+      },
+      {
+        "id": "signature-present",
+        "label": "Synthetic signature present",
+        "status": "pass",
+        "detail": "The fixture must exercise HMAC verification without returning signing secret material."
+      },
+      {
+        "id": "accepted-once",
+        "label": "Accepted once",
+        "status": "pass",
+        "detail": "A valid synthetic ping should be accepted exactly once by the route handler."
+      },
+      {
+        "id": "replay-blocked",
+        "label": "Replay blocked",
+        "status": "pass",
+        "detail": "Reusing the same synthetic event id must trip the idempotency gate."
+      },
+      {
+        "id": "activation-private-material-blocked",
+        "label": "Activation private material blocked",
+        "status": "pass",
+        "detail": "A local activation negative case must reject provider token and raw carrier payload keys before webhook enablement."
+      },
+      {
+        "id": "redacted-response",
+        "label": "Redacted response",
+        "status": "pass",
+        "detail": "Responses must not include raw address, witness, key, biometric, production secret, or synthetic secret material."
+      },
+      {
+        "id": "non-claims-declared",
+        "label": "Non-claims declared",
+        "status": "pass",
+        "detail": "The preflight is a webhook safety check, not a payment, settlement, delivery, or proof-generation claim."
+      }
+    ],
+    "passed": true,
+    "blockedMaterial": [
+      "raw_address",
+      "recipient_phone",
+      "provider_token",
+      "raw_provider_profile",
+      "raw_carrier_payload",
+      "proof_witness",
+      "private_key",
+      "biometric_template",
+      "production_webhook_secret"
+    ],
+    "nonClaims": [
+      "not-payment-settlement",
+      "not-raw-address-intake",
+      "not-proof-witness-intake",
+      "not-provider-token-intake",
+      "not-raw-carrier-payload-intake",
+      "not-production-delivery-attempt"
+    ]
+  },
+  "verification": {
+    "expectedAcceptedStatus": 202,
+    "expectedReplayStatus": 401,
+    "requiredChecks": [
+      "local-only-boundary",
+      "signature-present",
+      "accepted-once",
+      "replay-blocked",
+      "activation-private-material-blocked",
+      "redacted-response",
+      "non-claims-declared"
+    ]
+  },
+  "privacyBoundary": {
+    "forbiddenMaterial": [
+      "raw_address",
+      "recipient_phone",
+      "provider_token",
+      "raw_provider_profile",
+      "raw_carrier_payload",
+      "proof_witness",
+      "private_key",
+      "biometric_template",
+      "production_webhook_secret"
+    ],
+    "nonClaims": [
+      "not-payment-settlement",
+      "not-raw-address-intake",
+      "not-proof-witness-intake",
+      "not-provider-token-intake",
+      "not-raw-carrier-payload-intake",
+      "not-production-delivery-attempt"
+    ]
+  }
+}

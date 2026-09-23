@@ -1,0 +1,226 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-sg",
+    "country_code": "SG",
+    "country_name": "Singapore",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/sg/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "contract_files": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "README.md",
+    "fixtures/singapore-synthetic.json"
+  ],
+  "authority_model": {
+    "rule": "Postal assignment, address assignment, and geometry authority are independent. A six-digit code or a nearest OneMap response does not create an official postal polygon.",
+    "required_fields": [
+      "assignment_authority",
+      "geometry_authority",
+      "source_ids",
+      "source_release",
+      "method_id",
+      "observed_at",
+      "valid_from",
+      "valid_to"
+    ],
+    "geometry_authority_values": [
+      "official_postal_geometry",
+      "official_address_registry_geometry",
+      "official_municipal_civic_geometry",
+      "official_cadastral_geometry",
+      "official_mapping_geometry",
+      "official_3d_city_model_geometry",
+      "derived_geometry",
+      "virtual_geometry",
+      "synthetic_fixture_geometry",
+      "none"
+    ],
+    "assignment_authority_values": [
+      "official_postal_operator",
+      "official_address_registry",
+      "official_municipal_civic_address",
+      "official_land_registry",
+      "derived_spatial_assignment",
+      "virtual_assignment",
+      "synthetic_fixture_assignment",
+      "none"
+    ]
+  },
+  "postal_system": {
+    "full_code_format": "NNNNNN",
+    "full_code_regex": "^\\d{6}$",
+    "full_code_default_geometry": "point_or_none",
+    "full_code_rule": "Treat a six-digit code as a delivery-point or address assignment until independently licensed building geometry proves a footprint link.",
+    "postal_sector_prefix_digits": 2,
+    "postal_sector_rule": "The first two digits may be used for sorting or coarse sector analysis, but a derived sector surface is not the geometry of every six-digit code inside it.",
+    "voronoi_rule": "Voronoi, buffers, AGID cell unions, and learned boundaries are candidate or virtual geometry only and never official postal geometry."
+  },
+  "address_graph": {
+    "node_types": [
+      "postal_code",
+      "postal_sector",
+      "country",
+      "planning_area",
+      "road",
+      "block_or_house_number",
+      "premise",
+      "building",
+      "entrance",
+      "unit",
+      "po_box",
+      "organization",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "assigned_to",
+      "located_at",
+      "addresses",
+      "contains",
+      "part_of",
+      "covered_by_agid",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "postal_code_to-building_or-premise-may-be-one-to-many",
+      "building_to-unit-is-one-to-many",
+      "postal_sector_to-full-code-is-one-to-many",
+      "nearest-address-candidate-is-not-containment"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "building_delivery_point",
+      "rule": "Publish a full-code point or building link only when the postal and address evidence agree; do not publish a surrounding area."
+    },
+    {
+      "id": "hdb_or-multi-unit-block",
+      "rule": "A block may share one six-digit code across many units. Unit and occupant information remains private and is never inferred from the code."
+    },
+    {
+      "id": "postal_sector",
+      "rule": "A two-digit sector is a coarse grouping. Any sector polygon must be marked derived and cannot answer full-code containment."
+    },
+    {
+      "id": "po_box_or-non-spatial",
+      "rule": "Keep PO-box and other non-spatial assignments without invented point or polygon geometry."
+    },
+    {
+      "id": "nearest_api_candidate",
+      "rule": "OneMap reverse-geocode buffer results are ranked nearby address candidates until a source-backed match rule resolves them."
+    },
+    {
+      "id": "offshore_or-special-site",
+      "rule": "Do not force mainland sector geometry over islands, restricted facilities, ports, airports, or special delivery endpoints."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source and field has a pinned release or observation time, terms snapshot, redistribution class, attribution, and transformation method."
+    },
+    {
+      "id": "six-digit-format",
+      "scope": "full-postal-codes",
+      "metric": "valid_six_digit_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Assignment and geometry authority are recorded separately; API provider authority is not copied into a derived geometry claim."
+    },
+    {
+      "id": "full-code-geometry-classification",
+      "scope": "full-postal-codes",
+      "metric": "point_building_none_or-explicit-area-classified-ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "exact-address-building-link",
+      "scope": "promoted-building-links",
+      "pass": "Postal code, block or house number, and road agree with the pinned address source; conflicts remain alternatives."
+    },
+    {
+      "id": "nearest-is-not-exact",
+      "scope": "reverse-geocode-results",
+      "pass": "Buffer and nearest results cannot promote a premise or building without the country-policy exact-link gate."
+    },
+    {
+      "id": "unit-privacy",
+      "scope": "public-artifacts",
+      "pass": "No unit, resident, recipient, phone, delivery instruction, API token, or private entrance is published."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "exact_postal_to-address_match_ratio_minimum": 0.995,
+        "coordinate_top_1_match_ratio_minimum": 0.98,
+        "coordinate_top_k_match_ratio_minimum": 0.995
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy a production promotion gate."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, API conditions, and known legal blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Repository contract, source profiles, and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_experimental",
+        "definition": "License-cleared snapshots or API receipts reproduce experimental point-first artifacts with complete lineage."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Independent holdout, ambiguity, privacy, freshness, and correction gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two consecutive refreshes pass all gates and monitored rollback is operating."
+      }
+    ],
+    "hard_blockers": [
+      "singpost-subscription-data-redistributed-without-contractual-rights",
+      "onemap-api-response-bulk-cached-or-redistributed-without-terms-review",
+      "six-digit-delivery-point-expanded-to-neighborhood-polygon",
+      "postal-sector-presented-as-full-code-boundary",
+      "nearest-result-presented-as-exact-address",
+      "unit_or-occupant-published",
+      "missing_assignment_or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "unit_or-occupant",
+    "official_full-code-polygon",
+    "planning-area-equals-postal-sector",
+    "nearest-address-equals-query-point",
+    "legal-boundary-or-survey-certification"
+  ]
+}

@@ -1,7 +1,9 @@
 import {
+ABSOLUTE_GRID_ANCHOR_VERSION,
 AGID_BASE_CELL_METERS,
 type GridFeatureResult,
 getRegularMetricGridMetrics,
+getNearestAbsoluteGridAnchorPoint,
 latitudeToAbsoluteGridY,
 lonLatToAbsoluteGridMeters,
 longitudeToAbsoluteGridX,
@@ -40,6 +42,7 @@ export function buildRegularMetricGridFeatures({
   paddingCells = 4,
 }: RegularMetricGridInput): GridFeatureResult {
   const metrics = getRegularMetricGridMetrics(zoom, lat);
+  const absoluteAnchor = getNearestAbsoluteGridAnchorPoint(lat, lon);
   const safeColumns = Math.max(1, Math.floor(columns));
   const safeRows = Math.max(1, Math.floor(rows));
 
@@ -55,6 +58,7 @@ export function buildRegularMetricGridFeatures({
       columns: Math.max(safeColumns, endCol - startCol),
       rows: Math.max(safeRows, endRow - startRow),
       metrics,
+      absoluteAnchorId: absoluteAnchor.id,
     });
   }
 
@@ -68,6 +72,7 @@ export function buildRegularMetricGridFeatures({
     columns: safeColumns,
     rows: safeRows,
     metrics,
+    absoluteAnchorId: absoluteAnchor.id,
   });
 }
 
@@ -101,12 +106,14 @@ function buildRegularMetricGridFeaturesFromRange({
   columns,
   rows,
   metrics,
+  absoluteAnchorId,
 }: {
   startCol: number;
   startRow: number;
   columns: number;
   rows: number;
   metrics: ReturnType<typeof getRegularMetricGridMetrics>;
+  absoluteAnchorId: string;
 }): GridFeatureResult {
   const { step } = metrics;
   const gridCells: any[] = [];
@@ -145,6 +152,8 @@ function buildRegularMetricGridFeaturesFromRange({
           id: `display_${startCol + col}_${startRow + row}_${step}`,
           step,
           isFocus: step === 1,
+          absoluteAnchorId,
+          absoluteAnchorVersion: ABSOLUTE_GRID_ANCHOR_VERSION,
         },
       });
     }
@@ -188,6 +197,9 @@ export function buildGridFeaturesFromPackedCells({
     const p3 = [packedCells[offset + 4], packedCells[offset + 5]];
     const p4 = [packedCells[offset + 6], packedCells[offset + 7]];
     const poly = metricSquareCellFromCorners([p1, p2, p3, p4, p1], step);
+    const centerLon = normalizeLongitude(poly.slice(0, -1).reduce((sum, point) => sum + point[0], 0) / 4);
+    const centerLat = poly.slice(0, -1).reduce((sum, point) => sum + point[1], 0) / 4;
+    const absoluteAnchor = getNearestAbsoluteGridAnchorPoint(centerLat, centerLon);
 
     const row = Math.floor(index / cols);
     const col = index % cols;
@@ -198,7 +210,13 @@ export function buildGridFeaturesFromPackedCells({
     gridCells.push({
       type: 'Feature',
       geometry: { type: 'Polygon', coordinates: [poly] },
-      properties: { id: cellId, step, isFocus: step === 1 },
+      properties: {
+        id: cellId,
+        step,
+        isFocus: step === 1,
+        absoluteAnchorId: absoluteAnchor.id,
+        absoluteAnchorVersion: ABSOLUTE_GRID_ANCHOR_VERSION,
+      },
     });
 
     for (let i = 0; i < 4; i++) {

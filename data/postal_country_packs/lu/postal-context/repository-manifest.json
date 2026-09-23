@@ -1,0 +1,109 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-lu",
+    "country_code": "LU",
+    "country_name": "Luxembourg",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "code postal",
+    "full_code_format": "L-NNNN",
+    "full_code_default_geometry": "address_membership_or_non_area",
+    "assignment_rule": "POST Luxembourg publishes the current assignment reference. CACLR is the national locality, street, building-number and postcode reference, but its current file model has no coordinates and is not a POST postcode-boundary release.",
+    "endpoint_rule": "PackUp points, Point POST, PO boxes, organizations, bulk receivers, routes and other endpoints remain non-areal unless an independent authoritative source explicitly supplies valid postcode geometry.",
+    "address_rule": "ACT BD-Adresses supplies CC0 georeferenced address points derived from CACLR. The points may be manually positioned or based on parcel/building centroids and do not independently define a postal surface.",
+    "postal_surface_rule": "Only a current rights-cleared source Polygon/MultiPolygon, or an expressly authorized reproducible derivation from a complete current postal membership denominator, may become a postcode surface. Point buffers, hulls, Voronoi cells, raster cells, buildings, parcels and administrative boundaries are prohibited proxies.",
+    "building_rule": "A building is address context only through a stable explicit source relation or reviewed crosswalk; containment and proximity remain candidates and never create postcode geometry.",
+    "territory_rule": "Every feature retains Luxembourg identity and the LU partition; neighbouring Belgium, France and Germany geometry is never absorbed by interpolation."
+  },
+  "geometry_classes": [
+    "polygon",
+    "multipolygon",
+    "point",
+    "route",
+    "po_box",
+    "organization",
+    "unknown"
+  ],
+  "quality_gates": [
+    {
+      "id": "operator-assignment-and-rights",
+      "pass": "A current complete POST assignment denominator and explicit AGID processing, public serving and redistribution rights are pinned by version, date, byte length and SHA-256."
+    },
+    {
+      "id": "postcode-surface",
+      "pass": "Every promoted Polygon/MultiPolygon has authoritative postcode meaning, valid topology, declared code-class coverage and reproducible lineage."
+    },
+    {
+      "id": "point-and-endpoint-separation",
+      "pass": "CACLR/BD-Adresses points and PackUp, Point POST, PO-box, organization and route records remain non-areal and are never buffered or tessellated."
+    },
+    {
+      "id": "context-authority",
+      "pass": "Administrative, parcel and building geometry stays context-only and an exact building relation requires an explicit source link."
+    },
+    {
+      "id": "privacy",
+      "pass": "No recipient, resident, owner, tenant, customer, credential, private-unit occupant or land-right record is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures test behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights, coverage and blockers are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts, authority separation and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_current_luxembourg_postcode_area_visualization",
+        "definition": "A current complete rights-cleared POST Luxembourg postcode assignment denominator, code-class exceptions and real postcode Polygon/MultiPolygon surfaces are pinned by edition or retrieval basis, effective date, terms, byte length and SHA-256, published as an approved immutable artifact, and loaded through the real LU API/app so a normalized L-NNNN search fits and renders a translucent area with a clear outline, selected code, geometry kind, official/derived/virtual classification, source, reference date and confidence. POST/CACLR tables, BD-Adresses points, PackUp or Point POST endpoints, PO boxes, organizations, routes, administrative boundaries, parcels, buildings, buffers, hulls, Voronoi/raster cells and synthetic fixtures never satisfy M2 by themselves."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Holdout, topology, ambiguity, privacy, freshness and correction gates pass."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Two source refreshes pass and monitored rollback operates."
+      }
+    ],
+    "hard_blockers": [
+      "postal-table-presented-as-postcode-boundary",
+      "address-point-buffer-hull-or-voronoi-presented-as-postcode-boundary",
+      "administrative-parcel-or-building-proxy-presented-as-postcode-boundary",
+      "packup-po-box-organization-or-route-presented-as-area",
+      "leading-zero-postcode-truncated",
+      "building-proximity-presented-as-exact-link",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-geometry-or-rights-authority",
+      "synthetic-fixture-presented-as-production-evidence"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy",
+    "building_identity_from_proximity",
+    "every_postcode_is_a_polygon",
+    "derived_surface_is_an_official_boundary",
+    "legal_boundary_or_survey_certification"
+  ]
+}

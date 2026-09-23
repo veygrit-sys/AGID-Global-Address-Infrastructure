@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "ES",
+  "checkedAt": "2026-08-30T04:57:50.433Z",
+  "baseCommit": "c342beac7da9ddef97b06afc6766f19a635b068b",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/es-source-review-2026-08-30.json",
+    "digest": "sha256:f3498301f6977ee350f24c9c012483b42dcf67afd82af66aa0ed1e03701919df"
+  },
+  "verification": [
+    {
+      "name": "official source byte, rights, geocoder point and WMS Polygon audit",
+      "command": "node scripts/inspect-postal-context-es-sources.mjs .m2-es-raw reports/postal-context-m2/es-source-review-2026-08-30.json",
+      "result": "pass",
+      "references": 10,
+      "samplePostcode": "28013",
+      "candidateGeometry": null,
+      "findGeometryType": "Point",
+      "featureInfoGeometryType": "Polygon",
+      "featureInfoCoordinateCount": 16,
+      "productionEligibleRecords": 0
+    },
+    {
+      "name": "ES source inspector unit tests",
+      "command": "node --test scripts/inspect-postal-context-es-sources.test.mjs",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "name": "shared postal policy, store, search and deterministic map rendering tests",
+      "command": "tsx --test src/lib/postalContextCountryPolicy.test.ts src/server/postalContextMultiCountryStore.test.ts src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "result": "pass",
+      "tests": 28
+    },
+    {
+      "name": "TypeScript typecheck",
+      "command": "tsc --noEmit",
+      "result": "pass",
+      "errors": 0
+    },
+    {
+      "name": "ES M2 ledger fail-closed tests",
+      "command": "node --test scripts/postal-context-m2-es-ledger.test.mjs",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "name": "rollout status",
+      "command": "node scripts/postal-context-m2-rollout.mjs status",
+      "result": "pass",
+      "expectedNext": "FI",
+      "expectedStates": {
+        "pending": 187,
+        "in_progress": 0,
+        "blocked": 64,
+        "m2_verified": 1
+      }
+    }
+  ],
+  "applicationEvidence": {
+    "sharedSearchMapPathVerified": true,
+    "sharedTranslucentFillAndVisibleOutlineVerified": true,
+    "sharedLoadingNoResultMultipleApiFailureAndInvalidGeometryStatesVerified": true,
+    "sharedClearAndResearchVerified": true,
+    "realEsArtifactLoaderVerified": false,
+    "realEsPostalApiVerified": false,
+    "realEsAppAreaVisualizationVerified": false,
+    "browserE2eWithRealEsDataVerified": false
+  },
+  "sourceDataDisposition": {
+    "rawOfficialBodiesCommittedToGit": 0,
+    "auditBodiesDeletedAfterRemoteVerification": true,
+    "observedSamplePolygonDigest": "sha256:0f5dec1747cf118db128b381aeb75f04a4a9e82a3049ca93a46e52cead04cfae"
+  },
+  "executionNotes": [
+    "The npm launcher could not spawn child node because node was absent from the inherited PATH; the exact installed Node.js executable ran the underlying scripts.",
+    "CartoCiudad candidate geometry was null, find returned a Point, and WMS GetFeatureInfo returned one real 28013 Polygon. The view receipt is not a national artifact.",
+    "Official source statements limit the postal surface to visualization/consultation and identify Correos as the only database distributor.",
+    "No account, API key, OAuth token, payment, contract acceptance, operator database download, repository, publication destination or deployment was created."
+  ],
+  "conclusion": {
+    "countryM2Achieved": false,
+    "reason": "A real official 28013 Polygon was confirmed, but no public complete redistributable current release, immutable artifact, national denominator/topology audit, real ES loader/API or real app visualization exists."
+  }
+}

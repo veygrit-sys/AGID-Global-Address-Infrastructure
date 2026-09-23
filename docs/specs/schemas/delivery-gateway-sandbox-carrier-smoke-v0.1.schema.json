@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/delivery-gateway-sandbox-carrier-smoke-v0.1.schema.json",
+  "title": "Delivery Gateway Sandbox Carrier Smoke Fixture v0.1",
+  "description": "Local-only synthetic Delivery Gateway carrier smoke fixture. This schema pins safe refs, lifecycle surfaces, privacy flags, blocked material, and non-claims without storing raw address or production carrier material.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixtureId",
+    "fixtureVersion",
+    "source",
+    "input",
+    "expected",
+    "nonClaims"
+  ],
+  "properties": {
+    "fixtureId": {
+      "const": "delivery-gateway-sandbox-carrier-smoke-v0.1"
+    },
+    "fixtureVersion": {
+      "const": "0.1.0"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product",
+        "generator",
+        "verifier",
+        "managedServiceBoundary",
+        "localOnly"
+      ],
+      "properties": {
+        "product": {
+          "const": "Delivery Gateway / Carrier API Stripe"
+        },
+        "generator": {
+          "const": "runSandboxCarrierGatewaySmoke"
+        },
+        "verifier": {
+          "const": "npm run verify:delivery-gateway-carrier-api"
+        },
+        "managedServiceBoundary": {
+          "const": "commercial-managed"
+        },
+        "localOnly": {
+          "const": true
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective",
+        "merchantRef",
+        "addressAliasRef",
+        "addressFormVersion",
+        "parcelProfileRef",
+        "walletConsentRef",
+        "createdAt"
+      ],
+      "properties": {
+        "objective": {
+          "enum": [
+            "fastest",
+            "cheapest",
+            "balanced",
+            "risk-minimized"
+          ]
+        },
+        "merchantRef": {
+          "type": "string",
+          "pattern": "^[a-z0-9_:-]+$"
+        },
+        "addressAliasRef": {
+          "type": "string",
+          "pattern": "^(addr_alias_|address_alias_)[a-z0-9_:-]+$"
+        },
+        "addressFormVersion": {
+          "type": "string",
+          "pattern": "^wallet_country_form_ref_[a-z0-9_:-]+$"
+        },
+        "parcelProfileRef": {
+          "type": "string",
+          "pattern": "^parcel_profile_[a-z0-9_:-]+$"
+        },
+        "walletConsentRef": {
+          "type": "string",
+          "pattern": "^(consent_|wallet_consent_)[a-z0-9_:-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z$"
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "carrierId",
+        "objective",
+        "stepSurfaces",
+        "stepRefs",
+        "merchantVisible",
+        "blockedMaterial",
+        "labelIntent",
+        "localOnly",
+        "productionTraffic",
+        "rawAddressFixtures",
+        "validationErrors"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^sandbox_gateway_smoke_[0-9a-f]{24}$"
+        },
+        "carrierId": {
+          "const": "sandbox-carrier"
+        },
+        "objective": {
+          "enum": [
+            "fastest",
+            "cheapest",
+            "balanced",
+            "risk-minimized"
+          ]
+        },
+        "stepSurfaces": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "enum": [
+              "rate-quote",
+              "carrier-allocation",
+              "label-create",
+              "tracking-webhook",
+              "delivery-proof"
+            ]
+          },
+          "contains": {
+            "const": "delivery-proof"
+          }
+        },
+        "stepRefs": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "string",
+            "pattern": "^(rate|alloc|label|tracking_receipt|delivery_proof)_[0-9a-f]{24}$"
+          }
+        },
+        "merchantVisible": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rateRef",
+            "allocationRef",
+            "labelRef",
+            "trackingReceiptRef",
+            "deliveryProofRef"
+          ],
+          "properties": {
+            "rateRef": {
+              "type": "string",
+              "pattern": "^rate_[0-9a-f]{24}$"
+            },
+            "allocationRef": {
+              "type": "string",
+              "pattern": "^alloc_[0-9a-f]{24}$"
+            },
+            "labelRef": {
+              "type": "string",
+              "pattern": "^label_[0-9a-f]{24}$"
+            },
+            "trackingReceiptRef": {
+              "type": "string",
+              "pattern": "^tracking_receipt_[0-9a-f]{24}$"
+            },
+            "deliveryProofRef": {
+              "type": "string",
+              "pattern": "^delivery_proof_[0-9a-f]{24}$"
+            }
+          }
+        },
+        "blockedMaterial": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "string"
+          },
+          "allOf": [
+            {
+              "contains": {
+                "const": "rawAddress"
+              }
+            },
+            {
+              "contains": {
+                "const": "carrierApiKey"
+              }
+            },
+            {
+              "contains": {
+                "const": "rawLabelPayload"
+              }
+            },
+            {
+              "contains": {
+                "const": "proofWitness"
+              }
+            }
+          ]
+        },
+        "labelIntent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "status",
+            "proofLevel",
+            "evidenceTypes",
+            "privacy"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^LIT-[0-9A-F]{24}$"
+            },
+            "status": {
+              "const": "completed"
+            },
+            "proofLevel": {
+              "const": "delivery-completed"
+            },
+            "evidenceTypes": {
+              "type": "array",
+              "minItems": 11,
+              "items": {
+                "type": "string"
+              },
+              "contains": {
+                "const": "recipient-proof"
+              }
+            },
+            "privacy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rawAddressStored",
+                "rawAgidStored",
+                "rawAoidStored",
+                "rawRecipientStored",
+                "rawProofCodeStored",
+                "rawLabelPayloadStored",
+                "carrierApiKeyStored"
+              ],
+              "properties": {
+                "rawAddressStored": {
+                  "const": false
+                },
+                "rawAgidStored": {
+                  "const": false
+                },
+                "rawAoidStored": {
+                  "const": false
+                },
+                "rawRecipientStored": {
+                  "const": false
+                },
+                "rawProofCodeStored": {
+                  "const": false
+                },
+                "rawLabelPayloadStored": {
+                  "const": false
+                },
+                "carrierApiKeyStored": {
+                  "const": false
+                }
+              }
+            }
+          }
+        },
+        "localOnly": {
+          "const": true
+        },
+        "productionTraffic": {
+          "const": false
+        },
+        "rawAddressFixtures": {
+          "const": false
+        },
+        "validationErrors": {
+          "type": "array",
+          "maxItems": 0
+        }
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "Fixture does not call production carrier APIs."
+          }
+        },
+        {
+          "contains": {
+            "const": "Fixture is not proof that a real carrier accepted, transported, or delivered a parcel."
+          }
+        }
+      ]
+    }
+  }
+}

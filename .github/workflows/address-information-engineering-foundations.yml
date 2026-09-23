@@ -1,0 +1,53 @@
+name: Address Information Engineering Foundations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "docs/research/address-information-engineering-foundations-for-address-research-ja.md"
+      - "src/lib/addressInformationEngineeringFoundations.ts"
+      - "src/lib/addressInformationEngineeringFoundations.test.ts"
+      - "scripts/verify-address-information-engineering-foundations-workflow.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/address-information-engineering-foundations.yml"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "docs/research/address-information-engineering-foundations-for-address-research-ja.md"
+      - "src/lib/addressInformationEngineeringFoundations.ts"
+      - "src/lib/addressInformationEngineeringFoundations.test.ts"
+      - "scripts/verify-address-information-engineering-foundations-workflow.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/address-information-engineering-foundations.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  foundations-registry:
+    name: Foundations registry contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Verify address information engineering foundations
+        run: npm run verify:address-information-engineering-foundations
+
+      - name: Check workflow contract
+        run: npm run verify:address-information-engineering-foundations-workflow

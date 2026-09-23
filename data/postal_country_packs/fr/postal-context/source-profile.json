@@ -1,0 +1,159 @@
+{
+  "schema_version": "agid-postal-fr-source-profile-v0.1",
+  "country_code": "FR",
+  "artifact_scope": "m2-experimental-paris-arrondissement-runtime",
+  "redistribution_classes": [
+    {
+      "id": "R1_open_attribution",
+      "meaning": "Licence Ouverte 2.0 material may be reproduced, redistributed, adapted and used commercially with source and latest-update attribution."
+    },
+    {
+      "id": "R2_reference_only",
+      "meaning": "A source is policy context only and contributes no published row or geometry."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "la-poste-base-officielle-codes-postaux",
+      "provider": "La Poste",
+      "source_url": "https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux",
+      "api_url": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/",
+      "terms_url": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "role": [
+        "official-postal-code-to-insee-commune",
+        "delivery-locality-label",
+        "line-five-locality-reference"
+      ],
+      "production_scope": "Pinned 1,555,485-byte official CSV with 39,192 rows; the M2 output uses only exact one-to-one 75001-75020 to 75101-75120 relations. Raw CSV is audit-only and not committed.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R1_open_attribution",
+      "source_version": "resource 008a2dda-2c60-4b63-b910-998f6f818089; Data Fair dataset updated 2026-08-08T07:04:29.824Z",
+      "source_digest": "sha256:f921ac020ca3b9efebd8f0d01782555fb70d63d1ae36535109c67e4a74bd6e22",
+      "metadata_digest": "sha256:1715e9fbe79c398f5619ef4b68b72a8a79c4c6491e43355288f1abee8b99ea1e",
+      "licence_digest": "sha256:1c721702ef459d935f2d097fec4a81d5f9dd258477c92b0857dd8f1d9cdc2909",
+      "attribution": "La Poste — Base officielle des codes postaux; latest source update 2026-08-08; Licence Ouverte 2.0.",
+      "bundled_here": true,
+      "terms_note": "The official dataset maps postal codes to INSEE communes. It explicitly states that open data does not provide postal-code contours.",
+      "promotion_requirements": [
+        "pin-export-time-schema-byte-length-and-digest",
+        "emit-la-poste-and-licence-ouverte-attribution",
+        "retain-exact-code-commune-relations",
+        "partition-fr-overseas-and-monaco"
+      ],
+      "prohibited_claims": [
+        "official-la-poste-polygon",
+        "commune-centroid-is-address",
+        "one-code-one-commune-nationally",
+        "national-france-coverage",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "geo-api-gouv-commune-contours-via-laposte-data-fair",
+      "provider": "Etalab / API Découpage administratif, exposed by La Poste Data Fair extension",
+      "source_url": "https://geo.api.gouv.fr/decoupage-administratif/communes",
+      "api_url": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/lines",
+      "terms_url": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+      "role": [
+        "official-administrative-arrondissement-contour",
+        "municipal-arrondissement-identity"
+      ],
+      "production_scope": "Twenty exact La Poste Data Fair receipts for 75001-75020. Each response contains one matching INSEE arrondissement and one _contours_commune.geometry MultiPolygon. Raw receipts are audit-only and not committed.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "source_version": "laposte-hexasmal _contours_commune.geometry exact-query receipts captured 2026-08-30",
+      "source_digest": "sha256:76d9f52e38386339a15d3becc6f4ed6eb3605af3cb82669cea772feb8fd586ec",
+      "licence_digest": "sha256:1c721702ef459d935f2d097fec4a81d5f9dd258477c92b0857dd8f1d9cdc2909",
+      "attribution": "Etalab / API Découpage administratif administrative contours, accessed through La Poste Data Fair; Licence Ouverte 2.0.",
+      "bundled_here": true,
+      "promotion_requirements": [
+        "pin-query-url-response-id-byte-length-and-sha256",
+        "require-one-exact-postcode-and-insee-result",
+        "validate-multipolygon-rings-bounds-and-boolean-validity",
+        "label-postcode-join-derived"
+      ],
+      "prohibited_claims": [
+        "official-la-poste-polygon",
+        "postal-operator-deliverability",
+        "address-building-or-cadastral-geometry",
+        "legal-boundary-certification"
+      ]
+    },
+    {
+      "source_id": "fr-paris-arrondissement-postcode-display-surface",
+      "provider": "AGID deterministic transform",
+      "source_url": "scripts/build-postal-context-fr-m2.mjs",
+      "role": ["derived-postcode-display-surface"],
+      "production_scope": "Exact equality join of the pinned 75001-75020 La Poste relations to the matching 75101-75120 administrative contour receipts; no coordinate modification.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_attribution",
+      "source_version": "fr-paris-arrondissement-derived-display-v1",
+      "source_digest": "sha256:cbc9768b1b2b17927865f7b0f1de2f0719c8ae713cda6e8ef90f6c5d1fa29090",
+      "bundled_here": true,
+      "promotion_requirements": [
+        "publish-derived-provenance-and-confidence",
+        "show-source-date-and-authorities",
+        "do-not-extend-beyond-75001-75020"
+      ],
+      "prohibited_claims": [
+        "official-la-poste-polygon",
+        "national-france-coverage",
+        "address-building-recipient-or-deliverability"
+      ]
+    },
+    {
+      "source_id": "ban-fr",
+      "provider": "Base Adresse Nationale, operated by IGN",
+      "source_url": "https://adresse.data.gouv.fr/contenu-de-la-ban",
+      "role": ["separate-official-public-address-point-reference"],
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R2_reference_only",
+      "bundled_here": false,
+      "production_scope": "No BAN address row or point is included in this M2 release.",
+      "prohibited_claims": ["postcode-containment-proves-address", "exact-building-from-nearest-point"]
+    },
+    {
+      "source_id": "ign-bd-topo-ban-links",
+      "provider": "Institut national de l'information géographique et forestière",
+      "source_url": "https://geoservices.ign.fr/documentation/donnees/vecteur/bdtopo",
+      "role": ["separate-building-and-address-link-reference"],
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R2_reference_only",
+      "bundled_here": false,
+      "production_scope": "No building, parcel, street or address-to-building relation is included in this M2 release.",
+      "prohibited_claims": ["postal-area-proves-building", "legal-property-boundary"]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "official-postal-assignment",
+      "sources": ["la-poste-base-officielle-codes-postaux"],
+      "public_output": "20 postal-to-INSEE assertions"
+    },
+    {
+      "id": "official-administrative-geometry",
+      "sources": ["geo-api-gouv-commune-contours-via-laposte-data-fair"],
+      "public_output": "20 source-identical administrative MultiPolygon inputs"
+    },
+    {
+      "id": "derived-postcode-display",
+      "sources": ["fr-paris-arrondissement-postcode-display-surface"],
+      "public_output": "20 explicitly derived postal display surfaces, 75001-75020 only"
+    },
+    {
+      "id": "address-and-building",
+      "sources": ["ban-fr", "ign-bd-topo-ban-links"],
+      "public_output": "none"
+    },
+    {
+      "id": "overseas-and-monaco",
+      "sources": ["la-poste-base-officielle-codes-postaux"],
+      "public_output": "none; separate ISO packs only"
+    }
+  ]
+}

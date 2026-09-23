@@ -1,0 +1,67 @@
+{
+  "schema_version": "agid-postal-mq-source-profile-v0.1",
+  "country_code": "MQ",
+  "artifact_scope": "complete-current-laposte-postcodes-derived-commune-runtime",
+  "redistribution_classes": [
+    { "id": "R1_open_licence_2_0", "meaning": "Official assignment data and administrative geometry may be reused with source and date attribution under Etalab Open Licence 2.0." },
+    { "id": "R2_reference_receipt", "meaning": "Exact metadata, documentation, licence and query bodies stay outside Git; URLs, retrieval time, byte lengths and SHA-256 receipts remain reviewable." }
+  ],
+  "sources": [
+    {
+      "source_id": "mq-la-poste-hexasmal-20260808",
+      "provider": "La Poste",
+      "source_url": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/raw",
+      "metadata_urls": ["https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal", "https://www.data.gouv.fr/api/1/datasets/545b55e1c751df52de9b6045/"],
+      "role": ["official-postcode-assignment", "complete-current-denominator", "all-MQ-INSEE-972xx-assignments"],
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R1_open_licence_2_0",
+      "bundled_here": false,
+      "observed_release": {
+        "version": "Base officielle des codes postaux; data updated 2026-08-08; semiannual; 39,192 rows",
+        "retrieved_at": "2026-09-01T13:07:27.205Z",
+        "raw_digest": "sha256:f921ac020ca3b9efebd8f0d01782555fb70d63d1ae36535109c67e4a74bd6e22",
+        "dataset_metadata_digest": "sha256:b5d6b5dcb421ece75d41b5903ded715a88df97ff1b4fa1f070e9fa7535167d65",
+        "data_gouv_metadata_digest": "sha256:453a8cd0168191503ae7e949f89523206d921ab67c67370f3a6fd97fc3da45a2",
+        "finding": "The full snapshot contains 38 MQ rows, 30 postcodes, 34 INSEE 972xx commune identities and 35 postcode/commune pairs."
+      },
+      "terms_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+      "terms_digest": "sha256:706f075457bc6106c64b4040bceb0c63926b67192145e669a278ec72723e2ca3",
+      "rights_review": "Open Licence 2.0 permits reuse with source and date attribution. Raw source bodies remain outside Git.",
+      "prohibited_claims": ["official-postal-polygon", "address-building-or-deliverability"]
+    },
+    {
+      "source_id": "mq-geo-api-gouv-972-communes-20260901",
+      "provider": "Direction interministérielle du numérique / Etalab",
+      "source_url": "https://geo.api.gouv.fr/departements/972/communes?fields=nom,code,codesPostaux,surface,contour&format=geojson&geometry=contour",
+      "postcode_query_template": "https://geo.api.gouv.fr/communes?codePostal={postalCode}&fields=nom,code,codesPostaux,surface,contour&format=geojson&geometry=contour",
+      "documentation_url": "https://geo.api.gouv.fr/decoupage-administratif/communes",
+      "insee_context_url": "https://www.insee.fr/fr/metadonnees/geographie/departement/972-martinique",
+      "role": ["derived-postcode-display-surface", "official-administrative-contours", "30-postcode-query-cross-check"],
+      "assignment_authority": "none",
+      "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_licence_2_0",
+      "bundled_here": true,
+      "attribution": "geo.api.gouv.fr COG 2026 commune contours for Martinique, retrieved 2026-09-01, Etalab Open Licence 2.0.",
+      "observed_release": {
+        "version": "Current geo.api.gouv.fr department 972 response and 30 MQ postcode queries; COG 2026 context",
+        "retrieved_at": "2026-09-01T13:07:27.205Z",
+        "department_response_digest": "sha256:b7a30e913a752fe828d3619095187aae1d42cbc7cf06d9aedfac77110e9e30dd",
+        "documentation_digest": "sha256:c05f57f48ae4b3adacacf868ed5814ce6152f839c80082c5edeb0571ee0884f4",
+        "insee_context_digest": "sha256:3cc336c9ac01e1496cbac460b7ebc37ede0fd7526fad73a510a3cc3490e7560b",
+        "feature_identity": "34 COG 2026 MQ communes exactly equal the official La Poste assignment commune codes",
+        "geometry": "21 Polygon and 14 MultiPolygon pair features; 102 rings; 40,100 positions; 35 exact code/commune surfaces"
+      },
+      "terms_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+      "terms_digest": "sha256:706f075457bc6106c64b4040bceb0c63926b67192145e669a278ec72723e2ca3",
+      "rights_review": "Redistribution is permitted with attribution. Responses supply administrative geometry, not official postal contours.",
+      "prohibited_claims": ["official-postal-geometry", "unioned-multi-commune-postal-boundary", "legal-survey-or-cadastral-boundary", "delivery-zone", "address-or-building-proof"]
+    }
+  ],
+  "receipt_summary": { "exact_bodies": 37, "exact_bytes": 3608319, "all_sha256_bound": true, "raw_source_bodies_in_git": 0 },
+  "artifact_partitions": [
+    { "id": "official-postcode-assertions", "rule": "The 38 La Poste MQ rows become 35 code/commune assertions over 35 pair-specific postal nodes representing 30 postal codes and have no geometry authority." },
+    { "id": "derived-display-geometry", "rule": "Only fixed geo.api.gouv.fr coordinates enter geometry; source, date, licence, digest, multiple, shared and Ligne 5 cases, and derived class remain visible." },
+    { "id": "address-building-private", "rule": "No address, building, parcel, recipient, customer or land-rights record is published." }
+  ]
+}

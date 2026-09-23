@@ -20,9 +20,14 @@ export const OUTER_CIRCLE_ENGLISH_COUNTRIES = [
   'er', 'et', 'ke', 'mu', 'rw', 'sc', 'so', 'ss', 'tz', 'ug',
   'za', 'zw', 'zm', 'bw', 'na', 'mw', 'ls', 'sz',
   'jm', 'tt', 'bb', 'bs', 'bz', 'gy', 'ag', 'lc', 'gd', 'dm', 'vc', 'kn',
+  'bm', 'ai', 'ky', 'ms', 'tc', 'vg', 'vi',
   'pg', 'fj', 'sb', 'vu', 'ws', 'to',
   'fm', 'pw', 'mh', 'ki', 'tv', 'nr',
   'nf', 'cx', 'cc', 'ck', 'tk', 'nu', 'pn', 'aq',
+  'as', 'gu', 'mp', 'um',
+  'fk', 'gs',
+  'gg', 'im', 'je', 'gi', 'sba',
+  'io', 'sh', 'ac', 'ta',
   'ae', 'qa', 'bh',
 ] as const;
 
@@ -66,14 +71,20 @@ const DEFAULT_NATIVE_LANGUAGES_BY_COUNTRY: Record<string, string[]> = {
   kh: ['km'],
   la: ['lo'],
   my: ['ms'],
-  sg: ['en'],
+  sg: ['en', 'ms', 'zh-Hans', 'ta'],
   id: ['id'],
   ph: ['tl'],
   bn: ['ms'],
   tl: ['tet', 'pt-PT'],
   jp: ['ja'],
+  kr: ['ko'],
+  kp: ['ko'],
+  cn: ['zh-Hans'],
+  tw: ['zh-Hant'],
+  hk: ['zh-Hant'],
+  mo: ['zh-Hant', 'pt'],
   mn: ['mn'],
-  in: ['en'],
+  in: ['en', 'hi', 'bn', 'ta', 'te', 'kn', 'ml', 'gu', 'pa', 'or', 'mr', 'as', 'ur'],
   pk: ['ur'],
   bd: ['bn'],
   np: ['ne'],
@@ -103,12 +114,12 @@ const DEFAULT_NATIVE_LANGUAGES_BY_COUNTRY: Record<string, string[]> = {
   tj: ['tg', 'ru'],
   nz: ['en', 'mi'],
   fj: ['en', 'fj', 'hi'],
-  pg: ['en', 'tpi'],
+  pg: ['en', 'tpi', 'ho'],
   ws: ['sm'],
   to: ['to'],
   vu: ['bi', 'fr', 'en'],
   sb: ['en', 'pis'],
-  fm: ['en', 'chk', 'yap'],
+  fm: ['en', 'chk', 'pon', 'kos', 'yap'],
   pw: ['en', 'pau'],
   mh: ['mh', 'en'],
   ki: ['gil', 'en'],
@@ -122,6 +133,12 @@ const DEFAULT_NATIVE_LANGUAGES_BY_COUNTRY: Record<string, string[]> = {
   nu: ['niu'],
   pn: ['en'],
   aq: ['en'],
+  as: ['en', 'sm'],
+  gu: ['en', 'ch'],
+  mp: ['en', 'ch'],
+  um: ['en'],
+  gb: ['en', 'cy', 'gd'],
+  ie: ['en', 'ga'],
   fr: ['fr'],
   de: ['de'],
   nl: ['nl'],
@@ -134,9 +151,9 @@ const DEFAULT_NATIVE_LANGUAGES_BY_COUNTRY: Record<string, string[]> = {
   gf: ['fr'],
   re: ['fr'],
   yt: ['fr'],
-  pf: ['fr'],
+  pf: ['fr', 'ty'],
   nc: ['fr'],
-  wf: ['fr'],
+  wf: ['fr', 'wls', 'fud'],
   mf: ['fr'],
   bl: ['fr'],
   pm: ['fr'],
@@ -220,13 +237,13 @@ const DEFAULT_NATIVE_LANGUAGES_BY_COUNTRY: Record<string, string[]> = {
   gy: ['en'],
   bz: ['en', 'es'],
   eg: ['ar'],
-  dz: ['ar', 'fr'],
-  ma: ['ar', 'fr'],
+  dz: ['ar', 'kab', 'fr'],
+  ma: ['ar', 'zgh', 'fr'],
   tn: ['ar', 'fr'],
   ly: ['ar'],
-  sd: ['ar'],
+  sd: ['ar', 'en'],
   mr: ['ar'],
-  eh: ['ar'],
+  eh: ['ar', 'es', 'fr'],
   ci: ['fr'],
   sn: ['fr'],
   bf: ['fr'],
@@ -245,29 +262,31 @@ const DEFAULT_NATIVE_LANGUAGES_BY_COUNTRY: Record<string, string[]> = {
   gq: ['es', 'fr', 'pt'],
   ga: ['fr'],
   st: ['pt'],
-  za: ['en', 'af', 'zu', 'xh'],
+  za: ['en', 'af', 'zu', 'xh', 'nr', 'st', 'tn', 'ss', 've', 'ts', 'nso'],
   na: ['en', 'af', 'kj'],
   bw: ['en', 'tn'],
   zw: ['en', 'sn', 'nd'],
-  km: ['fr', 'ar'],
+  bi: ['rn', 'fr'],
+  km: ['fr', 'ar', 'zdj'],
   dj: ['fr', 'ar'],
-  er: ['ti', 'en'],
-  et: ['am', 'en'],
+  er: ['ti', 'en', 'ar'],
+  et: ['am', 'en', 'om', 'ti', 'so'],
   ke: ['en', 'sw'],
-  mg: ['fr'],
+  mg: ['mg', 'fr'],
   mw: ['en', 'ny'],
-  mu: ['en', 'fr'],
+  mu: ['en', 'fr', 'mfe'],
   mz: ['pt'],
-  rw: ['en', 'fr', 'sw'],
+  rw: ['rw', 'en', 'fr', 'sw'],
   sc: ['en', 'fr', 'crs'],
   so: ['so', 'ar', 'en'],
   ss: ['en'],
   tz: ['sw', 'en'],
   ug: ['en', 'sw'],
-  zm: ['en', 'bem'],
+  zm: ['en', 'bem', 'ny'],
   ls: ['en', 'st'],
   sz: ['en', 'ss'],
   ao: ['pt'],
+  slnd: ['so', 'en', 'ar'],
 };
 
 export function normalizeAgidLanguageCode(code: string | undefined | null): string {
@@ -291,6 +310,9 @@ const EUROPEAN_MULTILINGUAL_ADDRESS_MARKETS = new Set([
   'by',
   'ba',
   'xk',
+  'gb',
+  'ie',
+  'mt',
 ]);
 
 const CENTRAL_ASIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
@@ -299,6 +321,23 @@ const CENTRAL_ASIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
   'tm',
   'kg',
   'tj',
+]);
+
+const EAST_ASIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
+  'hk',
+  'mo',
+]);
+
+const SOUTH_ASIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
+  'af',
+  'in',
+  'lk',
+]);
+
+const SOUTHEAST_ASIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
+  'ph',
+  'sg',
+  'tl',
 ]);
 
 const WEST_ASIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
@@ -316,25 +355,60 @@ const AMERICAS_MULTILINGUAL_ADDRESS_MARKETS = new Set([
   'cw',
 ]);
 
+const NORTH_AFRICA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
+  'dz',
+  'ma',
+  'eh',
+]);
+
 const CENTRAL_AFRICA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
   'cm',
   'cf',
   'td',
   'gq',
+  'bi',
 ]);
 
 const SOUTHERN_AFRICA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
+  'ao',
+  'bw',
   'km',
+  'ls',
+  'mw',
+  'mu',
+  'mz',
+  'na',
+  'sc',
+  'sz',
+  'za',
+  'zm',
+  'zw',
 ]);
 
 const EAST_AFRICA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
+  'bi',
   'km',
   'dj',
+  'er',
+  'et',
+  'ke',
+  'mg',
+  'mw',
+  'mu',
+  'mz',
+  'rw',
+  'sc',
   'so',
+  'slnd',
+  'tz',
+  'ug',
+  'zm',
 ]);
 
 const OCEANIA_MULTILINGUAL_ADDRESS_MARKETS = new Set([
   'vu',
+  'pf',
+  'wf',
 ]);
 
 const ENGLISH_PRIMARY_EXTRA_TABS_BY_COUNTRY: Record<string, string[]> = {
@@ -446,8 +520,12 @@ export function getAgidAddressTabLanguages({
   if (
     EUROPEAN_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
     CENTRAL_ASIA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
+    EAST_ASIA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
+    SOUTH_ASIA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
+    SOUTHEAST_ASIA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
     WEST_ASIA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
     AMERICAS_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
+    NORTH_AFRICA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
     CENTRAL_AFRICA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
     SOUTHERN_AFRICA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||
     EAST_AFRICA_MULTILINGUAL_ADDRESS_MARKETS.has(normalizedCountryCode) ||

@@ -1,0 +1,61 @@
+{
+  "schema_version": "agid-postal-gf-source-profile-v0.1",
+  "country_code": "GF",
+  "artifact_scope": "complete-current-laposte-postcodes-derived-commune-runtime",
+  "redistribution_classes": [
+    {"id": "R1_open_licence_2_0", "meaning": "Official assignment data and administrative geometry may be reused with source and date attribution under Etalab Open Licence 2.0."},
+    {"id": "R2_reference_receipt", "meaning": "Exact metadata, documentation, licence and query bodies are retained outside Git; URLs, retrieval time, byte lengths and SHA-256 receipts remain reviewable."}
+  ],
+  "sources": [
+    {
+      "source_id": "gf-la-poste-hexasmal-20260808", "provider": "La Poste",
+      "source_url": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/raw",
+      "metadata_urls": ["https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal", "https://www.data.gouv.fr/api/1/datasets/545b55e1c751df52de9b6045/"],
+      "role": ["official-postcode-assignment", "complete-current-denominator", "all-973-postcodes"],
+      "assignment_authority": "official_postal_operator", "geometry_authority": "none",
+      "redistribution_class": "R1_open_licence_2_0", "bundled_here": false,
+      "observed_release": {
+        "version": "Base officielle des codes postaux; data updated 2026-08-08; semiannual; 39,192 rows",
+        "retrieved_at": "2026-09-01T02:54:50.355Z",
+        "raw_digest": "sha256:f921ac020ca3b9efebd8f0d01782555fb70d63d1ae36535109c67e4a74bd6e22",
+        "dataset_metadata_digest": "sha256:b5d6b5dcb421ece75d41b5903ded715a88df97ff1b4fa1f070e9fa7535167d65",
+        "data_gouv_metadata_digest": "sha256:c42a15c49ea9591e66270d0a6dad43e2b947c8e29a9013466f03ddd9514d6b08",
+        "finding": "The full snapshot contains 25 unique 973 postal-code rows mapped one-to-one by code to 22 distinct INSEE commune identities."
+      },
+      "terms_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+      "terms_digest": "sha256:85c8dd8ecfeb60531069a9e8e6208946778360fcb925673b1de39a20bd3d309c",
+      "rights_review": "Open Licence 2.0 permits reuse with source and date attribution. Raw source bodies remain outside Git.",
+      "prohibited_claims": ["official-postal-polygon", "address-building-or-deliverability"]
+    },
+    {
+      "source_id": "gf-geo-api-gouv-973-communes-20260901", "provider": "Direction interministérielle du numérique / Etalab",
+      "source_url": "https://geo.api.gouv.fr/departements/973/communes?fields=nom,code,codesPostaux,surface,contour&format=geojson&geometry=contour",
+      "postcode_query_template": "https://geo.api.gouv.fr/communes?codePostal={postalCode}&fields=nom,code,codesPostaux,surface,contour&format=geojson&geometry=contour",
+      "documentation_url": "https://geo.api.gouv.fr/decoupage-administratif/communes",
+      "insee_context_url": "https://www.insee.fr/fr/metadonnees/geographie/departement/973-guyane",
+      "role": ["derived-postcode-display-surface", "official-administrative-contours", "25-postcode-query-cross-check"],
+      "assignment_authority": "none", "geometry_authority": "official_mapping_geometry",
+      "redistribution_class": "R1_open_licence_2_0", "bundled_here": true,
+      "attribution": "geo.api.gouv.fr COG 2026 commune contours for French Guiana, retrieved 2026-09-01, Etalab Open Licence 2.0.",
+      "observed_release": {
+        "version": "Current geo.api.gouv.fr department 973 response and 25 postcode queries; COG 2026 context",
+        "retrieved_at": "2026-09-01T02:54:50.355Z",
+        "department_response_digest": "sha256:d4fba56670e484cdbed767862263b959546d6aa515ea9fc5690a3c500ad9b724",
+        "documentation_digest": "sha256:c05f57f48ae4b3adacacf868ed5814ce6152f839c80082c5edeb0571ee0884f4",
+        "insee_context_digest": "sha256:61672057759d4ab6c9157eb5ca3914bdd4a236662adde1aad16747aedd18f227",
+        "feature_identity": "22 COG 2026 communes exactly equal the 22 official La Poste assignment commune codes",
+        "geometry": "17 Polygon and 8 MultiPolygon postal responses; 73 rings; 118,559 published positions including three intentional shared-surface duplicates"
+      },
+      "terms_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+      "terms_digest": "sha256:85c8dd8ecfeb60531069a9e8e6208946778360fcb925673b1de39a20bd3d309c",
+      "rights_review": "Redistribution is permitted with attribution. Responses supply administrative geometry, not official postal contours.",
+      "prohibited_claims": ["official-postal-geometry", "distinct-boundary-for-shared-commune-codes", "legal-survey-or-cadastral-boundary", "delivery-zone", "address-or-building-proof"]
+    }
+  ],
+  "receipt_summary": {"exact_bodies": 32, "exact_bytes": 6473543, "all_sha256_bound": true, "raw_source_bodies_in_git": 0},
+  "artifact_partitions": [
+    {"id": "official-postcode-assertions", "rule": "The 25 La Poste rows are graph assertions only and have no geometry authority."},
+    {"id": "derived-display-geometry", "rule": "Only fixed geo.api.gouv.fr coordinates enter the geometry artifact; source, date, licence, digest, shared surfaces and derived class remain visible."},
+    {"id": "address-building-private", "rule": "No address, building, parcel, recipient, customer or land-rights record is published."}
+  ]
+}

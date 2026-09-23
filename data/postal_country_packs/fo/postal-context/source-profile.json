@@ -1,0 +1,89 @@
+{
+  "schema_version": "agid-postal-fo-source-profile-v0.1",
+  "country_code": "FO",
+  "artifact_scope": "current-umhvorvisstovan-postoki-runtime",
+  "redistribution_classes": [
+    {
+      "id": "R1_official_open_reuse",
+      "meaning": "Umhvørvisstovan data may be copied, distributed, published, modified, combined and used commercially or non-commercially with the required attribution and terms notice."
+    },
+    {
+      "id": "R2_reference_only",
+      "meaning": "Operator and address-register pages are context only unless an exact artifact and its rights are separately pinned."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "umhvorvisstovan-faroe-postoki",
+      "provider": "Umhvørvisstovan / Faroese Environment Agency",
+      "source_url": "https://gis.us.fo/arcgis/rest/services/fyrisitingarlig_kort/us_postnr/MapServer/0",
+      "service_page": "https://www.foroyakort.fo/vevtaenastur",
+      "terms_url": "https://www.foroyakort.fo/um-foeroyakort/terms-and-conditions-in-english",
+      "role": [
+        "official-mapped-postoki-identity",
+        "official-postal-area-polygon-and-multipolygon"
+      ],
+      "assignment_authority": "official_postal_mapping_authority",
+      "geometry_authority": "official_postal_geometry",
+      "redistribution_class": "R1_official_open_reuse",
+      "bundled_here": true,
+      "source_version": "ArcGIS MapServer 11.4 / document 2.9.0 live snapshot 2026-08-30",
+      "source_digest": "sha256:952d2b52d358cd2671673ea1bc5ee3e9161eacd6b15981a9c97f9fc08709ced2",
+      "attribution": "Data from the Faroese Environment Agency, Umhvørvisstovan: Postnummur; downloaded through web service 2026-08-30.",
+      "production_scope": "The 117-feature Postnr query transformed by ArcGIS to EPSG:4326, with all object IDs, three-digit codes, place labels and Polygon/MultiPolygon geometry. Raw query output is not committed.",
+      "promotion_requirements": [
+        "pin-query-url-retrieval-time-service-version-and-sha256",
+        "validate-code-identity-objectids-rings-coordinate-range-and-topology",
+        "label-code-476-topology-repair-derived",
+        "emit-provider-dataset-date-and-terms-attribution"
+      ],
+      "prohibited_claims": [
+        "postal-operator-deliverability-guarantee",
+        "recipient-customer-address-or-building-identity",
+        "cadastral-or-legal-boundary",
+        "unrepaired-476-geometry-is-valid"
+      ]
+    },
+    {
+      "source_id": "posta-faroe-operator-reference",
+      "provider": "Posta Faroe Islands",
+      "source_url": "https://www.posta.fo/",
+      "role": ["postal-operator-reference"],
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_reference_only",
+      "bundled_here": false,
+      "production_scope": "Operator context only; no Posta bulk assignment, deliverability, recipient or geometry artifact is included.",
+      "prohibited_claims": ["bundled-operator-assignment-file", "postcode-area-geometry-authority"]
+    },
+    {
+      "source_id": "umhvorvisstovan-faroe-address-register",
+      "provider": "Umhvørvisstovan / Faroese Environment Agency",
+      "source_url": "https://www.us.fo/kort/adressuskra/",
+      "role": ["separate-official-address-register-reference"],
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry",
+      "redistribution_class": "R2_reference_only",
+      "bundled_here": false,
+      "production_scope": "Address and building evidence is outside FO M2 and requires its own pinned artifact and relation contract.",
+      "prohibited_claims": ["postal-polygon-proves-address", "postal-containment-proves-building"]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "postal-area",
+      "sources": ["umhvorvisstovan-faroe-postoki"],
+      "public_output": "117 attributed postal-area records; 116 official geometries and one explicitly derived topology repair"
+    },
+    {
+      "id": "operator",
+      "sources": ["posta-faroe-operator-reference"],
+      "public_output": "none"
+    },
+    {
+      "id": "address-and-building",
+      "sources": ["umhvorvisstovan-faroe-address-register"],
+      "public_output": "none"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "agid"
-  spec.version = "0.1.0"
+  spec.version = "1.0.0"
   spec.summary = "AGID Ruby SDK"
   spec.license = "MIT"
   spec.files = Dir["lib/**/*.rb", "README.md", "LICENSE"]

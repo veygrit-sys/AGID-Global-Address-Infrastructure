@@ -78,7 +78,7 @@ function shouldRequirePostcode(format: AddressFormat): boolean {
 
 test('Africa address formats have renderable language tabs and open postal/geographic evidence', () => {
   const jsonFiles = collectFiles('.json');
-  assert.equal(jsonFiles.length, 63);
+  assert.equal(jsonFiles.length, 64);
 
   for (const filePath of jsonFiles) {
     const format = loadAddressFormat(filePath);
@@ -110,7 +110,7 @@ test('Africa address formats have renderable language tabs and open postal/geogr
 
 test('Africa postal-code-required rules are reflected in every address language tab', () => {
   const files = [...collectFiles('.json'), ...collectFiles('.yaml')];
-  assert.equal(files.length, 126);
+  assert.equal(files.length, 127);
 
   for (const filePath of files) {
     const format = loadAddressFormat(filePath);

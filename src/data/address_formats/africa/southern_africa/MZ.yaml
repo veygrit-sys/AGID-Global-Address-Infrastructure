@@ -4,140 +4,76 @@ native:
   name: Moçambique
   addressFormat: |-
     {{recipient}}
-    {{street}}
+    {{organization}}
+    {{building}} {{unit}}
+    {{street}} {{houseNumber}}
+    {{bairro}}
     {{postcode}} {{city}}
+    {{province}}
   ordering: small-to-big
   fields:
-    - key: recipient
-      label: Nome Completo
-      placeholder: José Eduardo
-      required: true
-      type: text
-    - key: street
-      label: Endereço
-      placeholder: Av. 24 de Julho, 123
-      required: true
-      type: text
-    - key: postcode
-      label: Código Postal
-      placeholder: "1100"
-      required: true
-      type: text
-    - key: city
-      label: Cidade / Província
-      placeholder: Maputo
-      required: true
-      type: text
+    - { key: recipient, label: Nome do destinatário, placeholder: Nome completo, required: true, type: text }
+    - { key: organization, label: Organização, placeholder: "", required: false, type: text }
+    - { key: building, label: Edifício, placeholder: "", required: false, type: text }
+    - { key: unit, label: Unidade, placeholder: "", required: false, type: text }
+    - { key: street, label: Avenida / Rua, placeholder: Avenida Exemplo, required: true, type: text }
+    - { key: houseNumber, label: Número, placeholder: "123", required: true, type: text }
+    - { key: bairro, label: Bairro / Localidade, placeholder: Bairro Exemplo, required: true, type: text }
+    - { key: postcode, label: Código de Endereçamento Postal, placeholder: 99999-999, required: true, type: text }
+    - { key: city, label: Cidade / Vila / Distrito, placeholder: Cidade, required: true, type: text }
+    - { key: province, label: Província, placeholder: Província, required: true, type: text }
 english:
   name: International English
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{street}}
+    {{building}} {{unit}}
+    {{houseNumber}} {{street}}
+    {{bairro}}
     {{postcode}} {{city}}
+    {{province}}
     MOZAMBIQUE
   ordering: small-to-big
   fields:
-    - key: organization
-      label: Co./Org.
-      placeholder: ""
-    - key: street
-      label: Street (Latin)
-      placeholder: Av. 24 de Julho, 123
-    - key: postcode
-      label: Postcode
-      placeholder: "1100"
-      required: true
-    - key: city
-      label: City
-      placeholder: Maputo
-international:
-  pt:
-    name: Português (Internacional)
-    addressFormat: |-
-      {{organization}}
-      {{street}}
-      {{postcode}} {{city}}
-      MOÇAMBIQUE
-    ordering: small-to-big
-    fields:
-      - key: organization
-        label: Empresa (Latim)
-        placeholder: ""
-      - key: street
-        label: Endereço (Latim)
-        placeholder: Av. 24 de Julho, 123
-      - key: postcode
-        label: C.P. (Latin)
-        placeholder: "1100"
-        required: true
-      - key: city
-        label: Cidade
-        placeholder: Maputo
+    - { key: recipient, label: Recipient, placeholder: Full name, required: true, type: text }
+    - { key: organization, label: Organization, placeholder: "", required: false, type: text }
+    - { key: building, label: Building, placeholder: "", required: false, type: text }
+    - { key: unit, label: Unit, placeholder: "", required: false, type: text }
+    - { key: houseNumber, label: House number, placeholder: "123", required: true, type: text }
+    - { key: street, label: Street, placeholder: Example Avenue, required: true, type: text }
+    - { key: bairro, label: Bairro / Locality, placeholder: Example Bairro, required: true, type: text }
+    - { key: postcode, label: Postal Addressing Code, placeholder: 99999-999, required: true, type: text }
+    - { key: city, label: City / Town / District, placeholder: City, required: true, type: text }
+    - { key: province, label: Province, placeholder: Province, required: true, type: text }
 postalCode:
-  format: NNNN
-  regex: ^\d{4}$
-  api: null
-  source: Postal metadata from AGID East Africa regional table; open OSS source not configured
+  format: NNNNN-NNN
+  regex: ^\d{5}-\d{3}$
+  api: https://www.incm.gov.mz/documentos-do-sector-postal/
+  source: "INCM Decreto n.º 74/2024 revised CEP: eight digits in 5-3 groups; it supersedes the 2019 six-digit CEP and the historical four-digit Correios directory. Syntax does not prove a current assignment, boundary, address-building link or deliverability."
 addressRules:
   languages:
-    - code: pt
-      name: Portuguese
-  nativeOrder:
-    - name
-    - street
-    - houseNumber
-    - postcode
-    - city
-    - region
-    - country
-  englishOrder:
-    - name
-    - street
-    - houseNumber
-    - postcode
-    - city
-    - region
-    - country
-  regionalHierarchy:
-    - province
-    - district
+    - { code: pt, name: Portuguese }
+  deliveryLanguages:
+    - { code: pt, name: Portuguese }
+  nativeOrder: [recipient, organization, building, unit, street, houseNumber, bairro, postcode, city, province, country]
+  englishOrder: [recipient, organization, building, unit, houseNumber, street, bairro, postcode, city, province, country]
+  regionalHierarchy: [country, addressingZone, province, urbanOrNonUrbanZone, districtCityOrTown, administrativeOrMunicipalPost, localityOrBairro, currentIncmCepAssignment, officialTerritorialOrUrbanSurfaceOrNoCanonicalGeometry, explicitCivicAddressPoint, explicitAddressLinkedBuildingFeature, exactRightsClearedBuilding, agidCell]
   postalCode:
-    label: 4 digits required
+    label: "Current Decreto 74/2024 CEP has eight digits formatted NNNNN-NNN for territorial and urban units, with capital-specific rules; legacy four-digit and NNNN-NN values are not current canonical codes and no code alone proves an exact building"
     required: true
     usage: required
-  deliveryLanguages:
-    - code: pt
-      name: Portuguese
-  openSourceIds:
-    - rcmrd-geoportal
-    - hot-osm-east-southern-africa
-    - osm-nominatim
-    - osm-overpass
-    - openaddresses
-    - geonames-postal
-    - geonames-gazetteer
-    - geoboundaries
-    - upu-addressing
-    - hot-osm-africa
-    - openstreetmap-wiki-africa
-    - humdata-africa
-    - openaerialmap
-    - digital-earth-africa-dem
-    - digital-earth-africa-coastlines
-    - digital-earth-africa-waterbodies
-    - digital-earth-africa-wofs
-    - digital-earth-africa-fractional-cover
-    - digital-earth-africa-geomad
-    - fao-wapor
-    - esa-worldcover
-    - gebco-bathymetry
-    - gmrt-topography
-    - global-mangrove-watch
-    - allen-coral-atlas
-    - protected-planet-wdpa
-    - gbif-occurrence
-    - rcmrd-gmes-africa-geoportal
 openSourceIds:
+  - incm-mozambique-cep-2024
+  - incm-mozambique-postal-law-2016
+  - incm-mozambique-corre-universal-2024
+  - incm-mozambique-postal-operators
+  - mozambique-correios-dissolution-2021
+  - correios-mocambique-codigos-postais
+  - incm-mozambique-cep-rollout-2019-2022
+  - ine-mozambique-admin-cartography
+  - fnds-mozambique-land-cadastre
+  - intic-mozambique-data-protection-status-2026
+  - osm-mozambique
   - rcmrd-geoportal
   - hot-osm-east-southern-africa
   - osm-nominatim

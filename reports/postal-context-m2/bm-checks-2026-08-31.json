@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BM",
+  "observedAt": "2026-08-31T11:37:20.370Z",
+  "completedAt": "2026-08-31T12:24:23.5291968Z",
+  "baseCommit": "3d9f8a8e59971ad4199b0725b49c0356d6a399d4",
+  "scope": "BM-specific current format, official locations, Crown-copyright, official encrypted XLS aggregate quality, UPU commercial-access boundary, BELCO tile-package exclusion, Geotripz geographic false-positive exclusion and no-proxy evidence plus shared application contracts. No raw workbook row, feature row, address, building, parcel, person, tile package or geometry was copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "bm-source-inspector",
+      "command": "<bundled-python with pdfplumber, msoffcrypto-tool 5.4.2 and xlrd 2.0.2> scripts/inspect-postal-context-bm-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "twelve exact bodies reproduce current format, official workbook aggregate quality, rights and ArcGIS exclusion evidence without raw rows or geometry promotion"
+    },
+    {
+      "id": "bm-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-bm-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, HTML/PDF marker, PDF page, workbook summary, JSON path/value/field and unexpected-postcode-field drift fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "bm-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-bm-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, workbook age and quality, rights, ArcGIS no-proxy boundary, report digests, no real runtime claim and next BO"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 60,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialPublicationAndMetadataReferencesReviewed": 12,
+    "exactBodiesByteAndSha256Bound": 12,
+    "exactOfficialBodiesBytes": 1039242,
+    "sourceReviewDigest": "sha256:f788c2355fe77717f134cd16f57c84355a3368e83ca26aa87d2e6a301cb2b14c",
+    "currentAddressingSheetEdition": "4/2026",
+    "officialWorkbookLastSavedAt": "2019-03-28T19:32:44Z",
+    "candidateAssignmentRows": 2087,
+    "uniqueNormalizedPostcodes": 102,
+    "homeDeliveryNumericCodes": 80,
+    "alphaPostcodes": 22,
+    "sourceQualityAnomalies": 34,
+    "ambiguousAssignmentKeys": 30,
+    "currentCompleteAssignmentDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialOrRightsClearedPostalAreaArtifacts": 0,
+    "featureRowsQueried": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawWorkbookRowsInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realBmRuntimeVerified": false,
+    "realBmApiVerified": false,
+    "realBmAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no rights-cleared immutable BM assignment-and-geometry artifact can drive a real application path"
+  },
+  "knownLimitations": [
+    "The current portal download contains an official street/range assignment workbook, but its internal last-save date is March 2019 and it has no operator edition, validity, correction log or completeness statement.",
+    "Government Crown-copyright terms do not grant the processing, derivation, redistribution and public-serving rights M2 needs.",
+    "The workbook has no geometry; the BELCO item is an unlicensed private-owner tile package and the Geotripz Polygon is outside Bermuda and lacks a postcode field.",
+    "No street, parish, building, tile, Point, buffer, hull, Voronoi/raster cell, model, AGID cell or synthetic fixture was promoted as a postcode area."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "The old XLS parser and standard Office-protection reader were installed only under C:\\tmp for read-only inspection and are removed with the run's temporary data.",
+    "Poppler rendered all 11 PDF pages to non-empty 1241x1754 RGB PNGs. The local image-view helper returned Windows error 206 even from C:\\tmp\\bmu; exact PDF bytes, full extracted text, page counts, non-white bounds and render SHA-256 values were validated.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

@@ -207,7 +207,7 @@ const CYRILLIC_MAP: Record<string, string> = {
   'И': 'I', 'и': 'i', 'Й': 'Y', 'й': 'y', 'К': 'K', 'к': 'k',
   'Л': 'L', 'л': 'l', 'М': 'M', 'м': 'm', 'Н': 'N', 'н': 'n',
   'О': 'O', 'о': 'o', 'П': 'P', 'п': 'p', 'Р': 'R', 'р': 'r',
-  'С': 'S', 'с': 's', 'Ｔ': 'T', 'т': 't', 'У': 'U', 'у': 'u',
+  'С': 'S', 'с': 's', 'Т': 'T', 'т': 't', 'У': 'U', 'у': 'u',
   'Ф': 'F', 'ф': 'f', 'Х': 'Kh', 'х': 'kh', 'Ц': 'Ts', 'ц': 'ts',
   'Ч': 'Ch', 'ч': 'ch', 'Ш': 'Sh', 'ш': 'sh', 'Щ': 'Shch', 'щ': 'shch',
   'Ъ': '', 'ъ': '', 'Ы': 'Y', 'ы': 'y', 'Ь': "'", 'ь': "'",
@@ -215,6 +215,17 @@ const CYRILLIC_MAP: Record<string, string> = {
   // Ukrainian specific
   'Є': 'Ye', 'є': 'ye', 'І': 'I', 'і': 'i', 'Ї': 'Yi', 'ї': 'yi',
   'Ґ': 'G', 'ґ': 'g',
+  // Belarusian, Serbian, and Macedonian specific
+  'Ў': 'U', 'ў': 'u', 'Ј': 'J', 'ј': 'j', 'Љ': 'Lj', 'љ': 'lj',
+  'Њ': 'Nj', 'њ': 'nj', 'Ђ': 'Dj', 'ђ': 'dj', 'Ћ': 'C', 'ћ': 'c',
+  'Џ': 'Dz', 'џ': 'dz', 'Ѓ': 'Gj', 'ѓ': 'gj', 'Ќ': 'Kj', 'ќ': 'kj',
+  'Ѕ': 'Dz', 'ѕ': 'dz',
+  // Kazakh, Kyrgyz, Tajik, Mongolian, and other extended Cyrillic
+  'Ә': 'A', 'ә': 'a', 'Ғ': 'Gh', 'ғ': 'gh', 'Қ': 'Q', 'қ': 'q',
+  'Ң': 'Ng', 'ң': 'ng', 'Ө': 'O', 'ө': 'o', 'Ұ': 'U', 'ұ': 'u',
+  'Ү': 'U', 'ү': 'u', 'Һ': 'H', 'һ': 'h', 'Ҷ': 'J', 'ҷ': 'j',
+  'Ӣ': 'I', 'ӣ': 'i', 'Ӯ': 'U', 'ӯ': 'u', 'Җ': 'J', 'җ': 'j',
+  'Ҥ': 'Ng', 'ҥ': 'ng',
 };
 
 /**
@@ -268,7 +279,177 @@ export function transliterateCyrillic(text: string): string {
 
 export function transliterateGreek(text: string): string {
   if (!text) return "";
-  return text.split('').map(char => GREEK_MAP[char] || char).join('');
+  return Array.from(text.normalize('NFC'))
+    .map(char => {
+      if (!/[\u0370-\u03ff\u1f00-\u1fff]/u.test(char)) return char;
+      const base = char.normalize('NFD').replace(/\p{M}/gu, '');
+      return Array.from(base).map(part => GREEK_MAP[part] || part).join('');
+    })
+    .join('');
+}
+
+const ARMENIAN_MAP: Record<string, string> = {
+  'Ա': 'A', 'ա': 'a', 'Բ': 'B', 'բ': 'b', 'Գ': 'G', 'գ': 'g',
+  'Դ': 'D', 'դ': 'd', 'Ե': 'E', 'ե': 'e', 'Զ': 'Z', 'զ': 'z',
+  'Է': 'E', 'է': 'e', 'Ը': 'Y', 'ը': 'y', 'Թ': 'T', 'թ': 't',
+  'Ժ': 'Zh', 'ժ': 'zh', 'Ի': 'I', 'ի': 'i', 'Լ': 'L', 'լ': 'l',
+  'Խ': 'Kh', 'խ': 'kh', 'Ծ': 'Ts', 'ծ': 'ts', 'Կ': 'K', 'կ': 'k',
+  'Հ': 'H', 'հ': 'h', 'Ձ': 'Dz', 'ձ': 'dz', 'Ղ': 'Gh', 'ղ': 'gh',
+  'Ճ': 'Ch', 'ճ': 'ch', 'Մ': 'M', 'մ': 'm', 'Յ': 'Y', 'յ': 'y',
+  'Ն': 'N', 'ն': 'n', 'Շ': 'Sh', 'շ': 'sh', 'Ո': 'O', 'ո': 'o',
+  'Չ': 'Ch', 'չ': 'ch', 'Պ': 'P', 'պ': 'p', 'Ջ': 'J', 'ջ': 'j',
+  'Ռ': 'R', 'ռ': 'r', 'Ս': 'S', 'ս': 's', 'Վ': 'V', 'վ': 'v',
+  'Տ': 'T', 'տ': 't', 'Ր': 'R', 'ր': 'r', 'Ց': 'Ts', 'ց': 'ts',
+  'Ւ': 'W', 'ւ': 'w', 'Փ': 'P', 'փ': 'p', 'Ք': 'K', 'ք': 'k',
+  'Օ': 'O', 'օ': 'o', 'Ֆ': 'F', 'ֆ': 'f', 'և': 'ev',
+  '՚': "'", '՛': "'", '՜': '', '՝': ',', '՞': '?', '։': '.',
+};
+
+const GEORGIAN_MAP: Record<string, string> = {
+  'ა': 'a', 'ბ': 'b', 'გ': 'g', 'დ': 'd', 'ე': 'e', 'ვ': 'v',
+  'ზ': 'z', 'თ': 't', 'ი': 'i', 'კ': 'k', 'ლ': 'l', 'მ': 'm',
+  'ნ': 'n', 'ო': 'o', 'პ': 'p', 'ჟ': 'zh', 'რ': 'r', 'ს': 's',
+  'ტ': 't', 'უ': 'u', 'ფ': 'p', 'ქ': 'k', 'ღ': 'gh', 'ყ': 'q',
+  'შ': 'sh', 'ჩ': 'ch', 'ც': 'ts', 'ძ': 'dz', 'წ': 'ts',
+  'ჭ': 'ch', 'ხ': 'kh', 'ჯ': 'j', 'ჰ': 'h',
+};
+
+const ETHIOPIC_VOWEL_SUFFIXES = ['a', 'u', 'i', 'a', 'e', '', 'o'] as const;
+const ETHIOPIC_SERIES: ReadonlyArray<readonly [string, string]> = [
+  ['ሀሁሂሃሄህሆ', 'h'],
+  ['ለሉሊላሌልሎ', 'l'],
+  ['ሐሑሒሓሔሕሖ', 'h'],
+  ['መሙሚማሜምሞ', 'm'],
+  ['ሠሡሢሣሤሥሦ', 's'],
+  ['ረሩሪራሬርሮ', 'r'],
+  ['ሰሱሲሳሴስሶ', 's'],
+  ['ሸሹሺሻሼሽሾ', 'sh'],
+  ['ቀቁቂቃቄቅቆ', 'q'],
+  ['በቡቢባቤብቦ', 'b'],
+  ['ተቱቲታቴትቶ', 't'],
+  ['ቸቹቺቻቼችቾ', 'ch'],
+  ['ኀኁኂኃኄኅኆ', 'h'],
+  ['ነኑኒናኔንኖ', 'n'],
+  ['ኘኙኚኛኜኝኞ', 'ny'],
+  ['አኡኢኣኤእኦ', ''],
+  ['ከኩኪካኬክኮ', 'k'],
+  ['ኸኹኺኻኼኽኾ', 'kh'],
+  ['ወዉዊዋዌውዎ', 'w'],
+  ['ዐዑዒዓዔዕዖ', ''],
+  ['ዘዙዚዛዜዝዞ', 'z'],
+  ['ዠዡዢዣዤዥዦ', 'zh'],
+  ['የዩዪያዬይዮ', 'y'],
+  ['ደዱዲዳዴድዶ', 'd'],
+  ['ጀጁጂጃጄጅጆ', 'j'],
+  ['ገጉጊጋጌግጎ', 'g'],
+  ['ጠጡጢጣጤጥጦ', 't'],
+  ['ጨጩጪጫጬጭጮ', 'ch'],
+  ['ጰጱጲጳጴጵጶ', 'p'],
+  ['ጸጹጺጻጼጽጾ', 'ts'],
+  ['ፀፁፂፃፄፅፆ', 'ts'],
+  ['ፈፉፊፋፌፍፎ', 'f'],
+  ['ፐፑፒፓፔፕፖ', 'p'],
+];
+
+const ETHIOPIC_MAP: Record<string, string> = Object.fromEntries(
+  ETHIOPIC_SERIES.flatMap(([series, consonant]) =>
+    Array.from(series).map((char, index) => [
+      char,
+      `${consonant}${ETHIOPIC_VOWEL_SUFFIXES[index]}`,
+    ]),
+  ),
+);
+
+const ETHIOPIC_PUNCTUATION: Record<string, string> = {
+  '፡': ' ', '።': '.', '፣': ',', '፤': ';', '፥': ':', '፦': ':', '፧': '?',
+  '፩': '1', '፪': '2', '፫': '3', '፬': '4', '፭': '5',
+  '፮': '6', '፯': '7', '፰': '8', '፱': '9', '፲': '10',
+};
+
+const TIFINAGH_MAP: Record<string, string> = {
+  'ⴰ': 'a', 'ⴱ': 'b', 'ⴳ': 'g', 'ⴷ': 'd', 'ⴹ': 'd', 'ⴻ': 'e',
+  'ⴼ': 'f', 'ⴽ': 'k', 'ⵀ': 'h', 'ⵃ': 'h', 'ⵄ': "'", 'ⵅ': 'kh',
+  'ⵇ': 'q', 'ⵉ': 'i', 'ⵊ': 'j', 'ⵍ': 'l', 'ⵎ': 'm', 'ⵏ': 'n',
+  'ⵓ': 'u', 'ⵔ': 'r', 'ⵕ': 'r', 'ⵖ': 'gh', 'ⵙ': 's', 'ⵚ': 's',
+  'ⵛ': 'sh', 'ⵜ': 't', 'ⵟ': 't', 'ⵡ': 'w', 'ⵢ': 'y', 'ⵣ': 'z',
+  'ⵥ': 'z', 'ⵯ': 'w',
+};
+
+export function transliterateArmenian(text: string): string {
+  if (!text) return "";
+  return text.split('').map(char => ARMENIAN_MAP[char] || char).join('');
+}
+
+export function transliterateGeorgian(text: string): string {
+  if (!text) return "";
+  return text
+    .split('')
+    .map(char => {
+      const key = /[\u1c90-\u1cbf]/u.test(char)
+        ? char.toLocaleLowerCase('ka-GE')
+        : char;
+      return GEORGIAN_MAP[key] || char;
+    })
+    .join('');
+}
+
+export function transliterateEthiopic(text: string): string {
+  if (!text) return "";
+  return text
+    .split('')
+    .map(char => ETHIOPIC_MAP[char] || ETHIOPIC_PUNCTUATION[char] || char)
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function transliterateTifinagh(text: string): string {
+  if (!text) return "";
+  return text
+    .split('')
+    .map(char => TIFINAGH_MAP[char] || char)
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const ARABIC_INDIC_DIGITS: Record<string, string> = {
+  '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+  '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9',
+  '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+  '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',
+};
+
+const ARABIC_LATIN_MAP: Record<string, string> = {
+  'ء': "'", 'آ': 'a', 'أ': 'a', 'ؤ': 'w', 'إ': 'i', 'ئ': 'y',
+  'ا': 'a', 'ب': 'b', 'ة': 'ah', 'ت': 't', 'ث': 'th', 'ج': 'j',
+  'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'dh', 'ر': 'r', 'ز': 'z',
+  'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z',
+  'ع': "'", 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k', 'ل': 'l',
+  'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'w', 'ى': 'a', 'ي': 'y',
+  'پ': 'p', 'چ': 'ch', 'ژ': 'zh', 'گ': 'g',
+  'ک': 'k', 'ی': 'y', 'ے': 'e', 'ٹ': 't', 'ڈ': 'd', 'ڑ': 'r',
+  'ں': 'n', 'ھ': 'h', 'ہ': 'h', 'ۂ': 'h', 'ۀ': 'h', 'ڤ': 'v',
+  'َ': 'a', 'ُ': 'u', 'ِ': 'i', 'ً': 'an', 'ٌ': 'un', 'ٍ': 'in',
+  'ْ': '', 'ّ': '', 'ٰ': 'a', 'ـ': '',
+};
+
+export function transliterateArabic(text: string): string {
+  if (!text) return "";
+  return text
+    .normalize('NFKC')
+    .replace(/[\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, '')
+    .replace(/[٠-٩۰-۹]/g, digit => ARABIC_INDIC_DIGITS[digit] || digit)
+    .replace(/(^|[\s,،])ال(?=[\p{Script=Arabic}])/gu, '$1al-')
+    .split('')
+    .map(char => ARABIC_LATIN_MAP[char] ?? char)
+    .join('')
+    .replace(/[،؛]/g, ',')
+    .replace(/\?+/g, '?')
+    .replace(/'{2,}/g, "'")
+    .replace(/(^|[\s-])'|'\b/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /**
@@ -302,6 +483,22 @@ export function transliterate(text: string, lang: string): string {
       return transliterateCyrillic(text);
     case 'el':
       return transliterateGreek(text);
+    case 'hy':
+      return transliterateArmenian(text);
+    case 'ka':
+      return transliterateGeorgian(text);
+    case 'am':
+    case 'ti':
+    case 'gez':
+      return transliterateEthiopic(text);
+    case 'zgh':
+    case 'kab':
+      return transliterateTifinagh(text);
+    case 'ar':
+    case 'ar-sa':
+    case 'ar-ae':
+    case 'ar-eg':
+      return transliterateArabic(text);
     case 'pl':
     case 'cs':
     case 'hu':

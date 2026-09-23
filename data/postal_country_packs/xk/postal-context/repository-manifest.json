@@ -1,0 +1,69 @@
+{
+  "schema_version": "agid-postal-xk-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-xk", "country_code": "XK", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Kosovo five-digit postal code",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "official_or_rights_cleared_postal_area_or_explicit_non_area",
+    "assignment_rule": "Only the current Posta e Kosovës assignment denominator may establish normalized XK postal-code membership and exceptions.",
+    "postcode_area_rule": "Only a fixed, rights-cleared and Posta-reconciled PostalZone Polygon/MultiPolygon may be drawn. A Geoportal image or point, municipality, settlement, office, address, building, parcel, buffer, hull or raster cell is never promoted by implication.",
+    "address_rule": "Postal assignment, postal-area membership, address, office and service state remain separate assertions.",
+    "building_rule": "Building output requires a separately sourced explicit distributable address-building relationship or common authoritative identifier.",
+    "administrative_rule": "XK identity is preserved; source identities and territories are not changed, merged or relabelled.",
+    "service_status_rule": "Office and delivery service state are time-stamped assertions separate from area membership."
+  },
+  "integration": {
+    "agid_country_code": "XK",
+    "coordinate_flow": "coordinate -> rights-cleared Posta-reconciled postal area or explicit non-area -> address graph -> explicit building relation -> AGID cell",
+    "postcode_flow": "normalized five-digit code -> current operator assignment and exception denominator -> valid official/derived/virtual area or explicit non-area -> address context -> explicit building relation -> AGID cells",
+    "building_output_gate": "explicit distributable relation, common authoritative identifier, or reviewed crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "complete-current-denominator", "pass": "All current five-digit assignments, aliases, exceptions and explicit non-area classes are fixed with dates, digests and correction policy." },
+    { "id": "operator-geoportal-reconciliation", "pass": "Every current operator code is reconciled to one fixed PostalZone area or source-grounded non-area reason; levels and duplicate features are explained." },
+    { "id": "valid-area-only", "pass": "Every drawable record is finite, closed and valid Polygon/MultiPolygon in a declared CRS with lineage, class, date and confidence." },
+    { "id": "resource-rights", "pass": "Assignment and geometry resources pin processing, storage, derivation, redistribution, public-serving and attribution permission." },
+    { "id": "identity-separation", "pass": "XK and all source country/territory identities remain unchanged." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures and shared code capability never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_kosovo_official_postal_code_assignment_and_area_visualization", "definition": "The current complete Kosovo five-digit postal-code assignment, alias, exception and explicit non-area denominator is pinned from Posta e Kosovës under reviewed rights compatible with AGID processing, storage, derivation, redistribution and public serving. Every normalized code is reconciled to a fixed public official or rights-cleared Geoportal PostalZone Polygon/MultiPolygon whose feature level, parent relationship, duplicate handling, provider, edition, reference date, bytes, SHA-256, schema, CRS, topology, coverage, method, official/derived/virtual class, confidence and exceptions are recorded, or retains a source-grounded office, P.O.-box, organization, route, point or other non-area reason. A dynamic WMS image or GetFeatureInfo response, Level-1 zone, municipality, settlement, office, address, building, parcel, point, buffer, hull, Voronoi/raster cell and synthetic fixture never becomes a complete postal perimeter by implication; XK and source identities are not changed or merged. The approved immutable artifact drives the real XK API/app, which normalizes five-digit inputs, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_address", "definition": "Explicit address identifiers and points pass rights, schema, coverage, validity, privacy and correction gates." },
+      { "id": "M4_geometry", "definition": "Postal surfaces and building joins pass topology, ambiguity, identifier, rights and quality gates." }
+    ],
+    "hard_blockers": [
+      "dynamic-wms-or-getfeatureinfo-treated-as-fixed-release",
+      "level-one-zone-or-duplicate-feature-treated-as-complete-denominator",
+      "public-page-or-image-access-substituted-for-resource-specific-license",
+      "office-address-building-parcel-or-administrative-proxy-promoted",
+      "point-buffer-hull-voronoi-or-raster-area-promoted",
+      "xk-or-source-identity-changed-or-merged"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_XK_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_XK_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_XK_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_XK_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-raw-postal-or-geoportal-source-bodies",
+    "dynamic-wms-is-immutable-artifact",
+    "level-one-zone-equals-all-leaf-codes",
+    "municipality-settlement-office-address-building-or-parcel-equals-postal-area",
+    "point-buffer-hull-voronoi-or-raster-perimeter",
+    "public-access-is-blanket-redistribution-license"
+  ]
+}

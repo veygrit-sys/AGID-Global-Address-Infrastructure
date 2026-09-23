@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "NL",
+  "observedAt": "2026-08-30T20:04:32.662Z",
+  "completedAt": "2026-08-30T20:35:29.0148140Z",
+  "baseCommit": "df4aeb32ed390585a8d763484b77eb2b8d196fe6",
+  "scope": "Country-specific M2 definition, corrected current CBS/Esri PC6 geometry, PostNL assignment and reuse-rights audit, deterministic full-source inspection and conservative blocker evidence; no raw source body, address row, postal data pack, API geometry route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "netherlands-source-inspector",
+      "command": "node scripts/inspect-postal-context-nl-sources.mjs --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "twelve byte/SHA-256-bound current bodies reproduce the corrected 2025-v1 CBS release, 465935 unique valid PC6 MultiPolygons, 597956 polygon parts, 14458509 positions and the 2521 CA versus 2500 GG/2500 CC exception examples"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "netherlands-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-nl-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, corrected CBS geometry counts, PostNL rights/denominator/exception gates, report digests and Norway next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes after the lockfile dependency tree is installed"
+    },
+    {
+      "id": "changed-javascript-and-json-syntax",
+      "command": "node --check scripts/inspect-postal-context-nl-sources.mjs && node --check scripts/postal-context-m2-nl-ledger.test.mjs plus JSON.parse for all changed JSON files",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "both changed JavaScript modules parse and all three country-pack JSON files plus source review and rollout ledger parse"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 49,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 10,
+    "exactBodiesByteAndSha256Bound": 12,
+    "cbsCorrectedPc6Features": 465935,
+    "cbsDistinctPc6Codes": 465935,
+    "cbsMalformedCodes": 0,
+    "cbsEmptyGeometry": 0,
+    "cbsInvalidGeometry": 0,
+    "cbsPolygonParts": 597956,
+    "cbsPositions": 14458509,
+    "headquarters2521CaAreaRecords": 1,
+    "publicPoBox2500GgAreaRecords": 0,
+    "publicPoBox2500CcAreaRecords": 0,
+    "rightsClearedCbsEsriDerivedPostcodePolygonRecords": 465935,
+    "completeOrdinaryAndExceptionPostnlDenominatorAvailableForAgidPublicServing": false,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0,
+    "postnlDatasetSpecificAgidProcessingDerivationPublicServingAndRedistributionGrantEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realNlRuntimeVerified": false,
+    "realNlApiVerified": false,
+    "realNlAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no approved complete PostNL assignment plus corrected CBS runtime artifact exists"
+  },
+  "knownLimitations": [
+    "CBS/Esri supplies current valid rights-cleared derived PC6 surfaces but does not establish PostNL assignment authority.",
+    "The complete current PostNL ordinary and H/B/N exception denominator is purchased from a protected environment and no AGID public-serving grant was established.",
+    "At least the public P.O.-box examples 2500 GG and 2500 CC have no CBS surface; no exception area was invented.",
+    "The PDOK service description reaches 2024 and its default sample is 2015, so it was not represented as the corrected current 2025 artifact.",
+    "The first shared-test invocation failed before tests because the isolated worktree had no dependency tree; both shared suites passed after a temporary link to an existing dependency cache.",
+    "That cache lacked many unrelated full-project dependencies. The first full npm ci exhausted the host volume; after the already inspected, hash-recorded temporary ZIP/GeoPackage/workbook copies were removed, a reduced optional-dependency install completed and the full TypeScript graph passed.",
+    "No real NL postcode runtime, API map fit, translucent rendering or browser E2E can be exercised without an approved complete assignment plus geometry artifact."
+  ],
+  "countryM2Achieved": false
+}

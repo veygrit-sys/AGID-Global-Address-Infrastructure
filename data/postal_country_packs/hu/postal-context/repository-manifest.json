@@ -1,0 +1,91 @@
+{
+  "schema_version": "agid-postal-hu-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-hu",
+    "country_code": "HU",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Irányítószám",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "operator_assignment_with_derived_or_non_area_geometry",
+    "assignment_rule": "A pinned Magyar Posta Partner Extra ZipCodes row or separately retained official address-validation receipt establishes a four-digit postcode-to-settlement or address assignment at the receipt time. Syntax, settlement, post-office point, KCR address or generated surface alone does not establish current operator assignment or deliverability.",
+    "postcode_geometry_rule": "No nationwide operator-authored postcode polygon is assumed. A surface may be generated only from complete, rights-cleared and time-compatible assignment membership plus authoritative coordinates; it remains derived, noncanonical and carries method, members, exclusions, uncertainty, topology, coverage and validity. Settlement, district, county, nearest points, buffers and Voronoi cells never substitute for missing postal evidence.",
+    "special_code_rule": "Post-office-box and dedicated or highlighted postcodes may require only recipient, destination and postcode fields. They are routing or endpoint records and remain non-area unless an independent authoritative source explicitly supplies area geometry.",
+    "address_rule": "The Központi Címregiszter is the authoritative address register and records postcode, settlement, public-place name/type, house number, building, staircase, floor, door, coordinate, unique address identifier, cadastral identifier and object type. Its statutory transfer rules do not authorize a public bulk mirror; an address coordinate is not a building footprint or resident identity.",
+    "unit_rule": "Building, staircase, floor and door designators are address components. They identify a unit only when the exact KCR address identifier and allowed unit-level components are present; they never identify an occupant, recipient, household, owner or rightsholder.",
+    "eha_rule": "Lechner's Elérési Hely Adatbázis records a location geometry inside the parcel and the address-to-cadastral-number relation. The point may represent an entrance or geometric centre and is not automatically a building footprint or exact entrance.",
+    "building_rule": "Exact building output requires a source-defined relation or common authoritative identifier from the KCR or EHA address to an exact rights-cleared building feature. INSPIRE coverage and licence are pinned per distribution. NTA buildings are generalized map-display features, and cadastral-map data are controlled; containment, nearest geometry and text similarity remain candidates only.",
+    "administrative_rule": "KSH and official administrative units provide region, county, district, municipality and Budapest-district context. Administrative geometry never creates postcode assignment, a postal perimeter, delivery eligibility or building identity.",
+    "licence_rule": "Every Partner Extra, KCR, EHA, INSPIRE, NTA, cadastral and KSH artifact pins the exact access terms, provider, source URL, capture/download time, edition, coverage, schema, CRS, reviewed transform and digest. Public viewing, free registration, an XML link or INSPIRE availability is not by itself unrestricted redistribution authority.",
+    "crs_rule": "Every geometry retains its published source CRS. EOV, INSPIRE and Web Mercator representations are transformed to WGS84 only through a reviewed versioned transform; tiles and coordinates are never relabelled as vector footprints.",
+    "territory_rule": "The HU pack is clipped to Hungary's official territory and records cross-border exclusions. Postal routing evidence never determines sovereignty or silently imports neighbouring-country address or building geometry."
+  },
+  "integration": {
+    "agid_country_code": "HU",
+    "coordinate_flow": "coordinate -> explicit derived postcode surface or honest no-area -> KCR/EHA address coordinate -> allowed unit components -> explicit cadastral/building relation -> rights-cleared building -> HU AGID cell",
+    "postcode_flow": "canonical four digits -> pinned Magyar Posta assignment -> settlement or special endpoint -> rights-cleared address membership -> optional derived surface -> explicit building relation -> AGID cells",
+    "building_output_gate": "exact KCR or EHA address identity plus a common authoritative cadastral/building identifier and an exact rights-cleared building feature"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode remains four-character text and preserves leading zeroes." },
+    { "id": "operator-assignment", "pass": "Every current postcode pins the Magyar Posta source URL, download or query time, edition/effective time, settlement or address scope, terms, schema and digest." },
+    { "id": "derived-or-non-area", "pass": "Every polygon is explicitly derived from complete rights-cleared membership with method and uncertainty, or the code remains non-area; no polygon is called Magyar Posta official." },
+    { "id": "authoritative-address", "pass": "Every address pins its KCR identifier, allowed components, object type, coordinate semantics, cadastral relation, access authority, validity and digest." },
+    { "id": "unit-privacy", "pass": "Unit-level display requires an exact address identifier and allowed components and never exposes recipients, occupants, households, owners or rightsholders." },
+    { "id": "building-link", "pass": "Exact building output requires a common authoritative identifier or reviewed explicit crosswalk; NTA display, parcel containment, proximity and text matching do not pass." },
+    { "id": "rights", "pass": "KCR statutory access, INSPIRE distribution coverage, NTA terms and cadastral fees/licences remain enforceable per artifact." },
+    { "id": "privacy", "pass": "No resident, recipient, owner, rightsholder, personal contact, title/value, credential, shipment or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_magyar_posta_assignment_and_postcode_area_visualization", "definition": "A current rights-cleared Magyar Posta nationwide four-digit assignment denominator with special, PO-box and dedicated-code classification, and either an authoritative postal-area Polygon/MultiPolygon or a rights-cleared postcode-membership-derived surface with complete members, exclusions, method and uncertainty, are pinned by edition, validity, terms, CRS, SHA-256 and coverage, published as an approved immutable artifact, and pass the real HU loader, API and app search-to-translucent-area path. Partner Extra rows without special classification or area geometry, GISCO or TERCET points and NUTS matches, KSH administrative polygons, KCR address points, buildings or parcels, buffers, Voronoi cells, synthetic fixtures and invented non-geographic surfaces never satisfy M2." },
+      { "id": "M3_derived_geometry", "definition": "Complete rights-cleared address membership and coordinates pass derivation, topology, coverage, uncertainty and correction gates." },
+      { "id": "M4_address_building", "definition": "Authorized KCR/EHA identity and exact licensed building relationships pass identifier, privacy, CRS, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "partner-extra-row-presented-as-official-polygon",
+      "special-or-postbox-code-given-invented-polygon",
+      "settlement-district-or-county-presented-as-postcode-area",
+      "unmatched-code-filled-by-nearest-buffer-or-voronoi",
+      "kcr-statutory-access-presented-as-public-redistribution",
+      "address-or-eha-point-presented-as-building-footprint",
+      "nta-generalized-or-tile-building-presented-as-exact-vector-footprint",
+      "parcel-or-nearest-building-presented-as-exact-address-link",
+      "owner-resident-recipient-or-title-data-published",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "cross-border-geometry-silently-imported",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_HU_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_HU_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_HU_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_HU_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-magyar-posta-kcr-eha-inspire-nta-or-cadastral-rows",
+    "every-four-digit-code-is-a-polygon",
+    "settlement-is-postcode-area",
+    "post-office-box-or-dedicated-code-is-area",
+    "address-coordinate-is-building-footprint",
+    "nta-tile-is-exact-building-vector",
+    "parcel-is-building",
+    "nearest-footprint-is-exact-building",
+    "unit-address-identifies-occupant"
+  ]
+}

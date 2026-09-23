@@ -5,6 +5,7 @@ import React from 'react';
 import type { DroneLandingAssessment } from '../lib/droneAssessment';
 import type { DroneCorridorReport } from '../lib/droneCorridor';
 import type { DroneMissionPlan } from '../lib/droneMissionPlan';
+import { formatPublicConfidenceBand } from '../lib/publicDecisionDisplay';
 import { cn } from '../lib/utils';
 import type { DroneNavigationPoint } from '../services/DroneNavigationService';
 
@@ -91,7 +92,7 @@ export const DronePlanningPanel: React.FC<DronePlanningPanelProps> = ({
             <div className="text-right">
               <p className="text-2xl font-black">{assessment ? assessment.score : '--'}</p>
               <p className="text-[9px] font-black uppercase tracking-widest opacity-70">
-                Confidence {assessment ? Math.round(assessment.confidence * 100) : 0}%
+                Proof {formatPublicConfidenceBand(assessment?.confidence)}
               </p>
             </div>
           </div>
@@ -126,7 +127,7 @@ export const DronePlanningPanel: React.FC<DronePlanningPanelProps> = ({
               <RadioTower className="h-3.5 w-3.5" />
               <span className="font-black uppercase tracking-widest">3D destination</span>
               <span>Safety {navigationPoint.safety}</span>
-              <span>Confidence {Math.round(navigationPoint.confidence * 100)}%</span>
+              <span>Proof {formatPublicConfidenceBand(navigationPoint.confidence)}</span>
             </div>
           )}
 
@@ -258,7 +259,7 @@ export const DronePlanningPanel: React.FC<DronePlanningPanelProps> = ({
                   </div>
 
                   <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-slate-400">
-                    <span>Confidence {Math.round(corridorReport.confidence * 100)}%</span>
+                    <span>Proof {formatPublicConfidenceBand(corridorReport.confidence)}</span>
                     {corridorReport.worstSample ? (
                       <span>Sample {corridorReport.worstSample.sample.index + 1}</span>
                     ) : null}

@@ -20,6 +20,21 @@ test('renders Mainland China place names as readable Pinyin English address part
   assert.equal(normalizeEnglishAddressPart('上海市浦东新区世纪大道', 'CN'), 'Shanghai Pudong New Area Century Avenue');
 });
 
+test('renders Chinese place names with country-scoped established readings', () => {
+  assert.equal(normalizeEnglishAddressPart('沙田', 'HK'), 'Sha Tin');
+  assert.equal(normalizeEnglishAddressPart('沙田', 'CN'), 'Shatian');
+  assert.equal(normalizeEnglishAddressPart('高雄市', 'TW'), 'Kaohsiung City');
+  assert.equal(normalizeEnglishAddressPart('氹仔', 'MO'), 'Taipa');
+  assert.equal(normalizeEnglishAddressPart('牛車水', 'SG'), 'Chinatown');
+  assert.equal(normalizeEnglishAddressPart('合成區', 'HK'), '');
+});
+
+test('does not invent Mandarin building readings for non-Mandarin delivery regions', () => {
+  assert.equal(normalizeEnglishAddressBuildingName('廈門大廈', 'CN'), 'Xiamen Building');
+  assert.equal(normalizeEnglishAddressBuildingName('合成中心', 'HK'), '');
+  assert.equal(normalizeEnglishAddressBuildingName('合成中心', 'SG'), '');
+});
+
 test('renders Korean Peninsula addresses with Revised Romanization style English parts', () => {
   assert.equal(normalizeEnglishAddressPart('서울특별시 중구 세종대로', 'KR'), 'Seoul Jung-gu Sejong-daero');
   assert.equal(normalizeEnglishAddressPart('부산광역시 해운대구 달맞이길', 'KR'), 'Busan Haeundae-gu Dalmaji-gil');

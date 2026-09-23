@@ -1,0 +1,109 @@
+{
+  "$schema": "https://agid.local/schemas/veygrit-address-login-packages-v0.1.json",
+  "version": "0.1.0",
+  "status": "oss-prep-local",
+  "scope": "Veygrit Address Login and Vey ID SDK package publication map",
+  "privacyBoundary": "reference-only; no raw address, recipient, witness, private-key, proof-secret, or production credential material",
+  "packages": [
+    {
+      "name": "@veygrit/address-login-react",
+      "packagePath": "sdk/veygrit-address-login-react",
+      "runtime": "react-browser",
+      "entrypoints": [
+        "src/index.ts"
+      ],
+      "readme": "README.md",
+      "examples": [
+        "examples/checkout-friend-delivery/CheckoutFriendDelivery.tsx",
+        "examples/checkout-guest-checkout/CheckoutGuestCheckout.tsx"
+      ],
+      "verifyCommand": "npm run verify:veygrit-address-login-react",
+      "publishReadiness": "local-preview",
+      "publicSurfaces": [
+        "VeygritProvider",
+        "AddressLoginButton",
+        "GuestCheckoutButton",
+        "useAddressLogin",
+        "useGuestCheckoutHandoff",
+        "useFriendDelivery",
+        "createAddressLoginRequest",
+        "createVeyIdAuthorizeRequest",
+        "createVeyIdGuestCheckoutHandoffPayload",
+        "createGuestCheckoutHandoffHttpTransport",
+        "createFriendDeliveryRequestPayload",
+        "parseAddressLoginCallback",
+        "parseVeyIdCallback"
+      ],
+      "safetyControls": [
+        "no-raw-address-material",
+        "no-recipient-material",
+        "no-witness-material",
+        "no-private-key-material",
+        "no-proof-secret-material",
+        "no-production-credentials",
+        "publishable-key-only-in-browser",
+        "same-origin-merchant-route-for-guest-checkout"
+      ]
+    },
+    {
+      "name": "@veygrit/address-login-nextjs",
+      "packagePath": "sdk/veygrit-address-login-nextjs",
+      "runtime": "nextjs-server",
+      "entrypoints": [
+        "src/server.ts"
+      ],
+      "readme": "README.md",
+      "examples": [
+        "examples/app-router/vey-id/token/route.ts",
+        "examples/app-router/vey-id/revoke/route.ts",
+        "examples/app-router/vey-id/guest-checkout/route.ts",
+        "examples/app-router/vey-id/guest-checkout/README.md",
+        "examples/app-router/friend-delivery/request/route.ts",
+        "examples/app-router/friend-delivery/approval/route.ts"
+      ],
+      "verifyCommand": "npm run verify:veygrit-address-login-nextjs",
+      "publishReadiness": "local-preview",
+      "publicSurfaces": [
+        "createAddressLoginRouteHandler",
+        "createAddressLoginRouteHandlers",
+        "verifyAddressLoginCallback",
+        "verifyVeygritWebhook",
+        "verifyVeygritWebhookHmac",
+        "createVeygritWebhookHmacSignature",
+        "exchangeVeyIdAuthorizationCode",
+        "createVeyIdGuestCheckoutHandoff",
+        "revokeVeyIdConnection",
+        "requestFriendDelivery",
+        "approveFriendDelivery",
+        "parseAddressLoginCallback",
+        "parseVeyIdCallback"
+      ],
+      "safetyControls": [
+        "no-raw-address-material",
+        "no-recipient-material",
+        "no-witness-material",
+        "no-private-key-material",
+        "no-proof-secret-material",
+        "no-production-credentials",
+        "server-access-token-only-on-server",
+        "mocked-transport-for-local-tests",
+        "redacted-blocked-response-on-upstream-failure"
+      ]
+    }
+  ],
+  "integrationContracts": [
+    {
+      "name": "react-guest-checkout-to-nextjs-route",
+      "browserEndpoint": "/api/veygrit/guest-checkout/handoff",
+      "reactExample": "sdk/veygrit-address-login-react/examples/checkout-guest-checkout/CheckoutGuestCheckout.tsx",
+      "nextjsRoute": "sdk/veygrit-address-login-nextjs/examples/app-router/vey-id/guest-checkout/route.ts",
+      "privacyBoundary": "browser receives refs and redacted blocked states only; server route owns hosted Vey ID handoff",
+      "testCoverage": [
+        "Guest Checkout browser transport accepts same-origin merchant endpoints only",
+        "React Guest Checkout example handles ready and blocked handoff states",
+        "Next.js Guest Checkout route returns a redacted blocked response on hosted failure",
+        "React transport can hand off through the mocked Next.js App Router route"
+      ]
+    }
+  ]
+}

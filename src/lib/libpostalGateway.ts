@@ -12,6 +12,20 @@ export type OptionalLibpostalResult = {
   components: LibpostalComponent[];
 };
 
+export const LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION =
+  'agid-local-libpostal-endpoint-policy-v1';
+
+export type LocalLibpostalEndpointPolicy = {
+  version: typeof LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION;
+  status: 'ready' | 'disabled' | 'blocked';
+  network: 'loopback-only' | 'none';
+  reason?: 'endpoint-not-configured' | 'endpoint-must-be-absolute-loopback-http' | 'endpoint-must-not-contain-credentials';
+};
+
+export type LocalLibpostalResult = OptionalLibpostalResult & {
+  endpointPolicy: LocalLibpostalEndpointPolicy;
+};
+
 type ParseOptions = {
   text: string;
   countryCode?: string;
@@ -58,6 +72,54 @@ function localResult(text: string, countryCode?: string): OptionalLibpostalResul
   };
 }
 
+/**
+ * The local-only path is the privacy-preserving integration point for an
+ * optional libpostal sidecar. Relative and non-loopback URLs are deliberately
+ * rejected before any input is sent to a fetch implementation.
+ */
+export function assessLocalLibpostalEndpoint(endpoint?: string): LocalLibpostalEndpointPolicy {
+  if (!endpoint) {
+    return {
+      version: LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION,
+      status: 'disabled',
+      network: 'none',
+      reason: 'endpoint-not-configured',
+    };
+  }
+  try {
+    const parsed = new URL(endpoint);
+    if (parsed.username || parsed.password) {
+      return {
+        version: LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION,
+        status: 'blocked',
+        network: 'none',
+        reason: 'endpoint-must-not-contain-credentials',
+      };
+    }
+    const isLoopback = ['127.0.0.1', '::1', '[::1]', 'localhost'].includes(parsed.hostname);
+    if (parsed.protocol !== 'http:' || !isLoopback) {
+      return {
+        version: LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION,
+        status: 'blocked',
+        network: 'none',
+        reason: 'endpoint-must-be-absolute-loopback-http',
+      };
+    }
+    return {
+      version: LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION,
+      status: 'ready',
+      network: 'loopback-only',
+    };
+  } catch {
+    return {
+      version: LOCAL_LIBPOSTAL_ENDPOINT_POLICY_VERSION,
+      status: 'blocked',
+      network: 'none',
+      reason: 'endpoint-must-be-absolute-loopback-http',
+    };
+  }
+}
+
 export async function parseAddressWithOptionalLibpostal({
   text,
   countryCode,
@@ -94,4 +156,29 @@ export async function parseAddressWithOptionalLibpostal({
   } catch {
     return localResult(text, countryCode);
   }
+}
+
+export async function parseAddressWithLocalLibpostal({
+  text,
+  countryCode,
+  endpoint,
+  fetcher = fetch,
+}: ParseOptions): Promise<LocalLibpostalResult> {
+  const endpointPolicy = assessLocalLibpostalEndpoint(endpoint);
+  if (endpointPolicy.status !== 'ready') {
+    return {
+      ...localResult(text, countryCode),
+      endpointPolicy,
+    };
+  }
+  const result = await parseAddressWithOptionalLibpostal({
+    text,
+    countryCode,
+    endpoint,
+    fetcher,
+  });
+  return {
+    ...result,
+    endpointPolicy,
+  };
 }

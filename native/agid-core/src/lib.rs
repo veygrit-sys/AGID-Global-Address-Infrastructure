@@ -203,6 +203,89 @@ fn grid_step_for_zoom(zoom: f64) -> u32 {
     final_step
 }
 
+fn is_valid_lat_lon(lat: f64, lon: f64) -> bool {
+    lat.is_finite() && lon.is_finite() && (-90.0..=90.0).contains(&lat)
+}
+
+fn normalize_lon(lon: f64) -> f64 {
+    let mut normalized = (lon + 180.0) % 360.0;
+    if normalized < 0.0 {
+        normalized += 360.0;
+    }
+    normalized - 180.0
+}
+
+fn haversine_distance_meters(lat_a: f64, lon_a: f64, lat_b: f64, lon_b: f64) -> f64 {
+    let lat_a_rad = lat_a * std::f64::consts::PI / 180.0;
+    let lat_b_rad = lat_b * std::f64::consts::PI / 180.0;
+    let delta_lat = (lat_b - lat_a) * std::f64::consts::PI / 180.0;
+    let delta_lon = (lon_b - lon_a) * std::f64::consts::PI / 180.0;
+    let h = (delta_lat / 2.0).sin().powi(2)
+        + lat_a_rad.cos() * lat_b_rad.cos() * (delta_lon / 2.0).sin().powi(2);
+    2.0 * 6_371_008.8 * h.sqrt().min(1.0).asin()
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn agid_zkp_quality_threshold_satisfied(score_percent: u32, threshold_percent: u32) -> u32 {
+    if score_percent > 100 || threshold_percent > 100 {
+        return 0;
+    }
+    (score_percent >= threshold_percent) as u32
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn agid_zkp_point_in_bbox(
+    lat: f64,
+    lon: f64,
+    north: f64,
+    south: f64,
+    west: f64,
+    east: f64,
+) -> u32 {
+    if !is_valid_lat_lon(lat, lon)
+        || !north.is_finite()
+        || !south.is_finite()
+        || !west.is_finite()
+        || !east.is_finite()
+        || north < south
+        || north > 90.0
+        || south < -90.0
+    {
+        return 0;
+    }
+    if lat < south || lat > north {
+        return 0;
+    }
+
+    let lon = normalize_lon(lon);
+    let west = normalize_lon(west);
+    let east = normalize_lon(east);
+    let inside_lon = if west <= east {
+        lon >= west && lon <= east
+    } else {
+        lon >= west || lon <= east
+    };
+    inside_lon as u32
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn agid_zkp_point_in_circle(
+    lat: f64,
+    lon: f64,
+    center_lat: f64,
+    center_lon: f64,
+    radius_meters: f64,
+) -> u32 {
+    if !is_valid_lat_lon(lat, lon)
+        || !is_valid_lat_lon(center_lat, center_lon)
+        || !radius_meters.is_finite()
+        || radius_meters < 0.0
+    {
+        return 0;
+    }
+    (haversine_distance_meters(lat, lon, center_lat, center_lon) <= radius_meters) as u32
+}
+
 fn write_cell_to_grid_buffer(index: usize, face: u32, x: u32, y: u32, step: u32) {
     let p1 = get_from_quantized(face, x, y);
     let p2 = get_from_quantized(face, x.saturating_add(step).min(M), y);
@@ -330,5 +413,29 @@ mod tests {
             assert!(pair[0] >= -540.0 && pair[0] <= 540.0);
             assert!(pair[1] >= -90.0 && pair[1] <= 90.0);
         }
+    }
+
+    #[test]
+    fn zkp_quality_threshold_predicate_uses_bounded_percent_values() {
+        assert_eq!(agid_zkp_quality_threshold_satisfied(92, 85), 1);
+        assert_eq!(agid_zkp_quality_threshold_satisfied(84, 85), 0);
+        assert_eq!(agid_zkp_quality_threshold_satisfied(101, 85), 0);
+        assert_eq!(agid_zkp_quality_threshold_satisfied(92, 101), 0);
+    }
+
+    #[test]
+    fn zkp_bbox_predicate_handles_antimeridian_regions() {
+        assert_eq!(agid_zkp_point_in_bbox(35.0, 139.0, 36.0, 34.0, 138.0, 140.0), 1);
+        assert_eq!(agid_zkp_point_in_bbox(35.0, 141.0, 36.0, 34.0, 138.0, 140.0), 0);
+        assert_eq!(agid_zkp_point_in_bbox(10.0, 179.0, 20.0, 0.0, 170.0, -170.0), 1);
+        assert_eq!(agid_zkp_point_in_bbox(10.0, 0.0, 20.0, 0.0, 170.0, -170.0), 0);
+    }
+
+    #[test]
+    fn zkp_circle_predicate_uses_haversine_distance() {
+        assert_eq!(agid_zkp_point_in_circle(35.0, 139.0, 35.0, 139.0, 1.0), 1);
+        assert_eq!(agid_zkp_point_in_circle(35.001, 139.0, 35.0, 139.0, 200.0), 1);
+        assert_eq!(agid_zkp_point_in_circle(36.0, 139.0, 35.0, 139.0, 200.0), 0);
+        assert_eq!(agid_zkp_point_in_circle(35.0, 139.0, 35.0, 139.0, -1.0), 0);
     }
 }

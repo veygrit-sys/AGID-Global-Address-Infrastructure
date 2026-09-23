@@ -1,0 +1,207 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-ee",
+    "country_code": "EE",
+    "country_name": "Estonia",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/ee/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "sihtnumber",
+    "full_code_format": "NNNNN",
+    "full_code_regex": "^\\d{5}$",
+    "full_code_default_geometry": "official_postal_area_or_facility_point",
+    "full_code_rule": "Preserve exactly five digits including leading zeroes. Omniva manages postal codes and zones; a code does not by itself identify a recipient, apartment, building, entrance, or delivery guarantee.",
+    "postcode_area_rule": "Use the pinned AKS OGC Sihtnumbri alad layer as official public Polygon or MultiPolygon evidence. Preserve service schema, CRS, retrieval time, provider attribution and digest independently from address assignments.",
+    "address_rule": "Use AKS/ADS official address objects and the monthly postal-code extract or current query receipt. Preserve ADR_ID, stable ADS_OID, version ADOB_ID, object type, legal-basis date, valid time, history and coordinate semantics.",
+    "building_rule": "A definitive building requires one coherent ADS address-object path to an ADS building point or polygon using stable source identifiers. Proximity or containment alone remains candidate evidence.",
+    "building_part_rule": "ADS building parts can represent dwellings or other units. Public AGID results stop at the building or public entrance and never expose occupants or private unit context without an authorized purpose.",
+    "service_migration_rule": "In-AKS became active on 27 April 2026 and legacy ADS SOAP services close at the end of 2026. Runtime configuration must use versioned AKS interfaces and cannot depend on a retired endpoint.",
+    "facility_rule": "Parcel-machine, post-office, offload-postcode and Poste Restante records are facility or routing points. They do not overwrite a premise postcode or imply residence at the facility."
+  },
+  "address_graph": {
+    "node_types": [
+      "postcode",
+      "postal_area",
+      "country",
+      "county",
+      "municipality",
+      "settlement",
+      "small_place",
+      "road",
+      "cadastral_parcel",
+      "ads_address",
+      "residential_building",
+      "non_residential_building",
+      "dwelling",
+      "other_building_part",
+      "entrance",
+      "post_office",
+      "parcel_machine",
+      "poste_restante",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "part_of",
+      "served_by",
+      "postal_contains",
+      "covered_by_agid",
+      "succeeds",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "postcode-to-area-may-be-multipart",
+      "postcode-to-address-is-one-to-many",
+      "ads-address-object-may-have-many-versions",
+      "building-may-have-many-addresses-and-building-parts",
+      "address-to-building-must-use-source-object-path",
+      "facility-postcode-is-not-premise-location",
+      "agid-containment-is-not-source-identity"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "official_postal_area",
+      "rule": "Return pinned AKS postal-area geometry and keep Omniva assignment, AKS address assignment and geometry authority as separate evidence."
+    },
+    {
+      "id": "address_postcode_assignment",
+      "rule": "Monthly postal-code extracts contain only current address versions. Preserve ADR_ID and release date, and use address history or change services for historical queries."
+    },
+    {
+      "id": "ads_building_address",
+      "rule": "Resolve a building only when the address and building shape share a coherent ADS_OID/ADOB_ID lineage; do not create identity from nearest geometry."
+    },
+    {
+      "id": "building_part_or_private_unit",
+      "rule": "Keep residential dwelling and other building-part objects privacy-scoped. Public display does not expose occupant, ownership, apartment internals or inferred household context."
+    },
+    {
+      "id": "rural_farm_or_named_place",
+      "rule": "Preserve farm, village, municipality and county components even when no street exists; do not invent an urban street or entrance."
+    },
+    {
+      "id": "parcel_machine_post_office_or_poste_restante",
+      "rule": "Return the facility as a point and delivery preference without overwriting the premise postcode, deriving a residential polygon, or inferring residence."
+    },
+    {
+      "id": "aks_service_transition",
+      "rule": "Pin interface generation and schema. Migrate from In-ADS/legacy SOAP to In-AKS/AKS REST and OGC without treating endpoint aliases as new source truth."
+    },
+    {
+      "id": "historical_address_object",
+      "rule": "Keep ADS_OID stable across versions, use ADOB_ID for each version, and preserve predecessor/successor and valid/known times."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-rights-lineage",
+      "scope": "all",
+      "pass": "Every source has a pinned release or receipt, digest, attribution, interface schema, CRS where applicable, geographic scope, and transformation method."
+    },
+    {
+      "id": "postcode-normalization",
+      "scope": "postcode",
+      "metric": "normalized_exact_five_digit_string_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "Omniva routing, AKS address assignment, AKS postal-area geometry, ADS address/building identity, EHAK administration, facility routing, and AGID indexes remain separate."
+    },
+    {
+      "id": "postal-area-topology",
+      "scope": "aks-postal-areas",
+      "pass": "Polygon and multipolygon geometry is valid, bounded, versioned and checked for unexplained gaps, overlaps, slivers, islands and missing populated address objects."
+    },
+    {
+      "id": "postal-address-coherence",
+      "scope": "aks-postal-assignments",
+      "pass": "Every promoted current address assignment has a valid ADR_ID, five-digit code, release date, coordinate semantics and a compatible postal-area relation or explicit exception."
+    },
+    {
+      "id": "ads-version-continuity",
+      "scope": "ads-address-objects",
+      "pass": "ADS_OID remains stable across versions; ADOB_ID, legal-basis date, valid time, status, predecessor and successor are retained without destructive overwrite."
+    },
+    {
+      "id": "address-building-path",
+      "scope": "promoted-building-links",
+      "pass": "A displayed building follows one coherent ADS address-object path to building geometry; nearest or containing geometry remains candidate-only."
+    },
+    {
+      "id": "public-privacy",
+      "scope": "public-resolution",
+      "pass": "Public responses contain no recipient, occupant, owner, private dwelling context, delivery instruction, telephone number or shipment data."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "current_postcode_assignment_match_ratio_minimum": 0.999,
+        "postal_area_address_containment_minimum": 0.995,
+        "ads_object_top_1_match_ratio_minimum": 0.995,
+        "building_path_integrity_ratio_minimum": 1.0
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      {
+        "id": "M2_current_aks_sihtnumbri_alad_visualization",
+        "definition": "A current complete rights-reviewed Estonia five-digit postcode assignment denominator and postcode-specific AKS Sihtnumbri alad Polygon/MultiPolygon release is pinned by service or release edition, validity, schema, CRS, coverage, authority, terms and SHA-256, published as an approved immutable artifact, and passes the real EE AGID loader, API and app path for normalization, ambiguity, geometry validity, map fit, translucent fill, visible outline, provenance, loading, no-result, failure, invalid geometry, clear and re-search. Omniva assignment, AKS postal-area geometry, ADS address/building identity, EHAK administration, facility routing and AGID coverage remain separate; point, route, P.O. box, organization, facility and other non-area classes receive no invented surface. Synthetic fixtures, mutable live responses and metadata alone never establish M2."
+      },
+      { "id": "M3_candidate", "definition": "Holdout, topology, identity, privacy, freshness and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "unpinned-aks-postal-area-layer",
+      "omniva-search-scraped-as-unreviewed-bulk-data",
+      "postal-area-assumed-from-ehak-boundary",
+      "monthly-current-only-extract-used-for-historical-query",
+      "ads-oid-or-adob-id-dropped",
+      "building-proximity-presented-as-source-identity",
+      "private-building-part-exposed-publicly",
+      "parcel-machine-presented-as-residence",
+      "legacy-ads-endpoint-hard-coded-after-cutover",
+      "postcode-stored-as-number",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy_or_ownership",
+    "private_dwelling_context",
+    "building_identity_from_proximity",
+    "legal_boundary_or_survey_certification",
+    "facility_postcode_equals_residence",
+    "administrative_area_equals_postal_area"
+  ]
+}

@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/veygrit-address-login-hosted-fixture-v0.1.schema.json",
+  "title": "Veygrit ID Hosted Address Login Synthetic Fixture v0.1",
+  "description": "Minimal schema for the redacted synthetic Hosted Address Login fixture set. This schema is for local conformance fixtures only and is not a hosted Evidence Vault API contract.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "fixtureSet",
+    "version",
+    "description",
+    "nonClaims",
+    "callbackContract",
+    "callbackValidationVectors",
+    "webhookContract",
+    "privacyPosture",
+    "merchantVisibleRedactionHostedRefSource",
+    "merchantVisibleRedactionDisplayContract"
+  ],
+  "properties": {
+    "fixtureSet": {
+      "const": "synthetic-veygrit-address-login-hosted-v0.1"
+    },
+    "version": {
+      "const": "0.1.0"
+    },
+    "description": {
+      "type": "string"
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "string"
+      },
+      "contains": {
+        "const": "The fixture set is not production data."
+      }
+    },
+    "callbackContract": {
+      "type": "object",
+      "required": [
+        "version",
+        "forbiddenParams",
+        "nonClaims"
+      ],
+      "properties": {
+        "version": {
+          "const": "veygrit-address-login-callback-v0.1"
+        },
+        "forbiddenParams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "allOf": [
+            {
+              "contains": {
+                "const": "raw_address"
+              }
+            },
+            {
+              "contains": {
+                "const": "witness"
+              }
+            },
+            {
+              "contains": {
+                "const": "private_key"
+              }
+            },
+            {
+              "contains": {
+                "const": "proof_secret"
+              }
+            }
+          ]
+        },
+        "nonClaims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "callbackValidationVectors": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id",
+          "endpoint",
+          "input",
+          "options",
+          "expectedResult",
+          "safeInputs"
+        ],
+        "properties": {
+          "endpoint": {
+            "const": "GET merchant callback"
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "expectedResult": {
+            "enum": [
+              "accepted",
+              "rejected"
+            ]
+          },
+          "expectedError": {
+            "enum": [
+              "forbidden_callback_param",
+              "unexpected_callback_param",
+              "callback_param_alias_conflict",
+              "state_mismatch",
+              "issuer_mismatch",
+              "missing_code",
+              "missing_session_ref",
+              "missing_credential_ref",
+              "missing_proof_bundle_ref",
+              "missing_carrier_handoff_ref"
+            ]
+          },
+          "safeInputs": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "webhookContract": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "signatureHeader",
+        "timestampHeader",
+        "eventIdIdempotencyRequired",
+        "nonClaims"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "hmac-sha256"
+        },
+        "signatureHeader": {
+          "const": "x-veygrit-signature"
+        },
+        "timestampHeader": {
+          "const": "x-veygrit-timestamp"
+        },
+        "eventIdIdempotencyRequired": {
+          "const": true
+        },
+        "nonClaims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "privacyPosture": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "rawAddressAccepted",
+        "merchantCanDecrypt",
+        "witnessAccepted",
+        "productionCredentialAccepted",
+        "rejectedMaterial"
+      ],
+      "properties": {
+        "rawAddressAccepted": {
+          "const": false
+        },
+        "merchantCanDecrypt": {
+          "const": false
+        },
+        "witnessAccepted": {
+          "const": false
+        },
+        "productionCredentialAccepted": {
+          "const": false
+        },
+        "rejectedMaterial": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "merchantVisibleRedactionHostedRefSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "guestCheckoutAlias",
+        "nonClaims"
+      ],
+      "properties": {
+        "source": {
+          "const": "hosted-address-login-synthetic-flow-refs-v0.1"
+        },
+        "guestCheckoutAlias": {
+          "const": "guest_checkout_alias_synthetic_hosted_001"
+        },
+        "nonClaims": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "merchantVisibleRedactionDisplayContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceFixture",
+        "sdkPackage",
+        "sdkHelper",
+        "example",
+        "boundaryGateId",
+        "displayFields",
+        "displayRefsByField",
+        "requiredNextAction",
+        "blockedClassCount",
+        "nonClaimCount",
+        "renderedMaterialPolicy"
+      ],
+      "properties": {
+        "sourceFixture": {
+          "const": "docs/specs/fixtures/veygrit-id-core-v0.1.json#merchantVisibleRedactionDisplayContract"
+        },
+        "sdkPackage": {
+          "const": "@veygrit/address-login-react"
+        },
+        "sdkHelper": {
+          "const": "createMerchantVisibleRedactionDisplayModel"
+        },
+        "example": {
+          "const": "sdk/veygrit-address-login-react/examples/merchant-visible-redaction/MerchantVisibleRedactionCard.tsx"
+        },
+        "boundaryGateId": {
+          "const": "merchant-visible-redaction"
+        },
+        "displayFields": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "pairwiseSubjectAlias" },
+            { "const": "guestCheckoutAlias" },
+            { "const": "walletConsentRef" },
+            { "const": "addressCredentialRef" },
+            { "const": "carrierHandoffRef" }
+          ],
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "displayRefsByField": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pairwiseSubjectAlias",
+            "guestCheckoutAlias",
+            "walletConsentRef",
+            "addressCredentialRef",
+            "carrierHandoffRef"
+          ],
+          "properties": {
+            "pairwiseSubjectAlias": {
+              "const": "pairwise_sub_synthetic_shipping_001"
+            },
+            "guestCheckoutAlias": {
+              "const": "guest_checkout_alias_synthetic_hosted_001"
+            },
+            "walletConsentRef": {
+              "const": "ace_synthetic_shipping_001"
+            },
+            "addressCredentialRef": {
+              "const": "cred_ref_synthetic_address_001"
+            },
+            "carrierHandoffRef": {
+              "const": "carrier_blob_ref_synthetic_shipping_001"
+            }
+          }
+        },
+        "requiredNextAction": {
+          "const": "create-guest-order-from-refs"
+        },
+        "blockedClassCount": {
+          "const": 7
+        },
+        "nonClaimCount": {
+          "const": 1
+        },
+        "renderedMaterialPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "copyBlockedMaterialNames",
+            "copyNonClaimText",
+            "showCountsOnly"
+          ],
+          "properties": {
+            "copyBlockedMaterialNames": {
+              "const": false
+            },
+            "copyNonClaimText": {
+              "const": false
+            },
+            "showCountsOnly": {
+              "const": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

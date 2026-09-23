@@ -1,4 +1,5 @@
 import { Protocol } from 'pmtiles';
+import { apiV1Path } from './apiVersion';
 
 export const OPENFREEMAP_STYLES = {
   bright: 'https://tiles.openfreemap.org/styles/bright',
@@ -75,7 +76,7 @@ export const AGID_MAP_ENGINE: AgidMapEngineProfile = {
     {
       id: 'terrarium-terrain',
       name: 'Terrarium terrain raster-dem proxy',
-      url: '/api/terrain/{z}/{x}/{y}.png',
+      url: apiV1Path('/terrain/{z}/{x}/{y}.png'),
       role: 'terrain',
       license: 'Open terrain data via local proxy',
     },
@@ -143,6 +144,7 @@ type BuildMapOptionsInput = {
   pitch: number;
   bearing: number;
   projection: AgidMapProjection;
+  lowBandwidth?: boolean;
 };
 
 const registeredMapLibreObjects = new WeakSet<object>();
@@ -155,6 +157,8 @@ export function resolveMapStyle(style: string | null | undefined, satelliteStyle
 }
 
 export function buildMapLibreOptions(input: BuildMapOptionsInput) {
+  const lowBandwidth = Boolean(input.lowBandwidth);
+
   return {
     container: input.container,
     style: resolveMapStyle(input.style, input.satelliteStyle),
@@ -164,7 +168,13 @@ export function buildMapLibreOptions(input: BuildMapOptionsInput) {
     bearing: input.bearing,
     attributionControl: true,
     projection: { type: input.projection },
-    maxParallelImageRequests: 16,
+    antialias: !lowBandwidth,
+    fadeDuration: lowBandwidth ? 0 : 300,
+    refreshExpiredTiles: !lowBandwidth,
+    maxParallelImageRequests: lowBandwidth ? 4 : 16,
+    maxTileCacheSize: lowBandwidth ? 48 : 192,
+    maxTileCacheZoomLevels: lowBandwidth ? 3 : 5,
+    pixelRatio: lowBandwidth ? 1 : undefined,
     transformRequest: (url: string) => ({ url }),
   };
 }

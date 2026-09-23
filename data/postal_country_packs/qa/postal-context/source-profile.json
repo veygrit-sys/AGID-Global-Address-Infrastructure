@@ -1,0 +1,104 @@
+{
+  "schema_version": "agid-postal-qa-source-profile-v0.1",
+  "country_code": "QA",
+  "scope": "metadata, service schemas and public aggregates only; no source features or civic-address records",
+  "sources": [
+    {
+      "source_id": "qatar-post-addressing",
+      "provider": "Qatar Post",
+      "url": "https://qatarpost.qa/Home/PostalStandards",
+      "role": "Inwani addressing semantics and separate PO-box delivery",
+      "authority": "postal-operator-reference",
+      "geometry_authority": "none",
+      "rights": "Public reference; shipping terms do not supply bulk address-data rights.",
+      "stage": "metadata-only"
+    },
+    {
+      "source_id": "upu-qatar-addressing",
+      "provider": "Universal Postal Union",
+      "url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/qatEn.pdf",
+      "role": "Address layout examples",
+      "edition": "08/2024",
+      "authority": "addressing-semantics-only",
+      "geometry_authority": "none",
+      "rights": "Reference only; examples are not current assigned addresses.",
+      "stage": "metadata-only"
+    },
+    {
+      "source_id": "qatar-gis",
+      "provider": "Centre for GIS / Qatar",
+      "url": "https://geoportal.gisqatar.org.qa/",
+      "role": "Map-viewer discovery",
+      "authority": "government-context",
+      "geometry_authority": "none-from-viewer-shell",
+      "rights": "Viewer availability does not establish artifact-specific reuse rights.",
+      "stage": "metadata-only"
+    },
+    {
+      "source_id": "qatar-qars-address-locator",
+      "provider": "Centre for GIS / Qatar",
+      "url": "https://services.gisqatar.org.qa/server/rest/services/Vector/QARS_Custom_Locator/GeocodeServer?f=pjson",
+      "role": "Geocoder schema with ZONE_NO / STREET_NO / BUILDING_NO candidate fields",
+      "authority": "government-candidate-service",
+      "geometry_authority": "WKID 2932 advertised; no candidate or feature retrieved",
+      "rights": "Specific data edition, coverage, C0 classification or separate permission and stable address relations not verified.",
+      "stage": "metadata-only"
+    },
+    {
+      "source_id": "qatar-zones-streets",
+      "provider": "Centre for GIS / Qatar",
+      "url": "https://services.gisqatar.org.qa/server/rest/services/Vector/ZonesStreetsFS/FeatureServer/0?f=pjson",
+      "role": "Road polyline context and aggregate quality check",
+      "authority": "government-road-context",
+      "geometry_authority": "polyline, not postal polygon or building footprint",
+      "rights": "Empty copyright metadata is not an open licence; June 2026 C0 policy is not automatically evidence that this service is classified C0.",
+      "stage": "aggregate-reviewed-no-release"
+    },
+    {
+      "source_id": "qatar-open-data-catalog",
+      "provider": "National Planning Council",
+      "url": "https://www.data.gov.qa/explore/",
+      "role": "Open-data catalog; reviewed English address/zone/building searches",
+      "authority": "government-statistical-context",
+      "geometry_authority": "One 2015 building census dataset advertises municipal polygons, not individual building footprints.",
+      "rights": "Relevant NPC C0 catalog entries explicitly link CC-BY-4.0. This is positive open-data evidence, not a rights blocker for those entries; their aggregate grain does not meet Inwani M2.",
+      "stage": "metadata-only"
+    },
+    {
+      "source_id": "qatar-c0-licensing-policy",
+      "provider": "National Planning Council - National Statistics Center",
+      "url": "https://www.npc.qa/en/media/Documents/OpenData/En_OpenDataLicensingPolicy.pdf",
+      "role": "C0 licensing framework",
+      "edition": "June 2026",
+      "authority": "government-licensing-framework",
+      "geometry_authority": "none",
+      "rights": "CC-BY-4.0 for classified C0 data, attribution and modification disclosure; no re-identification, implied official endorsement or unlicensed logos. Restricted/personal data excluded. Chapter Two is guidance and does not amend CC-BY.",
+      "stage": "rights-reference-reviewed"
+    },
+    {
+      "source_id": "qatar-cgis-historical-price-list",
+      "provider": "Centre for GIS / Qatar",
+      "url": "https://www.gisqatar.org.qa/links/pricelist.pdf",
+      "role": "Historical topographic-product pricing notice",
+      "edition": "not printed; server last-modified 2017-05-23",
+      "authority": "historical-product-terms",
+      "geometry_authority": "none",
+      "rights": "Non-commercial product list and negotiated commercial use. Not proven applicable to current QARS or ZonesStreets services and not current pricing advice.",
+      "stage": "historical-reference-only"
+    }
+  ],
+  "data_grain_separation": [
+    "postal or PO-box routing",
+    "Inwani zone/street/building civic address",
+    "road polyline",
+    "administrative/statistical area",
+    "building footprint",
+    "personal shipment/occupant/owner record"
+  ],
+  "fallback_policy": {
+    "model_or_voronoi_geometry": "derived or virtual only with explicit input rights and uncertainty; never official",
+    "postal_code": "null in QA no-normal-postcode flow; no 00000, PO-box, zone or geocoder field substitution",
+    "building": "explicit separately permitted source relation only",
+    "personal_data": "never use shipment, QID, occupant, owner or re-identification records in public artifacts"
+  }
+}

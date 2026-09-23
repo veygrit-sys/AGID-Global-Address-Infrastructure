@@ -1,0 +1,28 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {"name": "agid-postal-hk", "country_code": "HK", "country_name": "Hong Kong", "lifecycle": "planned_external_repository", "seed_location": "data/postal_country_packs/hk/postal-context", "maturity": "M1_metadata"},
+  "release_scope": {"metadata_only": true, "contains_raw_source_data": false, "contains_real_addresses": false, "contains_personal_data": false, "contains_production_geometry": false, "publication_claim": "reviewed-contract-and-in-memory-preflight-not-data-release"},
+  "contract_files": ["repository-manifest.json", "source-profile.json", "m2-source-review.json", "README.md"],
+  "postal_system": {"status": "not_used", "postal_code": null, "official_postal_geometry": "none", "source_id": "hongkong-post-no-postcode", "placeholder_rule": "000, 0000, 000000 and HKG are form workarounds, not assigned postcodes. 852, 999077, GeoAddress and AGID must not be substituted as local official postcodes."},
+  "identifier_namespaces": [
+    {"id": "hk_geoaddress", "authority": "Address Data Infrastructure / Lands Department", "scope": "source-declared Hong Kong building or address location", "rule": "A location identifier may have several textual addresses; it is not a unique textual-address row, unit, postal code or polygon."},
+    {"id": "hk_als_address_record", "authority": "Digital Policy Office aggregated address service", "scope": "explicit response snapshot and record pointer", "rule": "Retain source fields and bilingual variants independently; a digest plus response pointer is snapshot identity, not a permanent government ID."},
+    {"id": "agid_cell", "authority": "AGID coordinate encoding", "scope": "source WGS84 point", "rule": "Derived grid identity does not override source country HK or prove a postal area, entrance, parcel or building footprint."}
+  ],
+  "exception_classes": ["no_postcode_not_missing_code", "placeholder_not_assignment", "geoaddress_not_postcode", "one_location_multiple_addresses", "range_not_expanded_to_house_numbers", "rural_description_not_official_street_assignment", "complex_not_single_building", "ranking_score_not_confidence", "creation_date_not_valid_from", "monthly_cadence_not_record_edition", "coordinate_not_entrance_or_footprint", "floor_unit_outside_public_preflight", "language_missing_not_translated_or_inferred"],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Identify Hongkong Post no-postcode policy and separate ADI/ALS location and address sources."},
+      {"id": "M1_metadata", "definition": "Review the no-postcode, bilingual-address, geometry, rights and privacy contract with bounded source checks and negative tests."},
+      {"id": "M2_scoped_address_context", "definition": "A rights-cleared current real HK address dataset with explicit scope and snapshot identity reproducibly produces published digest-pinned address-context artifacts and passes namespace-aware AGID loader/API checks; retain no-postcode semantics and source-linked civic/building fields without inventing postal areas, validity dates or national coverage."},
+      {"id": "M3_candidate", "definition": "Independent holdout, completeness, ambiguity, currency and source-linked building/entrance checks pass within the declared scope."},
+      {"id": "M4_stable", "definition": "Reviewed source refresh, corrections, version history and rollback operate repeatedly under approved rights and privacy conditions."}
+    ],
+    "m2_required_evidence": ["current-real-scoped-source-and-terms-snapshots", "observation-time-version-sha256-and-reproducible-transform", "planned-use-and-redistribution-rights-reviewed", "bilingual-source-fields-and-nonunique-geoaddress-preserved", "explicit-none-for-postal-geometry-with-separate-source-points", "civic-number-and-building-display-only-from-source-record-fields", "missingness-ranges-duplicates-and-coordinate-validation", "approved-immutable-artifacts-and-remote-hash-verification", "namespace-aware-real-agid-loader-and-api-verification"],
+    "hard_blockers": ["fabricated-official-postcode-or-polygon", "raw-or-personal-data-in-agid-git", "unknown-or-incompatible-redistribution-rights", "source-score-promoted-to-probability", "geoaddress-date-promoted-to-validity", "coordinate-proximity-promoted-to-exact-building", "unpublished-or-unpinned-data-artifacts", "synthetic-tests-or-live-query-alone-called-m2"]
+  },
+  "agid_integration": {"current_scope": "HK source registry plus an experimental in-memory ALS candidate adapter and coordinate-cell checks; no generic country-only Postal Context API enabled.", "enablement_gate": "Publish a rights-reviewed no-postcode address-context descriptor and verify the real loader/API before runtime enablement. Existing postcode-normalization routes must not receive GeoAddress as a postcode.", "coordinate_rule": "Use explicit WGS84 Latitude/Longitude, never decode GeoAddress HK1980 digits as geographic degrees. Keep source HK identity even if a coarse AGID prefix differs."},
+  "non_guarantees": ["national_coverage", "postal_deliverability", "building_footprint", "entrance", "floor_or_unit", "recipient_identity", "legal_or_cadastral_boundary", "current_record_validity"]
+}

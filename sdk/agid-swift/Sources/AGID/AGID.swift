@@ -10,12 +10,23 @@ public struct AGIDResult: Equatable {
     public let face: Int?
 }
 
+public struct AGIDBounds: Equatable {
+    public let minLat: Double
+    public let maxLat: Double
+    public let minLon: Double
+    public let maxLon: Double
+}
+
 public func encode(lat: Double, lon: Double) throws -> AGIDResult {
     throw AGIDError.notImplemented
 }
 
 public func decode(_ id: String) -> AGIDResult? {
     nil
+}
+
+public func cellBounds(_ id: String) throws -> AGIDBounds {
+    throw AGIDError.notImplemented
 }
 
 public enum AGIDError: Error {

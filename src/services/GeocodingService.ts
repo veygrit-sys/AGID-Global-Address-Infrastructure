@@ -10,23 +10,26 @@ matchesAdvancedSearchCategory,
 matchesAdvancedSearchLocation,
 normalizeAdvancedSearchOptions,
 } from '../lib/advancedSearch';
-import {
-buildBuildingNameOverpassQuery,
-buildingNameCandidateFromOsmElement,
-extractBuildingNameFromReverseGeocode,
-rankBuildingNameCandidates,
-type BuildingNameCandidate,
-} from '../lib/buildingName';
+import type { BuildingNameCandidate } from '../lib/buildingName';
+import type {
+MapAddressFeatureCandidate,
+MapAddressFeatureSummary,
+} from '../lib/mapFeatureAddress';
 import { parseAddressWithOptionalLibpostal } from '../lib/libpostalGateway';
 import { latLonToOSGrid } from '../lib/osgrid';
-import { buildingNameCandidateFromOvertureFeature } from '../lib/overtureMaps';
+import { buildPlaceSearchLanguageProfile } from '../lib/placeSearchLanguage';
 import { expandSearchQuery,normalizeSearchText,scoreSearchCandidate } from '../lib/searchQuery';
+import { getCachedAddressRetrieval } from '../lib/addressRetrievalCache';
+import {
+ADDRESS_RETRIEVAL_RETRIES,
+ADDRESS_RETRIEVAL_TIMEOUTS,
+withAddressLookupTimeout,
+} from '../lib/addressRetrievalPolicy';
 import { AfricaContext,fetchAfricaContext,fetchAfricaOfficialAddress,fetchEgyptAddress,fetchSouthAfricaAddress } from './AfricaService';
-import { fetchAsiaOceaniaAddress } from './AsiaOceaniaService';
 import { CaribbeanContext,fetchCaribbeanContext,fetchCaribbeanOfficialAddress } from './CaribbeanService';
 import { CentralAmericaContext,fetchCentralAmericaContext,fetchCentralAmericaOfficialAddress } from './CentralAmericaService';
 import { CentralAsiaContext,fetchCentralAsiaContext } from './CentralAsiaService';
-import { EastAsiaContext,fetchEastAsiaContext,fetchHKOfficialAddress,fetchKoreaOfficialAddress } from './EastAsiaService';
+import type { EastAsiaContext } from './EastAsiaService';
 import { fetchAustrianAddress,fetchBelgianAddress,fetchBelgiumBestAddress,fetchCypriotAddress,fetchCzechRuianAddress,fetchDutchAddress,fetchEEBalkanAddress,fetchEstonianAddress,fetchFrenchAddress,fetchGermanAddress,fetchGreekAddress,fetchIcelandicAddress,fetchIrelandAddress,fetchItalianAddress,fetchLatvianAddress,fetchLithuanianAddress,fetchLuxembourgAddress,fetchMalteseAddress,fetchMicrostateAddress,fetchPolishAddress,fetchPortugueseAddress,fetchSpainCatastroAddress,fetchSpanishAddress,fetchSwedishAddress,fetchSwissAddress,fetchUKAddress } from './EuropePostalService';
 import { fetchHeritageContext,HeritageContext } from './HeritageService';
 import { fetchJapaneseGeoContext,JapaneseGeoContext } from './JapaneseGeoService';
@@ -62,6 +65,32 @@ export interface OSMPlace {
 import { calculateMountainClass } from '../lib/agid';
 
 import { fetchGlobalContext,fetchGlobalPostcodeDetails,fetchPlusCode,GlobalWeather,LocalTimeInfo } from './GlobalContextService';
+import { apiEndpoints } from '../lib/apiEndpoints';
+import { dedupeGeocodingSearchResults,photonFeatureToGeocodingResult,type GeocodingSearchResult } from '../lib/geocodingSearch';
+
+type MapFeatureAddressModule = typeof import('../lib/mapFeatureAddress');
+let mapFeatureAddressModulePromise: Promise<MapFeatureAddressModule> | null = null;
+
+function loadMapFeatureAddressModule() {
+  mapFeatureAddressModulePromise ??= import('../lib/mapFeatureAddress');
+  return mapFeatureAddressModulePromise;
+}
+
+type BuildingNameModule = typeof import('../lib/buildingName');
+let buildingNameModulePromise: Promise<BuildingNameModule> | null = null;
+
+function loadBuildingNameModule() {
+  buildingNameModulePromise ??= import('../lib/buildingName');
+  return buildingNameModulePromise;
+}
+
+type OvertureMapsModule = typeof import('../lib/overtureMaps');
+let overtureMapsModulePromise: Promise<OvertureMapsModule> | null = null;
+
+function loadOvertureMapsModule() {
+  overtureMapsModulePromise ??= import('../lib/overtureMaps');
+  return overtureMapsModulePromise;
+}
 
 async function enrichAnalysisWithOptionalLibpostal(analysis: ReturnType<typeof analyzeAddress>, displayName?: string, countryCode?: string) {
   if (!displayName) return analysis;
@@ -102,6 +131,15 @@ export interface ParsedAddress {
   building_en?: string;
   building_name_source?: string;
   building_name_data?: BuildingNameCandidate | null;
+  map_feature_name?: string;
+  map_feature_name_en?: string;
+  map_feature_kind?: string;
+  map_feature_source?: string;
+  map_feature_data?: MapAddressFeatureCandidate | null;
+  map_feature_candidates?: MapAddressFeatureCandidate[];
+  map_feature_by_kind?: MapAddressFeatureSummary['byKind'];
+  map_feature_hierarchy?: string[];
+  map_feature_sources?: string[];
   poi?: string;
   elevation?: number;
   mountain_class?: number;
@@ -198,14 +236,14 @@ export async function fetchNearbyOSMPlaces(lat: number, lon: number, radius: num
     );
     out center;
   `;
-  
+
   try {
     const response = await fetchWithRetry('/api/overpass', {
       method: 'POST',
       body: JSON.stringify({ query }),
       headers: { 'Content-Type': 'application/json' }
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       let errorMessage = `Overpass Proxy error (${response.status})`;
@@ -218,7 +256,7 @@ export async function fetchNearbyOSMPlaces(lat: number, lon: number, radius: num
       console.error(errorMessage);
       throw new Error(errorMessage);
     }
-    
+
     const data = await response.json();
     if (!data.elements) return [];
 
@@ -234,12 +272,12 @@ export async function fetchNearbyOSMPlaces(lat: number, lon: number, radius: num
       tags: el.tags,
       lastUpdated: Date.now()
     }));
-    
+
     // Save to local DB
     if (places.length > 0) {
       await db.places.bulkPut(places);
     }
-    
+
     return places;
   } catch (error) {
     console.error(`Failed to fetch from Overpass Proxy:`, error);
@@ -256,14 +294,14 @@ export async function fetchNearestRoad(lat: number, lon: number, radius: number 
     way["highway"](around:${radius},${lat},${lon});
     out geom;
   `;
-  
+
   try {
     const response = await fetchWithRetry('/api/overpass', {
       method: 'POST',
       body: JSON.stringify({ query }),
       headers: { 'Content-Type': 'application/json' }
     });
-    
+
     if (!response.ok) return null;
     const data = await response.json();
     if (!data.elements || data.elements.length === 0) return null;
@@ -321,14 +359,20 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
  * Searches for a place using local DB first, then Nominatim.
  */
 export async function smartSearch(query: string, lat?: number, lon?: number, options?: Partial<AdvancedSearchOptions>): Promise<any[]> {
-  const queryCandidates = expandSearchQuery(query).slice(0, 6);
+  const searchProfile = buildPlaceSearchLanguageProfile(query);
+  const queryCandidates = searchProfile.queryVariants.length
+    ? searchProfile.queryVariants
+    : expandSearchQuery(query).slice(0, 6);
   const normalizedQuery = normalizeAddress(queryCandidates[0] || query);
   const advancedOptions = normalizeAdvancedSearchOptions(options);
-  
+
   // 1. Search Local DB
   const localResults = await db.places
     .filter(place => {
-      const labels = [place.name, place.nameEn, place.tags?.['name:local'], place.tags?.['name:es'], place.tags?.['name:ja']]
+      const localizedNames = Object.entries(place.tags ?? {})
+        .filter(([key, value]) => (key === 'name' || key.startsWith('name:')) && typeof value === 'string')
+        .map(([, value]) => value as string);
+      const labels = [place.name, place.nameEn, ...localizedNames]
         .filter(Boolean)
         .join(' ');
       const countryCode = place.address?.country_code || place.tags?.['addr:country'];
@@ -343,8 +387,8 @@ export async function smartSearch(query: string, lat?: number, lon?: number, opt
     })
     .limit(Math.max(20, advancedOptions.limit * 2))
     .toArray();
-    
-  const formattedLocal = localResults
+
+  const formattedLocal: GeocodingSearchResult[] = localResults
     .map(p => ({
       display_name: `${p.nameEn || p.name} (${p.category})`,
       lat: p.lat.toString(),
@@ -356,12 +400,18 @@ export async function smartSearch(query: string, lat?: number, lon?: number, opt
     }))
     .sort((a, b) => b.confidence - a.confidence)
     .slice(0, Math.min(8, advancedOptions.limit));
-  
+
   // 2. Search Nominatim via Proxy
   let nominatimResults: any[] = [];
   try {
     for (const candidate of queryCandidates) {
-      const res = await fetchWithRetry(buildNominatimSearchUrl(candidate, lat, lon, advancedOptions));
+      const res = await fetchWithRetry(buildNominatimSearchUrl(
+        candidate,
+        lat,
+        lon,
+        advancedOptions,
+        searchProfile.acceptLanguage,
+      ));
       if (res.ok) {
         const results = await res.json();
         nominatimResults.push(
@@ -383,21 +433,44 @@ export async function smartSearch(query: string, lat?: number, lon?: number, opt
   } catch (e) {
     console.error('Nominatim search error:', e);
   }
-  
-  const deduped = new Map<string, any>();
-  for (const result of [...formattedLocal, ...nominatimResults]) {
-    const key = [
-      Number.parseFloat(result.lat).toFixed(5),
-      Number.parseFloat(result.lon).toFixed(5),
-      normalizeAddress(result.display_name || ''),
-    ].join('|');
-    const existing = deduped.get(key);
-    if (!existing || (result.confidence ?? 0) > (existing.confidence ?? 0)) {
-      deduped.set(key, result);
+
+  // 3. Search Photon via Proxy. Photon often resolves multilingual place names,
+  // streets, POIs, and island/natural feature labels that Nominatim may rank lower.
+  let photonResults: GeocodingSearchResult[] = [];
+  try {
+    const photonLimit = Math.min(8, Math.max(3, advancedOptions.limit));
+    for (const candidate of queryCandidates.slice(0, 4)) {
+      const res = await fetchWithRetry(apiEndpoints.photonSearch(candidate, photonLimit, lat, lon), {
+        timeout: 15000,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const features = Array.isArray(data?.features) ? data.features : [];
+        const countryCodes = advancedOptions.countryCodes.split(',').filter(Boolean);
+        photonResults.push(
+          ...features
+            .map((feature: any) => photonFeatureToGeocodingResult(feature, candidate, queryCandidates))
+            .filter((result: GeocodingSearchResult | null): result is GeocodingSearchResult => {
+              if (!result) return false;
+              const countryCode = String(result.address?.country_code || result.tags?.countrycode || '').toLowerCase();
+              const matchesCountry = !countryCodes.length || countryCodes.includes(countryCode);
+              return matchesCountry &&
+                matchesAdvancedSearchCategory(result, advancedOptions) &&
+                matchesAdvancedSearchLocation(result, lat, lon, advancedOptions);
+            }),
+        );
+      }
+      if (photonResults.length >= advancedOptions.limit) break;
     }
+  } catch (e) {
+    console.error('Photon search error:', e);
   }
 
-  const dedupedResults = Array.from(deduped.values());
+  const dedupedResults = dedupeGeocodingSearchResults([
+    ...formattedLocal,
+    ...nominatimResults,
+    ...photonResults,
+  ]);
   const addressFormatCache = new Map<string, Awaited<ReturnType<typeof getAddressFormat>>>();
   const loadAddressFormat = async (countryCode?: string) => {
     const code = String(countryCode || '').trim().toUpperCase();
@@ -460,17 +533,37 @@ export async function smartSearch(query: string, lat?: number, lon?: number, opt
     .slice(0, advancedOptions.limit);
 }
 
+async function dedupeBuildingNameCandidates(candidates: BuildingNameCandidate[]) {
+  const { rankBuildingNameCandidates } = await loadBuildingNameModule();
+  const deduped = new Map<string, BuildingNameCandidate>();
+  for (const candidate of rankBuildingNameCandidates(candidates)) {
+    const nameKey = String(candidate.name || '').normalize('NFKC').trim().toLocaleLowerCase();
+    const key = [
+      candidate.source,
+      nameKey,
+      candidate.osmType || '',
+      candidate.osmId || '',
+    ].join('|');
+    if (!deduped.has(key)) deduped.set(key, candidate);
+  }
+  return Array.from(deduped.values());
+}
+
 /**
- * Fetches the strongest open-source building or housename candidate near the coordinate.
- * Uses OSM/Overpass tags only and returns null when only generic building types are available.
+ * Fetches open-source building or housename candidates near the coordinate.
+ * Uses OSM/Overpass tags only and omits generic building types.
  */
-async function fetchNearbyOsmBuildingName(
+async function fetchNearbyOsmBuildingNameCandidates(
   lat: number,
   lon: number,
   langCode: string = 'en',
   radius: number = 90,
-): Promise<BuildingNameCandidate | null> {
+): Promise<BuildingNameCandidate[]> {
   try {
+    const {
+      buildBuildingNameOverpassQuery,
+      buildingNameCandidateFromOsmElement,
+    } = await loadBuildingNameModule();
     const response = await fetchWithRetry('/api/overpass', {
       method: 'POST',
       body: JSON.stringify({ query: buildBuildingNameOverpassQuery(lat, lon, radius) }),
@@ -478,7 +571,7 @@ async function fetchNearbyOsmBuildingName(
       timeout: 45000,
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) return [];
     const data = await response.json();
     const elements = Array.isArray(data?.elements) ? data.elements : [];
     const candidates = elements
@@ -490,19 +583,19 @@ async function fetchNearbyOsmBuildingName(
       })
       .filter(Boolean) as BuildingNameCandidate[];
 
-    return rankBuildingNameCandidates(candidates)[0] || null;
+    return (await dedupeBuildingNameCandidates(candidates)).slice(0, 8);
   } catch (error) {
     console.warn('Failed to fetch nearby building name:', error);
-    return null;
+    return [];
   }
 }
 
-export async function fetchNearbyOvertureBuildingName(
+export async function fetchNearbyOvertureBuildingNameCandidates(
   lat: number,
   lon: number,
   langCode: string = 'en',
   radius: number = 90,
-): Promise<BuildingNameCandidate | null> {
+): Promise<BuildingNameCandidate[]> {
   try {
     const params = new URLSearchParams({
       lat: String(lat),
@@ -514,7 +607,7 @@ export async function fetchNearbyOvertureBuildingName(
       timeout: 45000,
     }, 0);
 
-    if (!response.ok) return null;
+    if (!response.ok) return [];
     const data = await response.json();
     const rawCandidates = Array.isArray(data)
       ? data
@@ -525,33 +618,106 @@ export async function fetchNearbyOvertureBuildingName(
           : Array.isArray(data?.features)
             ? data.features
             : [];
+    const { buildingNameCandidateFromOvertureFeature } = await loadOvertureMapsModule();
     const candidates = rawCandidates
       .map((feature: any) => buildingNameCandidateFromOvertureFeature(feature, langCode))
       .filter(Boolean) as BuildingNameCandidate[];
 
-    return rankBuildingNameCandidates(candidates)[0] || null;
+    return (await dedupeBuildingNameCandidates(candidates)).slice(0, 8);
   } catch (error) {
     console.warn('Failed to fetch Overture building name:', error);
-    return null;
+    return [];
   }
 }
 
+export async function fetchNearbyOvertureBuildingName(
+  lat: number,
+  lon: number,
+  langCode: string = 'en',
+  radius: number = 90,
+): Promise<BuildingNameCandidate | null> {
+  const candidates = await fetchNearbyOvertureBuildingNameCandidates(lat, lon, langCode, radius);
+  return candidates[0] || null;
+}
+
+export async function fetchNearbyBuildingNameCandidates(
+  lat: number,
+  lon: number,
+  langCode: string = 'en',
+  radius: number = 90,
+): Promise<BuildingNameCandidate[]> {
+  const results = await Promise.allSettled([
+    fetchNearbyOvertureBuildingNameCandidates(lat, lon, langCode, radius),
+    fetchNearbyOsmBuildingNameCandidates(lat, lon, langCode, radius),
+  ]);
+  const candidates = results
+    .filter((result): result is PromiseFulfilledResult<BuildingNameCandidate[]> => result.status === 'fulfilled')
+    .flatMap(result => result.value);
+
+  return (await dedupeBuildingNameCandidates(candidates)).slice(0, 8);
+}
+
+/**
+ * Fetches the strongest open-source building or housename candidate near the coordinate.
+ * Uses OSM/Overture sources and returns null when only generic building types are available.
+ */
 export async function fetchNearbyBuildingName(
   lat: number,
   lon: number,
   langCode: string = 'en',
   radius: number = 90,
 ): Promise<BuildingNameCandidate | null> {
-  const results = await Promise.allSettled([
-    fetchNearbyOvertureBuildingName(lat, lon, langCode, radius),
-    fetchNearbyOsmBuildingName(lat, lon, langCode, radius),
-  ]);
-  const candidates = results
-    .filter((result): result is PromiseFulfilledResult<BuildingNameCandidate | null> => result.status === 'fulfilled')
-    .map(result => result.value)
-    .filter(Boolean) as BuildingNameCandidate[];
+  const candidates = await fetchNearbyBuildingNameCandidates(lat, lon, langCode, radius);
+  return candidates[0] || null;
+}
 
-  return rankBuildingNameCandidates(candidates)[0] || null;
+export async function fetchNearbyMapAddressFeatures(
+  lat: number,
+  lon: number,
+  langCode: string = 'en',
+  radius: number = 140,
+): Promise<MapAddressFeatureSummary> {
+  const {
+    buildMapFeatureAddressOverpassQuery,
+    mapAddressFeatureCandidateFromOsmElement,
+    summarizeMapAddressFeatures,
+  } = await loadMapFeatureAddressModule();
+  try {
+    const response = await fetchWithRetry('/api/overpass', {
+      method: 'POST',
+      body: JSON.stringify({ query: buildMapFeatureAddressOverpassQuery(lat, lon, radius) }),
+      headers: { 'Content-Type': 'application/json' },
+      timeout: 45000,
+    });
+
+    if (!response.ok) return summarizeMapAddressFeatures([]);
+    const data = await response.json();
+    const elements = Array.isArray(data?.elements) ? data.elements : [];
+    const candidates = elements
+      .map((element: any) => {
+        const elLat = element.lat ?? element.center?.lat;
+        const elLon = element.lon ?? element.center?.lon;
+        const hasCoordinates = elLat !== undefined && elLon !== undefined;
+        const distanceMeters = hasCoordinates ? Math.round(calculateDistance(lat, lon, Number(elLat), Number(elLon)) * 1000) : undefined;
+        return mapAddressFeatureCandidateFromOsmElement(element, langCode, distanceMeters);
+      })
+      .filter(Boolean) as MapAddressFeatureCandidate[];
+
+    return summarizeMapAddressFeatures(candidates);
+  } catch (error) {
+    console.warn('Failed to fetch nearby map address features:', error);
+    return summarizeMapAddressFeatures([]);
+  }
+}
+
+export async function fetchNearbyMapAddressFeature(
+  lat: number,
+  lon: number,
+  langCode: string = 'en',
+  radius: number = 140,
+): Promise<MapAddressFeatureCandidate | null> {
+  const summary = await fetchNearbyMapAddressFeatures(lat, lon, langCode, radius);
+  return summary.primary || null;
 }
 
 // --- Regional Geocoding ---
@@ -560,8 +726,15 @@ export async function fetchNearbyBuildingName(
  * Performs reverse geocoding using regional APIs if available, falling back to Nominatim.
  */
 export async function regionalReverseGeocode(lat: number, lon: number, langCode: string, countryCode: string): Promise<any> {
+  return getCachedAddressRetrieval(
+    { lat, lon, langCode, countryCode },
+    () => fetchRegionalReverseGeocode(lat, lon, langCode, countryCode),
+  );
+}
+
+async function fetchRegionalReverseGeocode(lat: number, lon: number, langCode: string, countryCode: string): Promise<any> {
   const cc = countryCode.toLowerCase();
-  
+
   // 1. Japan (HeartRails Geo API via Proxy)
   // Only supports Japanese. If language is not Japanese, fallback to Nominatim.
   if (cc === 'jp' && langCode === 'ja') {
@@ -604,7 +777,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
         const ctyName = getTag('ctyName');
         const townName = getTag('townName');
         const villageName = getTag('villageName');
-        
+
         if (ctyName || townName) {
           return {
             address: {
@@ -655,6 +828,8 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
   let heritageContext: HeritageContext | null = null;
   let japaneseGeoContext: JapaneseGeoContext | null = null;
   let buildingNameData: BuildingNameCandidate | null = null;
+  let mapAddressFeatureData: MapAddressFeatureCandidate | null = null;
+  let mapAddressFeatureSummary: MapAddressFeatureSummary | null = null;
 
   const westAsiaCountries = ['sa', 'ae', 'tr', 'ir', 'il', 'iq', 'sy', 'jo', 'lb', 'ye', 'om', 'kw', 'qa', 'bh'];
   const centralAsiaCountries = ['kz', 'uz', 'kg', 'tj', 'tm'];
@@ -669,23 +844,48 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
   let plusCodeIdx = -1;
   let hkAlsIdx = -1;
   let buildingNameIdx = -1;
+  let mapFeatureIdx = -1;
 
   try {
     const promises: Promise<any>[] = [
-      fetchWithRetry(`/api/osm-reverse?lat=${lat}&lon=${lon}&lang=${langCode}&cc=${cc}`, { timeout: 120000 }),
-      fetchWithRetry(`/api/elevation?lat=${lat}&lon=${lon}`, { timeout: 120000 }),
-      fetchWithRetry(`/api/water-risk?lat=${lat}&lon=${lon}`, { timeout: 120000 }),
-      fetchWithRetry(`/api/mountain/nearby?lat=${lat}&lon=${lon}`, { timeout: 120000 }),
-      fetchWithRetry(`/api/geological-risk?lat=${lat}&lon=${lon}`, { timeout: 120000 })
+      fetchWithRetry(
+        `/api/osm-reverse?lat=${lat}&lon=${lon}&lang=${langCode}&cc=${cc}`,
+        { timeout: ADDRESS_RETRIEVAL_TIMEOUTS.coreReverseMs },
+        ADDRESS_RETRIEVAL_RETRIES.coreReverse,
+      ),
+      fetchWithRetry(
+        `/api/elevation?lat=${lat}&lon=${lon}`,
+        { timeout: ADDRESS_RETRIEVAL_TIMEOUTS.optionalGeoMs },
+        ADDRESS_RETRIEVAL_RETRIES.optional,
+      ),
+      fetchWithRetry(
+        `/api/water-risk?lat=${lat}&lon=${lon}`,
+        { timeout: ADDRESS_RETRIEVAL_TIMEOUTS.optionalGeoMs },
+        ADDRESS_RETRIEVAL_RETRIES.optional,
+      ),
+      fetchWithRetry(
+        `/api/mountain/nearby?lat=${lat}&lon=${lon}`,
+        { timeout: ADDRESS_RETRIEVAL_TIMEOUTS.optionalGeoMs },
+        ADDRESS_RETRIEVAL_RETRIES.optional,
+      ),
+      fetchWithRetry(
+        `/api/geological-risk?lat=${lat}&lon=${lon}`,
+        { timeout: ADDRESS_RETRIEVAL_TIMEOUTS.optionalGeoMs },
+        ADDRESS_RETRIEVAL_RETRIES.optional,
+      )
     ];
 
     // Only add postal code fetch if cc is a standard 2-letter land country code (e.g. 'JP', 'US').
     // Numeric codes like '74' represent sea/other regions and don't have Geonames postal data.
     if (/^[a-z]{2}$/i.test(cc)) {
-      promises.unshift(fetchWithRetry(`/api/postal-code/nearest?lat=${lat}&lon=${lon}&cc=${cc}`, { timeout: 65000 }));
+      promises.unshift(fetchWithRetry(
+        `/api/postal-code/nearest?lat=${lat}&lon=${lon}&cc=${cc}`,
+        { timeout: ADDRESS_RETRIEVAL_TIMEOUTS.postalNearestMs },
+        ADDRESS_RETRIEVAL_RETRIES.optional,
+      ));
     } else {
       // Push a dummy promise that resolves to an empty response to maintain index alignment
-      // But wait, the indices depend on the order. 
+      // But wait, the indices depend on the order.
       // Actually, looking at the code later:
       // data = await results[0].value.json(); // localData (postal)
       // nominatimData = await results[1].value.json(); // nominatim
@@ -794,16 +994,17 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       promises.push(fetchAfricaContext(lat, lon));
       promises.push(fetchAfricaOfficialAddress(lat, lon, cc));
     } else if (asiaOceaniaCountries.includes(cc)) {
+      const { fetchAsiaOceaniaAddress } = await import('./AsiaOceaniaService');
       promises.push(fetchAsiaOceaniaAddress(lat, lon, cc));
       if (['au', 'nz'].includes(cc)) {
         promises.push(fetchOceaniaContext(lat, lon, cc));
       } else if (['cn', 'kr'].includes(cc)) {
-        promises.push(fetchEastAsiaContext(lat, lon, cc));
+        const eastAsiaService = await import('./EastAsiaService');
+        promises.push(eastAsiaService.fetchEastAsiaContext(lat, lon, cc));
         if (cc === 'cn') {
-          const { fetchTiandituAddress } = await import('./EastAsiaService');
-          promises.push(fetchTiandituAddress(lat, lon));
+          promises.push(eastAsiaService.fetchTiandituAddress(lat, lon));
         } else if (cc === 'kr') {
-          promises.push(fetchKoreaOfficialAddress(lat, lon));
+          promises.push(eastAsiaService.fetchKoreaOfficialAddress(lat, lon));
         }
       }
     }
@@ -820,8 +1021,8 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
 
     // 5. Nature Features
     const natureIdx = promises.length;
-    promises.push(fetchNatureContext(lat, lon).catch(() => ({ 
-      mountains: [], beaches: [], ports: [], seas: [], deserts: [] 
+    promises.push(fetchNatureContext(lat, lon).catch(() => ({
+      mountains: [], beaches: [], ports: [], seas: [], deserts: []
     })));
 
     // 6. Deep Sea Context
@@ -849,6 +1050,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
 
     // 11. Hong Kong ALS (Official Address lookup for HK which has no postcodes)
     if (cc === 'hk') {
+      const { fetchHKOfficialAddress } = await import('./EastAsiaService');
       hkAlsIdx = promises.length;
       promises.push(fetchHKOfficialAddress(lat, lon).catch(() => null));
     }
@@ -858,7 +1060,25 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
     buildingNameIdx = promises.length;
     promises.push(fetchNearbyBuildingName(lat, lon, langCode, 90).catch(() => null));
 
-    results = await Promise.allSettled(promises);
+    // 13. Public map feature labels for roads, bridges, water, natural
+    // features, heritage/ruins, parks, and other named public features that
+    // can explain an otherwise weak address.
+    mapFeatureIdx = promises.length;
+    promises.push(fetchNearbyMapAddressFeatures(lat, lon, langCode, 220).catch(async () => {
+      const { summarizeMapAddressFeatures } = await loadMapFeatureAddressModule();
+      return summarizeMapAddressFeatures([]);
+    }));
+
+    results = await Promise.allSettled(promises.map((promise, index) => {
+      if (index <= 5) return promise;
+      const timeoutMs = (index === buildingNameIdx || index === mapFeatureIdx)
+        ? ADDRESS_RETRIEVAL_TIMEOUTS.buildingNameMs
+        : (index === globalContextIdx || index === plusCodeIdx)
+          ? ADDRESS_RETRIEVAL_TIMEOUTS.globalContextMs
+          : ADDRESS_RETRIEVAL_TIMEOUTS.regionalContextMs;
+
+      return withAddressLookupTimeout(promise, timeoutMs, null);
+    }));
 
     const safeJson = async (result: any) => {
       if (result.status !== 'fulfilled' || !result.value || !result.value.ok) return null;
@@ -898,6 +1118,10 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
 
     if (buildingNameIdx !== -1 && results[buildingNameIdx] && results[buildingNameIdx].status === 'fulfilled') {
       buildingNameData = (results[buildingNameIdx] as PromiseFulfilledResult<any>).value;
+    }
+    if (mapFeatureIdx !== -1 && results[mapFeatureIdx] && results[mapFeatureIdx].status === 'fulfilled') {
+      mapAddressFeatureSummary = (results[mapFeatureIdx] as PromiseFulfilledResult<MapAddressFeatureSummary>).value || null;
+      mapAddressFeatureData = mapAddressFeatureSummary?.primary || null;
     }
 
     // Handle Polar results
@@ -1037,7 +1261,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
           const { fetchChinaPostcode, getChinaProvinceByPostcode } = await import('./EastAsiaService');
           const cnAddr = await fetchChinaPostcode(pc);
           const provinceHint = getChinaProvinceByPostcode(pc);
-          
+
           if (cnAddr || provinceHint) {
             if (asiaOceaniaData) {
               asiaOceaniaData.chinaDetails = { ...cnAddr, provinceHint };
@@ -1084,7 +1308,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
         }
       } catch (e) {}
     }
-    
+
     // Add OS Grid Reference for UK
     if (cc === 'gb') {
       const grid = latLonToOSGrid(lat, lon);
@@ -1148,7 +1372,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       if (!nominatimData.address.house_number && asiaOceaniaData.houseNumber) nominatimData.address.house_number = asiaOceaniaData.houseNumber;
       if (!nominatimData.address.suburb && asiaOceaniaData.suburb) nominatimData.address.suburb = asiaOceaniaData.suburb;
       if (!nominatimData.address.state && asiaOceaniaData.state) nominatimData.address.state = asiaOceaniaData.state;
-      
+
       // Japan specific Zipcloud & Overpass Context enrichment
       if (cc === 'jp') {
         const jp = asiaOceaniaData.japanDetails;
@@ -1169,7 +1393,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
           if (jg.town) nominatimData.address.suburb = jg.town;
           if (jg.chome) nominatimData.address.neighbourhood = jg.chome;
           if (jg.building) nominatimData.address.building = jg.building;
-          
+
           // Special field for Japanese formatting
           nominatimData.address.jp_chome = jg.chome;
           nominatimData.address.jp_block = jg.block;
@@ -1184,14 +1408,14 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       if (!nominatimData.address.state && place.state) nominatimData.address.state = place.state;
       if (!nominatimData.address.city && place['place name']) nominatimData.address.city = place['place name'];
     }
-    
+
     // Fallback to local DB
     if (localData && localData.postalCode) {
       if (!nominatimData.address.postcode) nominatimData.address.postcode = localData.postalCode;
       if (!nominatimData.address.state && !nominatimData.address.province && localData.adminName1) nominatimData.address.state = localData.adminName1;
       if (!nominatimData.address.city && !nominatimData.address.town && localData.adminName2) nominatimData.address.city = localData.adminName2;
     }
-    
+
     // Attach elevation, difficulty, flood risk, and mountain info
     if (elevationData) {
       nominatimData.elevation = elevationData.elevation;
@@ -1201,7 +1425,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
     }
     nominatimData.delivery_difficulty = deliveryDifficulty;
     nominatimData.flood_risk = floodRisk;
-    
+
     if (mountainData && mountainData.peaks && mountainData.peaks.length > 0) {
       nominatimData.mountain_name = mountainData.peaks[0].name;
     }
@@ -1229,7 +1453,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       nominatimData.seismic_risk = geoRiskData.risks?.seismic;
       nominatimData.land_cover = geoRiskData.land_cover;
     }
-    
+
     nominatimData.west_asia_context = westAsiaContext;
     nominatimData.russia_context = russiaContext;
     nominatimData.central_asia_context = centralAsiaContext;
@@ -1256,7 +1480,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
     nominatimData.sea_context = seaContext;
     nominatimData.heritage_context = heritageContext;
     nominatimData.japanese_geo_context = japaneseGeoContext;
-    
+
     if (globalContextIdx !== -1 && results[globalContextIdx] && results[globalContextIdx].status === 'fulfilled') {
       nominatimData.global_context = (results[globalContextIdx] as PromiseFulfilledResult<any>).value;
     }
@@ -1276,6 +1500,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       }
     }
 
+    const { extractBuildingNameFromReverseGeocode } = await loadBuildingNameModule();
     const reverseBuilding = extractBuildingNameFromReverseGeocode(nominatimData, langCode);
     const preferredBuilding = buildingNameData || (reverseBuilding ? { ...reverseBuilding, category: 'address' } : null);
     if (preferredBuilding?.name) {
@@ -1285,6 +1510,18 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       }
       nominatimData.building_name_data = preferredBuilding;
       nominatimData.building_name_source = preferredBuilding.source;
+    }
+    const { applyMapAddressFeaturesToAddress } = await loadMapFeatureAddressModule();
+    nominatimData.address = applyMapAddressFeaturesToAddress(nominatimData.address, mapAddressFeatureSummary);
+    if (mapAddressFeatureData?.name) {
+      nominatimData.map_feature_name = mapAddressFeatureData.name;
+      nominatimData.map_feature_kind = mapAddressFeatureData.kind;
+      nominatimData.map_feature_source = mapAddressFeatureData.source;
+      nominatimData.map_feature_data = mapAddressFeatureData;
+      nominatimData.map_feature_candidates = mapAddressFeatureSummary?.features || [];
+      nominatimData.map_feature_by_kind = mapAddressFeatureSummary?.byKind || {};
+      nominatimData.map_feature_hierarchy = mapAddressFeatureSummary?.hierarchy || [];
+      nominatimData.map_feature_sources = mapAddressFeatureSummary?.sources || [];
     }
 
     const addressSources = [
@@ -1298,6 +1535,7 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       usCensusData ? 'us-census' : '',
       japaneseGeoContext ? 'japanese-open-data' : '',
       preferredBuilding ? 'osm-building-name' : '',
+      mapAddressFeatureSummary?.features.length ? 'osm-map-feature-name' : '',
     ].filter(Boolean) as string[];
     nominatimData.address_analysis = await enrichAnalysisWithOptionalLibpostal(analyzeAddress({
       apiAddress: nominatimData.address,
@@ -1310,8 +1548,17 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       building_en: nominatimData.address.building_en,
       building_name_source: nominatimData.building_name_source,
       building_name_data: nominatimData.building_name_data,
+      map_feature_name: nominatimData.address.map_feature_name,
+      map_feature_name_en: nominatimData.address.map_feature_name_en,
+      map_feature_kind: nominatimData.address.map_feature_kind,
+      map_feature_source: nominatimData.address.map_feature_source,
+      map_feature_data: nominatimData.address.map_feature_data,
+      map_feature_candidates: nominatimData.address.map_feature_candidates,
+      map_feature_by_kind: nominatimData.address.map_feature_by_kind,
+      map_feature_hierarchy: nominatimData.address.map_feature_hierarchy,
+      map_feature_sources: nominatimData.address.map_feature_sources,
     };
-    
+
     return nominatimData;
   }
 
@@ -1319,7 +1566,8 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
   if (localData && localData.postalCode) {
     const finalOfficialData = officialRegionalData || {};
     if (elevationData) finalOfficialData.elevation_source = elevationData.source;
-    const address = {
+    const { applyMapAddressFeaturesToAddress } = await loadMapFeatureAddressModule();
+    const address = applyMapAddressFeaturesToAddress({
       country_code: localData.countryCode.toLowerCase(),
       country: localData.countryCode,
       state: localData.adminName1,
@@ -1330,12 +1578,13 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       building_en: buildingNameData?.nameEn || '',
       building_name_source: buildingNameData?.source || '',
       building_name_data: buildingNameData,
-    };
+    }, mapAddressFeatureSummary);
+    const displayName = [address.building || address.poi || address.map_feature_name, address.postcode, address.suburb, address.city, address.state, address.country].filter(Boolean).join(', ');
     const addressAnalysis = await enrichAnalysisWithOptionalLibpostal(analyzeAddress({
       apiAddress: address,
-      displayName: [address.postcode, address.suburb, address.city, address.state, address.country].filter(Boolean).join(', '),
-      sources: ['geonames-postal', buildingNameData ? 'osm-building-name' : ''].filter(Boolean),
-    }), [address.postcode, address.suburb, address.city, address.state, address.country].filter(Boolean).join(', '), localData.countryCode);
+      displayName,
+      sources: ['geonames-postal', buildingNameData ? 'osm-building-name' : '', mapAddressFeatureSummary?.features.length ? 'osm-map-feature-name' : ''].filter(Boolean),
+    }), displayName, localData.countryCode);
 
     return {
       elevation: elevationData?.elevation,
@@ -1378,24 +1627,35 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
         building_en: address.building_en,
         building_name_source: address.building_name_source,
         building_name_data: address.building_name_data,
+        map_feature_name: address.map_feature_name,
+        map_feature_name_en: address.map_feature_name_en,
+        map_feature_kind: address.map_feature_kind,
+        map_feature_source: address.map_feature_source,
+        map_feature_data: address.map_feature_data,
+        map_feature_candidates: address.map_feature_candidates,
+        map_feature_by_kind: address.map_feature_by_kind,
+        map_feature_hierarchy: address.map_feature_hierarchy,
+        map_feature_sources: address.map_feature_sources,
       }
     };
   }
 
-  if (buildingNameData) {
-    const address = {
+  if (buildingNameData || mapAddressFeatureSummary?.features.length) {
+    const { applyMapAddressFeaturesToAddress } = await loadMapFeatureAddressModule();
+    const address = applyMapAddressFeaturesToAddress({
       country_code: cc,
       country: countryCode.toUpperCase(),
-      building: buildingNameData.name,
-      building_en: buildingNameData.nameEn || '',
-      building_name_source: buildingNameData.source,
+      building: buildingNameData?.name || '',
+      building_en: buildingNameData?.nameEn || '',
+      building_name_source: buildingNameData?.source || '',
       building_name_data: buildingNameData,
-    };
+    }, mapAddressFeatureSummary);
+    const displayName = address.building || address.poi || address.map_feature_name || '';
     const addressAnalysis = await enrichAnalysisWithOptionalLibpostal(analyzeAddress({
       apiAddress: address,
-      displayName: buildingNameData.name,
-      sources: ['osm-building-name'],
-    }), buildingNameData.name, cc);
+      displayName,
+      sources: [buildingNameData ? 'osm-building-name' : '', mapAddressFeatureSummary?.features.length ? 'osm-map-feature-name' : ''].filter(Boolean),
+    }), displayName, cc);
 
     return {
       elevation: elevationData?.elevation,
@@ -1411,13 +1671,30 @@ export async function regionalReverseGeocode(lat: number, lon: number, langCode:
       heritage_context: heritageContext,
       address_analysis: addressAnalysis,
       building_name_data: buildingNameData,
-      building_name_source: buildingNameData.source,
+      building_name_source: buildingNameData?.source,
+      map_feature_name: address.map_feature_name,
+      map_feature_kind: address.map_feature_kind,
+      map_feature_source: address.map_feature_source,
+      map_feature_data: address.map_feature_data,
+      map_feature_candidates: address.map_feature_candidates,
+      map_feature_by_kind: address.map_feature_by_kind,
+      map_feature_hierarchy: address.map_feature_hierarchy,
+      map_feature_sources: address.map_feature_sources,
       address: {
         ...address,
         ...addressAnalysis.canonical,
         building_en: address.building_en,
         building_name_source: address.building_name_source,
         building_name_data: address.building_name_data,
+        map_feature_name: address.map_feature_name,
+        map_feature_name_en: address.map_feature_name_en,
+        map_feature_kind: address.map_feature_kind,
+        map_feature_source: address.map_feature_source,
+        map_feature_data: address.map_feature_data,
+        map_feature_candidates: address.map_feature_candidates,
+        map_feature_by_kind: address.map_feature_by_kind,
+        map_feature_hierarchy: address.map_feature_hierarchy,
+        map_feature_sources: address.map_feature_sources,
       }
     };
   }

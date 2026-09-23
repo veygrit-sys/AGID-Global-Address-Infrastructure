@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/vey-trade-gateway-idempotency-v0.1.schema.json",
+  "title": "Vey Trade Gateway Idempotency Fixture v0.1",
+  "description": "Synthetic local fixture shape for Trade Gateway intent idempotency created, replayed, conflict, and private-material rejection vectors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "fixtureId",
+    "status",
+    "source",
+    "boundaryGateId",
+    "privacy",
+    "vectors",
+    "forbiddenValueMarkers",
+    "localOnly",
+    "productionTraffic",
+    "privateMaterialExposed",
+    "nonClaims",
+    "validationErrors"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../schemas/vey-trade-gateway-idempotency-v0.1.schema.json"
+    },
+    "fixtureId": {
+      "const": "vey-trade-gateway-idempotency-v0.1"
+    },
+    "status": {
+      "const": "synthetic-local-fixture"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "builder",
+        "verifier"
+      ],
+      "properties": {
+        "builder": {
+          "const": "buildVeyTradeGatewayIdempotencyFixture"
+        },
+        "verifier": {
+          "const": "npm run verify:vey-trade-gateway-idempotency-fixture-schema"
+        }
+      }
+    },
+    "boundaryGateId": {
+      "const": "trade-gateway-local-idempotent-intent"
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "localOnly",
+        "productionTraffic",
+        "containsRawAddress",
+        "privateMaterialExposed"
+      ],
+      "properties": {
+        "localOnly": {
+          "const": true
+        },
+        "productionTraffic": {
+          "const": false
+        },
+        "containsRawAddress": {
+          "const": false
+        },
+        "privateMaterialExposed": {
+          "const": false
+        }
+      }
+    },
+    "vectors": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vectorId",
+          "ok",
+          "decision",
+          "httpStatus",
+          "replayed",
+          "attemptCount",
+          "errors",
+          "warnings",
+          "localOnly",
+          "productionTraffic",
+          "privateMaterialExposed",
+          "forbiddenValueMarkersFound",
+          "nonClaims"
+        ],
+        "properties": {
+          "vectorId": {
+            "type": "string",
+            "enum": [
+              "trade_gateway_intent_created_positive",
+              "trade_gateway_intent_replayed_positive",
+              "trade_gateway_intent_conflict_negative",
+              "trade_gateway_intent_private_material_negative"
+            ]
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "created",
+              "replayed",
+              "conflict",
+              "rejected"
+            ]
+          },
+          "httpStatus": {
+            "type": "integer",
+            "enum": [
+              201,
+              400,
+              409
+            ]
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "attemptCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tradeGatewayIntentRef": {
+            "type": "string",
+            "pattern": "^trade_gateway_intent_[A-F0-9]{24}$"
+          },
+          "bodyFingerprintRef": {
+            "type": "string",
+            "pattern": "^trade_gateway_body_[A-F0-9]{24}$"
+          },
+          "conflictRef": {
+            "type": "string",
+            "pattern": "^trade_gateway_conflict_[A-F0-9]{24}$"
+          },
+          "safeRefs": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "tradingIntentId"
+            ],
+            "properties": {
+              "tradingIntentId": {
+                "type": "string",
+                "pattern": "^VT-[A-F0-9]{24}$"
+              },
+              "operatorWorkspaceRef": {
+                "type": "string"
+              },
+              "deliveryGatewayShipmentRef": {
+                "type": "string"
+              },
+              "playlistCommerceIntentRef": {
+                "type": "string"
+              },
+              "financeIntentRef": {
+                "type": "string"
+              },
+              "listingAlias": {
+                "type": "string"
+              },
+              "orderAlias": {
+                "type": "string"
+              }
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "localOnly": {
+            "const": true
+          },
+          "productionTraffic": {
+            "const": false
+          },
+          "privateMaterialExposed": {
+            "const": false
+          },
+          "forbiddenValueMarkersFound": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "nonClaims": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "string",
+              "pattern": "local-only|does-not-execute|does-not-verify"
+            }
+          }
+        }
+      }
+    },
+    "forbiddenValueMarkers": {
+      "type": "array",
+      "minItems": 25,
+      "maxItems": 25,
+      "items": {
+        "type": "string",
+        "enum": [
+          "rawAddressValue",
+          "rawAgidValue",
+          "rawAoidValue",
+          "recipientNameValue",
+          "counterpartyNameValue",
+          "phoneValue",
+          "emailValue",
+          "privateKeyValue",
+          "seedPhraseValue",
+          "walletPrivateKeyValue",
+          "bankAccountValue",
+          "cardPanValue",
+          "contractBodyValue",
+          "customsDocumentBodyValue",
+          "raw_address_value",
+          "raw_agid_value",
+          "raw_aoid_value",
+          "recipient_name_value",
+          "counterparty_name_value",
+          "private_key_value",
+          "wallet_private_key_value",
+          "bank_account_value",
+          "card_pan_value",
+          "contract_body_value",
+          "customs_document_body_value"
+        ]
+      }
+    },
+    "localOnly": {
+      "const": true
+    },
+    "productionTraffic": {
+      "const": false
+    },
+    "privateMaterialExposed": {
+      "const": false
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "string",
+        "pattern": "local-only|does-not-execute|does-not-verify"
+      }
+    },
+    "validationErrors": {
+      "type": "array",
+      "maxItems": 0
+    }
+  }
+}

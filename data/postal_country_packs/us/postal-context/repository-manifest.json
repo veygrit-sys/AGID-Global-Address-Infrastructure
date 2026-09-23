@@ -1,0 +1,60 @@
+{
+  "repository": {
+    "name": "agid-postal-us",
+    "country_code": "US",
+    "maturity": "M2_experimental",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "publication_claim": "one-fixed-2020-census-zcta-derived-validation-sample-with-agid-centroid-cell-crosswalk"
+  },
+  "postal_system": {
+    "code_format": "NNNNN or NNNNN-NNNN",
+    "assignment_rule": "USPS assigns five-digit ZIP Codes and ZIP+4 codes to a delivery network containing street, rural-route, highway-contract-route, P.O. Box, general-delivery, unique-organization, military and inactive postal objects. ZIP Codes are routing and delivery constructs, can be point-like or non-area, and are never presumed to be administrative areas, occupant evidence, building footprints or universal land coverage. USPS API and AIS observations require exact product, monthly version, purpose, terms, request time and digest; cached evidence cannot silently become current.",
+    "geometry_rule": "USPS sources reviewed here publish no canonical national ZIP coordinate polygons. Census ZCTA is an official-derived generalized block-based statistical approximation for some ZIP Codes, not a USPS delivery boundary and not coverage for every valid ZIP. TIGER/Line, NAD address points, USGS structure points or footprints, HUD crosswalks, state or local boundaries, parcels, OSM, Voronoi, interpolation, APIs and models remain independent or derived evidence; no layer may fill unknown official coverage or be relabelled USPS geometry.",
+    "address_format_rule": "USPS Publication 28 dated October 2024 defines delivery and last-line semantics including recipient or organization, primary number, street predirectional and suffix, secondary unit designator and number, rural route, highway contract route, general delivery, P.O. Box, Puerto Rico urbanization and military addressing. Those format rules and examples are not reusable real addresses, occupant evidence, postal assignments, coordinates, geometry or buildings.",
+    "postal_object_rule": "Store postal object type independently as street, rural_route, highway_contract_route, po_box, general_delivery, unique_organization, military, non_active or unknown. A five-digit ZIP or ZIP+4 can refer to delivery points, ranges, routes or non-area objects; its text pattern and successful lookup do not determine a Polygon or MultiPolygon.",
+    "zcta_rule": "ZCTAs are Census-created statistical areas generalized from 2020 Census blocks. They do not represent every valid USPS ZIP, may combine or omit postal cases, and cannot be used as official delivery coverage, address disclosure, building membership or a substitute for current operator assignments. Preserve ZCTA vintage, TIGER release, derivation status and Title 13 disclosure boundaries.",
+    "building_rule": "Building-level display requires an explicit rights-cleared civic address identity, a stable reviewed relation to a building identifier, and separately permitted point or footprint geometry with provider, purpose, jurisdiction, validity, privacy, CRS and digest pinned. USPS ZIP+4, Census geocode, NAD point, USGS structure, parcel, coordinate, containment, interpolation or proximity alone is not an address-building relation.",
+    "cadastre_rule": "The United States has no single canonical open national parcel or cadastral address-to-building relation. State, county, tribal, territorial and local artifacts have different schemas, authority, access, privacy and licences. Parcel ownership, assessor records, tax values, occupants, residents, units and query results are restricted or purpose-specific unless an exact lawful public artifact explicitly permits release.",
+    "derived_and_realtime_rule": "OAuth APIs, cached observations, mathematical models and machine learning may normalize input, compress candidate surfaces, detect conflicts and prioritize review. Every output preserves source and model version, feature version, request and input digests, observed_at, generated_at, cache TTL, confidence, uncertainty and derived status. It never overwrites USPS evidence, manufactures official geometry, infers an occupant, house number, unit or building, or converts absence into coverage.",
+    "agid_rule": "AGID remains an independent spatial index. Versioned crosswalks may relate typed USPS objects, ZCTA validation surfaces, permitted civic-address points and explicitly linked buildings to AGID cells without relabelling any postal, statistical, administrative, civic, parcel or building object as an AGID cell or claiming AGID geometry is official USPS geometry.",
+    "licence_rule": "USPS APIs and AIS products require product-specific credentials, licences, terms and redistribution review; Publication 28 and interactive lookup are reference evidence. Census public-domain status applies to exact released products while Title 13 protects individual address locations. NAD catalog metadata, accessLevel, rights and provider-specific notices must all be honored. USGS and state or local artifacts require exact layer provenance. ODbL data stays separate. Pin every source URL, terms version, access class, attribution, release and digest before promotion.",
+    "jurisdiction_rule": "The US country pack is ISO US scope and must not silently absorb Puerto Rico, Guam, U.S. Virgin Islands, American Samoa, Northern Mariana Islands, U.S. Minor Outlying Islands or other separately coded jurisdictions. USPS domestic routing scope and APO, FPO or DPO military routing do not establish physical country, sovereignty, administrative containment, public geolocation or AGID jurisdiction.",
+    "privacy_rule": "Exact addresses, coordinates, entrances, units, recipients, residents, owners, occupants, household or business identities, assessor and parcel records, service responses, OAuth credentials and query logs can expose personal, property or security context. Exclude them from public artifacts unless lawful authority, purpose limitation, minimisation, retention, access control and publication approval are explicit.",
+    "temporal_rule": "USPS assignments, delivery object types, ZIP+4 ranges, routes, non-active objects, ZCTAs, TIGER releases, address points, building geometries, jurisdictions, local parcel sources, API observations and crosswalks are time-dependent. Store object_type, valid_from, valid_to, observed_at, retrieved_at, generated_at, source release and supersession independently; never rewrite historical evidence or promote a cached response or model surface into a timeless fact."
+  },
+  "promotion": {
+    "current_stage": "M2_current_typed_usps_and_fixed_census_zcta_runtime",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Source roles, rights, ZIP object types, geometry limits, privacy boundaries and jurisdiction exclusions are inventoried."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Country-specific ZIP, ZCTA, AGID, address-building and evidence contracts are reviewable."
+      },
+      {
+        "id": "M2_current_typed_usps_and_fixed_census_zcta_runtime",
+        "definition": "All current five-digit and ZIP+4 USPS assignments are fixed with validity, corrections, typed non-area exceptions and compatible redistribution rights; every eligible fixed Census or separately licensed postal Polygon/MultiPolygon loads through the API/app, exposes stable postal, geometry, assertion, AGID crosswalk and detailed source-attribute IDs, renders and fits as a translucent area, and clears/re-searches without fabricating missing areas, addresses or buildings."
+      }
+    ],
+    "hard_blockers": [
+      "zip-or-zip-plus-four-presented-as-canonical-area-or-building",
+      "census-zcta-presented-as-official-usps-delivery-boundary-or-complete-coverage",
+      "census-tiger-nad-usgs-hud-admin-parcel-or-osm-evidence-presented-as-usps-assignment",
+      "zip-geocode-address-point-structure-parcel-containment-or-proximity-presented-as-exact-address-building-relation",
+      "person-company-owner-occupant-household-property-or-api-response-published-without-authority",
+      "derived-api-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage",
+      "usps-census-nad-usgs-state-local-or-community-licence-and-release-not-pinned",
+      "territory-or-military-routing-scope-presented-as-physical-us-jurisdiction",
+      "one-source-presented-as-universal-address-building-or-delivery-coverage"
+    ]
+  }
+}

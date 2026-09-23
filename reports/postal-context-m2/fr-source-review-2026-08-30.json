@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "postal-context-m2-source-review/v1",
+  "countryCode": "FR",
+  "reviewedAt": "2026-08-30T06:52:44.942Z",
+  "result": "pass-scoped-experimental",
+  "m2Definition": "Pinned open snapshots reproduce experimental packs with full lineage.",
+  "scope": {
+    "postalCodes": "75001-75020",
+    "publishedRecords": 20,
+    "nationalCoverage": false,
+    "officialPostalBoundary": false,
+    "surfaceClassification": "derived",
+    "reason": "Each target code has one exact La Poste-to-INSEE arrondissement relation; the joined geometry is the matching official administrative contour."
+  },
+  "sources": [
+    {
+      "id": "la-poste-base-officielle-codes-postaux",
+      "provider": "La Poste",
+      "catalogueUrl": "https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux",
+      "apiMetadataUrl": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal",
+      "rawUrl": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/raw",
+      "resourceId": "008a2dda-2c60-4b63-b910-998f6f818089",
+      "datasetUpdatedAt": "2026-08-08T07:04:29.824Z",
+      "retrievedAt": "2026-08-30T06:52:44.942Z",
+      "sha256": "f921ac020ca3b9efebd8f0d01782555fb70d63d1ae36535109c67e4a74bd6e22",
+      "byteLength": 1555485,
+      "rows": 39192,
+      "distinctPostalCodes": 6328,
+      "distinctCommuneCodes": 35007,
+      "authority": {
+        "assignment": "official_postal_operator",
+        "geometry": "none"
+      },
+      "sourceStatement": "Maps postal codes to INSEE communes and does not publish open postal-code contours."
+    },
+    {
+      "id": "geo-api-gouv-commune-contours-via-laposte-data-fair",
+      "provider": "Etalab / API Découpage administratif",
+      "documentationUrl": "https://geo.api.gouv.fr/decoupage-administratif/communes",
+      "queryUrlTemplate": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/lines?size=2&q=code_postal%3A{POSTAL_CODE}",
+      "retrievedAt": "2026-08-30T06:52:44.942Z",
+      "responseCount": 20,
+      "aggregateMethod": "SHA-256 of raw response bytes concatenated in ascending file-name order",
+      "aggregateSha256": "76d9f52e38386339a15d3becc6f4ed6eb3605af3cb82669cea772feb8fd586ec",
+      "authority": {
+        "assignment": "none",
+        "geometry": "official_mapping_geometry"
+      },
+      "checks": {
+        "eachQueryReturnedOneRow": true,
+        "postcodeAndInseeMatchedCsv": true,
+        "geometryType": "MultiPolygon",
+        "allBooleanValid": true,
+        "allRingsClosed": true,
+        "allCoordinatesWithinParisBounds": true
+      }
+    }
+  ],
+  "rights": {
+    "licence": "Etalab Open Licence 2.0",
+    "url": "https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf",
+    "sha256": "1c721702ef459d935f2d097fec4a81d5f9dd258477c92b0857dd8f1d9cdc2909",
+    "byteLength": 239078,
+    "reuse": [
+      "reproduce",
+      "redistribute",
+      "adapt",
+      "publish",
+      "commercial-use",
+      "non-commercial-use"
+    ],
+    "conditions": [
+      "attribute-source",
+      "identify-latest-update",
+      "do-not-imply-official-endorsement"
+    ],
+    "attribution": "La Poste — Base officielle des codes postaux, latest source update 2026-08-08; Etalab / API Découpage administratif contours; Licence Ouverte 2.0. Retrieved 2026-08-30."
+  },
+  "transform": {
+    "script": "scripts/build-postal-context-fr-m2.mjs",
+    "compositeDigest": "sha256:cbc9768b1b2b17927865f7b0f1de2f0719c8ae713cda6e8ef90f6c5d1fa29090",
+    "steps": [
+      "verify pinned bytes and hashes",
+      "decode Windows-1252 semicolon CSV",
+      "require exactly one 75001-75020 row and expected 75101-75120 identity",
+      "require one exact API response per code",
+      "decode _contours_commune.geometry",
+      "validate rings, coordinates, area and boolean topology",
+      "join by exact postal code and INSEE identity",
+      "sort by postal code",
+      "emit graph, geometry and descriptor"
+    ],
+    "geometricModification": false,
+    "inventedGeometry": false,
+    "rawInputsCommitted": false
+  },
+  "quality": {
+    "grain": "one published postcode-to-one municipal-arrondissement display surface",
+    "primaryKey": "countryCode + postalCode + releaseId",
+    "sourceRowsUnique": true,
+    "targetRowsComplete": true,
+    "referentialIntegrity": true,
+    "publishedFeatures": 20,
+    "positions": 1157,
+    "rings": 20,
+    "multiPolygons": 20,
+    "validGeometryRatio": 1,
+    "postcodeNormalizationRatio": 1,
+    "freshnessBasis": "La Poste dataset update 2026-08-08; retrieval 2026-08-30"
+  },
+  "exceptions": [
+    {
+      "class": "unscoped-standard-postcode",
+      "handling": "return no_match; do not borrow a commune or centroid"
+    },
+    {
+      "class": "cedex-po-box-route-organization",
+      "handling": "remain non-area unless a separately authorized Polygon/MultiPolygon exists"
+    },
+    {
+      "class": "overseas-or-monaco",
+      "handling": "route to a separate ISO country pack; never merge into FR"
+    },
+    {
+      "class": "address-building-recipient-land-right",
+      "handling": "not published; requires a separate explicit source relation"
+    }
+  ],
+  "limitations": [
+    "not national coverage",
+    "not an official La Poste boundary",
+    "not deliverability",
+    "not an address or building relation",
+    "not a legal or cadastral boundary",
+    "numeric confidence describes the exact scoped join and validated display surface, not postal-boundary authority"
+  ],
+  "nextRefreshCheck": "2026-09-30"
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "DE",
+  "checkedAt": "2026-08-30T02:31:42.000Z",
+  "baseCommit": "8e6a4c9ad0e2bf53beb3ce20fdd7450d7ee9292d",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/de-source-review-2026-08-30.json",
+    "digest": "sha256:1c5d81ec17ac764b6c1c043ed78a6c48f37be4cffa5df98f69c5f4f07f1b84d7"
+  },
+  "verification": [
+    {
+      "name": "official source byte audit and compatibility Shapefile inspection",
+      "command": "node scripts/inspect-postal-context-de-sources.mjs .m2-sources-de reports/postal-context-m2/de-source-review-2026-08-30.json",
+      "passed": true,
+      "result": "Ten exact official bodies matched byte length and SHA-256. The BKG test archive contains three valid EPSG:25832 Polygon records for 38350, 38368 and 38379, all classified as compatibility-only and production-ineligible."
+    },
+    {
+      "name": "DE source, ledger and rollout tests",
+      "command": "node --test scripts/inspect-postal-context-de-sources.test.mjs scripts/postal-context-m2-de-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+      "testsPassed": 16,
+      "testsFailed": 0
+    },
+    {
+      "name": "existing Germany Postal Context regression",
+      "command": "tsx --test <verify:postal-context-germany file set>",
+      "testsPassed": 71,
+      "testsFailed": 0
+    },
+    {
+      "name": "shared postcode-search and translucent-area map regression",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "testsPassed": 23,
+      "testsFailed": 0
+    },
+    {
+      "name": "TypeScript",
+      "command": "tsc --noEmit",
+      "errors": 0
+    }
+  ],
+  "totals": {
+    "testsPassed": 110,
+    "testsFailed": 0,
+    "typeErrors": 0
+  },
+  "runtime": {
+    "packStatus": "metadata-only",
+    "documentedCurrentDeliveryPostcodeAreas": 8169,
+    "currentNationalSourcePolygonRecordsAvailableToAgid": 0,
+    "testPolygonRecords": 3,
+    "productionEligibleRecords": 0,
+    "productionArtifactPublished": false,
+    "realGermanyApiToAppToMapVerified": false,
+    "sharedAppAreaPathVerified": true,
+    "fitBoundsCapabilityVerified": true,
+    "translucentFillCapabilityVerified": true,
+    "outlineCapabilityVerified": true,
+    "clearAndResearchCapabilityVerified": true,
+    "currentGermanyAreaVisualizationEnabled": false
+  },
+  "operations": {
+    "authenticatedRequests": 0,
+    "paidOperations": 0,
+    "contractAcceptances": 0,
+    "newDestinations": 0,
+    "deployments": 0,
+    "rawSourceBodiesCommitted": 0
+  },
+  "npmLauncher": {
+    "status": "bypassed",
+    "detail": "The exact scripts were executed with the repository's shared Node, tsx and TypeScript binaries."
+  }
+}

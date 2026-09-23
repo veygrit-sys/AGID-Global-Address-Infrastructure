@@ -2,10 +2,23 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+ADDRESS_TRANSLATION_FEEDBACK_STORAGE_KEY,
+appendAddressTranslationFeedbackSample,
+appendRegistrationCorrectionSample,
+buildAddressTranslationFeedbackSample,
+buildAgidRegistrationAutofillCandidate,
 buildPostcodeAutofillLanguageDrafts,
+buildPostcodeRegistrationAssistanceCandidate,
+buildRegistrationAssistanceComparison,
+buildRegistrationCorrectionSample,
+getPostcodeAutofillMode,
+getPostcodeAutofillModeForCoverage,
 isPostcodeReadyForAutofill,
+listRegistrationCorrectionSamples,
+lookupPostcodeAutofillCandidates,
 lookupPostcodeAutofill,
 mergePostcodeAutofill,
+REGISTRATION_CORRECTION_STORAGE_KEY,
 translateRegistrationFormFields,
 } from './addressRegistrationAutomation';
 import { buildRegistrationAddressLanguageTabs } from './addressRegistrationState';
@@ -85,6 +98,239 @@ test('complete postcode input can autofill local and address-language draft fiel
   assert.equal(drafts.en.suburb, 'Chiyoda');
   assert.equal(drafts.en.postcode, '1000001');
   assert.equal(drafts.fr, undefined);
+});
+
+test('AGID and postal-code assistance produce reviewable registration hints', async () => {
+  const agidCandidate = buildAgidRegistrationAutofillCandidate({
+    agid: 'JP01R1A0ZTR4',
+    decoded: { lat: 35.6812, lon: 139.7671, prefix: 'JP' },
+    supportedCountryCodes: ['JP', 'US'],
+  });
+
+  assert.ok(agidCandidate);
+  assert.equal(agidCandidate.source, 'agid');
+  assert.equal(agidCandidate.patch.country, 'JP');
+  assert.equal(agidCandidate.requiresUserReview, true);
+  assert.ok(agidCandidate.evidence.some(line => line.includes('AGID prefix')));
+
+  const calls: string[] = [];
+  const fetcher = async (url: string | URL | Request) => {
+    calls.push(String(url));
+    return Response.json({
+      'post code': '90210',
+      places: [{
+        'place name': 'Beverly Hills',
+        state: 'California',
+      }],
+    });
+  };
+
+  const patch = await lookupPostcodeAutofill('US', '90210', fetcher as typeof fetch);
+  assert.deepEqual(calls, ['/api/zippopotam/US/90210']);
+  assert.deepEqual(patch, {
+    postcode: '90210',
+    city: 'Beverly Hills',
+    state: 'California',
+  });
+
+  const postalCandidate = buildPostcodeRegistrationAssistanceCandidate({
+    countryCode: 'US',
+    postcode: '90210',
+    patch,
+  });
+
+  assert.ok(postalCandidate);
+  assert.equal(postalCandidate.source, 'postcode');
+  assert.equal(postalCandidate.patch.city, 'Beverly Hills');
+  assert.ok(postalCandidate.confidence > 0.8);
+});
+
+test('postal-code lookup policy auto-fills reliable countries and exposes candidates for weak APIs', async () => {
+  assert.equal(getPostcodeAutofillMode('JP'), 'auto');
+  assert.equal(getPostcodeAutofillMode('GB'), 'auto');
+  assert.equal(getPostcodeAutofillMode('MX'), 'candidates');
+  assert.equal(getPostcodeAutofillModeForCoverage({ id: 'postal-reliable-api' }), 'auto');
+  assert.equal(getPostcodeAutofillModeForCoverage({ id: 'postal-weak-api' }), 'candidates');
+  assert.equal(getPostcodeAutofillModeForCoverage({ id: 'no-postal-strong-geo' }), 'manual');
+  assert.equal(getPostcodeAutofillModeForCoverage({ id: 'no-postal-weak-geo' }), 'manual');
+
+  const fetcher = async () => Response.json({
+    'post code': '01000',
+    places: [
+      { 'place name': 'San Angel', state: 'Ciudad de México' },
+      { 'place name': 'Álvaro Obregón', state: 'Ciudad de México' },
+    ],
+  });
+
+  const candidates = await lookupPostcodeAutofillCandidates('MX', '01000', fetcher as typeof fetch);
+  assert.equal(candidates.length, 2);
+  assert.deepEqual(candidates[0], {
+    postcode: '01000',
+    city: 'San Angel',
+    state: 'Ciudad de México',
+  });
+  assert.deepEqual(candidates[1], {
+    postcode: '01000',
+    city: 'Álvaro Obregón',
+    state: 'Ciudad de México',
+  });
+});
+
+test('registration correction samples store address corrections as local RL references without recipient or phone', () => {
+  const before = {
+    country: 'JP',
+    recipient: '山田太郎',
+    street: '丸の内',
+    city: '千代田区',
+    postcode: '1000001',
+    phone: '0312345678',
+  };
+  const after = {
+    country: 'JP',
+    recipient: '山田花子',
+    street: '丸の内1-1',
+    city: '千代田区',
+    postcode: '1000001',
+    phone: '0399999999',
+  };
+
+  const sample = buildRegistrationCorrectionSample({
+    before,
+    after,
+    assistanceSourceIds: ['postcode:JP:1000001'],
+    agid: 'JP01R1A0ZTR4',
+    addressLanguage: 'ja',
+    now: new Date('2026-06-12T00:00:00.000Z'),
+  });
+
+  assert.ok(sample);
+  assert.equal(sample.storageScope, 'closed-device-local-rl-reference');
+  assert.deepEqual(sample.learningPolicy, {
+    mode: 'closed',
+    storage: 'device-local',
+    externalTransmission: 'blocked',
+    export: 'manual-only',
+  });
+  assert.equal(sample.agidTail, 'A0ZTR4');
+  assert.deepEqual(sample.assistanceSourceIds, ['postcode:JP:1000001']);
+  assert.deepEqual(sample.changedFields, [{
+    field: 'street',
+    before: '丸の内',
+    after: '丸の内1-1',
+  }]);
+  assert.deepEqual(sample.excludedFields.sort(), ['phone', 'recipient']);
+
+  const memory = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => memory.get(key) || null,
+    setItem: (key: string, value: string) => memory.set(key, value),
+  };
+
+  appendRegistrationCorrectionSample(sample, storage);
+  const stored = JSON.parse(memory.get(REGISTRATION_CORRECTION_STORAGE_KEY) || '[]');
+  assert.equal(stored.length, 1);
+  assert.equal(stored[0].id, sample.id);
+
+  const history = listRegistrationCorrectionSamples(storage);
+  assert.equal(history.length, 1);
+  assert.equal(history[0].id, sample.id);
+  assert.equal(history[0].changedFields[0].field, 'street');
+});
+
+test('registration assistance comparison ranks postal-code and AGID hints with local-only feedback consent', () => {
+  const agidCandidate = buildAgidRegistrationAutofillCandidate({
+    agid: 'JP01R1A0ZTR4',
+    decoded: { lat: 35.6812, lon: 139.7671, prefix: 'JP' },
+    supportedCountryCodes: ['JP'],
+  });
+  const postalCandidate = buildPostcodeRegistrationAssistanceCandidate({
+    countryCode: 'JP',
+    postcode: '1000001',
+    patch: {
+      postcode: '1000001',
+      state: '東京都',
+      city: '千代田区',
+      suburb: '千代田',
+    },
+  });
+
+  const comparison = buildRegistrationAssistanceComparison({
+    postcodeCandidate: postalCandidate,
+    agidCandidate,
+    appliedSourceIds: [postalCandidate!.id],
+    feedbackConsent: true,
+    qualityDecision: 'partial',
+    qualityReasons: ['missing-required:street'],
+  });
+
+  assert.equal(comparison.recommendedSource, 'postcode');
+  assert.equal(comparison.candidates.length, 2);
+  assert.equal(comparison.candidates[0].source, 'postcode');
+  assert.equal(comparison.candidates[0].applied, true);
+  assert.ok(comparison.qualityReasons.includes('both-postcode-and-agid-available'));
+  assert.ok(comparison.qualityReasons.includes('feedback-consent-local-only-enabled'));
+  assert.equal(comparison.feedbackConsent.storageScope, 'closed-device-local-rl-reference');
+  assert.equal(comparison.feedbackConsent.externalTransmission, 'blocked');
+  assert.equal(comparison.feedbackConsent.canSaveCorrectionHistory, true);
+});
+
+test('address translation feedback is a closed local learning sample and excludes private recipient fields', () => {
+  const source = {
+    country: 'JP',
+    recipient: '山田太郎',
+    street: '丸の内',
+    city: '千代田区',
+    state: '東京都',
+    postcode: '1000001',
+    phone: '0312345678',
+  };
+  const translated = {
+    ...source,
+    recipient: 'Taro Yamada',
+    street: 'Marunouchi',
+    city: 'Chiyoda City',
+    state: 'Tokyo',
+    phone: '+81312345678',
+  };
+  const corrected = {
+    ...translated,
+    street: '1 Marunouchi',
+  };
+
+  const sample = buildAddressTranslationFeedbackSample({
+    source,
+    translated,
+    corrected,
+    feedback: 'corrected',
+    countryCode: 'JP',
+    sourceLanguage: 'ja',
+    targetLanguage: 'en',
+    agid: 'JP01R1A0ZTR4',
+    now: new Date('2026-06-12T00:00:00.000Z'),
+  });
+
+  assert.ok(sample);
+  assert.equal(sample.storageScope, 'closed-device-local-rl-reference');
+  assert.equal(sample.learningPolicy.externalTransmission, 'blocked');
+  assert.equal(sample.feedback, 'corrected');
+  assert.deepEqual(sample.fields, [{
+    field: 'street',
+    source: '丸の内',
+    translated: 'Marunouchi',
+    corrected: '1 Marunouchi',
+  }]);
+  assert.deepEqual(sample.excludedFields.sort(), ['phone', 'recipient']);
+
+  const memory = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => memory.get(key) || null,
+    setItem: (key: string, value: string) => memory.set(key, value),
+  };
+
+  appendAddressTranslationFeedbackSample(sample, storage);
+  const stored = JSON.parse(memory.get(ADDRESS_TRANSLATION_FEEDBACK_STORAGE_KEY) || '[]');
+  assert.equal(stored.length, 1);
+  assert.equal(stored[0].learningPolicy.mode, 'closed');
 });
 
 test('switching a country-supported address language tab translates fields without changing postcode and private fields', async () => {
@@ -601,8 +847,8 @@ test('Western Europe address tabs use country-specific native-to-English routes 
     },
   });
 
-  assert.equal(switzerland.city, 'Zurich');
-  assert.equal(switzerland.street, 'Street');
+  assert.equal(switzerland.city, 'Zürich');
+  assert.equal(switzerland.street, 'Straße');
   assert.equal(switzerland.postcode, '8001');
 });
 
@@ -669,8 +915,8 @@ test('Southern Europe address tabs use country-specific native-to-English routes
     },
   });
 
-  assert.equal(italy.city, 'Rome');
-  assert.equal(italy.street, 'Street');
+  assert.equal(italy.city, 'Roma');
+  assert.equal(italy.street, 'Via');
   assert.equal(italy.postcode, '00118');
 });
 
@@ -939,7 +1185,7 @@ test('West Africa address tabs use country-specific native-to-English routes bef
 
   assert.equal(coteDivoire.state, 'Lagunes');
   assert.equal(coteDivoire.city, 'Abidjan');
-  assert.equal(coteDivoire.street, 'Street');
+  assert.equal(coteDivoire.street, 'Rue');
   assert.equal(coteDivoire.postcode, '00225');
 });
 
@@ -1009,7 +1255,7 @@ test('Central Africa address tabs use country-specific native-to-English routes 
 
   assert.equal(congo.state, 'Kinshasa');
   assert.equal(congo.city, 'Kinshasa');
-  assert.equal(congo.street, 'Municipality');
+  assert.equal(congo.street, 'Commune');
   assert.equal(congo.postcode, '243');
 });
 
@@ -1031,11 +1277,11 @@ test('Central Africa multilingual native tabs use English pivot when topology di
     },
   });
 
-  assert.equal(chadArabic.city, 'ar:NDjamena');
-  assert.equal(chadArabic.street, 'ar:Street');
+  assert.equal(chadArabic.city, 'ar:N’Djamena');
+  assert.equal(chadArabic.street, 'ar:Rue');
   assert.deepEqual(calls, [
-    'en->ar:NDjamena',
-    'en->ar:Street',
+    'en->ar:N’Djamena',
+    'en->ar:Rue',
   ]);
 });
 
@@ -1102,10 +1348,10 @@ test('Southern Africa multilingual native tabs use English pivot when topology d
   });
 
   assert.equal(comorosArabic.city, 'ar:Moroni');
-  assert.equal(comorosArabic.street, 'ar:Street');
+  assert.equal(comorosArabic.street, 'ar:Rue');
   assert.deepEqual(calls, [
     'en->ar:Moroni',
-    'en->ar:Street',
+    'en->ar:Rue',
   ]);
 });
 
@@ -1214,8 +1460,8 @@ test('Americas address tabs use regional Spanish-to-English routes before machin
     },
   });
 
-  assert.equal(mexico.city, 'Mexico City');
-  assert.equal(mexico.street, 'Street Mayor');
+  assert.equal(mexico.city, 'Ciudad de México');
+  assert.equal(mexico.street, 'Calle Mayor');
   assert.equal(mexico.postcode, '01000');
 });
 
@@ -1237,11 +1483,11 @@ test('Americas multilingual native tabs use English pivot when language topology
     },
   });
 
-  assert.equal(paraguayGuarani.city, 'gn:Asuncion');
-  assert.equal(paraguayGuarani.street, 'gn:Street');
+  assert.equal(paraguayGuarani.city, 'gn:Asunción');
+  assert.equal(paraguayGuarani.street, 'gn:Calle');
   assert.deepEqual(calls, [
-    'en->gn:Asuncion',
-    'en->gn:Street',
+    'en->gn:Asunción',
+    'en->gn:Calle',
   ]);
 });
 

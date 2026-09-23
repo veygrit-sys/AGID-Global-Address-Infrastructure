@@ -1,0 +1,84 @@
+{
+  "schema_version": "agid-postal-ne-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ne",
+    "country_code": "NE",
+    "country_name": "Niger",
+    "maturity": "M1_metadata",
+    "integration_role": "external-country-pack-consumed-by-agid"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_upstream_rows": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_land_records": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "canonical_postcode_format": "NNNN",
+    "current_directory_shape_rule": "Four digits; the currently published directory uses first digits 1 through 8. Syntax alone is not a live assignment.",
+    "coding_method_rule": "The dated UPU sheet maps the first digit to region and remaining digits to post office; current Niger Poste rows map code, locality and region and must be pinned independently.",
+    "assignment_rule": "Only a current digest-pinned Niger Poste code-to-locality row with observed_at, valid-time and approved field rights can become official_postal_operator assignment evidence.",
+    "geometry_rule": "The current Niger Poste directory and dated UPU sheet publish no boundary coordinates. Default full-code geometry is none; locality, region, agency point, buffer, Voronoi surface, model output and AGID cover are never an official postcode polygon.",
+    "address_rule": "The four-digit postcode is placed before the locality. BP/P.O. Box identifier, physical street or quarter, administrative region and postcode are separate fields; the dated 2005 P.O.-Box-only statement must not override current Niger Poste services.",
+    "building_rule": "Building display requires a rights-cleared civic address point, matching normalized components, an explicit address-to-building relation and independently licensed building geometry. Postcode, nearest feature, text match, containment and model score are insufficient.",
+    "land_rule": "IGN.N administrative, cadastral, topographic and land products remain product-specific controlled context. A parcel or map does not prove a postal assignment, civic address, building, owner, resident or occupant.",
+    "privacy_rule": "HAPDP Law 2022-59 and amendments require lawful purpose, proportionality, security and bounded retention. Person-linked precise addresses, recipients, box holders, residents, owners, occupants, instructions and query histories are not public artifacts.",
+    "realtime_rule": "Live observations become bounded normalized receipts with source URL, terms version, digest, observed_at, valid-time and parser version; there is no invisible unverified live fallback or training mirror.",
+    "model_rule": "Learned models may rank candidates, detect drift, compress search indexes or propose derived surfaces. They never confer official assignment, polygon, address, building or deliverability authority.",
+    "compression_rule": "A compact code-to-locality index, minimal perfect hash and PMTiles, FlatGeobuf or Parquet candidate layers are allowed only while exact code strings, validity, authority, lineage and correction paths remain recoverable.",
+    "hosting_rule": "Cloudflare and Hugging Face may host only digest-pinned, rights-cleared, minimized, non-personal public artifacts. Restricted geographic or address evidence remains on controlled infrastructure.",
+    "agid_rule": "AGID is an independent spatial index and crosswalk. An AGID cell or cell union is not a Niger Poste code or polygon, administrative boundary, parcel, civic address or building."
+  },
+  "required_artifacts": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "fixtures/niger-synthetic.json",
+    "release-manifest.json",
+    "assignment-observations.parquet",
+    "derived-candidates.pmtiles",
+    "agid-crosswalk.parquet",
+    "validation-report.json"
+  ],
+  "validation_rules": [
+    { "id": "current-row", "scope": "official-assignments", "pass": "Every assignment has a current Niger Poste row, approved rights, digest and observation time." },
+    { "id": "four-digit-shape", "scope": "codes", "pass": "Every current code has four digits and a first digit between 1 and 8; shape never substitutes for a row." },
+    { "id": "no-invented-postal-area", "scope": "full-codes", "pass": "No code is published with canonical Polygon or MultiPolygon geometry without issuer-authorized boundary evidence." },
+    { "id": "authority-separation", "scope": "all", "pass": "Postal, administrative, land, address, building and AGID authority are stored separately." },
+    { "id": "exact-address-building-link", "scope": "promoted-buildings", "pass": "Explicit rights-cleared address-building relation and matching normalized components are present." },
+    { "id": "privacy-and-licence", "scope": "public-artifacts", "pass": "No personal, contact, land-holder, subscriber, recipient, occupant or query data is published and every field has approved rights." },
+    { "id": "synthetic-never-promotes", "scope": "fixtures", "pass": "Synthetic fixtures validate behavior but never satisfy production gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Sources, semantics, licences and blockers inventoried." },
+      { "id": "M1_metadata", "definition": "Contract, source profile and synthetic conformance fixtures reviewable." },
+      { "id": "M2_experimental", "definition": "Rights-cleared observations reproduce a digest-pinned experimental pack." },
+      { "id": "M3_candidate", "definition": "Independent holdout, ambiguity, privacy, freshness and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two consecutive refreshes pass and rollback is monitored." }
+    ],
+    "hard_blockers": [
+      "directory-row-presented-as-postcode-polygon",
+      "locality-region-or-agency-point-presented-as-postal-catchment",
+      "buffer-voronoi-model-or-agid-cover-presented-as-official",
+      "live-page-or-pdf-mirrored-without-redistribution-rights",
+      "po-box-holder-recipient-or-private-address-published",
+      "land-owner-resident-occupant-or-query-trail-published",
+      "nearest-text-containment-or-model-score-presented-as-exact-building",
+      "agid-cell-presented-as-niger-poste-land-address-or-building-authority",
+      "missing-assignment-geometry-time-or-licence-lineage"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "official_postcode_polygon",
+    "recipient_identity",
+    "po_box_holder",
+    "resident_owner_or_occupant",
+    "exact_address_or_building_without_explicit_link",
+    "land_or_title_certification"
+  ]
+}
