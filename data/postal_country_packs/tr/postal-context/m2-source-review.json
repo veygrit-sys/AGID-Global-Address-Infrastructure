@@ -1,0 +1,122 @@
+{
+  "schema_version": "agid-postal-tr-m2-source-review-v0.1",
+  "country_code": "TR",
+  "m2_criterion": {
+    "id": "M2_current_five_digit_delivery_area_visualization",
+    "definition": "Current complete-for-declared-coverage, rights-cleared Türkiye five-digit postcode assignments and exact Polygon/MultiPolygon delivery areas, preserving street, neighbourhood, P.O. box, poste-restante and locality exceptions, with immutable publication and real TR API/app visualization verification."
+  },
+  "references": [
+    {
+      "id": "ptt-postcode-ui",
+      "url": "https://www.ptt.gov.tr/posta-kodu",
+      "kind": "operator-html",
+      "mime": "text/html",
+      "markers": ["Posta Kodu Sorgulama", "İl ve ilçe seçerek posta kodunu öğrenebilirsiniz"],
+      "expected_digest": "sha256:c33fcbbc2dc0d4e8fc3929df01f0eba2ff451b65b3a0fec306d5a66eab08252a",
+      "reviewed_bytes": 182910,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z"
+    },
+    {
+      "id": "ptt-postcode-client",
+      "url": "https://www.ptt.gov.tr/_next/static/chunks/pages/posta-kodu-4ca6e3b2455a7d53.js",
+      "kind": "operator-javascript",
+      "mime": "application/javascript",
+      "markers": ["/api/posta-kodu", "postakodu", "posta_Kodu", "mahalleAdi", "sokakAdi"],
+      "expected_digest": "sha256:c4449259e58fe7b15d4146376338a27757483e1ae75ec7a6f6682dd79a340c42",
+      "reviewed_bytes": 6172,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z"
+    },
+    {
+      "id": "ptt-province-response",
+      "url": "https://www.ptt.gov.tr/api/posta-kodu",
+      "request": {"method":"POST","body":{"action":"iller"}},
+      "kind": "province-directory-json",
+      "mime": "application/json",
+      "expected_digest": "sha256:dd4b336f4ab32331bf0cc4b4d223f14c91774ac61c78687f94762d53d5ec642e",
+      "reviewed_bytes": 2162,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z",
+      "manual_data_review": {"rows_including_sentinel":82,"actual_provinces":81,"fields":["ad","kod"],"polygon_or_coordinate_fields":0}
+    },
+    {
+      "id": "ptt-ankara-district-response",
+      "url": "https://www.ptt.gov.tr/api/posta-kodu",
+      "request": {"method":"POST","body":{"action":"ilceler","il_kodu":"6"}},
+      "kind": "district-directory-json",
+      "mime": "application/json",
+      "expected_digest": "sha256:61b6fa86290f895a74c9d2d07d47c9f7acedb4874347e91ffd339ba267db3262",
+      "reviewed_bytes": 767,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z",
+      "manual_data_review": {"rows_including_sentinel":26,"actual_districts":25,"selected_district":{"ad":"ALTINDAĞ","kod":1130},"polygon_or_coordinate_fields":0}
+    },
+    {
+      "id": "ptt-altindag-assignment-sample",
+      "url": "https://www.ptt.gov.tr/api/posta-kodu",
+      "request": {"method":"POST","body":{"action":"postakodu","il_kodu":"6","ilce_kodu":"1130"}},
+      "kind": "assignment-sample-json",
+      "mime": "application/json",
+      "expected_digest": "sha256:f11a11cc64a151bcb91cef1c137abedba498bc1f469e063b2f1513c882e76ed0",
+      "reviewed_bytes": 379715,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z",
+      "manual_data_review": {"rows":3269,"unique_five_digit_postcodes":8,"invalid_postcodes":0,"unique_neighbourhoods":26,"unique_streets":3169,"empty_neighbourhoods":0,"empty_streets":0,"fields":["İl_Adi","İlce_Adi","posta_Kodu","mahalleAdi","sokakAdi"],"polygon_or_coordinate_fields":0}
+    },
+    {
+      "id": "ptt-legal-notice",
+      "url": "https://www.ptt.gov.tr/yasal-uyari",
+      "kind": "rights-html",
+      "mime": "text/html",
+      "markers": ["önceden izin alınmadan", "kopyalanamaz", "yeniden yayımlanamaz", "dağıtılamaz"],
+      "expected_digest": "sha256:4533b012eb91b4a2452252639e62bb3cf5b520a3e38f7663196df70c2b1b07f4",
+      "reviewed_bytes": 204413,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z"
+    },
+    {
+      "id": "upu-turkiye-addressing-sheet",
+      "url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/turEn.pdf",
+      "kind": "reviewed-pdf",
+      "mime": "application/pdf",
+      "expected_digest": "sha256:5a4ba8333d75decf67ec88b5ea71eeb45db8c3587a50809dece217a50779b005",
+      "reviewed_bytes": 227891,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z",
+      "manual_pdf_review": {"title":"Türkiye","pdf_pages":2,"sheet_date":"2022-07","postcode_length":5,"postcode_pattern":"^[0-9]{5}$","postcode_position":"five digits to the left of the locality name","example_codes":["06101","06850","06050","06040"],"exception_modes":["home-delivery","sub-locality-suffix","po-box","poste-restante"],"postal_area_geometry_records":0}
+    },
+    {
+      "id": "tucbs-current-home",
+      "url": "https://tucbs.gov.tr/",
+      "kind": "government-geospatial-html",
+      "mime": "text/html",
+      "markers": ["Coğrafi Veri Talep Portalı", "izin verdiği ölçüde", "Açık Veri"],
+      "expected_digest": "sha256:1c41bb210b7321cd93d07d39992a4eba99c68ac57c4d79de16df55e3ee03c72e",
+      "reviewed_bytes": 369358,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z"
+    },
+    {
+      "id": "tucbs-address-schema-v1-1",
+      "url": "https://webdosya.csb.gov.tr/db/cbs/editordosya/TUCBS_AD1_1.pdf",
+      "kind": "reviewed-pdf",
+      "mime": "application/pdf",
+      "expected_digest": "sha256:e10444e86297186405ceced5c716bd7645cb0f8c9ceab1f81b1e2c125e9ec750",
+      "reviewed_bytes": 1658698,
+      "reviewed_observed_at": "2026-08-29T05:06:23.425Z",
+      "manual_pdf_review": {"title":"TUCBS Address Data Theme","version":"1.1","document_date":"2012-12","pdf_pages":67,"postcode_object_status":"proposed","postcode_attributes":["isim","postaKodu"],"postcode_geometry_properties":0,"outer_door_geometry":"point"}
+    }
+  ],
+  "rights_gate": {
+    "ptt": "The current lookup and bounded API response were reviewed. PTT's legal notice reserves site rights and bars copying, republication and distribution without prior permission and attribution; no bulk, derivative-polygon, redistribution or AGID API-serving permission was obtained.",
+    "upu_sheet": "The July 2022 country sheet confirms format and exceptions and carries UPU copyright. It is neither a current complete assignment nor an area dataset or redistribution grant.",
+    "tucbs": "The current portal says services are shared to the extent permitted by data owners and only layers classified as Open Data expose service addresses. No exact public postcode-area layer and reuse receipt was verified.",
+    "decision": "Current PTT rows can support typed address-assignment context only. They do not define or authorize national delivery polygons, and TUCBS conceptual postcode objects do not supply a current reusable area release.",
+    "legal_conclusion_claimed": false
+  },
+  "policy": {
+    "postal_code_pattern": "^[0-9]{5}$",
+    "official_postal_geometry": "none_verified",
+    "derived_postal_geometry": "not_generated",
+    "bounded_assignment_sample_is_national_complete": false,
+    "administrative_geometry_is_postal_geometry": false,
+    "point_or_address_row_is_postal_area": false,
+    "building_from_containment_allowed": false,
+    "raw_source_bodies_allowed_in_git": false
+  },
+  "limits": {"max_response_bytes": 1048576,"sample_scope":"Ankara province, ALTINDAĞ district"},
+  "live_allowed_hosts": ["www.ptt.gov.tr", "www.upu.int", "tucbs.gov.tr", "webdosya.csb.gov.tr"]
+}

@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agid.local/schemas/veygrit-id-core-fixture-v0.1.schema.json",
+  "title": "Vey ID Core Fixture v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixtureId",
+    "fixtureVersion",
+    "source",
+    "authorization",
+    "tokenExchange",
+    "guestCheckoutHandoff",
+    "privacyBoundaryGate",
+    "merchantVisibleRedactionDisplayContract",
+    "revocation",
+    "privacy",
+    "forbiddenMaterial",
+    "nonClaims"
+  ],
+  "properties": {
+    "fixtureId": { "const": "veygrit-id-core-v0.1" },
+    "fixtureVersion": { "const": "0.1.0" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["product", "implementation", "openapi", "schema", "verifier", "managedServiceBoundary", "localOnly"],
+      "properties": {
+        "product": { "const": "Vey ID Core" },
+        "implementation": { "const": "src/lib/veygritId.ts" },
+        "openapi": { "const": "docs/specs/veygrit-id-core.openapi.yaml" },
+        "schema": { "const": "docs/specs/schemas/veygrit-id-core-fixture-v0.1.schema.json" },
+        "verifier": { "const": "npm run verify:veygrit-id-core-openapi" },
+        "managedServiceBoundary": { "const": "commercial-managed" },
+        "localOnly": { "const": true }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accountProviders", "responseType", "pkceRequired", "pairwiseSubjectAlias", "walletSessionRef", "authorizationCodeRef", "stateHashRef", "nonceHashRef"],
+      "properties": {
+        "accountProviders": {
+          "type": "array",
+          "prefixItems": [{ "const": "google" }, { "const": "apple" }],
+          "minItems": 2,
+          "maxItems": 2,
+          "items": false
+        },
+        "responseType": { "const": "code" },
+        "pkceRequired": { "const": true },
+        "pairwiseSubjectAlias": { "type": "string", "pattern": "^pairwise_" },
+        "walletSessionRef": { "type": "string", "pattern": "^wallet_session_" },
+        "authorizationCodeRef": { "type": "string", "pattern": "^vey_auth_code_" },
+        "stateHashRef": { "type": "string", "pattern": "^state_hash_" },
+        "nonceHashRef": { "type": "string", "pattern": "^nonce_hash_" }
+      }
+    },
+    "tokenExchange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tokenType", "accessTokenRef", "idTokenRef", "addressCredentialRef", "expiresInSeconds", "claims"],
+      "properties": {
+        "tokenType": { "const": "bearer-ref" },
+        "accessTokenRef": { "type": "string", "pattern": "^vey_access_" },
+        "idTokenRef": { "type": "string", "pattern": "^vey_id_" },
+        "addressCredentialRef": { "type": "string", "pattern": "^addr_cred_" },
+        "expiresInSeconds": { "type": "integer", "minimum": 60 },
+        "claims": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["iss", "sub", "aud", "addressWalletLinked"],
+          "properties": {
+            "iss": { "const": "https://id.veygrit.example" },
+            "sub": { "type": "string", "pattern": "^pairwise_" },
+            "aud": { "type": "string", "minLength": 3 },
+            "addressWalletLinked": { "const": true }
+          }
+        }
+      }
+    },
+    "guestCheckoutHandoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "status",
+        "nextAction",
+        "guestCheckoutAlias",
+        "walletConsentRef",
+        "addressCredentialRef",
+        "carrierHandoffRef",
+        "merchantAccountCreationRequired",
+        "ecPasswordRequired",
+        "walletLoginRequired",
+        "ttlSeconds",
+        "privacy"
+      ],
+      "properties": {
+        "mode": { "const": "ec-guest-checkout" },
+        "status": { "const": "ready" },
+        "nextAction": { "const": "create-guest-order" },
+        "guestCheckoutAlias": { "type": "string", "pattern": "^vey_guest_checkout_" },
+        "walletConsentRef": { "type": "string", "pattern": "^wallet_consent_" },
+        "addressCredentialRef": { "type": "string", "pattern": "^addr_cred_" },
+        "carrierHandoffRef": { "type": "string", "pattern": "^carrier_handoff_" },
+        "merchantAccountCreationRequired": { "const": false },
+        "ecPasswordRequired": { "const": false },
+        "walletLoginRequired": { "const": true },
+        "ttlSeconds": { "type": "integer", "minimum": 1, "maximum": 600 },
+        "privacy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rawAddressSharedWithMerchant",
+            "rawPhoneSharedWithMerchant",
+            "globalSubjectIdExposedToMerchant",
+            "merchantCanCreateAccountSilently",
+            "carrierCredentialsSharedWithMerchant",
+            "oneTimeUse"
+          ],
+          "properties": {
+            "rawAddressSharedWithMerchant": { "const": false },
+            "rawPhoneSharedWithMerchant": { "const": false },
+            "globalSubjectIdExposedToMerchant": { "const": false },
+            "merchantCanCreateAccountSilently": { "const": false },
+            "carrierCredentialsSharedWithMerchant": { "const": false },
+            "oneTimeUse": { "const": true }
+          }
+        }
+      }
+    },
+    "privacyBoundaryGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "owner", "safeEvidenceRefs", "requiredBlockedMaterial", "nonClaims"],
+      "properties": {
+        "id": { "const": "merchant-visible-redaction" },
+        "source": { "const": "src/lib/veyIdAddressWalletFoundation.ts#privacyThreatBoundaryGates" },
+        "owner": { "const": "merchant-app" },
+        "safeEvidenceRefs": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "enum": [
+              "pairwiseSubjectAlias",
+              "guestCheckoutAlias",
+              "walletConsentRef",
+              "addressCredentialRef",
+              "carrierHandoffRef"
+            ]
+          }
+        },
+        "requiredBlockedMaterial": {
+          "type": "array",
+          "minItems": 7,
+          "items": {
+            "enum": [
+              "rawAddress",
+              "recipientName",
+              "recipientPhone",
+              "privateDeliveryNotes",
+              "proofWitness",
+              "proofSecret",
+              "privateKey"
+            ]
+          }
+        },
+        "nonClaims": {
+          "type": "array",
+          "minItems": 1,
+          "contains": {
+            "const": "Merchant-visible refs are not raw address disclosure, residence proof, or reusable marketing consent."
+          },
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "merchantVisibleRedactionDisplayContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sdkPackage",
+        "sdkHelper",
+        "example",
+        "boundaryGateId",
+        "displayFields",
+        "displayRefsByField",
+        "requiredNextAction",
+        "blockedClassCount",
+        "nonClaimCount",
+        "renderedMaterialPolicy"
+      ],
+      "properties": {
+        "sdkPackage": { "const": "@veygrit/address-login-react" },
+        "sdkHelper": { "const": "createMerchantVisibleRedactionDisplayModel" },
+        "example": { "const": "sdk/veygrit-address-login-react/examples/merchant-visible-redaction/MerchantVisibleRedactionCard.tsx" },
+        "boundaryGateId": { "const": "merchant-visible-redaction" },
+        "displayFields": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "pairwiseSubjectAlias" },
+            { "const": "guestCheckoutAlias" },
+            { "const": "walletConsentRef" },
+            { "const": "addressCredentialRef" },
+            { "const": "carrierHandoffRef" }
+          ],
+          "minItems": 5,
+          "maxItems": 5,
+          "items": false
+        },
+        "displayRefsByField": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pairwiseSubjectAlias",
+            "guestCheckoutAlias",
+            "walletConsentRef",
+            "addressCredentialRef",
+            "carrierHandoffRef"
+          ],
+          "properties": {
+            "pairwiseSubjectAlias": { "type": "string", "pattern": "^pairwise_" },
+            "guestCheckoutAlias": { "type": "string", "pattern": "^vey_guest_checkout_" },
+            "walletConsentRef": { "type": "string", "pattern": "^wallet_consent_" },
+            "addressCredentialRef": { "type": "string", "pattern": "^addr_cred_" },
+            "carrierHandoffRef": { "type": "string", "pattern": "^carrier_handoff_" }
+          }
+        },
+        "requiredNextAction": { "const": "create-guest-order-from-refs" },
+        "blockedClassCount": { "const": 7 },
+        "nonClaimCount": { "const": 1 },
+        "renderedMaterialPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["copyBlockedMaterialNames", "copyNonClaimText", "showCountsOnly"],
+          "properties": {
+            "copyBlockedMaterialNames": { "const": false },
+            "copyNonClaimText": { "const": false },
+            "showCountsOnly": { "const": true }
+          }
+        }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revocationRef", "merchantDeletionRefs", "walletEffects"],
+      "properties": {
+        "revocationRef": { "type": "string", "pattern": "^vey_revoke_" },
+        "merchantDeletionRefs": {
+          "type": "array",
+          "minItems": 4,
+          "contains": { "const": "pairwiseSubjectAlias" },
+          "items": {
+            "enum": ["pairwiseSubjectAlias", "walletConsentRef", "addressCredentialRef", "carrierHandoffRef"]
+          }
+        },
+        "walletEffects": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rawAddressExposed",
+        "providerIdTokenStored",
+        "providerAccessTokenStored",
+        "providerRefreshTokenStored",
+        "rawProviderProfileStored",
+        "proofSecretExposed",
+        "refreshTokenIssued",
+        "productionTraffic"
+      ],
+      "properties": {
+        "rawAddressExposed": { "const": false },
+        "providerIdTokenStored": { "const": false },
+        "providerAccessTokenStored": { "const": false },
+        "providerRefreshTokenStored": { "const": false },
+        "rawProviderProfileStored": { "const": false },
+        "proofSecretExposed": { "const": false },
+        "refreshTokenIssued": { "const": false },
+        "productionTraffic": { "const": false }
+      }
+    },
+    "forbiddenMaterial": {
+      "type": "array",
+      "minItems": 8,
+      "items": { "type": "string" }
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/address-validation-result-v0.1.schema.json",
+  "title": "AddressValidationResult v0.1",
+  "description": "Purpose-bound validation result that separates format, existence, delivery, and identity-relationship checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "purpose",
+    "status",
+    "confidence",
+    "source_refs",
+    "result_boundaries",
+    "privacy",
+    "non_claims"
+  ],
+  "properties": {
+    "version": {
+      "const": "address-validation-result-v0.1"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "format",
+        "existence",
+        "delivery",
+        "identity_relationship"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "unknown",
+        "not_applicable",
+        "conflict"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_level": {
+      "type": "string",
+      "enum": [
+        "none",
+        "synthetic",
+        "official",
+        "postal_operator",
+        "carrier",
+        "credential",
+        "user_attested"
+      ]
+    },
+    "field_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "status"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": [
+              "country",
+              "admin_area",
+              "locality",
+              "postal_code",
+              "street_or_thoroughfare",
+              "premise",
+              "recipient_authorization"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "unknown",
+              "not_applicable",
+              "conflict"
+            ]
+          },
+          "reason_code": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "result_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_pass_does_not_imply_existence",
+        "existence_pass_does_not_imply_delivery",
+        "delivery_pass_does_not_imply_identity",
+        "identity_pass_does_not_disclose_full_address"
+      ],
+      "properties": {
+        "format_pass_does_not_imply_existence": {
+          "const": true
+        },
+        "existence_pass_does_not_imply_delivery": {
+          "const": true
+        },
+        "delivery_pass_does_not_imply_identity": {
+          "const": true
+        },
+        "identity_pass_does_not_disclose_full_address": {
+          "const": true
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_raw_address",
+        "log_safe",
+        "disclosure_scope"
+      ],
+      "properties": {
+        "contains_raw_address": {
+          "const": false
+        },
+        "log_safe": {
+          "const": true
+        },
+        "disclosure_scope": {
+          "type": "string",
+          "enum": [
+            "status_only",
+            "field_status",
+            "authorized_processor"
+          ]
+        }
+      }
+    },
+    "non_claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "agid-postal-pm-source-profile-v0.1",
+  "country_code": "PM",
+  "artifact_scope": "current-laposte-single-postcode-derived-two-commune-runtime",
+  "redistribution_classes": [
+    {"id": "R1_open_licence_2_0", "meaning": "Official assignment data and administrative geometry may be reused with source and date attribution under Etalab Open Licence 2.0."},
+    {"id": "R2_reference_receipt", "meaning": "Exact metadata, documentation and licence bodies are retained outside Git; URLs, retrieval time, byte lengths and SHA-256 receipts remain reviewable."}
+  ],
+  "sources": [
+    {
+      "source_id": "laposte-hexasmal-20260808-pm-97501-97502", "provider": "La Poste",
+      "source_url": "https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/raw",
+      "metadata_urls": ["https://data.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal", "https://www.data.gouv.fr/api/1/datasets/545b55e1c751df52de9b6045/"],
+      "role": ["official-postcode-assignment", "complete-current-denominator", "two-commune-id-crosswalk"],
+      "assignment_authority": "official_postal_dictionary", "geometry_authority": "none",
+      "redistribution_class": "R1_open_licence_2_0", "bundled_here": false,
+      "observed_release": {
+        "version": "Base officielle des codes postaux; data updated 2026-08-08; semiannual; 39,192 rows",
+        "retrieved_at": "2026-09-01T19:06:03.583Z",
+        "raw_digest": "sha256:f921ac020ca3b9efebd8f0d01782555fb70d63d1ae36535109c67e4a74bd6e22",
+        "dataset_metadata_digest": "sha256:b5d6b5dcb421ece75d41b5903ded715a88df97ff1b4fa1f070e9fa7535167d65",
+        "data_gouv_metadata_digest": "sha256:453a8cd0168191503ae7e949f89523206d921ab67c67370f3a6fd97fc3da45a2",
+        "finding": "Exactly three PM rows: two 97501 variants and one 97502 row; all assign 97500."
+      },
+      "terms_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+      "terms_digest": "sha256:055988f69abf3c34d29ecd026b0156e66ea8edc20a894938fc376ea11fc30993",
+      "rights_review": "Open Licence 2.0 permits reuse with source and date attribution. Raw source bodies remain outside Git.",
+      "prohibited_claims": ["official-postal-polygon", "address-building-or-deliverability"]
+    },
+    {
+      "source_id": "geo-api-gouv-fr-communes-97501-97502-20260901", "provider": "Direction interministérielle du numérique / Etalab",
+      "source_urls": [
+        "https://geo.api.gouv.fr/communes/97501?fields=nom,code,codesPostaux,surface,centre,contour&format=geojson&geometry=contour",
+        "https://geo.api.gouv.fr/communes/97502?fields=nom,code,codesPostaux,surface,centre,contour&format=geojson&geometry=contour"
+      ],
+      "cross_check_url": "https://geo.api.gouv.fr/communes?codePostal=97500&fields=nom,code,codesPostaux,surface,centre,contour&format=geojson&geometry=contour",
+      "documentation_url": "https://geo.api.gouv.fr/decoupage-administratif/communes",
+      "role": ["derived-single-postcode-display-surface", "official-administrative-contours", "postcode-query-cross-check", "public-admin-id-linkage"],
+      "assignment_authority": "derived_spatial_assignment", "geometry_authority": "derived_geometry",
+      "redistribution_class": "R1_open_licence_2_0", "bundled_here": true,
+      "attribution": "geo.api.gouv.fr administrative contours for codes 97501 and 97502, retrieved 2026-09-01, Etalab Open Licence 2.0.",
+      "observed_release": {
+        "version": "Current geo.api.gouv.fr 97501/97502 contours and 97500 query; stable 97501 then 97502 concatenation",
+        "retrieved_at": "2026-09-01T19:06:03.583Z",
+        "code_response_digests": ["sha256:baf289ef9c951d28bb8e902b81bc0be21b23cc7c7db1377a72ed6d7974c265b1", "sha256:cdd11e84eb7dbd892a3a864540cb60327c577a162715da9df8be8e1139942902"],
+        "postcode_response_digest": "sha256:c32727b4d867d974a10ac19aba25e24591368f203e6a1a70013dae43a5ada790",
+        "documentation_digest": "sha256:c05f57f48ae4b3adacacf868ed5814ce6152f839c80082c5edeb0571ee0884f4",
+        "feature_identities": ["Miquelon-Langlade / 97501 / codesPostaux [97500]", "Saint-Pierre / 97502 / codesPostaux [97500]"],
+        "geometry": "MultiPolygon; 78 parts; 78 rings; 9,097 positions"
+      },
+      "terms_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+      "terms_digest": "sha256:055988f69abf3c34d29ecd026b0156e66ea8edc20a894938fc376ea11fc30993",
+      "rights_review": "Redistribution is permitted with attribution. Responses supply administrative geometry, not an official postal contour.",
+      "prohibited_claims": ["official-postal-geometry", "legal-survey-or-cadastral-boundary", "delivery-zone", "address-or-building-proof"]
+    }
+  ],
+  "receipt_summary": {"exact_bodies": 8, "exact_bytes": 2162379, "all_sha256_bound": true, "raw_source_bodies_in_git": 0},
+  "artifact_partitions": [
+    {"id": "official-postcode-assertion", "rule": "La Poste rows produce only postal-to-admin ID assertions and carry no geometry authority."},
+    {"id": "derived-display-geometry", "rule": "Only fixed geo.api.gouv.fr coordinates enter the geometry artifact; source, date, licence, digest and derived class remain visible."},
+    {"id": "address-building-private", "rule": "No address, building, parcel, recipient, customer or land-rights record is published."}
+  ]
+}

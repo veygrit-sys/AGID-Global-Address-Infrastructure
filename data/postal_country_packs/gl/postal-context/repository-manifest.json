@@ -1,0 +1,70 @@
+{
+  "repository": {
+    "name": "agid-postal-gl",
+    "country_code": "GL",
+    "maturity": "M1_metadata",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "code_format": "four digits; the current Government of Greenland Address Register includes 2412 and 3900-3992 values",
+    "assignment_rule": "The continuously updated Government of Greenland national Address Register Postnummer layer is the controlling finite denominator reviewed for M2. Its complete public query returned 32 features for 31 distinct postcode values. The current Tusass postal-code page is an operator cross-reference with 28 coded and 44 dash-valued locality rows; it omits Address Register values 3940, 3972 and 3982 and therefore cannot replace the register denominator.",
+    "geometry_rule": "Only the Government of Greenland Postnummer layer's real Polygon geometry can carry official postal-area authority. Empty Polygon OBJECTID 42399 for 2412 and OBJECTID 42400 for 3992 are invalid display geometry and must be rejected; 2412 has no drawable feature, while valid OBJECTID 42369 remains a separate real 3992 Polygon candidate. Municipality, locality, technical-map, place-name, address-point, building, route, Point, buffer, hull, Voronoi/raster cell, AGID cell and model geometry must not be relabelled as a postcode surface.",
+    "address_format_rule": "Preserve the four-digit postcode separately from locality and country. GL- may be accepted only as an input prefix and must normalize to the four digits present in the competent-authority register. Do not infer a postcode for a Tusass locality whose table value is a dash.",
+    "postal_object_rule": "Store postal offices, postal boxes, routes, organizations and other service objects independently. A non-area object never becomes a postcode Polygon/MultiPolygon without an authoritative code assignment and reviewed geometry relation.",
+    "building_rule": "Building display requires a separately rights-cleared civic address identity and explicit reviewed relation to permitted point or footprint geometry. A postcode polygon, locality, parcel, coordinate or proximity is not an address-building relation.",
+    "derived_and_realtime_rule": "Realtime use of the public ArcGIS REST or WFS service must preserve source, service item, layer, request, retrieval time and classification. It must reject empty or invalid geometry and must not be presented as an immutable AGID artifact without a rights-cleared fixed release.",
+    "agid_rule": "AGID remains an independent spatial index. It may index an approved official postcode artifact but never supplies missing postal authority or replaces an empty or rights-ineligible source geometry.",
+    "licence_rule": "NunaGIS states that its web services are publicly available, may be connected to GIS software and that the Address Register contains postcodes and coordinates. The reviewed service and layer metadata expose public Query/Data capabilities and empty copyrightText, but none of the five fixed bodies publishes an explicit licence granting AGID storage, derivation, redistribution and public serving of the postcode polygons. Empty copyright metadata and network access are not treated as a redistribution licence.",
+    "jurisdiction_rule": "Preserve ISO GL and Greenland/Kalaallit Nunaat source identity. Do not merge Greenland with Denmark, the Faroe Islands, Canada or another Arctic jurisdiction even where postal history, numeric ranges, carriers or geography are related.",
+    "privacy_rule": "The reviewed postcode layer contains aggregate postal polygons only. Address points, recipients, residents, customers, postal-box holders, parcels, buildings, cadastral objects and land rights remain outside this artifact and require separate authority, minimisation and publication approval.",
+    "temporal_rule": "The Address Register is continuously updated and its returned date fields are null. Store retrieval time, ArcGIS version, service item, exact bytes and SHA-256, disclose the missing source reference date, and re-review any changed body before promotion. Never rewrite the 2026-09-01 observation as a timeless release."
+  },
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "hard_blockers": [
+      "no-explicit-licence-grants-agid-storage-derivation-redistribution-and-public-serving-of-postcode-polygons",
+      "no-approved-immutable-rights-cleared-postcode-artifact",
+      "address-register-date-fields-null-and-no-fixed-release-or-reference-date-published",
+      "empty-3992-polygon-objectid-42400-presented-as-drawable",
+      "tusass-28-code-cross-reference-presented-as-the-31-code-register-denominator",
+      "municipality-locality-place-name-address-point-building-route-buffer-hull-cell-or-model-proxy-promoted-to-postal-area",
+      "unpublished-or-unpinned-data-artifact-called-m2",
+      "synthetic-fixture-policy-page-or-shared-ui-called-m2"
+    ],
+    "target_stage": "M2_current_greenland_address_register_postcode_polygon_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Greenland address-format inventory and open-geodata planning metadata only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Digest-bound Tusass and Government of Greenland/NunaGIS evidence for the current postcode assignments, public Polygon service, source discrepancies, empty-geometry exception, rights boundary, identity and no-proxy contracts."
+      },
+      {
+        "id": "M2_current_greenland_address_register_postcode_polygon_visualization",
+        "definition": "M2 requires a current complete competent-authority Greenland release covering every four-digit postcode assignment, alias, validity interval, correction, exception and typed area/non-area object, fixed with retrieval time, edition or release identity, schema, coverage, exact bytes and SHA-256 under rights compatible with AGID processing, storage, derivation, redistribution and public serving. The Government of Greenland national Address Register Postnummer layer is the controlling denominator reviewed on 2026-09-01: a complete public query returned 32 records, 31 distinct postcode values and 30 non-empty real Polygon geometries; 2412 has only empty Polygon OBJECTID 42399, and 3992 also has empty Polygon OBJECTID 42400 alongside valid OBJECTID 42369. Empty geometries must be rejected rather than rendered. The current Tusass page is an operator cross-reference with 28 coded and 44 dash-valued locality rows and omits register values 3940, 3972 and 3982. Every drawable code must reconcile to finite closed valid Polygon/MultiPolygon geometry with postal authority, official/derived/virtual class, source, service/layer and feature identity, reference date, CRS, topology, method, confidence and exceptions. Municipality, locality, place-name, address-point, building, route, Point, buffer, hull, Voronoi/raster cell, AGID cell and model surfaces are prohibited proxies. Postal-office, postal-box, route, organization, empty geometry and other non-area objects must expose their type and reason without a fabricated surface. An approved immutable artifact must drive the real GL API/app, which normalizes GL-9999 or 9999 to four digits, handles loading, no-match, multiple, API-failure and invalid-geometry states, fits and renders a translucent fill with a clear outline only for eligible real geometry, supports clear and re-search, and displays the selected code, geometry kind, official/derived/virtual class, source, reference date and confidence."
+      }
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "GL metadata, source receipts, rights boundary and no-proxy contracts only; no real GL Postal Context descriptor or geometry artifact is enabled.",
+    "enablement_gate": "An explicit compatible redistribution/public-serving licence, a fixed immutable Address Register snapshot with reference date or version, approved handling of the empty 2412 and 3992 features and actual GL loader/API/app verification are required before enablement.",
+    "geometry_rule": "Do not copy the live postcode polygons into an AGID production artifact until compatible redistribution/public-serving rights are established."
+  },
+  "non_goals": [
+    "new-repository-or-public-destination",
+    "paid-source-or-extra-cloud-charge",
+    "provider-contact-registration-contract-or-production-deployment-without-approval",
+    "postal-areas-from-municipalities-localities-place-names-address-points-buildings-routes-points-buffers-hulls-cells-or-models",
+    "personal-customer-recipient-postal-box-holder-property-cadastral-or-land-rights-distribution"
+  ]
+}

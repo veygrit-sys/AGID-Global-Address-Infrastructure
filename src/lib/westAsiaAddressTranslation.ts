@@ -1,6 +1,7 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
+import { romanizeArabicShippingText } from './arabicShippingAddress';
 
 export type WestAsiaAddressTopology =
   | 'latin-turkic'
@@ -242,6 +243,9 @@ function normalizeWestAsiaEnglish(text: string, countryCode: string, fieldKey: s
   if (aliases[text]) return aliases[text];
   if (COMMON_ARABIC_ADDRESS_TERMS[text]) return COMMON_ARABIC_ADDRESS_TERMS[text];
   if (COMMON_HEBREW_ADDRESS_TERMS[text]) return COMMON_HEBREW_ADDRESS_TERMS[text];
+  if (/\p{Script=Arabic}/u.test(text)) {
+    return romanizeArabicShippingText(text).text;
+  }
 
   if (shouldUseBuildingEnglish(fieldKey)) {
     const building = normalizeEnglishAddressBuildingName(text, code);

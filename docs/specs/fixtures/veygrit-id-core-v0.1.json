@@ -1,0 +1,152 @@
+{
+  "fixtureId": "veygrit-id-core-v0.1",
+  "fixtureVersion": "0.1.0",
+  "source": {
+    "product": "Vey ID Core",
+    "implementation": "src/lib/veygritId.ts",
+    "openapi": "docs/specs/veygrit-id-core.openapi.yaml",
+    "schema": "docs/specs/schemas/veygrit-id-core-fixture-v0.1.schema.json",
+    "verifier": "npm run verify:veygrit-id-core-openapi",
+    "managedServiceBoundary": "commercial-managed",
+    "localOnly": true
+  },
+  "authorization": {
+    "accountProviders": ["google", "apple"],
+    "responseType": "code",
+    "pkceRequired": true,
+    "pairwiseSubjectAlias": "pairwise_synthetic_001",
+    "walletSessionRef": "wallet_session_synthetic_001",
+    "authorizationCodeRef": "vey_auth_code_synthetic_001",
+    "stateHashRef": "state_hash_synthetic_001",
+    "nonceHashRef": "nonce_hash_synthetic_001"
+  },
+  "tokenExchange": {
+    "tokenType": "bearer-ref",
+    "accessTokenRef": "vey_access_synthetic_001",
+    "idTokenRef": "vey_id_synthetic_001",
+    "addressCredentialRef": "addr_cred_synthetic_001",
+    "expiresInSeconds": 900,
+    "claims": {
+      "iss": "https://id.veygrit.example",
+      "sub": "pairwise_synthetic_001",
+      "aud": "merchant_demo",
+      "addressWalletLinked": true
+    }
+  },
+  "guestCheckoutHandoff": {
+    "mode": "ec-guest-checkout",
+    "status": "ready",
+    "nextAction": "create-guest-order",
+    "guestCheckoutAlias": "vey_guest_checkout_synthetic_001",
+    "walletConsentRef": "wallet_consent_synthetic_001",
+    "addressCredentialRef": "addr_cred_synthetic_001",
+    "carrierHandoffRef": "carrier_handoff_synthetic_001",
+    "merchantAccountCreationRequired": false,
+    "ecPasswordRequired": false,
+    "walletLoginRequired": true,
+    "ttlSeconds": 600,
+    "privacy": {
+      "rawAddressSharedWithMerchant": false,
+      "rawPhoneSharedWithMerchant": false,
+      "globalSubjectIdExposedToMerchant": false,
+      "merchantCanCreateAccountSilently": false,
+      "carrierCredentialsSharedWithMerchant": false,
+      "oneTimeUse": true
+    }
+  },
+  "privacyBoundaryGate": {
+    "id": "merchant-visible-redaction",
+    "source": "src/lib/veyIdAddressWalletFoundation.ts#privacyThreatBoundaryGates",
+    "owner": "merchant-app",
+    "safeEvidenceRefs": [
+      "pairwiseSubjectAlias",
+      "guestCheckoutAlias",
+      "walletConsentRef",
+      "addressCredentialRef",
+      "carrierHandoffRef"
+    ],
+    "requiredBlockedMaterial": [
+      "rawAddress",
+      "recipientName",
+      "recipientPhone",
+      "privateDeliveryNotes",
+      "proofWitness",
+      "proofSecret",
+      "privateKey"
+    ],
+    "nonClaims": [
+      "Merchant-visible refs are not raw address disclosure, residence proof, or reusable marketing consent."
+    ]
+  },
+  "merchantVisibleRedactionDisplayContract": {
+    "sdkPackage": "@veygrit/address-login-react",
+    "sdkHelper": "createMerchantVisibleRedactionDisplayModel",
+    "example": "sdk/veygrit-address-login-react/examples/merchant-visible-redaction/MerchantVisibleRedactionCard.tsx",
+    "boundaryGateId": "merchant-visible-redaction",
+    "displayFields": [
+      "pairwiseSubjectAlias",
+      "guestCheckoutAlias",
+      "walletConsentRef",
+      "addressCredentialRef",
+      "carrierHandoffRef"
+    ],
+    "displayRefsByField": {
+      "pairwiseSubjectAlias": "pairwise_synthetic_001",
+      "guestCheckoutAlias": "vey_guest_checkout_synthetic_001",
+      "walletConsentRef": "wallet_consent_synthetic_001",
+      "addressCredentialRef": "addr_cred_synthetic_001",
+      "carrierHandoffRef": "carrier_handoff_synthetic_001"
+    },
+    "requiredNextAction": "create-guest-order-from-refs",
+    "blockedClassCount": 7,
+    "nonClaimCount": 1,
+    "renderedMaterialPolicy": {
+      "copyBlockedMaterialNames": false,
+      "copyNonClaimText": false,
+      "showCountsOnly": true
+    }
+  },
+  "revocation": {
+    "revocationRef": "vey_revoke_synthetic_001",
+    "merchantDeletionRefs": [
+      "pairwiseSubjectAlias",
+      "walletConsentRef",
+      "addressCredentialRef",
+      "carrierHandoffRef"
+    ],
+    "walletEffects": [
+      "invalidate-merchant-consent",
+      "stop-address-autofill",
+      "reject-stale-carrier-handoff-refs",
+      "record-wallet-side-revocation-receipt"
+    ]
+  },
+  "privacy": {
+    "rawAddressExposed": false,
+    "providerIdTokenStored": false,
+    "providerAccessTokenStored": false,
+    "providerRefreshTokenStored": false,
+    "rawProviderProfileStored": false,
+    "proofSecretExposed": false,
+    "refreshTokenIssued": false,
+    "productionTraffic": false
+  },
+  "forbiddenMaterial": [
+    "rawAddress",
+    "recipientPhone",
+    "providerIdToken",
+    "providerAccessToken",
+    "providerRefreshToken",
+    "rawProviderProfile",
+    "proofSecret",
+    "privateKey",
+    "carrierApiKey",
+    "productionCredential"
+  ],
+  "nonClaims": [
+    "Vey ID login is not proof of residence.",
+    "Fixture does not store Google or Apple tokens.",
+    "Fixture does not include raw addresses, recipient contacts, proof witnesses, private keys, carrier API keys, or production credentials.",
+    "Fixture does not call production carrier or provider APIs."
+  ]
+}

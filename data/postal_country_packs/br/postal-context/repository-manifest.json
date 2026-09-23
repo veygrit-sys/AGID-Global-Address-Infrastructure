@@ -1,0 +1,85 @@
+{
+  "repository": {
+    "name": "agid-postal-br",
+    "country_code": "BR",
+    "country_name": "Brazil",
+    "maturity": "M1_metadata",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true
+  },
+  "postal_system": {
+    "code_format": "NNNNN-NNN display; NNNNNNNN Correios API query",
+    "assignment_rule": "Correios defines an eight-digit CEP. The digits encode postal region, subregion, sector, subsector, divider and delivery-area context, but syntax alone is never assignment evidence. Use an authorized time-bound Busca CEP response or a licensed, version-pinned DNE record. The object can identify a logradouro or number range, locality, building, large user, Correios unit, locker or pickup point, P.O. box, community mailbox, organization or another typed delivery object.",
+    "geometry_rule": "Treat the full CEP as area-or-non-area. Only an area-capable locality assignment may support derived-review geometry after an exact, time-compatible, rights-cleared crosswalk. Street and number ranges remain route or range evidence; a road buffer, Thiessen or Voronoi cell, interpolation, CNEFE aggregation, municipality boundary, API result or model output is not an official Correios polygon. Building, large-user, unit, locker, P.O. box, community-mailbox, organization and unknown CEP objects are not automatically areas. No reusable nationwide official CEP polygon release has been verified for this seed.",
+    "address_format_rule": "Store recipient, attention, organization, street type, logradouro, house number, complement, building or condominium, floor, unit, bairro, district or locality, municipality, state abbreviation, Brasília sector, quadra, bloco, P.O. box, community mailbox, post office and CEP separately. UPU, Correios and CNEFE examples are never production address rows.",
+    "postal_object_rule": "Store postal object type independently as logradouro_or_range, locality_or_area, building, large_user, correios_unit, locker_or_pickup_point, po_box, community_mailbox, organization or unknown. An eight-digit string, address row, administrative boundary and CEP object must never be collapsed into one polygon class.",
+    "building_rule": "CNEFE can supply an address point and NV_GEO_COORD or equivalent geocoding-quality evidence, but coordinates may represent an entrance, accessible point, rural gate, earlier location, street-face midpoint or census-sector centroid. Exact building display requires a rights-cleared stable civic-address identifier, an explicit reviewed relation to a permitted building identifier and separately permitted footprint or point geometry. CEP, CNEFE point, parcel, coordinate, containment, interpolation or proximity is not an exact address-to-building relation.",
+    "administrative_rule": "IBGE great regions, federative units, intermediate and immediate geographic regions, municipalities, the Federal District, districts and subdistricts are versioned administrative context. Municipal mesh and cartographic-base layers are not Correios assignments or CEP geometry. Pin exact edition, producer, layer, CRS, coverage, item terms and digest.",
+    "cnefe_rule": "CNEFE 2022 microdata and aggregates provide statistical address context including logradouro, number, complement, locality, CEP and establishment or building category, subject to the exact edition, technical note, privacy controls and data dictionary. Preserve positional-quality metadata and never present a point, CEP aggregate, establishment category or census output as postal assignment, deliverability, occupant proof, building footprint or exact building link.",
+    "derived_and_realtime_rule": "Authorized Correios observations and licensed DNE data, combined with rights-cleared IBGE, address, road and building inputs, may normalize CEPs, validate joins, rank candidates, build review surfaces, simplify or compress geometry, detect drift and train or run review models. Every output preserves source edition, service version, input and artifact digests, observed_at, retrieved_at, generated_at, cache TTL, confidence, uncertainty and official-observation or derived-review status. A model never upgrades evidence, fills unknown coverage or invents an address, unit, building, person, owner, occupant or delivery entitlement.",
+    "agid_rule": "AGID remains an independent spatial index. Versioned crosswalks may relate time-bound Correios or DNE assignments, typed CEP objects, reviewed derived geometry, permitted CNEFE context, stable civic addresses, explicit address-to-building relations and IBGE administration to AGID cells without relabelling a source object as an AGID cell or claiming AGID geometry is official Brazilian postal geometry.",
+    "licence_rule": "Correios API access is contract and credential governed; public documentation or a successful query is not bulk redistribution permission. DNE is commercially licensed and purpose limited. UPU publications are semantic references, not bulk-data licences. Each CNEFE, IBGE mesh, cartographic-base and INDE-discovered artifact requires exact release, producer, privacy, terms and digest review. ViaCEP and BrasilAPI remain third-party partitions. ODbL content remains separately attributed and partitioned.",
+    "jurisdiction_rule": "The pack is ISO BR scope and stores national, great-region, federative-unit, geographic-region, municipal, district, locality and source-specific coverage independently. Postal, administrative, statistical, address, building, cadastral and AGID coverage, asserted_by, legal status and vintage must not be conflated or extended beyond an artifact declaration.",
+    "privacy_rule": "Addresses, house numbers, complements, units, coordinates, query payloads, CNEFE records, organizations, recipients, credentials, logs, cadastral links, owners and occupants can expose household, property, security or commercial context. Apply purpose limitation, minimisation, retention, access control, aggregation and publication review; exclude personal, owner-linked, restricted and raw query data from public artifacts.",
+    "temporal_rule": "Correios assignments and observations, licensed DNE releases, the pinned UPU sheet, CNEFE 2022, IBGE 2024 municipal mesh, 2023 cartographic base, derived surfaces, building relations and AGID crosswalks are time-dependent. Store valid_from, valid_to, observed_at, retrieved_at, generated_at, service and artifact version, edition, digest and supersession independently.",
+    "hugging_face_rule": "A Hugging Face Dataset may publish only rights-cleared versioned Parquet or GeoParquet partitions with source release, item terms, schema, CRS, positional-quality fields, digest and provenance. DNE rows, Correios query logs, real addresses, fine CNEFE points, credentials, owner-linked data and restricted inputs stay private, gated or external. Dataset Viewer is discovery, a Space is demonstration, and production AGID readers pin a Hub commit and verify shard digests."
+  },
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "hard_blockers": [
+      "valid-eight-digit-text-presented-as-current-correios-assignment",
+      "typed-cep-object-presented-as-an-automatic-polygon",
+      "street-range-building-large-user-unit-locker-po-box-community-mailbox-or-organization-cep-presented-as-area",
+      "correios-api-or-dne-record-republished-without-contractual-authority",
+      "cnefe-point-cep-aggregate-administrative-boundary-api-cache-or-model-geometry-presented-as-correios-postal-geometry",
+      "postcode-address-point-parcel-coordinate-containment-interpolation-or-proximity-presented-as-exact-building-relation",
+      "person-owner-occupant-credential-query-log-or-fine-address-data-published-without-authority",
+      "derived-buffer-voronoi-interpolation-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage",
+      "third-party-api-result-presented-as-correios-proof",
+      "hugging-face-artifact-published-without-release-terms-crs-quality-and-digest",
+      "postal-or-administrative-coverage-silently-extended-beyond-declared-br-scope",
+      "licensed-dne-acquired-or-republished-without-explicit-approval-contract-term-payment-and-compatible-public-serving-rights",
+      "busca-cep-api-used-without-corporate-account-contract-service-86738-bearer-token-and-compatible-output-rights",
+      "public-captcha-portal-scraped-into-a-complete-denominator",
+      "dne-txt-mdb-or-api-address-object-presented-as-postal-polygon",
+      "current-complete-assignment-alias-validity-correction-exception-and-explicit-non-area-denominator-not-validated",
+      "official-derived-or-virtual-rights-cleared-postcode-polygon-multipolygon-artifact-not-validated",
+      "shared-ui-or-synthetic-fixture-called-br-m2",
+      "raw-address-customer-po-box-delivery-property-cadastral-or-land-rights-data-published"
+    ],
+    "target_stage": "M2_current_correios_cep_assignment_and_area_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Brazil generic address-format inventory and source links only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Digest-bound Correios DNE, Busca CEP API/public portal and UPU semantic evidence plus contract, licence, normalization, object typing, privacy and no-proxy rules."
+      },
+      {
+        "id": "M2_current_correios_cep_assignment_and_area_visualization",
+        "definition": "M2 requires a current dated Correios release containing a complete finite denominator of every valid eight-digit CEP assignment, alias, validity interval, correction, exception and explicit area or non-area object type, fixed with retrieval time, edition, stable identity, schema, coverage, bytes and SHA-256 under rights compatible with AGID processing, storage, derivation, redistribution and public serving. Display NNNNN-NNN and normalized NNNNNNNN remain distinct representations of the same reviewed assignment, and syntax or a UPU example is never assignment evidence. Every drawable CEP must reconcile to a fixed real finite closed valid Polygon/MultiPolygon whose postal authority, official/derived/virtual class, source, edition, reference date, CRS, topology, reproducible method, confidence and exceptions are explicit. Street or number ranges, buildings, large users, Correios units, lockers, pickup points, P.O. boxes, community mailboxes, organizations, Points and unknown objects must expose their type and reason without a fabricated surface. DNE TXT/MDB rows, Busca CEP responses or caches, public CAPTCHA results, IBGE CNEFE points or CEP aggregates, municipality/district/neighbourhood/census boundaries, roads, address ranges, buildings, parcels, buffers, hulls, Voronoi/raster cells, models and AGID cells are prohibited proxies unless an exact independently authorized postal-area derivation and complete reconciliation are proven. An approved immutable artifact must drive the real BR API/app, which handles loading, no-match, multiple, API-failure and invalid-geometry states, fits and renders translucent fill with a clear outline only for eligible real geometry, supports clear and re-search, and displays the selected CEP, geometry kind, official/derived/virtual class, source, reference date and confidence."
+      }
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "BR metadata, source constraints and synthetic fixtures only; no real BR Postal Context descriptor is enabled.",
+    "enablement_gate": "A current complete Correios assignment denominator, compatible processing and public-serving rights, a fixed rights-cleared Polygon/MultiPolygon artifact for area-capable CEPs, typed non-area exclusions and actual BR loader/API/app verification are required before enablement.",
+    "geometry_rule": "Do not manufacture a BR postal polygon. DNE/API address objects, CNEFE points or aggregates, administrative/census boundaries, roads, buildings, parcels, buffers, models and AGID cells stay independently typed and source-qualified unless a reviewed postal-area derivation satisfies every gate."
+  },
+  "non_goals": [
+    "new-repository-or-public-destination",
+    "paid-source-contract-terms-acceptance-provider-contact-registration-authentication-or-production-deployment-without-approval",
+    "postal-areas-from-address-ranges-buildings-large-users-units-lockers-po-boxes-community-mailboxes-organizations-points-cnefe-administration-census-roads-parcels-buffers-cells-or-models",
+    "personal-customer-recipient-po-box-holder-address-property-cadastral-or-land-rights-distribution"
+  ]
+}

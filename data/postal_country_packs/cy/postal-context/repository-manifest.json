@@ -1,0 +1,77 @@
+{
+  "schema_version": "agid-postal-cy-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-cy",
+    "country_code": "CY",
+    "country_name": "Cyprus",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postal code",
+    "full_code_format": "NNNN",
+    "international_display_format": "CY-NNNN",
+    "full_code_default_geometry": "street_or_locality_assignment_with_optional_statistical_postal_sector_or_rights_cleared_derived_surface",
+    "assignment_rule": "A pinned Cyprus Post directory row, street-range row, or permitted API response establishes a four-digit assignment at its capture time. The CY- international prefix, UPU syntax, district digit, post-office route, or structurally valid digits do not establish current allocation or deliverability.",
+    "perimeter_rule": "A postcode, street range, municipality, community, delivery office, statistical postal sector, or administrative boundary is not automatically a Cyprus Post polygon. CYSTAT postal-sector geometry remains official statistical geometry; address-membership surfaces are explicitly derived and uncertainty-bearing.",
+    "address_rule": "Exact address display requires a pinned DLS INSPIRE Address identifier and point or a permitted Cyprus Post assertion with hierarchy, locator, postcode, validity, capture time, dataset-specific CC BY or API rights, and digest. Search or API availability alone does not establish bulk retention rights.",
+    "building_rule": "Exact building display requires an explicit DLS address-to-building relationship, common authoritative identifier, or reviewed crosswalk to a pinned INSPIRE Building feature. Address points, parcel relations, building footprints, containment, and proximity remain distinct; proximity is candidate-only.",
+    "service_status_rule": "Cyprus Post API availability, post-office operation, routing, and delivery status are time-stamped operational evidence separate from assignment, geometry, legal country identity, and historical validity.",
+    "territory_rule": "Postal evidence never determines sovereignty, recognition, effective control, the Green Line, or a Sovereign Base Area boundary. CY country identity, Republic-government service coverage, non-government-controlled-area status, CYGL/TRNC/SBA feature class, and any foreign routing path remain separate pinned assertions.",
+    "administrative_rule": "DLS districts, municipalities, communities, quarters, and outline layers provide official administrative context only. They do not create postal membership, delivery eligibility, service coverage, or political-control claims."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment, street range, address, building, statistical sector, administrative boundary, operational service, and coverage validity when supplied.",
+    "known_time": "Publication, capture, ingest, correction, service observation, license review, territorial-policy review, and release timestamps retained independently.",
+    "history_rule": "Annual Cyprus Post releases and later DLS/CYSTAT snapshots append versioned assertions; no refresh silently rewrites earlier evidence, promotes an old census sector to a current operator perimeter, or converts service/control state into sovereignty history."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each full code references a pinned Cyprus Post resource or receipt with four-digit text, street/locality/range scope, special class, capture time, CC BY or API terms, and digest." },
+    { "id": "postal-perimeter", "pass": "Every surface declares operator-official, official-statistical, or derived authority; derived surfaces retain members, ranges, method, exclusions, uncertainty, validity, rights, and digest." },
+    { "id": "official-address", "pass": "Each exact address retains DLS or Post identity, point/locator semantics, hierarchy, permitted fields, coverage, validity, capture time, rights, and postal cross-check." },
+    { "id": "building-link", "pass": "An exact building has an explicit DLS relationship, common identifier, or reviewed crosswalk; address point, parcel, footprint, containment, and proximity are never silently substituted." },
+    { "id": "dataset-specific-rights", "pass": "Every Post, DLS, INSPIRE, CYSTAT, portal, or API artifact pins its exact resource, license or access contract, attribution, schema, coverage, vintage, CRS, update time, and digest." },
+    { "id": "territory-and-service", "pass": "Country, effective-control area, operator service coverage, Green Line, SBA, disputed-feature class, and foreign routing are separately sourced and no one layer auto-reclassifies another." },
+    { "id": "privacy", "pass": "No addressee, resident, owner, rightsholder, occupant, title-register field, phone, credential, delivery instruction, or protected cadastral information is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "target_stage": "M2_current_assignment_and_statistical_or_derived_postal_area_visualization",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, ranges, address/building identifiers, geometry semantics, coverage/territorial policy, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_assignment_and_statistical_or_derived_postal_area_visualization", "definition": "A current rights-cleared four-digit Cyprus Post street/community assignment denominator and a current postcode-specific Polygon/MultiPolygon, or a complete permitted member relation from which a clearly derived surface is reproducible, must be pinned by edition, valid time, schema, coverage, rights and SHA-256. Every drawable result retains operator-official, official-statistical, derived or virtual authority, source date, confidence, exclusions and uncertainty and passes the real CY AGID loader, API and app search, fit, translucent fill, clear outline, provenance, no-result, failure, clear and re-search path. The 2011 CYSTAT statistical distribution can be retained as historical official-statistical context only; it is never a current Cyprus Post perimeter. Street, community, district, address, building, route, P.O. box, organization, buffer, Voronoi, learned and AGID geometry never become official postcode areas. Synthetic fixtures and metadata alone never establish M2." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, license, freshness, coverage, territorial-policy, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-or-prefix-presented-as-current-allocation",
+      "street-range-or-post-office-presented-as-postcode-polygon",
+      "statistical-postal-sector-presented-as-cyprus-post-perimeter",
+      "derived-address-membership-surface-presented-as-official",
+      "api-access-presented-as-bulk-license",
+      "portal-license-generalized-to-another-dataset",
+      "address-point-or-parcel-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-identifier-link",
+      "foreign-routing-or-service-state-presented-as-sovereignty-or-effective-control",
+      "green-line-trnc-or-sba-feature-silently-merged-into-standard-cy-service-coverage",
+      "postcode-stored-as-number",
+      "addressee-owner-rightsholder-occupant-or-protected-cadastral-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "addressee_identity", "occupancy", "ownership", "building_identity_from_proximity", "statistical_sector_equals_postal_operator_perimeter", "administrative_boundary_equals_postcode", "every_postcode_is_a_polygon", "po_box_is_a_residential_area", "routing_or_service_state_determines_sovereignty", "effective_control_or_recognition", "survey_or_cadastral_certification"
+  ]
+}

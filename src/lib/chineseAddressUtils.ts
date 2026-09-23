@@ -1,15 +1,27 @@
-import * as OpenCC from 'opencc-js';
+import * as OpenCCT2CN from 'opencc-js/t2cn';
+import { ConverterFactory } from 'opencc-js/core';
+import HKVariants from 'opencc-js/dict/HKVariants';
+import STCharacters from 'opencc-js/dict/STCharacters';
+import TWVariants from 'opencc-js/dict/TWVariants';
 import { pinyin } from 'pinyin-pro';
+import {
+  listChineseRegionalPlaceNameRecords,
+  resolveChineseRegionalPlaceName,
+} from './chineseRegionalPlaceName';
 
 /**
  * Chinese Address Specialized Utilities
  * Implements the architecture requested for CN Mainland, HK, MO, and TW.
  */
 
-// Converters
-const s2tw = OpenCC.Converter({ from: 'cn', to: 'tw' });
-const s2hk = OpenCC.Converter({ from: 'cn', to: 'hk' });
-const t2s = OpenCC.Converter({ from: 'tw', to: 'cn' });
+// Keep the heavy full OpenCC dictionary out of the app shell. Address UI needs
+// reliable script compatibility for place names, not full-document conversion.
+const t2s = OpenCCT2CN.Converter({ from: 'tw', to: 'cn' });
+// Address components are proper names, identifiers, and delivery descriptors.
+// Character conversion plus regional glyph variants avoids pulling OpenCC's
+// 1 MB general prose phrase dictionary into the shipping UI.
+const s2tw = ConverterFactory([STCharacters], [TWVariants]);
+const s2hk = ConverterFactory([STCharacters], [HKVariants]);
 
 // Shipping English Dictionary (as requested)
 
@@ -160,27 +172,6 @@ const CHINESE_REGION_ALIASES: Record<ChineseAddressZone, Record<string, ChineseA
   },
 };
 
-const TAIWAN_FIELD_ALIASES: Record<string, string> = {
-  台北市: 'Taipei City',
-  臺北市: 'Taipei City',
-  新北市: 'New Taipei City',
-  台中市: 'Taichung City',
-  臺中市: 'Taichung City',
-  台南市: 'Tainan City',
-  臺南市: 'Tainan City',
-  高雄市: 'Kaohsiung City',
-  信義區: 'Xinyi District',
-  市府路: 'Shifu Rd.',
-};
-
-const HK_FIELD_ALIASES: Record<string, string> = Object.fromEntries(
-  Object.entries(CHINESE_REGION_ALIASES['hong-kong']).map(([key, alias]) => [key, alias.values[0]])
-);
-
-const MO_FIELD_ALIASES: Record<string, string> = Object.fromEntries(
-  Object.entries(CHINESE_REGION_ALIASES.macao).map(([key, alias]) => [key, alias.values[0]])
-);
-
 function zoneFromCountryCode(countryCode: string): ChineseAddressZone {
   const code = countryCode.toUpperCase();
   if (code === 'TW') return 'taiwan';
@@ -202,11 +193,6 @@ function collectChineseAliases(zone: ChineseAddressZone, values: string[]) {
   }
 
   return Array.from(collected.values());
-}
-
-function aliasValue(value: string, aliases: Record<string, string>, fallback?: (text: string) => string) {
-  if (!value) return '';
-  return aliases[value] || aliases[toTraditional(value, 'HK')] || aliases[toSimplified(value)] || fallback?.(value) || value;
 }
 
 export function buildChineseAddressProfile(countryCode: string, details: Record<string, any>): ChineseAddressProfile {
@@ -307,6 +293,78 @@ export function normalizeMainlandChineseAddressPart(text: string): string {
     .trim();
 }
 
+const CHINESE_REGIONAL_COUNTRY_CODES = new Set(['CN', 'TW', 'HK', 'MO', 'SG']);
+const HAN_TEXT_PATTERN = /[\u3400-\u9fff]/;
+
+/**
+ * Resolves regional official or established names before any phonetic fallback.
+ * HK, MO, and SG deliberately fail closed for unknown Han text because Mandarin
+ * Pinyin is not a safe substitute for their delivery names.
+ */
+export function normalizeChineseRegionalAddressPart(text: string, countryCode: string): string {
+  const value = String(text ?? '').normalize('NFKC').trim();
+  if (!value) return '';
+
+  const code = countryCode.toUpperCase();
+  if (!CHINESE_REGIONAL_COUNTRY_CODES.has(code)) return '';
+  if (!HAN_TEXT_PATTERN.test(value)) return value;
+
+  const exact = resolveChineseRegionalPlaceName({ countryCode: code, nativeName: value });
+  if (exact.status === 'resolved') return exact.englishName;
+  if (exact.status === 'ambiguous' || exact.status === 'rejected-evidence') return '';
+
+  const aliases = listChineseRegionalPlaceNameRecords(code)
+    .flatMap(item => item.nativeNames.map(nativeName => ({
+      nativeName: nativeName.normalize('NFKC'),
+      englishName: item.englishName,
+    })))
+    .sort((left, right) => right.nativeName.length - left.nativeName.length);
+  const parts: string[] = [];
+  let index = 0;
+
+  while (index < value.length) {
+    const match = aliases.find(alias => value.startsWith(alias.nativeName, index));
+    if (match) {
+      parts.push(match.englishName);
+      index += match.nativeName.length;
+      continue;
+    }
+
+    const current = value[index];
+    if (/[\s,，、]/.test(current)) {
+      index += 1;
+      continue;
+    }
+
+    if (/[\dA-Za-z.'\-]/.test(current)) {
+      let end = index + 1;
+      while (end < value.length && /[\dA-Za-z.'\-]/.test(value[end])) end += 1;
+      parts.push(value.slice(index, end));
+      index = end;
+      continue;
+    }
+
+    let end = index + 1;
+    while (
+      end < value.length &&
+      !aliases.some(alias => value.startsWith(alias.nativeName, end)) &&
+      !/[\s,，、\dA-Za-z.'\-]/.test(value[end])
+    ) {
+      end += 1;
+    }
+    const unresolved = value.slice(index, end);
+    if (HAN_TEXT_PATTERN.test(unresolved)) {
+      if (code !== 'CN' && code !== 'TW') return '';
+      const fallback = normalizeMainlandChineseAddressPart(unresolved);
+      if (!fallback) return '';
+      parts.push(fallback);
+    }
+    index = end;
+  }
+
+  return parts.join(' ').replace(/\s+/g, ' ').trim();
+}
+
 /**
  * Layer 1: Input Absorption & Canonicalization
  * Handles Simplified/Traditional/Dialect variations.
@@ -329,10 +387,7 @@ export function toSimplified(text: string): string {
 
 export function toTraditional(text: string, region: 'TW' | 'HK' | 'MO' = 'TW'): string {
   if (!text) return "";
-  if (region === 'HK' || region === 'MO') {
-    return s2hk(text);
-  }
-  return s2tw(text);
+  return region === 'HK' || region === 'MO' ? s2hk(text) : s2tw(text);
 }
 
 /**
@@ -340,10 +395,10 @@ export function toTraditional(text: string, region: 'TW' | 'HK' | 'MO' = 'TW'): 
  */
 export function detectChineseScript(text: string): 'simplified' | 'traditional' | 'mixed' | 'none' {
   if (!text || !/[\u4e00-\u9faf]/.test(text)) return 'none';
-  
+
   const simplified = toSimplified(text);
   const traditional = toTraditional(text);
-  
+
   if (text === simplified && text !== traditional) return 'simplified';
   if (text === traditional && text !== simplified) return 'traditional';
   if (text !== simplified && text !== traditional) return 'mixed';
@@ -361,12 +416,12 @@ export function canonicalizeCN(details: any): any {
   fields.forEach(f => {
     if (result[f]) result[f] = toSimplified(result[f]);
   });
-  
+
   // Clean common suffixes if they are redundant (Heuristic)
   if (result.city && result.city.endsWith('市') && result.city.length > 2) {
     // Keep it for domestic, but we might mark it for international
   }
-  
+
   return result;
 }
 
@@ -387,7 +442,7 @@ export function renderDomesticCN(details: any): string {
     c.building,
     c.amenity || c.shop
   ].filter(Boolean);
-  
+
   return parts.join("");
 }
 
@@ -397,10 +452,10 @@ export function renderDomesticCN(details: any): string {
  */
 export function renderInternationalCN(details: any): string {
   const c = canonicalizeCN(details);
-  
+
   const translateField = (text: string) => {
     if (!text) return "";
-    return normalizeMainlandChineseAddressPart(text);
+    return normalizeChineseRegionalAddressPart(text, 'CN');
   };
 
   const parts = [
@@ -414,16 +469,17 @@ export function renderInternationalCN(details: any): string {
     c.postcode,
     "CHINA"
   ].filter(Boolean);
-  
+
   return parts.join(", ");
 }
 
 function renderTaiwanEnglish(details: any): string {
-  const state = aliasValue(details.state, TAIWAN_FIELD_ALIASES, normalizeMainlandChineseAddressPart);
-  const city = aliasValue(details.city, TAIWAN_FIELD_ALIASES, normalizeMainlandChineseAddressPart);
-  const road = aliasValue(details.road, TAIWAN_FIELD_ALIASES, normalizeMainlandChineseAddressPart);
+  const state = normalizeChineseRegionalAddressPart(details.state, 'TW');
+  const city = normalizeChineseRegionalAddressPart(details.city, 'TW');
+  const road = normalizeChineseRegionalAddressPart(details.road, 'TW');
+  const building = normalizeChineseRegionalAddressPart(details.building, 'TW');
   const parts = [
-    details.building,
+    building,
     details.house_number && road ? `No. ${details.house_number}, ${road}` : road,
     city,
     state,
@@ -434,11 +490,12 @@ function renderTaiwanEnglish(details: any): string {
 }
 
 function renderHongKongEnglish(details: any): string {
-  const road = aliasValue(details.road, HK_FIELD_ALIASES);
-  const subdistrict = aliasValue(details.subdistrict, HK_FIELD_ALIASES);
-  const city = aliasValue(details.city || details.district, HK_FIELD_ALIASES);
+  const road = normalizeChineseRegionalAddressPart(details.road, 'HK');
+  const subdistrict = normalizeChineseRegionalAddressPart(details.subdistrict, 'HK');
+  const city = normalizeChineseRegionalAddressPart(details.city || details.district, 'HK');
+  const building = normalizeChineseRegionalAddressPart(details.building, 'HK');
   const parts = [
-    details.building,
+    building,
     details.house_number && road ? `${details.house_number} ${road}` : (details.house_number || road),
     subdistrict,
     city,
@@ -448,11 +505,12 @@ function renderHongKongEnglish(details: any): string {
 }
 
 function renderMacaoPortuguese(details: any) {
-  const road = aliasValue(details.road, MO_FIELD_ALIASES);
-  const subdistrict = aliasValue(details.subdistrict || details.city, MO_FIELD_ALIASES);
+  const road = normalizeChineseRegionalAddressPart(details.road, 'MO');
+  const subdistrict = normalizeChineseRegionalAddressPart(details.subdistrict || details.city, 'MO');
+  const building = normalizeChineseRegionalAddressPart(details.building, 'MO');
   const locality = subdistrict && !/^maca[ou]$/i.test(subdistrict) ? subdistrict : '';
   const parts = [
-    details.building,
+    building,
     details.house_number && road ? `No. ${details.house_number}, ${road}` : road,
     locality,
     'MACAU',
@@ -530,7 +588,7 @@ export function renderHK(details: any, lang: string): string {
 export function renderMO(details: any, lang: string): string {
   const isEnglish = lang === 'en' || lang === 'international';
   const isPortuguese = lang === 'pt-PT' || lang === 'pt';
-  
+
   if (isPortuguese || isEnglish) {
     return renderMacaoPortuguese(details);
   } else {

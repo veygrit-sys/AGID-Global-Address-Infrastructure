@@ -1,0 +1,70 @@
+{
+  "schema_version": "agid-postal-il-m2-source-review-v1",
+  "country_code": "IL",
+  "m2_definition": {
+    "id": "M2_licensed_assignment",
+    "definition": "A current rights-cleared Israel Post assignment artifact with explicit source-stated coverage, seven-digit string codes, postal-object types and source validity is reproducibly transformed, published as immutable digest-pinned data and verified through the AGID loader/API. Any included geometry, civic-address or building relation has independent authority, terms and lineage; no polygon or national coverage is presumed."
+  },
+  "definition_basis": "The existing IL manifest had no named M2 stage. This criterion formalizes its assignment, non-area, privacy, territorial and separately licensed geometry rules without changing its nine hard blockers. Source-stated coverage must be complete for the release's declared scope; a street list cannot substitute for licensed postal assignments.",
+  "reference_probes": [
+    {
+      "id": "israel-post-terms",
+      "url": "https://israelpost.co.il/pages/termsofuse",
+      "mime": "text/html",
+      "markers": ["אינפורמציה בלבד", "שימוש רשמי או מסחרי", "כל הזכויות שמורות"],
+      "edition": "no current effective date established"
+    },
+    {
+      "id": "data-gov-il-terms-2025",
+      "url": "https://data.gov.il/terms-of-use",
+      "mime": "text/html",
+      "markers": ["30/08/2025", "שימושים מותרים", "ציון מקור המידע"],
+      "edition": "2025-08-30 only if directly retrieved and verified; search-index text is not a retained current licence snapshot"
+    },
+    {
+      "id": "population-authority-israel-street-list",
+      "url": "https://data.gov.il/he/datasets/population_authority/321",
+      "mime": "text/html",
+      "markers": ["רשימת רחובות ישראל", "רשות האוכלוסין וההגירה"]
+    },
+    {
+      "id": "israel-street-api-documentation",
+      "url": "https://data.gov.il/api/1/util/snippet/api_info.html?resource_id=9ad3862c-8391-4b2f-84a4-2d4c68625f4b",
+      "mime": "text/html",
+      "markers": ["datastore_search", "9ad3862c-8391-4b2f-84a4-2d4c68625f4b"]
+    },
+    {
+      "id": "upu-israel-addressing-2022",
+      "url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/isrFr.pdf",
+      "mime": "application/pdf",
+      "markers": [],
+      "edition": "10/2022; one page visually reviewed as format and routing reference only",
+      "expectedDigest": "sha256:88584e23c0cedcf91081f6f515e3027ef43d250ba9c50ddc496d23ab072b20ac"
+    }
+  ],
+  "street_probe": {
+    "metadata_url": "https://data.gov.il/api/3/action/package_show?id=321",
+    "query_url": "https://data.gov.il/api/3/action/datastore_search",
+    "dataset_id": "d2581732-eca4-4988-b986-df8e791a1d60",
+    "dataset_name": "321",
+    "resource_id": "9ad3862c-8391-4b2f-84a4-2d4c68625f4b",
+    "organization_name": "population_authority",
+    "offsets": [0, 50, 0],
+    "limit": 50,
+    "sort": "_id asc",
+    "grain": "One resource-version-local street row. Locality code plus street code is the comparison key, not street code alone; _id is an observation-local row key, not a durable civic-address identity.",
+    "fields": [{"id":"_id","type":"int"},{"id":"סמל_ישוב","type":"numeric"},{"id":"שם_ישוב","type":"text"},{"id":"סמל_רחוב","type":"numeric"},{"id":"שם_רחוב","type":"text"}],
+    "rights": "Metadata license fields and the portal's default licence must be reviewed together; an empty item licence is not itself a ban or grant. Bounded public data profiling does not clear production redistribution rights.",
+    "download_policy": "Do not follow the bulk CSV download or API-provided next links. Never retrieve recipient, population, owner or private-address datasets. Persist aggregate quality receipts only."
+  },
+  "limits": {"max_response_bytes": 2097152, "max_rows_per_response": 50, "max_data_requests": 3, "max_name_characters": 256},
+  "quality_rules": [
+    "Validate exact resource and five-field schema; reject additional postcode, premise, coordinate, recipient or owner columns instead of silently exposing them.",
+    "Preserve numeric transport types and code string identity without padding; locality/street identifiers are never seven-digit postal assignments.",
+    "Measure missingness, invalid types, duplicate row IDs, composite-key duplicates, repeated street codes across localities and code/name inconsistencies within the sampled window.",
+    "Record code 9000 and equal street/locality labels as observed diagnostics only; do not invent undocumented sentinel semantics or house numbers.",
+    "A reported total, sorted sample and stable repeat do not establish a full or atomic snapshot. Metadata modified dates do not become assignment validity.",
+    "No inferred postal geometry, country boundary, civic-address, building, coordinate or AGID relation is emitted from street rows."
+  ],
+  "promotion_gates": ["separately-cleared-israel-post-assignment-rights", "source-object-types-and-validity", "declared-scope-completeness", "source-and-terms-snapshot-sha256", "privacy-and-territorial-review", "reproducible-transformation-and-validation", "approved-immutable-publication", "real-agid-loader-api-verification"]
+}

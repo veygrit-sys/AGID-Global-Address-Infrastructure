@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-runtime-config-v1.schema.json",
+  "title": "AddressQL Runtime Config v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "adapters"
+  ],
+  "properties": {
+    "version": {
+      "const": "addressql-runtime-config-v1"
+    },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/adapter"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "mode",
+        "countryCode",
+        "purpose",
+        "coverage",
+        "dataFile",
+        "evidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": [
+            "approved",
+            "conformance"
+          ]
+        },
+        "countryCode": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "purpose": {
+          "enum": [
+            "existence",
+            "delivery"
+          ]
+        },
+        "coverage": {
+          "enum": [
+            "complete",
+            "partial"
+          ]
+        },
+        "dataFile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "sourceVersion",
+        "reuseRights",
+        "coverageStatement",
+        "correctionUrl",
+        "retrievedAt",
+        "validUntil",
+        "datasetDigest",
+        "holdoutDigest",
+        "reportDigest",
+        "attestationKeyId",
+        "attestationSignature"
+      ],
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reuseRights": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coverageStatement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correctionUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "retrievedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "datasetDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "holdoutDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "reportDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "attestationKeyId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attestationSignature": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

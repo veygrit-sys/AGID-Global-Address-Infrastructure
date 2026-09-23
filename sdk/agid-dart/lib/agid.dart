@@ -12,8 +12,21 @@ class AgidResult {
   final int? face;
 }
 
+class AgidBounds {
+  const AgidBounds({required this.minLat, required this.maxLat, required this.minLon, required this.maxLon});
+
+  final double minLat;
+  final double maxLat;
+  final double minLon;
+  final double maxLon;
+}
+
 AgidResult encode(double lat, double lon) {
   throw UnimplementedError('wire this package to the AGID reference implementation');
 }
 
 AgidResult? decode(String id) => null;
+
+AgidBounds cellBounds(String id) {
+  throw UnimplementedError('wire this package to the AGID reference implementation');
+}

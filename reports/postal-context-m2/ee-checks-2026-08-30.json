@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "EE",
+  "checkedAt": "2026-08-30T04:25:25.294Z",
+  "baseCommit": "580bdfdc6129a767656ad84e6b72eb815667b08d",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/ee-source-review-2026-08-30.json",
+    "digest": "sha256:09f92c5eec4e345d9f52211e0db7a1f24299b981a43154e66868550d879b24db"
+  },
+  "verification": [
+    {
+      "name": "official source byte, paged national GeoJSON and postcode-specific audit",
+      "command": "node scripts/inspect-postal-context-ee-sources.mjs .m2-sources-ee reports/postal-context-m2/ee-source-review-2026-08-30.json",
+      "result": "pass",
+      "officialFeatures": 5436,
+      "polygonRecords": 4320,
+      "multiPolygonRecords": 1116,
+      "invalidGeometry": 91,
+      "samplePostcode": "10621",
+      "sampleGeometryType": "MultiPolygon"
+    },
+    {
+      "name": "EE source inspector unit tests",
+      "command": "node --test scripts/inspect-postal-context-ee-sources.test.mjs",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "name": "EE repository, runtime, API and catalog regression tests",
+      "command": "tsx --test src/lib/postalContextCountryPolicy.test.ts src/lib/postalContextEstoniaRepository.test.ts src/lib/postalContextEstoniaRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts src/server/routes/postalContextEstoniaRoutes.test.ts src/data/estoniaOpenGeoSources.test.ts src/lib/officialPostalSourceCatalog.test.ts",
+      "result": "pass",
+      "tests": 71
+    },
+    {
+      "name": "shared postal-search and deterministic map rendering tests",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "result": "pass",
+      "tests": 23
+    },
+    {
+      "name": "EE M2 ledger fail-closed tests",
+      "command": "node --test scripts/postal-context-m2-ee-ledger.test.mjs",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "name": "TypeScript typecheck",
+      "command": "tsc --noEmit",
+      "result": "pass"
+    },
+    {
+      "name": "rollout status",
+      "command": "node scripts/postal-context-m2-rollout.mjs status",
+      "result": "pass",
+      "expectedNext": "ES",
+      "expectedStates": {
+        "pending": 188,
+        "in_progress": 0,
+        "blocked": 63,
+        "m2_verified": 1
+      }
+    }
+  ],
+  "applicationEvidence": {
+    "sharedSearchMapPathVerified": true,
+    "sharedTranslucentFillAndVisibleOutlineVerified": true,
+    "sharedLoadingNoResultMultipleApiFailureAndInvalidGeometryStatesVerified": true,
+    "sharedClearAndResearchVerified": true,
+    "eeSpecificRuntimeUsesSyntheticFixtureOnly": true,
+    "syntheticPostcode": "00000",
+    "realEeArtifactLoaderVerified": false,
+    "realEePostalApiVerified": false,
+    "realEeAppAreaVisualizationVerified": false
+  },
+  "sourceDataDisposition": {
+    "rawNationalBodiesCommittedToGit": 0,
+    "auditBodiesDeletedAfterRemoteVerification": true,
+    "observedPageDigests": [
+      "sha256:b4a2df24d6af13042fb9b27acde384b804b63eb62c334fe5896126c7b77a2847",
+      "sha256:54a67aac9c2fa74208ef0bf1aa27d09401644414f72b14f6c40e95e145571b81"
+    ]
+  },
+  "executionNotes": [
+    "The npm launcher could not spawn child node because node was absent from the inherited PATH; the exact installed Node.js executable ran the underlying scripts instead.",
+    "The WFS declared paging non-transaction-safe; the two observed pages are audit evidence, not an immutable national edition.",
+    "Omniva CSV/XML download was not invoked and no popup agreement was accepted.",
+    "No account, API key, OAuth token, payment, contract acceptance, repository, publication destination or deployment was created."
+  ],
+  "conclusion": {
+    "countryM2Achieved": false,
+    "reason": "Real current official Polygon/MultiPolygon features and a real 10621 query were confirmed, but no immutable transaction-safe edition, fully valid national geometry set, resolved external-origin publication right, complete assignment/non-area denominator, real artifact-backed EE API, or real app visualization exists."
+  }
+}

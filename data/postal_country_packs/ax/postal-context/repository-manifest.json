@@ -1,0 +1,41 @@
+{
+  "schema_version": "agid-postal-ax-repository-manifest-v0.1",
+  "repository": {"name":"agid-postal-ax","country_code":"AX","country_name":"Åland Islands","maturity":"M1_metadata"},
+  "release_scope": {"metadata_only":true,"contains_raw_source_data":false,"contains_real_addresses":false,"contains_personal_data":false,"contains_production_geometry":false,"fixtures_are_synthetic":false,"publication_claim":"contract-seed-only"},
+  "contract_files": ["repository-manifest.json","source-profile.json","m2-source-review.json","README.md"],
+  "postal_system": {
+    "full_code_name":"Postnummer",
+    "full_code_format":"NNNNN",
+    "full_code_default_geometry":"official_statistical_area_or_explicit_non_area_assignment",
+    "assignment_rule":"A pinned Posti PCF row establishes the current five-digit assignment, effective date and type for this review. Åland Post pages are corroborating operator references; page presence or syntax alone does not establish completeness.",
+    "perimeter_rule":"Statistics Finland Paavo pno_2026 is official-derived statistical postal-code-area geometry generated from building address postcodes; it is not an Åland Post delivery perimeter.",
+    "non_area_rule":"P.O. box and postal-terminal codes without a Paavo feature remain non-area. No point, office, locality, municipality, buffer, Voronoi cell, learned surface or AGID cell is promoted to a postal polygon.",
+    "address_rule":"Postcode containment provides postal context only. House numbers, named buildings and delivery points require a separate permitted stable address/building relation.",
+    "country_identity_rule":"AX remains Åland Islands. Finnish data providers and the FI PCF container do not merge AX into FI or rewrite its territory identity."
+  },
+  "temporal_model": {"valid_time":"PCF effective date and Paavo classification year are retained separately.","known_time":"Retrieval, review, transformation, correction and publication times are retained separately.","history_rule":"New PCF and Paavo releases append versioned evidence and never silently rewrite earlier releases."},
+  "geometry_classes": ["polygon","multipolygon","point","route","po_box","organization","unknown"],
+  "quality_gates": [
+    {"id":"postal-assignment","pass":"Every current code binds to an exact PCF release row with five-digit text, type, effective date, terms and digest."},
+    {"id":"postal-perimeter","pass":"Each drawable code binds one-to-one to a valid Paavo 2026 Polygon/MultiPolygon and retains official-derived statistical authority, basis year, license and digest."},
+    {"id":"non-area","pass":"Codes missing from Paavo are explicitly classified and never receive invented area geometry."},
+    {"id":"publication","pass":"A rights-cleared transformed artifact is published at an approved immutable destination with bytes and SHA-256."},
+    {"id":"application","pass":"The actual AX loader, API and app verify normalized search, fit, translucent fill, outline, provenance, failure states and clear/re-search on the published artifact."},
+    {"id":"privacy","pass":"No addressee, customer, delivery instruction, private address, resident, owner or land-rights data is published."}
+  ],
+  "promotion": {
+    "current_stage":"M1_metadata",
+    "target_stage":"M2_current_assignment_and_official_statistical_postal_area_visualization",
+    "stages":[
+      {"id":"M0_inventory","definition":"Operator assignment, official statistical geometry, rights, non-area cases and publication gaps are inventoried."},
+      {"id":"M1_metadata","definition":"Exact source contracts, byte-bound review and non-area policy are reproducible."},
+      {"id":"M2_current_assignment_and_official_statistical_postal_area_visualization","definition":"A current rights-cleared complete five-digit assignment release must reconcile to valid Paavo official-derived statistical Polygon/MultiPolygon coverage or explicit non-area outcomes, then produce an approved immutable artifact and pass the actual AX AGID loader, API and app. The app must normalize country and postcode search, fit real geometry, render translucent fill and clear outline, expose geometry type, authority, source, basis date and confidence, and handle loading, no-result, multiple, invalid geometry, API failure, clear and re-search. Paavo geometry never becomes Åland Post operator geometry. P.O. box, terminal, point, route, office, organization, locality, municipality, address, building, buffer, Voronoi, learned and AGID geometry never become an official full-code area. House numbers and buildings require separate permitted stable relations. Metadata, source code, shared tests and synthetic fixtures alone never establish M2."},
+      {"id":"M3_candidate","definition":"Refresh, topology, ambiguity, coverage, privacy and rollback gates pass."},
+      {"id":"M4_stable","definition":"Two independent source refreshes and monitored rollback pass."}
+    ],
+    "hard_blockers":["statistical-area-presented-as-postal-operator-perimeter","non-area-code-given-invented-polygon","unpublished-or-mutable-production-artifact","real-ax-loader-api-or-app-unverified","postcode-containment-presented-as-house-number-or-building-proof","source-release-or-rights-unpinned"],
+    "data_completion_verified":false,
+    "source_review":"data/postal_country_packs/ax/postal-context/m2-source-review.json"
+  },
+  "non_guarantees":["postal_operator_perimeter","deliverability","every_postcode_is_a_polygon","po_box_is_an_area","terminal_is_an_area","house_number_from_postcode","building_identity_from_containment","territory_identity_from_provider"]
+}

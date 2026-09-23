@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/playlist-commerce-openapi-evidence-extension-v0.1.schema.json",
+  "title": "Playlist Commerce OpenAPI Evidence Fixtures Extension Profile v0.1",
+  "description": "Playlist Commerce profile for the generic x-agid-evidence-fixtures OpenAPI extension. This profile fixes the exact local fixtures, schema, verifier commands, and non-claims used by the webhook preflight evidence gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "preflightFixture",
+    "historyFixture",
+    "evidenceFixture",
+    "evidenceSchema",
+    "verifierCommand",
+    "aggregateVerifierCommand",
+    "managedServiceBoundary",
+    "localOnly",
+    "forbiddenMaterial",
+    "nonClaims",
+    "nonClaimsProfile"
+  ],
+  "properties": {
+    "preflightFixture": {
+      "const": "docs/specs/fixtures/playlist-commerce-webhook-preflight-v0.1.json"
+    },
+    "historyFixture": {
+      "const": "docs/specs/fixtures/playlist-commerce-webhook-preflight-history-v0.1.json"
+    },
+    "evidenceFixture": {
+      "const": "docs/specs/fixtures/playlist-commerce-webhook-evidence-v0.1.json"
+    },
+    "evidenceSchema": {
+      "const": "docs/specs/schemas/playlist-commerce-webhook-evidence-v0.1.schema.json"
+    },
+    "verifierCommand": {
+      "const": "npm run verify:playlist-commerce-evidence"
+    },
+    "aggregateVerifierCommand": {
+      "const": "npm run verify:playlist-commerce"
+    },
+    "managedServiceBoundary": {
+      "const": "fixture-only-not-hosted-evidence-vault"
+    },
+    "localOnly": {
+      "const": true
+    },
+    "forbiddenMaterial": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "raw_address"
+          }
+        },
+        {
+          "contains": {
+            "const": "recipient_phone"
+          }
+        },
+        {
+          "contains": {
+            "const": "provider_token"
+          }
+        },
+        {
+          "contains": {
+            "const": "raw_provider_profile"
+          }
+        },
+        {
+          "contains": {
+            "const": "raw_carrier_payload"
+          }
+        },
+        {
+          "contains": {
+            "const": "proof_witness"
+          }
+        },
+        {
+          "contains": {
+            "const": "private_key"
+          }
+        },
+        {
+          "contains": {
+            "const": "biometric_template"
+          }
+        },
+        {
+          "contains": {
+            "const": "production_webhook_secret"
+          }
+        }
+      ]
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "not-payment-settlement"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-raw-address-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-proof-witness-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-provider-token-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-raw-carrier-payload-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-production-delivery-attempt"
+          }
+        }
+      ]
+    },
+    "nonClaimsProfile": {
+      "const": "playlist-commerce-webhook-v0.1"
+    }
+  }
+}

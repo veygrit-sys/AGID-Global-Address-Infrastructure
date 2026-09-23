@@ -58,17 +58,17 @@ test('allows only Western Europe domestic language pairs and native-to-English r
 
 test('translates representative Western Europe native address fields to English', async () => {
   const cases = [
-    ['FR', 'fr', 'street', 'Rue', 'Street', 'french-laposte-international-shipping'],
+    ['FR', 'fr', 'street', 'Rue', 'Rue', 'french-laposte-international-shipping'],
     ['FR', 'fr', 'city', 'Paris', 'Paris', 'french-laposte-international-shipping'],
-    ['DE', 'de', 'street', 'Straße', 'Street', 'german-dach-international-shipping'],
-    ['DE', 'de', 'city', 'München', 'Munich', 'german-dach-international-shipping'],
+    ['DE', 'de', 'street', 'Straße', 'Straße', 'german-dach-international-shipping'],
+    ['DE', 'de', 'city', 'München', 'München', 'german-dach-international-shipping'],
     ['NL', 'nl', 'street', 'Straat', 'Street', 'dutch-postnl-international-shipping'],
     ['BE', 'nl', 'city', 'Brussel', 'Brussels', 'belgium-trilingual-address'],
-    ['BE', 'fr', 'city', 'Bruxelles', 'Brussels', 'belgium-trilingual-address'],
-    ['CH', 'de', 'city', 'Zürich', 'Zurich', 'swiss-quadrilingual-address'],
-    ['CH', 'fr', 'city', 'Genève', 'Geneva', 'swiss-quadrilingual-address'],
+    ['BE', 'fr', 'city', 'Bruxelles', 'Bruxelles', 'belgium-trilingual-address'],
+    ['CH', 'de', 'city', 'Zürich', 'Zürich', 'swiss-quadrilingual-address'],
+    ['CH', 'fr', 'city', 'Genève', 'Genève', 'swiss-quadrilingual-address'],
     ['LU', 'lb', 'city', 'Lëtzebuerg', 'Luxembourg', 'luxembourg-trilingual-address'],
-    ['AT', 'de', 'city', 'Wien', 'Vienna', 'austrian-german-address'],
+    ['AT', 'de', 'city', 'Wien', 'Wien', 'austrian-german-address'],
     ['LI', 'de', 'city', 'Vaduz', 'Vaduz', 'liechtenstein-german-address'],
     ['GB', 'cy', 'city', 'Caerdydd', 'Cardiff', 'uk-english-celtic-address'],
     ['IE', 'ga', 'city', 'Baile Átha Cliath', 'Dublin', 'ireland-english-irish-address'],
@@ -104,5 +104,5 @@ test('uses English pivot for Western Europe multilingual native address tabs whe
 
   assert.equal(french?.text, 'Zurich FR');
   assert.equal(french?.route.mode, 'english-pivot');
-  assert.deepEqual(calls, ['en->fr:Zurich']);
+  assert.deepEqual(calls, ['en->fr:Zürich']);
 });

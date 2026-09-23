@@ -6,17 +6,46 @@ normalizeEnglishAddressPart,
 renderStreetAddressLine,
 uniqueAddressParts,
 } from './addressEnglish';
+import type { AddressFormat } from '../data/address_formats';
 import { mergeOpenSourceAddressEvidence } from './addressEvidence';
+import { renderAddressFormatTemplate } from './addressFormatRenderer';
 import { applyShippingAbbreviations } from './addressUtils';
 import {
-renderDomesticCN,
-renderHK,
-renderInternationalCN,
 renderMO,
-renderTW
 } from './chineseAddressUtils';
 import { renderEnglishAddressMode } from './englishAddressMode';
 import { isEnglishAddressCountry,isInternationalShippingEnglishTab } from './languageTabs';
+import { buildFrenchShippingAddress,isFrenchShippingCountry } from './frenchShippingAddress';
+import { buildSpanishShippingAddress,isSpanishShippingCountry } from './spanishShippingAddress';
+import { buildChineseShippingAddress,isChineseShippingCountry } from './chineseShippingAddress';
+import {
+buildMajorEuropeanShippingAddress,
+isMajorEuropeanShippingCountry,
+} from './majorEuropeanShippingAddress';
+import {
+buildArabicShippingAddress,
+isArabicShippingCountry,
+} from './arabicShippingAddress';
+import {
+buildRemainingEuropeanShippingAddress,
+isRemainingEuropeanShippingCountry,
+supportsRemainingEuropeanDomesticLanguage,
+} from './remainingEuropeanShippingAddress';
+import {
+buildRemainingAfricanShippingAddress,
+prefersRemainingAfricanInternationalRenderer,
+supportsRemainingAfricanDomesticLanguage,
+} from './remainingAfricanShippingAddress';
+import {
+buildRemainingAsianShippingAddress,
+prefersRemainingAsianInternationalRenderer,
+supportsRemainingAsianDomesticLanguage,
+} from './remainingAsianShippingAddress';
+import {
+buildRemainingOceaniaShippingAddress,
+prefersRemainingOceaniaInternationalRenderer,
+supportsRemainingOceaniaDomesticLanguage,
+} from './remainingOceaniaShippingAddress';
 
 export interface CanonicalAddress {
   country_code: string;
@@ -32,6 +61,13 @@ export interface CanonicalAddress {
   postcode: string;
   poi: string;
   plus_code?: string;
+  po_box?: string;
+  unit?: string;
+  floor?: string;
+  block?: string;
+  zone?: string;
+  additional_number?: string;
+  short_address?: string;
 }
 
 /**
@@ -55,7 +91,7 @@ export function createCanonicalAddress(details: any): CanonicalAddress {
     ? { ...safeDetails, ...safeDetails.address_analysis.canonical }
     : safeDetails;
   const parts = {
-    poi: source.amenity || source.shop || source.office || source.tourism || source.leisure || source.railway || source.aeroway || source.historic || source.station || source.healthcare || source.poi || "",
+    poi: source.poi || source.map_feature_name || source.bridge || source.heritage_site || source.ruins || source.park || source.river || source.stream || source.canal || source.lake || source.salt_lake || source.reservoir || source.lagoon || source.oxbow || source.pond || source.bay || source.waterfall || source.water || source.waterway || source.mountain || source.peak || source.grassland || source.desert || source.dryland || source.wilderness || source.salt_flat || source.salt_pan || source.dry_lake || source.badlands || source.bare_rock || source.scree || source.shingle || source.forest || source.wetland || source.beach || source.island || source.islet || source.archipelago || source.island_group || source.atoll || source.cay || source.key || source.cave || source.valley || source.glacier || source.ice_field || source.reef || source.spring || source.natural_feature || source.amenity || source.shop || source.office || source.tourism || source.leisure || source.railway || source.aeroway || source.historic || source.station || source.healthcare || source.natural || "",
     country: source.country || "",
     country_code: (source.country_code || "").toUpperCase(),
     postcode: source.postcode || source.postal_code || source.zip || "",
@@ -68,8 +104,25 @@ export function createCanonicalAddress(details: any): CanonicalAddress {
     house_number: source.house_number || source.houseNumber || "",
     building: source.building || source.building_name || source.organization || source.flats || "",
     plus_code: source.plus_code?.global_code || source.plus_code?.plus_code || source.plus_code || "",
+    po_box: source.po_box || source.post_office_box || source.pobox || "",
+    unit: source.unit || source.apartment || source.flat || source.office_number || "",
+    floor: source.floor || source.level || "",
+    block: source.block || source.parcel || "",
+    zone: source.zone || source.zone_number || "",
+    additional_number: source.additional_number || source.secondary_number || "",
+    short_address: source.short_address || "",
   };
   const { address: mergedParts } = mergeOpenSourceAddressEvidence(parts, details);
+
+  const extendedParts: Partial<CanonicalAddress> = {
+    ...(parts.po_box ? { po_box: parts.po_box } : {}),
+    ...(parts.unit ? { unit: parts.unit } : {}),
+    ...(parts.floor ? { floor: parts.floor } : {}),
+    ...(parts.block ? { block: parts.block } : {}),
+    ...(parts.zone ? { zone: parts.zone } : {}),
+    ...(parts.additional_number ? { additional_number: parts.additional_number } : {}),
+    ...(parts.short_address ? { short_address: parts.short_address } : {}),
+  };
 
   return {
     country_code: mergedParts.country_code,
@@ -85,6 +138,7 @@ export function createCanonicalAddress(details: any): CanonicalAddress {
     postcode: mergedParts.postcode,
     poi: mergedParts.poi,
     plus_code: mergedParts.plus_code,
+    ...extendedParts,
   };
 }
 
@@ -108,22 +162,81 @@ function meaningfulAddressContextPart(value: string, country: string) {
   return meaningfulAddressTextPattern.test(cleaned) ? cleaned : '';
 }
 
+function uniqueCanonicalParts(parts: string[]) {
+  const seen = new Set<string>();
+  return parts
+    .map(part => normalizeUnicode(part))
+    .filter(Boolean)
+    .filter(part => {
+      const comparable = comparableAddressPart(part);
+      if (!comparable || seen.has(comparable)) return false;
+      seen.add(comparable);
+      return true;
+    });
+}
+
 /**
  * Address Rendering Engine for International Shipping
  */
 export class AddressRenderer {
-  
+
   /**
    * Main entry point for rendering an address based on specific tab/context
    */
-  static render(tab: string, data: CanonicalAddress): string {
+  static render(tab: string, data: CanonicalAddress, format?: AddressFormat | null): string {
     const canonical = this.normalizeCanonical(data);
-    
+    const formattedByCountryRules = format
+      ? renderAddressFormatTemplate(format, tab, canonical as unknown as Record<string, unknown>)
+      : '';
+    if (formattedByCountryRules) return formattedByCountryRules;
+
     // Check if it's the specialized International English tab
-    if (tab === 'intl_en') {
+    if (isInternationalShippingEnglishTab(tab)) {
+      if (isArabicShippingCountry(canonical.country_code)) {
+        return buildArabicShippingAddress(canonical, 'international-shipping').formatted;
+      }
+      if (isChineseShippingCountry(canonical.country_code)) {
+        return buildChineseShippingAddress(canonical, 'international-shipping').formatted;
+      }
+      if (prefersRemainingAsianInternationalRenderer(canonical.country_code)) {
+        return buildRemainingAsianShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted;
+      }
+      if (prefersRemainingOceaniaInternationalRenderer(canonical.country_code)) {
+        return buildRemainingOceaniaShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted;
+      }
+      if (prefersRemainingAfricanInternationalRenderer(canonical.country_code)) {
+        return buildRemainingAfricanShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted;
+      }
+      if (
+        isRemainingEuropeanShippingCountry(canonical.country_code)
+        && !['GB', 'IE'].includes(canonical.country_code)
+      ) {
+        return buildRemainingEuropeanShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted;
+      }
+      if (isMajorEuropeanShippingCountry(canonical.country_code)) {
+        return buildMajorEuropeanShippingAddress(canonical, 'international-shipping').formatted;
+      }
+      if (isFrenchShippingCountry(canonical.country_code)) {
+        return buildFrenchShippingAddress(canonical, 'international-shipping').formatted;
+      }
+      if (isSpanishShippingCountry(canonical.country_code)) {
+        return buildSpanishShippingAddress(canonical, 'international-shipping').formatted;
+      }
       return this.renderInternationalEnglish(canonical);
     }
-    
+
     // Otherwise render by language code
     return this.renderByLanguage(tab, canonical);
   }
@@ -146,30 +259,98 @@ export class AddressRenderer {
     const isEnglish = lang.startsWith('en') || lang === 'international' || lang === 'romaji';
     const c = data.country_code;
 
-    // Specialized Logic for Greater China (as requested)
-    if (c === 'CN') {
-      if (isEnglish) return renderInternationalCN(data);
-      return renderDomesticCN(data);
-    }
-    
-    if (c === 'TW') {
-      return renderTW(data, lang);
-    }
-    
     if (c === 'HK' && isEnglish && lang === 'en_domestic') {
       return this.renderDomesticEnglish(data);
     }
 
-    if (c === 'HK') {
-      return renderHK(data, lang);
-    }
-
-    if (c === 'MO') {
+    if (c === 'MO' && (lang === 'pt' || lang === 'pt-PT')) {
       return renderMO(data, lang);
     }
 
-    // Specialized Logic for Latin America (Hispanosphere / Lusosphere)
-    if (c === 'CO' || c === 'MX' || c === 'AR' || c === 'CL' || c === 'BR') {
+    if (isChineseShippingCountry(c)) {
+      const mode = isEnglish
+        ? 'international-shipping'
+        : lang.toLowerCase().includes('hans') || lang.toLowerCase() === 'zh-cn'
+          ? 'domestic-simplified'
+          : lang.toLowerCase().includes('hant') ||
+              ['zh-tw', 'zh-hk', 'zh-mo'].includes(lang.toLowerCase())
+            ? 'domestic-traditional'
+            : c === 'CN'
+              ? 'domestic-simplified'
+              : 'domestic-traditional';
+      return buildChineseShippingAddress(data, mode).formatted;
+    }
+
+    if (supportsRemainingAsianDomesticLanguage(c, lang)) {
+      return buildRemainingAsianShippingAddress(
+        data,
+        'domestic',
+        { domesticLanguage: lang },
+      ).formatted;
+    }
+
+    if (supportsRemainingOceaniaDomesticLanguage(c, lang)) {
+      return buildRemainingOceaniaShippingAddress(
+        data,
+        'domestic',
+        { domesticLanguage: lang },
+      ).formatted;
+    }
+
+    if (supportsRemainingAfricanDomesticLanguage(c, lang)) {
+      return buildRemainingAfricanShippingAddress(
+        data,
+        'domestic',
+        { domesticLanguage: lang },
+      ).formatted;
+    }
+
+    if (isArabicShippingCountry(c)) {
+      if (isEnglish && !isEnglishAddressCountry(c)) {
+        return buildArabicShippingAddress(data, 'international-shipping').formatted;
+      }
+      if (lang.toLowerCase().startsWith('ar')) {
+        return buildArabicShippingAddress(data, 'domestic-arabic').formatted;
+      }
+    }
+
+    if (isSpanishShippingCountry(c)) {
+      return buildSpanishShippingAddress(
+        data,
+        isEnglish ? 'international-shipping' : 'domestic',
+      ).formatted;
+    }
+
+    if (supportsRemainingEuropeanDomesticLanguage(c, lang)) {
+      return buildRemainingEuropeanShippingAddress(
+        data,
+        'domestic',
+        { domesticLanguage: lang },
+      ).formatted;
+    }
+
+    const isSwissFrenchDomestic = c === 'CH' && lang.toLowerCase().startsWith('fr');
+    if (isMajorEuropeanShippingCountry(c) && !isSwissFrenchDomestic) {
+      return buildMajorEuropeanShippingAddress(
+        data,
+        isEnglish ? 'international-shipping' : 'domestic',
+        { domesticLanguage: lang },
+      ).formatted;
+    }
+
+    const isFrenchDomestic = lang.toLowerCase().startsWith('fr');
+    if (
+      isFrenchShippingCountry(c) &&
+      (isFrenchDomestic || (isEnglish && !(lang === 'en_domestic' && isEnglishAddressCountry(c))))
+    ) {
+      return buildFrenchShippingAddress(
+        data,
+        isEnglish ? 'international-shipping' : 'domestic',
+      ).formatted;
+    }
+
+    // Specialized Logic for Portuguese-speaking Latin America.
+    if (c === 'BR') {
       return this.renderLATAM(c, data, lang);
     }
 
@@ -178,7 +359,7 @@ export class AddressRenderer {
     }
 
     const isEastAsian = ['JP', 'KR', 'KP', 'VN', 'HU'].includes(c);
-    
+
     // If it's English domestic inside an Inner/Outer Circle English address market.
     if (isEnglish && isEnglishAddressCountry(c)) {
       return this.renderDomesticEnglish(data);
@@ -186,7 +367,7 @@ export class AddressRenderer {
 
     if (isEastAsian && !isEnglish) {
       // Big-to-Small for East Asian languages
-      const parts = [
+      const parts = uniqueCanonicalParts([
         data.postcode ? `〒${data.postcode}` : "",
         data.state,
         data.city,
@@ -194,8 +375,8 @@ export class AddressRenderer {
         data.subdistrict,
         data.road,
         data.house_number,
-        data.building
-      ].filter(Boolean);
+        data.building || data.poi
+      ]);
       return parts.join(data.country_code === 'JP' ? "" : " ");
     } else {
       // Small-to-Big for others
@@ -206,19 +387,20 @@ export class AddressRenderer {
       const t = (val: string) => isEnglish ? normalizeEnglishAddressPart(val, data.country_code) : val;
       const tb = (val: string) => isEnglish ? normalizeEnglishAddressBuildingName(val, data.country_code) : val;
 
-      const line1 = isRoadFirst 
+      const line1 = isRoadFirst
         ? `${t(data.road)} ${t(data.house_number)}`.trim()
         : `${t(data.house_number)} ${t(data.road)}`.trim();
 
-      const parts = [
-        tb(data.building),
+      const parts = uniqueCanonicalParts([
+        tb(data.building || data.poi),
         line1,
         t(data.subdistrict),
+        t(data.district),
         t(data.city),
         t(data.state),
         data.postcode
-      ].filter(Boolean);
-      
+      ]);
+
       // Don't include country name in domestic view (except maybe for English intl)
       return parts.join(", ");
     }
@@ -234,19 +416,19 @@ export class AddressRenderer {
 
     let housePart = t(data.house_number);
     let roadPart = t(data.road);
-    
+
     // Colombia specific: Add # separator if it's a grid coordinate pattern
     if (country === 'CO' && housePart && !housePart.includes('#') && /^\d/.test(housePart)) {
       housePart = `# ${housePart}`;
     }
 
     const line1 = `${roadPart} ${housePart}`.trim();
-    
+
     // Neighborhood is very important in MX (Colonia) and BR (Bairro)
     const neighborhood = t(data.subdistrict || data.suburb);
-    
+
     const parts = [
-      tb(data.building),
+      tb(data.building || data.poi),
       line1,
       neighborhood,
       t(data.city),
@@ -274,7 +456,38 @@ export class AddressRenderer {
 
   static renderInternationalShippingEnglish(data: CanonicalAddress): string {
     const canonical = this.normalizeCanonical(data);
-    let text = this.renderInternationalEnglish(canonical);
+    let text = isArabicShippingCountry(canonical.country_code)
+      ? buildArabicShippingAddress(canonical, 'international-shipping').formatted
+      : isChineseShippingCountry(canonical.country_code)
+      ? buildChineseShippingAddress(canonical, 'international-shipping').formatted
+      : prefersRemainingAsianInternationalRenderer(canonical.country_code)
+      ? buildRemainingAsianShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted
+      : prefersRemainingOceaniaInternationalRenderer(canonical.country_code)
+      ? buildRemainingOceaniaShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted
+      : prefersRemainingAfricanInternationalRenderer(canonical.country_code)
+      ? buildRemainingAfricanShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted
+      : isRemainingEuropeanShippingCountry(canonical.country_code)
+        && !['GB', 'IE'].includes(canonical.country_code)
+      ? buildRemainingEuropeanShippingAddress(
+          canonical,
+          'international-shipping',
+        ).formatted
+      : isMajorEuropeanShippingCountry(canonical.country_code)
+        ? buildMajorEuropeanShippingAddress(canonical, 'international-shipping').formatted
+      : isFrenchShippingCountry(canonical.country_code)
+      ? buildFrenchShippingAddress(canonical, 'international-shipping').formatted
+      : isSpanishShippingCountry(canonical.country_code)
+        ? buildSpanishShippingAddress(canonical, 'international-shipping').formatted
+        : this.renderInternationalEnglish(canonical);
     text = applyShippingAbbreviations(text);
     return text.toUpperCase();
   }

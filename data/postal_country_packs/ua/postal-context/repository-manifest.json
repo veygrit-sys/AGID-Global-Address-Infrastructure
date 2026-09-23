@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ua",
+    "country_code": "UA",
+    "country_name": "Ukraine",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postal index",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "routing_and_delivery_office_assignment_with_optional_rights_cleared_derived_surface",
+    "assignment_rule": "A pinned Ukrposhta postcode-directory row, address lookup, or API response establishes a five-digit routing assignment at its capture time. UPU syntax and structurally valid digits do not establish current allocation or service availability.",
+    "perimeter_rule": "A postcode, post-office point, delivery zone, replacement-office relation, or administrative code is not automatically an official postal polygon. A rights-cleared address-membership surface is versioned, uncertainty-bearing, and explicitly derived.",
+    "address_rule": "Exact address display requires a pinned public-field assertion from Ukrposhta or the Unified State Address Register, including its identifier, status, hierarchy, capture time, and permitted-use basis; search access alone does not establish bulk retention or redistribution rights.",
+    "building_rule": "Exact building display requires the same authoritative address/building identifier or a reviewed explicit crosswalk to the Register of Buildings and Structures or a competent NSDI layer. Address points, parcels, footprints, containment, and proximity remain candidates.",
+    "administrative_rule": "KATOTTG and competent Ukrainian administrative-boundary data supply hierarchy and clipping context only; they do not create postal membership without Ukrposhta evidence.",
+    "service_status_rule": "Ukrposhta AVAILBLE, LOCK_CODE, replacement-office, closure, and routing fields are time-stamped operational evidence. They may qualify current service but never delete historical assignment or prove a permanent perimeter.",
+    "territory_rule": "Postal assignment, missing service, replacement routing, a foreign operator, occupation, or control never determines sovereignty or a legal boundary. UA country and disputed-feature classification must cite a separately pinned boundary authority, policy, coverage, and vintage."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment, address, building, administrative boundary, and service availability validity when supplied by the source.",
+    "known_time": "Source publication, capture, ingest, correction, service check, restriction, and release timestamps retained independently.",
+    "history_rule": "New Ukrposhta, register, or competent boundary evidence appends a versioned assertion and never silently rewrites an earlier release or turns operational outage into territorial history."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each full code references a pinned Ukrposhta directory row, lookup, or API receipt with five-digit text preserved, address or office scope, capture time, rights, and digest." },
+    { "id": "service-status", "pass": "Operational availability, closure, lock, and replacement-office facts retain source fields and observation time and remain separate from assignment, geometry, and sovereignty." },
+    { "id": "postal-perimeter", "pass": "Every derived surface retains member addresses, method, boundary clips, exclusions, outages, uncertainty, rights, temporal lineage, and digest and is never labelled official." },
+    { "id": "official-address", "pass": "Each exact address retains a Ukrposhta or Unified State Address Register identifier, status, hierarchy, permitted fields, access terms, capture time, and postal cross-check result." },
+    { "id": "building-link", "pass": "An exact building has a common authoritative address/building identifier or reviewed explicit crosswalk; parcel, footprint, containment, and proximity are candidate-only." },
+    { "id": "coverage-and-boundary", "pass": "Each NSDI, KATOTTG, building, or boundary artifact retains producer, public-access state, security restriction, coverage, territorial policy, vintage, CRS, terms, and digest." },
+    { "id": "privacy-and-security", "pass": "No addressee, resident, owner, rightsholder, occupant, phone, credential, military or security-sensitive site, cadastral-right, or protected register field is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, access restrictions, operational status, territorial policy, coverage, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_ukraine_postal_index_assignment_and_area_visualization", "definition": "A current complete Ukrposhta five-digit postal-index assignment, operational exception and explicit non-area denominator is fixed under resource-specific rights compatible with AGID processing, storage, derivation, redistribution and public serving. Every drawable index reconciles to a fixed finite closed valid Polygon/MultiPolygon whose official/derived/virtual class, provider, edition, reference date, rights, attribution, bytes, SHA-256, schema, CRS, topology, member-address denominator, exclusions, wartime/service gaps, territorial policy, method and confidence are recorded; non-area route, P.O.-box, organization and service cases retain source-grounded reasons. Address and office rows, office coordinates, KATOTTG/administrative boundaries, settlements, streets, buildings, parcels, buffers, hulls, Voronoi/raster cells and synthetic fixtures never become postal perimeters by implication, and postal/service evidence never changes UA identity, sovereignty, occupation or control. The approved immutable artifact drives the real UA API/app, which normalizes five text digits, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected index, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, security, freshness, outage, territorial-policy, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "post-office-point-or-routing-range-presented-as-postcode-area",
+      "derived-surface-presented-as-official-postcode-boundary",
+      "service-outage-or-replacement-route-presented-as-permanent-assignment-change",
+      "interactive-address-search-presented-as-bulk-release",
+      "address-point-or-parcel-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postal-or-foreign-operator-evidence-presented-as-sovereignty-or-boundary-evidence",
+      "occupied-or-disputed-feature-auto-reclassified-from-routing-or-service-state",
+      "postcode-stored-as-number",
+      "addressee-owner-rightsholder-occupant-or-protected-register-data-published",
+      "security-restricted-geodata-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "addressee_identity", "occupancy", "ownership", "building_identity_from_proximity", "administrative_boundary_equals_postcode", "every_postcode_is_a_polygon", "po_box_is_a_residential_area", "service_status_is_permanent", "sovereignty_or_legal_boundary", "survey_or_cadastral_certification"
+  ]
+}

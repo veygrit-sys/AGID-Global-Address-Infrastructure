@@ -1,0 +1,751 @@
+openapi: 3.1.0
+info:
+  title: Hosted Registry API
+  version: 0.1.0
+  summary: Commitment-only registry API for AGID, AOID, PID-compatible references, credentials, revocation, freshness, and nullifier used-state.
+  description: |
+    Hosted Registry API manages public registry state for address-related
+    commitments. It is not a raw address database and MUST NOT receive raw
+    address text, raw AGID, raw AOID, AGID-S ciphertext, recipient data,
+    precise coordinates, ZK witnesses, proof secrets, or private keys.
+servers:
+  - url: /api/registry/hosted
+security: []
+tags:
+  - name: Capabilities
+  - name: Issuer
+  - name: Revocation
+  - name: Freshness
+  - name: Verification
+  - name: Nullifier
+  - name: Audit
+paths:
+  /capabilities:
+    get:
+      tags: [Capabilities]
+      summary: Return registry capabilities and privacy posture.
+      responses:
+        '200':
+          description: Capabilities returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultCapabilities'
+  /status:
+    get:
+      tags: [Capabilities]
+      summary: Return current registry snapshot.
+      description: Deployments MAY restrict this endpoint in hosted commercial operation.
+      responses:
+        '200':
+          description: Registry snapshot.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultSnapshot'
+  /audit:
+    get:
+      tags: [Audit]
+      summary: Return redacted audit events.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+      responses:
+        '200':
+          description: Redacted audit event list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultAudit'
+  /issuer/register:
+    post:
+      tags: [Issuer]
+      summary: Register or update an issuer using public commitments only.
+      security:
+        - RegistryAdminToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterIssuerRequest'
+            examples:
+              issuer:
+                value:
+                  issuerId: issuer-example
+                  status: active
+                  trustScore: 0.92
+                  publicKeyCommitment: '0xissuerpublickeycommitment'
+                  metadataHash: '0xissuermetadatahash'
+                  sourceIds: [issuer-policy-v0]
+      responses:
+        '200':
+          description: Issuer recorded or already recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultMutationIssuer'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/AdminTokenRequired'
+  /revocation/revoke-commitment:
+    post:
+      tags: [Revocation]
+      summary: Revoke a credential, address-reference, AOID, AGID, or issuer-scoped commitment.
+      security:
+        - RegistryAdminToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeCommitmentRequest'
+            examples:
+              credential:
+                value:
+                  commitment: '0xcredentialcommitment'
+                  commitmentType: credential
+                  issuerId: issuer-example
+                  reason: moved-or-reissued
+                  sourceIds: [issuer-revocation-feed]
+      responses:
+        '200':
+          description: Revocation recorded or already recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultMutationRevocation'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/AdminTokenRequired'
+  /freshness/anchor:
+    post:
+      tags: [Freshness]
+      summary: Anchor a freshness root and validity window.
+      security:
+        - RegistryAdminToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnchorFreshnessRootRequest'
+            examples:
+              root:
+                value:
+                  freshnessRoot: '0xfreshnessroot'
+                  registryId: hosted-registry-example
+                  issuerId: issuer-example
+                  freshUntil: '2027-01-01T00:00:00.000Z'
+                  sourceIds: [freshness-batch-v0]
+      responses:
+        '200':
+          description: Freshness root recorded or already recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultMutationFreshness'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/AdminTokenRequired'
+  /verify:
+    post:
+      tags: [Verification]
+      summary: Verify issuer, revocation, freshness, and nullifier registry state.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+            examples:
+              credentialCheck:
+                value:
+                  issuerId: issuer-example
+                  credentialCommitment: '0xcredentialcommitment'
+                  freshnessRoot: '0xfreshnessroot'
+                  requireAnchoredFreshnessRoot: true
+                  now: '2026-07-02T00:00:00.000Z'
+      responses:
+        '200':
+          description: Registry state is valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultVerify'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '409':
+          description: Registry state is invalid, stale, revoked, or already used.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultVerify'
+  /nullifier/mark-used:
+    post:
+      tags: [Nullifier]
+      summary: Mark a scoped nullifier as used.
+      description: |
+        The body MUST include a terminal signature binding operation,
+        basePath, scope, nullifierHash, nonce, and signedAt. This prevents
+        replay across terminals or scopes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkNullifierUsedRequest'
+            examples:
+              markUsed:
+                value:
+                  nullifierHash: '0xnullifierhash'
+                  scope: delivery-session-example
+                  issuerId: issuer-example
+                  expiresAt: '2026-07-03T00:00:00.000Z'
+                  terminalSignature: '0xterminalsig'
+                  signatureNonce: nonce-example
+                  signedAt: '2026-07-02T00:00:00.000Z'
+      responses:
+        '200':
+          description: Nullifier recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultMutationNullifier'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          description: Terminal signing secret is missing or terminal signature is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultError'
+        '409':
+          description: Nullifier is already used.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgidResultMutationNullifier'
+components:
+  securitySchemes:
+    RegistryAdminToken:
+      type: apiKey
+      in: header
+      name: X-AGID-Registry-Admin-Token
+  responses:
+    AdminTokenRequired:
+      description: Registry admin token is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AgidResultError'
+    RejectedPrivateMaterial:
+      description: Request contains private/raw address material and was rejected.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AgidResultError'
+  schemas:
+    HashOrCommitment:
+      type: string
+      minLength: 8
+      description: Commitment, hash, root, or nullifier. Raw address material is forbidden.
+      examples: ['0xcredentialcommitment']
+    SourceIds:
+      type: array
+      items:
+        type: string
+      maxItems: 20
+    PrivacyPosture:
+      type: object
+      additionalProperties: false
+      required:
+        - rawAddressStored
+        - rawAgidStored
+        - rawAoidStored
+        - agidSecureCiphertextStored
+        - zkProofRequired
+        - ethereumRequired
+        - gasRequired
+        - serverTrusted
+        - acceptedMaterial
+        - rejectedMaterial
+      properties:
+        rawAddressStored: { type: boolean, const: false }
+        rawAgidStored: { type: boolean, const: false }
+        rawAoidStored: { type: boolean, const: false }
+        agidSecureCiphertextStored: { type: boolean, const: false }
+        zkProofRequired: { type: boolean, const: false }
+        ethereumRequired: { type: boolean, const: false }
+        gasRequired: { type: boolean, const: false }
+        serverTrusted: { type: boolean, const: true }
+        acceptedMaterial:
+          type: array
+          items: { type: string }
+        rejectedMaterial:
+          type: array
+          items: { type: string }
+    Capabilities:
+      type: object
+      additionalProperties: false
+      required:
+        - mode
+        - modeVersion
+        - zkProofRequired
+        - ethereumRequired
+        - gasRequired
+        - offlineCapableAfterCache
+        - publicReads
+        - adminWrites
+        - publicWrites
+        - privacy
+      properties:
+        mode: { type: string, examples: [local-server-registry] }
+        modeVersion: { type: string, examples: [agid-registry-api-v1] }
+        zkProofRequired: { type: boolean, const: false }
+        ethereumRequired: { type: boolean, const: false }
+        gasRequired: { type: boolean, const: false }
+        offlineCapableAfterCache: { type: boolean }
+        publicReads:
+          type: array
+          items: { type: string }
+        adminWrites:
+          type: array
+          items: { type: string }
+        publicWrites:
+          type: array
+          items: { type: string }
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    IssuerRecord:
+      type: object
+      additionalProperties: false
+      required: [issuerId, status, trustScore, registeredAt, updatedAt, sourceIds]
+      properties:
+        issuerId: { type: string }
+        status:
+          type: string
+          enum: [active, suspended, revoked]
+        displayName: { type: string }
+        trustScore:
+          type: number
+          minimum: 0
+          maximum: 1
+        publicKeyCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        metadataHash:
+          $ref: '#/components/schemas/HashOrCommitment'
+        registeredAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    RevocationRecord:
+      type: object
+      additionalProperties: false
+      required: [commitment, commitmentType, revokedAt, sourceIds]
+      properties:
+        commitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        commitmentType:
+          type: string
+          enum: [credential, address-reference, aoid, agid, issuer-scoped, unknown]
+        reason: { type: string }
+        issuerId: { type: string }
+        revokedAt: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    FreshnessRootRecord:
+      type: object
+      additionalProperties: false
+      required: [freshnessRoot, registryId, anchoredAt, freshUntil, sourceIds]
+      properties:
+        freshnessRoot:
+          $ref: '#/components/schemas/HashOrCommitment'
+        registryId: { type: string }
+        issuerId: { type: string }
+        anchoredAt: { type: string, format: date-time }
+        freshUntil: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    NullifierRecord:
+      type: object
+      additionalProperties: false
+      required: [nullifierHash, scope, usedAt, sourceIds]
+      properties:
+        nullifierHash:
+          $ref: '#/components/schemas/HashOrCommitment'
+        scope: { type: string }
+        issuerId: { type: string }
+        usedAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    AuditEvent:
+      type: object
+      additionalProperties: false
+      required: [eventId, operation, status, recordedAt, errors, warnings]
+      properties:
+        eventId: { type: string }
+        operation:
+          type: string
+          enum: [register-issuer, revoke-commitment, anchor-freshness-root, verify, mark-nullifier-used]
+        status:
+          type: string
+          enum: [recorded, already_recorded, duplicate, rejected, verified, invalid]
+        recordedAt: { type: string, format: date-time }
+        subjectCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        issuerId: { type: string }
+        scope: { type: string }
+        errors:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+    RegisterIssuerRequest:
+      type: object
+      additionalProperties: true
+      required: [issuerId]
+      properties:
+        issuerId: { type: string }
+        status:
+          type: string
+          enum: [active, suspended, revoked]
+          default: active
+        displayName: { type: string }
+        trustScore:
+          type: number
+          minimum: 0
+          maximum: 1
+        publicKeyCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        metadataHash:
+          $ref: '#/components/schemas/HashOrCommitment'
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    RevokeCommitmentRequest:
+      type: object
+      additionalProperties: true
+      required: [commitment]
+      properties:
+        commitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        revocationCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        commitmentType:
+          type: string
+          enum: [credential, address-reference, aoid, agid, issuer-scoped, unknown]
+        reason: { type: string }
+        issuerId: { type: string }
+        revokedAt: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    AnchorFreshnessRootRequest:
+      type: object
+      additionalProperties: true
+      required: [freshnessRoot, freshUntil]
+      properties:
+        freshnessRoot:
+          $ref: '#/components/schemas/HashOrCommitment'
+        root:
+          $ref: '#/components/schemas/HashOrCommitment'
+        registryId: { type: string, default: default }
+        issuerId: { type: string }
+        anchoredAt: { type: string, format: date-time }
+        freshUntil: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+    VerifyRequest:
+      type: object
+      additionalProperties: true
+      properties:
+        issuerId: { type: string }
+        credentialCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        addressReferenceCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        aoidCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        agidCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        revocationCommitment:
+          $ref: '#/components/schemas/HashOrCommitment'
+        commitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/HashOrCommitment'
+        freshnessRoot:
+          $ref: '#/components/schemas/HashOrCommitment'
+        requireAnchoredFreshnessRoot:
+          type: boolean
+          default: false
+        freshUntil: { type: string, format: date-time }
+        nullifierHash:
+          $ref: '#/components/schemas/HashOrCommitment'
+        scope: { type: string }
+        now: { type: string, format: date-time }
+        localResolverStatus: { type: string }
+    MarkNullifierUsedRequest:
+      type: object
+      additionalProperties: true
+      required: [nullifierHash]
+      properties:
+        nullifierHash:
+          $ref: '#/components/schemas/HashOrCommitment'
+        scope: { type: string, default: default }
+        issuerId: { type: string }
+        usedAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+        sourceIds:
+          $ref: '#/components/schemas/SourceIds'
+        terminalSignature:
+          type: string
+        signatureNonce:
+          type: string
+        terminalNonce:
+          type: string
+        nonce:
+          type: string
+        signedAt:
+          type: string
+          format: date-time
+        terminalSignedAt:
+          type: string
+          format: date-time
+    RegistrySnapshot:
+      type: object
+      additionalProperties: false
+      required: [mode, modeVersion, issuers, revokedCommitments, freshnessRoots, usedNullifiers, audit, privacy]
+      properties:
+        mode: { type: string }
+        modeVersion: { type: string }
+        issuers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuerRecord'
+        revokedCommitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/RevocationRecord'
+        freshnessRoots:
+          type: array
+          items:
+            $ref: '#/components/schemas/FreshnessRootRecord'
+        usedNullifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/NullifierRecord'
+        audit:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditEvent'
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    VerifyResult:
+      type: object
+      additionalProperties: false
+      required: [mode, modeVersion, valid, checkedAt, errors, warnings, revokedCommitments, freshness, matchedRecords, privacy]
+      properties:
+        mode: { type: string }
+        modeVersion: { type: string }
+        valid: { type: boolean }
+        checkedAt: { type: string, format: date-time }
+        errors:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        issuer:
+          type: object
+          additionalProperties: false
+          properties:
+            issuerId: { type: string }
+            status:
+              type: string
+              enum: [active, suspended, revoked]
+            trustScore:
+              type: number
+              minimum: 0
+              maximum: 1
+        revokedCommitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/HashOrCommitment'
+        freshness:
+          type: object
+          additionalProperties: false
+          required: [anchored, fresh]
+          properties:
+            root:
+              $ref: '#/components/schemas/HashOrCommitment'
+            anchored: { type: boolean }
+            fresh: { type: boolean }
+            freshUntil: { type: string, format: date-time }
+        nullifier:
+          type: object
+          additionalProperties: false
+          properties:
+            scope: { type: string }
+            used: { type: boolean }
+            usedAt: { type: string, format: date-time }
+        matchedRecords:
+          type: object
+          additionalProperties: false
+          required: [commitmentCount, revokedCount]
+          properties:
+            commitmentCount:
+              type: integer
+              minimum: 0
+            revokedCount:
+              type: integer
+              minimum: 0
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    MutationResult:
+      type: object
+      additionalProperties: true
+      required: [mode, modeVersion, status, errors, warnings, privacy, event]
+      properties:
+        mode: { type: string }
+        modeVersion: { type: string }
+        status:
+          type: string
+          enum: [recorded, already_recorded, duplicate, rejected]
+        record:
+          type: object
+        errors:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+        event:
+          $ref: '#/components/schemas/AuditEvent'
+    AgidResultBase:
+      type: object
+      additionalProperties: true
+      required: [ok, sources, warnings, cache]
+      properties:
+        ok: { type: boolean }
+        error: { type: string }
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        sources:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        cache:
+          type: string
+          enum: [none, hit, miss, stale]
+    AgidResultError:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          properties:
+            data:
+              type: object
+              additionalProperties: true
+    AgidResultCapabilities:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/Capabilities'
+    AgidResultSnapshot:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/RegistrySnapshot'
+    AgidResultAudit:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              additionalProperties: false
+              required: [events]
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AuditEvent'
+    AgidResultVerify:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/VerifyResult'
+    AgidResultMutationIssuer:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          properties:
+            data:
+              allOf:
+                - $ref: '#/components/schemas/MutationResult'
+                - type: object
+                  properties:
+                    record:
+                      $ref: '#/components/schemas/IssuerRecord'
+    AgidResultMutationRevocation:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          properties:
+            data:
+              allOf:
+                - $ref: '#/components/schemas/MutationResult'
+                - type: object
+                  properties:
+                    record:
+                      $ref: '#/components/schemas/RevocationRecord'
+    AgidResultMutationFreshness:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          properties:
+            data:
+              allOf:
+                - $ref: '#/components/schemas/MutationResult'
+                - type: object
+                  properties:
+                    record:
+                      $ref: '#/components/schemas/FreshnessRootRecord'
+    AgidResultMutationNullifier:
+      allOf:
+        - $ref: '#/components/schemas/AgidResultBase'
+        - type: object
+          properties:
+            data:
+              allOf:
+                - $ref: '#/components/schemas/MutationResult'
+                - type: object
+                  properties:
+                    record:
+                      $ref: '#/components/schemas/NullifierRecord'

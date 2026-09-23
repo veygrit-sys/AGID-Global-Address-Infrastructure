@@ -1,0 +1,40 @@
+{
+  "schema_version": "agid-postal-at-synthetic-fixtures-v0.1",
+  "country_code": "AT",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "at-syn-derived-postal-surface",
+      "synthetic_address": { "street": "Testgasse", "orientation_number": "1", "locality": "Testort", "postcode": "0000" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["official-postcode-polygon", "official-statistical-postcode-region", "real-address", "deliverability"] }
+    },
+    {
+      "fixture_id": "at-syn-bev-building-link",
+      "synthetic_address": { "street": "Testgasse", "orientation_number": "2", "postcode": "0001" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["real-bev-addresscode", "real-bev-subcode", "real-building", "nearest-building-is-exact-link"] }
+    },
+    {
+      "fixture_id": "at-syn-statistical-region",
+      "synthetic_address": { "locality": "Statistik-Testort", "postcode": "0002" },
+      "evidence": [{ "assignment_authority": "none", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["austrian-post-official-perimeter", "statistical-region-proves-deliverability", "administrative-boundary-is-postcode-boundary"] }
+    },
+    {
+      "fixture_id": "at-syn-cross-border-route",
+      "synthetic_address": { "organization": "Testorganisation", "postcode": "0003" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "must_not_assert": ["foreign-routing-determines-country", "border-clip-determines-country", "po-box-is-residential-area"] }
+    }
+  ]
+}

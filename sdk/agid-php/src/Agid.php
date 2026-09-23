@@ -18,4 +18,9 @@ final class Agid
     {
         return null;
     }
+
+    public static function cellBounds(string $id): array
+    {
+        throw new \RuntimeException('wire this package to the AGID reference implementation');
+    }
 }

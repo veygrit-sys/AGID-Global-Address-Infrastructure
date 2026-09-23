@@ -194,7 +194,14 @@ function classifyAddressQuality({
 }
 
 function valueForField(address: CanonicalAddressParts, field: string) {
-  const key = field === 'street' ? 'road' : field === 'houseNumber' ? 'house_number' : field;
+  const key =
+    field === 'street'
+      ? 'road'
+      : field === 'houseNumber'
+        ? 'house_number'
+        : field === 'countryCode'
+          ? 'country_code'
+          : field;
   return clean(address[key as keyof CanonicalAddressParts]);
 }
 

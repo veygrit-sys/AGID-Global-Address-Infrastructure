@@ -1,0 +1,211 @@
+[
+  {
+    "runbookId": "ofk-field-handoff-scan-decision-report",
+    "surface": "field-handoff",
+    "label": "Field Handoff: Scan -> Decision -> Handoff -> Report",
+    "defaultMode": "deferred-sync",
+    "primaryWorkflow": [
+      "prepare",
+      "scan",
+      "decision",
+      "handoff",
+      "queue",
+      "sync",
+      "report"
+    ],
+    "operatorActions": [
+      "confirm device clock and operator session",
+      "scan QR or NFC alias",
+      "show only decision state and safe reason codes",
+      "request recipient proof when required",
+      "sign local receipt and queue sync item",
+      "mark conflict as review-required if reconciliation fails"
+    ],
+    "requiredControls": [
+      "terminal signature",
+      "offline queue reference",
+      "short alias for stop or waybill",
+      "recipient proof secret is never stored",
+      "high-risk mode redacts precise AGID and address history"
+    ],
+    "forbiddenStorage": [
+      "raw address text",
+      "raw AGID in high-risk mode",
+      "AOID body",
+      "recipient name",
+      "phone number",
+      "proof code or proof secret",
+      "QR or NFC raw payload"
+    ],
+    "syncPolicy": "Queue signed receipts and nullifier sync items locally, then reconcile as accepted, conflict, or audit-required.",
+    "fallbackPolicy": "If the scan cannot be accepted, record a safe cannot-reach reason and open a review case."
+  },
+  {
+    "runbookId": "ofk-ngo-aid-local-station",
+    "surface": "ngo-aid-station",
+    "label": "NGO Aid Station: Offline Eligibility and Used-state Capture",
+    "defaultMode": "local-only",
+    "primaryWorkflow": [
+      "prepare",
+      "scan",
+      "decision",
+      "queue",
+      "sync",
+      "report"
+    ],
+    "operatorActions": [
+      "load signed issuer and area roots before deployment",
+      "accept local proof verification or credential status cache",
+      "record only nullifier and aid-event alias",
+      "use deferred sync when network returns"
+    ],
+    "requiredControls": [
+      "local issuer cache expiry",
+      "aid-event domain separation",
+      "no household-level public zone",
+      "recipient proof code is not retained"
+    ],
+    "forbiddenStorage": [
+      "precise refuge location",
+      "recipient identity",
+      "raw address evidence",
+      "proof witness"
+    ],
+    "syncPolicy": "Batch nullifiers and receipt roots; conflicts become audit-required rather than public accusation.",
+    "fallbackPolicy": "If issuer cache is stale, continue only in local provisional mode and require supervisor review."
+  },
+  {
+    "runbookId": "ofk-warehouse-locker-local-control",
+    "surface": "warehouse-locker",
+    "label": "Warehouse / Locker: Local Control with Later Registry Sync",
+    "defaultMode": "server-registry-when-online",
+    "primaryWorkflow": [
+      "prepare",
+      "scan",
+      "decision",
+      "handoff",
+      "queue",
+      "sync",
+      "report"
+    ],
+    "operatorActions": [
+      "bind locker bay alias to a short-lived handoff receipt",
+      "open bay only after QR, NFC, PIN, passkey, or local proof passes",
+      "sign device event before queueing",
+      "keep Modbus/MQTT/HTTP simulator events address-free"
+    ],
+    "requiredControls": [
+      "locker bay alias",
+      "device event signature",
+      "used-state sync item",
+      "local open/close receipt"
+    ],
+    "forbiddenStorage": [
+      "raw destination address",
+      "full waybill identifier",
+      "recipient private credential",
+      "precise high-risk delivery location"
+    ],
+    "syncPolicy": "Sync used-state, device health, and signed event roots; never sync full locker access payloads.",
+    "fallbackPolicy": "If bay state and server state diverge, freeze the bay and create a review case."
+  },
+  {
+    "runbookId": "ofk-drone-reachability-report",
+    "surface": "drone-reachability",
+    "label": "Drone Reachability: Feasibility Report, Not Drone OS",
+    "defaultMode": "deferred-sync",
+    "primaryWorkflow": [
+      "prepare",
+      "decision",
+      "cannot-reach",
+      "queue",
+      "sync",
+      "report"
+    ],
+    "operatorActions": [
+      "classify route feasibility using safe reachability categories",
+      "store precise telemetry only in encrypted local or evidence vault storage",
+      "publish only coarse cells and public-safe categories",
+      "restrict no-fly, landing-impossible, and high-risk telemetry"
+    ],
+    "requiredControls": [
+      "coarse cell projection",
+      "restricted evidence commitment",
+      "device event signature",
+      "offline report queue",
+      "device attestation reference",
+      "TTL on public reachability warning"
+    ],
+    "forbiddenStorage": [
+      "precise route telemetry in public feed",
+      "raw address or AOID in reachability feed",
+      "operator identity in public feed"
+    ],
+    "syncPolicy": "Sync public-safe reachability feed items separately from restricted evidence commitments.",
+    "fallbackPolicy": "If safety classification is uncertain, keep the report restricted and require manual review."
+  },
+  {
+    "runbookId": "ofk-hotel-check-in-address-transfer",
+    "surface": "hotel-check-in",
+    "label": "Hotel Check-in: QR Address Transfer without Persistent Raw Storage",
+    "defaultMode": "local-only",
+    "primaryWorkflow": [
+      "prepare",
+      "scan",
+      "decision",
+      "queue",
+      "report"
+    ],
+    "operatorActions": [
+      "scan traveler QR or NFC address envelope",
+      "let the guest approve only required hotel fields",
+      "store check-in receipt and consent scope rather than reusable address payload",
+      "export a redacted receipt for audit"
+    ],
+    "requiredControls": [
+      "explicit consent scope",
+      "short-lived hotel alias",
+      "local redaction before export",
+      "guest can revoke or delete later"
+    ],
+    "forbiddenStorage": [
+      "reusable address QR payload",
+      "passport or travel document image in public logs",
+      "phone number in receipt export"
+    ],
+    "syncPolicy": "Sync only consent receipt, alias, and retention policy when the hotel back office is online.",
+    "fallbackPolicy": "If consent cannot be confirmed, fall back to manual entry without retaining scan payload."
+  },
+  {
+    "runbookId": "ofk-registry-reconciliation",
+    "surface": "registry-sync",
+    "label": "Registry Reconciliation: Conflict-safe Offline Sync",
+    "defaultMode": "deferred-sync",
+    "primaryWorkflow": [
+      "queue",
+      "sync",
+      "decision",
+      "report"
+    ],
+    "operatorActions": [
+      "submit CRDT envelope and nullifier sync items",
+      "accept server used-state response",
+      "mark conflicts as audit-required",
+      "return redacted reconciliation report to device"
+    ],
+    "requiredControls": [
+      "offline queue reconciliation decision",
+      "CRDT vector clock",
+      "commitment-only sensitive fields",
+      "nullifier replay check",
+      "redacted audit outcome"
+    ],
+    "forbiddenStorage": [
+      "raw address in registry",
+      "full QR/NFC payload in webhook",
+      "proof witness in server log"
+    ],
+    "syncPolicy": "Server may accept, reject, or conflict each item; client must preserve local receipt history.",
+    "fallbackPolicy": "If registry is unreachable, keep queue append-only and surface stale sync state to operator."
+  }
+]

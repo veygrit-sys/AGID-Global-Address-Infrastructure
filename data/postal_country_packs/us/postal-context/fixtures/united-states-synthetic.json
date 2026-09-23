@@ -1,0 +1,54 @@
+{
+  "country_code": "US",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_value": "99999",
+    "coordinates_are_upstream_observations": false,
+    "postcodes_are_assignment_evidence": false,
+    "synthetic_value_not_checked_against_live_lookup": true,
+    "collision_requires_replacement_before_promotion": true
+  },
+  "fixtures": [
+    {
+      "fixture_id": "us-syn-postal-99999",
+      "synthetic_address": {
+        "postcode": "99999",
+        "state": "Synthetic State",
+        "county": "Synthetic County",
+        "city": "Synthetic City"
+      },
+      "expected": {
+        "geometry_type": "derived_synthetic_zcta_like_validation_surface",
+        "must_not_assert": [
+          "synthetic-code-is-current-usps-assignment",
+          "zip-or-zip-plus-four-is-an-official-polygon-or-building",
+          "synthetic-zcta-like-surface-is-official-usps-geometry",
+          "census-zcta-is-usps-delivery-boundary-or-complete-coverage",
+          "territory-or-military-routing-is-physical-us-jurisdiction"
+        ]
+      }
+    },
+    {
+      "fixture_id": "us-syn-building-99999",
+      "synthetic_address": {
+        "postcode": "99999",
+        "city": "Synthetic City",
+        "civic_address_id": "US-SYN-CIVIC-99",
+        "building_id": "US-SYN-BUILDING-99"
+      },
+      "expected": {
+        "geometry_type": "explicit_synthetic_building",
+        "must_not_assert": [
+          "zip-geocode-address-point-structure-parcel-containment-or-proximity-is-exact-building-link",
+          "owner-occupant-person-or-property-data-is-public-address-data",
+          "synthetic-fixture-is-a-real-address-or-delivery-entitlement",
+          "agid-cell-is-official-usps-geometry"
+        ]
+      }
+    }
+  ]
+}

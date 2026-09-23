@@ -1,0 +1,154 @@
+{
+  "country_code": "PA",
+  "artifact_scope": "metadata-only-contract-seed",
+  "sources": [
+    {
+      "bundled_here": false,
+      "source_id": "correos-panama-postal-system-2026",
+      "provider": "Correos y Telegrafos de Panama (COTEL)",
+      "source_url": "https://www.correospanama.gob.pa/panama-da-un-paso-firme-hacia-la-modernizacion-con-el-nuevo-sistema-de-codigos-postales/",
+      "role": [
+        "official-launch-scope-and-temporal-reference-2026-05-07"
+      ],
+      "production_scope": "Metadata only; the announcement does not license underlying records, API automation or geometry redistribution.",
+      "assignment_authority": "system-existence-and-launch-date-not-row-level-assignment",
+      "geometry_authority": "none",
+      "redistribution_class": "PUBLICATION_TERMS_SEPARATE"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "panama-postal-code-api-2026",
+      "provider": "Sistema de Codigos Postales de Panama / Correos Panama",
+      "source_url": "https://codigospostalespanama.gob.pa/",
+      "role": [
+        "official-single-observation-location-and-code-validation",
+        "full-code-and-grid-decoding",
+        "postal-zone-estafeta-hierarchy-and-pico-cell-observation"
+      ],
+      "production_scope": "Pin successful request and response, normalized input, timestamp, terms, rate policy and digest; do not bulk scrape, republish, retain household queries unnecessarily or treat outage as absence.",
+      "assignment_authority": "official_postal_portal_observation",
+      "geometry_authority": "official_portal_observed_pico_cell_only_subject_to_terms",
+      "redistribution_class": "OBSERVATION_ONLY_API_TERMS_UNCONFIRMED"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "upu-panama-addressing-2015",
+      "provider": "Universal Postal Union",
+      "source_url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/panEn.pdf",
+      "role": [
+        "pre-2026-address-layout-and-po-box-reference-02-2015"
+      ],
+      "production_scope": "Historical metadata and validation guidance only unless separately licensed; never override the 2026 system.",
+      "assignment_authority": "dated_pre-system_context_not_current_assignment",
+      "geometry_authority": "none",
+      "redistribution_class": "UPU_PUBLICATION_TERMS_SEPARATE"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "inec-panama-territorial-coding",
+      "provider": "Instituto Nacional de Estadistica y Censo",
+      "source_url": "https://www.inec.gob.pa/aplicaciones/env2008/otros/manuales/cartografia.pdf",
+      "role": [
+        "official-political-administrative-coding-and-census-hierarchy-context"
+      ],
+      "production_scope": "Pin exact current code list or publication, edition, terms, attribution and digest; keep separate from postal assignment.",
+      "assignment_authority": "not_postal",
+      "geometry_authority": "administrative_context_only",
+      "redistribution_class": "RESOURCE_PERMISSION_AND_CURRENT_EDITION_REQUIRED"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "ign-panama-dpa-2025",
+      "provider": "Instituto Geografico Nacional Tommy Guardia / ANATI",
+      "source_url": "https://sigigntg.anati.gob.pa/arcgisserver/rest/services/Mapa_Web_de_Poblados_2025_MIL1/MapServer",
+      "role": [
+        "official-1-to-25000-dpa-and-settlement-reference-2025"
+      ],
+      "production_scope": "Pin exact layer item info, CC BY-NC-SA terms, edition, attribution, schema, CRS and digest; preserve non-commercial share-alike constraints and never relabel DPA as postal geometry.",
+      "assignment_authority": "not_postal",
+      "geometry_authority": "official_administrative_context_not_postal",
+      "redistribution_class": "CC_BY_NC_SA_SEPARATE_PARTITION"
+    },
+    {
+      "bundled_here": false,
+      "source_id": "osm-panama",
+      "provider": "OpenStreetMap contributors",
+      "source_url": "https://wiki.openstreetmap.org/wiki/Panama",
+      "role": [
+        "community-address-road-building-and-validation-context"
+      ],
+      "production_scope": "Keep ODbL data and derivatives in a separately attributed provenance partition.",
+      "assignment_authority": "not_official_operator",
+      "geometry_authority": "community_context_only",
+      "redistribution_class": "ODBL_SEPARATE_PARTITION"
+    }
+  ],
+  "assignment_observation_gate": {
+    "maximum_claim": "official-api-observation",
+    "required": [
+      "official-endpoint",
+      "successful-response",
+      "full-code-or-grid-input-kind",
+      "normalized-code",
+      "observed-at",
+      "request-purpose",
+      "coordinate-minimisation",
+      "terms-snapshot",
+      "rate-policy",
+      "request-response-digests",
+      "source-provenance"
+    ],
+    "failure_mode": "metadata-only-or-unverified-observation"
+  },
+  "geometry_promotion_gate": {
+    "maximum_claim": "official-api-observed-pico-cell-or-derived-review-geometry",
+    "required": [
+      "explicit-full-code-or-grid-observation",
+      "resource-or-api-permission",
+      "validity",
+      "schema",
+      "crs",
+      "request-response-sha256",
+      "topology-validation",
+      "uncertainty-and-resolution",
+      "derived-lineage-when-modified"
+    ],
+    "failure_mode": "no-published-postal-zone-geometry-and-never-infer-a-polygon-from-area-scalar-or-dpa"
+  },
+  "building_promotion_gate": {
+    "maximum_claim": "explicit-address-linked-building",
+    "required": [
+      "rights-cleared-civic-address-id",
+      "rights-cleared-building-id",
+      "explicit-reviewed-relation",
+      "validity",
+      "privacy-review",
+      "geometry-provenance",
+      "sha256"
+    ],
+    "failure_mode": "cell-and-address-context-only-no-building-claim"
+  },
+  "realtime_and_model": {
+    "permitted_roles": [
+      "single-observation-validation",
+      "normalization",
+      "grid-decoding-under-permitted-contract",
+      "join-validation",
+      "drift-detection",
+      "review-prioritization",
+      "geometry-compression-with-error-bounds"
+    ],
+    "prohibited_roles": [
+      "invent-estafeta-prefix-or-current-assignment",
+      "turn-area-scalar-or-administration-into-official-postal-polygon",
+      "infer-premises-number-unit-building-person-or-delivery-entitlement"
+    ],
+    "outage_rule": "timeout-empty-or-unavailable-is-unknown-not-no-assignment"
+  },
+  "hugging_face": {
+    "dataset_role": "rights-cleared-versioned-derived-artifact-store",
+    "space_role": "demonstration-only",
+    "production_read_rule": "pin-hub-commit-and-verify-shard-digests",
+    "restricted_data_rule": "private-gated-or-external-only-for-household-coordinate-address-property-owner-query-and-credential-data"
+  }
+}

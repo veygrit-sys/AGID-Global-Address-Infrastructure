@@ -1,0 +1,174 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-nl",
+    "country_code": "NL",
+    "country_name": "Netherlands",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/nl/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "PC6",
+    "full_code_format": "NNNN AA",
+    "full_code_regex": "^\\d{4}\\s[A-Z]{2}$",
+    "full_code_default_geometry": "address_range_with_optional_derived_area",
+    "full_code_rule": "Treat PC6 as a PostNL assignment to an address or number range. A polygon is separate evidence and must carry its own geometry authority.",
+    "pc4_prefix_digits": 4,
+    "pc4_rule": "PC4 is a coarse numeric area and cannot replace PC6 for an exact premise or building decision.",
+    "cbs_geometry_rule": "CBS/Esri PC4, PC5, and PC6 surfaces are versioned derived geometry with attribution, never official PostNL boundaries.",
+    "model_geometry_rule": "Voronoi, buffers, alpha shapes, learned boundaries, and AGID cell unions are candidate or virtual geometry only."
+  },
+  "address_graph": {
+    "node_types": [
+      "postal_code_pc6",
+      "postal_area_pc4",
+      "country",
+      "province",
+      "municipality",
+      "woonplaats",
+      "street",
+      "nummeraanduiding",
+      "verblijfsobject",
+      "ligplaats",
+      "standplaats",
+      "pand",
+      "po_box",
+      "organization",
+      "agid_cell"
+    ],
+    "edge_types": [
+      "postal_assigned",
+      "located_at",
+      "addresses",
+      "part_of",
+      "postal_contains",
+      "covered_by_agid",
+      "derived_from"
+    ],
+    "cardinality_rules": [
+      "pc6_to-address-or-number-range-is-one-to-many",
+      "verblijfsobject_to-pand-may-be-many-to-many",
+      "pand_to-address-may-be-one-to-many",
+      "pc4_to-pc6-is-one-to-many",
+      "derived-area-containment-is-not-deliverability"
+    ]
+  },
+  "exception_classes": [
+    {
+      "id": "pc6_address_range",
+      "rule": "Preserve even/odd number ranges and additions; do not replace them with a single centroid."
+    },
+    {
+      "id": "cbs_derived_postcode_area",
+      "rule": "Pin year, corrected version, CBS and Esri attribution, and geometry method. Never label the surface as an official PostNL boundary."
+    },
+    {
+      "id": "bag_many_to_many_building",
+      "rule": "Keep all BAG verblijfsobject-to-pand relationships and all public addresses; never collapse conflicting buildings into one result."
+    },
+    {
+      "id": "po_box_or_answer_number",
+      "rule": "Retain Postbus and Antwoordnummer assignments as non-building postal records unless an independent public facility link exists."
+    },
+    {
+      "id": "historical_reassignment",
+      "rule": "Use separate valid and known times for postal, BAG, and geometry changes; do not overwrite history."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "metadata-and-license-lineage",
+      "scope": "all",
+      "pass": "Every source field has a pinned release, digest, terms or licence reference, attribution, and transformation method."
+    },
+    {
+      "id": "pc6-normalization",
+      "scope": "pc6",
+      "metric": "normalized_four_digits_space_two_uppercase_letters_ratio",
+      "minimum": 1.0
+    },
+    {
+      "id": "authority-separation",
+      "scope": "all",
+      "pass": "PostNL assignment, BAG address/building geometry, CBS/Esri postal geometry, and AGID indexing authority remain separate."
+    },
+    {
+      "id": "exact-bag-link",
+      "scope": "promoted-address-links",
+      "pass": "PC6, huisnummer, toevoeging, openbareruimte, and woonplaats agree on one BAG path; conflicts remain alternatives."
+    },
+    {
+      "id": "cbs-correction-and-attribution",
+      "scope": "cbs-postcode-areas",
+      "pass": "The corrected release and checksum are pinned and required CBS plus Esri Nederland attribution is emitted."
+    },
+    {
+      "id": "postal-area-topology",
+      "scope": "derived-postcode-areas",
+      "pass": "Geometry is valid, bounded, versioned, and overlap or gap changes are reported rather than silently repaired."
+    },
+    {
+      "id": "privacy",
+      "scope": "public-artifacts",
+      "pass": "No occupant, recipient, phone, customer record, delivery instruction, API key, or private unit assertion is published."
+    },
+    {
+      "id": "holdout",
+      "scope": "candidate-release",
+      "metrics": {
+        "exact_pc6_address_match_ratio_minimum": 0.995,
+        "coordinate_top_1_match_ratio_minimum": 0.98,
+        "coordinate_top_k_match_ratio_minimum": 0.995
+      },
+      "requires_independent_holdout": true
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "scope": "fixtures",
+      "pass": "Synthetic fixtures validate behavior but never satisfy production gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles and legal blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_netherlands_pc6_assignment_and_cbs_area_visualization", "definition": "A current complete rights-cleared PostNL PC6 assignment and exception denominator, including house-number ranges, P.O. box ranges, NAPO, organizations, reply/freepost, facility/special/non-geographic and historical or transition classes, is reconciled to the corrected current CBS/Esri derived PC6 Polygon/MultiPolygon release. Edition, effective date, dataset-specific terms, attribution, byte length, SHA-256, coverage, exclusions and reproducible transformation are pinned in an approved immutable artifact. The real NL API/app must normalize NNNN AA, fit and render a translucent area with a clear outline, and show selected code, geometry kind, official/derived/virtual classification, source, reference date and confidence. CBS/Esri surfaces remain derived and never establish PostNL assignment or deliverability. PostNL site/API observations, BAG points/buildings, PC4/PC5, statistical/admin/cadastral units, buffers, hulls, Voronoi/raster cells and synthetic fixtures never satisfy M2 by themselves; non-areal endpoints remain non-area." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postnl-table-redistributed-without-contractual-rights",
+      "postnl-complete-ordinary-and-exception-denominator-unavailable-for-public-serving",
+      "cbs-derived-pc6-surface-used-as-postnl-assignment-authority",
+      "po-box-napo-or-special-code-given-invented-area",
+      "postnl-api-receipts-published-without-terms-review",
+      "cbs-derived-area-presented-as-official-postnl-boundary",
+      "uncorrected-or-unpinned-cbs-release",
+      "pc4-presented-as-exact-pc6",
+      "bag-proximity-presented-as-postal-assignment",
+      "occupant-or-customer-data-published",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "occupancy",
+    "official-postnl-polygon",
+    "pc4-equals-pc6",
+    "bag-building-has-one-postcode",
+    "legal-boundary-or-survey-certification"
+  ]
+}

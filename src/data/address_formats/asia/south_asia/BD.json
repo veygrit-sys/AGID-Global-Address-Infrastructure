@@ -3,13 +3,20 @@
   "name": "Bangladesh",
   "native": {
     "name": "বাংলাদেশ",
-    "addressFormat": "{{organization}}\n{{houseNumber}}, {{street}}\n{{suburb}}\n{{city}} - {{postcode}}\n{{state}}",
+    "addressFormat": "{{organization}}\n{{houseNumber}}, {{street}}\n{{suburb}}\n{{postOffice}}\n{{city}} - {{postcode}}\n{{state}}",
     "ordering": "small-to-big",
     "fields": [
       {
         "key": "organization",
         "label": "ভবন/কোম্পানি",
         "placeholder": "বঙ্গভবন",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "অনুমোদিত ভবন পরিচিতি",
+        "placeholder": "BD-SYN-BLDG",
         "required": false,
         "type": "text"
       },
@@ -32,6 +39,13 @@
         "label": "এলাকা",
         "placeholder": "ধানমন্ডি",
         "required": false,
+        "type": "text"
+      },
+      {
+        "key": "postOffice",
+        "label": "ডেলিভারি পোস্ট অফিস",
+        "placeholder": "সাভার",
+        "required": true,
         "type": "text"
       },
       {
@@ -58,13 +72,20 @@
     ]
   },
   "english": {
-    "addressFormat": "{{organization}}\n{{houseNumber}}, {{street}}\n{{suburb}}\n{{city}} - {{postcode}}\n{{state}}\n{{country}}",
+    "addressFormat": "{{organization}}\n{{houseNumber}}, {{street}}\n{{suburb}}\n{{postOffice}}\n{{city}} - {{postcode}}\n{{state}}\n{{country}}",
     "ordering": "small-to-big",
     "fields": [
       {
         "key": "organization",
         "label": "Building/Company",
         "placeholder": "Bangabhaban",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "Authoritative Building ID",
+        "placeholder": "BD-SYN-BLDG",
         "required": false,
         "type": "text"
       },
@@ -87,6 +108,13 @@
         "label": "Area",
         "placeholder": "Dhanmondi",
         "required": false,
+        "type": "text"
+      },
+      {
+        "key": "postOffice",
+        "label": "Delivery Post Office",
+        "placeholder": "Savar",
+        "required": true,
         "type": "text"
       },
       {
@@ -113,10 +141,10 @@
     ]
   },
   "postalCode": {
-    "format": "NNNN",
-    "regex": "^\\d{4}$",
-    "api": "https://bdpost.portal.gov.bd/",
-    "source": "Bangladesh Post / Survey of Bangladesh / OSM Bangladesh"
+    "format": "NNNN (1000-9999)",
+    "regex": "^[1-9]\\d{3}$",
+    "api": "https://bdpost.gov.bd/pages/internal-eservices/%E0%A6%AA%E0%A7%8B%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A6%95%E0%A7%8B%E0%A6%A1-%E0%A6%85%E0%A6%A8%E0%A7%81%E0%A6%B8%E0%A6%A8%E0%A7%8D%E0%A6%A7%E0%A6%BE%E0%A6%A8-d365db-6922d969dbfbab28ce04c535",
+    "source": "Bangladesh Post official postcode tables / UPU Bangladesh addressing / Survey of Bangladesh GIS / Bangladesh NSDI / BBS Census 2022 / DLRS"
   },
   "addressRules": {
     "languages": [
@@ -146,15 +174,48 @@
       "country"
     ],
     "regionalHierarchy": [
-      "district"
+      "division",
+      "district",
+      "upazilaOrThana",
+      "unionMunicipalityOrWard",
+      "villageAreaOrStreet",
+      "deliveryPostOffice",
+      "typedGpoHoTsoUpoSoEdsoOrEdbo",
+      "fourDigitPostcode",
+      "officialPostalSurfaceOrNoCanonicalGeometry",
+      "optionalDerivedDeliverySurface",
+      "explicitRightsClearedCivicAddressPoint",
+      "explicitAddressLinkedBuilding",
+      "exactRightsClearedBuildingGeometry"
     ],
     "postalCode": {
       "label": "4 digits required",
       "required": true,
       "usage": "required"
-    }
+    },
+    "aliasLayers": [
+      "Bangladesh Post English and Bengali post-office names",
+      "official division, district, upazila, thana and union names",
+      "source-qualified Bengali and Latin-script aliases",
+      "OSM, HOT and GeoNames names for fallback only"
+    ],
+    "normalizationPriority": [
+      "pinned Bangladesh Post district table edition and typed office row",
+      "exact rights-cleared postal boundary and explicit postcode relation",
+      "Survey of Bangladesh and NSDI context without promoting topographic or administrative features to postal geometry",
+      "BBS census context without promoting enumeration areas to postal areas",
+      "rights-cleared civic-address point and explicit building relation",
+      "DLRS, OSM and HOT only within source-specific rights and evidence roles"
+    ]
   },
   "openSourceIds": [
+    "bangladesh-post-postcode-tables",
+    "upu-bangladesh-addressing",
+    "survey-of-bangladesh-gis-services",
+    "bangladesh-nsdi-geoportal",
+    "bangladesh-nsdi-data-catalog",
+    "bbs-bangladesh-census-2022",
+    "dlrs-bangladesh-map-portal",
     "bd-post",
     "survey-bangladesh",
     "osm-bangladesh",

@@ -1,0 +1,19 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JSON manifests
+        run: |
+          node -e "const fs=require('fs'); for (const f of fs.readdirSync('.').filter(x=>x.endsWith('.json'))) JSON.parse(fs.readFileSync(f,'utf8'));"

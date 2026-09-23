@@ -59,3 +59,24 @@ test('combines API details with parsed display text and records provenance', () 
   assert.deepEqual(analysis.sources, ['nominatim', 'zippopotam', 'parser']);
   assert.ok(analysis.confidence >= 0.8);
 });
+
+test('normalizes public map feature labels into POI evidence', () => {
+  const normalized = normalizeApiAddress({
+    country_code: 'jp',
+    city: 'Tokyo',
+    map_feature_name: 'Rainbow Bridge',
+    map_feature_kind: 'bridge',
+  });
+
+  assert.equal(normalized.poi, 'Rainbow Bridge');
+  assert.equal(normalized.city, 'Tokyo');
+  assert.equal(normalized.country_code, 'jp');
+});
+
+test('normalizes direct natural and heritage feature fields into POI evidence', () => {
+  assert.equal(normalizeApiAddress({ pond: 'Shinobazu Pond' }).poi, 'Shinobazu Pond');
+  assert.equal(normalizeApiAddress({ bay: 'Tokyo Bay' }).poi, 'Tokyo Bay');
+  assert.equal(normalizeApiAddress({ waterfall: 'Victoria Falls' }).poi, 'Victoria Falls');
+  assert.equal(normalizeApiAddress({ glacier: 'Aletsch Glacier' }).poi, 'Aletsch Glacier');
+  assert.equal(normalizeApiAddress({ heritage_site: 'Taj Mahal' }).poi, 'Taj Mahal');
+});

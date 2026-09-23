@@ -1,4 +1,5 @@
 import type { SyncQueueRecord } from './appDatabase';
+import type { AddressIdentityLayer } from './addressIdentity';
 
 export type HybridAuthority = 'device' | 'central' | 'sdk' | 'open-data-pack';
 
@@ -23,6 +24,8 @@ export type HybridRuntimeMode =
 
 export type HybridPrivacyScope = 'public-grid' | 'private-record' | 'derived-evidence' | 'settings';
 
+export type HybridIdentityLayer = AddressIdentityLayer | 'ADDRESS_EVIDENCE' | 'SETTINGS';
+
 export type HybridCentralRole =
   | 'none'
   | 'quality-upgrade'
@@ -41,6 +44,7 @@ export type HybridPolicy = {
   centralRole: HybridCentralRole;
   sdkRole: HybridSdkRole;
   privacyScope: HybridPrivacyScope;
+  identityLayer: HybridIdentityLayer;
   canRunOffline: boolean;
   canUseSdkWithoutCentral: boolean;
   sendsPersonalDataToPublicLayer: boolean;
@@ -66,6 +70,7 @@ export type HybridRuntimeDecision = {
   canUseSdkWithoutCentral: boolean;
   qualityTier: 'local' | 'partial' | 'verified';
   privacyScope: HybridPrivacyScope;
+  identityLayer: HybridIdentityLayer;
   sendsPersonalDataToPublicLayer: false;
   label: string;
 };
@@ -81,6 +86,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'none',
     sdkRole: 'core-owner',
     privacyScope: 'public-grid',
+    identityLayer: 'AGID',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -97,6 +103,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'quality-upgrade',
     sdkRole: 'consumer',
     privacyScope: 'private-record',
+    identityLayer: 'AOID',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -113,6 +120,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'verification-source',
     sdkRole: 'consumer',
     privacyScope: 'derived-evidence',
+    identityLayer: 'ADDRESS_EVIDENCE',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -129,6 +137,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'verification-source',
     sdkRole: 'consumer',
     privacyScope: 'derived-evidence',
+    identityLayer: 'ADDRESS_EVIDENCE',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -145,6 +154,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'quality-upgrade',
     sdkRole: 'mirror',
     privacyScope: 'derived-evidence',
+    identityLayer: 'ADDRESS_EVIDENCE',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -153,7 +163,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
   },
   'building-name': {
     workflow: 'building-name',
-    label: 'Building and place name enrichment',
+    label: 'Building, place, and map-feature enrichment',
     primaryAuthority: 'central',
     fallbackAuthorities: ['open-data-pack', 'device'],
     onlineMode: 'central-assisted',
@@ -161,6 +171,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'quality-upgrade',
     sdkRole: 'consumer',
     privacyScope: 'derived-evidence',
+    identityLayer: 'ADDRESS_EVIDENCE',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -177,6 +188,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'optional-private-sync',
     sdkRole: 'consumer',
     privacyScope: 'private-record',
+    identityLayer: 'AOID',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -193,6 +205,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'optional-private-sync',
     sdkRole: 'none',
     privacyScope: 'settings',
+    identityLayer: 'SETTINGS',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -209,6 +222,7 @@ const HYBRID_POLICIES: Record<HybridWorkflow, HybridPolicy> = {
     centralRole: 'none',
     sdkRole: 'core-owner',
     privacyScope: 'public-grid',
+    identityLayer: 'AGID',
     canRunOffline: true,
     canUseSdkWithoutCentral: true,
     sendsPersonalDataToPublicLayer: false,
@@ -223,6 +237,13 @@ const SYNC_ENTITY_WORKFLOW: Record<SyncQueueRecord['entityType'], HybridWorkflow
   registeredAddress: 'registered-address-sync',
   aoid: 'registered-address-sync',
   settings: 'settings-sync',
+  posShipment: 'registered-address-sync',
+  posReceipt: 'registered-address-sync',
+  posAuditCase: 'registered-address-sync',
+  posHandoff: 'registered-address-sync',
+  posDeviceDiagnostic: 'settings-sync',
+  posCrossBorderDeclaration: 'registered-address-sync',
+  posOfflineUsage: 'registered-address-sync',
 };
 
 const QUALITY_TIERS = [
@@ -288,6 +309,7 @@ export function resolveHybridRuntime(context: HybridRuntimeContext): HybridRunti
     canUseSdkWithoutCentral: policy.canUseSdkWithoutCentral,
     qualityTier: getQualityTier(policy, context.centralConfidence),
     privacyScope: policy.privacyScope,
+    identityLayer: policy.identityLayer,
     sendsPersonalDataToPublicLayer: false,
     label: policy.evidenceLabel,
   };

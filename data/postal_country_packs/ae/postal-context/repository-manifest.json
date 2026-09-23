@@ -1,0 +1,95 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-ae",
+    "country_code": "AE",
+    "country_name": "United Arab Emirates",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/ae/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "publication_claim": "reviewed-contract-not-data-release"
+  },
+  "contract_files": ["repository-manifest.json", "source-profile.json", "README.md"],
+  "identifier_namespaces": [
+    {
+      "id": "emirates_post_po_box",
+      "scope": "emirates-post-branch",
+      "required_identity": ["operator", "branch_id", "box_identifier"],
+      "geometry_rule": "Non-area delivery identifier; never convert the box identifier into a postcode or postcode polygon.",
+      "public_data_rule": "No subscriber names, private mailbox ownership or recipient records."
+    },
+    {
+      "id": "dubai_makani_entrance",
+      "scope": "explicit-provider-emirate-and-release",
+      "required_identity": ["authority", "emirate", "entrance_identifier"],
+      "geometry_rule": "Source-linked entrance geometry only. Do not treat an entrance locator as a postal catchment or a verified building name.",
+      "public_data_rule": "A documented deployment in Dubai does not prove nationwide coverage. Unit identifiers are a separate, privacy-reviewed namespace."
+    },
+    {
+      "id": "abu_dhabi_onwani_postal_code",
+      "scope": "Abu Dhabi addressing system",
+      "required_identity": ["authority", "emirate", "postal_code", "source_release"],
+      "geometry_rule": "Retain Onwani postal codes as their own scoped identifiers. Require explicit source geometry and assignment evidence before publishing areas or address links.",
+      "public_data_rule": "Do not substitute a PO Box number, Makani identifier, parcel number or fabricated zero code."
+    }
+  ],
+  "authority_model": {
+    "required_fields": ["namespace", "jurisdiction", "assignment_authority", "geometry_authority", "source_id", "source_record_id", "source_release", "source_digest", "observed_at", "valid_from", "valid_to", "license_ref"],
+    "rule": "Postal, municipal address, entrance, parcel and building evidence remain independent. An official document or geometry alone is not an assignment dataset."
+  },
+  "exception_classes": [
+    "po_box_not_postcode",
+    "onwani_not_nationwide_postcode",
+    "makani_entrance_not_postal_polygon",
+    "unit_identifier_not_public_entrance",
+    "parcel_not_civic_address",
+    "historical_document_not_current_coverage",
+    "ambiguous_identifier_without_namespace",
+    "source_page_not_data_snapshot"
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {"id": "M0_inventory", "definition": "Identify operator and emirate-level addressing systems and unresolved source rights."},
+      {"id": "M1_metadata", "definition": "Review the namespace, authority, privacy and publication contract with source-backed negative tests."},
+      {"id": "M2_scoped_address_context", "definition": "A rights-cleared, editioned real dataset for an explicitly declared AE jurisdiction and identifier namespace reproduces published digest-pinned experimental context artifacts and passes namespace-aware AGID integration; documentation, synthetic fixtures and a no-postcode label do not satisfy this stage."},
+      {"id": "M3_candidate", "definition": "Independent holdout, coverage, exceptions, freshness and source-linked civic/building checks pass within the declared scope."},
+      {"id": "M4_stable", "definition": "Repeated source refreshes, corrections and verified rollback operate under reviewed redistribution and privacy rules."}
+    ],
+    "m2_required_evidence": [
+      "real-current-source-records-with-declared-edition-and-scope",
+      "retained-source-and-terms-snapshots-with-sha256-and-observation-times",
+      "rights-cleared-for-the-actual-transformations-and-public-artifacts",
+      "namespace-and-emirate-aware-identifiers-without-fabricated-postcodes",
+      "complete-lineage-and-explicit-temporal-semantics",
+      "source-authorized-geometry-or-explicit-none",
+      "separate-direct-source-evidence-for-civic-number-building-and-entrance-display",
+      "reproducible-pack-and-negative-tests-on-real-scoped-records",
+      "approved-immutable-external-publication-and-remote-digest-verification",
+      "namespace-aware-agid-loader-and-api-verification"
+    ],
+    "hard_blockers": [
+      "uncleared-derivative-or-redistribution-rights",
+      "reference-html-or-historical-pdf-used-as-real-data-coverage",
+      "private-recipient-or-mailbox-owner-data",
+      "implicit-cross-namespace-or-cross-emirate-join",
+      "zero-placeholder-promoted-to-official-postcode",
+      "location-or-parcel-proximity-promoted-to-building-identity",
+      "unpublished-or-unpinned-artifacts"
+    ]
+  },
+  "agid_integration": {
+    "current_scope": "Source registry and address-format metadata only; AE is not enabled as a generic country-only Postal Context runtime.",
+    "enablement_gate": "Add an explicit namespace/jurisdiction contract before enabling a real AE runtime. Do not flatten PO Box, Onwani and Makani into a single numeric postcode parser.",
+    "agid_cell_rule": "A coordinate cell is an independent spatial reference, not evidence of postal assignment or building identity."
+  },
+  "non_guarantees": ["nationwide_coverage", "deliverability", "recipient_identity", "building_name_without_source", "legal_boundary", "parcel_to_civic_equivalence"]
+}

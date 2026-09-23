@@ -9,10 +9,13 @@ import { ASIA_OPEN_GEO_SOURCES } from './asiaOpenGeoSources';
 import { EUROPE_OPEN_GEO_SOURCES } from './europeOpenGeoSources';
 import { OCEANIA_OPEN_GEO_SOURCES } from './oceaniaOpenGeoSources';
 import { POLAR_OPEN_GEO_SOURCES } from './polarOpenGeoSources';
+import { LICENSE_REVIEW_REQUIRED,resolveSourceLicenseStatus } from './sourceLicensePolicy';
+import { SPACE_AGENCY_OPEN_GEO_SOURCES } from './spaceAgencyOpenGeoSources';
 
 type SourceRecord = {
   url: string;
   kind: string;
+  license?: string;
 };
 
 const SOURCE_REGISTRY: Record<string, SourceRecord> = {
@@ -22,6 +25,7 @@ const SOURCE_REGISTRY: Record<string, SourceRecord> = {
   ...EUROPE_OPEN_GEO_SOURCES,
   ...OCEANIA_OPEN_GEO_SOURCES,
   ...POLAR_OPEN_GEO_SOURCES,
+  ...SPACE_AGENCY_OPEN_GEO_SOURCES,
 };
 
 type AddressFormatFile = {
@@ -78,6 +82,11 @@ test('postal APIs and open-source ids are registered with clean testable URLs', 
       if (!isCleanHttpUrl(source.url)) {
         failures.push(`${relative(root, file)} references source with invalid URL: ${sourceId} -> ${source.url}`);
       }
+
+      const licenseStatus = resolveSourceLicenseStatus(source);
+      if (!licenseStatus.label.trim()) {
+        failures.push(`${relative(root, file)} references source without license audit status: ${sourceId}`);
+      }
     }
 
     if (format.addressRules?.postalCode?.required) {
@@ -92,4 +101,12 @@ test('postal APIs and open-source ids are registered with clean testable URLs', 
   }
 
   assert.deepEqual(failures, []);
+});
+
+test('source license policy keeps missing licenses out of redistributable data packs', () => {
+  const status = resolveSourceLicenseStatus({ url: 'https://example.test/source', kind: 'postal-code' });
+
+  assert.equal(status.label, LICENSE_REVIEW_REQUIRED);
+  assert.equal(status.redistributable, false);
+  assert.equal(status.requiresReview, true);
 });

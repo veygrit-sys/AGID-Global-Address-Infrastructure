@@ -1,10 +1,16 @@
 import assert from 'node:assert/strict';
 import { describe,it } from 'node:test';
 import {
+ABSOLUTE_GRID_ANCHOR_POINTS,
+ABSOLUTE_GRID_ANCHOR_VERSION,
+getAbsoluteGridAnchorCell,
+getAbsoluteGridAnchorMeters,
+getAbsoluteGridAnchorPoint,
 getCloseDistanceGridFade,
 getDisplayCellSizeMeters,
 getDisplayGridStep,
 getEffectiveGridOpacityLevel,
+getNearestAbsoluteGridAnchorPoint,
 getGridRenderRange,
 metricSquareCellFromCenter,
 regularMetricCellFromPoint,
@@ -24,9 +30,17 @@ describe('grid display shared utilities', () => {
     assert.equal(getGridRenderRange(19), 100);
   });
 
-  it('auto-shows black grid lines at close zoom like what3words', () => {
-    assert.equal(shouldShowDisplayGrid({ zoom: 18.25, isGridVisible: false, gridOpacityLevel: 0 }), true);
-    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: false, gridOpacityLevel: 0 }), 3);
+  it('shows close-distance grid only when the grid switch and opacity allow it', () => {
+    assert.equal(shouldShowDisplayGrid({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 3 }), true);
+    assert.equal(shouldShowDisplayGrid({ zoom: 18.25, isGridVisible: false, gridOpacityLevel: 3 }), false);
+    assert.equal(shouldShowDisplayGrid({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 0 }), false);
+    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 3 }), 3);
+    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: false, gridOpacityLevel: 3 }), 0);
+  });
+
+  it('keeps close-distance grid opacity finite when saved opacity is invalid', () => {
+    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: Number.NaN }), 3);
+    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 999 }), 5);
   });
 
   it('keeps far zoom grid hidden when the user turned it off', () => {
@@ -67,5 +81,49 @@ describe('grid display shared utilities', () => {
 
     assert.equal(cell[0][0], 0);
     assert.equal(cell[0][1], 0);
+  });
+
+  it('defines absolute anchor points for global grid stability', () => {
+    const ids = new Set(ABSOLUTE_GRID_ANCHOR_POINTS.map(anchor => anchor.id));
+
+    assert.equal(ABSOLUTE_GRID_ANCHOR_VERSION, 'agid-grid-anchors-v1');
+    assert.ok(ABSOLUTE_GRID_ANCHOR_POINTS.length >= 8);
+    assert.ok(ids.has('null-island'));
+    assert.ok(ids.has('equator-east-face'));
+    assert.ok(ids.has('antimeridian-face'));
+    assert.ok(ids.has('equator-west-face'));
+    assert.ok(ids.has('north-pole-face'));
+    assert.ok(ids.has('south-pole-face'));
+    assert.ok(ids.has('web-mercator-north-limit'));
+    assert.ok(ids.has('web-mercator-south-limit'));
+  });
+
+  it('keeps absolute anchor points projectable into finite grid meters', () => {
+    for (const anchor of ABSOLUTE_GRID_ANCHOR_POINTS) {
+      const meters = getAbsoluteGridAnchorMeters(anchor);
+      assert.ok(Number.isFinite(meters.x), `${anchor.id} x should be finite`);
+      assert.ok(Number.isFinite(meters.y), `${anchor.id} y should be finite`);
+    }
+
+    const origin = getAbsoluteGridAnchorPoint('null-island');
+    assert.ok(origin);
+    assert.deepEqual(getAbsoluteGridAnchorCell(origin, 18), {
+      anchorId: 'null-island',
+      col: 0,
+      row: 0,
+      step: 1,
+      cellMeters: 4.4,
+    });
+  });
+
+  it('selects the nearest absolute anchor for seams, face centers, and polar render limits', () => {
+    assert.equal(getNearestAbsoluteGridAnchorPoint(0.1, 0.1).id, 'null-island');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(0.1, 90.1).id, 'equator-east-face');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(0.1, 179.9).id, 'antimeridian-face');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(0.1, -90.1).id, 'equator-west-face');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(90, 25).id, 'north-pole-face');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(-90, -25).id, 'south-pole-face');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(85.05112878, 0).id, 'web-mercator-north-limit');
+    assert.equal(getNearestAbsoluteGridAnchorPoint(-85.05112878, 0).id, 'web-mercator-south-limit');
   });
 });

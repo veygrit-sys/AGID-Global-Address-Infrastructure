@@ -69,7 +69,7 @@ test('translates representative Central Africa native address fields to English'
     text: 'N’Djamena',
     sourceLanguage: 'fr',
     targetLanguage: 'en',
-  }))?.text, 'NDjamena');
+  }))?.text, 'N’Djamena');
   assert.equal((await translateCentralAfricaAddressField({
     countryCode: 'CG',
     fieldKey: 'street',
@@ -107,6 +107,6 @@ test('uses English pivot for Chad French and Arabic address tabs', async () => {
     },
   });
 
-  assert.equal(translated?.text, 'ar:NDjamena');
-  assert.deepEqual(calls, ['en->ar:NDjamena']);
+  assert.equal(translated?.text, 'ar:N’Djamena');
+  assert.deepEqual(calls, ['en->ar:N’Djamena']);
 });

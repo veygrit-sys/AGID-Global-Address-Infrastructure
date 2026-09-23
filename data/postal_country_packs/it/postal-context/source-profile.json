@@ -1,0 +1,217 @@
+{
+  "schema_version": "agid-postal-source-profile-v0.1",
+  "country_code": "IT",
+  "artifact_scope": "metadata-only-contract-seed",
+  "rights_policy": {
+    "default": "deny-publication-until-reviewed",
+    "rule": "Public lookup pages, licensed CAP Professional records, open ANNCSU records, ISTAT boundaries, regional DBGT layers, and cadastral services remain separately governed artifacts.",
+    "attribution": "Each published artifact must carry provider, title, edition or receipt time, license or contract reference, digest, transformation, and downstream notice."
+  },
+  "sources": [
+    {
+      "source_id": "poste-italiane-cap-search",
+      "provider": "Poste Italiane",
+      "source_url": "https://www.poste.it/cap",
+      "role": [
+        "official-cap-search",
+        "five-digit-system-reference",
+        "cap-change-and-transition-notice"
+      ],
+      "production_scope": "Pinned, reviewed operator pages and query receipts used within applicable terms; not a scraped national bulk dataset.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R2_public_web_reference",
+      "terms_note": "The public service establishes current operator reference and change notices. Automated extraction, bulk caching, redistribution, and deliverability claims require separate review.",
+      "expected_update_cadence": "operator-controlled-with-announced-changes",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-retrieval-time-content-digest-and-review-receipt",
+        "record-change-notice-effective-date-and-transition-window",
+        "do-not-convert-search-results-into-unlicensed-bulk-data",
+        "do-not-store-recipient-or-shipment-data"
+      ],
+      "prohibited_claims": [
+        "bulk-open-cap-dataset",
+        "official-cap-polygon",
+        "address-or-building-authority",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "poste-italiane-cap-professional",
+      "provider": "Poste Italiane",
+      "source_url": "https://business.poste.it/professionisti-imprese/prodotti/cap-professional.html",
+      "role": [
+        "licensed-cap-locality-assignment",
+        "multicap-city-zone",
+        "street-arc-and-house-number-range"
+      ],
+      "production_scope": "Contract-governed ingestion and validation only; public artifacts include rows or derived results only when the signed licence explicitly permits them.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "redistribution_class": "R5_licensed_restricted",
+      "terms_note": "CAP Professional is a commercial reference database. Product access does not imply open redistribution or permission to publish derived geometry.",
+      "expected_update_cadence": "contract-edition",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "record-contract-edition-permitted-uses-and-expiry",
+        "partition-restricted-rows-from-public-artifacts",
+        "preserve-street-arc-range-parity-and-validity",
+        "obtain-explicit-rights-for-any-published-derived-surface"
+      ],
+      "prohibited_claims": [
+        "open-data",
+        "redistributable-without-contract-review",
+        "official-polygon-boundary",
+        "building-or-recipient-authority"
+      ]
+    },
+    {
+      "source_id": "anncsu-italy-addresses",
+      "provider": "Agenzia delle Entrate and ISTAT",
+      "source_url": "https://www.anncsu.gov.it/it/consultazione-dellarchivio/open-data/index.html",
+      "role": [
+        "official-national-street-register",
+        "official-civic-number-register",
+        "monthly-bulk-and-daily-api-evidence",
+        "address-position-when-provided"
+      ],
+      "production_scope": "Pinned national or regional monthly CSV releases and daily API receipts under CC BY 4.0 with provider attribution.",
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_registry_geometry_when_present",
+      "redistribution_class": "R3_cc_by_4_open_data",
+      "terms_note": "ANNCSU consultation data is CC BY 4.0. Coordinate availability and meaning must be read from the pinned schema and must not be upgraded to postal or building authority.",
+      "expected_update_cadence": "monthly-bulk-daily-api",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-time-schema-byte-length-and-digest",
+        "emit-anncsu-provider-and-cc-by-4-attribution",
+        "preserve-street-civic-suffix-snc-and-coordinate-semantics",
+        "exclude-recipient-occupant-and-private-unit-data"
+      ],
+      "prohibited_claims": [
+        "poste-cap-assignment-authority",
+        "exact-building-footprint-from-civic-point",
+        "recipient-or-occupant",
+        "deliverability-guarantee"
+      ]
+    },
+    {
+      "source_id": "istat-italy-admin-boundaries",
+      "provider": "ISTAT",
+      "source_url": "https://www.istat.it/notizia/confini-delle-unita-amministrative-a-fini-statistici-al-1-gennaio-2018-2/",
+      "role": [
+        "region-province-metropolitan-city-comune-boundary",
+        "official-statistical-code-and-history",
+        "rights-cleared-derived-surface-clip-candidate"
+      ],
+      "production_scope": "Pinned detailed or generalized WGS84 administrative-boundary edition under ISTAT CC BY terms with attribution.",
+      "assignment_authority": "official_statistical_registry",
+      "geometry_authority": "official_administrative_geometry",
+      "redistribution_class": "R3_cc_by_3_italy",
+      "terms_note": "ISTAT administrative boundaries can provide context or a derivation clip. They are not CAP boundaries and must retain the edition date and administrative level.",
+      "expected_update_cadence": "at-least-annual-and-event-driven",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-edition-detail-level-crs-and-digest",
+        "emit-istat-attribution-and-license-reference",
+        "preserve-codes-history-and-boundary-reference-date",
+        "label-every-cap-surface-derived"
+      ],
+      "prohibited_claims": [
+        "poste-cap-boundary",
+        "street-or-civic-assignment",
+        "building-geometry",
+        "legal-cadastral-boundary"
+      ]
+    },
+    {
+      "source_id": "italy-regional-dbgt-buildings",
+      "provider": "Italian regional and municipal geodata authorities",
+      "source_url": "https://geodati.gov.it/geoportale/datiterritoriali/regole-tecniche",
+      "role": [
+        "dbgt-common-building-model",
+        "regional-or-municipal-building-footprint-candidate",
+        "address-building-crosswalk-when-explicitly-published"
+      ],
+      "production_scope": "Per-dataset pinned regional or municipal DBGT layers only after metadata, coverage, scale, schema, CRS, freshness, license, attribution, and stable-link fields are reviewed.",
+      "assignment_authority": "none",
+      "geometry_authority": "regional_or_municipal_topographic_geometry",
+      "redistribution_class": "R4_federated_per_dataset_review",
+      "terms_note": "The national DBGT specification defines a common content model; it is not a single nationwide building dataset or a uniform licence for every regional implementation.",
+      "expected_update_cadence": "provider-specific",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "maintain-per-dataset-license-ledger-and-coverage-mask",
+        "pin-edition-scale-schema-crs-and-digest",
+        "preserve-explicit-address-building-identifiers-when-present",
+        "retain-derived-link-method-distance-and-ambiguity"
+      ],
+      "prohibited_claims": [
+        "uniform-national-building-coverage",
+        "postal-assignment-authority",
+        "exact-address-link-from-proximity",
+        "legal-parcel-boundary"
+      ]
+    },
+    {
+      "source_id": "agenzia-entrate-cadastral-cartography",
+      "provider": "Agenzia delle Entrate",
+      "source_url": "https://www.agenziaentrate.gov.it/portale/web/english/nse/services/cadastral-and-cartographic-services",
+      "role": [
+        "cadastral-cartography-reference",
+        "parcel-and-map-sheet-context",
+        "independent-link-evidence-when-lawfully-available"
+      ],
+      "production_scope": "Reference or separately rights-reviewed cadastral services; no public redistribution, automated harvesting, or address/building inference without service-specific terms and a lawful stable link.",
+      "assignment_authority": "none",
+      "geometry_authority": "cadastral_reference_only",
+      "redistribution_class": "R5_service_specific_restricted",
+      "terms_note": "A cadastral parcel or map feature is neither a postal assignment nor necessarily a building footprint, entrance, or deliverable address.",
+      "expected_update_cadence": "service-controlled",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "review-service-specific-access-and-reuse-terms",
+        "pin-query-or-extract-receipt-and-digest",
+        "keep-cadastral-identifiers-in-a-rights-partition",
+        "require-explicit-source-link-before-address-building-use"
+      ],
+      "prohibited_claims": [
+        "open-national-building-dataset",
+        "parcel-equals-building",
+        "parcel-equals-address",
+        "postal-assignment-or-deliverability"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "poste-public-receipts",
+      "rule": "Interactive CAP searches and change pages remain receipt evidence and never become an unlicensed bulk artifact."
+    },
+    {
+      "id": "poste-licensed-assignment",
+      "rule": "CAP Professional rows, street arcs, ranges, parity, and contract metadata remain isolated according to explicit publication rights."
+    },
+    {
+      "id": "anncsu-open-address",
+      "rule": "ANNCSU street and civic artifacts retain release, schema, stable fields, coordinate semantics, CC BY 4.0 attribution, and no postal or building authority."
+    },
+    {
+      "id": "istat-administrative-context",
+      "rule": "ISTAT boundaries retain edition and CC BY attribution and never inherit CAP authority."
+    },
+    {
+      "id": "federated-dbgt-buildings",
+      "rule": "Each regional or municipal building artifact has its own coverage mask, licence, scale, freshness, identifiers, digest, and ambiguity policy."
+    },
+    {
+      "id": "derived-cap-geometry",
+      "rule": "Generated surfaces retain input artifact digests, rights proof, projection, clip, model, parameters, topology, holdout, version, and derived label."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

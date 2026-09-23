@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {test} from 'node:test';
+import {profileBelpostObservation,sourceDigest,validateBelarusAuditReport} from './inspect-postal-context-by-sources.mjs';
+const report=JSON.parse(readFileSync(new URL('../reports/postal-context-m2/by-source-review-2026-08-29.json',import.meta.url),'utf8'));
+test('Belarus review binds eight exact public observations and stays blocked',()=>assert.deepEqual(validateBelarusAuditReport(report),{references:8,postcode:'220030',autocompleteRows:21,searchTotal:89,postalAreaGeometries:0,countryM2Achieved:false}));
+test('Belpost profiler preserves assignment rows without inventing geometry',()=>assert.deepEqual(profileBelpostObservation([{postcode:'220030',street:'Example'}],{data:{total:1,postcodes:[{postcode:'220030',house:'1'}],ops:[{postcode:'220030'}]}}),{autocompleteRows:1,searchTotal:1,searchPageRows:1,operations:1,uniquePostcodes:1,invalidSixDigitRows:0,rowsWithGeometry:0}));
+test('invalid codes and geometry drift remain visible',()=>assert.deepEqual(profileBelpostObservation([{postcode:'22003',geometry:{type:'Point'}}],{data:{total:0,postcodes:[],ops:[]}}),{autocompleteRows:1,searchTotal:0,searchPageRows:0,operations:0,uniquePostcodes:1,invalidSixDigitRows:1,rowsWithGeometry:1}));
+test('NCA methodology remains official-derived and actual layer rights remain absent',()=>{assert.equal(report.ncaPostalZones.nationwideCoverageClaim,true);assert.equal(report.ncaPostalZones.updateCadence,'six-months');assert.equal(report.ncaPostalZones.actualVectorArtifactRetrieved,false);assert.equal(report.ncaPostalZones.websiteRulesAreDatasetLicense,false);});
+test('live one-code sample is not promoted to national completeness',()=>{assert.equal(report.belpostLiveObservation.searchTotal,89);assert.equal(report.belpostLiveObservation.rowsWithGeometry,0);assert.equal(report.belpostLiveObservation.completeNationalAssignmentVerified,false);});
+test('shared drawing capability cannot turn assignment rows into an area',()=>{assert.equal(report.sharedAppAreaPathVerified,true);assert.equal(report.productionPostalAreaGeometryRecords,0);assert.equal(report.realAgidAppAreaVisualizationVerified,false);});
+test('sourceDigest is stable SHA-256',()=>{const digest=sourceDigest(Buffer.from('AGID BY M2'));assert.match(digest,/^sha256:[0-9a-f]{64}$/);assert.equal(digest,sourceDigest(Buffer.from('AGID BY M2')));});

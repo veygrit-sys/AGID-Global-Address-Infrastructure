@@ -62,14 +62,14 @@ test('translates representative West Africa native address fields to English', a
     text: 'Côte d’Ivoire',
     sourceLanguage: 'fr',
     targetLanguage: 'en',
-  }))?.text, 'Ivory Coast');
+  }))?.text, 'Côte d’Ivoire');
   assert.equal((await translateWestAfricaAddressField({
     countryCode: 'SN',
     fieldKey: 'street',
     text: 'Rue',
     sourceLanguage: 'fr',
     targetLanguage: 'en',
-  }))?.text, 'Street');
+  }))?.text, 'Rue');
   assert.equal((await translateWestAfricaAddressField({
     countryCode: 'BJ',
     fieldKey: 'city',

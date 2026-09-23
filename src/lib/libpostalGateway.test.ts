@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { parseAddressWithOptionalLibpostal } from './libpostalGateway';
+import {
+  assessLocalLibpostalEndpoint,
+  parseAddressWithLocalLibpostal,
+  parseAddressWithOptionalLibpostal,
+} from './libpostalGateway';
 
 test('falls back to local parser when libpostal service is not configured', async () => {
   const result = await parseAddressWithOptionalLibpostal({
@@ -76,4 +80,58 @@ test('keeps server-side local parser fallback as unavailable', async () => {
   assert.equal(result.source, 'local-parser');
   assert.equal(result.available, false);
   assert.equal(result.canonical.road, 'Downing Street');
+});
+
+test('local libpostal policy permits only a loopback HTTP sidecar', () => {
+  assert.deepEqual(assessLocalLibpostalEndpoint(), {
+    version: 'agid-local-libpostal-endpoint-policy-v1',
+    status: 'disabled',
+    network: 'none',
+    reason: 'endpoint-not-configured',
+  });
+  assert.deepEqual(assessLocalLibpostalEndpoint('http://127.0.0.1:8080/parse'), {
+    version: 'agid-local-libpostal-endpoint-policy-v1',
+    status: 'ready',
+    network: 'loopback-only',
+  });
+  assert.equal(
+    assessLocalLibpostalEndpoint('https://parser.example.invalid/parse').reason,
+    'endpoint-must-be-absolute-loopback-http',
+  );
+  assert.equal(
+    assessLocalLibpostalEndpoint('http://token@127.0.0.1:8080/parse').reason,
+    'endpoint-must-not-contain-credentials',
+  );
+});
+
+test('local libpostal parser blocks remote egress before it calls fetch', async () => {
+  const result = await parseAddressWithLocalLibpostal({
+    text: 'synthetic-token',
+    endpoint: 'https://parser.example.invalid/parse',
+    fetcher: async () => {
+      throw new Error('blocked endpoint must not call fetch');
+    },
+  });
+
+  assert.equal(result.source, 'local-parser');
+  assert.equal(result.endpointPolicy.status, 'blocked');
+  assert.equal(result.endpointPolicy.network, 'none');
+});
+
+test('local libpostal parser allows a loopback sidecar and records the policy', async () => {
+  const result = await parseAddressWithLocalLibpostal({
+    text: 'synthetic-token',
+    endpoint: 'http://localhost:8080/parse',
+    fetcher: async () => ({
+      ok: true,
+      json: async () => ({
+        source: 'libpostal',
+        components: [{ label: 'country_code', value: 'jp' }],
+      }),
+    } as Response),
+  });
+
+  assert.equal(result.source, 'libpostal');
+  assert.equal(result.endpointPolicy.status, 'ready');
+  assert.equal(result.endpointPolicy.network, 'loopback-only');
 });

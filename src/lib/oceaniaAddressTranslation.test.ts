@@ -16,10 +16,13 @@ test('classifies Oceania address markets by domestic language algorithm and topo
     englishAlgorithm: 'new-zealand-maori-english-address',
   });
   assert.equal(getOceaniaAddressTranslationProfile('FJ')?.nativeLanguages.join(','), 'en,fj,hi');
-  assert.equal(getOceaniaAddressTranslationProfile('PG')?.nativeLanguages.join(','), 'en,tpi');
+  assert.equal(getOceaniaAddressTranslationProfile('PG')?.nativeLanguages.join(','), 'en,tpi,ho');
   assert.equal(getOceaniaAddressTranslationProfile('VU')?.nativeLanguages.join(','), 'bi,en,fr');
-  assert.equal(getOceaniaAddressTranslationProfile('FM')?.nativeLanguages.join(','), 'en,chk,yap');
+  assert.equal(getOceaniaAddressTranslationProfile('FM')?.nativeLanguages.join(','), 'en,chk,pon,kos,yap');
   assert.equal(getOceaniaAddressTranslationProfile('CK')?.nativeLanguages.join(','), 'en,rar');
+  assert.equal(getOceaniaAddressTranslationProfile('PF')?.nativeLanguages.join(','), 'fr,ty');
+  assert.equal(getOceaniaAddressTranslationProfile('WF')?.nativeLanguages.join(','), 'fr,wls,fud');
+  assert.equal(getOceaniaAddressTranslationProfile('GU')?.nativeLanguages.join(','), 'en,ch');
 });
 
 test('allows Oceania native-to-English and domestic multilingual routes only', () => {
@@ -86,6 +89,13 @@ test('translates representative Oceania native address fields to English', async
     sourceLanguage: 'bi',
     targetLanguage: 'en',
   }))?.text, 'House Number');
+  assert.equal((await translateOceaniaAddressField({
+    countryCode: 'VU',
+    fieldKey: 'street',
+    text: 'Rue du Marché',
+    sourceLanguage: 'fr',
+    targetLanguage: 'en',
+  }))?.text, 'Rue du Marché');
   assert.equal((await translateOceaniaAddressField({
     countryCode: 'WS',
     fieldKey: 'street',

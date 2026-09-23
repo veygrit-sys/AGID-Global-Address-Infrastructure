@@ -1,0 +1,92 @@
+{
+  "schema_version": "agid-postal-im-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-im",
+    "country_code": "IM",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "country-definition-and-blocker-evidence-only"
+  },
+  "postal_system": {
+    "full_code_name": "Isle of Man unit postcode",
+    "full_code_format": "IM plus one digit and an optional alphanumeric outward character, one inward digit and two letters; normally displayed with one space before the final three characters",
+    "outward_code_format": "IM plus one digit and an optional alphanumeric character, including the observed IM1 through IM9 and IM99 groups",
+    "full_code_default_geometry": "delivery-address-cluster-or-non-geographic-routing-identity-with-no-public-coordinate",
+    "assignment_rule": "A current unit postcode is a Royal Mail and Isle of Man Post Office routing assignment. Syntax, an ONSPD row, a PQI 9 placeholder, a post-box point, a post-office point, a constituency or another government boundary does not prove a Polygon/MultiPolygon for the unit postcode.",
+    "normalization_rule": "Trim, uppercase, remove internal whitespace for validation, require ^IM\\d[A-Z\\d]?\\d[A-Z]{2}$, then display one space before the final three characters. Preserve the code as text. Normalization does not prove that the code is live or geographic.",
+    "full_code_geometry_rule": "Serve an exact unit-postcode surface only from an authoritative or rights-cleared real Polygon/MultiPolygon explicitly related to that current unit code. Never buffer, Voronoi-partition or dissolve a point, placeholder coordinate, delivery route, PO box, organisation or address list into a postcode polygon.",
+    "outward_code_geometry_rule": "An outward-code or postal-district context surface may be served only from a complete authoritative or rights-cleared real postal boundary release with deterministic current unit-code membership, edition, date, CRS, topology, coverage, exceptions, terms and SHA-256. It must be labelled as broader postal context and never as the exact unit-postcode geometry.",
+    "po_box_route_organization_rule": "Non-geographic, large-user, PO-box, route and organisation codes remain non-area. IM99 and every other code require source-defined classification; the outward text alone is not enough to infer an area.",
+    "address_rule": "A postcode finder result or ONSPD assignment is not permission to publish an address, recipient, occupant, delivery instruction or customer record. Address identity requires a separately authorised source and purpose.",
+    "building_rule": "Exact building output requires an explicit rights-cleared relation from an address or postcode assignment to a building feature. A post-box/post-office point, postcode membership, proximity, point containment or shared text does not establish a building relation.",
+    "administrative_rule": "Isle of Man constituencies, sheadings, parishes, government service areas and other administrative layers remain separate context. None may be relabelled as a unit-postcode or outward-code perimeter.",
+    "licence_rule": "Every ONS, Isle of Man Post Office, Isle of Man Government GIS or other artifact pins provider, exact URL, capture time, edition/effective date, terms, attribution, scope, bytes and SHA-256. ONS OGL reuse does not create geometry that the source withholds; public Finder access and an internal API reference do not authorize crawling or redistribution.",
+    "territory_rule": "The IM pack preserves Isle of Man identity. It does not merge the United Kingdom, Ireland, the Channel Islands or another territory and does not treat ONS inclusion as a change in postal or territorial authority."
+  },
+  "integration": {
+    "agid_country_code": "IM",
+    "postcode_flow": "normalized IM unit postcode -> current rights-cleared assignment -> truthful exact non-area/unavailable reason or explicit unit surface -> separately labelled rights-cleared outward-code context when available -> explicit address/building relation from separate authority -> IM AGID cells",
+    "coordinate_flow": "honest no-coordinate result or competent source coordinate -> optional separately labelled postal context Polygon/MultiPolygon -> explicit address-to-building relation -> rights-cleared building -> IM AGID cell",
+    "building_output_gate": "current postcode or address identity plus an explicit source-defined rights-cleared building identifier/relation and exact building geometry"
+  },
+  "quality_gates": [
+    { "id": "canonical-unit-postcode", "pass": "Every code remains text, normalizes to the country grammar with one display space and distinguishes syntax from a live assignment." },
+    { "id": "current-assignment", "pass": "The nationwide live IM unit-postcode denominator pins edition, effective date, update cadence, terms, coverage, exceptions, byte length and SHA-256." },
+    { "id": "truthful-unit-geometry", "pass": "Every displayed exact unit surface comes from an explicit competent Polygon/MultiPolygon relation; PQI 9, null geometry and placeholder coordinates remain unavailable rather than being fabricated." },
+    { "id": "postal-context-area", "pass": "Every broader outward-code context comes from a complete authoritative or rights-cleared real postal-boundary release and is labelled separately from the searched unit code." },
+    { "id": "rights", "pass": "ONS, Isle of Man Post Office and government GIS terms and attributions remain enforceable per artifact; interactive or internal API access is never treated as bulk or public-serving authority." },
+    { "id": "authority-separation", "pass": "Postcode assignment, postal context area, post-box/post-office point, address, building, administration, occupancy and ownership remain distinct authorities and relations." },
+    { "id": "privacy", "pass": "No resident, recipient, occupant, owner, rightsholder, personal contact, delivery instruction, title/value, credential or customer record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Generic IM planning cells and synthetic fixtures verify behavior only and never satisfy production M2 evidence." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country-specific contracts, authority separation and synthetic conformance fixtures are reviewable." },
+      {
+        "id": "M2_current_unit_postcode_and_truthful_postal_area_visualization",
+        "definition": "A current rights-cleared nationwide Isle of Man unit-postcode denominator and an authoritative or rights-cleared real Polygon/MultiPolygon explicitly corresponding to every searchable geographic unit postcode, or an honest source-defined non-area classification plus a separately labelled real outward-code postal context surface, are pinned by edition, effective date, terms, attribution, CRS, topology, coverage, exceptions and SHA-256 and published as an approved immutable artifact. Searching a normalized IM postcode through the real AGID API/app must preserve unit versus broader-context grain, fit and render the eligible surface with translucent fill and a clear outline, and show selected code, geometry kind, official/derived/virtual class, source, reference date, confidence and any non-area reason. ONSPD PQI 9 placeholders, null geometry, 99.999999 or rounded 100 latitude, longitude 0, post-box/post-office points, addresses, routes, PO boxes, organisations, constituencies, administrative areas, buffers, Voronoi cells and synthetic fixtures never satisfy M2."
+      },
+      { "id": "M3_derived_geometry", "definition": "Complete rights-cleared address membership and coordinates pass derivation, topology, coverage, uncertainty and correction gates for explicitly derived postal context only." },
+      { "id": "M4_address_building", "definition": "Licensed address identity and exact rights-cleared building relationships pass identifier, privacy, CRS, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "pqI9-or-null-geometry-presented-as-postcode-area",
+      "placeholder-latitude-longitude-presented-as-real-point",
+      "post-box-or-post-office-point-buffered-or-voronoi-partitioned",
+      "constituency-parish-or-government-layer-presented-as-postal-boundary",
+      "postcode-finder-personal-use-presented-as-bulk-or-redistribution-right",
+      "internal-rest-api-reference-presented-as-public-api-authority",
+      "unit-postcode-presented-as-outward-code-area",
+      "address-or-postcode-point-presented-as-building-footprint",
+      "parcel-or-nearest-building-presented-as-exact-address-link",
+      "occupant-owner-rightsholder-or-private-address-list-published",
+      "another-country-or-territory-geometry-silently-imported",
+      "synthetic-planning-cell-presented-as-real-postal-area"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_IM_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_IM_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_IM_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_IM_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-postcode-finder-address-rows-or-raw-onspd-dump",
+    "pqi9-placeholder-is-real-coordinate",
+    "unit-postcode-is-invented-polygon",
+    "outward-code-is-administrative-area",
+    "post-box-or-post-office-point-is-postcode-surface",
+    "finder-is-public-bulk-data",
+    "address-coordinate-is-building-footprint",
+    "parcel-or-nearest-footprint-is-exact-building",
+    "postcode-identifies-occupant-owner-or-rightsholder"
+  ]
+}

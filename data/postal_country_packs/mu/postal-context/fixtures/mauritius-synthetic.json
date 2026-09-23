@@ -1,0 +1,47 @@
+{
+  "schema_version": "agid-postal-mu-synthetic-fixtures-v0.1",
+  "country_code": "MU",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "main_island_postcode_value": "99999",
+    "rodrigues_postcode_value": "R9999",
+    "agalega_postcode_value": "A9999",
+    "postcodes_match_reviewed_shapes": true,
+    "synthetic_values_not_assignment_evidence": true,
+    "collision_requires_replacement_before_promotion": true,
+    "coordinates_are_upstream_observations": false,
+    "identifiers_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mu-synthetic-main-island-code-no-geometry",
+      "input": { "postcode": "99 999" },
+      "expected": {
+        "normalized_postcode": "99999",
+        "geometry_type": "none",
+        "must_not_assert": ["current_mauritius_post_assignment", "postcode_polygon", "district_or_vca", "deliverability", "building"]
+      }
+    },
+    {
+      "fixture_id": "mu-synthetic-outer-island-shapes",
+      "input": { "rodrigues": "R9999", "agalega": "A9999" },
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": ["current_rodrigues_assignment", "current_agalega_assignment", "outer_island_postcode_polygon", "deliverability"]
+      }
+    },
+    {
+      "fixture_id": "mu-synthetic-explicit-address-building-link",
+      "input": { "latitude": -20.2, "longitude": 57.5 },
+      "expected": {
+        "resolution_level": "building",
+        "requires": ["synthetic_civic_address_point", "synthetic_explicit_address_building_relation", "synthetic_building_geometry"],
+        "must_not_assert": ["real_address", "real_building", "mauritius_post_polygon", "cadastral_title", "owner_or_occupant"]
+      }
+    }
+  ]
+}

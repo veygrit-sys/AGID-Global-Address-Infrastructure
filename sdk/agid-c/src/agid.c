@@ -12,3 +12,9 @@ int agid_decode(const char* id, agid_result* out) {
   (void)out;
   return -1;
 }
+
+int agid_cell_bounds(const char* id, agid_bounds* out) {
+  (void)id;
+  (void)out;
+  return -1;
+}

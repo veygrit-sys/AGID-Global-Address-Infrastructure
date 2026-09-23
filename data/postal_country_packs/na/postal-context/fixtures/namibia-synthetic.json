@@ -1,0 +1,57 @@
+{
+  "schema_version": "agid-postal-na-synthetic-fixtures-v0.1",
+  "fixture_set_id": "namibia-like-contract-cases-v0.1",
+  "country_code": "NA",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postcode_value": "99099",
+    "postcode_matches_phase1_shape": true,
+    "third_character_is_zero": true,
+    "synthetic_value_not_checked_against_live_nampost": true,
+    "collision_requires_replacement_before_promotion": true,
+    "coordinates_are_upstream_observations": false,
+    "identifiers_are_assignment_evidence": false,
+    "rule": "No value in this fixture is a real NamPost assignment, address, parcel, person, building or production geometry."
+  },
+  "fixtures": [
+    {
+      "fixture_id": "na-syn-delivery-office-code",
+      "exception_class": "delivery-office-code",
+      "synthetic_address": {"postal_region": "NA-SYN-REGION", "postal_area": "NA-SYN-AREA", "delivery_post_office": "NA-SYN-OFFICE", "postcode": "99099"},
+      "evidence": [{"source_id": "synthetic-nampost-like", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none"}],
+      "expected": {"postal_geometry_type": "none", "must_not_assert": ["official-nampost-assignment", "phase1-code-is-postal-polygon", "political-region-or-office-point-is-postal-catchment", "deliverability"]}
+    },
+    {
+      "fixture_id": "na-syn-explicit-address-building",
+      "exception_class": "physical-address",
+      "synthetic_address": {"delivery_point": "99", "street": "Synthetic Delivery Point Road", "locality": "Synthetic Locality", "building": "NA-SYN-BUILDING"},
+      "evidence": [{"source_id": "synthetic-civic-address", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry"}, {"source_id": "synthetic-building-link", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry"}],
+      "expected": {"resolved_level": "building", "must_not_assert": ["postcode-proves-address", "nearest-parcel-text-or-model-proves-building", "resident-owner-or-occupant", "production-geometry"]}
+    },
+    {
+      "fixture_id": "na-syn-po-box-private-bag",
+      "exception_class": "po-box-private-bag-poste-restante",
+      "synthetic_address": {"delivery_identifier": "NA-SYN-PRIVATE-BAG", "delivery_post_office": "NA-SYN-OFFICE", "postcode": "99099"},
+      "evidence": [{"source_id": "synthetic-nampost-like", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none"}],
+      "expected": {"geometry_type": "none", "must_not_assert": ["holder-or-recipient", "building", "entrance", "postal-area", "deliverability"]}
+    },
+    {
+      "fixture_id": "na-syn-admin-cadastre-agid-separation",
+      "exception_class": "admin-or-census-boundary",
+      "synthetic_address": {"region": "NA-SYN-REGION", "constituency": "NA-SYN-CONSTITUENCY", "parcel": "NA-SYN-PARCEL", "agid": "NA0000000000"},
+      "evidence": [{"source_id": "synthetic-admin", "assignment_authority": "none", "geometry_authority": "synthetic_fixture_geometry"}, {"source_id": "synthetic-cadastre", "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry"}],
+      "expected": {"must_not_assert": ["admin-or-census-boundary-is-postal-polygon", "parcel-is-postal-address-or-building", "agid-is-nampost-code-cadastre-address-or-building", "owner-or-occupant"]}
+    },
+    {
+      "fixture_id": "na-syn-learned-candidate",
+      "exception_class": "nearest-or-learned-candidate",
+      "synthetic_address": {"postcode_candidates": ["99099", "98098"]},
+      "evidence": [{"source_id": "synthetic-model", "assignment_authority": "derived_spatial_assignment", "geometry_authority": "derived_geometry"}],
+      "expected": {"status": "ambiguous", "must_not_assert": ["model-is-official-authority", "nearest-is-exact", "derived-surface-is-official-nampost-polygon", "single-selected-building"]}
+    }
+  ]
+}

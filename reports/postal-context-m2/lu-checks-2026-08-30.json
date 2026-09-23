@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "LU",
+  "observedAt": "2026-08-30T16:08:26.315Z",
+  "completedAt": "2026-08-30T16:30:16.8743616Z",
+  "baseCommit": "a09d23ff6b0b2c053536572eb2b87fb99d14443e",
+  "scope": "Country-specific definition, current official source reconciliation and conservative blocker evidence; no raw POST/CACLR/address data, real postcode pack, API geometry route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "luxembourg-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-lu-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country definition, leading-zero/endpoint handling, point/proxy separation, exact report digests and Latvia next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes with package-lock dependencies installed locally"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 5,
+    "testsPassed": 43,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialObservations": 8,
+    "exactBodiesOrDistributionsByteAndSha256Bound": 10,
+    "postCsvRows": 9715,
+    "postDistinctCodes": 4750,
+    "caclrDistinctCodes": 4430,
+    "addressPointRows": 179491,
+    "addressPointDistinctCodes": 4200,
+    "publicOfficialPostcodePolygonRecords": 0,
+    "rightsClearedDerivedPostcodePolygonRecords": 0,
+    "addressPointsPromotedToAreas": 0,
+    "rawSourceBodiesInGit": 0,
+    "postExplicitProcessingPublicServingAndRedistributionRightsEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realLuRuntimeVerified": false,
+    "realLuApiVerified": false,
+    "realLuAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no rights-cleared real LU Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "The first shared test attempt reused an empty node_modules junction and could not resolve tsx. The junction was removed, package-lock dependencies were installed into the isolated worktree, and all final suites plus full TypeScript passed.",
+    "The official POST PDF passed metadata and text extraction. Three pages were rasterized, but the local image-inspection tool returned Windows error 206 even for shortened paths; no visual-layout claim is made.",
+    "POST, CACLR and BD-Adresses are current official references but their postcode denominators differ. All official address geometry is Point, and no official or rights-cleared derived postcode Polygon/MultiPolygon exists.",
+    "No real LU postcode Polygon/MultiPolygon can be lawfully exercised while POST processing/public-serving/redistribution rights and authoritative geometry remain unresolved, so country runtime, map fit, translucent rendering and browser E2E are unverified."
+  ],
+  "countryM2Achieved": false
+}

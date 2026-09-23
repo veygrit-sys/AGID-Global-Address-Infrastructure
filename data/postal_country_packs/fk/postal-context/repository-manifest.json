@@ -1,0 +1,63 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-fk-upu-geoboundaries",
+    "country_code": "FK",
+    "country_name": "Falkland Islands",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "current-upu-fiqq-whole-territory-with-derived-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Falkland Islands postcode",
+    "full_code_format": "FIQQ 1ZZ",
+    "full_code_default_geometry": "whole-territory-derived-display-surface",
+    "assignment_rule": "The country-specific UPU addressing sheet states that FIQQ 1ZZ is the single postcode for the whole territory. Current Falkland Islands Government and GOV.UK office pages corroborate FIQQ 1ZZ. The August 2026 UPU general table prints F1QQ 1ZZ; AGID records that conflicting glyph as an explicit source exception and does not accept it as a postcode.",
+    "geometry_rule": "No reusable official postal polygon was located. A pinned geoBoundaries gbOpen FLK ADM0 MultiPolygon is used only because the official postcode scope is the whole territory; it remains derived display geometry and is never presented as an official postal, legal, survey, cadastral or delivery boundary.",
+    "topology_rule": "The pinned source has 394 polygon parts and excludes water through 488 interior rings. One interior ring touches its outer ring and is rejected by the shared runtime even though Turf and JSTS accept the source. Because FIQQ 1ZZ covers the whole territory rather than land-cover pixels, the reproducible display transform omits all interior water-exclusion rings, preserves every source outer-ring coordinate, and partitions source parts 222, 348 and 383 into a second independently valid MultiPolygon.",
+    "address_rule": "No address, recipient, customer, delivery record, PO box, organisation, parcel, building or land-rights row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The postal node and derived surfaces are linked only inside the versioned Postal Context graph. AGID identity, addresses and buildings require independent explicit evidence. FK remains a distinct source identity and is not merged with another country or territory."
+  },
+  "temporal_model": {
+    "valid_time": "FIQQ 1ZZ is represented from the country-specific UPU rule corroborated by current official pages; display geometry retains boundary year 2021 and build date 2023-12-12.",
+    "known_time": "Retrieval, source edition, fixed commit, digests and AGID release time remain separately recorded.",
+    "history_rule": "A later postcode or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "official-assignment", "pass": "FIQQ 1ZZ remains an official UPU country-sheet assertion with no geometry authority; the conflicting F1QQ 1ZZ table value is recorded and rejected." },
+    { "id": "derived-surface", "pass": "Each displayed surface retains the fixed geoBoundaries source, CC BY 4.0, boundary year, source digest and derived geometry authority." },
+    { "id": "coordinate-provenance", "pass": "All 394 source outer rings and all 13,250 outer-ring positions are emitted exactly once with no coordinate fabrication; 488 interior water-exclusion rings containing 2,944 positions are reproducibly omitted and quantified." },
+    { "id": "runtime", "pass": "The real pack passes API lookup, normalization, multiple-surface conversion, bounds fit, translucent paint, clear and re-search tests." },
+    { "id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-rights data is published." }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_upu_fiqq_whole_territory_derived_visualization",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Country-specific contracts, source exception and provenance are reviewable." },
+      { "id": "M2_current_upu_fiqq_whole_territory_derived_visualization", "definition": "Country-specific UPU evidence proves FIQQ 1ZZ is the single postcode for the whole territory; current official pages resolve a conflicting UPU table glyph; a pinned CC BY 4.0 ADM0 source reproducibly supplies real derived MultiPolygon display surfaces; the shared API and app path renders, fits, clears and re-searches them with provenance and multiple-result state." },
+      { "id": "M3_candidate", "definition": "A refresh and independent review pass without authority drift." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback." }
+    ],
+    "hard_blockers": [
+      "f1qq-source-typo-silently-accepted-as-canonical-postcode",
+      "derived-adm0-presented-as-official-postal-geometry",
+      "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability",
+      "source-coordinates-invented-or-silently-repaired",
+      "missing-upu-edition-or-geoboundaries-commit-digest-and-rights",
+      "fk-source-identity-merged-or-relabelled",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": [
+    "official_postal_boundary", "legal_or_survey_boundary", "cadastral_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "recipient_identity"
+  ]
+}

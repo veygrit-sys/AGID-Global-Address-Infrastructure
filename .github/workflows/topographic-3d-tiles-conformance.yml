@@ -1,0 +1,86 @@
+name: Topographic 3D Tiles Conformance
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/topographic-3d-tiles-conformance.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/export-topographic-3d-tiles-conformance-fixture.ts"
+      - "scripts/verify-topographic-3d-tiles-cesium-renderer.ts"
+      - "scripts/verify-topographic-3d-tiles-validator-report.ts"
+      - "src/lib/topographic3dTiles.ts"
+      - "src/lib/topographic3dTilesExternalValidation.ts"
+      - "src/lib/topographic3dTilesRefinement.ts"
+      - "src/lib/topographic3dTilesRendererValidation.ts"
+      - "src/lib/topographicExportSerializers.ts"
+      - "src/lib/topographicGeodesy.ts"
+      - "src/lib/topographicLocalGeoTiffWorkflow.ts"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - ".github/workflows/topographic-3d-tiles-conformance.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/export-topographic-3d-tiles-conformance-fixture.ts"
+      - "scripts/verify-topographic-3d-tiles-cesium-renderer.ts"
+      - "scripts/verify-topographic-3d-tiles-validator-report.ts"
+      - "src/lib/topographic3dTiles.ts"
+      - "src/lib/topographic3dTilesExternalValidation.ts"
+      - "src/lib/topographic3dTilesRefinement.ts"
+      - "src/lib/topographic3dTilesRendererValidation.ts"
+      - "src/lib/topographicExportSerializers.ts"
+      - "src/lib/topographicGeodesy.ts"
+      - "src/lib/topographicLocalGeoTiffWorkflow.ts"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validator and CesiumJS renderer
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Build deterministic synthetic tileset
+        run: npm run export:topographic-3d-tiles-conformance
+
+      - name: Run pinned external validator
+        run: >
+          npx --yes 3d-tiles-validator@0.6.1
+          --tilesetFile output/topographic-3d-tiles-conformance/tileset.json
+          --reportFile output/topographic-3d-tiles-conformance/cesium-validator-0.6.1.json
+
+      - name: Enforce zero errors and zero warnings
+        run: npm run verify:topographic-3d-tiles-validator-report
+
+      - name: Install pinned Chromium runtime
+        run: npx playwright install --with-deps chromium
+
+      - name: Load and render the generated tileset
+        run: npm run verify:topographic-3d-tiles-renderer
+
+      - name: Upload conformance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: topographic-3d-tiles-conformance
+          path: output/topographic-3d-tiles-conformance
+          if-no-files-found: error
+          retention-days: 14

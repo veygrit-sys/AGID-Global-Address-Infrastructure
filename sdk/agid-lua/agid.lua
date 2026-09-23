@@ -13,4 +13,8 @@ function agid.decode(id)
   return nil
 end
 
+function agid.cellBounds(id)
+  error("wire this package to the AGID reference implementation")
+end
+
 return agid

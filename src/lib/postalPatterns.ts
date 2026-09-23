@@ -633,7 +633,7 @@ export const NO_POSTAL_COUNTRIES: CountryContext[] = [
     history: 'Small population sorted directly by district name at the national sorting hub.'
   },
   { 
-    code: 'SY', 
+    code: 'SC',
     name: 'Seychelles', 
     region: 'Africa', 
     lat: -4.6796, 
@@ -654,7 +654,7 @@ export const NO_POSTAL_COUNTRIES: CountryContext[] = [
     region: 'Africa', 
     lat: 5.1521, 
     lng: 46.1996,
-    history: 'Historical instability led to a breakdown of central postal coding authorities.'
+    history: 'Postal sending and receiving resumed in May 2025 and one official public address exposes an AA plus five-digit code shape, but no nationwide public assignment table or geometry has been verified; postcode use remains optional and evidence-gated.'
   },
   { 
     code: 'SS', 

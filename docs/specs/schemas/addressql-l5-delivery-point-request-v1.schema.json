@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-l5-delivery-point-request-v1.schema.json",
+  "title": "AddressQL L5 Delivery Point Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "countryCode",
+    "deliveryPointCommitment",
+    "serviceLevel",
+    "assertions"
+  ],
+  "properties": {
+    "version": {
+      "const": "addressql-l5-delivery-point-request-v1"
+    },
+    "countryCode": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "deliveryPointCommitment": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "serviceLevel": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "$ref": "addressql-l5-carrier-assertion-v1.schema.json"
+      }
+    }
+  }
+}

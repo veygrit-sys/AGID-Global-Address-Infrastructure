@@ -23,6 +23,10 @@ test('help FAQ covers the questions that usually become support inquiries', () =
     '黒い線',
     '精度',
     'オープンソース',
+    'AOID',
+    '個人情報',
+    '通信',
+    '検索専用',
   ].forEach(term => assert.match(searchable, new RegExp(term)));
 });
 

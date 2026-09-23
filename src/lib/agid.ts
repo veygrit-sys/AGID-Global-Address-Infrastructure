@@ -4,11 +4,17 @@
  */
 
 import { COUNTRIES } from '../constants/countries';
-import { combineWasmU32Pair,getAgidWasmCore } from './agidWasm';
-import { COUNTRY_REGIONS,LAND_REGIONS,SEA_REGIONS } from './regions';
-export { COUNTRY_REGIONS,LAND_REGIONS,SEA_REGIONS };
+import { combineWasmU32Pair, getAgidWasmCore } from './agidWasm';
+import {
+  AGID_HASH_ALPHABET,
+  isAgidPackedValueInRange,
+  isValidAGIDFormat,
+  normalizeAGIDInput,
+} from './agidSecurity';
+import { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS } from './regions';
+export { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS };
 
-const BASE32_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+const BASE32_ALPHABET = AGID_HASH_ALPHABET;
 const NUMBERS = "0123456789";
 const LETTERS = "ABCDEFGHJKMNPQRSTVWXYZ"; // 22 letters
 
@@ -16,8 +22,11 @@ const OPEN_OCEAN_CODES = 220; // 22 Letters * 10 Numbers
 const COASTAL_SEA_CODES = 220; // 10 Numbers * 22 Letters
 const OTHER_CODES = 100; // 10 Numbers * 10 Numbers
 
-const K = 2097152; // 2^21 divisions
-const M = 2097151; // 2^21 - 1
+export const AGID_GRID_AXIS_BITS = 21;
+export const AGID_GRID_AXIS_CELLS = 2 ** AGID_GRID_AXIS_BITS;
+const K = AGID_GRID_AXIS_CELLS;
+const M = AGID_GRID_AXIS_CELLS - 1;
+const REGION_CACHE_EPSILON_DEGREES = 1e-9;
 
 /**
  * Equal-Area Transformation (E)
@@ -91,7 +100,7 @@ function getQuantized(lat: number, lon: number) {
  */
 function getFromQuantized(face: number, qx: number, qy: number) {
   const wasmCore = getAgidWasmCore();
-  if (wasmCore) {
+  if (wasmCore && Number.isInteger(qx) && Number.isInteger(qy)) {
     return {
       lat: wasmCore.agid_get_lat(face, qx, qy),
       lon: wasmCore.agid_get_lon(face, qx, qy),
@@ -156,10 +165,10 @@ const PREFIX_CACHE: { [key: string]: string } = {};
 export function generatePrefix(code: string, isSea: boolean, name: string): string {
   const cacheKey = `${code}_${isSea}`;
   if (PREFIX_CACHE[cacheKey]) return PREFIX_CACHE[cacheKey];
-  
+
   // Categorization
   let category: 'OPEN' | 'COASTAL' | 'OTHER' = 'OTHER';
-  
+
   if (isSea) {
     // [SPECIFIC 2-CHAR SEA CODES]
     const seaCodeMap: { [key: string]: string } = {
@@ -167,7 +176,7 @@ export function generatePrefix(code: string, isSea: boolean, name: string): stri
       'NATL': 'A1', 'SATL': 'A2', 'NIND': 'I1', 'SIND': 'I2',
       'SOUT': 'S0', 'ARCT': 'R0'
     };
-    
+
     // Check if it's a major ocean segment
     for (const [longCode, shortCode] of Object.entries(seaCodeMap)) {
       if (code.includes(longCode)) {
@@ -185,12 +194,12 @@ export function generatePrefix(code: string, isSea: boolean, name: string): stri
       // Other Sea: Inland or completely isolated seas.
       const isCoastalType = name.includes("Sea") || name.includes("Coast") || name.includes("Strait") || name.includes("Bay") || name.includes("Gulf") || name.includes("Inlet") || name.includes("Channel");
       const isBig5Coastal = name.includes("Pacific") || name.includes("Atlantic") || name.includes("Indian") || name.includes("Arctic") || name.includes("Southern") || isCoastalType;
-      
+
       if (isBig5Coastal) {
         category = 'COASTAL'; // Number + Alpha
       } else {
         // Fallback for smaller bays/straits/channels that the user wants to treat as open sea grid
-        category = 'OPEN'; 
+        category = 'OPEN';
       }
     }
   } else {
@@ -198,12 +207,12 @@ export function generatePrefix(code: string, isSea: boolean, name: string): stri
     // If it's land, ensure we always use a 2-letter code from ISO 3166-1 if detected.
     const upperCode = code.toUpperCase();
     const isIsoCountry = COUNTRIES.some(c => c.code === upperCode) || code.length === 2;
-    
+
     if (isIsoCountry && /^[A-Z]{2}$/.test(upperCode)) {
       PREFIX_CACHE[cacheKey] = upperCode;
       return upperCode;
     }
-    
+
     // For non-ISO codes (disputed/territories), use Number-Number format to avoid collisions
     const hashData = (name + code).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const n1 = NUMBERS[hashData % 10];
@@ -223,7 +232,7 @@ export function generatePrefix(code: string, isSea: boolean, name: string): stri
   hash = Math.abs(hash);
 
   let prefix = get2CharPrefix(hash, category);
-  
+
   // Collision Resolution within cache
   let attempts = 0;
   while (Object.values(PREFIX_CACHE).includes(prefix) && attempts < 50) {
@@ -239,12 +248,12 @@ export function generatePrefix(code: string, isSea: boolean, name: string): stri
     // Forced fallback to Number-Alpha (Coastal format) if categorization somehow produced Alpha-Alpha
     prefix = NUMBERS[hash % 10] + LETTERS[hash % 22];
   }
-  
+
   // 3. land codes (without ISO) MUST be Number-Number
   if (!isSea && !/^[A-Z]{2}$/.test(prefix) && !/^[0-9]{2}$/.test(prefix)) {
     prefix = NUMBERS[hash % 10] + NUMBERS[(hash / 10 | 0) % 10];
   }
-  
+
   PREFIX_CACHE[cacheKey] = prefix;
   return prefix;
 }
@@ -430,15 +439,43 @@ function getClaimAwareRegionCode(lat: number, lon: number, fallbackCode: string)
   return normalizedFallback;
 }
 
+export type AGIDCellInput = string | Pick<AGIDResult, 'id' | 'face' | 'qx' | 'qy'>;
+
+export type AGIDAdjacentCell = {
+  relation: 'edge-adjacent' | 'corner-adjacent';
+  sourceCellKey: string;
+  cellKey: string;
+  agid: AGIDResult;
+};
+
+export type AGIDGridRelation =
+  | 'same-cell'
+  | 'edge-adjacent'
+  | 'corner-adjacent'
+  | 'separate'
+  | 'invalid';
+
+export type AGIDGridNeighborhoodMatch = {
+  version: 'agid-grid-neighborhood-v0.1';
+  gridAxisBits: typeof AGID_GRID_AXIS_BITS;
+  relation: AGIDGridRelation;
+  acceptedAsSameOrNearArea: boolean;
+  boundaryMatch: boolean;
+  leftCellKey: string | null;
+  rightCellKey: string | null;
+  nonClaims: string[];
+};
+
 /**
  * Core AGID Encoding
- * Redesigned for Cubed Sphere (23-bit precision per face axis).
+ * Redesigned for Cubed Sphere (21-bit precision per face axis).
  * This ensures near-uniform cell size (~4.78m) globally.
  */
 export function encodeAGID(lat: number, lon: number): AGIDResult {
   const region = getRegionInfo(lat, lon);
-  const prefix = generatePrefix(region.prefix, region.isSea, region.name);
   const regionCode = getClaimAwareRegionCode(lat, lon, region.prefix);
+  const prefixCode = regionCode.startsWith("JP_") ? "JP" : region.prefix;
+  const prefix = generatePrefix(prefixCode, region.isSea, region.name);
 
   // 1. Quantization: Cubed Sphere mapping with Equal-Area correction
   const { face, qx, qy } = getQuantized(lat, lon);
@@ -475,28 +512,14 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
  * Bounds Calculation for Cubed Sphere
  */
 export function getCellPolygon(face: number, quantX: number, quantY: number, step: number = 1): number[][] {
-  const p1 = getFromQuantized(face, quantX, quantY);
-  const p2 = getFromQuantized(face, quantX + step, quantY);
-  const p3 = getFromQuantized(face, quantX + step, quantY + step);
-  const p4 = getFromQuantized(face, quantX, quantY + step);
-
-  const pts = [p1, p2, p3, p4];
-  const refLon = p1.lon;
-  
-  // Handle Longitudinal Wrap (IDL)
-  const adjusted = pts.map(p => {
-    let shiftedLon = p.lon;
-    if (shiftedLon - refLon > 180) shiftedLon -= 360;
-    else if (shiftedLon - refLon < -180) shiftedLon += 360;
-    return [shiftedLon, p.lat];
-  });
+  const adjusted = getAdjustedCellCorners(face, quantX, quantY, step);
 
   return [
-    adjusted[0],
-    adjusted[1],
-    adjusted[2],
-    adjusted[3],
-    adjusted[0]
+    [adjusted[0].lon, adjusted[0].lat],
+    [adjusted[1].lon, adjusted[1].lat],
+    [adjusted[2].lon, adjusted[2].lat],
+    [adjusted[3].lon, adjusted[3].lat],
+    [adjusted[0].lon, adjusted[0].lat]
   ];
 }
 
@@ -509,9 +532,21 @@ export function getCellCorners(face: number, quantX: number, quantY: number, ste
   return [p1, p2, p3, p4];
 }
 
-export function getCellBounds(face: number, quantX: number, quantY: number, step: number = 1) {
+function getAdjustedCellCorners(face: number, quantX: number, quantY: number, step: number = 1) {
   const corners = getCellCorners(face, quantX, quantY, step);
-  
+  const refLon = corners[0].lon;
+
+  return corners.map(corner => {
+    let lon = corner.lon;
+    if (lon - refLon > 180) lon -= 360;
+    else if (lon - refLon < -180) lon += 360;
+    return { ...corner, lon };
+  });
+}
+
+export function getCellBounds(face: number, quantX: number, quantY: number, step: number = 1) {
+  const corners = getAdjustedCellCorners(face, quantX, quantY, step);
+
   return {
     minLat: Math.min(...corners.map(c => c.lat)),
     maxLat: Math.max(...corners.map(c => c.lat)),
@@ -523,22 +558,157 @@ export function getCellBounds(face: number, quantX: number, quantY: number, step
 /**
  * Core AGID Decoding
  */
-export function decodeAGID(id: string): { lat: number, lon: number, isSea: boolean, prefix: string, face: number } | null {
-  if (id.length !== 12) return null;
-  const prefix = id.substring(0, 2);
-  const hash = id.substring(2);
+export function decodeAGID(id: string): {
+  lat: number;
+  lon: number;
+  isSea: boolean;
+  prefix: string;
+  face: number;
+  qx: number;
+  qy: number;
+  bounds: AGIDResult['bounds'];
+} | null {
+  const normalizedId = normalizeAGIDInput(id);
+  if (!normalizedId || !isValidAGIDFormat(normalizedId)) return null;
+  const prefix = normalizedId.substring(0, 2);
+  const hash = normalizedId.substring(2);
 
   try {
     const packedValue = decodeBase32(hash);
+    if (!isAgidPackedValueInRange(packedValue)) return null;
     const { face, h } = unpackAGID(packedValue);
     const { x: quantX, y: quantY } = decodeHilbert(K, h);
 
     const { lat, lon } = getFromQuantized(face, quantX, quantY);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
 
-    return { lat, lon, isSea: false, prefix, face };
+    return {
+      lat,
+      lon,
+      isSea: false,
+      prefix,
+      face,
+      qx: quantX,
+      qy: quantY,
+      bounds: getCellBounds(face, quantX, quantY),
+    };
   } catch (e) {
     return null;
   }
+}
+
+function resolveAGIDCell(input: AGIDCellInput) {
+  const id = typeof input === 'string' ? input : input.id;
+  const decoded = decodeAGID(id);
+  if (!decoded) return null;
+  if (
+    typeof input !== 'string'
+    && (
+      input.face !== decoded.face
+      || input.qx !== decoded.qx
+      || input.qy !== decoded.qy
+    )
+  ) {
+    return null;
+  }
+  return decoded;
+}
+
+function agidCellKey(face: number, qx: number, qy: number) {
+  return `${face}:${qx}:${qy}`;
+}
+
+export function getAGIDCellKey(input: AGIDCellInput): string | null {
+  const cell = resolveAGIDCell(input);
+  return cell ? agidCellKey(cell.face, cell.qx, cell.qy) : null;
+}
+
+/**
+ * Returns the eight immediate cells around an AGID cell.
+ *
+ * Sampling through the sphere and re-encoding is intentional. Direct qx/qy
+ * arithmetic is insufficient at cubed-sphere face edges, corners, poles, and
+ * the antimeridian.
+ */
+export function getAdjacentAGIDCells(input: AGIDCellInput): AGIDAdjacentCell[] {
+  const source = resolveAGIDCell(input);
+  if (!source) return [];
+  const sourceCellKey = agidCellKey(source.face, source.qx, source.qy);
+  const neighbors = new Map<string, AGIDAdjacentCell>();
+
+  for (let dy = -1; dy <= 1; dy += 1) {
+    for (let dx = -1; dx <= 1; dx += 1) {
+      if (dx === 0 && dy === 0) continue;
+      const center = getFromQuantized(
+        source.face,
+        source.qx + dx + 0.5,
+        source.qy + dy + 0.5,
+      );
+      const agid = encodeAGID(center.lat, center.lon);
+      const cellKey = agidCellKey(agid.face, agid.qx, agid.qy);
+      if (cellKey === sourceCellKey) continue;
+      const relation: AGIDAdjacentCell['relation'] =
+        dx === 0 || dy === 0 ? 'edge-adjacent' : 'corner-adjacent';
+      const existing = neighbors.get(cellKey);
+      if (!existing || (
+        existing.relation === 'corner-adjacent'
+        && relation === 'edge-adjacent'
+      )) {
+        neighbors.set(cellKey, {
+          relation,
+          sourceCellKey,
+          cellKey,
+          agid,
+        });
+      }
+    }
+  }
+
+  return [...neighbors.values()].sort((left, right) => {
+    if (left.relation !== right.relation) {
+      return left.relation === 'edge-adjacent' ? -1 : 1;
+    }
+    return left.cellKey.localeCompare(right.cellKey);
+  });
+}
+
+export function matchAGIDGridNeighborhood(
+  left: AGIDCellInput,
+  right: AGIDCellInput,
+): AGIDGridNeighborhoodMatch {
+  const leftCellKey = getAGIDCellKey(left);
+  const rightCellKey = getAGIDCellKey(right);
+  let relation: AGIDGridRelation = 'invalid';
+
+  if (leftCellKey && rightCellKey) {
+    if (leftCellKey === rightCellKey) {
+      relation = 'same-cell';
+    } else {
+      const neighbor = getAdjacentAGIDCells(left)
+        .find(candidate => candidate.cellKey === rightCellKey);
+      relation = neighbor?.relation || 'separate';
+    }
+  }
+
+  return {
+    version: 'agid-grid-neighborhood-v0.1',
+    gridAxisBits: AGID_GRID_AXIS_BITS,
+    relation,
+    acceptedAsSameOrNearArea:
+      relation === 'same-cell'
+      || relation === 'edge-adjacent'
+      || relation === 'corner-adjacent',
+    boundaryMatch:
+      relation === 'edge-adjacent'
+      || relation === 'corner-adjacent',
+    leftCellKey,
+    rightCellKey,
+    nonClaims: [
+      'Cell proximity does not prove that two address records have the same referent.',
+      'Adjacent cells do not prove a traversable entrance or carrier delivery route.',
+      'Public AGID proximity must not disclose a unit, room, recipient, or access instruction.',
+    ],
+  };
 }
 
 // Spatial Cache for faster lookup (Grid Index)
@@ -600,7 +770,7 @@ function getSpatialCell(lat: number, lon: number) {
       return latOverlap && lonOverlap;
     })
   };
-  
+
   GRID_INDEX[key] = cell;
   return cell;
 }
@@ -611,11 +781,11 @@ function getSpatialCell(lat: number, lon: number) {
  */
 function isPointInPolygon(lat: number, lon: number, polygon: [number, number][] | [number, number][][], bounds?: { n: number, s: number, w: number, e: number }) {
   const EPS = 1e-10;
-  
+
   // Bounding box pre-check
   if (bounds) {
-    const inLon = bounds.w <= bounds.e 
-      ? (lon >= bounds.w - EPS && lon <= bounds.e + EPS) 
+    const inLon = bounds.w <= bounds.e
+      ? (lon >= bounds.w - EPS && lon <= bounds.e + EPS)
       : (lon >= bounds.w - EPS || lon <= bounds.e + EPS);
     if (lat < bounds.s - EPS || lat > bounds.n + EPS || !inLon) return false;
   }
@@ -628,14 +798,17 @@ function isPointInPolygon(lat: number, lon: number, polygon: [number, number][] 
     : [polygon as [number, number][]];
 
   for (const poly of polygons) {
+    const longitudes = poly.map(point => point[1]);
+    const crossesAntimeridian = Math.max(...longitudes) - Math.min(...longitudes) > 180;
+    const testLon = crossesAntimeridian && lon < 0 ? lon + 360 : lon;
     let inside = false;
     for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
       // Data in JSON is [LAT, LON]
-      const yi = poly[i][0], xi = poly[i][1];
-      const yj = poly[j][0], xj = poly[j][1];
-      
+      const yi = poly[i][0], xi = crossesAntimeridian && poly[i][1] < 0 ? poly[i][1] + 360 : poly[i][1];
+      const yj = poly[j][0], xj = crossesAntimeridian && poly[j][1] < 0 ? poly[j][1] + 360 : poly[j][1];
+
       const intersect = ((yi > lat) !== (yj > lat)) &&
-        (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+        (testLon < (xj - xi) * (lat - yi) / (yj - yi) + xi);
       if (intersect) inside = !inside;
     }
     if (inside) return true;
@@ -651,21 +824,319 @@ const OCEANS = [
   // Polar Oceans first (Highest priority to avoid overlap with mid-latitude fallbacks)
   { id: "ARCT", n: 90, s: 66.5, w: -180, e: 180, name: "Arctic Ocean" },
   { id: "SOUT", n: -60, s: -90, w: -180, e: 180, name: "Southern Ocean" },
-  
+
   // Atlantic
   { id: "NATL", n: 66.5, s: 0, w: -70, e: 20, name: "North Atlantic" },
   { id: "SATL", n: 0, s: -60, w: -67, e: 20, name: "South Atlantic" },
-  
+
   // Indian
   { id: "NIND", n: 30, s: 0, w: 20, e: 100, name: "North Indian Ocean" },
   { id: "SIND", n: 0, s: -60, w: 20, e: 147, name: "South Indian Ocean" },
-  
+
   // Pacific (split by IDL and Atlantic boundaries)
   { id: "NPAC", n: 66.5, s: 0, w: 100, e: 180, name: "North Pacific" },
   { id: "NEPC", n: 66.5, s: 0, w: -180, e: -70, name: "North Pacific" },
   { id: "SPAC", n: 0, s: -60, w: 147, e: 180, name: "South Pacific" },
   { id: "SEPC", n: 0, s: -60, w: -180, e: -67, name: "South Pacific" },
 ];
+
+const COARSE_URBAN_ANCHORS = [
+  { code: "KR", lat: 37.5665, lon: 126.9780, radiusKm: 80 },
+  { code: "KP", lat: 39.0392, lon: 125.7625, radiusKm: 80 },
+  { code: "VN", lat: 21.0278, lon: 105.8342, radiusKm: 100 },
+  { code: "IN", lat: 28.6139, lon: 77.2090, radiusKm: 120 },
+  { code: "PK", lat: 33.6844, lon: 73.0479, radiusKm: 120 },
+  { code: "UZ", lat: 41.2995, lon: 69.2401, radiusKm: 100 },
+  { code: "SY", lat: 33.5138, lon: 36.2765, radiusKm: 100 },
+  { code: "AT", lat: 48.2082, lon: 16.3738, radiusKm: 35 },
+  { code: "SK", lat: 48.1486, lon: 17.1077, radiusKm: 60 },
+  { code: "SI", lat: 46.0569, lon: 14.5058, radiusKm: 70 },
+  { code: "HR", lat: 45.8150, lon: 15.9819, radiusKm: 80 },
+  { code: "IS", lat: 64.1466, lon: -21.9426, radiusKm: 100 },
+  { code: "EE", lat: 59.4370, lon: 24.7536, radiusKm: 80 },
+  { code: "LV", lat: 56.9496, lon: 24.1052, radiusKm: 80 },
+  { code: "LT", lat: 54.6872, lon: 25.2797, radiusKm: 80 },
+  { code: "MK", lat: 41.9981, lon: 21.4254, radiusKm: 80 },
+  { code: "RU", lat: 55.7558, lon: 37.6173, radiusKm: 150 },
+  { code: "CY", lat: 34.7071, lon: 33.0226, radiusKm: 80 },
+  { code: "ES_CAN", lat: 28.2916, lon: -16.6291, radiusKm: 130 },
+  { code: "PT_MAD", lat: 32.7607, lon: -16.9595, radiusKm: 80 },
+  { code: "PT_AZO", lat: 37.7412, lon: -25.6756, radiusKm: 220 },
+  { code: "DZ", lat: 36.7538, lon: 3.0588, radiusKm: 80 },
+  { code: "SD", lat: 15.5007, lon: 32.5599, radiusKm: 100 },
+  { code: "SS", lat: 4.8594, lon: 31.5713, radiusKm: 100 },
+  { code: "CV", lat: 14.9330, lon: -23.5133, radiusKm: 120 },
+  { code: "ML", lat: 12.6392, lon: -8.0029, radiusKm: 80 },
+  { code: "NE", lat: 13.5116, lon: 2.1254, radiusKm: 80 },
+  { code: "ZA", lat: -25.7479, lon: 28.2293, radiusKm: 90 },
+  { code: "MW", lat: -13.9626, lon: 33.7741, radiusKm: 80 },
+  { code: "CD", lat: -4.4419, lon: 15.2663, radiusKm: 35 },
+  { code: "CG", lat: -4.2634, lon: 15.2429, radiusKm: 35 },
+  { code: "TD", lat: 12.1348, lon: 15.0557, radiusKm: 80 },
+  { code: "KM", lat: -11.7172, lon: 43.2473, radiusKm: 80 },
+  { code: "RE", lat: -20.8823, lon: 55.4504, radiusKm: 80 },
+  { code: "YT", lat: -12.7806, lon: 45.2279, radiusKm: 50 },
+  { code: "IO", lat: -7.3195, lon: 72.4229, radiusKm: 160 },
+  { code: "ST", lat: 0.3365, lon: 6.7273, radiusKm: 60 },
+  { code: "HN", lat: 14.0723, lon: -87.1921, radiusKm: 80 },
+  { code: "BM", lat: 32.2948, lon: -64.7814, radiusKm: 80 },
+  { code: "AR", lat: -34.6037, lon: -58.3816, radiusKm: 90 },
+  { code: "UY", lat: -34.9011, lon: -56.1645, radiusKm: 80 },
+  { code: "CL-SG", lat: -26.4667, lon: -105.35, radiusKm: 50 },
+  { code: "CP", lat: 10.2833, lon: -109.2167, radiusKm: 50 },
+] as const;
+
+const PRECISE_SEA_PRIORITY_IDS = new Set([
+  "CASP", "BLCK", "BALT", "HUDS_L", "PGUL", "REDM", "MARM", "AZOV",
+  "SETO", "TKYB", "OSKB", "ISEB", "ARIA", "OMUR",
+  "CALI", "GMXC", "ENGC", "BISC", "ADRI", "AEGE", "GOMA", "BENG", "ANDM",
+  "LACC", "ADEN", "KUTC", "KHAM",
+  "LABR", "STLA", "FUND",
+  "ESCH", "YELW", "BOHI", "SJPN", "BERI", "CORL", "SOLO", "BISM", "ARAF", "TIMR",
+  "MALA", "GBRL", "COOK_S1", "BASS", "MGLN",
+]);
+
+const COARSE_OCEANIC_ARCHIPELAGO_CODES = new Set([
+  "BM", "CV", "ES_CAN", "FK", "GS", "PT", "PT_AZO", "PT_MAD",
+  "CC", "CX", "ID", "IO", "KM", "MU", "MV", "RE", "SC", "YT",
+  "AS", "CK", "FJ", "FM", "GU", "KI", "MH", "MP", "NC", "PF",
+  "PW", "SB", "TO", "TV", "UM", "VU", "WS",
+]);
+
+const COASTAL_LAND_ANCHORS = [
+  { code: "JP", lat: 35.6812, lon: 139.7671, radiusKm: 16 },
+  { code: "JP", lat: 35.4437, lon: 139.6380, radiusKm: 16 },
+  { code: "JP", lat: 34.6937, lon: 135.5023, radiusKm: 16 },
+  { code: "JP", lat: 35.1815, lon: 136.9066, radiusKm: 16 },
+  { code: "JP", lat: 34.3853, lon: 132.4553, radiusKm: 16 },
+  { code: "JP", lat: 33.5902, lon: 130.4017, radiusKm: 16 },
+  { code: "TR", lat: 41.0082, lon: 28.9784, radiusKm: 18 },
+  { code: "GR", lat: 37.9838, lon: 23.7275, radiusKm: 18 },
+  { code: "SE", lat: 59.3293, lon: 18.0686, radiusKm: 18 },
+  { code: "DK", lat: 55.6761, lon: 12.5683, radiusKm: 18 },
+  { code: "FI", lat: 60.1699, lon: 24.9384, radiusKm: 18 },
+  { code: "EE", lat: 59.4370, lon: 24.7536, radiusKm: 18 },
+  { code: "LV", lat: 56.9496, lon: 24.1052, radiusKm: 18 },
+  { code: "AX", lat: 60.0973, lon: 19.9348, radiusKm: 18 },
+  { code: "HK", lat: 22.3193, lon: 114.1694, radiusKm: 18 },
+  { code: "MO", lat: 22.1987, lon: 113.5439, radiusKm: 18 },
+  { code: "TW", lat: 25.0330, lon: 121.5654, radiusKm: 18 },
+  { code: "PH", lat: 14.5995, lon: 120.9842, radiusKm: 18 },
+  { code: "SG", lat: 1.3521, lon: 103.8198, radiusKm: 18 },
+  { code: "ID", lat: -6.2088, lon: 106.8456, radiusKm: 18 },
+  { code: "TL", lat: -8.5569, lon: 125.5603, radiusKm: 18 },
+  { code: "IN", lat: 15.4909, lon: 73.8278, radiusKm: 24 },
+  { code: "IN", lat: 10.5593, lon: 72.6358, radiusKm: 35 },
+  { code: "IN", lat: 9.9312, lon: 76.2673, radiusKm: 22 },
+  { code: "IN", lat: 8.5241, lon: 76.9366, radiusKm: 22 },
+  { code: "IN", lat: 23.2419, lon: 69.6669, radiusKm: 28 },
+  { code: "IN", lat: 22.4707, lon: 70.0577, radiusKm: 28 },
+  { code: "IN", lat: 21.7645, lon: 72.1519, radiusKm: 24 },
+  { code: "IN", lat: 21.1702, lon: 72.8311, radiusKm: 28 },
+  { code: "MV", lat: 6.7693, lon: 73.1700, radiusKm: 45 },
+  { code: "MV", lat: 4.1755, lon: 73.5093, radiusKm: 45 },
+  { code: "MV", lat: -0.6301, lon: 73.1587, radiusKm: 45 },
+  { code: "SC", lat: -4.6200, lon: 55.4500, radiusKm: 55 },
+  { code: "SC", lat: -9.4200, lon: 46.3500, radiusKm: 80 },
+  { code: "MU", lat: -20.1609, lon: 57.5012, radiusKm: 45 },
+  { code: "KM", lat: -11.7042, lon: 43.2402, radiusKm: 40 },
+  { code: "KM", lat: -12.1696, lon: 44.3999, radiusKm: 35 },
+  { code: "YT", lat: -12.7806, lon: 45.2279, radiusKm: 35 },
+  { code: "RE", lat: -20.8823, lon: 55.4504, radiusKm: 45 },
+  { code: "IO", lat: -7.3195, lon: 72.4229, radiusKm: 80 },
+  { code: "CC", lat: -12.1888, lon: 96.8293, radiusKm: 18 },
+  { code: "CX", lat: -10.4475, lon: 105.6904, radiusKm: 18 },
+  { code: "YE", lat: 12.7855, lon: 45.0187, radiusKm: 35 },
+  { code: "DJ", lat: 11.5721, lon: 43.1456, radiusKm: 30 },
+  { code: "SO", lat: 10.4396, lon: 45.0143, radiusKm: 45 },
+  { code: "FJ", lat: -18.1248, lon: 178.4501, radiusKm: 80 },
+  { code: "VU", lat: -17.7333, lon: 168.3273, radiusKm: 70 },
+  { code: "SB", lat: -9.4456, lon: 159.9729, radiusKm: 80 },
+  { code: "NC", lat: -22.2758, lon: 166.4580, radiusKm: 70 },
+  { code: "WS", lat: -13.8507, lon: -171.7514, radiusKm: 45 },
+  { code: "KI", lat: 1.3278, lon: 172.9769, radiusKm: 45 },
+  { code: "KI", lat: 1.8721, lon: -157.4278, radiusKm: 65 },
+  { code: "TO", lat: -21.1394, lon: -175.2049, radiusKm: 55 },
+  { code: "FM", lat: 6.9178, lon: 158.1850, radiusKm: 60 },
+  { code: "PW", lat: 7.5006, lon: 134.6242, radiusKm: 45 },
+  { code: "MH", lat: 7.1164, lon: 171.1858, radiusKm: 50 },
+  { code: "TV", lat: -8.5243, lon: 179.1942, radiusKm: 45 },
+  { code: "GU", lat: 13.4763, lon: 144.7502, radiusKm: 35 },
+  { code: "MP", lat: 15.1778, lon: 145.7509, radiusKm: 45 },
+  { code: "UM", lat: 19.2823, lon: 166.6470, radiusKm: 25 },
+  { code: "AS", lat: -14.2756, lon: -170.7020, radiusKm: 55 },
+  { code: "CK", lat: -21.2129, lon: -159.7823, radiusKm: 60 },
+  { code: "PF", lat: -17.5516, lon: -149.5585, radiusKm: 70 },
+  { code: "MY", lat: 3.1390, lon: 101.6869, radiusKm: 18 },
+  { code: "MM", lat: 16.8409, lon: 96.1735, radiusKm: 18 },
+  { code: "IN", lat: 19.0760, lon: 72.8777, radiusKm: 18 },
+  { code: "LK", lat: 6.9271, lon: 79.8612, radiusKm: 18 },
+  { code: "BD", lat: 23.8103, lon: 90.4125, radiusKm: 18 },
+  { code: "OM", lat: 23.5880, lon: 58.3829, radiusKm: 18 },
+  { code: "AE", lat: 25.2048, lon: 55.2708, radiusKm: 18 },
+  { code: "QA", lat: 25.2854, lon: 51.5310, radiusKm: 18 },
+  { code: "BH", lat: 26.2235, lon: 50.5876, radiusKm: 18 },
+  { code: "KW", lat: 29.3759, lon: 47.9774, radiusKm: 18 },
+  { code: "AZ", lat: 40.4093, lon: 49.8671, radiusKm: 35 },
+  { code: "BM", lat: 32.2948, lon: -64.7814, radiusKm: 35 },
+  { code: "CV", lat: 14.9330, lon: -23.5133, radiusKm: 60 },
+  { code: "ES_CAN", lat: 28.2916, lon: -16.6291, radiusKm: 90 },
+  { code: "PT", lat: 38.7223, lon: -9.1393, radiusKm: 320 },
+  { code: "PT_MAD", lat: 32.7607, lon: -16.9595, radiusKm: 55 },
+  { code: "PT_AZO", lat: 37.7412, lon: -25.6756, radiusKm: 110 },
+  { code: "FK", lat: -51.6977, lon: -57.8517, radiusKm: 80 },
+  { code: "GS", lat: -54.2811, lon: -36.5080, radiusKm: 60 },
+  { code: "CA", lat: 44.6488, lon: -63.5752, radiusKm: 45 },
+  { code: "CA", lat: 45.2733, lon: -66.0633, radiusKm: 35 },
+  { code: "CA", lat: 47.5615, lon: -52.7126, radiusKm: 45 },
+  { code: "PM", lat: 46.7811, lon: -56.1764, radiusKm: 20 },
+  { code: "CRIM", lat: 44.9521, lon: 34.1024, radiusKm: 35 },
+  { code: "GG", lat: 49.4657, lon: -2.5853, radiusKm: 12 },
+  { code: "JE", lat: 49.2138, lon: -2.1358, radiusKm: 12 },
+  { code: "GI", lat: 36.1408, lon: -5.3536, radiusKm: 8 },
+  { code: "NZ", lat: -41.2865, lon: 174.7762, radiusKm: 18 },
+  { code: "JP_SK", lat: 25.75, lon: 123.55, radiusKm: 25 },
+  { code: "JP_NT", lat: 44.5, lon: 146.8, radiusKm: 90 },
+  { code: "JP_TK", lat: 37.24, lon: 131.86, radiusKm: 8 },
+  { code: "US", lat: 37.7749, lon: -122.4194, radiusKm: 18 },
+  { code: "US", lat: 29.9511, lon: -90.0715, radiusKm: 18 },
+] as const;
+
+const COARSE_ARCHIPELAGO_LAND_ANCHORS = [
+  { code: "ID", lat: 5.5483, lon: 95.3238, radiusKm: 95 },
+  { code: "ID", lat: 3.5952, lon: 98.6722, radiusKm: 110 },
+  { code: "ID", lat: -0.9471, lon: 100.4172, radiusKm: 110 },
+  { code: "ID", lat: -2.9761, lon: 104.7754, radiusKm: 130 },
+  { code: "ID", lat: -6.2088, lon: 106.8456, radiusKm: 120 },
+  { code: "ID", lat: -6.9904, lon: 110.4229, radiusKm: 120 },
+  { code: "ID", lat: -7.2575, lon: 112.7521, radiusKm: 130 },
+  { code: "ID", lat: -8.6500, lon: 115.2167, radiusKm: 90 },
+  { code: "ID", lat: -8.5831, lon: 116.1167, radiusKm: 80 },
+  { code: "ID", lat: -10.1772, lon: 123.6070, radiusKm: 90 },
+  { code: "ID", lat: -0.0263, lon: 109.3425, radiusKm: 140 },
+  { code: "ID", lat: -1.2379, lon: 116.8529, radiusKm: 180 },
+  { code: "ID", lat: -5.1477, lon: 119.4327, radiusKm: 130 },
+  { code: "ID", lat: 1.4748, lon: 124.8421, radiusKm: 100 },
+  { code: "ID", lat: -3.6954, lon: 128.1814, radiusKm: 120 },
+  { code: "ID", lat: -2.5489, lon: 140.7195, radiusKm: 170 },
+] as const;
+
+const POLAR_COARSE_COUNTRY_CODES = new Set(["CA", "RU", "US"]);
+const ANTARCTIC_INTERIOR_LATITUDE = -72;
+
+const POLAR_LAND_ANCHORS = [
+  { code: "CA", name: "Alert, Nunavut", lat: 82.5018, lon: -62.3481, radiusKm: 45 },
+  { code: "CA", name: "Eureka, Nunavut", lat: 79.9900, lon: -85.9400, radiusKm: 55 },
+  { code: "CA", name: "Resolute, Nunavut", lat: 74.6973, lon: -94.8297, radiusKm: 55 },
+  { code: "CA", name: "Pond Inlet, Nunavut", lat: 72.6992, lon: -77.9592, radiusKm: 45 },
+  { code: "US", name: "Utqiagvik, Alaska", lat: 71.2906, lon: -156.7886, radiusKm: 45 },
+  { code: "US", name: "Deadhorse, Alaska", lat: 70.2002, lon: -148.4597, radiusKm: 45 },
+  { code: "RU", name: "Tiksi", lat: 71.6872, lon: 128.8694, radiusKm: 70 },
+  { code: "RU", name: "Pevek", lat: 69.7018, lon: 170.2999, radiusKm: 65 },
+  { code: "RU", name: "Dikson", lat: 73.5071, lon: 80.5451, radiusKm: 70 },
+  { code: "GL", name: "Nuuk", lat: 64.1835, lon: -51.7216, radiusKm: 70 },
+  { code: "GL", name: "Qaanaaq", lat: 77.4670, lon: -69.2300, radiusKm: 75 },
+  { code: "GL", name: "Station Nord", lat: 81.6000, lon: -16.6700, radiusKm: 80 },
+  { code: "GL", name: "North Greenland coast", lat: 82.5000, lon: -40.0000, radiusKm: 120 },
+  { code: "SJ_SVA", name: "Longyearbyen", lat: 78.2232, lon: 15.6469, radiusKm: 45 },
+  { code: "SJ_JAN", name: "Jan Mayen", lat: 70.9820, lon: -8.5360, radiusKm: 30 },
+  { code: "AQ", name: "McMurdo Station", lat: -77.8500, lon: 166.6700, radiusKm: 45 },
+  { code: "AQ", name: "Amundsen-Scott South Pole Station", lat: -89.9990, lon: 0.0000, radiusKm: 80 },
+  { code: "AQ", name: "Rothera Research Station", lat: -67.5680, lon: -68.1300, radiusKm: 35 },
+  { code: "AQ", name: "Palmer Station", lat: -64.7740, lon: -64.0540, radiusKm: 30 },
+  { code: "AQ", name: "Belgrano II Antarctic Base", lat: -77.8739, lon: -34.6278, radiusKm: 35 },
+  { code: "AQ", name: "Casey Station", lat: -66.2825, lon: 110.5267, radiusKm: 45 },
+  { code: "AQ", name: "Syowa Station", lat: -69.0060, lon: 39.5900, radiusKm: 45 },
+  { code: "AQ", name: "Vostok Station", lat: -78.4640, lon: 106.8370, radiusKm: 55 },
+  { code: "AQ", name: "Concordia Station", lat: -75.1000, lon: 123.3333, radiusKm: 55 },
+  { code: "AQ", name: "Davis Station", lat: -68.5766, lon: 77.9674, radiusKm: 45 },
+  { code: "AQ", name: "Mawson Station", lat: -67.6033, lon: 62.8738, radiusKm: 45 },
+  { code: "AQ", name: "Halley Research Station", lat: -75.6050, lon: -26.2100, radiusKm: 65 },
+  { code: "BV", name: "Bouvet Island", lat: -54.4208, lon: 3.3464, radiusKm: 25 },
+  { code: "TF", name: "Kerguelen Islands", lat: -49.3500, lon: 70.2167, radiusKm: 90 },
+  { code: "TF", name: "Crozet Islands", lat: -46.4300, lon: 51.8500, radiusKm: 85 },
+  { code: "TF", name: "Amsterdam Island", lat: -37.8333, lon: 77.5500, radiusKm: 35 },
+  { code: "TF", name: "Saint Paul Island", lat: -38.7200, lon: 77.5300, radiusKm: 30 },
+] as const;
+
+function haversineKm(aLat: number, aLon: number, bLat: number, bLon: number) {
+  const toRad = Math.PI / 180;
+  const dLat = (bLat - aLat) * toRad;
+  const dLon = (bLon - aLon) * toRad;
+  const lat1 = aLat * toRad;
+  const lat2 = bLat * toRad;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+
+  return 2 * 6371.0088 * Math.asin(Math.sqrt(h));
+}
+
+function disambiguateCoarseCountryByAnchor(lat: number, lon: number, candidates: any[]) {
+  if (candidates.length <= 1) return null;
+  const candidateCodes = new Set(candidates.map(candidate => candidate.code));
+  let best: { code: string; normalizedDistance: number } | null = null;
+
+  for (const anchor of COARSE_URBAN_ANCHORS) {
+    if (!candidateCodes.has(anchor.code)) continue;
+    const distance = haversineKm(lat, lon, anchor.lat, anchor.lon);
+    if (distance > anchor.radiusKm) continue;
+
+    const normalizedDistance = distance / anchor.radiusKm;
+    if (!best || normalizedDistance < best.normalizedDistance) {
+      best = { code: anchor.code, normalizedDistance };
+    }
+  }
+
+  return best ? candidates.find(candidate => candidate.code === best?.code) || null : null;
+}
+
+function isProtectedCoastalLandAnchor(lat: number, lon: number, candidates: any[]) {
+  const candidateCodes = new Set(candidates.map(candidate => candidate.code));
+
+  for (const anchor of COASTAL_LAND_ANCHORS) {
+    if (!candidateCodes.has(anchor.code)) continue;
+    if (haversineKm(lat, lon, anchor.lat, anchor.lon) <= anchor.radiusKm) return true;
+  }
+
+  return false;
+}
+
+function getPolarLandAnchor(lat: number, lon: number, candidates?: any[]) {
+  const candidateCodes = candidates ? new Set(candidates.map(candidate => candidate.code)) : null;
+
+  for (const anchor of POLAR_LAND_ANCHORS) {
+    if (candidateCodes && !candidateCodes.has(anchor.code)) continue;
+    if (haversineKm(lat, lon, anchor.lat, anchor.lon) <= anchor.radiusKm) return anchor;
+  }
+
+  return null;
+}
+
+function isProtectedCoarseArchipelagoLandAnchor(lat: number, lon: number, country: any) {
+  for (const anchor of COARSE_ARCHIPELAGO_LAND_ANCHORS) {
+    if (anchor.code !== country.code) continue;
+    if (haversineKm(lat, lon, anchor.lat, anchor.lon) <= anchor.radiusKm) return true;
+  }
+
+  return false;
+}
+
+function isUnanchoredCoarseOceanicArchipelago(lat: number, lon: number, country: any) {
+  return (
+    COARSE_OCEANIC_ARCHIPELAGO_CODES.has(country.code) &&
+    !isProtectedCoastalLandAnchor(lat, lon, [country]) &&
+    !isProtectedCoarseArchipelagoLandAnchor(lat, lon, country)
+  );
+}
+
+function isUnanchoredCoarsePolarCountry(lat: number, lon: number, country: any) {
+  return (
+    lat >= 80 &&
+    POLAR_COARSE_COUNTRY_CODES.has(country.code) &&
+    !getPolarLandAnchor(lat, lon, [country])
+  );
+}
 
 /**
  * Optimized Country/Ocean detection using the "World - Land = Sea" principle.
@@ -684,16 +1155,63 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
   if (lat > 89.95) return { prefix: "ARCT", isSea: true, gridSize: 4.4, name: "North Pole", polygon: [[-180, 89.9],[-180, 90],[180, 90],[180, 89.9],[-180, 89.9]] };
   if (lat < -85.0) return { prefix: "AQ", isSea: false, gridSize: 4.4, name: "Antarctica" };
 
+  const polarLandAnchor = getPolarLandAnchor(lat, normLon);
+  if (polarLandAnchor) {
+    return { prefix: polarLandAnchor.code, isSea: false, gridSize: 4.4, name: polarLandAnchor.name };
+  }
+
+  if (lat <= ANTARCTIC_INTERIOR_LATITUDE) {
+    return { prefix: "AQ", isSea: false, gridSize: 4.4, name: "Antarctica" };
+  }
+
   // 2. GRID LOOKUP (Narrow down to 1-3 candidates)
   const cell = getSpatialCell(lat, normLon);
 
   // 3. SPATIAL CACHE (Last Result Check)
-  if (LAST_RESULT && Math.abs(lat - LAST_LAT) < 0.0001 && Math.abs(normLon - LAST_LON) < 0.0001) {
+  if (LAST_RESULT && Math.abs(lat - LAST_LAT) < REGION_CACHE_EPSILON_DEGREES && Math.abs(normLon - LAST_LON) < REGION_CACHE_EPSILON_DEGREES) {
     return LAST_RESULT as any;
   }
 
   // Helper for smallest polygon logic
   const getArea = (n: number, s: number, w: number, e: number) => (n - s) * (w > e ? (180 - w + e + 180) : (e - w));
+  const seaResult = (sea: any) => {
+    const polyRaw = sea.polygons?.[0] || sea.polygon;
+    let polySet = polyRaw;
+    while (Array.isArray(polySet) && Array.isArray(polySet[0]) && Array.isArray(polySet[0][0])) {
+      polySet = polySet[0];
+    }
+
+    return {
+      prefix: sea.id,
+      isSea: true,
+      gridSize: 4.4,
+      name: sea.name,
+      polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
+    };
+  };
+
+  if (!isProtectedCoastalLandAnchor(lat, normLon, cell.countries)) {
+    let prioritySeaMatch: any = null;
+    let prioritySeaMinArea = Infinity;
+
+    for (const s of cell.seas) {
+      if (!PRECISE_SEA_PRIORITY_IDS.has(s.id)) continue;
+      const polyRaw = (s as any).polygons || s.polygon;
+      if (!polyRaw || !isPointInPolygon(lat, normLon, polyRaw, s)) continue;
+
+      const area = getArea(s.n, s.s, s.w, s.e);
+      if (area < prioritySeaMinArea) {
+        prioritySeaMinArea = area;
+        prioritySeaMatch = s;
+      }
+    }
+
+    if (prioritySeaMatch) {
+      const res = seaResult(prioritySeaMatch);
+      LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
+      return res;
+    }
+  }
 
   let countryMatch: any = null;
   let countryMinArea = Infinity;
@@ -701,30 +1219,39 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
   // 4. LAND CHECK (Countries) - Strict Polygon Check
   // [PRIORITIZE JAPAN, DISPUTED AREAS, OVERSEAS TERRITORIES & AUTONOMOUS REGIONS]
   const HIGH_PRIORITY_CODES = [
-    "JP",
     "EH", "BT_T", "CRIM", "DONB", "KASH", "SCSD", "EEBD", "TRNC", "SLND", "PMR",
-    "PHIS", "BAAR", "CYGL", "JP_NT", "JP_TK", "JP_SK",
-    "AX", "GL", "FO", "SJ_SVA", "SJ_JAN", "BQ", "GG", "JE", "IM", "GI", "XK",
+    "PHIS", "BAAR", "CYGL", "XU", "XD", "EA", "JP_NT", "JP_TK", "JP_SK",
+    "IS", "AX", "GL", "FO", "SJ_SVA", "SJ_JAN", "BQ", "GG", "JE", "IM", "GI", "XK",
     "SH", "AC", "TA", "PM",
   ];
-  const prioritized = cell.countries.filter(c => HIGH_PRIORITY_CODES.includes(c.code));
+  const highPriorityRank = new Map(HIGH_PRIORITY_CODES.map((code, index) => [code, index]));
+  const prioritized = cell.countries
+    .filter(c => HIGH_PRIORITY_CODES.includes(c.code))
+    .sort((a, b) => (highPriorityRank.get(a.code) ?? Infinity) - (highPriorityRank.get(b.code) ?? Infinity));
   const others = cell.countries.filter(c => !HIGH_PRIORITY_CODES.includes(c.code));
+  const countryCandidates: any[] = [];
 
   for (const c of prioritized) {
     const polyRaw = (c as any).polygons || c.polygon;
     if (isPointInPolygon(lat, normLon, polyRaw, c)) {
+      if (isUnanchoredCoarsePolarCountry(lat, normLon, c)) continue;
+      if (!polyRaw) {
+        if (isUnanchoredCoarseOceanicArchipelago(lat, normLon, c)) continue;
+        countryCandidates.push(c);
+        continue;
+      }
       // Extract the first ring of the first polygon
       let polySet = polyRaw;
       while (Array.isArray(polySet) && Array.isArray(polySet[0]) && Array.isArray(polySet[0][0])) {
         polySet = polySet[0];
       }
-      
-      const res = { 
-        prefix: c.code, 
-        isSea: false, 
-        gridSize: 4.4, 
-        name: c.name, 
-        polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined 
+
+      const res = {
+        prefix: c.code,
+        isSea: false,
+        gridSize: 4.4,
+        name: c.name,
+        polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
       };
       LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
       return res;
@@ -734,6 +1261,17 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
   for (const c of others) {
     const polyRaw = (c as any).polygons || c.polygon;
     if (isPointInPolygon(lat, normLon, polyRaw, c)) {
+      if (isUnanchoredCoarsePolarCountry(lat, normLon, c)) continue;
+      if (!polyRaw && isUnanchoredCoarseOceanicArchipelago(lat, normLon, c)) continue;
+      countryCandidates.push(c);
+    }
+  }
+
+  const anchoredCountryMatch = disambiguateCoarseCountryByAnchor(lat, normLon, countryCandidates);
+  if (anchoredCountryMatch) {
+    countryMatch = anchoredCountryMatch;
+  } else {
+    for (const c of countryCandidates) {
       const area = getArea(c.n, c.s, c.w, c.e);
       if (area < countryMinArea) {
         countryMinArea = area;
@@ -749,12 +1287,12 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
       polySet = polySet[0];
     }
 
-    const res = { 
-      prefix: countryMatch.code, 
-      isSea: false, 
-      gridSize: 4.4, 
-      name: countryMatch.name, 
-      polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined 
+    const res = {
+      prefix: countryMatch.code,
+      isSea: false,
+      gridSize: 4.4,
+      name: countryMatch.name,
+      polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
     };
     LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
     return res;
@@ -776,19 +1314,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
   }
 
   if (seaMatch) {
-    const polyRaw = seaMatch.polygons?.[0] || seaMatch.polygon;
-    let polySet = polyRaw;
-    while (Array.isArray(polySet) && Array.isArray(polySet[0]) && Array.isArray(polySet[0][0])) {
-      polySet = polySet[0];
-    }
-
-    const res = { 
-      prefix: seaMatch.id, 
-      isSea: true, 
-      gridSize: 4.4, 
-      name: seaMatch.name, 
-      polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined 
-    };
+    const res = seaResult(seaMatch);
     LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
     return res;
   }
@@ -812,7 +1338,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
   const cosLat = Math.cos(Math.abs(lat) * Math.PI / 180);
   const lonStep = cosLat > 0 ? Math.min(60, 9 / cosLat) : 60;
   const lonBand = Math.floor(normLon / lonStep) * lonStep;
-  
+
   const subCode = `O_${o.id}_${latBand}_${Math.floor(lonBand)}`;
   const normalizeLon = (l: number) => {
     while (l > 180) l -= 360;
@@ -820,10 +1346,10 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
     return l;
   };
 
-  const res = { 
-    prefix: subCode, 
-    isSea: true, 
-    gridSize: 4.4, 
+  const res = {
+    prefix: subCode,
+    isSea: true,
+    gridSize: 4.4,
     name: `${o.name} (${Math.abs(latBand)}${latBand >= 0 ? 'N' : 'S'} ${Math.abs(Math.floor(lonBand))}${lonBand >= 0 ? 'E' : 'W'})`,
     polygon: [
       [lonBand, latBand],
@@ -854,23 +1380,23 @@ function getContinentForCountry(lat: number, lon: number): string {
 export function generateFullCountryRegistry(): any[] {
   const seen = new Set();
   const result: any[] = [];
-  
+
   for (const c of COUNTRY_REGIONS) {
     if (seen.has(c.code)) continue;
     seen.add(c.code);
-    
+
     const parentInfo = COUNTRIES.find(cnt => cnt.code === c.code);
     result.push({
       id: c.code,
       name: c.name,
-      prefix: c.code, 
+      prefix: c.code,
       lat: (c.n + c.s) / 2,
       lon: (c.w + c.e) / 2,
       type: parentInfo?.type || 'Country',
       area: parentInfo?.region || getContinentForCountry((c.n + c.s) / 2, (c.w + c.e) / 2)
     });
   }
-  
+
   return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -880,12 +1406,12 @@ export function generateFullCountryRegistry(): any[] {
 export function generateFullSeaRegistry(): any[] {
   const result: any[] = [];
   const seenIds = new Set();
-  
+
   // 1. Add all IHO named regions
   for (const s of SEA_REGIONS) {
     if (seenIds.has(s.id)) continue;
     seenIds.add(s.id);
-    
+
     const prefix = generatePrefix(s.id, true, s.name);
     const parentOcean = OCEANS.find(o => {
       const inLon = o.w <= o.e ? (s.w >= o.w && s.w <= o.e) : (s.w >= o.w || s.w <= o.e);
@@ -902,26 +1428,26 @@ export function generateFullSeaRegistry(): any[] {
       area: parentOcean
     });
   }
-  
+
   // 2. Add all Ocean Grid segments
   for (const o of OCEANS) {
     for (let lat = o.s; lat < o.n; lat += 9) {
       const cosLat = Math.cos(Math.abs(lat) * Math.PI / 180);
       const lonStep = cosLat > 0 ? Math.min(60, 9 / cosLat) : 60;
-      
+
       const startLon = o.w;
       const endLon = o.e;
       const totalWidth = endLon >= startLon ? (endLon - startLon) : (180 - startLon + endLon + 180);
-      
+
       for (let offset = 0; offset < totalWidth; offset += lonStep) {
         let lon = startLon + offset;
         while (lon > 180) lon -= 360;
         while (lon < -180) lon += 360;
-        
+
         const subCode = `O_${o.id}_${lat}_${Math.floor(lon)}`;
         const name = `${o.name} (${Math.abs(lat)}${lat >= 0 ? 'N' : 'S'} ${Math.abs(Math.floor(lon))}${lon >= 0 ? 'E' : 'W'})`;
         const prefix = generatePrefix(subCode, true, name);
-        
+
         result.push({
           id: subCode,
           name: name,
@@ -934,7 +1460,7 @@ export function generateFullSeaRegistry(): any[] {
       }
     }
   }
-  
+
   return result;
 }
 
@@ -953,7 +1479,7 @@ const gridCache = new Map<string, { gridLines: any[][], gridCells: any[] }>();
 export function getGridFeatures(lat: number, lon: number, range: number) {
   const centerResult = encodeAGID(lat, lon);
   const { face, qx: quantX, qy: quantY } = getQuantized(lat, lon);
-  
+
   // Cache key
   const cacheKey = `${centerResult.id}_${range}`;
   if (gridCache.has(cacheKey)) {
@@ -968,7 +1494,7 @@ export function getGridFeatures(lat: number, lon: number, range: number) {
     for (let dx = -range; dx <= range; dx++) {
       const qx = quantX + dx;
       const qy = quantY + dy;
-      
+
       const polyCoords = getCellPolygon(face, qx, qy);
       const cellId = `${face},${qx},${qy}`;
       if (seenIds.has(cellId)) continue;

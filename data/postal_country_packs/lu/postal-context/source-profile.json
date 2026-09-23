@@ -1,0 +1,127 @@
+{
+  "schema_version": "agid-postal-lu-source-profile-v0.1",
+  "country_code": "LU",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    {
+      "id": "R0_metadata",
+      "meaning": "AGID-authored metadata and non-geographic fixtures only."
+    },
+    {
+      "id": "R1_act_cc0",
+      "meaning": "Pinned ACT/data.public.lu CACLR and BD-Adresses releases under CC0 with source, release, schema, CRS, byte length, SHA-256 and modifications retained."
+    },
+    {
+      "id": "R2_post_reference",
+      "meaning": "POST Luxembourg reference material; processing, public serving and redistribution rights must be established per artifact before bundling or production use."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "post-luxembourg-current-postcodes",
+      "provider": "POST Luxembourg",
+      "source_url": "https://www.post.lu/fr/particuliers/colis-courrier/espace-telechargement",
+      "role": [
+        "official-postcode-assignment-reference",
+        "locality-street-house-range-and-endpoint-membership"
+      ],
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "validation_readiness": "current_csv_and_pdf_publicly_downloadable_rights_unresolved",
+      "redistribution_class": "R2_post_reference",
+      "terms_note": "The official page offers current CSV/XML/PDF files in open access, while the legal notice applies site copyright and no explicit AGID processing, public-serving or redistribution grant was found. Open access is not treated as a reuse licence.",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "obtain-explicit-written-processing-serving-and-redistribution-rights",
+        "pin-complete-current-edition-code-classes-byte-length-and-sha256",
+        "keep-packup-point-post-po-box-organization-and-route-records-non-areal"
+      ],
+      "prohibited_claims": [
+        "postal-table-is-an-official-postcode-polygon",
+        "open-access-is-redistribution-permission",
+        "every-postcode-is-an-area"
+      ]
+    },
+    {
+      "source_id": "act-caclr",
+      "provider": "Administration du cadastre et de la topographie",
+      "source_url": "https://data.public.lu/en/datasets/registre-national-des-localites-et-des-rues/",
+      "role": [
+        "official-address-reference",
+        "locality-street-building-number-and-postcode-membership"
+      ],
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "none",
+      "validation_readiness": "current_cc0_file_release_available",
+      "redistribution_class": "R1_act_cc0",
+      "terms_note": "CACLR is the official address reference and is CC0. Its file model provides no coordinates, completeness is not guaranteed, and it is not a POST postcode-boundary release.",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-release-schema-counts-byte-length-and-sha256",
+        "cross-check-against-current-post-operator-denominator",
+        "retain-leading-zero-and-code-type-semantics"
+      ],
+      "prohibited_claims": [
+        "official-postcode-polygon",
+        "complete-postal-operator-denominator",
+        "geometry-authority"
+      ]
+    },
+    {
+      "source_id": "act-bd-adresses",
+      "provider": "Administration du cadastre et de la topographie",
+      "source_url": "https://data.public.lu/en/datasets/adresses-georeferencees-bd-adresses/",
+      "role": [
+        "official-georeferenced-address-point",
+        "postcode-bearing-address-context"
+      ],
+      "assignment_authority": "official_address_registry",
+      "geometry_authority": "official_address_point",
+      "validation_readiness": "current_cc0_geojson_available",
+      "redistribution_class": "R1_act_cc0",
+      "terms_note": "All current features are Point. Coordinates may be manually positioned or calculated from parcel/building centroids; multiple addresses can share coordinates. Completeness is not guaranteed.",
+      "bundled_here": false,
+      "promotion_requirements": [
+        "pin-current-release-schema-crs-counts-bbox-byte-length-and-sha256",
+        "retain-id-geoportail-and-point-provenance",
+        "never-buffer-hull-voronoi-rasterize-or-admin-fill-postcode-surfaces"
+      ],
+      "prohibited_claims": [
+        "address-point-is-postcode-boundary",
+        "address-point-is-building-entrance",
+        "point-cluster-is-official-postcode-area",
+        "resident-owner-recipient-or-land-right"
+      ]
+    }
+  ],
+  "artifact_partitions": [
+    {
+      "id": "post-assignment-reference",
+      "rule": "POST rows retain edition, code class, range semantics, rights and digest; they do not acquire geometry authority."
+    },
+    {
+      "id": "act-address-reference",
+      "rule": "CACLR rows retain official address-reference identity, code type and release while remaining non-geometric."
+    },
+    {
+      "id": "act-address-points",
+      "rule": "BD-Adresses remains Point address context and is never converted to a postcode surface without a separately approved authoritative derivation."
+    },
+    {
+      "id": "delivery-endpoint",
+      "rule": "PackUp, Point POST, PO boxes, organizations, routes and special receivers remain non-areal without explicit geometry."
+    },
+    {
+      "id": "administrative-parcel-building-context",
+      "rule": "Context geometry remains separate and cannot create or replace postal geometry; building identity needs an explicit source relation."
+    },
+    {
+      "id": "private-and-sensitive",
+      "rule": "Recipients, residents, owners, tenants, customers, credentials, private-unit occupants and land-right records never enter public artifacts."
+    },
+    {
+      "id": "synthetic-conformance",
+      "rule": "Non-geographic fixtures only; never promotion evidence."
+    }
+  ]
+}

@@ -78,3 +78,10 @@ split into dedicated repositories when they mature:
 
 Splits should preserve the public contract first. Do not split a repo by copying
 private fixtures, secrets, generated build output, or unlicensed data.
+
+Public research, specifications, conformance fixtures, and OSS-ready packages
+should be published under `dawnportinfo-design`. Commercial product code,
+hosted operations, enterprise dashboards, managed registries, and
+customer-specific integrations should be published under `veygrit-sys`. The
+full routing rule is documented in
+[Repository Owner Routing](docs/repository-owner-routing.md).

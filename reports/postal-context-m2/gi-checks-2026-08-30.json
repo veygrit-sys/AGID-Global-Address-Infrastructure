@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "countryCode": "GI",
+  "checkedAt": "2026-08-30T09:02:00.000Z",
+  "result": "blocked",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/gi-source-review-2026-08-30.json",
+    "sha256": "e5e68aa2b63a5c83fffca168d2370799cd850b0511bd87e426fdfb525f336eae"
+  },
+  "commands": [
+    {
+      "name": "gibraltar-country-review",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextGibraltarRepository.test.ts",
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "name": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <31 shared runtime/API/schema/topology test files>",
+      "passed": 161,
+      "failed": 0
+    },
+    {
+      "name": "shared-postal-map-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "name": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "ledgerValidation": {
+    "command": "node --test scripts/postal-context-m2-gi-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+    "countryLedgerTests": 4,
+    "rolloutTests": 8,
+    "passed": 12,
+    "failed": 0,
+    "nextCountry": "GR"
+  },
+  "totalPassed": 200,
+  "totalFailed": 0,
+  "deterministicUiEvidence": {
+    "sharedStateAndRenderTestsPassed": 23,
+    "polygonAndMultiPolygonOnly": true,
+    "translucentFillAndVisibleOutline": true,
+    "fitAndClearPathCovered": true,
+    "syntheticGibraltarRenderUsed": false,
+    "realGibraltarPolygonAvailable": false,
+    "realGibraltarAppPathVerified": false
+  },
+  "browserAttempt": {
+    "attempted": true,
+    "passed": false,
+    "error": "node_repl kernel exited unexpectedly while the Windows sandbox applied deny-read ACLs",
+    "implication": "No browser E2E is claimed. The shared deterministic UI checks passed, but GI remains blocked because no rights-cleared real polygon exists."
+  },
+  "launcherNote": "The npm prefix status launcher could not locate Node in this host; the checked-in status script and all tests were run with the same Node executable directly.",
+  "conclusion": "Definition and blockers are verified. M2 is not achieved: no rights-cleared Gibraltar territory polygon or immutable artifact is available, so the real GI API/app search-to-area path was not fabricated."
+}

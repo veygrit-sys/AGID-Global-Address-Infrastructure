@@ -33,12 +33,24 @@ test('builds Nominatim search URL with detailed filters', () => {
   });
 
   const parsed = new URL(url, 'http://localhost');
-  assert.equal(parsed.pathname, '/api/osm-search');
+  assert.equal(parsed.pathname, '/api/v1/osm-search');
   assert.equal(parsed.searchParams.get('q'), 'Tokyo Station');
   assert.equal(parsed.searchParams.get('countrycodes'), 'jp');
   assert.equal(parsed.searchParams.get('bounded'), '1');
   assert.equal(parsed.searchParams.get('limit'), '10');
   assert.ok(parsed.searchParams.get('viewbox')?.includes('139.'));
+});
+
+test('adds search-only provider language hints when provided', () => {
+  const url = buildNominatimSearchUrl('東京駅', undefined, undefined, {
+    countryCodes: 'JP',
+    limit: 5,
+  }, 'ja,en,local');
+
+  const parsed = new URL(url, 'http://localhost');
+  assert.equal(parsed.searchParams.get('q'), '東京駅');
+  assert.equal(parsed.searchParams.get('accept_language'), 'ja,en,local');
+  assert.equal(parsed.searchParams.has('lang'), false);
 });
 
 test('matches advanced category filters across OSM-style result fields', () => {

@@ -1,0 +1,64 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ac-upu-geoboundaries",
+    "country_code": "AC",
+    "country_name": "Ascension Island",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "current-upu-single-postcode-with-derived-whole-territory-display-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Ascension Island postcode",
+    "full_code_format": "ASCN 1ZZ",
+    "full_code_default_geometry": "whole-territory-derived-display-surface",
+    "assignment_rule": "The UPU Universal POST*CODE DataBase August 2026 edition states that ASCN 1ZZ is the single postcode for the whole territory. Current Ascension Island Government documents corroborate its use. This proves only the postcode assignment and whole-territory scope.",
+    "geometry_rule": "No official postal polygon was located. A pinned geoBoundaries gbOpen SHN ADM0 source is geographically subset to its three unchanged Ascension parts only because the official postcode scope is the whole territory; output remains derived display geometry and is never presented as an official postal, legal, survey, cadastral or delivery boundary.",
+    "topology_rule": "The fixed SHN source has 47 parts and 7,854 positions. Parts 44, 45 and 46 are the only parts inside the strict Ascension envelope. Turf detects a contact between parts 44 and 46, so the reproducible builder preserves all 1,261 selected positions and partitions them into two independently valid MultiPolygons.",
+    "identity_rule": "AC remains the Postal Context identity. The SHN boundary source is only a geometry provenance container; Saint Helena and Tristan da Cunha parts are excluded and no identity or territory is merged.",
+    "address_rule": "No address, recipient, customer, delivery record, PO box, organisation, parcel, land right or building row is bundled. Postal Code to Polygon to Address Context authority remains separated.",
+    "agid_rule": "The postal node and derived surfaces are linked only inside the versioned Postal Context graph. More detailed settlement, street, address and building IDs require separate explicit evidence."
+  },
+  "temporal_model": {
+    "valid_time": "ASCN 1ZZ is represented from the current August 2026 UPU evidence; the display geometry retains boundary year 2021 and build date 2023-12-12.",
+    "known_time": "Retrieval, source edition, fixed commit, digests and AGID release time remain separately recorded.",
+    "history_rule": "A later postcode or boundary edition creates a new release and never rewrites this evidence."
+  },
+  "geometry_classes": ["multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "official-assignment", "pass": "ASCN 1ZZ remains an official UPU dictionary assertion with no geometry authority." },
+    { "id": "derived-surface", "pass": "Each displayed surface retains the fixed geoBoundaries source, CC BY 4.0, boundary year, source digest and derived geometry authority." },
+    { "id": "identity-separation", "pass": "Only Ascension parts 44-46 enter AC; no Saint Helena or Tristan da Cunha part or identity is imported." },
+    { "id": "coordinate-preservation", "pass": "All three selected source parts and all 1,261 positions are emitted exactly once with no coordinate fabrication." },
+    { "id": "runtime", "pass": "The real pack passes API lookup, normalization, multiple-surface conversion, bounds fit, translucent paint, clear and re-search tests." },
+    { "id": "privacy", "pass": "No address, building, parcel, recipient, customer or land-rights data is published." }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_upu_whole_territory_derived_visualization",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Country-specific contracts and provenance are reviewable." },
+      { "id": "M2_current_upu_whole_territory_derived_visualization", "definition": "Current UPU evidence proves ASCN 1ZZ is the single postcode for all Ascension Island; a pinned CC BY 4.0 source reproducibly supplies real derived MultiPolygon display surfaces for AC alone; the shared API and app path renders, fits, clears and re-searches them with provenance and multiple-result state." },
+      { "id": "M3_candidate", "definition": "A refresh and independent review pass without authority or identity drift." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass with monitored rollback." }
+    ],
+    "hard_blockers": [
+      "derived-boundary-presented-as-official-postal-geometry",
+      "shn-source-identity-presented-as-ac-identity-merge",
+      "postcode-or-boundary-presented-as-address-building-parcel-or-deliverability",
+      "source-coordinates-invented-or-silently-repaired",
+      "missing-upu-edition-or-geoboundaries-commit-digest-and-rights",
+      "recipient-customer-or-land-rights-data-published"
+    ]
+  },
+  "non_guarantees": [
+    "official_postal_boundary", "legal_or_survey_boundary", "cadastral_boundary", "delivery_zone", "deliverability", "address_or_building_identity", "recipient_identity"
+  ]
+}

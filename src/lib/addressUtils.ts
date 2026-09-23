@@ -1,9 +1,9 @@
 import { getAddressFormat } from '../data/address_formats';
 // import { GoogleGenAI } from "@google/genai"; // Gemini removed per user request
 import { normalizeEnglishAddressPart } from './addressEnglish';
+import { selectAddressLanguageFormat } from './addressFormatRenderer';
 import { formatNaturalAddress } from './naturalAddress';
 import { resolveEnglishAddressPartOpenSource } from './openSourceAddressResolver';
-import { translateWithOpenSource } from './openSourceTranslation';
 import { transliterate } from './transliteration';
 
 // --- Address Utilities ---
@@ -51,7 +51,7 @@ export function applyShippingAbbreviations(text: string): string {
     const regex = new RegExp(`\\b${full}\\b`, 'gi');
     result = result.replace(regex, abbr);
   });
-  
+
   return result;
 }
 
@@ -67,7 +67,7 @@ export async function generateInternationalShippingLabel(details: any, options: 
 
   // 1. Core Data Extraction & Enrichment
   const c = details.country_code?.slice(0, 2).toUpperCase() || "";
-  
+
   // Use English/International as the base language for the algorithm
   const mapping: Record<string, string> = {
     organization: details.building || details.organization || details.amenity || "",
@@ -102,12 +102,12 @@ export async function generateInternationalShippingLabel(details: any, options: 
     const block = details.jp_block || details.block_number;
     const chome = details.jp_chome || details.subdistrict;
     const number = details.jp_number;
-    
+
     let streetPart = mapping.street;
     if (chome || block || number) {
       streetPart = [chome, block, number].filter(Boolean).join("-") + " " + mapping.street;
     }
-    
+
     formatted += `${streetPart}\n`;
     formatted += `${mapping.suburb ? mapping.suburb + ", " : ""}${mapping.city}\n`;
     formatted += `${mapping.state.toUpperCase()} ${mapping.postcode}\n`;
@@ -126,7 +126,7 @@ export async function generateInternationalShippingLabel(details: any, options: 
   let lines = formatted.split('\n')
     .map(line => line.trim())
     .filter(line => line.length > 0);
-  
+
   // Apply abbreviations to street-level lines (usually the 1st or 2nd line after recipient)
   lines = lines.map((line, idx) => {
     if (idx > 0 && idx < lines.length - 1) {
@@ -177,14 +177,14 @@ export const LANGUAGES = [
   { code: 'en-VC', name: 'English (VC)', country: 'Saint Vincent', flag: '🇻🇨' },
   { code: 'en-GD', name: 'English (GD)', country: 'Grenada', flag: '🇬🇩' },
   { code: 'en-MY', name: 'English (MY)', country: 'Malaysia', flag: '🇲🇾' },
-  
+
   // Greater China
   { code: 'zh-Hans', name: '简体中文', country: 'China', flag: '🇨🇳' },
   { code: 'zh-Hant-TW', name: '繁體中文 (台灣)', country: 'Taiwan', flag: '🇹🇼' },
   { code: 'zh-Hant-HK', name: '繁體中文 (香港)', country: 'Hong Kong', flag: '🇭🇰' },
   { code: 'zh-Hant-MO', name: '繁體中文 (澳門)', country: 'Macau', flag: '🇲🇴' },
   { code: 'yue', name: '廣東話 (Cantonese)', country: 'Hong Kong', flag: '🇭🇰' },
-  
+
   // East Asia
   { code: 'ko', name: '한국어', country: 'South Korea', flag: '🇰🇷' },
   { code: 'ko-KP', name: '조선말', country: 'North Korea', flag: '🇰🇵' },
@@ -200,7 +200,7 @@ export const LANGUAGES = [
   { code: 'my', name: 'ဗမာစာ', country: 'Myanmar', flag: '🇲🇲' },
   { code: 'mn', name: 'Монгол', country: 'Mongolia', flag: '🇲🇳' },
   { code: 'mn-Cyrl', name: 'Монгол кирилл', country: 'Mongolia', flag: '🇲🇳' },
-  
+
   // Europe
   { code: 'fr', name: 'Français', country: 'France', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', country: 'Germany', flag: '🇩🇪' },
@@ -238,7 +238,7 @@ export const LANGUAGES = [
   { code: 'hr', name: 'Hrvatski', country: 'Croatia', flag: '🇭🇷' },
   { code: 'sr', name: 'Српски', country: 'Serbia', flag: '🇷🇸' },
   { code: 'ca', name: 'Català', country: 'Spain', flag: '🇪🇸' },
-  
+
   // Americas
   { code: 'es-MX', name: 'Español (México)', country: 'Mexico', flag: '🇲🇽' },
   { code: 'es-AR', name: 'Español (Argentina)', country: 'Argentina', flag: '🇦🇷' },
@@ -330,7 +330,7 @@ export const LANGUAGES = [
   { code: 'cnr', name: 'Crnogorski', country: 'Montenegro', flag: '🇲🇪' },
   { code: 'crh', name: 'Qırımtatarca', country: 'Crimea', flag: '🏴' },
   { code: 'la', name: 'Latina', country: 'Vatican City', flag: '🇻🇦' },
-  
+
   // Middle East & Africa
   { code: 'ar', name: 'العربية', country: 'Arab World', flag: '☪️' },
   { code: 'ar-SA', name: 'العربية (السعودية)', country: 'Saudi Arabia', flag: '🇸🇦' },
@@ -408,14 +408,14 @@ export const LANGUAGES = [
   { code: 'vmw', name: 'Emakhuwa', country: 'Mozambique', flag: '🇲🇿' },
   { code: 'wo', name: 'Wolof', country: 'Senegal / Gambia', flag: '🇸🇳' },
   { code: 'yo', name: 'Yorùbá', country: 'Nigeria / Benin', flag: '🇳🇬' },
-  
+
   // Central Asia
   { code: 'kk', name: 'Қазақ тілі', country: 'Kazakhstan', flag: '🇰🇿' },
   { code: 'uz', name: 'Oʻzbek', country: 'Uzbekistan', flag: '🇺🇿' },
   { code: 'ky', name: 'Кыргызча', country: 'Kyrgyzstan', flag: '🇰🇬' },
   { code: 'tg', name: 'Тоҷикӣ', country: 'Tajikistan', flag: '🇹🇯' },
   { code: 'tk', name: 'Türkmençe', country: 'Turkmenistan', flag: '🇹🇲' },
-  
+
   // India (Consolidated Group for screen transition)
   { code: 'hi', name: 'हिन्दी (Hindi)', country: 'India', flag: '🇮🇳' },
   { code: 'as', name: 'অসমীয়া (Assamese)', country: 'India', flag: '🇮🇳' },
@@ -439,7 +439,7 @@ export const LANGUAGES = [
   { code: 'sd', name: 'سنڌي (Sindhi)', country: 'India', flag: '🇮🇳' },
   { code: 'ur', name: 'اردو (Urdu)', country: 'India', flag: '🇮🇳' },
   { code: 'si', name: 'සිංහල (Sinhala)', country: 'Sri Lanka', flag: '🇱🇰' },
-  
+
   // South Africa
   { code: 'af', name: 'Afrikaans', country: 'South Africa', flag: '🇿🇦' },
   { code: 'zu', name: 'isiZulu', country: 'South Africa', flag: '🇿🇦' },
@@ -705,29 +705,23 @@ export async function formatAddress(details: any, lang: string = 'local', option
 
   // Determine which specification to use from JSON
   let currentSpec: any = null;
-  
+  let selectedSpecIsEnglish = false;
+
   if (formatDef) {
-    if (lang === 'international') {
-      // Direct request for international
-      currentSpec = formatDef.english || formatDef.native;
-    } else if (options.forceDomestic) {
-      currentSpec = formatDef.native;
-    } else {
-      // Check international record first
-      if (formatDef.international && formatDef.international[lang]) {
-        currentSpec = formatDef.international[lang];
-      } else if (lang === 'en' && formatDef.english) {
-        currentSpec = formatDef.english;
-      } else {
-        currentSpec = formatDef.native;
-      }
+    const selected = selectAddressLanguageFormat(
+      formatDef,
+      options.forceDomestic && lang === 'en' ? 'en_domestic' : lang,
+    );
+    if (selected) {
+      currentSpec = selected.spec;
+      selectedSpecIsEnglish = selected.isEnglish;
     }
   }
 
   // Fallback if no JSON spec found (legacy logic)
   if (!currentSpec && !formatDef) {
     const isBigToSmall = BIG_TO_SMALL_COUNTRIES.includes(c?.toLowerCase() || "");
-    
+
 
     if (isBigToSmall && lang !== 'en' && !options.forceDomestic === false) {
        // ... existing legacy big-to-small logic ...
@@ -737,12 +731,12 @@ export async function formatAddress(details: any, lang: string = 'local', option
 
   if (currentSpec) {
     let formatted = currentSpec.addressFormat;
-    const isTargetEn = lang === 'en' || lang === 'international';
-      
+    const isTargetEn = selectedSpecIsEnglish || lang === 'en' || lang === 'international' || lang === 'intl_en' || lang === 'carrier' || lang === 'en_domestic';
+
     // Map details to format keys
     const mapping: Record<string, string> = {};
     const keys = [
-      'postcode', 'state', 'city', 'district', 'subdistrict', 'suburb', 
+      'postcode', 'state', 'city', 'district', 'subdistrict', 'suburb',
       'street', 'road', 'houseNumber', 'organization', 'poi', 'country'
     ];
 
@@ -773,18 +767,18 @@ export async function formatAddress(details: any, lang: string = 'local', option
       if (c === 'JP') {
         const block = details.city_block || details.block_number;
         const chome = details.jp_chome || details.subdistrict || details.quarter;
-        
+
         if (chome && !mapping.subdistrict.includes(chome)) {
           mapping.subdistrict = mapping.subdistrict ? `${chome} ${mapping.subdistrict}` : chome;
         }
         if (block && !mapping.street.includes(block)) {
           mapping.street = mapping.street ? `${mapping.street} ${block}` : block;
         }
-        
+
         // Refine prefecture name based on target language
         if (details['ISO3166-2-lvl4'] && JP_PREFECTURES[details['ISO3166-2-lvl4']]) {
-          mapping.state = isTargetEn 
-            ? JP_PREFECTURES[details['ISO3166-2-lvl4']].en 
+          mapping.state = isTargetEn
+            ? JP_PREFECTURES[details['ISO3166-2-lvl4']].en
             : JP_PREFECTURES[details['ISO3166-2-lvl4']].ja;
         }
 
@@ -887,11 +881,12 @@ export async function formatAddress(details: any, lang: string = 'local', option
 async function performTranslation(text: string, target: string): Promise<string | null> {
   const normalizedText = text.trim();
   if (!normalizedText) return null;
-  
+
   // Cache check
   const cacheKey = `${normalizedText}_${target}`;
   if (translationCache[cacheKey]) return translationCache[cacheKey];
 
+  const { translateWithOpenSource } = await import('./openSourceTranslation');
   const translated = await translateWithOpenSource({
     text: normalizedText,
     target,
@@ -939,18 +934,18 @@ export async function translateAddressOpenSource(text: string, target: string, d
   if (target !== 'local') {
     const hasNonLatin = /[^\u0000-\u007F]/.test(processedText);
     const isTargetNonLatin = ['ja', 'ko', 'zh-Hans', 'zh-Hant', 'ru'].includes(target);
-    
+
     if (hasNonLatin || isTargetNonLatin) {
       const translated = await performTranslation(processedText, target);
       if (translated) processedText = translated;
     }
   }
-  
+
   if (target === 'en') {
     // Final Latin-only cleanup for English
     processedText = processedText.replace(/[^\u0000-\u017F\s,.-]/g, '').trim();
     processedText = processedText.replace(/\s+/g, ' ').trim();
   }
-  
+
   return processedText;
 }

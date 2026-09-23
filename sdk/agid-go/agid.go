@@ -12,10 +12,21 @@ type Result struct {
 	Face int
 }
 
+type Bounds struct {
+	MinLat float64
+	MaxLat float64
+	MinLon float64
+	MaxLon float64
+}
+
 func Encode(lat float64, lon float64) (Result, error) {
 	return Result{}, ErrNotImplemented
 }
 
 func Decode(id string) (Result, error) {
 	return Result{}, ErrNotImplemented
+}
+
+func CellBounds(id string) (Bounds, error) {
+	return Bounds{}, ErrNotImplemented
 }

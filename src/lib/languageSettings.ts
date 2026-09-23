@@ -1,8 +1,42 @@
-import { LANGUAGES } from './addressUtils';
+export type LanguageOption = {
+  code: string;
+  name: string;
+  country: string;
+  flag: string;
+};
 
-export type LanguageOption = (typeof LANGUAGES)[number];
+export const APP_LANGUAGE_STORAGE_KEY = 'agid_app_language';
+export const ADDRESS_LANGUAGE_STORAGE_KEY = 'agid_address_language';
 
-export const ADDRESS_LANGUAGES: LanguageOption[] = LANGUAGES;
+const CURRENT_APP_LANGUAGE_OPTIONS: LanguageOption[] = [
+  { code: 'ja', name: '日本語', country: 'Japan', flag: '🇯🇵' },
+  { code: 'en', name: 'English', country: 'Global', flag: '🌐' },
+  { code: 'en-GB', name: 'English (UK)', country: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'zh-Hans', name: '简体中文', country: 'China', flag: '🇨🇳' },
+  { code: 'zh-Hant', name: '繁體中文', country: 'Taiwan / Hong Kong / Macau', flag: '🇹🇼' },
+  { code: 'ko', name: '한국어', country: 'Korea', flag: '🇰🇷' },
+  { code: 'fr', name: 'Français', country: 'France', flag: '🇫🇷' },
+  { code: 'es', name: 'Español', country: 'Spain / Americas', flag: '🇪🇸' },
+  { code: 'de', name: 'Deutsch', country: 'Germany', flag: '🇩🇪' },
+  { code: 'it', name: 'Italiano', country: 'Italy', flag: '🇮🇹' },
+  { code: 'pt-BR', name: 'Português (Brasil)', country: 'Brazil', flag: '🇧🇷' },
+  { code: 'pt-PT', name: 'Português (Portugal)', country: 'Portugal', flag: '🇵🇹' },
+  { code: 'ru', name: 'Русский', country: 'Russia', flag: '🇷🇺' },
+  { code: 'vi', name: 'Tiếng Việt', country: 'Vietnam', flag: '🇻🇳' },
+  { code: 'ar', name: 'العربية', country: 'Arab world', flag: '🌐' },
+  { code: 'th', name: 'ไทย', country: 'Thailand', flag: '🇹🇭' },
+  { code: 'hi', name: 'हिन्दी', country: 'India', flag: '🇮🇳' },
+  { code: 'bn', name: 'বাংলা', country: 'Bangladesh / India', flag: '🇧🇩' },
+  { code: 'id', name: 'Bahasa Indonesia', country: 'Indonesia', flag: '🇮🇩' },
+  { code: 'tr', name: 'Türkçe', country: 'Türkiye', flag: '🇹🇷' },
+];
+
+const APP_LANGUAGE_FALLBACK_OPTIONS: LanguageOption[] = [
+  { code: 'fil', name: 'Filipino', country: 'Philippines', flag: '🇵🇭' },
+  { code: 'mn-Cyrl', name: 'Монгол', country: 'Mongolia', flag: '🇲🇳' },
+  { code: 'fo', name: 'Føroyskt', country: 'Faroe Islands', flag: '🇫🇴' },
+  { code: 'pl', name: 'Polski', country: 'Poland', flag: '🇵🇱' },
+];
 
 const APP_LANGUAGE_OVERRIDES: LanguageOption[] = [
   { code: 'zh-Hant', name: '繁體中文', country: 'Taiwan / Hong Kong / Macau', flag: '🇹🇼' },
@@ -254,7 +288,7 @@ const REGIONAL_PORTUGUESE_APP_LANGUAGE_CODES = [
 ] as const;
 
 const APP_LANGUAGE_OPTIONS_BY_CODE = new Map(
-  [...LANGUAGES, ...APP_LANGUAGE_OVERRIDES].map(language => [language.code, language])
+  [...CURRENT_APP_LANGUAGE_OPTIONS, ...APP_LANGUAGE_FALLBACK_OPTIONS, ...APP_LANGUAGE_OVERRIDES].map(language => [language.code, language])
 );
 
 export const APP_LANGUAGES: LanguageOption[] = Array.from(new Set([

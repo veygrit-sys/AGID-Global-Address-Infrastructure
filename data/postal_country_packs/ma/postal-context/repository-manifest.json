@@ -1,0 +1,81 @@
+{
+  "schema_version": "agid-postal-ma-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-ma", "country_code": "MA", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Morocco five-digit postcode",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "typed_sector_agency_or_recipient_assignment",
+    "assignment_rule": "The UPU Morocco case study defines five digits: the first digit is a postal routeing zone, the first two digits identify a province, and the remaining numerical series identifies a sector, Barid Al-Maghrib agency or centre, or large-volume recipient. The fifth digit is a mandatory type discriminator; syntax or a directory hit remains text assignment evidence and does not by itself prove polygon membership.",
+    "type_rule": "Codes ending 0, 1, 7 or 8 are home-delivery sector codes; a sector may be a whole locality, a district or a group of districts. Endings 2, 3, 4, 5 or 6 identify Barid Al-Maghrib agencies or centres for P.O. box or counter delivery. Ending 9 identifies a large-volume recipient. Agency, P.O. box and recipient codes are non-area by default.",
+    "geometry_rule": "Canonical postal geometry requires an exact official rights-cleared Barid Al-Maghrib surface for the same code, code type, edition and validity. A home-delivery sector may support an optional derived non-canonical surface from permitted address points, roads, buildings and locality evidence. Office coordinates, administrative boundaries, interpolation, Voronoi and model output never become official postal polygons.",
+    "address_rule": "Building number, street, neighbourhood, locality, commune, province or prefecture, postcode, agency, P.O. Box and recipient code remain typed evidence. A sector, office, P.O. Box or large-volume-recipient code does not identify an occupant, owner, exact entrance or exact building footprint.",
+    "building_rule": "Exact building display requires rights-cleared authoritative building geometry and a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address. Postal containment, cadastral overlap, street-text match, nearest building, office proximity or sector membership creates candidates only.",
+    "administration_rule": "Region, province or prefecture and commune geometry remains administrative or cartographic context. The UPU coding hierarchy and ANCFCC administrative maps do not make an administrative boundary a postal sector unless Barid Al-Maghrib explicitly publishes that relation.",
+    "licence_rule": "The Morocco Open Data portal applies its ODbL-derived licence only to the exact listed dataset and edition. Codepostal search access, a downloadable directory, government authorship, public viewing, ANCFCC ordering or cadastral consultation never by themselves grant bulk extraction or repository redistribution. Every artifact pins owner, dataset, licence, attribution, share-alike duties, edition, coverage, schema, CRS and digest.",
+    "privacy_rule": "Recipients, contacts, correspondence, shipment records, query history, P.O. Box holders, large-volume account holders, residents, occupants, owners, tenants, title and cadastral rights are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains its source CRS, axis order, zone, epoch and accuracy. Merchich, Lambert or product-specific coordinates are never relabelled WGS84. EPSG:4326 output requires a reviewed transform, zone selection and accuracy statement.",
+    "territory_rule": "The repository uses ISO code MA and exact source-stated coverage. MA and EH remain distinct country or territory packs; postal, open-data, administrative or cartographic coverage is not used to decide sovereignty, jurisdiction or borders, and gaps are not model-filled as official.",
+    "freshness_rule": "Postal sector, agency, recipient, office-coordinate, address, administrative, cadastral, building and licence artifacts refresh independently. The public open-data postcode lists identify a September 2018 update and must not be represented as current without a newer pinned operator record. Mixed-edition joins fail closed unless validity, known-time and explicit relation overlap."
+  },
+  "integration": {
+    "agid_country_code": "MA",
+    "coordinate_flow": "coordinate -> official sector surface or permitted civic-address point -> typed five-digit candidate -> locality/commune/province-or-prefecture/region -> explicit address-building relation -> MA AGID cell",
+    "postcode_flow": "canonical five digits -> fifth-digit delivery type -> pinned Barid Al-Maghrib assignment -> official surface or non-area record -> optional derived home-delivery-sector surface -> explicit civic-address/building relation -> AGID cells",
+    "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Exactly five digits remain text; prefixes, punctuation and four- or six-digit values are rejected." },
+    { "id": "typed-code-ending", "pass": "The fifth digit selects home-delivery sector, agency/centre, or large-volume-recipient semantics before geometry is considered." },
+    { "id": "assignment-versus-geometry", "pass": "Barid Al-Maghrib assignment and geometry authority are recorded independently." },
+    { "id": "derived-sector-surface", "pass": "Only eligible home-delivery sector codes may receive derived surfaces; inputs, method, uncertainty, exclusions, topology, version, time and digest are recorded and output remains non-canonical." },
+    { "id": "explicit-building-link", "pass": "Exact building output has an authoritative relation or reviewed crosswalk; containment, text and proximity alone never pass." },
+    { "id": "licence-and-crs", "pass": "Dataset-specific licence, ODbL duties where applicable, source CRS, zone, transform, attribution and redistribution conditions are pinned." },
+    { "id": "territory-and-privacy", "pass": "MA and EH are not silently merged and no recipient, holder, resident, owner, title, correspondence or query data is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "A complete rights-cleared typed five-digit assignment passes authority, coverage, freshness, licence and digest gates." },
+      { "id": "M3_geometry_and_address", "definition": "Official or derived sector geometry and public address artifacts pass type, authority, uncertainty, privacy, CRS, validity and redistribution gates." },
+      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "agency-centre-po-box-or-large-volume-recipient-code-presented-as-home-delivery-polygon",
+      "directory-row-office-point-administrative-boundary-or-model-output-presented-as-official-postal-polygon",
+      "derived-sector-surface-published-without-eligible-code-type-derived-noncanonical-label-uncertainty-lineage-and-version",
+      "postcode-office-po-box-or-recipient-code-presented-as-building-recipient-or-delivery-entitlement",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "search-download-viewer-government-authorship-or-paid-access-presented-as-redistribution-right",
+      "recipient-contact-correspondence-query-holder-resident-occupant-owner-title-or-cadastral-right-published",
+      "merchich-lambert-or-product-crs-published-as-wgs84-without-reviewed-transform",
+      "ma-and-eh-source-coverage-silently-merged-or-used-as-sovereignty-claim",
+      "postcode-po-box-building-or-delivery-point-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_MA_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_MA_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_MA_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_MA_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-address-building-administrative-cadastral-recipient-or-query-rows",
+    "all-five-digit-codes-have-polygons",
+    "agency-centre-po-box-or-recipient-code-is-area",
+    "administrative-or-cadastral-boundary-is-postal-sector",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ]
+}

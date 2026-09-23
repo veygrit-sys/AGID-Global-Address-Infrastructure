@@ -3,128 +3,186 @@ name: Mongolia
 native:
   name: Монгол улс
   addressFormat: |-
-    {{postcode}}
-    {{state}} {{city}}
-    {{district}} {{subdistrict}}
-    {{street}} {{houseNumber}}
-  ordering: big-to-small
+    {{recipient}}
+    {{organization}}
+    {{street}} {{houseNumber}} {{building}} {{unit}}
+    {{bagOrKhoroo}}, {{soumOrDistrict}}
+    {{aimagOrCapital}} {{postcode}}
+  ordering: small-to-big
   fields:
-    - key: postcode
-      label: Шуудангийн код
-      placeholder: "14210"
-      required: true
-      type: text
-    - key: state
-      label: Аймаг/Хот
-      placeholder: Улаанбаатар
-      required: true
-      type: text
-    - key: city
-      label: Сум/Дүүрэг
-      placeholder: Сүхбаатар
-      required: true
-      type: text
-    - key: district
-      label: Баг/Хороо
-      placeholder: 1-р хороо
+    - key: recipient
+      label: Хүлээн авагч
+      placeholder: Жишээ хүлээн авагч
       required: false
       type: text
-    - key: subdistrict
-      label: Хэсэг
-      placeholder: 12-р хэсэг
+    - key: organization
+      label: Байгууллага
+      placeholder: Жишээ байгууллага
+      required: false
+      type: text
+    - key: unit
+      label: Тоот/Нэгж
+      placeholder: Жишээ нэгж
+      required: false
+      type: text
+    - key: building
+      label: Барилга/Байр
+      placeholder: Жишээ барилга
+      required: false
+      type: text
+    - key: houseNumber
+      label: Байшин/Хаалганы дугаар
+      placeholder: Жишээ дугаар
       required: false
       type: text
     - key: street
       label: Гудамж
-      placeholder: Энх тайвны өргөн чөлөө
+      placeholder: Жишээ гудамж
       required: false
       type: text
-    - key: houseNumber
-      label: Байшин/Хаалга
-      placeholder: 10-24
+    - key: bagOrKhoroo
+      label: Баг/Хороо
+      placeholder: Жишээ баг эсвэл хороо
       required: false
+      type: text
+    - key: soumOrDistrict
+      label: Сум/Дүүрэг
+      placeholder: Жишээ сум эсвэл дүүрэг
+      required: true
+      type: text
+    - key: aimagOrCapital
+      label: Аймаг/Нийслэл
+      placeholder: Жишээ аймаг эсвэл нийслэл
+      required: true
+      type: text
+    - key: postcode
+      label: 5 эсвэл 9 оронтой шуудангийн код
+      placeholder: 99999 эсвэл 99999-9999
+      required: true
       type: text
 english:
   addressFormat: |-
-    {{houseNumber}} {{street}}
-    {{subdistrict}}, {{district}}
-    {{city}}, {{state}}
-    {{postcode}}
+    {{recipient}}
+    {{organization}}
+    {{unit}} {{building}} {{houseNumber}} {{street}}
+    {{bagOrKhoroo}}, {{soumOrDistrict}}
+    {{aimagOrCapital}} {{postcode}}
     {{country}}
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: Recipient
+      placeholder: Synthetic recipient
+      required: false
+      type: text
+    - key: organization
+      label: Organization
+      placeholder: Synthetic organization
+      required: false
+      type: text
+    - key: unit
+      label: Apartment/Unit
+      placeholder: Synthetic unit
+      required: false
+      type: text
+    - key: building
+      label: Building
+      placeholder: Synthetic building
+      required: false
+      type: text
     - key: houseNumber
-      label: Building/Door
-      placeholder: 10-24
+      label: Premise/Door Number
+      placeholder: Synthetic number
       required: false
       type: text
     - key: street
       label: Street
-      placeholder: Peace Avenue
+      placeholder: Synthetic street
       required: false
       type: text
-    - key: subdistrict
-      label: Section
-      placeholder: Section 12
+    - key: bagOrKhoroo
+      label: Bag/Khoroo
+      placeholder: Synthetic bag or khoroo
       required: false
       type: text
-    - key: district
-      label: Sub-district
-      placeholder: 1st khoroo
-      required: false
-      type: text
-    - key: city
-      label: District
-      placeholder: Sukhbaatar
+    - key: soumOrDistrict
+      label: Soum/District
+      placeholder: Synthetic soum or district
       required: true
       type: text
-    - key: state
-      label: Province/City
-      placeholder: Ulaanbaatar
+    - key: aimagOrCapital
+      label: Aimag/Capital City
+      placeholder: Synthetic aimag or capital
       required: true
       type: text
     - key: postcode
-      label: Postal Code
-      placeholder: "14210"
+      label: 5- or 9-digit Postal Code
+      placeholder: 99999 or 99999-9999
       required: true
       type: text
 postalCode:
-  format: NNNNN
-  regex: ^\d{5}$
-  api: https://zipcode.mn/
-  source: Mongol Post / zipcode.mn / ALAMGC NSDI
+  format: NNNNN or NNNNN-NNNN
+  regex: ^\d{5}(?:-\d{4})?$
+  api: https://www.zipcode.mn/
+  source: CRC Mongolia zipcode.mn, MNS 6775:2024 dated 2025 explanation and MNS 6775:2019 legacy explanation / UPU Mongolia 01/2019 / Gazar address system, NSDI and boundaries; official count conflict unresolved
 addressRules:
   languages:
     - code: mn-Cyrl
       name: Mongolian (Cyrillic)
   nativeOrder:
-    - postcode
-    - aimag
-    - sum
-    - bag
-    - street
+    - recipient
+    - organization
+    - unit
     - building
-    - name
+    - houseNumber
+    - street
+    - bagOrKhoroo
+    - soumOrDistrict
+    - aimagOrCapital
+    - postcode
   englishOrder:
-    - postcode
-    - province
-    - soum
-    - bag
-    - street
+    - recipient
+    - organization
+    - unit
     - building
-    - name
+    - houseNumber
+    - street
+    - bagOrKhoroo
+    - soumOrDistrict
+    - aimagOrCapital
+    - postcode
+    - country
   regionalHierarchy:
-    - aimag
-    - sum
-    - bag
+    - aimagOrCapitalCity
+    - soumOrDistrict
+    - bagOrKhoroo
+    - localityOrDeliveryBlock
+    - fiveDigitPostalZone
+    - nineDigitUnifiedBuildingCodeWhenAssigned
+    - officialPostalAssignmentWithoutCanonicalGeometry
+    - optionalDerivedPostalZoneSurface
+    - gazarAddressGridWithoutPostalPromotion
+    - explicitRightsClearedCivicAddress
+    - explicitUnifiedCodeLinkedBuilding
+    - exactRightsClearedBuildingGeometry
   postalCode:
-    label: 5 digits, e.g. 12345
-    required: false
-    usage: used
+    label: 5-digit postal zone or version-qualified 9-digit unified building code syntax; current assignment is unverified and only an exact rights-cleared provider relation may link a code to a building
+    required: true
+    usage: required
   openSourceIds:
+    - zipcode-mn
+    - crc-mongolia-postcode-2025
+    - crc-mongolia-postal-directory-2024
+    - crc-mongolia-unified-postcode-2019
+    - upu-mongolia-addressing
+    - crc-mongolia-postal-regulation
     - alamgc-mongolia
     - nsdi-mongolia
-    - zipcode-mn
+    - gazar-mongolia-address-system
+    - gazar-mongolia-spatial-data-standards
+    - gazar-mongolia-boundaries
+    - gazar-mongolia-open-spatial-data
+    - nso-mongolia-administrative-units
     - hot-osm-mongolia
     - osm-mongolia
     - osm-nominatim
@@ -143,9 +201,19 @@ addressRules:
     - protected-planet-wdpa
     - gbif-occurrence
 openSourceIds:
+  - zipcode-mn
+  - crc-mongolia-postcode-2025
+  - crc-mongolia-postal-directory-2024
+  - crc-mongolia-unified-postcode-2019
+  - upu-mongolia-addressing
+  - crc-mongolia-postal-regulation
   - alamgc-mongolia
   - nsdi-mongolia
-  - zipcode-mn
+  - gazar-mongolia-address-system
+  - gazar-mongolia-spatial-data-standards
+  - gazar-mongolia-boundaries
+  - gazar-mongolia-open-spatial-data
+  - nso-mongolia-administrative-units
   - hot-osm-mongolia
   - osm-mongolia
   - osm-nominatim

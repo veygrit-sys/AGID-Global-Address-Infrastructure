@@ -1,0 +1,46 @@
+{
+  "schema_version": "agid-postal-synthetic-fixtures-v0.1",
+  "country_code": "MC",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "980",
+    "coordinates_are_geographic": false,
+    "postal_codes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mc-syn-ordinary-routing",
+      "synthetic_address": { "postal_code": "98000", "district": "Quartier-Test", "street": "Voie du Test", "house_number": "1" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "geometry_type": "none", "must_not_assert": ["official-la-poste-polygon", "deliverability", "recipient-identity"] }
+    },
+    {
+      "fixture_id": "mc-syn-address-point",
+      "synthetic_address": { "postal_code": "98000", "district": "Quartier-Test", "street": "Voie du Point", "house_number": "2" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "point", "must_not_assert": ["address-point-is-building-footprint", "resident-or-owner", "production-ready"] }
+    },
+    {
+      "fixture_id": "mc-syn-building-link",
+      "synthetic_address": { "postal_code": "98000", "district": "Quartier-Test", "street": "Voie du Lien", "house_number": "3" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "polygon", "must_not_assert": ["nearest-building-is-exact-link", "legal-property-boundary", "deliverability"] }
+    },
+    {
+      "fixture_id": "mc-syn-derived-routing-surface",
+      "synthetic_address": { "postal_code": "98000", "district": "Quartier-Test" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "geometry_type": "multipolygon", "must_not_assert": ["official-la-poste-polygon", "district-is-postcode-area", "production-ready"] }
+    },
+    {
+      "fixture_id": "mc-syn-cedex-like-designator",
+      "synthetic_address": { "postal_code": "98090", "organization": "Service de Test" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "geometry_type": "organization", "must_not_assert": ["currently-allocated-cedex", "residential-area", "public-counter-location"] }
+    }
+  ]
+}

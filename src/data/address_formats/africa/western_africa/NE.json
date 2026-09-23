@@ -3,147 +3,75 @@
   "name": "Niger",
   "native": {
     "name": "Niger",
-    "addressFormat": "{{recipient}}\n{{street}} {{houseNumber}}\n{{postcode}} {{city}}\n{{region}}\n{{country}}",
+    "addressFormat": "{{recipient}}\n{{organization}}\n{{deliveryPoint}}\n{{building}}\n{{houseNumber}} {{street}}\n{{quarter}}\n{{postcode}} {{city}}\nNIGER",
     "ordering": "small-to-big",
     "fields": [
-      {
-        "key": "recipient",
-        "label": "Nom",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      },
-      {
-        "key": "street",
-        "label": "Rue",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      },
-      {
-        "key": "houseNumber",
-        "label": "Numéro",
-        "placeholder": "",
-        "required": false,
-        "type": "text"
-      },
-      {
-        "key": "postcode",
-        "label": "Code postal",
-        "placeholder": "",
-        "required": false,
-        "type": "text"
-      },
-      {
-        "key": "city",
-        "label": "Ville",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      },
-      {
-        "key": "region",
-        "label": "Région",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      }
+      { "key": "recipient", "label": "Nom complet", "placeholder": "Destinataire synthétique", "required": true, "type": "text" },
+      { "key": "organization", "label": "Organisation", "placeholder": "Organisation exemple", "type": "text" },
+      { "key": "deliveryPoint", "label": "Boîte postale / point de remise", "placeholder": "BP 999", "type": "text" },
+      { "key": "building", "label": "Bâtiment / étage / unité", "placeholder": "Bâtiment exemple, étage 2", "type": "text" },
+      { "key": "houseNumber", "label": "Numéro de porte / parcelle", "placeholder": "99", "type": "text" },
+      { "key": "street", "label": "Rue", "placeholder": "Rue Exemple", "type": "text" },
+      { "key": "quarter", "label": "Quartier / zone", "placeholder": "Quartier synthétique", "type": "text" },
+      { "key": "postcode", "label": "Code postal", "placeholder": "8999", "required": true, "type": "text" },
+      { "key": "city", "label": "Ville / localité", "placeholder": "Localité synthétique", "required": true, "type": "text" },
+      { "key": "region", "label": "Région administrative (contexte)", "placeholder": "Région synthétique", "type": "text" }
     ]
   },
   "english": {
-    "addressFormat": "{{recipient}}\n{{street}} {{houseNumber}}\n{{postcode}} {{city}}\n{{region}}\n{{country}}",
+    "name": "International English",
+    "addressFormat": "{{recipient}}\n{{organization}}\n{{deliveryPoint}}\n{{building}}\n{{houseNumber}} {{street}}\n{{quarter}}\n{{postcode}} {{city}}\nNIGER",
     "ordering": "small-to-big",
     "fields": [
-      {
-        "key": "recipient",
-        "label": "Name",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      },
-      {
-        "key": "street",
-        "label": "Street",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      },
-      {
-        "key": "houseNumber",
-        "label": "House No",
-        "placeholder": "",
-        "required": false,
-        "type": "text"
-      },
-      {
-        "key": "postcode",
-        "label": "Postal Code",
-        "placeholder": "",
-        "required": false,
-        "type": "text"
-      },
-      {
-        "key": "city",
-        "label": "City/Town",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      },
-      {
-        "key": "region",
-        "label": "Region",
-        "placeholder": "",
-        "required": true,
-        "type": "text"
-      }
+      { "key": "recipient", "label": "Full Name", "placeholder": "Synthetic Recipient", "required": true, "type": "text" },
+      { "key": "organization", "label": "Organization", "placeholder": "Example Organization", "type": "text" },
+      { "key": "deliveryPoint", "label": "P.O. Box / delivery point", "placeholder": "BP 999", "type": "text" },
+      { "key": "building", "label": "Building / floor / unit", "placeholder": "Example Building, floor 2", "type": "text" },
+      { "key": "houseNumber", "label": "Door / plot number", "placeholder": "99", "type": "text" },
+      { "key": "street", "label": "Street", "placeholder": "Example Street", "type": "text" },
+      { "key": "quarter", "label": "Quarter / zone", "placeholder": "Synthetic Quarter", "type": "text" },
+      { "key": "postcode", "label": "Postcode", "placeholder": "8999", "required": true, "type": "text" },
+      { "key": "city", "label": "City / locality", "placeholder": "Synthetic Locality", "required": true, "type": "text" },
+      { "key": "region", "label": "Administrative region (context)", "placeholder": "Synthetic Region", "type": "text" }
     ]
   },
   "postalCode": {
-    "format": "NNNN",
-    "regex": "^\\d{4}$",
-    "api": null,
-    "source": "Postal metadata from AGID regional table; no free OSS source configured"
+    "format": "NNNN (current directory uses region digit 1-8 plus post-office digits; assignment evidence required)",
+    "regex": "^[1-8]\\d{3}$",
+    "api": "https://nigerposte.ne/code-postal/",
+    "source": "Niger Poste current public code-to-locality directory; a listed row is not a polygon, civic-address record, building relation or redistribution licence"
   },
   "addressRules": {
-    "languages": [
-      {
-        "code": "fr",
-        "name": "French"
-      }
-    ],
-    "nativeOrder": [
-      "region",
-      "department",
-      "commune",
-      "village",
-      "street",
-      "country"
-    ],
-    "englishOrder": [
-      "region",
-      "department",
-      "commune",
-      "village",
-      "street",
-      "country"
-    ],
+    "languages": [{ "code": "fr", "name": "French" }],
+    "nativeOrder": ["recipient", "organization", "deliveryPointOrPhysicalAddress", "building", "floor", "unit", "houseNumber", "street", "quarterOrZone", "postcode", "locality", "country"],
+    "englishOrder": ["recipient", "organization", "deliveryPointOrPhysicalAddress", "building", "floor", "unit", "houseNumber", "street", "quarterOrZone", "postcode", "locality", "country"],
     "regionalHierarchy": [
+      "country",
       "region",
-      "department"
+      "department",
+      "commune",
+      "localityOrQuarter",
+      "nigerPosteFourDigitAssignment",
+      "officialPostalSurfaceOrNoCanonicalGeometry",
+      "explicitCivicAddressPoint",
+      "explicitAddressLinkedBuildingFeature",
+      "exactRightsClearedBuilding",
+      "agidCell"
     ],
     "postalCode": {
-      "label": "4 digits used",
-      "required": false,
-      "usage": "used"
+      "label": "4 digits before the locality; current official directory row required; BP identifier is separate",
+      "required": true,
+      "usage": "required"
     },
-    "deliveryLanguages": [
-      {
-        "code": "fr",
-        "name": "French"
-      }
-    ]
+    "deliveryLanguages": [{ "code": "fr", "name": "French" }]
   },
   "openSourceIds": [
+    "niger-poste",
+    "niger-poste-agencies",
+    "upu-niger-addressing-2005",
+    "ignniger-national-geography",
+    "hapdp-niger-data-protection-2022",
+    "osm-niger",
     "hot-osm-west-africa",
     "osm-nominatim",
     "osm-overpass",

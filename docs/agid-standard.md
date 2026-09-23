@@ -1,6 +1,6 @@
 # AGID Standard and Conformance
 
-Last updated: 2026-06-03
+Last updated: 2026-07-26
 
 AGID must be readable as an independent standard, not only as a web application. The application is one reference implementation. The standard surface is the set of artifacts that another team can use to implement AGID in an SDK, server, embedded device, GIS workflow, logistics tool, or offline application.
 
@@ -14,6 +14,7 @@ AGID must be readable as an independent standard, not only as a web application.
 | `src/lib/openApiSpec.ts` and `/api/v1/openapi.json` | OpenAPI 3.1 integration contract for server-backed AGID workflows. |
 | `docs/data-licenses.md` | Data-license and attribution policy for open-source, government, postal, and geographic evidence layers. |
 | `docs/agid-security.md` | Public-layer security policy for AGID format validation, QR boundaries, and open-source release integrity. |
+| `docs/agid-address-neighborhood-and-subpremise-v0.1.md` | Eight-neighbor matching, public building identity, private sub-premise separation, and the synthetic regression benchmark. |
 
 ## Conformance Levels
 
@@ -26,6 +27,12 @@ An SDK is core-conformant when it can pass the shared parity vectors for:
 - `cellBounds`
 
 `cellPolygon` is recommended for map/GIS clients, but `encode`, `decode`, and `cellBounds` are the formal parity minimum before release.
+
+The neighborhood extension is conformant when it reports same, edge-adjacent,
+corner-adjacent, separate, and invalid relations; crosses cubed-sphere face
+boundaries by reprojection; and treats proximity only as an area candidate.
+Existing SDKs remain core-conformant without this extension until neighborhood
+vectors become part of the cross-language parity minimum.
 
 ### API Conformance
 
@@ -70,6 +77,8 @@ The AGID standard includes:
 - ID string format and prefix rules,
 - decode behavior,
 - cell bounds and recommended polygon shape,
+- 21-bit-per-axis eight-neighbor cell relations,
+- public `AGID + buildingId` reference semantics,
 - public address, building, road, bridge, park, water, natural-feature, heritage, landmark, and place-evidence rules,
 - SDK parity vectors,
 - OpenAPI v1 integration contract,
@@ -78,7 +87,7 @@ The AGID standard includes:
 The AGID standard does not include:
 
 - private AOID recipient data,
-- room, phone, private access, or delivery-instruction contents,
+- room, unit, floor, entrance, phone, private access, or delivery-instruction contents,
 - UI layout or styling,
 - uptime guarantees for external APIs,
 - a promise that every postal authority or carrier can verify every result.
@@ -90,11 +99,12 @@ Before a formal SDK, API, or data-pack release:
 1. Update `sdk/agid-spec/agid-spec.json` if the core contract changes.
 2. Update `sdk/agid-spec/test-vectors.json` when vector expectations change.
 3. Run parity tests for generated SDKs.
-4. Confirm `/api/v1/openapi.json` still describes the public integration surface.
-5. Confirm source metadata includes URL, kind, and license or terms.
-6. Run AGID security tests and confirm public QR payloads cannot reintroduce recipient, phone, unit, room, access, delivery, owner-key, device-key, or encrypted AOID fields.
-7. Publish checksums or detached signatures for the spec, vectors, OpenAPI artifact, SDK packages, and public data packs.
-8. Document any non-conforming or partial areas as confidence limitations.
+4. Run `npm run verify:agid-address-matching` and `npm run benchmark:agid-address-normalization`.
+5. Confirm `/api/v1/openapi.json` still describes the public integration surface.
+6. Confirm source metadata includes URL, kind, and license or terms.
+7. Run AGID security tests and confirm public QR payloads cannot reintroduce recipient, phone, unit, room, access, delivery, owner-key, device-key, or encrypted AOID fields.
+8. Publish checksums or detached signatures for the spec, vectors, OpenAPI artifact, SDK packages, and public data packs.
+9. Document any non-conforming or partial areas as confidence limitations.
 
 ## Relationship to AGID and AOID
 

@@ -1,0 +1,164 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "contract_version": "0.1.0",
+  "repository": {
+    "name": "agid-postal-lk",
+    "country_code": "LK",
+    "country_name": "Sri Lanka",
+    "lifecycle": "planned_external_repository",
+    "seed_location": "data/postal_country_packs/lk/postal-context",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "publication_claim": "reviewed-contract-not-data-release"
+  },
+  "contract_files": [
+    "repository-manifest.json",
+    "source-profile.json",
+    "m2-source-review.json",
+    "README.md"
+  ],
+  "identifier_namespaces": [
+    {
+      "id": "sri_lanka_postcode",
+      "scope": "LK-postal-operator-source-release",
+      "required_identity": [
+        "country_code",
+        "postal_code",
+        "source_id",
+        "source_record_id",
+        "source_release"
+      ],
+      "format": "five ASCII digits stored as a string, preserving leading zeros",
+      "geometry_rule": "Post-office/locality assignment does not imply an area or a point. Use independently permitted source geometry and explicit postal crosswalk; otherwise none."
+    },
+    {
+      "id": "sri_lanka_administrative",
+      "scope": "NSDI-source-layer-edition",
+      "required_identity": [
+        "authority",
+        "source_layer",
+        "source_release",
+        "administrative_identifier"
+      ],
+      "geometry_rule": "GN, DS, district, province and census codes stay in their own namespace; neither containment nor similar digits create a postal assignment."
+    }
+  ],
+  "authority_model": {
+    "required_fields": [
+      "country_code",
+      "namespace",
+      "postal_code",
+      "normalized_postal_code",
+      "geometry",
+      "geometry_type",
+      "administrative_hierarchy",
+      "assignment_authority",
+      "geometry_authority",
+      "source_id",
+      "source_record_id",
+      "source_release",
+      "source_date",
+      "source_digest",
+      "observed_at",
+      "valid_from",
+      "valid_to",
+      "confidence",
+      "license_ref",
+      "version"
+    ],
+    "geometry_authority": [
+      "official",
+      "derived",
+      "virtual",
+      "none"
+    ],
+    "geometry_types": [
+      "polygon",
+      "multipolygon",
+      "point",
+      "route",
+      "po_box",
+      "organization",
+      "unknown"
+    ],
+    "rule": "Postal assignment, independent geometry, administration, civic number, building relation and AGID cell evidence remain separate. Unknown validity remains null, not inferred from a page date."
+  },
+  "exception_classes": [
+    "leading_zero_loss",
+    "same_name_different_place",
+    "office_not_whole_locality",
+    "placeholder_not_postcode",
+    "selector_order_not_join_key",
+    "administrative_or_census_code_not_postcode",
+    "multilingual_alias_not_identity",
+    "missing_geometry_is_none",
+    "private_contact_fields",
+    "source_page_not_data_edition"
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Existing Sri Lanka address format and primary-source discovery only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Reviewed LK namespace, privacy, geometry and publication contract with reproducible reference-only checks."
+      },
+      {
+        "id": "M2_assignment_geometry",
+        "definition": "Current rights-cleared Sri Lanka Post or legally authorised five-digit string assignments, with declared post-office/locality scope and temporal validity, are joined to independently licensed source-linked point, route or area geometry (or explicit none without a spatial lookup claim). Reproducible coverage, exception, CRS/topology and privacy checks must validate real scoped records and approved immutable digest-pinned artifacts through the actual AGID loader/API. Preserve Sinhala, Tamil and English names, leading zeros, separate GN/DS/census identifiers and official/derived/virtual/none authority; exact civic/building display needs an independent explicit permitted relation."
+      },
+      {
+        "id": "M3_candidate",
+        "definition": "Independent holdout, multilingual ambiguity, coverage, exceptions and civic/building relation checks pass within the declared release scope."
+      },
+      {
+        "id": "M4_stable",
+        "definition": "Repeated refresh, corrections, monitored freshness and verified rollback under reviewed rights."
+      }
+    ],
+    "m2_required_evidence": [
+      "current-real-scoped-postal-assignments",
+      "data-and-terms-edition-retrieval-time-sha256",
+      "rights-for-transformation-and-redistribution",
+      "leading-zero-and-multilingual-identity-preservation",
+      "explicit-postal-to-geometry-crosswalk-or-none",
+      "coverage-validity-crs-topology-and-exception-validation",
+      "private-contact-and-land-rights-exclusion",
+      "independent-permitted-civic-building-relations-before-display",
+      "reproducible-transformation-on-real-records",
+      "approved-immutable-artifact-and-remote-digest-verification",
+      "actual-agid-loader-and-api-validation"
+    ],
+    "hard_blockers": [
+      "unknown-data-or-derivative-rights",
+      "html-options-used-as-national-coverage",
+      "admin-census-or-cell-used-as-postal-assignment",
+      "post-office-point-expanded-to-official-polygon",
+      "personal-contact-customer-owner-or-title-records",
+      "proximity-or-model-used-as-civic-building-proof",
+      "unpublished-unpinned-or-synthetic-only-release"
+    ]
+  },
+  "agid_integration": {
+    "current_scope": "LK source catalog and address-format metadata only; LK is not enabled in the generic Postal Context runtime.",
+    "enablement_gate": "Enable LK only after a real scoped pack, reviewed rights and immutable release pass actual loader/API checks; source names, URLs or successful reference probes alone cannot validate addresses.",
+    "agid_cell_rule": "An AGID cell is a spatial index, not a postal assignment or building identity."
+  },
+  "non_guarantees": [
+    "national_coverage",
+    "deliverability",
+    "official_postal_polygon",
+    "civic_number_without_relation",
+    "building_name_without_relation",
+    "personal_or_land_rights_identity"
+  ]
+}

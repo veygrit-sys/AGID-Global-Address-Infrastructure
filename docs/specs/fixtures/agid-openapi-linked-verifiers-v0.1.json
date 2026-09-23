@@ -1,0 +1,59 @@
+{
+  "artifact": "agid-openapi-linked-verifier-allowlist",
+  "version": "v0.1",
+  "localOnly": true,
+  "description": "Allowlisted local verifier commands that may be executed from AGID OpenAPI x-agid-evidence-fixtures during CI. This fixture is not hosted evidence, production traffic, or credential material.",
+  "nonClaims": [
+    "not-production-traffic",
+    "not-raw-address-intake",
+    "not-proof-witness-intake",
+    "not-hosted-evidence-vault-storage"
+  ],
+  "verifiers": [
+    {
+      "command": "npm run verify:merchant-console-ec-plugin",
+      "script": "verify:merchant-console-ec-plugin",
+      "runner": [
+        "src/lib/merchantConsoleEcPlugin.test.ts"
+      ],
+      "timeoutMs": 120000,
+      "managedServiceBoundary": "delivery-gateway-carrier-api"
+    },
+    {
+      "command": "npm run verify:playlist-commerce-evidence",
+      "script": "verify:playlist-commerce-evidence",
+      "runner": [
+        "scripts/verify-playlist-commerce-webhook-evidence.ts"
+      ],
+      "timeoutMs": 120000,
+      "managedServiceBoundary": "fixture-only-not-hosted-evidence-vault"
+    },
+    {
+      "command": "npm run verify:veygrit-address-login-hosted",
+      "script": "verify:veygrit-address-login-hosted",
+      "runner": [
+        "scripts/verify-veygrit-address-login-hosted.ts"
+      ],
+      "timeoutMs": 120000,
+      "managedServiceBoundary": "fixture-only-not-hosted-address-login"
+    },
+    {
+      "command": "npm run verify:delivery-gateway-carrier-api",
+      "script": "verify:delivery-gateway-carrier-api",
+      "runner": [
+        "src/lib/deliveryGatewayCarrierApi.test.ts"
+      ],
+      "timeoutMs": 120000,
+      "managedServiceBoundary": "fixture-only-not-production-carrier"
+    },
+    {
+      "command": "npm run verify:vey-trade-gateway-idempotency-fixture-schema",
+      "script": "verify:vey-trade-gateway-idempotency-fixture-schema",
+      "runner": [
+        "scripts/verify-vey-trade-gateway-idempotency-fixture-schema.ts"
+      ],
+      "timeoutMs": 120000,
+      "managedServiceBoundary": "trade-gateway-local-idempotent-intent"
+    }
+  ]
+}

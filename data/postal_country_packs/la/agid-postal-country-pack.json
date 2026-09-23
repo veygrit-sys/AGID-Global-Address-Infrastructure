@@ -1,0 +1,5850 @@
+{
+  "manifest": {
+    "schemaId": "agid-postal-country-pack-v0.1",
+    "version": "agid-postal-country-pack-v0.1",
+    "strategyVersion": "agid-postal-country-pack-strategy-v0.1",
+    "engineVersion": "agid-postal-code-engine-v0.1-rc",
+    "generatedAt": "2026-06-20T00:00:00.000Z",
+    "countryCode": "LA",
+    "countryName": "Laos",
+    "repositoryName": "agid-postal-pack-la",
+    "packageName": "@agid/agid-postal-pack-la",
+    "requiredLayers": [
+      "manifest",
+      "source-catalog",
+      "country-profile",
+      "admin-boundary-index",
+      "locality-index",
+      "locality-alias-history",
+      "landform-index",
+      "settlement-cluster-index",
+      "planning-cell-index",
+      "route-evidence-index",
+      "quality-evidence-index",
+      "vpl-seed-regions",
+      "postal-system-priors",
+      "governance-notes",
+      "license-ledger",
+      "privacy-threat-model",
+      "test-vectors"
+    ],
+    "containsPersonalData": false,
+    "containsRawThirdPartyData": false,
+    "officialStatus": "draft",
+    "counts": {
+      "sources": 3,
+      "localities": 48,
+      "boundaries": 12,
+      "landforms": 1,
+      "settlementClusters": 6,
+      "vplSeeds": 3,
+      "planningCells": 202,
+      "routeEvidence": 51,
+      "qualityEvidence": 38,
+      "officialMunicipalityRecords": 0,
+      "testVectors": 3
+    }
+  },
+  "recommendation": {
+    "version": "agid-postal-country-pack-strategy-v0.1",
+    "countryCode": "LA",
+    "countryName": "Laos",
+    "tier": "weak-coarse-postal-code",
+    "repositoryMode": "country-pack-recommended",
+    "repositoryName": "agid-postal-pack-la",
+    "packageName": "@agid/agid-postal-pack-la",
+    "packWeight": "standard-pack",
+    "recommendedUse": "supplemental-agid-postal-draft",
+    "requiredLayers": [
+      "manifest",
+      "source-catalog",
+      "country-profile",
+      "admin-boundary-index",
+      "locality-index",
+      "locality-alias-history",
+      "landform-index",
+      "settlement-cluster-index",
+      "planning-cell-index",
+      "route-evidence-index",
+      "quality-evidence-index",
+      "vpl-seed-regions",
+      "postal-system-priors",
+      "governance-notes",
+      "license-ledger",
+      "privacy-threat-model",
+      "test-vectors"
+    ],
+    "preseededRecords": [
+      "country profile: population band, land area band, terrain class, postal maturity class",
+      "stable locality IDs independent of mutable city-name strings",
+      "administrative boundary references and source freshness metadata",
+      "landform and route evidence slots appropriate to the country terrain",
+      "settlement clusters and VPL seed regions for draft postal-zone design",
+      "license ledger for every imported source; third-party raw datasets are not bundled by default"
+    ],
+    "maintenanceRules": [
+      "Keep the AGID Postal Forge engine, UI, and core tests in the central repository.",
+      "Keep country-specific locality aliases, landforms, source metadata, and VPL seeds in the country pack.",
+      "Version every source by provider, license, retrieval date, and transformation script.",
+      "Use stable locality IDs; visible names can change without forcing postal code churn.",
+      "Run schema, no-raw-address, municipality-separation, and sample code conformance tests before publishing.",
+      "Publish generated codes as simulation or draft unless official authority, carrier pilot, privacy, data trust, and transition gates pass."
+    ],
+    "splitRationale": [
+      "Country packs keep the main app small and let operators load only the country they need.",
+      "Country experts can maintain local names, landforms, languages, and source notes without touching the core engine.",
+      "License risk is isolated because each country pack has its own source catalog and data license ledger."
+    ],
+    "compatibilityContract": {
+      "schemaId": "agid-postal-country-pack-v0.1",
+      "enginePackage": "@agid/postal-forge-core",
+      "countryPackDoesNotContain": [
+        "personal-addresses",
+        "recipient-names",
+        "phone-numbers",
+        "private-aoid-bodies",
+        "agid-s-payloads",
+        "raw-third-party-datasets-without-license"
+      ]
+    }
+  },
+  "countryProfile": {
+    "countryCode": "LA",
+    "countryName": "Laos",
+    "region": "Asia",
+    "terrain": "mountain",
+    "classHint": "B",
+    "planningCentroid": {
+      "lat": 19.8563,
+      "lng": 102.4955
+    },
+    "sourceNote": "Postal coverage is sparse outside cities; combine postal hints with AGID and administrative hierarchy."
+  },
+  "sourceCatalog": [
+    {
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "sourceName": "AGID-generated country pack fixtures",
+      "sourceUrl": "local:AGID",
+      "provider": "AGID project",
+      "licenseOrTerms": "Apache-2.0 for AGID-created metadata",
+      "redistributionStatus": "agid-metadata-redistributable",
+      "role": "synthetic locality, VPL seed, and conformance fixtures",
+      "transformedFields": [
+        "countryCode",
+        "localityId",
+        "codePart",
+        "planningCell",
+        "routeEvidence",
+        "qualityEvidence",
+        "testVector"
+      ],
+      "confidenceNotes": [
+        "Contains no personal addresses and no recipient data.",
+        "Useful for OSS demos and conformance tests; not official postal authority data."
+      ]
+    },
+    {
+      "sourceId": "official-boundary-required",
+      "sourceName": "LA official boundary and locality sources",
+      "sourceUrl": "source-metadata-only:official-authority-required",
+      "provider": "government, municipality, postal authority, or carrier pilot authority",
+      "licenseOrTerms": "source-specific; not bundled",
+      "redistributionStatus": "source-metadata-only",
+      "role": "official validation gate before pilot or public release",
+      "transformedFields": [],
+      "confidenceNotes": [
+        "This pack records the required source slot only.",
+        "No official raw boundary, road, population, postal, or address dataset is bundled."
+      ]
+    },
+    {
+      "sourceId": "open-map-evidence-slot",
+      "sourceName": "Open map evidence slot",
+      "sourceUrl": "source-metadata-only:open-map-provider",
+      "provider": "OSM, Overture, Natural Earth, or local open-data provider after license review",
+      "licenseOrTerms": "source-specific; license review required",
+      "redistributionStatus": "license-review-required",
+      "role": "road, landform, port, settlement, and map preview evidence",
+      "transformedFields": [
+        "featureClass",
+        "evidenceQuality",
+        "sourceFreshness"
+      ],
+      "confidenceNotes": [
+        "Open map records are not bundled by default.",
+        "Any derived database must keep source-specific attribution and redistribution obligations."
+      ]
+    }
+  ],
+  "licenseLedger": [
+    {
+      "subject": "AGID-created country pack metadata",
+      "licenseOrTerms": "Apache-2.0",
+      "redistribution": "allowed",
+      "notes": "Includes manifest, synthetic locality fixtures, VPL seeds, generated test vectors, and safety rules."
+    },
+    {
+      "subject": "Official postal, boundary, road, population, and locality datasets",
+      "licenseOrTerms": "source-specific",
+      "redistribution": "metadata-only",
+      "notes": "Do not bundle raw official records unless a separate DATA_LICENSES entry permits redistribution."
+    },
+    {
+      "subject": "Open map provider extracts",
+      "licenseOrTerms": "source-specific",
+      "redistribution": "review-required",
+      "notes": "OSM, Overture, Natural Earth, GeoNames, and similar data must be reviewed per source before bundling."
+    }
+  ],
+  "officialMunicipalitySummary": {
+    "mode": "synthetic-fixture",
+    "countryCode": "LA",
+    "sourceCount": 0,
+    "recordCount": 0,
+    "municipalityCount": 0,
+    "townCount": 0,
+    "blockCount": 0,
+    "sourceIds": [],
+    "coverageNote": "No normalized official municipality dataset was provided; AGID uses safe synthetic planning fixtures only."
+  },
+  "adminBoundaryIndex": [
+    {
+      "boundaryId": "boundary-la-m1",
+      "localityId": "LA-M1",
+      "label": "Central Valley Municipality",
+      "boundaryClass": "municipality",
+      "geometryRef": "source-required://LA-M1",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m1-t1",
+      "localityId": "LA-M1-T1",
+      "label": "Central Quarter",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M1-T1",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m1-t2",
+      "localityId": "LA-M1-T2",
+      "label": "North District",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M1-T2",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m1-t3",
+      "localityId": "LA-M1-T3",
+      "label": "Harbor / Market Area",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M1-T3",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m2",
+      "localityId": "LA-M2",
+      "label": "Upper Valley Municipality",
+      "boundaryClass": "municipality",
+      "geometryRef": "source-required://LA-M2",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m2-t1",
+      "localityId": "LA-M2-T1",
+      "label": "Central Quarter",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M2-T1",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m2-t2",
+      "localityId": "LA-M2-T2",
+      "label": "North District",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M2-T2",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m2-t3",
+      "localityId": "LA-M2-T3",
+      "label": "Harbor / Market Area",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M2-T3",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m3",
+      "localityId": "LA-M3",
+      "label": "Ridge Municipality",
+      "boundaryClass": "municipality",
+      "geometryRef": "source-required://LA-M3",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m3-t1",
+      "localityId": "LA-M3-T1",
+      "label": "Central Quarter",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M3-T1",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m3-t2",
+      "localityId": "LA-M3-T2",
+      "label": "North District",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M3-T2",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    },
+    {
+      "boundaryId": "boundary-la-m3-t3",
+      "localityId": "LA-M3-T3",
+      "label": "Harbor / Market Area",
+      "boundaryClass": "town",
+      "geometryRef": "source-required://LA-M3-T3",
+      "sourceId": "official-boundary-required",
+      "precision": "official-required"
+    }
+  ],
+  "localityIndex": [
+    {
+      "localityId": "LA-M1",
+      "stableId": "la-municipality-la-m1",
+      "name": "Central Valley Municipality",
+      "kind": "municipality",
+      "parentId": null,
+      "codePart": "Y2",
+      "aliases": [
+        {
+          "label": "Central Valley Municipality",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Central Valley Postal Area",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T1",
+      "stableId": "la-town-la-m1-t1",
+      "name": "Central Quarter",
+      "kind": "town",
+      "parentId": "LA-M1",
+      "codePart": "KD",
+      "aliases": [
+        {
+          "label": "Central Quarter",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Central Valley Municipality Central Quarter",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T1-C0",
+      "stableId": "la-block-la-m1-t1-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M1-T1",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T1-C1",
+      "stableId": "la-block-la-m1-t1-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M1-T1",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T1-C2",
+      "stableId": "la-block-la-m1-t1-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M1-T1",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T1-C3",
+      "stableId": "la-block-la-m1-t1-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M1-T1",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T2",
+      "stableId": "la-town-la-m1-t2",
+      "name": "North District",
+      "kind": "town",
+      "parentId": "LA-M1",
+      "codePart": "X5",
+      "aliases": [
+        {
+          "label": "North District",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Central Valley Municipality North District",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T2-C0",
+      "stableId": "la-block-la-m1-t2-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M1-T2",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T2-C1",
+      "stableId": "la-block-la-m1-t2-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M1-T2",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T2-C2",
+      "stableId": "la-block-la-m1-t2-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M1-T2",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T2-C3",
+      "stableId": "la-block-la-m1-t2-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M1-T2",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T3",
+      "stableId": "la-town-la-m1-t3",
+      "name": "Harbor / Market Area",
+      "kind": "town",
+      "parentId": "LA-M1",
+      "codePart": "88",
+      "aliases": [
+        {
+          "label": "Harbor / Market Area",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Central Valley Municipality Harbor / Market Area",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T3-C0",
+      "stableId": "la-block-la-m1-t3-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M1-T3",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T3-C1",
+      "stableId": "la-block-la-m1-t3-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M1-T3",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T3-C2",
+      "stableId": "la-block-la-m1-t3-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M1-T3",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M1-T3-C3",
+      "stableId": "la-block-la-m1-t3-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M1-T3",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2",
+      "stableId": "la-municipality-la-m2",
+      "name": "Upper Valley Municipality",
+      "kind": "municipality",
+      "parentId": null,
+      "codePart": "XV",
+      "aliases": [
+        {
+          "label": "Upper Valley Municipality",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Upper Valley Postal Area",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T1",
+      "stableId": "la-town-la-m2-t1",
+      "name": "Central Quarter",
+      "kind": "town",
+      "parentId": "LA-M2",
+      "codePart": "R8",
+      "aliases": [
+        {
+          "label": "Central Quarter",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Upper Valley Municipality Central Quarter",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T1-C0",
+      "stableId": "la-block-la-m2-t1-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M2-T1",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T1-C1",
+      "stableId": "la-block-la-m2-t1-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M2-T1",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T1-C2",
+      "stableId": "la-block-la-m2-t1-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M2-T1",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T1-C3",
+      "stableId": "la-block-la-m2-t1-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M2-T1",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T2",
+      "stableId": "la-town-la-m2-t2",
+      "name": "North District",
+      "kind": "town",
+      "parentId": "LA-M2",
+      "codePart": "8Z",
+      "aliases": [
+        {
+          "label": "North District",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Upper Valley Municipality North District",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T2-C0",
+      "stableId": "la-block-la-m2-t2-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M2-T2",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T2-C1",
+      "stableId": "la-block-la-m2-t2-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M2-T2",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T2-C2",
+      "stableId": "la-block-la-m2-t2-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M2-T2",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T2-C3",
+      "stableId": "la-block-la-m2-t2-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M2-T2",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T3",
+      "stableId": "la-town-la-m2-t3",
+      "name": "Harbor / Market Area",
+      "kind": "town",
+      "parentId": "LA-M2",
+      "codePart": "B9",
+      "aliases": [
+        {
+          "label": "Harbor / Market Area",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Upper Valley Municipality Harbor / Market Area",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T3-C0",
+      "stableId": "la-block-la-m2-t3-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M2-T3",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T3-C1",
+      "stableId": "la-block-la-m2-t3-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M2-T3",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T3-C2",
+      "stableId": "la-block-la-m2-t3-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M2-T3",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M2-T3-C3",
+      "stableId": "la-block-la-m2-t3-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M2-T3",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3",
+      "stableId": "la-municipality-la-m3",
+      "name": "Ridge Municipality",
+      "kind": "municipality",
+      "parentId": null,
+      "codePart": "KG",
+      "aliases": [
+        {
+          "label": "Ridge Municipality",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Ridge Postal Area",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T1",
+      "stableId": "la-town-la-m3-t1",
+      "name": "Central Quarter",
+      "kind": "town",
+      "parentId": "LA-M3",
+      "codePart": "MY",
+      "aliases": [
+        {
+          "label": "Central Quarter",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Ridge Municipality Central Quarter",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T1-C0",
+      "stableId": "la-block-la-m3-t1-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M3-T1",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T1-C1",
+      "stableId": "la-block-la-m3-t1-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M3-T1",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T1-C2",
+      "stableId": "la-block-la-m3-t1-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M3-T1",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T1-C3",
+      "stableId": "la-block-la-m3-t1-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M3-T1",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T2",
+      "stableId": "la-town-la-m3-t2",
+      "name": "North District",
+      "kind": "town",
+      "parentId": "LA-M3",
+      "codePart": "TV",
+      "aliases": [
+        {
+          "label": "North District",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Ridge Municipality North District",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T2-C0",
+      "stableId": "la-block-la-m3-t2-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M3-T2",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T2-C1",
+      "stableId": "la-block-la-m3-t2-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M3-T2",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T2-C2",
+      "stableId": "la-block-la-m3-t2-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M3-T2",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T2-C3",
+      "stableId": "la-block-la-m3-t2-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M3-T2",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T3",
+      "stableId": "la-town-la-m3-t3",
+      "name": "Harbor / Market Area",
+      "kind": "town",
+      "parentId": "LA-M3",
+      "codePart": "V5",
+      "aliases": [
+        {
+          "label": "Harbor / Market Area",
+          "language": "en",
+          "status": "preferred"
+        },
+        {
+          "label": "Ridge Municipality Harbor / Market Area",
+          "language": "en",
+          "status": "synthetic"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T3-C0",
+      "stableId": "la-block-la-m3-t3-c0",
+      "name": "Town-wide",
+      "kind": "block",
+      "parentId": "LA-M3-T3",
+      "codePart": "00",
+      "aliases": [
+        {
+          "label": "Town-wide",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T3-C1",
+      "stableId": "la-block-la-m3-t3-c1",
+      "name": "1-chome / Block 1",
+      "kind": "block",
+      "parentId": "LA-M3-T3",
+      "codePart": "01",
+      "aliases": [
+        {
+          "label": "1-chome / Block 1",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T3-C2",
+      "stableId": "la-block-la-m3-t3-c2",
+      "name": "2-chome / Block 2",
+      "kind": "block",
+      "parentId": "LA-M3-T3",
+      "codePart": "02",
+      "aliases": [
+        {
+          "label": "2-chome / Block 2",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    },
+    {
+      "localityId": "LA-M3-T3-C3",
+      "stableId": "la-block-la-m3-t3-c3",
+      "name": "3-chome / Block 3",
+      "kind": "block",
+      "parentId": "LA-M3-T3",
+      "codePart": "03",
+      "aliases": [
+        {
+          "label": "3-chome / Block 3",
+          "language": "en",
+          "status": "preferred"
+        }
+      ]
+    }
+  ],
+  "landformIndex": [
+    {
+      "landformId": "la-mixed-terrain",
+      "label": "Mixed administrative and settlement terrain",
+      "kind": "mixed",
+      "relatedLocalityIds": [
+        "LA-M1",
+        "LA-M2",
+        "LA-M3"
+      ],
+      "sourceId": "open-map-evidence-slot"
+    }
+  ],
+  "settlementClusterIndex": [
+    {
+      "clusterId": "la-cluster-la-m1-la-m1-t1",
+      "label": "Central Valley Municipality / Central Quarter",
+      "localityId": "LA-M1-T1",
+      "agidCellSeed": "LA:Y2:KD:11",
+      "deliveryHints": [
+        "confirm-official-boundary-before-pilot",
+        "keep-visible-code-municipality-scoped",
+        "check-road-route"
+      ],
+      "publicPrecision": "town"
+    },
+    {
+      "clusterId": "la-cluster-la-m1-la-m1-t2",
+      "label": "Central Valley Municipality / North District",
+      "localityId": "LA-M1-T2",
+      "agidCellSeed": "LA:Y2:X5:12",
+      "deliveryHints": [
+        "confirm-official-boundary-before-pilot",
+        "keep-visible-code-municipality-scoped",
+        "check-road-route"
+      ],
+      "publicPrecision": "town"
+    },
+    {
+      "clusterId": "la-cluster-la-m2-la-m2-t1",
+      "label": "Upper Valley Municipality / Central Quarter",
+      "localityId": "LA-M2-T1",
+      "agidCellSeed": "LA:XV:R8:21",
+      "deliveryHints": [
+        "confirm-official-boundary-before-pilot",
+        "keep-visible-code-municipality-scoped",
+        "check-road-route"
+      ],
+      "publicPrecision": "town"
+    },
+    {
+      "clusterId": "la-cluster-la-m2-la-m2-t2",
+      "label": "Upper Valley Municipality / North District",
+      "localityId": "LA-M2-T2",
+      "agidCellSeed": "LA:XV:8Z:22",
+      "deliveryHints": [
+        "confirm-official-boundary-before-pilot",
+        "keep-visible-code-municipality-scoped",
+        "check-road-route"
+      ],
+      "publicPrecision": "town"
+    },
+    {
+      "clusterId": "la-cluster-la-m3-la-m3-t1",
+      "label": "Ridge Municipality / Central Quarter",
+      "localityId": "LA-M3-T1",
+      "agidCellSeed": "LA:KG:MY:31",
+      "deliveryHints": [
+        "confirm-official-boundary-before-pilot",
+        "keep-visible-code-municipality-scoped",
+        "check-road-route"
+      ],
+      "publicPrecision": "town"
+    },
+    {
+      "clusterId": "la-cluster-la-m3-la-m3-t2",
+      "label": "Ridge Municipality / North District",
+      "localityId": "LA-M3-T2",
+      "agidCellSeed": "LA:KG:TV:32",
+      "deliveryHints": [
+        "confirm-official-boundary-before-pilot",
+        "keep-visible-code-municipality-scoped",
+        "check-road-route"
+      ],
+      "publicPrecision": "town"
+    }
+  ],
+  "vplSeedRegions": [
+    {
+      "vplId": "la-vpl-1",
+      "label": "Central Valley Municipality synthetic postal locality 1",
+      "nonAdministrative": true,
+      "localityId": "LA-M1",
+      "codeSeed": "SVT",
+      "reasons": [
+        "reduce-address-ambiguity",
+        "support-draft-postal-zone-design",
+        "separate-local-delivery-context"
+      ],
+      "status": "draft"
+    },
+    {
+      "vplId": "la-vpl-2",
+      "label": "Upper Valley Municipality synthetic postal locality 2",
+      "nonAdministrative": true,
+      "localityId": "LA-M2",
+      "codeSeed": "RYX",
+      "reasons": [
+        "reduce-address-ambiguity",
+        "support-draft-postal-zone-design",
+        "separate-local-delivery-context"
+      ],
+      "status": "draft"
+    },
+    {
+      "vplId": "la-vpl-3",
+      "label": "Ridge Municipality synthetic postal locality 3",
+      "nonAdministrative": true,
+      "localityId": "LA-M3",
+      "codeSeed": "Q32",
+      "reasons": [
+        "reduce-address-ambiguity",
+        "support-draft-postal-zone-design",
+        "separate-local-delivery-context"
+      ],
+      "status": "draft"
+    }
+  ],
+  "planningCellIndex": [
+    {
+      "cellId": "la-planning-cell-0001",
+      "agid": "LA0A5WR97R91",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.504279
+      },
+      "codeSeed": "LA-Y2-KD-001",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0002",
+      "agid": "LA0A5WR6XMQF",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.873521,
+        "lng": 102.520501
+      },
+      "codeSeed": "LA-XV-X5-002",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0003",
+      "agid": "LA0A5WR798B8",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.88812,
+        "lng": 102.532916
+      },
+      "codeSeed": "LA-KG-88-003",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0004",
+      "agid": "LA0A5WR7CVDD",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.897875,
+        "lng": 102.539635
+      },
+      "codeSeed": "LA-Y2-R8-004",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0005",
+      "agid": "LA0A5WR4K4N2",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.9013,
+        "lng": 102.539635
+      },
+      "codeSeed": "LA-XV-8Z-005",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0006",
+      "agid": "LA0A5WR7B818",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.897875,
+        "lng": 102.532916
+      },
+      "codeSeed": "LA-KG-B9-006",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0007",
+      "agid": "LA0A5WR6276V",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.88812,
+        "lng": 102.520501
+      },
+      "codeSeed": "LA-Y2-MY-007",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0008",
+      "agid": "LA0A5WR6TDT9",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.873521,
+        "lng": 102.504279
+      },
+      "codeSeed": "LA-XV-TV-008",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0009",
+      "agid": "LA0A5WR9AA2R",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.486721
+      },
+      "codeSeed": "LA-KG-V5-009",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0010",
+      "agid": "LA0A5WSPDZEP",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.839079,
+        "lng": 102.470499
+      },
+      "codeSeed": "LA-Y2-KD-010",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0011",
+      "agid": "LA0A5WSP7TKJ",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.82448,
+        "lng": 102.458084
+      },
+      "codeSeed": "LA-XV-X5-011",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0012",
+      "agid": "LA0A5WSNRWBY",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.814725,
+        "lng": 102.451365
+      },
+      "codeSeed": "LA-KG-88-012",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0013",
+      "agid": "LA0A5WSNSDPQ",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8113,
+        "lng": 102.451365
+      },
+      "codeSeed": "LA-Y2-R8-013",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0014",
+      "agid": "LA0A5WSNR55R",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.814725,
+        "lng": 102.458084
+      },
+      "codeSeed": "LA-XV-8Z-014",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0015",
+      "agid": "LA0A5WSPBTFA",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.82448,
+        "lng": 102.470499
+      },
+      "codeSeed": "LA-KG-B9-015",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0016",
+      "agid": "LA0A5WR9DGWV",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.839079,
+        "lng": 102.486721
+      },
+      "codeSeed": "LA-Y2-MY-016",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0017",
+      "agid": "LA0A5WR97KY0",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.507596
+      },
+      "codeSeed": "LA-XV-TV-017",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0018",
+      "agid": "LA0A5WR78GY3",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.880026,
+        "lng": 102.529945
+      },
+      "codeSeed": "LA-KG-V5-018",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0019",
+      "agid": "LA0A5WR4DATT",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.900141,
+        "lng": 102.547051
+      },
+      "codeSeed": "LA-Y2-KD-019",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0020",
+      "agid": "LA0A5WR4ET0S",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.913581,
+        "lng": 102.556309
+      },
+      "codeSeed": "LA-XV-X5-020",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0021",
+      "agid": "LA0A5WR4F9WK",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.9183,
+        "lng": 102.556309
+      },
+      "codeSeed": "LA-KG-88-021",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0022",
+      "agid": "LA0A5WR4E4TK",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.913581,
+        "lng": 102.547051
+      },
+      "codeSeed": "LA-Y2-R8-022",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0023",
+      "agid": "LA0A5WR7B59W",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.900141,
+        "lng": 102.529945
+      },
+      "codeSeed": "LA-XV-8Z-023",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0024",
+      "agid": "LA0A5WR6TTQ5",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.880026,
+        "lng": 102.507596
+      },
+      "codeSeed": "LA-KG-B9-024",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0025",
+      "agid": "LA0A5WR9AWW5",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.483404
+      },
+      "codeSeed": "LA-Y2-MY-025",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0026",
+      "agid": "LA0A5WSPF80G",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.832574,
+        "lng": 102.461055
+      },
+      "codeSeed": "LA-XV-TV-026",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0027",
+      "agid": "LA0A5WSNYXJ8",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.812459,
+        "lng": 102.443949
+      },
+      "codeSeed": "LA-KG-V5-027",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0028",
+      "agid": "LA0A5WSMR3H6",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.799019,
+        "lng": 102.434691
+      },
+      "codeSeed": "LA-Y2-KD-028",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0029",
+      "agid": "LA0A5WSMRC96",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.7943,
+        "lng": 102.434691
+      },
+      "codeSeed": "LA-XV-X5-029",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0030",
+      "agid": "LA0A5WSNWSJ7",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.799019,
+        "lng": 102.443949
+      },
+      "codeSeed": "LA-KG-88-030",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0031",
+      "agid": "LA0A5WSNQEAB",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.812459,
+        "lng": 102.461055
+      },
+      "codeSeed": "LA-Y2-R8-031",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0032",
+      "agid": "LA0A5WR9K310",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.832574,
+        "lng": 102.483404
+      },
+      "codeSeed": "LA-XV-8Z-032",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0033",
+      "agid": "LA0A5WR97817",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.510912
+      },
+      "codeSeed": "LA-KG-B9-033",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0034",
+      "agid": "LA0A5WR7EJAZ",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.886532,
+        "lng": 102.53939
+      },
+      "codeSeed": "LA-Y2-MY-034",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0035",
+      "agid": "LA0A5WR4929A",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.912161,
+        "lng": 102.561186
+      },
+      "codeSeed": "LA-XV-TV-035",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0036",
+      "agid": "LA0A5WR3XTV0",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.929286,
+        "lng": 102.572982
+      },
+      "codeSeed": "LA-KG-V5-036",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0037",
+      "agid": "LA0A5WR3ZNK3",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.9353,
+        "lng": 102.572982
+      },
+      "codeSeed": "LA-Y2-KD-037",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0038",
+      "agid": "LA0A5WR46RNZ",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.929286,
+        "lng": 102.561186
+      },
+      "codeSeed": "LA-XV-X5-038",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0039",
+      "agid": "LA0A5WR4HDZ0",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.912161,
+        "lng": 102.53939
+      },
+      "codeSeed": "LA-KG-88-039",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0040",
+      "agid": "LA0A5WR64CWY",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.886532,
+        "lng": 102.510912
+      },
+      "codeSeed": "LA-Y2-R8-040",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0041",
+      "agid": "LA0A5WSPN5HH",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.480088
+      },
+      "codeSeed": "LA-XV-8Z-041",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0042",
+      "agid": "LA0A5WSP6WK6",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.826068,
+        "lng": 102.45161
+      },
+      "codeSeed": "LA-KG-B9-042",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0043",
+      "agid": "LA0A5WSMQFDF",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.800439,
+        "lng": 102.429814
+      },
+      "codeSeed": "LA-Y2-MY-043",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0044",
+      "agid": "LA0A5WSMX38M",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.783314,
+        "lng": 102.418018
+      },
+      "codeSeed": "LA-XV-TV-044",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0045",
+      "agid": "LA0A5WS17J60",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.7773,
+        "lng": 102.418018
+      },
+      "codeSeed": "LA-KG-V5-045",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0046",
+      "agid": "LA0A5WSMYAYB",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.783314,
+        "lng": 102.429814
+      },
+      "codeSeed": "LA-Y2-KD-046",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0047",
+      "agid": "LA0A5WSNV7K6",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.800439,
+        "lng": 102.45161
+      },
+      "codeSeed": "LA-XV-X5-047",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0048",
+      "agid": "LA0A5WSPB99F",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.826068,
+        "lng": 102.480088
+      },
+      "codeSeed": "LA-KG-88-048",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0049",
+      "agid": "LA0A5WR90PTB",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.514229
+      },
+      "codeSeed": "LA-Y2-R8-049",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0050",
+      "agid": "LA0A5WR7JCWQ",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.893038,
+        "lng": 102.548835
+      },
+      "codeSeed": "LA-XV-8Z-050",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0051",
+      "agid": "LA0A5WR3WYZJ",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.924182,
+        "lng": 102.575321
+      },
+      "codeSeed": "LA-KG-B9-051",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0052",
+      "agid": "LA0A5WQYQFWT",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.944992,
+        "lng": 102.589655
+      },
+      "codeSeed": "LA-Y2-MY-052",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0053",
+      "agid": "LA0A5WQYGM5C",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.9523,
+        "lng": 102.589655
+      },
+      "codeSeed": "LA-XV-TV-053",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0054",
+      "agid": "LA0A5WQYNP7M",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.944992,
+        "lng": 102.575321
+      },
+      "codeSeed": "LA-KG-V5-054",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0055",
+      "agid": "LA0A5WR457Q8",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.924182,
+        "lng": 102.548835
+      },
+      "codeSeed": "LA-Y2-KD-055",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0056",
+      "agid": "LA0A5WR61951",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.893038,
+        "lng": 102.514229
+      },
+      "codeSeed": "LA-XV-X5-056",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0057",
+      "agid": "LA0A5WSPN3HK",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.476771
+      },
+      "codeSeed": "LA-KG-88-057",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0058",
+      "agid": "LA0A5WSNZF2A",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.819562,
+        "lng": 102.442165
+      },
+      "codeSeed": "LA-Y2-R8-058",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0059",
+      "agid": "LA0A5WSMWP13",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.788418,
+        "lng": 102.415679
+      },
+      "codeSeed": "LA-XV-8Z-059",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0060",
+      "agid": "LA0A5WS1C2F4",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.767608,
+        "lng": 102.401345
+      },
+      "codeSeed": "LA-KG-B9-060",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0061",
+      "agid": "LA0A5WS1DXGT",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.7603,
+        "lng": 102.401345
+      },
+      "codeSeed": "LA-Y2-MY-061",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0062",
+      "agid": "LA0A5WS15ZDJ",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.767608,
+        "lng": 102.415679
+      },
+      "codeSeed": "LA-XV-TV-062",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0063",
+      "agid": "LA0A5WSN3TKF",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.788418,
+        "lng": 102.442165
+      },
+      "codeSeed": "LA-KG-V5-063",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0064",
+      "agid": "LA0A5WSPAJ3R",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.819562,
+        "lng": 102.476771
+      },
+      "codeSeed": "LA-Y2-KD-064",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0065",
+      "agid": "LA0A5WR90J7Y",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.517545
+      },
+      "codeSeed": "LA-XV-X5-065",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0066",
+      "agid": "LA0A5WR4BA3H",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.899543,
+        "lng": 102.558279
+      },
+      "codeSeed": "LA-KG-88-066",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0067",
+      "agid": "LA0A5WR3R4EA",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.936203,
+        "lng": 102.589456
+      },
+      "codeSeed": "LA-Y2-R8-067",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0068",
+      "agid": "LA0A5WQY354B",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.960698,
+        "lng": 102.606329
+      },
+      "codeSeed": "LA-XV-8Z-068",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0069",
+      "agid": "LA0A5WQY3T9S",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.9693,
+        "lng": 102.606329
+      },
+      "codeSeed": "LA-KG-B9-069",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0070",
+      "agid": "LA0A5WQYG094",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.960698,
+        "lng": 102.589456
+      },
+      "codeSeed": "LA-Y2-MY-070",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0071",
+      "agid": "LA0A5WR41F2D",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.936203,
+        "lng": 102.558279
+      },
+      "codeSeed": "LA-XV-TV-071",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0072",
+      "agid": "LA0A5WR60J7G",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.899543,
+        "lng": 102.517545
+      },
+      "codeSeed": "LA-KG-V5-072",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0073",
+      "agid": "LA0A5WSPNPA5",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.473455
+      },
+      "codeSeed": "LA-Y2-KD-073",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0074",
+      "agid": "LA0A5WSMNQ1Y",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.813057,
+        "lng": 102.432721
+      },
+      "codeSeed": "LA-XV-X5-074",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0075",
+      "agid": "LA0A5WS1A78N",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.776397,
+        "lng": 102.401544
+      },
+      "codeSeed": "LA-KG-88-075",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0076",
+      "agid": "LA0A5WSEC819",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.751902,
+        "lng": 102.384671
+      },
+      "codeSeed": "LA-Y2-R8-076",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0077",
+      "agid": "LA0A5WSEA9BY",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.7433,
+        "lng": 102.384671
+      },
+      "codeSeed": "LA-XV-8Z-077",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0078",
+      "agid": "LA0A5WS1KSX6",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.751902,
+        "lng": 102.401544
+      },
+      "codeSeed": "LA-KG-B9-078",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0079",
+      "agid": "LA0A5WS10DYT",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.776397,
+        "lng": 102.432721
+      },
+      "codeSeed": "LA-Y2-MY-079",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0080",
+      "agid": "LA0A5WSNNPA9",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.813057,
+        "lng": 102.473455
+      },
+      "codeSeed": "LA-XV-TV-080",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0081",
+      "agid": "LA0A5WR90DT7",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.520862
+      },
+      "codeSeed": "LA-KG-V5-081",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0082",
+      "agid": "LA0A5WR4A1DD",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.906049,
+        "lng": 102.567724
+      },
+      "codeSeed": "LA-Y2-KD-082",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0083",
+      "agid": "LA0A5WQYYMEG",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.948224,
+        "lng": 102.603591
+      },
+      "codeSeed": "LA-XV-X5-083",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0084",
+      "agid": "LA0A5WQZBCBW",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.976404,
+        "lng": 102.623002
+      },
+      "codeSeed": "LA-KG-88-084",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0085",
+      "agid": "LA0A5WQWMF38",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.9863,
+        "lng": 102.623002
+      },
+      "codeSeed": "LA-Y2-R8-085",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0086",
+      "agid": "LA0A5WQY0VWB",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.976404,
+        "lng": 102.603591
+      },
+      "codeSeed": "LA-XV-8Z-086",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0087",
+      "agid": "LA0A5WQHB6FK",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.948224,
+        "lng": 102.567724
+      },
+      "codeSeed": "LA-KG-B9-087",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0088",
+      "agid": "LA0A5WR5ZPFP",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.906049,
+        "lng": 102.520862
+      },
+      "codeSeed": "LA-Y2-MY-088",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0089",
+      "agid": "LA0A5WSPNTJM",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.470138
+      },
+      "codeSeed": "LA-XV-TV-089",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0090",
+      "agid": "LA0A5WSMH4EH",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.806551,
+        "lng": 102.423276
+      },
+      "codeSeed": "LA-KG-V5-090",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0091",
+      "agid": "LA0A5WSEJZWK",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.764376,
+        "lng": 102.387409
+      },
+      "codeSeed": "LA-Y2-KD-091",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0092",
+      "agid": "LA0A5WSDR7XP",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.736196,
+        "lng": 102.367998
+      },
+      "codeSeed": "LA-XV-X5-092",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0093",
+      "agid": "LA0A5WSDT2PA",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.7263,
+        "lng": 102.367998
+      },
+      "codeSeed": "LA-KG-88-093",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0094",
+      "agid": "LA0A5WSDNESC",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.736196,
+        "lng": 102.387409
+      },
+      "codeSeed": "LA-Y2-R8-094",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0095",
+      "agid": "LA0A5WS14D5K",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.764376,
+        "lng": 102.423276
+      },
+      "codeSeed": "LA-XV-8Z-095",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0096",
+      "agid": "LA0A5WSNKZJE",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.806551,
+        "lng": 102.470138
+      },
+      "codeSeed": "LA-KG-B9-096",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0097",
+      "agid": "LA0A5WR903MY",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.524178
+      },
+      "codeSeed": "LA-Y2-MY-097",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0098",
+      "agid": "LA0A5WR33K52",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.912554,
+        "lng": 102.577169
+      },
+      "codeSeed": "LA-XV-TV-098",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0099",
+      "agid": "LA0A5WQZ8FN8",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.960245,
+        "lng": 102.617726
+      },
+      "codeSeed": "LA-KG-V5-099",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0100",
+      "agid": "LA0A5WQWEC0S",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.99211,
+        "lng": 102.639675
+      },
+      "codeSeed": "LA-Y2-KD-100",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0101",
+      "agid": "LA0A5WQW51AX",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.0033,
+        "lng": 102.639675
+      },
+      "codeSeed": "LA-XV-X5-101",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0102",
+      "agid": "LA0A5WQWPFQR",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.99211,
+        "lng": 102.617726
+      },
+      "codeSeed": "LA-KG-88-102",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0103",
+      "agid": "LA0A5WQYJ28R",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.960245,
+        "lng": 102.577169
+      },
+      "codeSeed": "LA-Y2-R8-103",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0104",
+      "agid": "LA0A5WR5XZ31",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.912554,
+        "lng": 102.524178
+      },
+      "codeSeed": "LA-XV-8Z-104",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0105",
+      "agid": "LA0A5WSPPHAW",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.466822
+      },
+      "codeSeed": "LA-KG-B9-105",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0106",
+      "agid": "LA0A5WSM5A5F",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.800046,
+        "lng": 102.413831
+      },
+      "codeSeed": "LA-Y2-MY-106",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0107",
+      "agid": "LA0A5WSEF807",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.752355,
+        "lng": 102.373274
+      },
+      "codeSeed": "LA-XV-TV-107",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0108",
+      "agid": "LA0A5WSDX8Y7",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.72049,
+        "lng": 102.351325
+      },
+      "codeSeed": "LA-KG-V5-108",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0109",
+      "agid": "LA0A5WSD2306",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.7093,
+        "lng": 102.351325
+      },
+      "codeSeed": "LA-Y2-KD-109",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0110",
+      "agid": "LA0A5WSDGD9X",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.72049,
+        "lng": 102.373274
+      },
+      "codeSeed": "LA-XV-X5-110",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0111",
+      "agid": "LA0A5WS1GFQY",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.752355,
+        "lng": 102.413831
+      },
+      "codeSeed": "LA-KG-88-111",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0112",
+      "agid": "LA0A5WSNHJNQ",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.800046,
+        "lng": 102.466822
+      },
+      "codeSeed": "LA-Y2-R8-112",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0113",
+      "agid": "LA0A5WR8ZVMK",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.527495
+      },
+      "codeSeed": "LA-XV-8Z-113",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0114",
+      "agid": "LA0A5WR3TSVY",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.91906,
+        "lng": 102.586614
+      },
+      "codeSeed": "LA-KG-B9-114",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0115",
+      "agid": "LA0A5WQZDJSG",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.972266,
+        "lng": 102.631861
+      },
+      "codeSeed": "LA-Y2-MY-115",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0116",
+      "agid": "LA0A5XXBXYPD",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.007816,
+        "lng": 102.656349
+      },
+      "codeSeed": "LA-XV-TV-116",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0117",
+      "agid": "LA0A5XXBZZR8",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.0203,
+        "lng": 102.656349
+      },
+      "codeSeed": "LA-KG-V5-117",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0118",
+      "agid": "LA0A5WQWV4BA",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.007816,
+        "lng": 102.631861
+      },
+      "codeSeed": "LA-Y2-KD-118",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0119",
+      "agid": "LA0A5WQY8SKX",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.972266,
+        "lng": 102.586614
+      },
+      "codeSeed": "LA-XV-X5-119",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0120",
+      "agid": "LA0A5WR4QQWG",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.91906,
+        "lng": 102.527495
+      },
+      "codeSeed": "LA-KG-88-120",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0121",
+      "agid": "LA0A5WSPQ04C",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.463505
+      },
+      "codeSeed": "LA-Y2-R8-121",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0122",
+      "agid": "LA0A5WSM4489",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.79354,
+        "lng": 102.404386
+      },
+      "codeSeed": "LA-XV-8Z-122",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0123",
+      "agid": "LA0A5WSE0NEV",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.740334,
+        "lng": 102.359139
+      },
+      "codeSeed": "LA-KG-B9-123",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0124",
+      "agid": "LA0A5WSCW96X",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.704784,
+        "lng": 102.334651
+      },
+      "codeSeed": "LA-Y2-MY-124",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0125",
+      "agid": "LA0A5WSBPYDQ",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.6923,
+        "lng": 102.334651
+      },
+      "codeSeed": "LA-XV-TV-125",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0126",
+      "agid": "LA0A5WSD16P9",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.704784,
+        "lng": 102.359139
+      },
+      "codeSeed": "LA-KG-V5-126",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0127",
+      "agid": "LA0A5WS1PE4Z",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.740334,
+        "lng": 102.404386
+      },
+      "codeSeed": "LA-Y2-KD-127",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0128",
+      "agid": "LA0A5WSNFP93",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.79354,
+        "lng": 102.463505
+      },
+      "codeSeed": "LA-XV-X5-128",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0129",
+      "agid": "LA0A5WR8Y5SC",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.530811
+      },
+      "codeSeed": "LA-KG-88-129",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0130",
+      "agid": "LA0A5WR3H40X",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.925566,
+        "lng": 102.596058
+      },
+      "codeSeed": "LA-Y2-R8-130",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0131",
+      "agid": "LA0A5WQWBGF8",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.984286,
+        "lng": 102.645996
+      },
+      "codeSeed": "LA-XV-8Z-131",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0132",
+      "agid": "LA0A5XXC2YYH",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.023522,
+        "lng": 102.673022
+      },
+      "codeSeed": "LA-KG-B9-132",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0133",
+      "agid": "LA0A5XXC511J",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.0373,
+        "lng": 102.673022
+      },
+      "codeSeed": "LA-Y2-MY-133",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0134",
+      "agid": "LA0A5WQVZ9TH",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.023522,
+        "lng": 102.645996
+      },
+      "codeSeed": "LA-XV-TV-134",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0135",
+      "agid": "LA0A5WQXRH93",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.984286,
+        "lng": 102.596058
+      },
+      "codeSeed": "LA-KG-V5-135",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0136",
+      "agid": "LA0A5WR4SP4Y",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.925566,
+        "lng": 102.530811
+      },
+      "codeSeed": "LA-Y2-KD-136",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0137",
+      "agid": "LA0A5WSPQEWM",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.460189
+      },
+      "codeSeed": "LA-XV-X5-137",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0138",
+      "agid": "LA0A5WSM0HPN",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.787034,
+        "lng": 102.394942
+      },
+      "codeSeed": "LA-KG-88-138",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0139",
+      "agid": "LA0A5WSCPDVN",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.728314,
+        "lng": 102.345004
+      },
+      "codeSeed": "LA-Y2-R8-139",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0140",
+      "agid": "LA0A5WSBSBW8",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.689078,
+        "lng": 102.317978
+      },
+      "codeSeed": "LA-XV-8Z-140",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0141",
+      "agid": "LA0A5WSB4JP7",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.6753,
+        "lng": 102.317978
+      },
+      "codeSeed": "LA-KG-B9-141",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0142",
+      "agid": "LA0A5WSBMJF1",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.689078,
+        "lng": 102.345004
+      },
+      "codeSeed": "LA-Y2-MY-142",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0143",
+      "agid": "LA0A5WS2B8C0",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.728314,
+        "lng": 102.394942
+      },
+      "codeSeed": "LA-XV-TV-143",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0144",
+      "agid": "LA0A5WSNF9ME",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.787034,
+        "lng": 102.460189
+      },
+      "codeSeed": "LA-KG-V5-144",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0145",
+      "agid": "LA0A5WR8Y0JX",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.534128
+      },
+      "codeSeed": "LA-Y2-KD-145",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0146",
+      "agid": "LA0A5WR3MA7K",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.932071,
+        "lng": 102.605503
+      },
+      "codeSeed": "LA-XV-X5-146",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0147",
+      "agid": "LA0A5XXB2X0K",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.996307,
+        "lng": 102.660131
+      },
+      "codeSeed": "LA-KG-88-147",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0148",
+      "agid": "LA0A5XXCSZ4Z",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.039228,
+        "lng": 102.689695
+      },
+      "codeSeed": "LA-Y2-R8-148",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0149",
+      "agid": "LA0A5XXCMETB",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.0543,
+        "lng": 102.689695
+      },
+      "codeSeed": "LA-XV-8Z-149",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0150",
+      "agid": "LA0A5XXC7Q12",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.039228,
+        "lng": 102.660131
+      },
+      "codeSeed": "LA-KG-B9-150",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0151",
+      "agid": "LA0A5WQXWA02",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.996307,
+        "lng": 102.605503
+      },
+      "codeSeed": "LA-Y2-MY-151",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0152",
+      "agid": "LA0A5WR4SA89",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.932071,
+        "lng": 102.534128
+      },
+      "codeSeed": "LA-XV-TV-152",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0153",
+      "agid": "LA0A5WSPSSS1",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.456872
+      },
+      "codeSeed": "LA-KG-V5-153",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0154",
+      "agid": "LA0A5WSENHWR",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.780529,
+        "lng": 102.385497
+      },
+      "codeSeed": "LA-Y2-KD-154",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0155",
+      "agid": "LA0A5WSCTY04",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.716293,
+        "lng": 102.330869
+      },
+      "codeSeed": "LA-XV-X5-155",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0156",
+      "agid": "LA0A5WVW9PHR",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.673372,
+        "lng": 102.301305
+      },
+      "codeSeed": "LA-KG-88-156",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0157",
+      "agid": "LA0A5WVWAS5B",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.6583,
+        "lng": 102.301305
+      },
+      "codeSeed": "LA-Y2-R8-157",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0158",
+      "agid": "LA0A5WSBFP1J",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.673372,
+        "lng": 102.330869
+      },
+      "codeSeed": "LA-XV-8Z-158",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0159",
+      "agid": "LA0A5WSDDH12",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.716293,
+        "lng": 102.385497
+      },
+      "codeSeed": "LA-KG-B9-159",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0160",
+      "agid": "LA0A5WSN7SYX",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.780529,
+        "lng": 102.456872
+      },
+      "codeSeed": "LA-Y2-MY-160",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0161",
+      "agid": "LA0A5WR8XYTK",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.537444
+      },
+      "codeSeed": "LA-XV-TV-161",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0162",
+      "agid": "LA0A5WQZ0324",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.938577,
+        "lng": 102.614948
+      },
+      "codeSeed": "LA-KG-V5-162",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0163",
+      "agid": "LA0A5XXBT4RZ",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.008328,
+        "lng": 102.674266
+      },
+      "codeSeed": "LA-Y2-KD-163",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0164",
+      "agid": "LA0A5XXDYZR3",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.054934,
+        "lng": 102.706369
+      },
+      "codeSeed": "LA-XV-X5-164",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0165",
+      "agid": "LA0A5XXE3TQG",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.0713,
+        "lng": 102.706369
+      },
+      "codeSeed": "LA-KG-88-165",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0166",
+      "agid": "LA0A5XXCDQ0T",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.054934,
+        "lng": 102.674266
+      },
+      "codeSeed": "LA-Y2-R8-166",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0167",
+      "agid": "LA0A5WQWRHDC",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.008328,
+        "lng": 102.614948
+      },
+      "codeSeed": "LA-XV-8Z-167",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0168",
+      "agid": "LA0A5WR4XSTT",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.938577,
+        "lng": 102.537444
+      },
+      "codeSeed": "LA-KG-B9-168",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0169",
+      "agid": "LA0A5WSPSN31",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.453556
+      },
+      "codeSeed": "LA-Y2-MY-169",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0170",
+      "agid": "LA0A5WSEQ3ZE",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.774023,
+        "lng": 102.376052
+      },
+      "codeSeed": "LA-XV-TV-170",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0171",
+      "agid": "LA0A5WSC25SF",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.704272,
+        "lng": 102.316734
+      },
+      "codeSeed": "LA-KG-V5-171",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0172",
+      "agid": "LA0A5WVZJP31",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.657666,
+        "lng": 102.284631
+      },
+      "codeSeed": "LA-Y2-KD-172",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0173",
+      "agid": "LA0A5WVZG62H",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.6413,
+        "lng": 102.284631
+      },
+      "codeSeed": "LA-XV-X5-173",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0174",
+      "agid": "LA0A5WSB7A16",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.657666,
+        "lng": 102.316734
+      },
+      "codeSeed": "LA-KG-88-174",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0175",
+      "agid": "LA0A5WSD8VXD",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.704272,
+        "lng": 102.376052
+      },
+      "codeSeed": "LA-Y2-R8-175",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0176",
+      "agid": "LA0A5WS0XEJ9",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.774023,
+        "lng": 102.453556
+      },
+      "codeSeed": "LA-XV-8Z-176",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0177",
+      "agid": "LA0A5WR8XG0T",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.540761
+      },
+      "codeSeed": "LA-KG-B9-177",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0178",
+      "agid": "LA0A5WQZ3WY2",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.945083,
+        "lng": 102.624392
+      },
+      "codeSeed": "LA-Y2-MY-178",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0179",
+      "agid": "LA0A5XXCXWHQ",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.020349,
+        "lng": 102.688401
+      },
+      "codeSeed": "LA-XV-TV-179",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0180",
+      "agid": "LA0A5XXEFA5G",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.07064,
+        "lng": 102.723042
+      },
+      "codeSeed": "LA-KG-V5-180",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0181",
+      "agid": "LA0A5XXEGK5N",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.0883,
+        "lng": 102.723042
+      },
+      "codeSeed": "LA-Y2-KD-181",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0182",
+      "agid": "LA0A5XXFC1V3",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.07064,
+        "lng": 102.688401
+      },
+      "codeSeed": "LA-XV-X5-182",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0183",
+      "agid": "LA0A5WQWXVNS",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.020349,
+        "lng": 102.624392
+      },
+      "codeSeed": "LA-KG-88-183",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0184",
+      "agid": "LA0A5WQH7EQN",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.945083,
+        "lng": 102.540761
+      },
+      "codeSeed": "LA-Y2-R8-184",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0185",
+      "agid": "LA0A5WSPS4AN",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.450239
+      },
+      "codeSeed": "LA-XV-8Z-185",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0186",
+      "agid": "LA0A5WSETBA8",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.767517,
+        "lng": 102.366608
+      },
+      "codeSeed": "LA-KG-B9-186",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0187",
+      "agid": "LA0A5WVW0QT0",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.692251,
+        "lng": 102.302599
+      },
+      "codeSeed": "LA-Y2-MY-187",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0188",
+      "agid": "LA0A5WVZ8XVV",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.64196,
+        "lng": 102.267958
+      },
+      "codeSeed": "LA-XV-TV-188",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0189",
+      "agid": "LA0A5WVZ12VF",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.6243,
+        "lng": 102.267958
+      },
+      "codeSeed": "LA-KG-V5-189",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0190",
+      "agid": "LA0A5WVZP6G3",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.64196,
+        "lng": 102.302599
+      },
+      "codeSeed": "LA-Y2-KD-190",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0191",
+      "agid": "LA0A5WS888N6",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.692251,
+        "lng": 102.366608
+      },
+      "codeSeed": "LA-XV-X5-191",
+      "routeBucket": "LA-route-11",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0192",
+      "agid": "LA0A5WS0W2B6",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.767517,
+        "lng": 102.450239
+      },
+      "codeSeed": "LA-KG-88-192",
+      "routeBucket": "LA-route-12",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0193",
+      "agid": "LA0A5WR8XBXJ",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.544077
+      },
+      "codeSeed": "LA-Y2-R8-193",
+      "routeBucket": "LA-route-01",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0194",
+      "agid": "LA0A5WQZ4TEB",
+      "localityId": "LA-M2-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.951588,
+        "lng": 102.633837
+      },
+      "codeSeed": "LA-XV-8Z-194",
+      "routeBucket": "LA-route-02",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0195",
+      "agid": "LA0A5XXD2CRM",
+      "localityId": "LA-M2-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.03237,
+        "lng": 102.702536
+      },
+      "codeSeed": "LA-KG-B9-195",
+      "routeBucket": "LA-route-03",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0196",
+      "agid": "LA0A5XXEK1YE",
+      "localityId": "LA-M3-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.086346,
+        "lng": 102.739716
+      },
+      "codeSeed": "LA-Y2-MY-196",
+      "routeBucket": "LA-route-04",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0197",
+      "agid": "LA0A5XXKZNYG",
+      "localityId": "LA-M3-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 20.1053,
+        "lng": 102.739716
+      },
+      "codeSeed": "LA-XV-TV-197",
+      "routeBucket": "LA-route-05",
+      "areaClass": "remote",
+      "publicPrecision": "municipality",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0198",
+      "agid": "LA0A5XXEXE9X",
+      "localityId": "LA-M3-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 20.086346,
+        "lng": 102.702536
+      },
+      "codeSeed": "LA-KG-V5-198",
+      "routeBucket": "LA-route-06",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0199",
+      "agid": "LA0A5WQVQAVQ",
+      "localityId": "LA-M1-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 20.03237,
+        "lng": 102.633837
+      },
+      "codeSeed": "LA-Y2-KD-199",
+      "routeBucket": "LA-route-07",
+      "areaClass": "rural",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0200",
+      "agid": "LA0A5WQH62EB",
+      "localityId": "LA-M1-T2",
+      "vplId": "la-vpl-2",
+      "centroid": {
+        "lat": 19.951588,
+        "lng": 102.544077
+      },
+      "codeSeed": "LA-XV-X5-200",
+      "routeBucket": "LA-route-08",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0201",
+      "agid": "LA0A5WSPYSQ2",
+      "localityId": "LA-M1-T3",
+      "vplId": "la-vpl-3",
+      "centroid": {
+        "lat": 19.8563,
+        "lng": 102.446923
+      },
+      "codeSeed": "LA-KG-88-201",
+      "routeBucket": "LA-route-09",
+      "areaClass": "remote",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    },
+    {
+      "cellId": "la-planning-cell-0202",
+      "agid": "LA0A5WSE398M",
+      "localityId": "LA-M2-T1",
+      "vplId": "la-vpl-1",
+      "centroid": {
+        "lat": 19.761012,
+        "lng": 102.357163
+      },
+      "codeSeed": "LA-Y2-R8-202",
+      "routeBucket": "LA-route-10",
+      "areaClass": "peri-urban",
+      "publicPrecision": "town",
+      "sourceId": "agid-synthetic-country-pack-fixtures",
+      "noRawAddress": true
+    }
+  ],
+  "routeEvidenceIndex": [
+    {
+      "routeId": "la-route-evidence-001",
+      "label": "LA corridor evidence slot 1",
+      "fromLocalityId": "LA-M1-T1",
+      "toLocalityId": "LA-M1-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/001",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-002",
+      "label": "LA road evidence slot 2",
+      "fromLocalityId": "LA-M1-T2",
+      "toLocalityId": "LA-M1-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/002",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-003",
+      "label": "LA road evidence slot 3",
+      "fromLocalityId": "LA-M1-T3",
+      "toLocalityId": "LA-M3-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/003",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-004",
+      "label": "LA corridor evidence slot 4",
+      "fromLocalityId": "LA-M2-T1",
+      "toLocalityId": "LA-M2-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/004",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-005",
+      "label": "LA road evidence slot 5",
+      "fromLocalityId": "LA-M2-T2",
+      "toLocalityId": "LA-M2-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/005",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-006",
+      "label": "LA road evidence slot 6",
+      "fromLocalityId": "LA-M2-T3",
+      "toLocalityId": "LA-M1-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/006",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-007",
+      "label": "LA corridor evidence slot 7",
+      "fromLocalityId": "LA-M3-T1",
+      "toLocalityId": "LA-M3-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/007",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-008",
+      "label": "LA road evidence slot 8",
+      "fromLocalityId": "LA-M3-T2",
+      "toLocalityId": "LA-M3-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/008",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-009",
+      "label": "LA road evidence slot 9",
+      "fromLocalityId": "LA-M3-T3",
+      "toLocalityId": "LA-M2-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/009",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-010",
+      "label": "LA corridor evidence slot 10",
+      "fromLocalityId": "LA-M1-T1",
+      "toLocalityId": "LA-M1-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/010",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-011",
+      "label": "LA road evidence slot 11",
+      "fromLocalityId": "LA-M1-T2",
+      "toLocalityId": "LA-M1-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/011",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-012",
+      "label": "LA road evidence slot 12",
+      "fromLocalityId": "LA-M1-T3",
+      "toLocalityId": "LA-M3-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/012",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-013",
+      "label": "LA corridor evidence slot 13",
+      "fromLocalityId": "LA-M2-T1",
+      "toLocalityId": "LA-M2-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/013",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-014",
+      "label": "LA road evidence slot 14",
+      "fromLocalityId": "LA-M2-T2",
+      "toLocalityId": "LA-M2-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/014",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-015",
+      "label": "LA road evidence slot 15",
+      "fromLocalityId": "LA-M2-T3",
+      "toLocalityId": "LA-M1-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/015",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-016",
+      "label": "LA corridor evidence slot 16",
+      "fromLocalityId": "LA-M3-T1",
+      "toLocalityId": "LA-M3-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/016",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-017",
+      "label": "LA road evidence slot 17",
+      "fromLocalityId": "LA-M3-T2",
+      "toLocalityId": "LA-M3-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/017",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-018",
+      "label": "LA road evidence slot 18",
+      "fromLocalityId": "LA-M3-T3",
+      "toLocalityId": "LA-M2-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/018",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-019",
+      "label": "LA corridor evidence slot 19",
+      "fromLocalityId": "LA-M1-T1",
+      "toLocalityId": "LA-M1-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/019",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-020",
+      "label": "LA road evidence slot 20",
+      "fromLocalityId": "LA-M1-T2",
+      "toLocalityId": "LA-M1-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/020",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-021",
+      "label": "LA road evidence slot 21",
+      "fromLocalityId": "LA-M1-T3",
+      "toLocalityId": "LA-M3-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/021",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-022",
+      "label": "LA corridor evidence slot 22",
+      "fromLocalityId": "LA-M2-T1",
+      "toLocalityId": "LA-M2-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/022",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-023",
+      "label": "LA road evidence slot 23",
+      "fromLocalityId": "LA-M2-T2",
+      "toLocalityId": "LA-M2-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/023",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-024",
+      "label": "LA road evidence slot 24",
+      "fromLocalityId": "LA-M2-T3",
+      "toLocalityId": "LA-M1-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/024",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-025",
+      "label": "LA corridor evidence slot 25",
+      "fromLocalityId": "LA-M3-T1",
+      "toLocalityId": "LA-M3-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/025",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-026",
+      "label": "LA road evidence slot 26",
+      "fromLocalityId": "LA-M3-T2",
+      "toLocalityId": "LA-M3-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/026",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-027",
+      "label": "LA road evidence slot 27",
+      "fromLocalityId": "LA-M3-T3",
+      "toLocalityId": "LA-M2-T2",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/027",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-028",
+      "label": "LA corridor evidence slot 28",
+      "fromLocalityId": "LA-M1-T1",
+      "toLocalityId": "LA-M1-T3",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/028",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-029",
+      "label": "LA road evidence slot 29",
+      "fromLocalityId": "LA-M1-T2",
+      "toLocalityId": "LA-M2-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/029",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-030",
+      "label": "LA road evidence slot 30",
+      "fromLocalityId": "LA-M1-T3",
+      "toLocalityId": "LA-M2-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/030",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-031",
+      "label": "LA corridor evidence slot 31",
+      "fromLocalityId": "LA-M2-T1",
+      "toLocalityId": "LA-M1-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/031",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-032",
+      "label": "LA road evidence slot 32",
+      "fromLocalityId": "LA-M2-T2",
+      "toLocalityId": "LA-M3-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/032",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-033",
+      "label": "LA road evidence slot 33",
+      "fromLocalityId": "LA-M2-T3",
+      "toLocalityId": "LA-M3-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/033",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-034",
+      "label": "LA corridor evidence slot 34",
+      "fromLocalityId": "LA-M3-T1",
+      "toLocalityId": "LA-M2-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/034",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-035",
+      "label": "LA road evidence slot 35",
+      "fromLocalityId": "LA-M3-T2",
+      "toLocalityId": "LA-M1-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/035",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-036",
+      "label": "LA road evidence slot 36",
+      "fromLocalityId": "LA-M3-T3",
+      "toLocalityId": "LA-M1-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/036",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-037",
+      "label": "LA corridor evidence slot 37",
+      "fromLocalityId": "LA-M1-T1",
+      "toLocalityId": "LA-M3-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/037",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-038",
+      "label": "LA road evidence slot 38",
+      "fromLocalityId": "LA-M1-T2",
+      "toLocalityId": "LA-M2-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/038",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-039",
+      "label": "LA road evidence slot 39",
+      "fromLocalityId": "LA-M1-T3",
+      "toLocalityId": "LA-M2-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/039",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-040",
+      "label": "LA corridor evidence slot 40",
+      "fromLocalityId": "LA-M2-T1",
+      "toLocalityId": "LA-M1-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/040",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-041",
+      "label": "LA road evidence slot 41",
+      "fromLocalityId": "LA-M2-T2",
+      "toLocalityId": "LA-M3-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/041",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-042",
+      "label": "LA road evidence slot 42",
+      "fromLocalityId": "LA-M2-T3",
+      "toLocalityId": "LA-M3-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/042",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-043",
+      "label": "LA corridor evidence slot 43",
+      "fromLocalityId": "LA-M3-T1",
+      "toLocalityId": "LA-M2-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/043",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-044",
+      "label": "LA road evidence slot 44",
+      "fromLocalityId": "LA-M3-T2",
+      "toLocalityId": "LA-M1-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/044",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-045",
+      "label": "LA road evidence slot 45",
+      "fromLocalityId": "LA-M3-T3",
+      "toLocalityId": "LA-M1-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/045",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-046",
+      "label": "LA corridor evidence slot 46",
+      "fromLocalityId": "LA-M1-T1",
+      "toLocalityId": "LA-M3-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/046",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-047",
+      "label": "LA road evidence slot 47",
+      "fromLocalityId": "LA-M1-T2",
+      "toLocalityId": "LA-M2-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/047",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-048",
+      "label": "LA road evidence slot 48",
+      "fromLocalityId": "LA-M1-T3",
+      "toLocalityId": "LA-M2-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/048",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-049",
+      "label": "LA corridor evidence slot 49",
+      "fromLocalityId": "LA-M2-T1",
+      "toLocalityId": "LA-M1-T2",
+      "mode": "corridor",
+      "evidenceRef": "source-required://LA/route/049",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-050",
+      "label": "LA road evidence slot 50",
+      "fromLocalityId": "LA-M2-T2",
+      "toLocalityId": "LA-M3-T3",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/050",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    },
+    {
+      "routeId": "la-route-evidence-051",
+      "label": "LA road evidence slot 51",
+      "fromLocalityId": "LA-M2-T3",
+      "toLocalityId": "LA-M3-T1",
+      "mode": "road",
+      "evidenceRef": "source-required://LA/route/051",
+      "sourceId": "open-map-evidence-slot",
+      "status": "source-required",
+      "riskFlags": [
+        "confirm-road-passability",
+        "local-route-review"
+      ]
+    }
+  ],
+  "qualityEvidenceIndex": [
+    {
+      "evidenceId": "la-quality-country",
+      "subjectId": "LA",
+      "subjectType": "country",
+      "addressQuality": 0.48,
+      "boundaryQuality": 0.66,
+      "routeQuality": 0.55,
+      "populationQuality": 0.6,
+      "confidenceBand": "high",
+      "verificationRequired": true,
+      "notes": [
+        "country-level-quality-prior",
+        "not-a-claim-of-official-postal-completeness"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-la-m1",
+      "subjectId": "LA-M1",
+      "subjectType": "municipality",
+      "addressQuality": 0.46,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.54,
+      "populationQuality": 0.59,
+      "confidenceBand": "medium",
+      "verificationRequired": true,
+      "notes": [
+        "synthetic-planning-quality-slot",
+        "replace-with-reviewed-official-or-open-data-before-pilot"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-la-m2",
+      "subjectId": "LA-M2",
+      "subjectType": "municipality",
+      "addressQuality": 0.47,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.54,
+      "populationQuality": 0.59,
+      "confidenceBand": "medium",
+      "verificationRequired": true,
+      "notes": [
+        "synthetic-planning-quality-slot",
+        "replace-with-reviewed-official-or-open-data-before-pilot"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-la-m3",
+      "subjectId": "LA-M3",
+      "subjectType": "municipality",
+      "addressQuality": 0.47,
+      "boundaryQuality": 0.66,
+      "routeQuality": 0.55,
+      "populationQuality": 0.6,
+      "confidenceBand": "medium",
+      "verificationRequired": true,
+      "notes": [
+        "synthetic-planning-quality-slot",
+        "replace-with-reviewed-official-or-open-data-before-pilot"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-001",
+      "subjectId": "la-planning-cell-0001",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-002",
+      "subjectId": "la-planning-cell-0007",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-003",
+      "subjectId": "la-planning-cell-0013",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-004",
+      "subjectId": "la-planning-cell-0019",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-005",
+      "subjectId": "la-planning-cell-0025",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-006",
+      "subjectId": "la-planning-cell-0031",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-007",
+      "subjectId": "la-planning-cell-0037",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-008",
+      "subjectId": "la-planning-cell-0043",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-009",
+      "subjectId": "la-planning-cell-0049",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-010",
+      "subjectId": "la-planning-cell-0055",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-011",
+      "subjectId": "la-planning-cell-0061",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-012",
+      "subjectId": "la-planning-cell-0067",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-013",
+      "subjectId": "la-planning-cell-0073",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-014",
+      "subjectId": "la-planning-cell-0079",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-015",
+      "subjectId": "la-planning-cell-0085",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-016",
+      "subjectId": "la-planning-cell-0091",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-017",
+      "subjectId": "la-planning-cell-0097",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-018",
+      "subjectId": "la-planning-cell-0103",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-019",
+      "subjectId": "la-planning-cell-0109",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-020",
+      "subjectId": "la-planning-cell-0115",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-021",
+      "subjectId": "la-planning-cell-0121",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-022",
+      "subjectId": "la-planning-cell-0127",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-023",
+      "subjectId": "la-planning-cell-0133",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-024",
+      "subjectId": "la-planning-cell-0139",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-025",
+      "subjectId": "la-planning-cell-0145",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-026",
+      "subjectId": "la-planning-cell-0151",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-027",
+      "subjectId": "la-planning-cell-0157",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-028",
+      "subjectId": "la-planning-cell-0163",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-029",
+      "subjectId": "la-planning-cell-0169",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-030",
+      "subjectId": "la-planning-cell-0175",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-031",
+      "subjectId": "la-planning-cell-0181",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-032",
+      "subjectId": "la-planning-cell-0187",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-033",
+      "subjectId": "la-planning-cell-0193",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.36,
+      "boundaryQuality": 0.6,
+      "routeQuality": 0.43,
+      "populationQuality": 0.54,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:remote",
+        "no-personal-address-derived-score"
+      ]
+    },
+    {
+      "evidenceId": "la-quality-cell-034",
+      "subjectId": "la-planning-cell-0199",
+      "subjectType": "planning-cell",
+      "addressQuality": 0.45,
+      "boundaryQuality": 0.65,
+      "routeQuality": 0.52,
+      "populationQuality": 0.58,
+      "confidenceBand": "low",
+      "verificationRequired": true,
+      "notes": [
+        "area-class:rural",
+        "no-personal-address-derived-score"
+      ]
+    }
+  ],
+  "postalSystemPriors": [
+    {
+      "templateId": "france-like",
+      "visibleFormat": "CC-NN NNN",
+      "recommendedUse": "supplemental-agid-postal-draft",
+      "rationale": [
+        "First two digits act as a broad administrative area, with three local digits below.",
+        "administrative departments",
+        "stable municipalities"
+      ]
+    },
+    {
+      "templateId": "agid-native",
+      "visibleFormat": "CC-AAAA-NNN",
+      "recommendedUse": "supplemental-agid-postal-draft",
+      "rationale": [
+        "Keeps visible code close to AGID hash structure while hiding the full AGID.",
+        "low-data regions",
+        "offline-first operation"
+      ]
+    },
+    {
+      "templateId": "japan-like",
+      "visibleFormat": "CC-NNN-NNNN",
+      "recommendedUse": "supplemental-agid-postal-draft",
+      "rationale": [
+        "Country prefix plus 3+4 numeric hierarchy. Good for dense settlement networks and later subdivision.",
+        "dense cities",
+        "municipal hierarchy"
+      ]
+    },
+    {
+      "templateId": "ghana-like",
+      "visibleFormat": "CC-AA-NNN-NNNN",
+      "recommendedUse": "supplemental-agid-postal-draft",
+      "rationale": [
+        "Country prefix, AGID-derived area letters, and numeric local grid. Best when public digital address UX is acceptable.",
+        "digital address adoption",
+        "public map/grid linkage"
+      ]
+    }
+  ],
+  "governanceNotes": [
+    "This country pack is not an official postal authority dataset.",
+    "Use simulation or draft status until government, municipality, postal authority, or carrier pilot approval is recorded.",
+    "Visible postal codes must remain within one municipality and preserve stable locality IDs across renames.",
+    "Old-to-new transition mappings are required before split, merge, or reshaping events."
+  ],
+  "privacyThreatModel": [
+    "Do not store personal addresses, recipient names, phone numbers, AOID private bodies, AGID-S payloads, or proof codes in this pack.",
+    "Do not publish household-level, sensitive-facility-level, refuge-level, or high-risk precise zones.",
+    "Use source metadata and geometry references until redistribution rights are verified.",
+    "Use no-raw-address test vectors before publishing pack releases."
+  ],
+  "testVectors": [
+    {
+      "id": "la-test-vector-1",
+      "input": {
+        "countryCode": "LA",
+        "municipalityId": "LA-M1",
+        "townId": "LA-M1-T1",
+        "chomeId": "LA-M1-T1-C1"
+      },
+      "expected": {
+        "candidateCodePrefix": "LA-",
+        "sameMunicipalityOnly": true,
+        "containsPersonalData": false
+      }
+    },
+    {
+      "id": "la-test-vector-2",
+      "input": {
+        "countryCode": "LA",
+        "municipalityId": "LA-M2",
+        "townId": "LA-M2-T2",
+        "chomeId": "LA-M2-T2-C2"
+      },
+      "expected": {
+        "candidateCodePrefix": "LA-",
+        "sameMunicipalityOnly": true,
+        "containsPersonalData": false
+      }
+    },
+    {
+      "id": "la-test-vector-3",
+      "input": {
+        "countryCode": "LA",
+        "municipalityId": "LA-M3",
+        "townId": "LA-M3-T3",
+        "chomeId": "LA-M3-T3-C3"
+      },
+      "expected": {
+        "candidateCodePrefix": "LA-",
+        "sameMunicipalityOnly": true,
+        "containsPersonalData": false
+      }
+    }
+  ]
+}

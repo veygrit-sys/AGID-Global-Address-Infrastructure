@@ -1,6 +1,6 @@
 {
   "name": "AGID",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "precision": {
     "projection": "cubed-sphere-equal-area",
     "faceCount": 6,
@@ -19,27 +19,410 @@
     "coastalSeaPrefix": "number + letter",
     "otherPrefix": "number + number"
   },
+  "neighborhood": {
+    "version": "agid-grid-neighborhood-v0.1",
+    "topology": "eight-neighbor",
+    "relations": [
+      "same-cell",
+      "edge-adjacent",
+      "corner-adjacent",
+      "separate",
+      "invalid"
+    ],
+    "calculation": "sample adjacent cell centers through the cubed sphere and re-encode",
+    "crossesFaceBoundaries": true,
+    "boundarySemantics": "same, edge-adjacent, and corner-adjacent cells may be accepted as the same-or-near area candidate",
+    "nonClaim": "proximity does not prove a shared building, entrance, traversable route, or delivery endpoint",
+    "extensionApi": [
+      "adjacentCells(agid) -> AgidAdjacentCell[]",
+      "gridNeighborhoodMatch(left, right) -> AgidGridNeighborhoodMatch"
+    ]
+  },
+  "addressReference": {
+    "version": "agid-address-reference-v0.1",
+    "publicIdentity": "canonical AGID + opaque buildingId",
+    "buildingIdPattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$",
+    "subPremiseClassification": "private-sub-premise",
+    "subPremiseRetention": "client-controlled",
+    "subPremiseExcludedFrom": [
+      "AGID",
+      "public reference key",
+      "public building comparison",
+      "public conformance vectors"
+    ]
+  },
+  "addressNormalizationBenchmark": {
+    "version": "agid-address-normalization-benchmark-v0.1",
+    "syntheticVectorCount": 10000,
+    "boundaryCheckCount": 2000,
+    "subPremiseSeparationCheckCount": 1000,
+    "minimumNormalizationSuccessRate": 0.995,
+    "maximumBoundaryValueErrorRate": 0.001,
+    "maximumSubPremiseLeakageRate": 0,
+    "realWorldQualityClaim": false
+  },
+  "security": {
+    "profile": "agid-public-security-v1",
+    "publicByDesign": true,
+    "confidentialityBoundary": "AGID is public and must not contain recipient, phone, unit, room, private delivery instruction, ownership proof, owner key, device key, or encrypted AOID payload fields.",
+    "canonicalInput": {
+      "normalization": "trim and uppercase before validation",
+      "pattern": "^[A-Z0-9]{2}[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{10}$"
+    },
+    "decodeValidation": [
+      "totalLength = 12",
+      "hashLength = 10",
+      "hash uses AGID Base32 alphabet",
+      "decoded packed value must be less than 2^45",
+      "decoded face must be in range 0..5",
+      "decoded latitude and longitude must be finite"
+    ],
+    "sdkValidationApi": [
+      "normalizeAgid(agid) -> canonical uppercase string | null",
+      "isValidAgid(agid) -> boolean",
+      "validateAgid(agid) -> AgidValidationResult",
+      "AGID_SECURITY_PROFILE -> public security policy metadata"
+    ],
+    "openSourceReleaseControls": [
+      "no secrets or private keys in repository",
+      "SDK parity tests pass before release",
+      "public QR payloads are re-sanitized on parse",
+      "public data packs exclude AOID private data",
+      "release artifacts publish checksums or detached signatures"
+    ]
+  },
   "api": [
     "encode(latitude, longitude) -> AgidResult",
     "decode(agid) -> AgidDecoded | null",
     "cellBounds(agid) -> bounds",
-    "cellPolygon(agid) -> lon/lat polygon"
+    "cellPolygon(agid) -> lon/lat polygon",
+    "normalizeAgid(agid) -> canonical uppercase string | null",
+    "isValidAgid(agid) -> boolean",
+    "validateAgid(agid) -> AgidValidationResult"
+  ],
+  "sdkTargets": [
+    {
+      "id": "agid-spec",
+      "directory": "agid-spec",
+      "language": "Spec",
+      "packageName": "agid-spec",
+      "ecosystem": "canonical-spec",
+      "packageManager": "none",
+      "runtime": "language-neutral",
+      "testCommand": "Use generated SDK parity tests",
+      "primaryUse": "Canonical AGID contract and parity vectors",
+      "releaseStatus": "canonical-spec"
+    },
+    {
+      "id": "agid-rs",
+      "directory": "agid-rs",
+      "language": "Rust",
+      "packageName": "agid",
+      "ecosystem": "systems",
+      "packageManager": "Cargo",
+      "runtime": "Rust 2021",
+      "testCommand": "cargo test",
+      "primaryUse": "Native core, servers, embedded, and FFI",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-c",
+      "directory": "agid-c",
+      "language": "C",
+      "packageName": "agid-c",
+      "ecosystem": "systems",
+      "packageManager": "CMake/manual",
+      "runtime": "C11",
+      "testCommand": "cc tests/parity.c src/agid.c -Iinclude -lm && ./a.out",
+      "primaryUse": "C ABI and embedded integrations",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-cpp",
+      "directory": "agid-cpp",
+      "language": "C++",
+      "packageName": "agid-cpp",
+      "ecosystem": "systems",
+      "packageManager": "CMake/manual",
+      "runtime": "C++17",
+      "testCommand": "c++ tests/parity.cpp src/agid.cpp -Iinclude -std=c++17 && ./a.out",
+      "primaryUse": "GIS engines, desktop, and native route systems",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-wasm",
+      "directory": "agid-wasm",
+      "language": "WebAssembly",
+      "packageName": "@agid/wasm",
+      "ecosystem": "web",
+      "packageManager": "npm",
+      "runtime": "WASM + TypeScript",
+      "testCommand": "npm test",
+      "primaryUse": "Browser and edge runtime bindings",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-js-ts",
+      "directory": "agid-js-ts",
+      "language": "JavaScript/TypeScript",
+      "packageName": "@agid/agid",
+      "ecosystem": "web",
+      "packageManager": "npm",
+      "runtime": "Node.js / browser",
+      "testCommand": "npm test",
+      "primaryUse": "Web apps, Node.js, and developer tooling",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-py",
+      "directory": "agid-py",
+      "language": "Python",
+      "packageName": "agid",
+      "ecosystem": "data",
+      "packageManager": "pip/uv",
+      "runtime": "Python >=3.10",
+      "testCommand": "python -m pytest",
+      "primaryUse": "Data pipelines, GIS notebooks, and backend automation",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-go",
+      "directory": "agid-go",
+      "language": "Go",
+      "packageName": "github.com/agid/agid-go",
+      "ecosystem": "server",
+      "packageManager": "Go modules",
+      "runtime": "Go >=1.22",
+      "testCommand": "go test ./...",
+      "primaryUse": "Server services and delivery APIs",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-swift",
+      "directory": "agid-swift",
+      "language": "Swift",
+      "packageName": "AGID",
+      "ecosystem": "mobile",
+      "packageManager": "Swift Package Manager",
+      "runtime": "Swift 5.9",
+      "testCommand": "swift test",
+      "primaryUse": "iOS, macOS, and Apple platform apps",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-kotlin",
+      "directory": "agid-kotlin",
+      "language": "Kotlin",
+      "packageName": "org.agid:agid-kotlin",
+      "ecosystem": "mobile",
+      "packageManager": "Gradle",
+      "runtime": "Kotlin/JVM",
+      "testCommand": "./gradlew test",
+      "primaryUse": "Android and JVM services",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-java",
+      "directory": "agid-java",
+      "language": "Java",
+      "packageName": "org.agid:agid",
+      "ecosystem": "enterprise",
+      "packageManager": "Maven",
+      "runtime": "Java >=17",
+      "testCommand": "mvn test",
+      "primaryUse": "Enterprise JVM and Android-compatible integrations",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-php",
+      "directory": "agid-php",
+      "language": "PHP",
+      "packageName": "agid/agid",
+      "ecosystem": "server",
+      "packageManager": "Composer",
+      "runtime": "PHP >=8.2",
+      "testCommand": "vendor/bin/phpunit",
+      "primaryUse": "Commerce and CMS integrations",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-dotnet",
+      "directory": "agid-dotnet",
+      "language": "C#/.NET",
+      "packageName": "Agid",
+      "ecosystem": "enterprise",
+      "packageManager": "NuGet/dotnet",
+      "runtime": ".NET 8",
+      "testCommand": "dotnet test",
+      "primaryUse": "Enterprise, Windows, POS, and hotel systems",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-ruby",
+      "directory": "agid-ruby",
+      "language": "Ruby",
+      "packageName": "agid",
+      "ecosystem": "server",
+      "packageManager": "RubyGems/Bundler",
+      "runtime": "Ruby >=3.0",
+      "testCommand": "bundle exec ruby test/test_parity.rb",
+      "primaryUse": "Rails and scripting integrations",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-dart",
+      "directory": "agid-dart",
+      "language": "Dart",
+      "packageName": "agid",
+      "ecosystem": "mobile",
+      "packageManager": "pub",
+      "runtime": "Dart >=3.0",
+      "testCommand": "dart test",
+      "primaryUse": "Flutter and Dart services",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-r",
+      "directory": "agid-r",
+      "language": "R",
+      "packageName": "agid",
+      "ecosystem": "data",
+      "packageManager": "R package",
+      "runtime": "R >=4.1",
+      "testCommand": "Rscript -e \"testthat::test_dir(\\\"tests/testthat\\\")\"",
+      "primaryUse": "Statistics, research, and geospatial analysis",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-julia",
+      "directory": "agid-julia",
+      "language": "Julia",
+      "packageName": "AGID",
+      "ecosystem": "data",
+      "packageManager": "Pkg",
+      "runtime": "Julia >=1.9",
+      "testCommand": "julia --project=. -e \"using Pkg; Pkg.test()\"",
+      "primaryUse": "Scientific computing and routing research",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-elixir",
+      "directory": "agid-elixir",
+      "language": "Elixir",
+      "packageName": "agid",
+      "ecosystem": "server",
+      "packageManager": "mix/Hex",
+      "runtime": "Elixir >=1.15",
+      "testCommand": "mix test",
+      "primaryUse": "Concurrent services and realtime systems",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-lua",
+      "directory": "agid-lua",
+      "language": "Lua",
+      "packageName": "agid",
+      "ecosystem": "scripting",
+      "packageManager": "LuaRocks",
+      "runtime": "Lua >=5.4",
+      "testCommand": "lua test/parity_test.lua",
+      "primaryUse": "Embedded scripting and lightweight devices",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-zig",
+      "directory": "agid-zig",
+      "language": "Zig",
+      "packageName": "agid",
+      "ecosystem": "systems",
+      "packageManager": "Zig build",
+      "runtime": "Zig >=0.12",
+      "testCommand": "zig test src/agid_parity_test.zig",
+      "primaryUse": "Systems programming and small binaries",
+      "releaseStatus": "generated-scaffold"
+    },
+    {
+      "id": "agid-nim",
+      "directory": "agid-nim",
+      "language": "Nim",
+      "packageName": "agid",
+      "ecosystem": "systems",
+      "packageManager": "nimble",
+      "runtime": "Nim >=2.0",
+      "testCommand": "nimble test",
+      "primaryUse": "Native tooling and compact services",
+      "releaseStatus": "generated-scaffold"
+    }
   ],
   "testVectors": [
     {
       "name": "Tokyo Station",
       "lat": 35.681236,
-      "lon": 139.767125
+      "lon": 139.767125,
+      "expected": {
+        "id": "JP05AV8TJGHD",
+        "prefix": "JP",
+        "hash": "05AV8TJGHD",
+        "face": 1,
+        "qx": 111082,
+        "qy": 2056297,
+        "decoded": {
+          "lat": 35.68121961131576,
+          "lon": 139.76712226867676
+        },
+        "cellBounds": {
+          "minLat": 35.68121961131576,
+          "maxLat": 35.68127755465351,
+          "minLon": 139.76712226867676,
+          "maxLon": 139.767165184021
+        }
+      }
     },
     {
       "name": "Null Island",
       "lat": 0,
-      "lon": 0
+      "lon": 0,
+      "expected": {
+        "id": "3B0200000000",
+        "prefix": "3B",
+        "hash": "0200000000",
+        "face": 0,
+        "qx": 1048576,
+        "qy": 1048576,
+        "decoded": {
+          "lat": 0,
+          "lon": 0
+        },
+        "cellBounds": {
+          "minLat": 0,
+          "maxLat": 0.00004291534423828125,
+          "minLon": 0,
+          "maxLon": 0.00004291534423828125
+        }
+      }
     },
     {
       "name": "New York City",
       "lat": 40.7128,
-      "lon": -74.006
+      "lon": -74.006,
+      "expected": {
+        "id": "US0ECWVG02V9",
+        "prefix": "US",
+        "hash": "0ECWVG02V9",
+        "face": 3,
+        "qx": 1421263,
+        "qy": 2023382,
+        "decoded": {
+          "lat": 40.712787854519725,
+          "lon": -74.00600910186768
+        },
+        "cellBounds": {
+          "minLat": 40.71278177280159,
+          "maxLat": 40.712830550646764,
+          "minLon": -74.00600910186768,
+          "maxLon": -74.00596618652344
+        }
+      }
     }
   ]
 }

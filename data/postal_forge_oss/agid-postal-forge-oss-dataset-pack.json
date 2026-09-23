@@ -1,0 +1,4437 @@
+{
+  "manifest": {
+    "packId": "agid-postal-forge-oss-dataset-pack",
+    "version": "agid-postal-forge-oss-dataset-pack-v0.1",
+    "engineVersion": "agid-postal-code-engine-v0.1-rc",
+    "systemName": "AGID Postal Forge",
+    "aiName": "AtlasWeaver AI",
+    "aiVersion": "atlasweaver-ai-v0.2-quality-gates",
+    "generatedAt": "2026-06-20T00:00:00.000Z",
+    "licenseOrTerms": "Apache-2.0 for AGID metadata; source-specific for referenced datasets",
+    "redistributionPolicy": "This pack redistributes AGID-created metadata and source references only. It does not bundle third-party postal, boundary, road, population, OSM, Overture, GeoNames, ISO, OGC, or UPU source data.",
+    "files": [
+      {
+        "path": "data/postal_forge_oss/manifest.json",
+        "role": "manifest",
+        "mediaType": "application/json",
+        "licenseOrTerms": "Apache-2.0",
+        "containsThirdPartyData": false,
+        "containsPersonalData": false
+      },
+      {
+        "path": "data/postal_forge_oss/agid-postal-forge-oss-dataset-pack.json",
+        "role": "generated-pack",
+        "mediaType": "application/json",
+        "licenseOrTerms": "Apache-2.0",
+        "containsThirdPartyData": false,
+        "containsPersonalData": false
+      },
+      {
+        "path": "data/postal_forge_oss/source-catalog.json",
+        "role": "source-catalog",
+        "mediaType": "application/json",
+        "licenseOrTerms": "DATA-LICENSES",
+        "containsThirdPartyData": false,
+        "containsPersonalData": false
+      },
+      {
+        "path": "data/postal_forge_oss/quality-gates.json",
+        "role": "quality-gates",
+        "mediaType": "application/json",
+        "licenseOrTerms": "Apache-2.0",
+        "containsThirdPartyData": false,
+        "containsPersonalData": false
+      },
+      {
+        "path": "data/postal_forge_oss/country-profile-overrides.sample.json",
+        "role": "sample-profile-overrides",
+        "mediaType": "application/json",
+        "licenseOrTerms": "CC0",
+        "containsThirdPartyData": false,
+        "containsPersonalData": false
+      },
+      {
+        "path": "data/postal_forge_oss/README.md",
+        "role": "documentation",
+        "mediaType": "text/markdown",
+        "licenseOrTerms": "Apache-2.0",
+        "containsThirdPartyData": false,
+        "containsPersonalData": false
+      }
+    ],
+    "counts": {
+      "countries": 49,
+      "classA": 0,
+      "classB": 0,
+      "classC": 49,
+      "templates": 8,
+      "sourceRecords": 8,
+      "qualityGates": 8
+    }
+  },
+  "sources": [
+    {
+      "sourceId": "agid-postal-forge-user-supplied-upu-2025-not-required-list",
+      "sourceName": "UPU 2025 postal-code-not-required country list supplied by project owner",
+      "sourceUrl": "https://www.upu.int/",
+      "provider": "Universal Postal Union / user-supplied project note",
+      "coverageRegion": "selected countries and territories",
+      "licenseOrTerms": "metadata-only; verify UPU source terms before redistributing original documents",
+      "redistributionStatus": "source-metadata-only",
+      "allowedUse": [
+        "country classification prior",
+        "postal-code-requiredness evidence"
+      ],
+      "transformedFields": [
+        "countryCode",
+        "countryName",
+        "region",
+        "basis",
+        "note"
+      ],
+      "freshness": "source note dated 2025; verify before public official claims",
+      "confidenceNotes": [
+        "This pack stores AGID-created metadata derived from the supplied list, not the UPU document itself.",
+        "Postal-code-not-required is not identical to no postal system."
+      ]
+    },
+    {
+      "sourceId": "iso-19160-addressing-framework",
+      "sourceName": "ISO 19160 addressing conceptual framework",
+      "sourceUrl": "https://www.iso.org/standard/61710.html",
+      "provider": "ISO",
+      "coverageRegion": "global standard reference",
+      "licenseOrTerms": "standard reference only; ISO text is not bundled",
+      "redistributionStatus": "not-bundled",
+      "allowedUse": [
+        "conceptual model alignment",
+        "address governance reference"
+      ],
+      "transformedFields": [],
+      "freshness": "reference; check edition before citing normative clauses",
+      "confidenceNotes": [
+        "Use as a conceptual compatibility reference, not as redistributed standard text."
+      ]
+    },
+    {
+      "sourceId": "ogc-dggs-reference",
+      "sourceName": "OGC Discrete Global Grid Systems reference",
+      "sourceUrl": "https://www.ogc.org/standard/dggs/",
+      "provider": "Open Geospatial Consortium",
+      "coverageRegion": "global grid reference",
+      "licenseOrTerms": "standard reference; do not bundle standard text unless terms allow",
+      "redistributionStatus": "not-bundled",
+      "allowedUse": [
+        "grid hierarchy design reference",
+        "cell-based locality modeling"
+      ],
+      "transformedFields": [],
+      "freshness": "reference; check current standard version before formal release",
+      "confidenceNotes": [
+        "Useful for AGID postal zone hierarchy; not a postal authority source."
+      ]
+    },
+    {
+      "sourceId": "openstreetmap-open-geography",
+      "sourceName": "OpenStreetMap-derived open geography",
+      "sourceUrl": "https://www.openstreetmap.org/copyright",
+      "provider": "OpenStreetMap contributors",
+      "coverageRegion": "global, community coverage varies",
+      "licenseOrTerms": "ODbL where OSM-derived data is used",
+      "redistributionStatus": "license-review-required",
+      "allowedUse": [
+        "road evidence",
+        "settlement evidence",
+        "map feature evidence"
+      ],
+      "transformedFields": [
+        "sourceId",
+        "featureClass",
+        "evidenceQuality"
+      ],
+      "freshness": "must be versioned by extract date if bundled",
+      "confidenceNotes": [
+        "This pack does not bundle OSM extracts.",
+        "Any derived database must preserve ODbL obligations."
+      ]
+    },
+    {
+      "sourceId": "natural-earth-public-domain-basemap",
+      "sourceName": "Natural Earth public domain geography",
+      "sourceUrl": "https://www.naturalearthdata.com/",
+      "provider": "Natural Earth",
+      "coverageRegion": "global small-scale reference geography",
+      "licenseOrTerms": "public domain per provider statement; verify before bundle",
+      "redistributionStatus": "license-review-required",
+      "allowedUse": [
+        "coarse country boundary sanity checks",
+        "map preview base layer"
+      ],
+      "transformedFields": [
+        "country boundary reference",
+        "coarse region label"
+      ],
+      "freshness": "version required if bundled",
+      "confidenceNotes": [
+        "Good for coarse references, not parcel or delivery-grade boundaries."
+      ]
+    },
+    {
+      "sourceId": "overture-maps-open-map-foundation",
+      "sourceName": "Overture Maps open map datasets",
+      "sourceUrl": "https://overturemaps.org/",
+      "provider": "Overture Maps Foundation",
+      "coverageRegion": "global, theme coverage varies",
+      "licenseOrTerms": "source-specific Overture terms; verify theme license before bundling",
+      "redistributionStatus": "license-review-required",
+      "allowedUse": [
+        "places",
+        "buildings",
+        "administrative boundaries",
+        "transportation evidence"
+      ],
+      "transformedFields": [
+        "theme",
+        "featureId",
+        "evidenceClass"
+      ],
+      "freshness": "release version required if bundled",
+      "confidenceNotes": [
+        "Candidate source for open map evidence; this pack does not include Overture records."
+      ]
+    },
+    {
+      "sourceId": "geonames-postal-or-place-metadata",
+      "sourceName": "GeoNames postal or place metadata",
+      "sourceUrl": "https://www.geonames.org/",
+      "provider": "GeoNames",
+      "coverageRegion": "global, varies by country",
+      "licenseOrTerms": "CC BY and source-specific terms; verify postal redistribution before bundling",
+      "redistributionStatus": "license-review-required",
+      "allowedUse": [
+        "place-name evidence",
+        "weak postal supplemental evidence"
+      ],
+      "transformedFields": [
+        "countryCode",
+        "placeName",
+        "adminCode",
+        "postalEvidenceClass"
+      ],
+      "freshness": "download date required if bundled",
+      "confidenceNotes": [
+        "Can support weak postal countries, but official postal authority data remains preferred."
+      ]
+    },
+    {
+      "sourceId": "agid-synthetic-test-fixtures",
+      "sourceName": "AGID synthetic postal forge fixtures",
+      "sourceUrl": "local:AGID",
+      "provider": "AGID project",
+      "coverageRegion": "synthetic test regions only",
+      "licenseOrTerms": "Apache-2.0 or CC0 depending on file",
+      "redistributionStatus": "agid-metadata-redistributable",
+      "allowedUse": [
+        "tests",
+        "examples",
+        "CI verification",
+        "documentation demos"
+      ],
+      "transformedFields": [
+        "syntheticCountryCode",
+        "templateId",
+        "qualityGateId"
+      ],
+      "freshness": "versioned with repository",
+      "confidenceNotes": [
+        "Contains no personal data and no real address records."
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "templateId": "agid-native",
+      "label": "AGID-native auxiliary",
+      "basedOn": "AGID hash",
+      "format": "CC-AAAA-NNN",
+      "hierarchyDepth": 2,
+      "defaultLength": 7,
+      "bestFor": [
+        "low-data regions",
+        "offline-first operation",
+        "future reshaping"
+      ],
+      "ossUse": "primary-template-candidate",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility",
+        "hide-full-agid-and-keep-visible-code-revocable"
+      ]
+    },
+    {
+      "templateId": "france-like",
+      "label": "France-like department",
+      "basedOn": "France NNNNN",
+      "format": "CC-NN NNN",
+      "hierarchyDepth": 2,
+      "defaultLength": 5,
+      "bestFor": [
+        "administrative departments",
+        "stable municipalities"
+      ],
+      "ossUse": "design-prior",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility"
+      ]
+    },
+    {
+      "templateId": "ghana-like",
+      "label": "Ghana-like digital address",
+      "basedOn": "Ghana Post GPS",
+      "format": "CC-AA-NNN-NNNN",
+      "hierarchyDepth": 4,
+      "defaultLength": 7,
+      "bestFor": [
+        "digital address adoption",
+        "public map/grid linkage"
+      ],
+      "ossUse": "supplemental-template-candidate",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility",
+        "avoid-public-precision-for-high-risk-or-surveillance-sensitive-areas"
+      ]
+    },
+    {
+      "templateId": "india-like",
+      "label": "India-like PIN",
+      "basedOn": "India NNNNNN",
+      "format": "CC-NNNNNN",
+      "hierarchyDepth": 3,
+      "defaultLength": 6,
+      "bestFor": [
+        "large population",
+        "many regions",
+        "simple numeric entry"
+      ],
+      "ossUse": "design-prior",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility"
+      ]
+    },
+    {
+      "templateId": "japan-like",
+      "label": "Japan-like hierarchy",
+      "basedOn": "Japan NNN-NNNN",
+      "format": "CC-NNN-NNNN",
+      "hierarchyDepth": 3,
+      "defaultLength": 7,
+      "bestFor": [
+        "dense cities",
+        "municipal hierarchy",
+        "block-level expansion"
+      ],
+      "ossUse": "design-prior",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility"
+      ]
+    },
+    {
+      "templateId": "singapore-like",
+      "label": "Singapore-like building dense",
+      "basedOn": "Singapore NNNNNN",
+      "format": "CC-NNNNNN",
+      "hierarchyDepth": 2,
+      "defaultLength": 6,
+      "bestFor": [
+        "compact dense urban states",
+        "building-level routing"
+      ],
+      "ossUse": "design-prior",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility"
+      ]
+    },
+    {
+      "templateId": "uk-like",
+      "label": "UK-like outward/inward",
+      "basedOn": "United Kingdom outward + inward",
+      "format": "CC-AN NAA",
+      "hierarchyDepth": 3,
+      "defaultLength": 5,
+      "bestFor": [
+        "dense cities",
+        "human-readable sorting",
+        "short local districts"
+      ],
+      "ossUse": "design-prior",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility",
+        "requires-readable-font-and-validation-for-alphanumeric-entry"
+      ]
+    },
+    {
+      "templateId": "us-like",
+      "label": "US-like ZIP",
+      "basedOn": "United States NNNNN / ZIP+4",
+      "format": "CC-NNNNN",
+      "hierarchyDepth": 2,
+      "defaultLength": 5,
+      "bestFor": [
+        "large territory",
+        "route sorting",
+        "later extension"
+      ],
+      "ossUse": "design-prior",
+      "cautions": [
+        "learn-as-design-prior-not-direct-copy",
+        "do-not-claim-foreign-postal-authority-compatibility"
+      ]
+    }
+  ],
+  "countries": [
+    {
+      "countryCode": "AE",
+      "countryName": "United Arab Emirates",
+      "region": "Asia",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:AE:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Supplement national addressing without replacing PO box/building systems."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Supplement national addressing without replacing PO box/building systems."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "AG",
+      "countryName": "Antigua and Barbuda",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:AG:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Small island state; AGID postal areas should be coarse and island-aware."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Small island state; AGID postal areas should be coarse and island-aware."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "AO",
+      "countryName": "Angola",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:AO:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "AW",
+      "countryName": "Aruba",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:AW:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BF",
+      "countryName": "Burkina Faso",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BF:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BI",
+      "countryName": "Burundi",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BI:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BJ",
+      "countryName": "Benin",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BJ:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BO",
+      "countryName": "Bolivia",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BO:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:france-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mountain",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "france-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:mountain",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Mountain/lowland split; use terrain-aware hierarchy."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Mountain/lowland split; use terrain-aware hierarchy."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BS",
+      "countryName": "Bahamas",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BS:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Archipelago; use island-first hierarchy."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Archipelago; use island-first hierarchy."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BW",
+      "countryName": "Botswana",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BW:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:us-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "desert",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "us-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:desert",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Sparse/desert conditions; keep large rural areas coarse."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Sparse/desert conditions; keep large rural areas coarse."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "BZ",
+      "countryName": "Belize",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:BZ:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "CF",
+      "countryName": "Central African Republic",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:CF:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Sparse routing; use AGID only as a supplemental postal area, not a legal address."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Sparse routing; use AGID only as a supplemental postal area, not a legal address."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "CG",
+      "countryName": "Congo (Republic)",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:CG:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "CI",
+      "countryName": "Cote d'Ivoire",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:CI:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "CK",
+      "countryName": "Cook Islands",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:CK:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Dispersed islands; island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Dispersed islands; island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "CM",
+      "countryName": "Cameroon",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:CM:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "CW",
+      "countryName": "Curacao",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:CW:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Small island territory; compact code recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Small island territory; compact code recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "DM",
+      "countryName": "Dominica",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:DM:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Mountain island; municipality-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Mountain island; municipality-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "ER",
+      "countryName": "Eritrea",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:ER:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:france-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mountain",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "france-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:mountain",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "FJ",
+      "countryName": "Fiji",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:FJ:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Archipelago; island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Archipelago; island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "GA",
+      "countryName": "Gabon",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:GA:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "GD",
+      "countryName": "Grenada",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:GD:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "GM",
+      "countryName": "Gambia",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:GM:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Narrow river country; route corridor hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Narrow river country; route corridor hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "GQ",
+      "countryName": "Equatorial Guinea",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:GQ:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Island/mainland split; use regional prefix."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Island/mainland split; use regional prefix."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "JM",
+      "countryName": "Jamaica",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:JM:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Some zones exist; AGID should remain supplemental and non-replacement."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Some zones exist; AGID should remain supplemental and non-replacement."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "KM",
+      "countryName": "Comoros",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:KM:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "KP",
+      "countryName": "Korea (Democratic People's Republic)",
+      "region": "Asia",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:KP:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Treat as constrained/high-risk metadata; do not claim operational completeness."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Treat as constrained/high-risk metadata; do not claim operational completeness."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "LY",
+      "countryName": "Libya",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:LY:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:us-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "desert",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "us-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:desert",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Desert and conflict-sensitive context; coarse AGID postal areas recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Desert and conflict-sensitive context; coarse AGID postal areas recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "ML",
+      "countryName": "Mali",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:ML:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal metadata may exist but UPU-required status is weak; supplemental AGID allowed."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal metadata may exist but UPU-required status is weak; supplemental AGID allowed."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "MR",
+      "countryName": "Mauritania",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:MR:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:us-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "desert",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "us-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:desert",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Desert/sparse conditions; area codes should be coarse."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Desert/sparse conditions; area codes should be coarse."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "QA",
+      "countryName": "Qatar",
+      "region": "Asia",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:QA:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Use as supplemental to building-zone-street addressing."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Use as supplemental to building-zone-street addressing."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "RW",
+      "countryName": "Rwanda",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:RW:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:france-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mountain",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "france-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:mountain",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Dense and hilly; compact hierarchical format recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Dense and hilly; compact hierarchical format recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SB",
+      "countryName": "Solomon Islands",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SB:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Dispersed archipelago; island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Dispersed archipelago; island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SC",
+      "countryName": "Seychelles",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SC:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SL",
+      "countryName": "Sierra Leone",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SL:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SO",
+      "countryName": "Somalia",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SO:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "High-risk/conflict-sensitive routing; do not expose precise AGID by default."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "High-risk/conflict-sensitive routing; do not expose precise AGID by default."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SR",
+      "countryName": "Suriname",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SR:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Coastal/interior split; route-aware hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Coastal/interior split; route-aware hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SS",
+      "countryName": "South Sudan",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SS:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Sparse and humanitarian context; high-risk defaults recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Sparse and humanitarian context; high-risk defaults recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "ST",
+      "countryName": "Sao Tome and Principe",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:ST:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SX",
+      "countryName": "Sint Maarten",
+      "region": "Americas",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SX:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Small island territory; use compact local hierarchy."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Small island territory; use compact local hierarchy."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "SY",
+      "countryName": "Syria",
+      "region": "Asia",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:SY:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Conflict-sensitive context; keep precision and publication constrained."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Conflict-sensitive context; keep precision and publication constrained."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "TD",
+      "countryName": "Chad",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:TD:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:us-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "desert",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "us-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:desert",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Desert and nomadic context; keep precision configurable."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Desert and nomadic context; keep precision configurable."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "TG",
+      "countryName": "Togo",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:TG:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "TK",
+      "countryName": "Tokelau",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:TK:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Atoll territory; compact island hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Atoll territory; compact island hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "TO",
+      "countryName": "Tonga",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:TO:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Archipelago; island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Archipelago; island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "TV",
+      "countryName": "Tuvalu",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:TV:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Atoll/island hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Atoll/island hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "VU",
+      "countryName": "Vanuatu",
+      "region": "Oceania",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:VU:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "archipelago",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:archipelago",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Dispersed islands; island-first hierarchy recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Dispersed islands; island-first hierarchy recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "YE",
+      "countryName": "Yemen",
+      "region": "Asia",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:YE:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 5,
+          "effective": 5,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:france-like"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mountain",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "france-like",
+      "observedFactors": [
+        "class:C",
+        "terrain:mountain",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "High-risk/conflict-sensitive context; coarse and revocable sharing recommended."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "High-risk/conflict-sensitive context; coarse and revocable sharing recommended."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    },
+    {
+      "countryCode": "ZW",
+      "countryName": "Zimbabwe",
+      "region": "Africa",
+      "class": "C",
+      "generationMode": "primary-agid-postal",
+      "allowed": true,
+      "recommendedUse": "primary-agid-postal-draft",
+      "generationPolicy": {
+        "publicationStage": "primary-draft",
+        "canGenerateVisibleCode": true,
+        "officialReplacementAllowed": false,
+        "canBecomeOfficialAfterApproval": true,
+        "requiresExistingPostalContext": false,
+        "requiresAuthorityApproval": true,
+        "requiresPublicReview": true,
+        "namespace": "AGID-POSTAL:ZW:primary-agid-postal",
+        "label": "Primary AGID postal draft",
+        "codeLength": {
+          "requested": 7,
+          "effective": 7,
+          "minimum": 3,
+          "maximum": 8
+        },
+        "visibleCode": {
+          "countryPrefixRequired": true,
+          "agidNamespaceRequired": false,
+          "checkCharacterRecommended": true,
+          "maxVisibleLength": 14
+        },
+        "privacyFloor": {
+          "minimumAddressEntities": 10,
+          "minimumPopulation": 50
+        },
+        "rationale": [
+          "class-c-primary-draft-only",
+          "official-replacement-never-allowed-by-generator",
+          "can-become-official-only-after-authority-approval",
+          "country-prefix-required",
+          "template:agid-native"
+        ]
+      },
+      "learningMode": "missing-postal-design",
+      "allowedLearningUse": "primary-design",
+      "generationBlockedByMaturePostalSystem": false,
+      "terrain": "mixed",
+      "populationBand": "unknown",
+      "areaBand": "unknown",
+      "countryScale": "continental",
+      "densityPerKm2": null,
+      "recommendedTemplateId": "agid-native",
+      "observedFactors": [
+        "class:C",
+        "terrain:mixed",
+        "country-scale:continental",
+        "population-band:unknown",
+        "area-band:unknown",
+        "density:unknown",
+        "urbanization:unknown",
+        "municipalities:unknown"
+      ],
+      "sources": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "upu-postal-code-not-required-2025-user-supplied",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "basis": [
+        "upu-postal-code-not-required-2025-user-supplied",
+        "address-coverage-policy",
+        "Postal code not required in the supplied UPU 2025 list."
+      ],
+      "governanceStatus": "not-official",
+      "publicationStatus": "draft-only",
+      "privacyDefaults": [
+        "draft-only",
+        "coarse-by-default",
+        "no-official-claim-without-authority"
+      ]
+    }
+  ],
+  "qualityGates": [
+    {
+      "id": "license-boundary",
+      "label": "License boundary",
+      "gateType": "license",
+      "requiredFor": [
+        "simulation",
+        "draft",
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "Do not bundle or redistribute third-party postal, map, boundary, or population datasets unless the source license explicitly permits it.",
+      "failureAction": "block"
+    },
+    {
+      "id": "governance-not-official-by-default",
+      "label": "Governance and official status",
+      "gateType": "governance",
+      "requiredFor": [
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "AGID Postal Forge outputs are simulation/draft unless a government, municipality, postal authority, or carrier pilot authority is explicitly recorded.",
+      "failureAction": "draft-only"
+    },
+    {
+      "id": "minimum-anonymity",
+      "label": "Minimum anonymity",
+      "gateType": "privacy",
+      "requiredFor": [
+        "draft",
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "A public postal zone cannot identify a single household, sensitive facility, or high-risk refuge location.",
+      "failureAction": "review-required"
+    },
+    {
+      "id": "data-trust-threshold",
+      "label": "Data trust threshold",
+      "gateType": "data-trust",
+      "requiredFor": [
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "Address, road, admin, population, and boundary evidence must pass the configured trust threshold before public pilot use.",
+      "failureAction": "draft-only"
+    },
+    {
+      "id": "existing-postal-non-replacement",
+      "label": "Existing postal non-replacement",
+      "gateType": "collision",
+      "requiredFor": [
+        "draft",
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "Class A mature postal countries cannot be replaced by AGID-generated postal codes; Class B countries only allow supplemental codes.",
+      "failureAction": "block"
+    },
+    {
+      "id": "country-boundary-and-municipality-boundary",
+      "label": "Country and municipality boundary",
+      "gateType": "territory-boundary",
+      "requiredFor": [
+        "simulation",
+        "draft",
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "Generated postal zones must stay inside one country, and user-selected locality codes must not cross municipalities.",
+      "failureAction": "block"
+    },
+    {
+      "id": "readability-and-error-distance",
+      "label": "Readability and error distance",
+      "gateType": "readability",
+      "requiredFor": [
+        "draft",
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "Public code sets should avoid visually confusable adjacent codes and keep human entry practical.",
+      "failureAction": "review-required"
+    },
+    {
+      "id": "lineage-and-migration-safety",
+      "label": "Lineage and migration safety",
+      "gateType": "migration",
+      "requiredFor": [
+        "pilot",
+        "supplementary",
+        "official"
+      ],
+      "rule": "Split, merge, rename, and reshaping events must keep old-to-new mappings and preserve stable locality IDs when names change.",
+      "failureAction": "review-required"
+    }
+  ],
+  "privacyRules": [
+    "The pack contains metadata, templates, quality gates, and synthetic fixtures only.",
+    "The pack must not contain personal addresses, recipient names, phone numbers, private AOID bodies, AGID-S payloads, proof codes, or precise high-risk coordinates.",
+    "Country classification is a design prior, not proof of deliverability or official postal authority approval.",
+    "High-risk and humanitarian contexts default to coarse, revocable, non-public codes."
+  ],
+  "consumerRules": [
+    "Use Class A countries as non-replacement baselines only.",
+    "Use Class B countries for supplemental AGID postal drafts only.",
+    "Use Class C countries for primary AGID postal draft design, not automatic official issuance.",
+    "Run license review before bundling any third-party geography, postal, population, road, or boundary dataset.",
+    "Keep AGID as an internal stable key so visible postal formats can be reshaped later."
+  ]
+}

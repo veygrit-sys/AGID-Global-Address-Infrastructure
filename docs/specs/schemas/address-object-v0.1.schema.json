@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/address-object-v0.1.schema.json",
+  "title": "AddressObject v0.1",
+  "description": "Raw-address-free typed address information object for AddressQL, Address Login, AGID/AOID, and research fixtures.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "object_kind",
+    "expression",
+    "country",
+    "quality_state",
+    "evidence",
+    "privacy"
+  ],
+  "properties": {
+    "version": {
+      "const": "address-object-v0.1"
+    },
+    "object_kind": {
+      "type": "string",
+      "enum": [
+        "address_expression",
+        "address_referent",
+        "delivery_point",
+        "place_alias"
+      ]
+    },
+    "expression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "display_text_redacted",
+        "raw_text_present"
+      ],
+      "properties": {
+        "display_text_redacted": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-facing text with raw private address material removed or replaced by fixture-safe tokens."
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"
+        },
+        "script": {
+          "type": "string",
+          "pattern": "^[A-Z][a-z]{3}$"
+        },
+        "raw_text_present": {
+          "const": false
+        }
+      }
+    },
+    "country": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "iso3166_1_alpha2",
+        "confidence"
+      ],
+      "properties": {
+        "iso3166_1_alpha2": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "admin_area_token": {
+          "type": "string"
+        },
+        "locality_token": {
+          "type": "string"
+        },
+        "postal_code_token": {
+          "type": "string"
+        },
+        "thoroughfare_token": {
+          "type": "string"
+        },
+        "premise_token": {
+          "type": "string"
+        }
+      }
+    },
+    "referent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "referent_type",
+        "id_token"
+      ],
+      "properties": {
+        "referent_type": {
+          "type": "string",
+          "enum": [
+            "building",
+            "parcel",
+            "delivery_point",
+            "administrative_area",
+            "natural_feature",
+            "unknown"
+          ]
+        },
+        "id_token": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "identifiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scheme",
+          "value_token",
+          "source_ref"
+        ],
+        "properties": {
+          "scheme": {
+            "type": "string",
+            "enum": [
+              "AGID",
+              "AOID",
+              "PID",
+              "carrier_recipient_id",
+              "local_registry_id"
+            ]
+          },
+          "value_token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "quality_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "purpose"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "unverified",
+            "format_checked",
+            "existence_checked",
+            "delivery_checked",
+            "identity_bound",
+            "conflict"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "search",
+            "delivery",
+            "kyc",
+            "proof",
+            "analytics",
+            "governance"
+          ]
+        },
+        "source_version": {
+          "type": "string"
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_ref",
+          "source_kind",
+          "checked_at"
+        ],
+        "properties": {
+          "source_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": [
+              "synthetic_fixture",
+              "official_gazetteer",
+              "postal_operator",
+              "carrier",
+              "user_attestation",
+              "credential"
+            ]
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_raw_address",
+        "disclosure_level",
+        "retention_policy"
+      ],
+      "properties": {
+        "contains_raw_address": {
+          "const": false
+        },
+        "disclosure_level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "masked",
+            "tokenized",
+            "full_to_authorized_processor"
+          ]
+        },
+        "retention_policy": {
+          "type": "string",
+          "enum": [
+            "fixture_only",
+            "session",
+            "consent_bound",
+            "legal_hold"
+          ]
+        }
+      }
+    },
+    "validation_links": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

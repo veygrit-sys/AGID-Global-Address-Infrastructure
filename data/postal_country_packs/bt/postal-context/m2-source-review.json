@@ -1,0 +1,57 @@
+{
+  "schema_version": "agid-postal-bt-m2-source-review-v0.1",
+  "country_code": "BT",
+  "m2_definition": {
+    "id": "M2_source_attested",
+    "definition": "A complete rights-cleared Bhutan routing-assignment snapshot for a source-attested current national edition covers the provider's entire Dzongkhag search scope, with Dzongkhag, Gewog, post-office and five-character postal-code fields kept at their stated grain; exact source lineage, row identity, duplicates and exceptions, coverage reconciliation, validity, source and terms SHA-256, reproducible transformation, approved immutable artifacts and real AGID lookup verification are required. Postal polygons and exact civic-address/building relations are separate optional layers, never inferred from office names, codes or administrative labels."
+  },
+  "definition_review": {
+    "previous_definition": null,
+    "retained_target_stage": "M2_source_attested",
+    "review_basis": "The existing BT manifest required exact locator-row authority, retrieval time, edition, rights and separate geometry/building evidence but had no named M2 criterion. This defines that target, not a sample-data or code-only promotion.",
+    "geometry_not_required_for_assignment_m2": true,
+    "civic_and_building_link_not_required_for_assignment_m2": true,
+    "all_form_options_not_proof_of_national_completeness": true
+  },
+  "locator_probe": {
+    "form_url": "https://bhutanpost.bt/postcode/",
+    "search_url": "https://bhutanpost.bt/postcode/searchpostcode-exec.php",
+    "method": "POST",
+    "purpose": "Read-only public search using only the visible Dzongkhag selector and Search button. The historical loginForm HTML name is not an authentication operation.",
+    "form_field": "dzongkhag",
+    "submit_field": "submit",
+    "submit_value": "Search",
+    "headers": ["Dzongkhag", "Gewog", "Post Office", "Postal Code"],
+    "reviewed_dzongkhag_options": ["Bumthang", "Chukha", "Dagana", "Gasa", "Haa", "Lhuntse", "Mongar", "Paro", "Pemagatshel", "Punakha", "Samdrupjongkhar", "Samtse", "Sarpang", "Thimphu", "Trashigang", "Trashiyangtse", "Trongsa", "Tsirang", "Wangdue Phodrang", "Zhemgang"],
+    "post_redirects_allowed": false,
+    "persist_source_rows": false,
+    "allow_authentication": false,
+    "allow_private_queries": false,
+    "source_rights_cleared": false,
+    "snapshot_rule": "Hash each response and the ordered observation manifest; a form repeat and one repeated district detect limited drift but cannot establish an atomic nationwide snapshot or current allocation edition.",
+    "malformed_table_rule": "The reviewed template can omit opening tr tags. Profile only exact four-cell groups ending in a closing tr, record missing tags, and never repair or publish rows. Extra fields, spans, nested markup, partial rows or changed headers fail closed."
+  },
+  "reference_probes": [
+    {"id":"bhutan-post-downloads-rights-notice","url":"https://bhutanpost.bt/downloads/","mime":"text/html","markers":["Downloads","Annual Report","All rights reserved"],"edition":"current downloads page; footer is not an assignment edition or a data licence"},
+    {"id":"upu-bhutan-addressing","url":"https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/btnEn.pdf","mime":"application/pdf","markers":[],"edition":"02/2010","expectedDigest":"sha256:b878c01e760fb749f91c3e36aedc0a0e5f65a3437adf20dbed87f1f99bfb2be9"},
+    {"id":"bhutan-post-legacy-postcodes-pdf","url":"https://bhutanpost.bt/documents/postcodes.pdf","mime":"application/pdf","markers":[],"edition":"legacy URL; not a current allocation source unless bytes and edition are reviewed"},
+    {"id":"bhutan-nlcs-map-products","url":"https://www.nlcs.gov.bt/dz/?page_id=203","mime":"text/html","markers":["Cadastral maps are not open to public","Submit application","Sign use agreement","Administrative maps"],"edition":"undated public access rules; no map product requested"},
+    {"id":"bhutan-nlcs-geoportal","url":"https://www.nlcs.gov.bt/dz/?page_id=38","mime":"text/html","markers":["Bhutan Geo-Portal","metadata","National Land Commission"],"edition":"public discovery description only"},
+    {"id":"bhutan-nlcs-cadastral-information","url":"https://web.nlcs.gov.bt/cadastral-information-division/","mime":"text/html","markers":["Cadastral Information Division","land ownership"],"edition":"public authority description only"},
+    {"id":"bhutan-esakor-public-faq","url":"https://esakor.nlcs.gov.bt/faq_eSakor","mime":"text/html","markers":["NDI","Thram"],"edition":"public FAQ only; no identity or property transaction queried"}
+  ],
+  "rights_review": {
+    "postal_basis": "The reviewed public locator shows no source-specific reuse grant; the current Bhutan Post downloads footer states all rights reserved. This does not prove reuse is impossible, but no exact permission for redistribution of the assignment data was established.",
+    "nlcs_basis": "The official map-services page requires application, approval and a use agreement for the described products, and payment for non-government applicants; cadastral maps are not open to the public. These rules do not license unrelated postal rows or prohibit all other Bhutan open datasets.",
+    "upu_scope": "The 02/2010 sheet defines format and gives examples, not current allocation coverage or permission for Bhutan Post data.",
+    "source_rights_for_m2_cleared": false,
+    "public_destination_approved": false,
+    "authority_gates": "No account, NDI login, eSakor transaction, recipient, household, Thram, plot, owner, paid map, contract, new repository, new public destination or deployment without explicit approval."
+  },
+  "limits": {"max_response_bytes":4194304,"max_rows_per_district":1000,"max_string_characters":200,"max_districts":20,"timeout_ms":25000},
+  "review_artifacts": {
+    "source_report":"reports/postal-context-m2/bt-source-review-2026-08-28.json",
+    "engineering_report":"reports/postal-context-m2/bt-checks-2026-08-28.json",
+    "review_document":"docs/postal-context-bhutan-m2.md"
+  }
+}

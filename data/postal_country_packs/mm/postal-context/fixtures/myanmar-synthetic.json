@@ -1,0 +1,79 @@
+{
+  "schema_version": "agid-postal-mm-synthetic-fixtures-v0.1",
+  "country_code": "MM",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "9999999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mm-syn-seven-digit-assignment",
+      "synthetic_address": {
+        "postcode": "9999999",
+        "assignment_class": "typed_current_postcode_assignment",
+        "state_region_or_union_territory": "Synthetic Region",
+        "town_or_township": "Synthetic Township",
+        "quarter_or_village_tract": "Synthetic Quarter"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-seven-digit-string",
+          "assignment-object-may-be-area-or-non-area"
+        ],
+        "must_not_assert": [
+          "syntax-proves-current-assignment",
+          "myanmar-post-upu-or-service-row-is-official-postal-boundary",
+          "postal-service-object-is-area",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "mm-syn-administrative-join",
+      "synthetic_address": {
+        "postcode": "9999999",
+        "assignment_class": "explicit_synthetic_administrative_join",
+        "administrative_id": "MM-SYN-ADMIN",
+        "mimu_pcode": "MM-SYN-PCODE"
+      },
+      "expected": {
+        "must_assert": [
+          "administrative-join-remains-derived",
+          "mimu-pcode-remains-administrative-only"
+        ],
+        "must_not_assert": [
+          "mimu-pcode-is-myanmar-post-postcode",
+          "administrative-boundary-join-is-postal-authority-polygon",
+          "administrative-overlap-proves-delivery",
+          "mimu-layer-is-postcode-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "mm-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "9999999",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "MM-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "ycdc-form-tax-or-property-record-is-public-address-data",
+          "survey-one-map-or-mimu-building-is-civic-address-link",
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-recipient-or-taxpayer",
+          "portal-query-request-registration-payment-or-attribution-is-redistribution-right"
+        ]
+      }
+    }
+  ]
+}

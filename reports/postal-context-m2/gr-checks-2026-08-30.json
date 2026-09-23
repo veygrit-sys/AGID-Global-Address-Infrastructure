@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "countryCode": "GR",
+  "checkedAt": "2026-08-30T09:25:59.343Z",
+  "result": "blocked",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/gr-source-review-2026-08-30.json",
+    "sha256": "2663623dc5561219d18666f06558c29f29af3c82e0887511beebe051d0b0f2ea"
+  },
+  "commands": [
+    {
+      "name": "greece-country-review",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextGreeceRepository.test.ts src/data/greeceOpenGeoSources.test.ts src/lib/postalContextGreeceM2Review.test.ts",
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "name": "greece-existing-runtime-regression",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <8 existing GR policy/repository/runtime/route/source/catalog/address-format test files>",
+      "passed": 139,
+      "failed": 0
+    },
+    {
+      "name": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <31 shared runtime/API/schema/topology test files>",
+      "passed": 161,
+      "failed": 0
+    },
+    {
+      "name": "shared-postal-map-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "name": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "ledgerValidation": {
+    "command": "node --test scripts/postal-context-m2-gr-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+    "countryLedgerTests": 4,
+    "rolloutTests": 8,
+    "passed": 12,
+    "failed": 0,
+    "nextCountry": "HR"
+  },
+  "totalPassed": 345,
+  "totalFailed": 0,
+  "deterministicUiEvidence": {
+    "sharedStateAndRenderTestsPassed": 23,
+    "polygonAndMultiPolygonOnly": true,
+    "translucentFillAndVisibleOutline": true,
+    "fitAndClearPathCovered": true,
+    "syntheticGreeceRenderUsed": false,
+    "realGreecePolygonAvailable": false,
+    "realGreeceAppPathVerified": false
+  },
+  "browserAttempt": {
+    "attempted": false,
+    "passed": false,
+    "implication": "No browser E2E is claimed because no real rights-cleared GR polygon exists. Shared deterministic UI checks passed, but GR remains blocked."
+  },
+  "launcherNote": "The npm prefix status launcher could not locate Node in this host; the checked-in status script and all tests were run with the same bundled Node executable directly.",
+  "conclusion": "The country-specific definition, official evidence and blockers are verified. M2 is not achieved: point/NUTS crosswalks and census or administrative geometry were not fabricated into a Greek postcode area, so no real GR API/app area result is claimed.",
+  "testExecutionCountsIncludeIntentionalRegressionOverlap": true
+}

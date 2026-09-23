@@ -16,6 +16,12 @@ public static class Agid
     {
         return null;
     }
+
+    public static AgidBounds CellBounds(string id)
+    {
+        throw new NotImplementedException("wire this package to the AGID reference implementation");
+    }
 }
 
 public sealed record AgidResult(string Id, double Lat, double Lon, int? Face);
+public sealed record AgidBounds(double MinLat, double MaxLat, double MinLon, double MaxLon);

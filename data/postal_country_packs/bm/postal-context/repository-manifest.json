@@ -1,0 +1,71 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-bm-bpo",
+    "country_code": "BM",
+    "country_name": "Bermuda",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": false
+  },
+  "postal_system": {
+    "code_format": "Home-delivery postcodes use two uppercase letters, one space and two digits (AA NN). P.O. Box and special postcodes use two uppercase letters, one space and two uppercase letters (AA AA).",
+    "assignment_rule": "The official Bermuda Post Office attachment relates a street, optional building-number range, Odd/Even/All qualifier, postcode and parish. It is an observed candidate assignment table only: its workbook was last saved on 2019-03-28, the migrated download is HTTP Last-Modified 2026-07-01, no edition or completeness statement is present, and one embedded header, one case anomaly, one qualifier anomaly, one duplicate and 30 ambiguous assignment keys require authoritative correction or documented interpretation.",
+    "geometry_rule": "No official or rights-cleared Bermuda postcode Polygon/MultiPolygon is bundled. The BELCO item is a 2019 private-owner Tile Package with empty licence and source fields, not a queryable versioned postcode vector release. The similarly titled Geotripz Polygon layer is located at 26.28742 to 30.041195 longitude and -28.04167 to -24.677977 latitude, has no postcode field and is not Bermuda. Streets, parishes, buildings, tile imagery, Points, buffers, hulls, Voronoi/raster cells and AGID cells must not be promoted as postcode areas.",
+    "postal_object_rule": "Preserve street-delivery codes, P.O. Box ranges, special or organization codes, routes, post offices, points, polygons, multipolygons and unknown objects independently. In particular GE CX and all AA AA objects require an explicit operator type before any area claim.",
+    "address_rule": "Street names and building-number ranges in the official workbook are assignment evidence, not reusable address or building records. Recipient, unit, building, parcel, resident, owner, customer, delivery entitlement and land-rights information require independent explicit sources and are not bundled.",
+    "administrative_rule": "Preserve the workbook parish labels exactly, including St. George, St. George's and Town of St. George. Do not merge, correct or replace their identity with a postal prefix, postcode, AGID cell or a modern administrative boundary without authority and validity evidence.",
+    "derived_and_realtime_rule": "Deterministic processing may normalize case and spacing, audit rows, index eligible fixed geometry and flag drift. It must not silently repair source anomalies, infer missing ranges or object types, manufacture boundaries, or treat timeout, an empty lookup, tiles or a model as an assignment.",
+    "agid_rule": "AGID remains an independent spatial index. Only a versioned rights-cleared relation may connect a Bermuda postal object, eligible geometry and address context to AGID; the relation never makes AGID canonical postal geometry.",
+    "licence_rule": "Government site Content, source code and databases are Crown-copyrighted; the reviewed terms state that use grants no intellectual-property licence and prohibit reproduction, distribution, modification or transmission without written permission. Public ArcGIS access with empty licence fields and UPU's contract/NDA/rates product do not establish AGID processing, derivation, redistribution or public-serving rights.",
+    "privacy_rule": "No recipient, customer, P.O. Box holder, account, exact private address, building, parcel, resident, owner, occupant, query log, credential or land-rights record may enter a public artifact without an independent purpose, lawful basis, minimisation and publication review.",
+    "temporal_rule": "Store source retrieval time, HTTP metadata, workbook internal last-save time, UPU edition, digest, validity and supersession separately. A 2026 migration timestamp does not make a workbook last saved in 2019 a current authoritative edition."
+  },
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "target_stage": "M2_current_bpo_assignments_and_postal_area_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Bermuda address-format inventory only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Digest-bound official BPO, Government of Bermuda and UPU publication evidence plus candidate-workbook aggregate quality, rights and no-proxy contracts; no raw row, address or production geometry is bundled."
+      },
+      {
+        "id": "M2_current_bpo_assignments_and_postal_area_visualization",
+        "definition": "M2 requires a current, complete and authoritative finite denominator of every Bermuda Post Office home-delivery AA NN assignment, P.O. Box or special AA AA object, building-number range, Odd/Even/All qualifier, alias, validity interval, correction, exception and explicit non-area type, fixed by retrieval time, operator edition, stable identity, schema, coverage, bytes and SHA-256 under rights compatible with AGID processing, storage, derivation, redistribution and public serving. Every drawable postcode must reconcile to a fixed real finite closed valid Polygon/MultiPolygon whose postal authority, official/derived/virtual class, source, edition, reference date, CRS, topology, method, confidence and exceptions are explicit; streets, parishes, buildings, tile imagery, Points, buffers, hulls, Voronoi/raster cells, models, AGID cells and synthetic fixtures are prohibited area proxies. P.O. Box, route, organization, Point and other non-area objects must expose their type and reason without a fabricated surface. An approved immutable artifact must drive the real BM API/app, which normalizes both code forms, handles loading, no-match, multiple, API-failure and invalid-geometry states, fits and renders translucent fill with a clear outline only for eligible real geometry, supports clear and re-search, and displays the selected code, geometry kind, official/derived/virtual class, source, reference date and confidence. A website example, undated or stale assignment workbook, encrypted-file access, shared code, schema-only evidence, public tiles, a synthetic fixture or a policy report never proves M2."
+      }
+    ],
+    "hard_blockers": [
+      "stale-or-undated-assignment-table-presented-as-current-complete-denominator",
+      "source-anomaly-silently-corrected-or-ambiguous-assignment-presented-as-authoritative",
+      "public-download-or-empty-licence-presented-as-reuse-and-public-serving-permission",
+      "belco-tile-package-or-geotripz-false-positive-presented-as-bermuda-postcode-vector",
+      "street-parish-building-point-buffer-hull-voronoi-raster-model-or-agid-cell-presented-as-postcode-area",
+      "po-box-special-route-organization-or-point-expanded-into-an-area",
+      "source-used-without-edition-validity-coverage-rights-attribution-crs-and-digest",
+      "raw-street-range-recipient-customer-po-box-holder-address-building-parcel-resident-owner-occupant-land-rights-query-log-or-credential-published"
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "BM metadata, format, aggregate source-quality and fail-closed policy only; no rights-cleared real BM Postal Context descriptor is enabled.",
+    "enablement_gate": "A current complete corrected operator denominator, compatible rights, immutable eligible postcode geometry and actual BM loader/API/app verification are required before enablement.",
+    "geometry_rule": "Do not manufacture a Bermuda postcode area. Postal, P.O. Box, special, street, parish, building, tile, point and AGID representations remain independently typed and source-qualified."
+  },
+  "non_goals": [
+    "new-repository-or-public-destination",
+    "paid-upu-commercial-or-other-licensed-source",
+    "provider-contact-registration-authentication-contract-terms-acceptance-or-production-deployment-without-approval",
+    "postcodes-from-parishes-streets-buildings-tiles-points-buffers-cells-or-models",
+    "raw-workbook-row-personal-customer-po-box-holder-address-building-parcel-or-land-rights-distribution"
+  ]
+}

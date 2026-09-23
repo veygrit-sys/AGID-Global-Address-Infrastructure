@@ -1,0 +1,40 @@
+{
+  "schema_version": "agid-postal-in-synthetic-fixtures-v0.1",
+  "country_code": "IN",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "100000",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "in-syn-pin-office-network-100000",
+      "synthetic_address": { "postcode": "100000", "region_digit": "1", "sorting_district": "100", "office_rows": [{ "office_type": "Head Office", "delivery": true }, { "office_type": "Sub Office", "delivery": false }] },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "none" }],
+      "expected": { "must_not_assert": ["real-department-of-posts-assignment", "syntax-proves-current-assignment", "office-row-is-pin-polygon", "delivery-and-nondelivery-are-equivalent"] }
+    },
+    {
+      "fixture_id": "in-syn-derived-pin-surface-100000",
+      "synthetic_address": { "postcode": "100000", "surface_class": "derived_pin_surface" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["derived-surface-is-official-pin-boundary", "lgd-boundary-is-pin-boundary", "office-point-is-pin-area"] }
+    },
+    {
+      "fixture_id": "in-syn-digipin-parallel-grid",
+      "synthetic_address": { "postcode": "100000", "digipin": "2222222222", "digipin_is_encoder_output": false },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["digipin-is-official-encoder-output", "digipin-is-pin-or-building", "digipin-proves-mail-booking"] }
+    },
+    {
+      "fixture_id": "in-syn-building-100000",
+      "synthetic_address": { "postcode": "100000", "building_id": "IN-SYN-BUILDING-0000", "explicit_address_link_id": "IN-SYN-LINK-0000" },
+      "evidence": [{ "assignment_authority": "synthetic_fixture_assignment", "geometry_authority": "synthetic_fixture_geometry" }],
+      "expected": { "must_not_assert": ["pin-or-digipin-identifies-exact-building", "containment-or-proximity-is-exact-building-link", "recipient-owner-or-query-data"] }
+    }
+  ]
+}

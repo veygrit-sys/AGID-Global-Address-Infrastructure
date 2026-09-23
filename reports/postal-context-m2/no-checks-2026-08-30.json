@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "NO",
+  "observedAt": "2026-08-30T20:52:33.425Z",
+  "completedAt": "2026-08-30T21:11:18.9446339Z",
+  "baseCommit": "87842c5f622e733bcd92d28650dac36fbb903777",
+  "scope": "Country-specific definition, current Posten G/P/B/S register, Kartverket/data.norge official-area metadata and rights/availability audit, deterministic full-register inspection and conservative blocker evidence; no raw source body, real postcode row, geometry pack, API route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "norway-source-inspector",
+      "command": "node scripts/inspect-postal-context-no-sources.mjs --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "six byte/SHA-256-bound bodies reproduce 5,122 unique well-formed rows, G/P/B/S counts, 359 municipality references, 21/22 territory metrics and current official area metadata"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "norway-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-no-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, full register/category/territory counts, rights and fixed-geometry gates, report digests and Poland next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes after the lockfile dependency tree is installed"
+    },
+    {
+      "id": "changed-javascript-and-json-syntax",
+      "command": "node --check for both changed JavaScript modules plus JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "the inspector and ledger test parse and the manifest, source profile, source report, checks report and rollout ledger are valid JSON"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 51,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 5,
+    "exactBodiesByteAndSha256Bound": 6,
+    "postenRows": 5122,
+    "postenDistinctPostcodes": 5122,
+    "postenMalformedRows": 0,
+    "postenDuplicatePostcodes": 0,
+    "categoryG": 3318,
+    "categoryP": 1740,
+    "categoryB": 60,
+    "categoryS": 4,
+    "countyLike21SvalbardRows": 7,
+    "countyLike22JanMayenRows": 1,
+    "fixedKartverketGeometryArtifactsInspected": 0,
+    "polygonOrMultiPolygonFeaturesValidated": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0,
+    "postenDatasetSpecificAgidProcessingAndPublicServingGrantEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realNoRuntimeVerified": false,
+    "realNoApiVerified": false,
+    "realNoAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no approved fixed Posten/Kartverket reconciled artifact exists"
+  },
+  "knownLimitations": [
+    "The current Posten register is complete and internally valid as a public assignment reference, but no dataset-specific AGID processing and public-serving grant was established.",
+    "Kartverket/data.norge advertises official postcode-area distributions under CC BY 4.0, but WFS and download-host requests timed out in this environment; no fixed geometry body or digest was pinned.",
+    "No full Polygon/MultiPolygon topology, CRS, coverage or 5,122-code area/non-area reconciliation could be verified.",
+    "Seven Svalbard and one Jan Mayen source rows are retained as operational classifications and were not merged into repository NO identity.",
+    "The first full typecheck used an existing incomplete dependency cache and failed only on missing unrelated packages. A lockfile npm ci in the isolated worktree completed, and the full TypeScript graph then passed.",
+    "No real NO postcode runtime, API map fit, translucent rendering or browser E2E can be exercised without an approved fixed reconciled artifact."
+  ],
+  "countryM2Achieved": false
+}

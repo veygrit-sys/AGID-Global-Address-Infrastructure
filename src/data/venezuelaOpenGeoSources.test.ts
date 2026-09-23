@@ -1,0 +1,51 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { test } from 'node:test';
+import { AMERICAS_OPEN_GEO_SOURCES, getAmericasOpenSourceIds } from './americasOpenGeoSources';
+import { classifyPostalSourceTrust, getOfficialPostalSourcesForCountry } from '../lib/officialPostalSourceCatalog';
+const EXPECTED = ['ipostel-venezuela-postcode-lookup', 'upu-venezuela-addressing-2019', 'ine-venezuela-populated-places-2001', 'igvsb-venezuela-geographic-authority', 'venezuela-geography-cartography-cadastre-law-2000', 'osm-venezuela'] as const;
+const CATALOG = EXPECTED.slice(0, 5);
+test('Venezuelan registry separates IPOSTEL, UPU, dated INE, IGVSB, legal, and community evidence', () => {
+  const ids = getAmericasOpenSourceIds('VE'); for (const id of EXPECTED) { assert.ok(ids.includes(id), id); assert.equal(AMERICAS_OPEN_GEO_SOURCES[id].id, id); assert.equal(AMERICAS_OPEN_GEO_SOURCES[id].url.startsWith('http'), true); }
+  const ipostelNotes = AMERICAS_OPEN_GEO_SOURCES['ipostel-venezuela-postcode-lookup'].notes;
+  assert.match(ipostelNotes, /designated operator/i);
+  assert.match(ipostelNotes, /time-bound four-digit lookup/i);
+  assert.match(ipostelNotes, /not bulk data, a polygon/i);
+  const upuNotes = AMERICAS_OPEN_GEO_SOURCES['upu-venezuela-addressing-2019'].notes;
+  assert.match(upuNotes, /May 2019/);
+  assert.match(upuNotes, /first digit as postal region/);
+  assert.match(upuNotes, /delivery office/);
+  assert.match(upuNotes, /not a current assignment table/i);
+  const ineNotes = AMERICAS_OPEN_GEO_SOURCES['ine-venezuela-populated-places-2001'].notes;
+  assert.match(ineNotes, /dated INE 2001/);
+  assert.match(ineNotes, /municipality and parish/);
+  assert.match(ineNotes, /not current administration.*postal geometry/i);
+  const igvsbNotes = AMERICAS_OPEN_GEO_SOURCES['igvsb-venezuela-geographic-authority'].notes;
+  assert.match(igvsbNotes, /geographic.*cartographic.*cadastral/i);
+  assert.match(igvsbNotes, /not.*postal/i);
+  const lawNotes = AMERICAS_OPEN_GEO_SOURCES['venezuela-geography-cartography-cadastre-law-2000'].notes;
+  assert.match(lawNotes, /public territorial information/i);
+  assert.match(lawNotes, /not.*bulk/i);
+  assert.match(lawNotes, /address-building/i);
+  assert.match(AMERICAS_OPEN_GEO_SOURCES['osm-venezuela'].license ?? '', /ODbL/i);
+});
+test('Venezuelan catalog treats an observed IPOSTEL result as authoritative but keeps context metadata-only', () => {
+  const sources = new Map(getOfficialPostalSourcesForCountry('VE').map(source => [source.id, source])); for (const id of CATALOG) assert.ok(sources.has(id), id);
+  assert.equal(sources.get('ipostel-venezuela-postcode-lookup')?.trustTier, 'authoritative'); assert.equal(sources.get('ipostel-venezuela-postcode-lookup')?.sourceRole, 'postal-reference-data'); assert.equal(sources.get('ipostel-venezuela-postcode-lookup')?.validationReadiness, 'reference-eligible');
+  assert.equal(sources.get('upu-venezuela-addressing-2019')?.sourceRole, 'context-only'); assert.equal(sources.get('ine-venezuela-populated-places-2001')?.validationReadiness, 'metadata-only'); assert.equal(sources.get('igvsb-venezuela-geographic-authority')?.sourceRole, 'context-only'); assert.equal(sources.get('venezuela-geography-cartography-cadastre-law-2000')?.sourceRole, 'legal-framework-only');
+  const classification = classifyPostalSourceTrust({ countryCode: 'VE', sourceIds: ['ipostel-venezuela-postcode-lookup'], source: 'IPOSTEL postcode lookup' }); assert.equal(classification.strength, 'strong'); assert.equal(classification.tier, 'authoritative');
+});
+test('Venezuelan address metadata encodes four digits, delivery network, specialist fields, building boundaries, and AGID', () => {
+  const here = dirname(fileURLToPath(import.meta.url)); const value = JSON.parse(readFileSync(resolve(here, 'address_formats/americas/south_america/VE.json'), 'utf8')) as any;
+  assert.equal(value.postalCode.format, 'NNNN'); assert.equal(new RegExp(value.postalCode.regex).test('9999'), true); assert.equal(new RegExp(value.postalCode.regex).test('99-99'), false); assert.equal(new RegExp(value.postalCode.regex).test('VE-9999'), false);
+  assert.match(value.postalCode.source, /IPOSTEL.*UPU.*05\/2019.*INE.*IGVSB.*cadastre law/i);
+  const usage = value.addressRules.postalCode.usage;
+  assert.match(usage, /delivery office/i);
+  assert.match(usage, /delivery-network-first, not an automatic polygon/i);
+  assert.match(usage, /Building display requires/i);
+  assert.match(usage, /AGID remains an independent/i);
+  for (const key of ['recipient', 'attention', 'organization', 'street', 'intersectionOrReference', 'houseNumber', 'premisesOrBuilding', 'entrance', 'floor', 'unitOrOffice', 'urbanizationSectorOrBarrio', 'parish', 'municipality', 'locality', 'stateOrCapitalDistrict', 'poBox', 'postOffice', 'postcode']) assert.ok(value.native.fields.some((item: any) => item.key === key), key);
+  assert.ok(value.native.fields.every((item: any) => item.placeholder === '')); for (const id of EXPECTED) assert.ok(value.openSourceIds.includes(id), id);
+});

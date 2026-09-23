@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "SR",
+  "observedAt": "2026-09-02T06:49:26.752Z",
+  "completedAt": "2026-09-02T07:09:19.9341353Z",
+  "baseCommit": "1472f1f86384f4466bb2d4ac9686bb5c76aa622f",
+  "scope": "SR official no-postcode, exact-body, rights, address-format, identity and no-proxy fail-closed evidence plus shared application contracts. No raw source body, address row, postcode row, district/resort/locality/address/route/service-area/point/building proxy, synthetic planning code, production pack, real SR API response or browser area was promoted.",
+  "checks": [
+    {
+      "id": "sr-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-sr-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "three exact official bodies reproduce UPU no-postcode and address-format plus SURPOST identity/rights evidence without rows or geometry"
+    },
+    {
+      "id": "sr-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-sr-sources.test.py -v",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "complete set, changed body, missing/extra/renamed body, HTML marker and PDF signature/page/marker drift fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts",
+      "result": "pass",
+      "tests": 28,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and context authority remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "sr-ledger-address-and-evidence",
+      "command": "node --test scripts/postal-context-m2-sr-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country definition, exact receipts, no-postcode address metadata, rights/no-proxy boundary, report digests and next SV"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "typescript tsc --noEmit for src/lib/postalSearchArea.test.ts and src/lib/postalContextPackRuntime.test.ts with shared dependencies as read-only base/type roots",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal search area and pack runtime graphs pass limited noEmit type checking"
+    },
+    {
+      "id": "syntax-and-status",
+      "command": "python compileall for two changed Python files; node --check for two changed JavaScript modules; JSON.parse for changed JSON; postal-context status",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "changed executable and JSON files parse and rollout selects SV after blocked SR"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 49,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 3,
+    "exactBodiesByteAndSha256Bound": 3,
+    "exactOfficialBodiesBytes": 720221,
+    "sourceReviewDigest": "sha256:50ef4a44d605bd89c30dba4a00398a2e46dbf644450e86ab8d991baabf3de9d0",
+    "currentPostalCodeFormat": "none",
+    "upuEdition": "Sep. 2025",
+    "upuListsSurinameAsNotRequiringPostalCodes": true,
+    "upuAddressExampleContainsPostcode": false,
+    "currentCompletePostalCodeAssignmentsValidated": 0,
+    "compatiblePublicServingPermissionEstablished": false,
+    "fixedOfficialPostalGeometryArtifactsInspected": 0,
+    "officialPostalPolygonOrMultiPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realSrRuntimeVerified": false,
+    "realSrApiVerified": false,
+    "realSrAppAreaVisualizationVerified": false,
+    "browserE2e": "not run: Suriname has no valid postcode input or eligible real postal Polygon/MultiPolygon; in-app Browser setup also failed on Windows deny-read ACLs"
+  },
+  "knownLimitations": [
+    "Current UPU no-postcode evidence cannot become a nationwide placeholder code or polygon.",
+    "The 03/2005 address sheet is dated format evidence and no address row from it is bundled.",
+    "SURPOST states all rights reserved and publishes no compatible open postcode dataset licence.",
+    "Draft SR planning cells and synthetic codes are not SURPOST assignments and remain unpromoted."
+  ],
+  "environmentNotes": [
+    "npm ci --offline --ignore-scripts stopped on ENOSPC; its incomplete SR-only node_modules was removed. Shared dependencies were consumed read-only through NODE_PATH for targeted tests.",
+    "A broader pre-existing suite had three unrelated baseline failures: global address inventory omissions, hierarchy HM mismatch and a stale configured-store expectation missing already-committed PY. The SR-focused 28 shared runtime tests pass.",
+    "Browser runtime initialization failed before navigation with Windows sandbox deny-read ACLs. No alternate positive visual claim was made because SR has no postcode search key or eligible area."
+  ],
+  "countryM2Achieved": false
+}

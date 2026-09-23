@@ -1,14 +1,114 @@
 # AGID Project Resume
 
-Last updated: 2026-06-01
+Last updated: 2026-06-07
+
+## Resume Map
+
+This file is the main product and architecture resume. It should remain the
+entry point for AGID as an application, standard, and integration surface. More
+specialized resumes and papers should be treated as companion documents:
+
+| Topic | Primary document | Role |
+| --- | --- | --- |
+| AGID project direction | `docs/project-resume.md` | Product, architecture, roadmap, and differentiation |
+| AGID grid mathematics | `docs/agid-math-model-resume.md` | Coordinate-to-cell contract and SDK math |
+| AGID/AOID privacy boundary | `docs/agid-aoid-design.md` | Public/private identity split and communication rules |
+| AOID detailed theory | `docs/aoid-detailed-paper-ja.md` | Owner-managed private address identifier |
+| Address Morphism Theory | `docs/address-morphism-theory-verified-resume.md` | Verified AMT claims and safe theorem wording |
+| AMN protocol layer | `docs/address-morphism-network-resume.md` | Public audit envelope and registry direction |
+| ZK address predicates | `docs/address-morphism-theory-ii-zero-knowledge-address-predicates.md` | Privacy-preserving address-derived predicates |
+| Cleanup and material audit | `docs/unused-file-material-audit-2026-06-07.md` | Generated artifacts, archive candidates, and code review candidates |
+
+Rule of use: keep this resume concise and operational. Put mathematical proofs,
+ZK definitions, AOID ownership details, and AMT manuscript structure in their
+own documents, then link back here.
 
 ## One-Line Summary
 
-AGID is a deterministic global grid and address intelligence platform for displaying, validating, registering, sharing, and integrating locations across countries, territories, seas, natural features, disputed regions, and building-level places.
+AGID is a deterministic global grid and address intelligence platform built as an overlay of a **virtual postal code** and a **virtual address** for displaying, validating, registering, sharing, and integrating locations across countries, territories, seas, natural features, disputed regions, and building-level places.
+
+## Core Philosophy: Virtual Postal Code + Virtual Address
+
+AGID's system philosophy is the superposition of two layers:
+
+1. **Virtual Postal Code**: a globally consistent location identifier for countries and regions where postal codes do not exist, are too broad, are incomplete, or cannot keep pace with urbanization.
+2. **Virtual Address**: a location reference that remains useful when conventional addresses change, disappear, or become socially unstable because of disasters, conflict, temporary housing, mobile homes, ships, redevelopment, or displaced communities.
+
+AGID does not begin from the assumption that every person has a stable street address or that every country has a reliable postal system. It begins from the physical Earth. As long as a place can be located in geographic space, AGID can assign a deterministic grid identity and then layer postal, administrative, linguistic, and human-readable address evidence on top.
+
+This means AGID is not trying to replace national postal systems. It is designed as a common reference layer that can coexist with them:
+
+- Where postal systems are strong, AGID complements them with grid identity, QR registration, multilingual display, and evidence scoring.
+- Where postal systems are weak or absent, AGID can function as a virtual postal code.
+- Where homes, buildings, camps, routes, or administrative labels change, AGID can function as a virtual address anchored to location rather than to a fragile civic record.
+- Where disaster, conflict, or informal settlement conditions break traditional addressing, AGID gives people and organizations a stable way to share, register, and recover a location reference.
+
+The central design idea is:
+
+```text
+physical location
+  -> deterministic AGID grid cell
+  -> virtual postal code layer
+  -> virtual address layer
+  -> local-language and international-English rendering
+  -> postal/geographic evidence and confidence
+```
+
+This layered model is what separates AGID from systems that only encode coordinates, only validate postal addresses, or only search map places.
+
+## AGID/AOID Two-Layer Identity
+
+AGID and AOID must stay separate:
+
+- **AGID (Address Grid ID)** is the public location, address, building, and public map-feature layer. It identifies a place and can act as a virtual postal code or virtual address anchor. It can include public building names, landmarks, natural-feature and heritage labels, public address labels, postal/admin labels, and open-source geographic evidence. It must not include recipient names, phone numbers, room numbers, private access instructions, or private ownership records.
+- **AOID (Address Owner ID)** is the private address layer. It identifies the owner-controlled delivery destination on top of an AGID. It can include room, recipient, phone, delivery instructions, private access notes, and owner-managed delivery details, but only the owner can update or regenerate its QR payload.
+
+The short rule is:
+
+```text
+AGID = where and public address/building/map feature
+AOID = who receives and how delivery reaches them
+```
+
+This distinction is also the privacy boundary. AGID can be generated and shared by SDKs and devices without central approval, and it may be enriched with public address/building/map-feature evidence. AOID is local-first and can sync only through explicit private sync paths. Central services may improve quality, confidence, postal lookup, building evidence, map-feature evidence, and geographic evidence, but they must not publish AOID contents into the public AGID layer.
+
+Current AOID identifier rule:
+
+- AOID IDs are normalized as 9- to 16-character unambiguous Base32 strings.
+- When linked to an AGID, the AOID must contain the AGID hash anchor, not the
+  two-character AGID prefix.
+- Sixteen identical repeated characters are rejected.
+- Any four-character consecutive run in the Base32 alphabet is rejected.
+- The AOID public handle is not ownership proof and must not expose recipient,
+  phone, room, delivery instruction, or exact private coordinate fields.
+
+Detailed identity rules are kept in [AGID and AOID Design Principles](./agid-aoid-design.md).
+
+## Independent Standard Surface
+
+AGID should be presented as a standard first and an application second. The app is the reference implementation, but integrations should be able to depend on explicit standard artifacts:
+
+- `sdk/agid-spec/agid-spec.json` defines the language-neutral AGID core.
+- `sdk/agid-spec/test-vectors.json` defines SDK parity expectations for `encode`, `decode`, and `cellBounds`.
+- `/api/v1/openapi.json` defines the versioned API contract for hosted AGID services.
+- `docs/data-licenses.md` defines how open-source, government, postal, map, and geographic evidence sources keep their own license boundaries.
+
+This matters because AGID is intended to be used by SDKs, logistics tools, embedded devices, offline workflows, GIS validation paths, QR readers, address registration systems, and humanitarian mapping tools. Those users need a stable standard surface instead of a dependency on one React UI or one server implementation.
+
+Detailed conformance rules are kept in [AGID Standard and Conformance](./agid-standard.md).
 
 ## Problem
 
 Addresses are not globally uniform. Some countries have reliable postal APIs, some have weak or partial postal datasets, some do not use postal codes at all, and many areas need coordinates, administrative hierarchy, local scripts, romanization, or geographic feature names to be understandable.
+
+The address gap is not only technical. It is also social and humanitarian:
+
+- some countries and territories have no practical postal code for many residents,
+- some postal codes cover areas that are too large for delivery or emergency response,
+- informal settlements and fast-growing suburbs may exist before official address records catch up,
+- displaced people may lose a civic address while still needing to receive aid, medicine, payments, or identity-linked services,
+- natural disasters can erase buildings and street signs while the location still matters,
+- ships, mobile bases, field camps, temporary clinics, and remote work sites may need address-like identifiers without being conventional addresses.
 
 AGID treats an address as a layered evidence object:
 
@@ -43,12 +143,30 @@ AGID is closest to a mix of coordinate-code systems, postal validation tools, op
 AGID should be positioned as:
 
 - a deterministic location ID that works without central approval,
+- a virtual postal-code layer for regions with missing, weak, broad, or incomplete postal-code systems,
+- a virtual-address layer for people, organizations, assets, and locations whose conventional address is absent, temporary, lost, or changing,
 - an address-quality layer that improves results with postal and open-source evidence,
 - a multilingual international-shipping address renderer,
 - a private address registration and QR layer,
 - a portable SDK/spec for apps, terminals, logistics, drones, and offline tools.
 
 AGID should not be positioned as a replacement for every GIS index, every postal API, or every map search provider. It should consume those tools as evidence and provide a stable user-facing location and address layer above them.
+
+### Comparison Matrix
+
+| Service / category | Primary job | Strength | Limitation AGID targets | AGID difference |
+| --- | --- | --- | --- | --- |
+| what3words | Human-friendly location words | Easy to say and remember | Closed word system, not an address-quality or postal-evidence platform | AGID is deterministic, SDK-oriented, evidence-aware, QR/address-registration friendly, and designed around virtual postal code + virtual address layers |
+| Google Plus Codes / Open Location Code | Open coordinate code | Mature open coordinate reference | Does not by itself solve postal quality, local-language address order, building evidence, or humanitarian virtual-address workflows | AGID can interoperate with Plus Codes but adds address rendering, confidence, country policy, QR registration, and no-postal-code behavior |
+| Geohash | Spatial indexing | Simple database/search prefix behavior | Cell shape and user-facing address semantics are not enough for global address UX | AGID focuses on address identity, selected-cell UX, country/sea/territory meaning, and source-aware address display |
+| H3 / S2 | Spatial analytics and geofencing | Excellent backend grid libraries | Not designed as a public address or postal substitute | AGID can bridge to H3/S2 for analytics while remaining the user-facing address ID |
+| National postal APIs | Official postal validation | Strong in mature postal countries | Weak or absent in many regions; cannot handle places without postal systems | AGID classifies postal strength and can still provide AGID/coordinate/geo evidence when postal data is missing |
+| Commercial address validation | Deliverability checks | Carrier and ecommerce workflows | Often country-limited, proprietary, and address-first rather than location-first | AGID is location-first and can supply virtual postal/address identity before carrier-specific validation |
+| Nominatim / Pelias / map geocoders | Search and reverse geocode | Large place databases and fuzzy search | Search result is not automatically a verified postal address | AGID treats geocoder output as evidence, then merges postal rules, local language, international English, and manual confidence |
+| Google Maps / Apple Maps | Consumer map UX | Huge POI/search ecosystems | Provider-dependent and not a portable open ID/spec | AGID can sit above maps as a portable ID, QR, SDK, and address-quality layer |
+| Logistics platforms | Operational delivery | Carrier networks, routes, SLAs | Carrier-specific and often assumes a deliverable address exists | AGID gives a neutral pre-carrier location/address identity, useful where addresses are weak |
+| GIS platforms | Spatial storage, rendering, analysis | Mature standards and tooling | Too infrastructure-oriented for everyday address registration | AGID uses GIS as validation/rendering infrastructure and adds user-facing address intelligence |
+| Emergency/humanitarian mapping | Crisis mapping and field coordination | Strong for disaster response and OSM/HOT workflows | Temporary records can be hard to carry into daily delivery and SDK workflows | AGID can encode disaster/temporary locations as virtual addresses while preserving open evidence and QR sharing |
 
 ### what3words
 
@@ -61,6 +179,8 @@ AGID advantages:
 - Visible map grid with selected-cell geometry that can be tested against the same cell polygon.
 - Address intelligence: postal codes, local language, international English, building names, confidence, and source labels.
 - Better fit for QR, logistics, drones, and developer workflows where machine-readable stability matters more than memorability.
+- Virtual postal-code behavior for regions where a word address is not enough to express postal evidence, administrative context, and confidence.
+- Virtual-address behavior for unstable, temporary, disaster-affected, or humanitarian locations where a conventional address may not exist.
 
 what3words advantages AGID should respect:
 
@@ -81,6 +201,8 @@ AGID advantages:
 - Handles postal-code strength classes, no-postal-code areas, seas, mountains, natural features, overseas territories, autonomous regions, and disputed areas.
 - Provides private registered-address and AOID workflows, not just a public coordinate code.
 - Uses a hybrid model: SDK/device for core ID, central services for quality upgrades.
+- Frames the location code as part of an address stack, not only as an encoded coordinate.
+- Can represent no-postal-code places as a virtual postal-code layer and temporary/disaster locations as a virtual-address layer.
 
 Plus Code advantages AGID should respect:
 
@@ -158,6 +280,8 @@ AGID advantages:
 - Can still produce a useful AGID/coordinate/administrative/natural-feature record when postal code data is missing.
 - Shows source, confidence, verified/partial/manual state instead of hiding uncertainty.
 - Supports local-language and international-English order conversion.
+- Provides an address fallback even when postal data is unavailable by using AGID, coordinates, administrative hierarchy, natural features, and manual confirmation.
+- Explicitly treats missing postal systems as a product case, not as an error.
 
 Postal API advantages AGID should respect:
 
@@ -165,6 +289,19 @@ Postal API advantages AGID should respect:
 - Better final-mile validation where the postal system is mature.
 
 AGID should use postal APIs as evidence, not as the only truth source.
+
+### Disaster, Displacement, and No-Permanent-Address Systems
+
+Some tools focus on emergency response, refugee registration, camp management, or field mapping. They solve important operational problems but often remain tied to a crisis-specific database, a local project, or a temporary workflow.
+
+AGID's difference:
+
+- A displaced person, temporary clinic, mobile base, or rebuilt home can retain a location reference even when the civic address changes.
+- The same AGID can be expressed as a QR payload, SDK object, map cell, registered address record, or international-English label.
+- The system can show whether the location is postal verified, geo verified, partial, or manual required.
+- It can coexist with humanitarian OSM/HOT-style mapping, national disaster datasets, and local administrative updates without becoming dependent on one database.
+
+This is the clearest use case for the **virtual address** concept: AGID preserves a place reference when the legal, postal, or physical address around it is fluid.
 
 ### Geocoders and Map Search
 
@@ -196,6 +333,8 @@ AGID advantages:
 - Preserves local script and romanization policy.
 - Can encode registered addresses into QR payloads.
 - Can expose SDKs for terminals and carrier integrations.
+- Can provide a stable virtual postal code before the carrier has an official postal code or route label for that place.
+- Can preserve location identity when a delivery point is temporary, under reconstruction, informal, or newly urbanized.
 
 Delivery-platform advantages AGID should respect:
 
@@ -226,6 +365,8 @@ AGID should use GIS tools for validation, rendering, and backend indexing, not r
 The strongest differentiation is the combination of:
 
 - deterministic global grid identity,
+- explicit virtual postal-code philosophy for countries and regions with no, weak, broad, or incomplete postal-code systems,
+- explicit virtual-address philosophy for locations whose ordinary address is missing, changing, temporary, or lost,
 - address-format intelligence by country/territory,
 - multilingual native and international-English rendering,
 - postal and open-source evidence scoring,
@@ -236,6 +377,10 @@ The strongest differentiation is the combination of:
 - SDK portability across many languages.
 
 No single competitor in the landscape fully covers this combination. The risk is scope creep. The product must keep the core simple: deterministic ID first, evidence second, rendering third, registration fourth, integrations fifth.
+
+### Product Philosophy in One Sentence
+
+AGID is a world-common location identity layer that overlays a virtual postal code and a virtual address on top of deterministic geography, then upgrades that identity with postal evidence, open geographic evidence, local-language rendering, international-English rendering, QR sharing, and SDK portability.
 
 ### Claims AGID Can Make Now
 
@@ -271,6 +416,13 @@ No single competitor in the landscape fully covers this combination. The risk is
 - Postal-code-aware field rendering.
 - QR payload generation and reading for registered addresses.
 - Building name prefill path from reverse geocode details and open-source place data.
+
+### Place Search
+
+- Search-only language hints derived from query scripts and aliases.
+- Place-name search remains separate from app UI language and address-language tabs.
+- Local OSM cache matching covers all available `name:*` tags, not a fixed small language list.
+- Photon route-search suggestions retry expanded query variants when the original query returns no features.
 
 ### Address Rendering
 
@@ -334,6 +486,17 @@ The SDK strategy is to keep the AGID encoding/decoding core portable while the w
 
 ## Recent Engineering Improvements
 
+- Verified that the app launches at `http://127.0.0.1:3000/`, returns HTTP
+  200, and reports `/api/health` as `{"status":"ok"}` in the 2026-06-07 smoke
+  pass.
+- Verified that the production build succeeds through Vite in the 2026-06-07
+  pass, while still warning about a large main bundle.
+- Added a full workspace material audit that separates generated cleanup
+  candidates, archive candidates, and code-review candidates without deleting
+  files.
+- Hardened AOID normalization around 9- to 16-character Base32 handles,
+  linked-AGID anchors, repeated-character rejection, and four-character
+  consecutive-run rejection.
 - Moved address-registration territory datasets out of the large UI component.
 - Added frontend API endpoint builders.
 - Added a typed GeoAdmin service for country stats, city lists, boundaries, data-quality reports, and OSM region search.

@@ -1,0 +1,86 @@
+{
+  "schema_version": "agid-postal-kr-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-kr",
+    "country_code": "KR",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "five-digit postcode and National Basic District Number",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "official_national_basic_district_polygon_or_multipolygon_when_exact_current_and_rights_cleared_otherwise_non_area",
+    "assignment_rule": "Korea Post has used the five-digit National Basic District Number as the postcode since 1 August 2015. The code remains text with leading zeroes. A current pinned Korea Post assignment or MOIS National Basic District artifact establishes the code at its effective time; valid syntax, an address API result, post-office location or administrative unit alone does not.",
+    "assignment_granularity_rule": "The first three digits identify a special or metropolitan city or province together with a city, county or autonomous district, and the final two are sequential within that jurisdiction. National Basic Districts are smaller than eup, myeon or dong and are bounded using stable features such as roads, rivers and railways. P.O. box, organization and exceptional delivery codes remain non-area unless an exact source supplies area semantics.",
+    "geometry_rule": "The exact current MOIS National Basic District polygon or multipolygon for the same five-digit number is canonical postal geometry when its product, edition, approval, licence, coverage, topology, source CRS and digest are pinned. A Korea Post query row, administrative boundary, road buffer, parcel, building footprint, centroid, Voronoi cell or interpolation never substitutes for that district; a missing district remains a gap.",
+    "address_rule": "The MOIS Juso road-name address API and public Building DB may supply public road-address components, postcode, road-address management number, 25-digit building management number and public building name. A result is address evidence, not geometry; detailed dong, floor and ho output requires an explicitly public, purpose-compatible artifact and is never inferred.",
+    "building_rule": "Exact building display requires an exact rights-cleared Juso electronic-map building or MOLIT GIS Integrated Building Information feature joined by a source-defined building management number, documented address-management relation or reviewed explicit crosswalk. Point, basic-district or parcel containment, address text, centroid, overlap and proximity create candidates only. One road address may relate to multiple buildings.",
+    "cadastral_rule": "The exact MOLIT continuous cadastral product is validation context only under its own terms and is not survey evidence. A parcel does not prove postcode, address, building identity, ownership or land rights. Public output excludes owners, rightsholders, residents, occupants, titles, encumbrances, values, transactions and taxes.",
+    "administration_rule": "Pinned official administrative boundaries supply dated province, special or metropolitan city, city, county, autonomous district, eup, myeon and dong context only. They do not replace National Basic District geometry, create a postcode assignment, prove a building relation or determine sovereignty.",
+    "licence_rule": "Korea Open Government Licence markings apply only to the exact product carrying them. Juso electronic-map application, identity verification, purpose review, service keys, viewers and public-data metadata do not imply unrestricted bulk extraction, derivative or redistribution rights. Each artifact pins product, layer, approval and purpose, allowed public fields, derivative rights, edition, capture and effective time, coverage, terms, schema, source CRS, reviewed transform and digest.",
+    "crs_rule": "Every geometry retains its exact product-specific source CRS. Juso spatial products may use GRS80 UTM-K EPSG:5179 while other position, building or cadastral products may use EPSG:5186; neither is assumed globally. WGS84 output requires a reviewed versioned transform and source coordinates are never relabelled EPSG:4326.",
+    "territory_rule": "The release uses ISO code KR and only the Republic of Korea coverage explicitly stated by each pinned source. Postal, address, administrative, building or cadastral coverage is not a sovereignty determination, and clipping or interpolation cannot fill disputed, offshore or absent source coverage.",
+    "freshness_rule": "Korea Post assignment, MOIS National Basic District, road-address, Building DB, electronic-map, MOLIT integrated-building and cadastral artifacts refresh independently. Mixed-edition joins fail closed unless validity and knowledge intervals overlap and the explicit identifier or crosswalk remains valid."
+  },
+  "integration": {
+    "agid_country_code": "KR",
+    "coordinate_flow": "coordinate -> official current National Basic District polygon -> five-digit postcode -> administrative hierarchy -> exact Juso address and building-management relation -> exact permitted building -> KR AGID cell",
+    "postcode_flow": "canonical five digits -> official National Basic District polygon or explicit non-area assignment -> Juso road-address candidates -> explicit building-management relation -> exact permitted building -> AGID cells",
+    "building_output_gate": "source-defined building-management relation, documented address-management relation, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Five-digit postcodes remain text and preserve leading zeroes; KR prefixes, hyphens and four- or six-digit values are rejected." },
+    { "id": "national-basic-district-identity", "pass": "Postal geometry uses the exact current MOIS National Basic District feature carrying the same five-digit number." },
+    { "id": "postal-topology", "pass": "Polygon or multipolygon validity, overlaps, gaps, exclusions, islands, effective dates, coverage and digest are checked without administrative or model-based gap filling." },
+    { "id": "product-specific-crs", "pass": "Every product pins its actual EPSG:5179, EPSG:5186 or other source CRS and a reviewed transform." },
+    { "id": "official-address", "pass": "Every road address retains allowed public components, road-address and building-management identifiers, source, validity, terms and digest." },
+    { "id": "explicit-building-link", "pass": "Building output has an explicit authoritative relation or reviewed crosswalk; containment, overlap, text match and proximity alone never pass." },
+    { "id": "licence-and-access", "pass": "Exact KOGL marking, application approval, purpose, service-key conditions, derivative rights, redistribution and attribution are pinned per product." },
+    { "id": "privacy", "pass": "No resident, household, owner, rightsholder, occupant, recipient, title, encumbrance, value, tax, contact, shipment or query-history data is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_postal_geometry", "definition": "Pinned Korea Post assignment and MOIS National Basic District geometry pass identity, licence, approval, coverage, topology, CRS, freshness and digest gates." },
+      { "id": "M3_address", "definition": "Juso road-address API or Building DB artifacts pass public-field, identifier, validity, access and redistribution gates." },
+      { "id": "M4_building", "definition": "Exact permitted Juso or MOLIT building geometry and explicit address-building joins pass identifier, ambiguity, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "postcode-query-or-valid-syntax-presented-as-national-basic-district-polygon",
+      "administrative-boundary-road-buffer-parcel-building-voronoi-or-interpolation-presented-as-official-postal-area",
+      "missing-national-basic-district-filled-by-model-without-derived-label-and-separate-policy",
+      "address-result-entrance-point-or-cadastral-parcel-presented-as-building-footprint",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "application-service-key-viewer-public-metadata-or-kogl-label-presented-as-unrestricted-redistribution-right",
+      "resident-household-owner-rightsholder-occupant-recipient-title-encumbrance-value-tax-shipment-or-query-data-published",
+      "administrative-cadastral-map-or-postal-coverage-presented-as-sovereignty-determination",
+      "product-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-or-building-management-number-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_KR_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_KR_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_KR_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_KR_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-address-building-cadastral-or-administrative-rows",
+    "postcode-query-result-is-polygon",
+    "administrative-boundary-equals-national-basic-district",
+    "model-generated-gap-is-official-postal-geometry",
+    "address-point-or-parcel-is-building-footprint",
+    "nearest-building-is-exact-address-link",
+    "building-register-or-land-rights-data-is-public-address-output"
+  ]
+}

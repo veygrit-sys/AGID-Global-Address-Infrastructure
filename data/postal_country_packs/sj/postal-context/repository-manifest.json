@@ -1,0 +1,77 @@
+{
+  "schema_version": "agid-postal-sj-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-sj",
+    "country_code": "SJ",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Postnummer",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "official_kartverket_postcode_area_or_source_defined_non_area",
+    "assignment_rule": "A pinned Posten Bring register row whose municipality code starts with county-like 21 Svalbard or 22 Jan Mayen establishes the observed four-digit postcode, postal place, municipality reference and G, P, B or S category at the register effective time. The 21/22 fields are operational source classifications, not ordinary counties, and do not merge repository SJ into NO.",
+    "category_rule": "G is used for street addresses, P for P.O. boxes, B for both street addresses and P.O. boxes, and S for special service not used as an ordinary address. Category, territory classification and validity are retained; no area is inferred from category or a missing feature.",
+    "postcode_area_rule": "Only an exact pinned Kartverket Postnummerområder Polygon/MultiPolygon feature with compatible code, validity, CC BY 4.0 lineage, CRS, topology, coverage and digest may be shown as an official postcode area. A P.O.-box, special, route, point, municipality, settlement, island, administrative boundary, buffer, hull, Voronoi/raster cell or nearest area never substitutes for a missing official feature.",
+    "territory_rule": "Repository identity remains SJ. Posten county-like 21 Svalbard and 22 Jan Mayen values, Kartverket source coverage, geographical territory, administration and postcode-area geometry stay distinct and are never silently merged into NO or into one another.",
+    "rights_rule": "Every Posten assignment/category body and Kartverket geometry distribution pins provider, source URL, capture and release/reference time, exact terms, attribution, byte length, SHA-256, schema, CRS, transform, coverage, exclusions and AGID changes. Public download availability is not silently widened into processing, derivation, redistribution or public-serving permission.",
+    "address_building_rule": "Postal assignment and area geometry do not authorize an address, building, unit, occupant, owner or rightsholder. Any address or building display requires a separately identified, rights-cleared authoritative source and explicit relationship."
+  },
+  "integration": {
+    "agid_country_code": "SJ",
+    "coordinate_flow": "coordinate -> pinned official SJ postcode area or explicit source-defined non-area -> separately sourced address/building context -> SJ AGID cell",
+    "postcode_flow": "canonical four digits -> pinned Posten 21/22 assignment and category -> matching official Kartverket area or explicit source-defined non-area -> separately sourced address/building context -> SJ AGID cells",
+    "building_output_gate": "separate rights-cleared address/building authority and an explicit source-defined relationship"
+  },
+  "quality_gates": [
+    { "id": "canonical-postcode", "pass": "Every postcode remains four-character text and preserves leading zeroes." },
+    { "id": "operator-assignment", "pass": "Every current SJ assignment pins the complete Posten register version/effective time, postal place, municipality reference, 21/22 classification, G/P/B/S category, terms, schema and digest." },
+    { "id": "official-area-or-non-area", "pass": "Each SJ code is reconciled to an exact valid Postnummerområder Polygon/MultiPolygon or an explicit source-defined non-area reason; absence is not classified by inference." },
+    { "id": "territory-identity", "pass": "Posten 21/22 source fields and repository SJ identity are retained without silently merging NO, Svalbard and Jan Mayen artifacts." },
+    { "id": "rights", "pass": "Posten and Kartverket rights are reviewed separately and authorize the actual AGID processing, derivation, redistribution and public-serving path." },
+    { "id": "privacy", "pass": "No recipient, occupant, owner, rightsholder, personal contact, title/value record, credential, shipment or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures may verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and fail-closed authority partitions are reviewable." },
+      { "id": "M2_current_svalbard_jan_mayen_assignment_and_official_area_visualization", "definition": "A current complete Posten four-digit assignment/category denominator whose county-like 21 Svalbard and 22 Jan Mayen rows are usable under explicit reviewed AGID processing, storage, derivation, redistribution and public-serving permission. Every SJ area code is reconciled to a valid fixed Kartverket Postnummerområder Polygon/MultiPolygon under CC BY 4.0, while P.O.-box, special, route, point, unmatched and other source-defined non-area records remain explicit. Source 21/22 classifications and repository SJ identity are preserved without merging NO. The approved immutable artifact pins provider, edition, reference date, rights, attribution, byte length, SHA-256, schema, source CRS, reviewed transform, topology, coverage, conflicts and exceptions. The real SJ API/app normalizes NNNN text, returns only valid real areas, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence; no municipality, settlement, island, administrative boundary, Point, building, buffer, hull, Voronoi/raster or synthetic proxy satisfies M2." },
+      { "id": "M3_address_building", "definition": "Separately sourced authoritative address/building records pass rights, identifier, relationship, validity, privacy, CRS, coverage and correction gates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-assignment",
+      "posten-public-download-presented-as-unrestricted-public-serving-right",
+      "posten-21-22-fields-used-to-merge-no-and-sj-identities",
+      "po-box-special-route-point-or-missing-feature-given-invented-polygon",
+      "municipality-settlement-island-or-administrative-boundary-presented-as-postcode-area",
+      "unmatched-code-filled-by-buffer-hull-voronoi-raster-or-nearest-area",
+      "address-or-building-object-presented-without-separate-authority-and-explicit-relation",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-stored-as-number"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_SJ_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SJ_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_SJ_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SJ_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-posten-or-kartverket-rows",
+    "every-four-digit-code-is-a-polygon",
+    "county-like-21-or-22-is-an-ordinary-county",
+    "posten-source-classification-determines-repository-identity",
+    "municipality-settlement-or-island-is-postcode-area",
+    "point-buffer-hull-voronoi-raster-or-nearest-area-is-postcode-area",
+    "postal-area-proves-address-building-or-delivery"
+  ]
+}

@@ -29,7 +29,9 @@ test('app wires Phase 3 drone mission QR saving', () => {
   assert.match(appSource, /buildDroneMissionQrPayload/);
   assert.match(appSource, /buildSavedQrFromDroneMission/);
   assert.match(appSource, /parseDroneMissionQrPayload/);
-  assert.match(appSource, /const saveDroneMissionPlan = React\.useCallback/);
+  assert.match(appSource, /await import\('\.\/lib\/droneMissionPackage'\)/);
+  assert.doesNotMatch(appSource, /from '\.\/lib\/droneMissionPackage'/);
+  assert.match(appSource, /const saveDroneMissionPlan = React\.useCallback\(async/);
   assert.doesNotMatch(appSource, /onSavePlan=\{saveDroneMissionPlan\}/);
   assert.match(appSource, /Mission QR Imported/);
 });

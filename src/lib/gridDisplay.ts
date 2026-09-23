@@ -6,6 +6,74 @@ export const W3W_STYLE_GRID_MIN_ZOOM = W3W_STYLE_GRID_FADE_START_ZOOM;
 export const W3W_STYLE_GRID_OPACITY_FLOOR = 3;
 export const WEB_MERCATOR_RADIUS_METERS = EARTH_METERS_PER_DEGREE * 180 / Math.PI;
 export const MAX_WEB_MERCATOR_LAT = 85.05112878;
+export const ABSOLUTE_GRID_ANCHOR_VERSION = 'agid-grid-anchors-v1';
+
+export type AbsoluteGridAnchorPoint = {
+  id: string;
+  label: string;
+  lat: number;
+  lon: number;
+  roles: readonly string[];
+};
+
+export const ABSOLUTE_GRID_ANCHOR_POINTS = [
+  {
+    id: 'null-island',
+    label: 'Null Island / Equator and prime meridian',
+    lat: 0,
+    lon: 0,
+    roles: ['display-origin', 'equator', 'prime-meridian', 'cubed-sphere-face-x-positive'],
+  },
+  {
+    id: 'equator-east-face',
+    label: 'Equator east cubed-sphere face center',
+    lat: 0,
+    lon: 90,
+    roles: ['equator', 'cubed-sphere-face-y-positive'],
+  },
+  {
+    id: 'antimeridian-face',
+    label: 'Equator antimeridian cubed-sphere face center',
+    lat: 0,
+    lon: 180,
+    roles: ['equator', 'antimeridian', 'cubed-sphere-face-x-negative'],
+  },
+  {
+    id: 'equator-west-face',
+    label: 'Equator west cubed-sphere face center',
+    lat: 0,
+    lon: -90,
+    roles: ['equator', 'cubed-sphere-face-y-negative'],
+  },
+  {
+    id: 'north-pole-face',
+    label: 'North pole cubed-sphere face center',
+    lat: 90,
+    lon: 0,
+    roles: ['polar', 'cubed-sphere-face-z-positive'],
+  },
+  {
+    id: 'south-pole-face',
+    label: 'South pole cubed-sphere face center',
+    lat: -90,
+    lon: 0,
+    roles: ['polar', 'cubed-sphere-face-z-negative'],
+  },
+  {
+    id: 'web-mercator-north-limit',
+    label: 'Web Mercator north render limit',
+    lat: MAX_WEB_MERCATOR_LAT,
+    lon: 0,
+    roles: ['display-limit', 'web-mercator'],
+  },
+  {
+    id: 'web-mercator-south-limit',
+    label: 'Web Mercator south render limit',
+    lat: -MAX_WEB_MERCATOR_LAT,
+    lon: 0,
+    roles: ['display-limit', 'web-mercator'],
+  },
+] as const satisfies readonly AbsoluteGridAnchorPoint[];
 
 export type GridVisibilityState = {
   zoom: number;
@@ -25,6 +93,41 @@ export function normalizeLongitude(lon: number) {
   return normalized;
 }
 
+function degreesToRadians(value: number) {
+  return value * Math.PI / 180;
+}
+
+function toUnitSphereVector(lat: number, lon: number) {
+  const latRad = degreesToRadians(Math.max(-90, Math.min(90, lat)));
+  const lonRad = degreesToRadians(normalizeLongitude(lon));
+  const cosLat = Math.cos(latRad);
+
+  return {
+    x: cosLat * Math.cos(lonRad),
+    y: cosLat * Math.sin(lonRad),
+    z: Math.sin(latRad),
+  };
+}
+
+export function getAbsoluteGridAnchorPoint(id: string) {
+  return ABSOLUTE_GRID_ANCHOR_POINTS.find(anchor => anchor.id === id);
+}
+
+export function getNearestAbsoluteGridAnchorPoint(lat: number, lon: number): AbsoluteGridAnchorPoint {
+  const point = toUnitSphereVector(
+    Number.isFinite(lat) ? lat : 0,
+    Number.isFinite(lon) ? lon : 0,
+  );
+
+  return ABSOLUTE_GRID_ANCHOR_POINTS.reduce<AbsoluteGridAnchorPoint>((best, anchor) => {
+    const bestVector = toUnitSphereVector(best.lat, best.lon);
+    const anchorVector = toUnitSphereVector(anchor.lat, anchor.lon);
+    const bestScore = point.x * bestVector.x + point.y * bestVector.y + point.z * bestVector.z;
+    const anchorScore = point.x * anchorVector.x + point.y * anchorVector.y + point.z * anchorVector.z;
+    return anchorScore > bestScore ? anchor : best;
+  }, ABSOLUTE_GRID_ANCHOR_POINTS[0]);
+}
+
 export function clampWebMercatorLatitude(lat: number) {
   return Math.max(-MAX_WEB_MERCATOR_LAT, Math.min(MAX_WEB_MERCATOR_LAT, lat));
 }
@@ -35,6 +138,7 @@ export function longitudeToAbsoluteGridX(lon: number) {
 
 export function latitudeToAbsoluteGridY(lat: number) {
   const clampedLat = clampWebMercatorLatitude(lat);
+  if (Math.abs(clampedLat) <= 1e-12) return 0;
   const latRad = clampedLat * Math.PI / 180;
   return WEB_MERCATOR_RADIUS_METERS * Math.log(Math.tan(Math.PI / 4 + latRad / 2));
 }
@@ -44,6 +148,10 @@ export function lonLatToAbsoluteGridMeters(lat: number, lon: number) {
     x: longitudeToAbsoluteGridX(normalizeLongitude(lon)),
     y: latitudeToAbsoluteGridY(lat),
   };
+}
+
+export function getAbsoluteGridAnchorMeters(anchor: AbsoluteGridAnchorPoint) {
+  return lonLatToAbsoluteGridMeters(anchor.lat, anchor.lon);
 }
 
 export function absoluteGridMetersToLonLat(x: number, y: number): number[] {
@@ -70,14 +178,16 @@ export function getCloseDistanceGridFade(zoom: number) {
 }
 
 export function shouldShowDisplayGrid({ zoom, isGridVisible, gridOpacityLevel }: GridVisibilityState) {
-  void isGridVisible;
-  void gridOpacityLevel;
+  if (!isGridVisible) return false;
+  if (Number.isFinite(gridOpacityLevel) && gridOpacityLevel <= 0) return false;
   return getCloseDistanceGridFade(zoom) > 0;
 }
 
 export function getEffectiveGridOpacityLevel(state: GridVisibilityState) {
   if (!shouldShowDisplayGrid(state)) return 0;
-  const requestedOpacity = state.isGridVisible ? state.gridOpacityLevel : 0;
+  const requestedOpacity = state.isGridVisible && Number.isFinite(state.gridOpacityLevel)
+    ? Math.max(0, Math.min(5, state.gridOpacityLevel))
+    : 0;
   return Math.max(requestedOpacity, W3W_STYLE_GRID_OPACITY_FLOOR);
 }
 
@@ -95,6 +205,19 @@ export function getRegularMetricGridMetrics(zoom: number, _anchorLat: number): R
   const lonStep = latStep;
 
   return { step, cellMeters, latStep, lonStep };
+}
+
+export function getAbsoluteGridAnchorCell(anchor: AbsoluteGridAnchorPoint, zoom: number) {
+  const metrics = getRegularMetricGridMetrics(zoom, anchor.lat);
+  const meters = getAbsoluteGridAnchorMeters(anchor);
+
+  return {
+    anchorId: anchor.id,
+    col: Math.floor(meters.x / metrics.cellMeters),
+    row: Math.floor(meters.y / metrics.cellMeters),
+    step: metrics.step,
+    cellMeters: metrics.cellMeters,
+  };
 }
 
 export function regularMetricPointAt(col: number, row: number, metrics: RegularMetricGridMetrics): number[] {

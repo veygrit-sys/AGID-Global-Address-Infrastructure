@@ -42,8 +42,16 @@ export type OceaniaOpenGeoSourceId =
   | 'eea-eunis-habitats'
   | 'jrc-esdac-soils'
   | 'auspost-postcode'
+  | 'auspost-paf'
+  | 'gnaf-au'
+  | 'abs-au-postal-areas'
+  | 'geoscape-au-buildings'
+  | 'abs-au-boundaries'
   | 'auspost-territories'
   | 'linz-nz-addresses'
+  | 'nz-post-postcode-network'
+  | 'linz-nz-building-outlines'
+  | 'stats-nz-geographic-boundaries'
   | 'nz-post-territories'
   | 'post-fiji'
   | 'post-png'
@@ -51,6 +59,9 @@ export type OceaniaOpenGeoSourceId =
   | 'tonga-post'
   | 'vanuatu-post'
   | 'solomon-post'
+  | 'fsm-postal-service'
+  | 'marshall-islands-postal-service'
+  | 'palau-postal-service'
   | 'usps-pacific-territories'
   | 'kiribati-post'
   | 'tuvalu-post'
@@ -64,6 +75,7 @@ export interface OceaniaOpenGeoSource {
   url: string;
   kind:
     | 'postal-code'
+    | 'building'
     | 'address'
     | 'geocoding'
     | 'admin-boundary'
@@ -72,6 +84,7 @@ export interface OceaniaOpenGeoSource {
     | 'elevation'
     | 'marine'
     | 'hydrology'
+    | 'facility'
     | 'land-cover'
     | 'protected-area'
     | 'biodiversity'
@@ -427,7 +440,57 @@ export const OCEANIA_OPEN_GEO_SOURCES: Record<OceaniaOpenGeoSourceId, OceaniaOpe
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official Australian postcode search.',
+    notes: 'Official Australia Post allocation lookup; a postcode record does not itself provide an authoritative postcode boundary.',
+  },
+  'auspost-paf': {
+    id: 'auspost-paf',
+    name: 'Australia Post Postal Address File',
+    url: 'https://auspost.com.au/business/services/data-services/supporting-our-data-partners/resources-and-key-dates',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Australia Post licensed PAF; contract rights govern use and redistribution',
+    notes: 'Official licensed postal-address and DPID reference updated monthly; it is not a building-footprint source and no PAF row is bundled here.',
+  },
+  'gnaf-au': {
+    id: 'gnaf-au',
+    name: 'Geocoded National Address File (G-NAF)',
+    url: 'https://www.data.gov.au/data/dataset/geocoded-national-address-file-g-naf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'G-NAF EULA based on CC BY 4.0; secondary verification required for sending mail',
+    notes: 'Official public address identities and geocodes; postcode is commonly locality-derived and the EULA requires secondary verification before using an address for mail.',
+  },
+  'abs-au-postal-areas': {
+    id: 'abs-au-postal-areas',
+    name: 'ABS ASGS Postal Areas',
+    url: 'https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-3-july-2021-june-2026/non-abs-structures/postal-areas',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'ABS source-specific terms and attribution',
+    notes: 'Official-derived Mesh Block approximation for statistics, not an Australia Post boundary; non-street-delivery codes are excluded and the ASGS edition must be pinned.',
+  },
+  'geoscape-au-buildings': {
+    id: 'geoscape-au-buildings',
+    name: 'Geoscape Buildings',
+    url: 'https://docs.geoscape.com.au/projects/buildings_guide/en/stable/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Geoscape commercial product; product-specific rights apply',
+    notes: 'Licensed building geometry and building_address crosswalk; containment or nearest-footprint matching remains candidate evidence.',
+  },
+  'abs-au-boundaries': {
+    id: 'abs-au-boundaries',
+    name: 'ABS Australian Statistical Geography Standard boundaries',
+    url: 'https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'ABS source-specific terms and attribution',
+    notes: 'Official statistical and administrative context; state, LGA and locality geometry cannot create, clip or replace postcode assignment.',
   },
   'auspost-territories': {
     id: 'auspost-territories',
@@ -438,78 +501,135 @@ export const OCEANIA_OPEN_GEO_SOURCES: Record<OceaniaOpenGeoSourceId, OceaniaOpe
     usage: 'primary',
     notes: 'Australian external territory postcode reference for Norfolk Island, Christmas Island, Cocos Islands, and Antarctic routing.',
   },
+  'nz-post-postcode-network': {
+    id: 'nz-post-postcode-network',
+    name: 'NZ Post Postcode Network File',
+    url: 'https://www.nzpost.co.nz/business/sending-within-nz/quality-addressing/postcode-network-file',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'NZ Post licensed PNF; redistribution rights vary by licence',
+    notes: 'Authoritative NZ Post postcode network with licensed urban and rural areas plus box-lobby references; not open bulk data.',
+  },
   'linz-nz-addresses': {
     id: 'linz-nz-addresses',
-    name: 'LINZ New Zealand Address Data',
-    url: 'https://data.linz.govt.nz/',
+    name: 'LINZ NZ Addresses',
+    url: 'https://data.linz.govt.nz/layer/123113-nz-addresses/',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
+    usage: 'primary',
     license: 'CC BY 4.0',
-    notes: 'New Zealand official address and geospatial data from LINZ.',
+    notes: 'Official weekly New Zealand address and road data; point-position method must be retained and does not by itself prove NZ Post assignment or a building link.',
+  },
+  'linz-nz-building-outlines': {
+    id: 'linz-nz-building-outlines',
+    name: 'LINZ NZ Building Outlines',
+    url: 'https://data.linz.govt.nz/layer/101290-nz-building-outlines/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official mapping roof outlines extracted from imagery; the dataset is not an exact address-to-building link or legal parcel boundary.',
+  },
+  'stats-nz-geographic-boundaries': {
+    id: 'stats-nz-geographic-boundaries',
+    name: 'Stats NZ Geographic Boundaries',
+    url: 'https://www.stats.govt.nz/methods/geographic-hierarchy/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0',
+    notes: 'Official statistical and administrative geography context; these areas are not NZ Post postcode boundaries.',
   },
   'nz-post-territories': {
     id: 'nz-post-territories',
     name: 'New Zealand Post Territory Postal Reference',
-    url: 'https://www.nzpost.co.nz/',
+    url: 'https://www.nzpost.co.nz/contact-support/international-delivery-updates',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Postal handling reference for Cook Islands, Tokelau, Niue, and New Zealand-associated territories.',
+    notes: 'Current NZ Post destination and delivery-status reference covering Cook Islands, Niue, Tokelau, and other South Pacific mail destinations handled through the NZ Post network.',
   },
   'post-fiji': {
     id: 'post-fiji',
     name: 'Post Fiji',
-    url: 'https://www.postfiji.com.fj/',
+    url: 'https://www.postfiji.com.fj/PostFiji/service',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Fiji postal addressing and delivery reference.',
+    notes: 'Official Post Fiji postal services reference with current delivery, tracking, and address-handling guidance.',
   },
   'post-png': {
     id: 'post-png',
     name: 'Post PNG',
-    url: 'https://postpng.com.pg/',
+    url: 'https://postpng-live.prontoavenue.biz/about',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Papua New Guinea postal addressing and postcode reference.',
+    notes: 'Current Post PNG company page for the national postal operator, replacing the stale postpng.com.pg domain now serving unrelated content.',
   },
   'samoa-post': {
     id: 'samoa-post',
     name: 'Samoa Post',
-    url: 'https://www.samoapost.ws/',
+    url: 'https://www.samoapost.ws/index.php/special-services/post-code-for-samoa',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Samoa postal addressing reference.',
+    notes: 'Official Samoa Post postcode directory for village-level postal-code lookup.',
   },
   'tonga-post': {
     id: 'tonga-post',
     name: 'Tonga Post',
-    url: 'https://www.tongapost.to/',
+    url: 'https://tongapost.org/services/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Tonga postal addressing reference.',
+    notes: 'Official Tonga Post services page with current mail, parcel, and national post-office coverage details.',
   },
   'vanuatu-post': {
     id: 'vanuatu-post',
     name: 'Vanuatu Post',
-    url: 'https://www.vanuatupost.vu/',
+    url: 'https://www.vanuatupost.vu/index.php/services/postal-services/receiving-mail',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Vanuatu postal addressing reference.',
+    notes: 'Official Vanuatu Post receiving-mail guidance covering delivery handling across the postal network.',
   },
   'solomon-post': {
     id: 'solomon-post',
     name: 'Solomon Post',
-    url: 'https://solomonpost.com.sb/',
+    url: 'https://www.mca.gov.sb/about-us/statutory-bodies/state-owned-enterprises/solomon-islands-postal-corporation-sipc.html',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Solomon Islands postal addressing reference.',
+    notes: 'Official Solomon Islands government reference for the Solomon Islands Postal Corporation (SIPC), the state-owned national postal operator.',
+  },
+  'fsm-postal-service': {
+    id: 'fsm-postal-service',
+    name: 'FSM Postal Service',
+    url: 'https://post.gov.fm/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Federated States of Micronesia Postal Services site with current postal-service, location, and contact information for the national postal network.',
+  },
+  'marshall-islands-postal-service': {
+    id: 'marshall-islands-postal-service',
+    name: 'Marshall Islands Postal Service Authority',
+    url: 'https://rmiparliament.org/cms/library/communications/58-2025-nitijela-session.html?download=831%3A2025-nitijela-communication-no-42-rmi-postal-service-faq-english-version',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Current official Marshall Islands Postal Service Authority FAQ published through the Nitijela site, documenting active postal operations, domestic ZIP handling, and public contact channels.',
+  },
+  'palau-postal-service': {
+    id: 'palau-postal-service',
+    name: 'Republic of Palau Postal Service',
+    url: 'https://palaupost.pw/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Palau Post Office site with current postal-service notices, PO box information, and public service/contact pages for the national postal network.',
   },
   'usps-pacific-territories': {
     id: 'usps-pacific-territories',
@@ -517,53 +637,53 @@ export const OCEANIA_OPEN_GEO_SOURCES: Record<OceaniaOpenGeoSourceId, OceaniaOpe
     url: 'https://tools.usps.com/go/ZipLookupAction_input',
     kind: 'postal-code',
     coverage: 'territory',
-    usage: 'primary',
-    notes: 'USPS ZIP Code lookup for freely associated Pacific states and US-handled Pacific mail routes.',
+    usage: 'validation',
+    notes: 'USPS ZIP Code lookup used as secondary validation for freely associated Pacific states and US-handled Pacific mail routes.',
   },
   'kiribati-post': {
     id: 'kiribati-post',
     name: 'Kiribati Post',
-    url: 'https://www.micttd.gov.ki/',
+    url: 'https://www.kiribati.gov.ki/services/postal',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Kiribati postal addressing reference.',
+    notes: 'Official Kiribati government postal-services page covering ordinary mail, parcel post, EMS, and POSMO postal operations; pair with current UPU guidance for the KI plus 4-digit island postcode scheme.',
   },
   'tuvalu-post': {
     id: 'tuvalu-post',
     name: 'Tuvalu Post',
-    url: 'https://www.gov.tv/',
+    url: 'https://stamp.tuvalupost.tv/contact',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Tuvalu postal addressing reference.',
+    notes: 'Officially endorsed Tuvalu Post Limited contact page with current postal-operator contact details and opening hours.',
   },
   'nauru-post': {
     id: 'nauru-post',
     name: 'Nauru Post',
-    url: 'https://www.naurupost.com/',
+    url: 'https://www.naurupost.com.nr/nauru-postal-services',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Nauru postal addressing reference.',
+    notes: 'Current Naoero Postal Services Corporation postal-services page under the live naurupost.com.nr domain; international mail uses the single country postcode NRU68.',
   },
   'british-overseas-postal-reference': {
     id: 'british-overseas-postal-reference',
     name: 'British Overseas Territories Postal Reference',
-    url: 'https://www.royalmail.com/',
+    url: 'https://www.royalmail.com/sending/international/country-guides',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Fallback postal reference for UK overseas territories using assigned territory postcodes.',
+    notes: 'Royal Mail country guides provide current destination addressing and service reference for UK overseas territories using assigned territory postcodes.',
   },
   'pitcairn-post': {
     id: 'pitcairn-post',
     name: 'Pitcairn Islands Post Office',
-    url: 'https://www.visitpitcairn.pn/',
+    url: 'https://www.visitpitcairn.pn/activities',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Pitcairn Islands postal addressing and postcode reference.',
+    notes: 'Current Pitcairn Islands government tourism page documenting the Pitcairn Island Post Office, mail routing via New Zealand, and local post-office operations.',
   },
 };
 
@@ -602,20 +722,25 @@ const COUNTRY_SOURCE_IDS: Partial<Record<OceaniaCountryOrTerritoryCode, OceaniaO
   AU: [
     'auspost-postcode',
     'digital-earth-australia-coastlines',
+    'auspost-paf',
+    'gnaf-au',
+    'abs-au-postal-areas',
+    'geoscape-au-buildings',
+    'abs-au-boundaries',
     'digital-earth-australia-wofs',
     'digital-earth-australia-fractional-cover',
     'geoscience-australia-elvis',
   ],
-  NZ: ['linz-nz-addresses', 'linz-data-service', 'linz-elevation'],
+  NZ: ['nz-post-postcode-network', 'linz-nz-addresses', 'linz-nz-building-outlines', 'stats-nz-geographic-boundaries', 'linz-data-service', 'linz-elevation'],
   FJ: ['post-fiji'],
   PG: ['post-png'],
   WS: ['samoa-post'],
   TO: ['tonga-post'],
   VU: ['vanuatu-post'],
   SB: ['solomon-post'],
-  FM: ['usps-pacific-territories'],
-  PW: ['usps-pacific-territories'],
-  MH: ['usps-pacific-territories'],
+  FM: ['fsm-postal-service'],
+  PW: ['palau-postal-service', 'usps-pacific-territories'],
+  MH: ['marshall-islands-postal-service'],
   KI: ['kiribati-post'],
   TV: ['tuvalu-post'],
   NR: ['nauru-post'],

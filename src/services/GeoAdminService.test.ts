@@ -30,9 +30,9 @@ test('GeoAdminService routes country admin requests through typed endpoint helpe
   assert.deepEqual(await fetchCountryBoundary('jp', { fetcher }), { type: 'Polygon', coordinates: [] });
   assert.deepEqual(await fetchCountryStats('jp', { fetcher }), { population: 1, area: 2, region: 'Asia' });
   assert.deepEqual(called, [
-    '/api/country-cities?cc=JP',
-    '/api/country-boundary?cc=JP',
-    '/api/country-stats?cc=JP',
+    '/api/v1/country-cities?cc=JP',
+    '/api/v1/country-boundary?cc=JP',
+    '/api/v1/country-stats?cc=JP',
   ]);
 });
 
@@ -51,6 +51,6 @@ test('GeoAdminService exposes quality report and OSM region search', async () =>
 
   assert.equal((await fetchDataQualityReport({ fetcher }))?.report, 'ok');
   assert.equal((await searchOsmRegion('Shinjuku, Japan', { fetcher })).length, 1);
-  assert.equal(called[0], '/api/data-quality/report');
-  assert.equal(called[1], '/api/osm-search?q=Shinjuku%2C+Japan&limit=1&polygon_geojson=1');
+  assert.equal(called[0], '/api/v1/data-quality/report');
+  assert.equal(called[1], '/api/v1/osm-search?q=Shinjuku%2C+Japan&limit=1&polygon_geojson=1');
 });

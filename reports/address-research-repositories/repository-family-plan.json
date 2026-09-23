@@ -1,0 +1,129 @@
+{
+  "version": "2026-07-17.local",
+  "remoteActions": "none",
+  "summary": "Local repository family plan for splitting address morphism theory and broader address research into specialized, publication-safe repositories.",
+  "policyRefs": [
+    "docs/repository-split-staged-creation-policy.md",
+    "docs/product/address-morphism-repository-boundary.md",
+    "src/address/repositoryCreationPreflight.ts",
+    "src/address/repositorySplitAllocationAudit.ts"
+  ],
+  "commonPromotionGates": [
+    "README.md",
+    "manifest.json",
+    "sources.json",
+    "quality-gates.json",
+    "DATA_LICENSES.md",
+    "local verification command",
+    "publication safety review",
+    "repository creation preflight before any remote action"
+  ],
+  "addressInformationEngineeringDomainFamily": {
+    "stage": "template-ready-local",
+    "remoteAction": "none",
+    "domainCount": 16,
+    "groups": 4,
+    "registryPath": "reports/address-research-repositories/address-information-engineering-domains.json",
+    "repositoryRoot": "reports/address-research-repositories/domains",
+    "existingProfileReuse": [
+      "address-morphism-theory"
+    ],
+    "verification": "npx tsx reports/address-research-repositories/scripts/scaffold-address-information-engineering-repositories.ts --check"
+  },
+  "repositories": [
+    {
+      "name": "address-morphism-theory",
+      "stage": "template-ready-local",
+      "remoteAction": "none",
+      "seedPath": "reports/address-morphism-theory-review",
+      "seedAvailability": "external-local",
+      "profilePath": "reports/address-research-repositories/address-morphism-theory",
+      "specialization": "independent theory and paper repository",
+      "createRationale": "AMT already has enough manuscripts, executable reference models, claim maps, and verification notes to stand alone outside AGID product code.",
+      "owns": [
+        "AMT I and AMT II manuscripts",
+        "formal definitions and diagrams",
+        "claim maps and non-claim boundaries",
+        "local manuscript and PDF build scripts",
+        "small executable theory models"
+      ],
+      "doesNotOwn": [
+        "AGID resolver runtime",
+        "merchant or carrier integrations",
+        "country packs or postal datasets",
+        "private address, recipient, witness, proof-secret, private-key, or production credential material"
+      ],
+      "requiredPromotionGates": [
+        "existing seed repository remains locally verifiable",
+        "AGID compatibility links are left in place until public publication",
+        "remote owner preflight passes before any GitHub creation",
+        "no raw private material is included"
+      ]
+    },
+    {
+      "name": "address-research",
+      "stage": "template-ready-local",
+      "remoteAction": "none",
+      "seedPath": "docs/research",
+      "seedAvailability": "workspace",
+      "profilePath": "reports/address-research-repositories/address-research",
+      "specialization": "research agenda, methodology, and source catalog repository",
+      "createRationale": "General address research needs a neutral home that is not mixed with AMT paper authorship, product code, or country-pack data production.",
+      "owns": [
+        "research agenda and roadmap",
+        "source discovery methodology",
+        "official-source watchlists",
+        "literature and prior-art notes",
+        "license and provenance ledgers",
+        "public non-claim reviews"
+      ],
+      "doesNotOwn": [
+        "canonical AMT manuscripts",
+        "AGID production services",
+        "carrier API credentials",
+        "private address, recipient, witness, proof-secret, private-key, or production credential material"
+      ],
+      "requiredPromotionGates": [
+        "source catalog is metadata-only",
+        "research notes are redacted and public-safe",
+        "claims are labeled as verified, hypothesis, or non-claim",
+        "remote owner preflight passes before any GitHub creation"
+      ]
+    },
+    {
+      "name": "address-morphism-benchmarks",
+      "stage": "logical-planned",
+      "remoteAction": "none",
+      "specialization": "synthetic AMT benchmark fixtures",
+      "createRationale": "Split only after AMT and Address Research share enough reusable synthetic fixtures to justify an independent benchmark package."
+    },
+    {
+      "name": "address-source-catalog",
+      "stage": "logical-planned",
+      "remoteAction": "none",
+      "specialization": "public source metadata and license ledgers",
+      "createRationale": "Split only after address-research accumulates enough source metadata to need separate maintainers and release gates."
+    },
+    {
+      "name": "address-quality-research",
+      "stage": "logical-planned",
+      "remoteAction": "none",
+      "specialization": "address quality methodology and evaluation rubrics",
+      "createRationale": "Split only after quality research has independent fixtures, reports, and credible non-claim boundaries."
+    }
+  ],
+  "creationOrder": [
+    "address-morphism-theory",
+    "address-research",
+    "address-morphism-benchmarks",
+    "address-source-catalog",
+    "address-quality-research"
+  ],
+  "nonGoals": [
+    "remote repository creation",
+    "raw private address handling",
+    "carrier credential handling",
+    "production traffic",
+    "deleting AGID compatibility snapshots"
+  ]
+}

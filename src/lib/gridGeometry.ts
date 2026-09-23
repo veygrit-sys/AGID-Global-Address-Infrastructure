@@ -16,6 +16,7 @@ export type GridCellBounds = {
 };
 
 const gridCellBoundsCache = new WeakMap<any[], GridCellBounds | null>();
+export const GRID_COVERAGE_EPSILON_DEGREES = 1e-8;
 
 export function getGridHighlightFrame(
   currentFrame: GridRenderFrame,
@@ -139,7 +140,7 @@ export function findContainingGridCellPolygon(
 export function gridCellsCoverBounds(
   gridCells: any[] | null | undefined,
   bounds: [[number, number], [number, number]],
-  epsilon = 1e-12,
+  epsilon = GRID_COVERAGE_EPSILON_DEGREES,
 ) {
   const renderedBounds = getGridCellsRenderBounds(gridCells);
   if (!renderedBounds) return false;
@@ -185,7 +186,7 @@ export function getGridCellsRenderBounds(gridCells: any[] | null | undefined): G
 export function gridBoundsCoverBounds(
   outerBounds: [[number, number], [number, number]] | null | undefined,
   innerBounds: [[number, number], [number, number]],
-  epsilon = 1e-12,
+  epsilon = GRID_COVERAGE_EPSILON_DEGREES,
 ) {
   if (!outerBounds) return false;
 
@@ -223,10 +224,42 @@ export function resolveGridHighlightPolygons(
   anchorLat?: number,
 ) {
   const selectedPolygon = getDisplayCellPolygon(selectedResult, zoom, anchorLat);
-  const shouldShowActive = !selectedPolygon || activeResult?.isSea;
+  const activePolygon = getDisplayCellPolygon(activeResult, zoom, anchorLat);
+  const shouldShowActive = Boolean(
+    activePolygon &&
+    !areGridPolygonsEquivalent(activePolygon, selectedPolygon),
+  );
 
   return {
-    activePolygon: shouldShowActive ? getDisplayCellPolygon(activeResult, zoom, anchorLat) : null,
+    activePolygon: shouldShowActive ? activePolygon : null,
     selectedPolygon,
+  };
+}
+
+export function areGridPolygonsEquivalent(
+  a: number[][] | null | undefined,
+  b: number[][] | null | undefined,
+  epsilon = 1e-12,
+) {
+  if (!a || !b || a.length !== b.length) return false;
+
+  const boundsA = getPolygonBounds(a);
+  const boundsB = getPolygonBounds(b);
+
+  return (
+    Math.abs(boundsA.minLon - boundsB.minLon) <= epsilon &&
+    Math.abs(boundsA.maxLon - boundsB.maxLon) <= epsilon &&
+    Math.abs(boundsA.minLat - boundsB.minLat) <= epsilon &&
+    Math.abs(boundsA.maxLat - boundsB.maxLat) <= epsilon
+  );
+}
+
+function getPolygonBounds(polygon: number[][]) {
+  const ring = polygon[0] === polygon[polygon.length - 1] ? polygon.slice(0, -1) : polygon;
+  return {
+    minLon: Math.min(...ring.map(point => point[0])),
+    maxLon: Math.max(...ring.map(point => point[0])),
+    minLat: Math.min(...ring.map(point => point[1])),
+    maxLat: Math.max(...ring.map(point => point[1])),
   };
 }

@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "CA",
+  "observedAt": "2026-08-31T16:29:28.906Z",
+  "completedAt": "2026-08-31T17:02:20.2662819Z",
+  "baseCommit": "14f3d55ed76f263b173453a29c031a89525e898b",
+  "scope": "CA-specific current Canada Post format, licensed assignment-product schedule/specification/request/API/terms evidence, Statistics Canada 2021 CFSA methodology/layer/open-licence evidence, identity/privacy/no-proxy rules and shared application contracts. No provider contact, request, registration, authentication, licence acceptance, payment, assignment, address, recipient, customer, organization, delivery, coordinate, building, parcel, cadastral or land-right row or production geometry was acquired, copied, transformed or promoted.",
+  "checks": [
+    {
+      "id": "ca-source-inspector",
+      "command": "<bundled-python with pypdf> scripts/inspect-ca-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "eleven exact official bodies reproduce ANA NAN/FSA/LDU and non-area semantics, the current licensed release identity, address-only product schema, approval/rights boundary and 2021 CFSA non-equivalence without querying or promoting a row"
+    },
+    {
+      "id": "ca-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-ca-sources.test.py -v",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "exact set, changed body, missing/extra/renamed body, text/JSON/PDF marker drift, unexpected geometry schema and licensed-row/CFSA/non-area promotion fail closed"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, approval blocker policy and evidence gates"
+    },
+    {
+      "id": "ca-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-ca-ledger.test.mjs",
+      "result": "pass",
+      "tests": 6,
+      "assertion": "country definition, exact receipts, current licensed release and approval boundary, full-code non-area semantics, CFSA non-equivalence, report digests, no real runtime claim and next Chile"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-and-json-syntax",
+      "command": "py_compile for two changed Python modules, node --check for the changed JavaScript module, and JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "inspector, inspector tests, ledger test, manifest, profile, source review, checks and rollout ledger are valid"
+    }
+  ],
+  "totals": {"assertionGroups":7,"testsPassed":60,"testsFailed":0},
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 11,
+    "exactBodiesByteAndSha256Bound": 11,
+    "exactOfficialBodiesBytes": 2395946,
+    "sourceReviewDigest": "sha256:d1c14546a5f52592c6775525ff1069cd40a1377bc4e66980615893fb6329a9f3",
+    "currentPostalCodeFormat": "ANA NAN",
+    "currentLicensedAssignmentReleaseIdentified": "260807ad.zip",
+    "currentCompleteLicensedAssignmentAcquired": false,
+    "completeAssignmentDenominatorEstablished": false,
+    "licensedProductContainsPolygonGeometrySchema": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "cfsaReferenceYear": 2021,
+    "cfsaRecordsDeclared": 1643,
+    "cfsaKeyLength": 3,
+    "cfsaIsCurrentCanadaPostFullCodeGeometry": false,
+    "officialOrRightsClearedFullCodePostalAreaArtifacts": 0,
+    "featureOrAddressRowsQueried": 0,
+    "rawSourceRowsInGit": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realCaRuntimeVerified": false,
+    "realCaApiVerified": false,
+    "realCaAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because no approved immutable current CA full-code assignment and real postal Polygon/MultiPolygon artifact exists; CFSA is three-character 2021 census reference geometry and a browser run would validate only shared code or a synthetic fixture"
+  },
+  "identityAndPrivacyValidation": {
+    "caIdentityPreserved": true,
+    "provinceTerritoryAndIndigenousIdentitiesPreserved": true,
+    "postalCensusAdministrativeAddressBuildingAndAgidAuthoritiesSeparated": true,
+    "protectedAddressCustomerOrganizationOrCredentialRowsQueried": 0,
+    "personalCustomerPropertyCadastralOrLandRightsRowsInGit": 0
+  },
+  "knownLimitations": [
+    "The current complete Canada Post assignment denominator is a licensed monthly product requiring provider contact, a use request, pricing and a licence agreement.",
+    "The public product specification publishes addresses, ranges and typed non-area records but no full-code Polygon/MultiPolygon, CRS or topology schema.",
+    "The open 2021 CFSA polygons are first-three-character respondent-derived census reference geometry, may differ from Canada Post assignments and contain no LDU/full-code geometry.",
+    "No CFSA/FSA, PCCF coordinate, NAR point, ODB footprint, administrative area, road, parcel, buffer, hull, Voronoi/raster cell, model, AGID cell or synthetic fixture was promoted as full-code postal geometry.",
+    "Buildings, large-volume receivers, lock boxes, routes, general delivery, Points and unknown objects remain non-area unless independently authorized geometry proves otherwise."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "Poppler rendered four relevant pages from four official PDFs to non-empty RGB PNGs. Exact PDF bytes, extracted page text, 49 page counts, image dimensions, non-white bounds and render SHA-256 values were validated.",
+    "The local image-view helper returned Windows error 206 through original and short C:\\tmp paths, so interactive visual inspection could not be completed; no source body or rendered image was committed.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

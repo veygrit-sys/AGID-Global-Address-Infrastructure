@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';import {existsSync,readFileSync,writeFileSync} from 'node:fs';import {resolve} from 'node:path';import express from 'express';
+import {buildMalaysiaObservationPack,materializeMalaysiaObservationPack} from './lib/postal-context-my-pack';
+import {readMalaysiaPostcodes,normalizeMalaysiaAssignments} from './lib/postal-context-my-postcodes.mjs';import {sourceDigest} from './lib/postal-context-source-probe.mjs';
+import {createInMemoryPostalContextPackStore} from '../src/server/postalContextPackStore';import {registerPostalContextRoutes} from '../src/server/routes/postalContextRoutes';
+const args=process.argv.slice(2),opts:Record<string,string>={};if(args.length!==6)throw Error('usage: --csv path --out new-directory --report new-file');
+for(let i=0;i<args.length;i+=2){if(!['--csv','--out','--report'].includes(args[i])||Object.hasOwn(opts,args[i]))throw Error('my-cli-arguments');opts[args[i]]=args[i+1];}
+if(!opts['--csv']||!opts['--out']||!opts['--report']||existsSync(opts['--out'])||existsSync(opts['--report']))throw Error('my-new-output-required');
+const config=JSON.parse(readFileSync(new URL('../data/postal_country_packs/my/postal-context/m2-source-review.json',import.meta.url),'utf8'));
+const digestFor=(id:string)=>config.references.find((r:{id:string})=>r.id===id).reviewed_digest;
+const csv=readFileSync(opts['--csv']),receipt={observedAt:config.csv_observed_at,edition:'2026-06',synthetic:false,csvDigest:digestFor('malaysia-mcmc-postcodes-csv'),catalogDigest:digestFor('malaysia-mcmc-postcodes-catalog'),termsDigest:digestFor('cc-by-4-legal')};
+const built=buildMalaysiaObservationPack(csv,receipt),again=buildMalaysiaObservationPack(csv,receipt);assert.equal(built.descriptorDigest,again.descriptorDigest);
+const loaded=materializeMalaysiaObservationPack(resolve(opts['--out']),built),assignments=normalizeMalaysiaAssignments(readMalaysiaPostcodes(csv)),byCode=new Map<string,number>();
+for(const a of assignments)byCode.set(a.postcode,(byCode.get(a.postcode)??0)+1);
+let passed=0;for(const [code,count]of byCode){const result=loaded.runtime.lookupPostalCode(code,receipt.observedAt,receipt.observedAt,true);assert.equal(result.status,count>1?'ambiguous':'unique');if(count>1)assert.equal(result.alternatives.length,count);assert.deepEqual(result.geometries,[]);passed++;}
+assert.equal(loaded.runtime.lookupPostalCode('01000',new Date(Date.parse(receipt.observedAt)+1).toISOString()).status,'no_match');passed++;
+assert.equal(loaded.runtime.resolvePublicCoordinate({latitude:3,longitude:101,purpose:'display',validAt:receipt.observedAt}).resolvedLevel,'none');passed++;
+const app=express();app.use(express.json());registerPostalContextRoutes(app,{store:createInMemoryPostalContextPackStore(loaded.runtime)});
+const server=app.listen(0,'127.0.0.1');await new Promise<void>(r=>server.once('listening',r));const address=server.address();assert.ok(address&&typeof address==='object');const base='http://127.0.0.1:'+address.port;
+try{
+ for(const [code,status]of [['01000','unique'],['40160','ambiguous'],['71000','unique']]){const r=await fetch(base+'/api/postal/MY/'+code+'?'+new URLSearchParams({validAt:receipt.observedAt,knownAt:receipt.observedAt,geometry:'geojson'}));assert.equal(r.status,200);const body=await r.json();assert.equal(body.ok,true);assert.equal(body.data.status,status);assert.deepEqual(body.data.geometries,[]);passed++;}
+ const r=await fetch(base+'/api/postal/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({countryCode:'MY',latitude:3,longitude:101,purpose:'display',validAt:receipt.observedAt})});assert.equal(r.status,200);const body=await r.json();assert.equal(body.data.resolvedLevel,'none');assert.ok(body.data.agid.cellId);assert.equal(body.data.agid.canonicalPostalGeometry,false);passed++;
+}finally{await new Promise<void>((r,j)=>server.close(e=>e?j(e):r()));}
+const report={schemaVersion:'postal-context-my-real-observation-check/v1',countryCode:'MY',generatedAt:new Date().toISOString(),synthetic:false,scope:'entire acquired MCMC dictionary; observation-time label lookup only',sourceEdition:receipt.edition,observedAt:receipt.observedAt,csvDigest:receipt.csvDigest,descriptorDigest:built.descriptorDigest,quality:built.evidence.quality,files:[...built.files].map(([path,bytes])=>({path,bytes:bytes.length,digest:sourceDigest(bytes)})),validation:{passed,failed:0,distinctCodesChecked:byCode.size,httpChecks:4,deterministicBuild:true},runtime:{localDigestPinnedLoader:true,localExpressApi:true,agidCoordinateIndexVerified:true,canonicalPostalGeometry:false,publishedArtifactDownloadVerified:false},countryM2Achieved:false,publicArtifacts:0,productionDeployment:false,paidOperations:0};
+writeFileSync(opts['--report'],JSON.stringify(report,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(report,null,2));

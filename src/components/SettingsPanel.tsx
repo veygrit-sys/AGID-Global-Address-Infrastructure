@@ -7,6 +7,7 @@ BookOpen,
 Bookmark,
 Check,
 ChevronRight,
+CreditCard,
 Database,
 Download,
 FileDown,
@@ -28,19 +29,23 @@ Smartphone,
 Trash2,
 X
 } from 'lucide-react';
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import { AnimatePresence,motion } from 'motion/react';
 import React from 'react';
 import { getHelpCenterContent } from '../lib/helpFaq';
+import { LANGUAGES as ADDRESS_LANGUAGES } from '../lib/addressUtils';
 import {
-ADDRESS_LANGUAGES,
 APP_LANGUAGES,
-LanguageOption,
 groupLanguageOptions,
 } from '../lib/languageSettings';
+import type { LanguageOption } from '../lib/languageSettings';
 import { AGID_MAP_ENGINES } from '../lib/mapEngine';
 import { cn } from '../lib/utils';
 import { ExportData,ExportService } from '../services/ExportService';
+
+const PosTerminalPanel = React.lazy(() => import('./PosTerminalPanel').then(module => ({
+  default: module.PosTerminalPanel,
+})));
 
 interface SettingsPanelProps {
   show: boolean;
@@ -72,6 +77,7 @@ interface SettingsPanelProps {
   searchHistory: string[];
   setSearchHistory: (h: string[]) => void;
   clearHistory: () => void;
+  clearPrivateData: () => Promise<void> | void;
   clickedAgid: any;
   showConfirm: (title: string, message: string, onConfirm: () => void) => void;
   showAlert: (title: string, message: string) => void;
@@ -83,6 +89,10 @@ interface SettingsPanelProps {
   setShowLicenses: (v: boolean) => void;
   mapRef: React.MutableRefObject<maplibregl.Map | null>;
   jumpToAgid: (id: string) => void;
+  externalAddressDataEnabled: boolean;
+  setExternalAddressDataEnabled: (v: boolean) => void;
+  qrPayloadPrivacy: 'full' | 'public';
+  setQrPayloadPrivacy: (v: 'full' | 'public') => void;
   t: (key: string) => string;
 }
 
@@ -115,6 +125,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   searchHistory,
   setSearchHistory,
   clearHistory,
+  clearPrivateData,
   clickedAgid,
   showConfirm,
   showAlert,
@@ -124,6 +135,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   setShowLicenses,
   mapRef,
   jumpToAgid,
+  externalAddressDataEnabled,
+  setExternalAddressDataEnabled,
+  qrPayloadPrivacy,
+  setQrPayloadPrivacy,
   t
 }) => {
   // Local state for searching codes
@@ -220,7 +235,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
     <AnimatePresence>
       {show && (
         <div className="fixed inset-0 z-[120] pointer-events-none flex items-center justify-center">
-          <motion.div 
+          <motion.div
             initial={{ y: '100dvh' }}
             animate={{ y: 0 }}
             exit={{ y: '100dvh' }}
@@ -229,13 +244,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           >
             <div className="flex-1 flex flex-col overflow-hidden w-full bg-white">
               {/* Header */}
-              <div 
+              <div
                 className="px-6 py-6 border-b border-slate-100 bg-white/90 backdrop-blur-xl sticky top-0 z-20"
                 style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1.5rem)' }}
               >
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                   <div className="flex items-center gap-6">
-                    <button 
+                    <button
                       onClick={() => {
                         if (settingsTab === 'main') {
                           onClose();
@@ -253,9 +268,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     </button>
                     <div className="flex flex-col">
                       <h3 className="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-1">
-                        {settingsTab === 'main' ? t('settings') : 
-                         settingsTab === 'app-language' ? t('app_language') : 
-                         settingsTab === 'address-language' ? t('address_language') : 
+                        {settingsTab === 'main' ? t('settings') :
+                         settingsTab === 'app-language' ? t('app_language') :
+                         settingsTab === 'address-language' ? t('address_language') :
                          t(settingsTab.replace('-', '_') as any) || settingsTab.replace('-', ' ')}
                       </h3>
                       <div className="flex items-center gap-2">
@@ -274,7 +289,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               <div className="max-w-4xl mx-auto pb-safe">
                 <AnimatePresence mode="wait">
                   {settingsTab === 'main' && (
-                    <motion.div 
+                    <motion.div
                       key="main"
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -285,7 +300,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       <div className="relative overflow-hidden bg-slate-900 rounded-3xl p-4 md:p-6 mb-4 group">
                         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-1000" />
                         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-32 h-32 bg-purple-600/20 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-1000" />
-                        
+
                         <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
                           <div className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl flex items-center justify-center text-white shadow-2xl shrink-0">
                             <Settings className="w-8 h-8 animate-[spin_8s_linear_infinite]" />
@@ -301,7 +316,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         </div>
                       </div>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('home')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -317,7 +332,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('app-language')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -338,7 +353,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         </div>
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('app')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -354,7 +369,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('location')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -370,7 +385,23 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
                       </button>
 
-                      <button 
+                      <button
+                        onClick={() => setSettingsTab('pos-terminal')}
+                        className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-cyan-50 text-cyan-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                            <CreditCard className="w-5 h-5" />
+                          </div>
+                          <div className="text-left">
+                            <p className="font-black text-sm text-slate-900">{t('pos_terminal')}</p>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{t('pos_terminal_desc')}</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                      </button>
+
+                      <button
                         onClick={() => setSettingsTab('offline')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -386,7 +417,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('export')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -402,7 +433,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('about')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -418,7 +449,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setSettingsTab('help')}
                         className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 rounded-2xl transition-colors group active:bg-slate-100"
                       >
@@ -436,8 +467,30 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     </motion.div>
                   )}
 
+                  {settingsTab === 'pos-terminal' && (
+                    <motion.div
+                      key="pos-terminal"
+                      initial={{ x: 20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 20, opacity: 0 }}
+                    >
+                      <React.Suspense fallback={
+                        <div className="m-5 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm font-bold text-slate-600">
+                          Loading POS terminal...
+                        </div>
+                      }>
+                        <PosTerminalPanel
+                          appLanguage={appLanguage}
+                          appLanguageLabel={APP_LANGUAGES.find(language => language.code === appLanguage)?.name || appLanguage}
+                          onAppLanguageChange={setAppLanguage}
+                          showAlert={showAlert}
+                        />
+                      </React.Suspense>
+                    </motion.div>
+                  )}
+
                   {settingsTab === 'export' && (
-                    <motion.div 
+                    <motion.div
                       key="export"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -461,7 +514,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               </div>
                             </div>
                             <div className="grid grid-cols-1 gap-2">
-                              <button 
+                              <button
                                 disabled={savedAgids.length === 0}
                                 onClick={() => {
                                   const data: ExportData[] = savedAgids.map(a => ({
@@ -479,7 +532,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                 <FileDown className="w-3.5 h-3.5" /> {t('export_geojson')}
                               </button>
                               <div className="grid grid-cols-2 gap-2">
-                                <button 
+                                <button
                                   disabled={savedAgids.length === 0}
                                   onClick={() => {
                                     const data: ExportData[] = savedAgids.map(a => ({
@@ -496,7 +549,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                 >
                                   {t('export_csv')}
                                 </button>
-                                <button 
+                                <button
                                   disabled={savedAgids.length === 0}
                                   onClick={() => {
                                     const data: ExportData[] = savedAgids.map(a => ({
@@ -525,7 +578,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               </div>
                             </div>
                             <div className="space-y-2">
-                              <button 
+                              <button
                                 disabled={searchHistory.length === 0}
                                 onClick={() => {
                                   const csvContent = "Query\n" + searchHistory.join("\n");
@@ -536,12 +589,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               >
                                 <Download className="w-3.5 h-3.5" /> {t('download_history_csv')}
                               </button>
-                              
+
                               <div className="relative">
-                                <input 
-                                  type="file" 
+                                <input
+                                  type="file"
                                   accept=".csv,.json"
-                                  className="hidden" 
+                                  className="hidden"
                                   id="import-history-input"
                                   onChange={(e) => {
                                     const file = e.target.files?.[0];
@@ -567,7 +620,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                     reader.readAsText(file);
                                   }}
                                 />
-                                <label 
+                                <label
                                   htmlFor="import-history-input"
                                   className="w-full py-3 bg-white text-indigo-600 border border-indigo-100 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer hover:bg-indigo-50 transition-colors"
                                 >
@@ -584,7 +637,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                 <span className="text-xs font-black text-slate-700 uppercase tracking-widest">{t('current_view')}</span>
                               </div>
                             </div>
-                            <button 
+                            <button
                               onClick={() => {
                                 if (!mapRef.current) return;
                                 const center = mapRef.current.getCenter();
@@ -608,7 +661,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     </motion.div>
                   )}
                   {settingsTab === 'home' && (
-                    <motion.div 
+                    <motion.div
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: 20, opacity: 0 }}
@@ -620,14 +673,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           {t('home_desc')}
                         </p>
                         <div className="flex gap-2">
-                          <input 
+                          <input
                             type="text"
                             value={homeAgid}
                             onChange={(e) => setHomeAgid(e.target.value.toUpperCase())}
                             placeholder="Enter AGID (e.g. JP12345678)"
                             className="flex-1 bg-white border border-blue-200 rounded-xl px-4 py-3 text-sm font-black font-mono focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all"
                           />
-                          <button 
+                          <button
                             onClick={() => {
                               if (clickedAgid) setHomeAgid(clickedAgid.id);
                             }}
@@ -639,7 +692,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       </div>
 
                       {homeAgid && (
-                        <button 
+                        <button
                           onClick={() => jumpToAgid(homeAgid)}
                           className="w-full py-4 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest text-xs shadow-lg hover:shadow-xl transition-all active:scale-95"
                         >
@@ -650,7 +703,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   )}
 
                   {settingsTab === 'app' && (
-                    <motion.div 
+                    <motion.div
                       key="app"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -664,7 +717,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           <h3 className="text-[10px] font-black uppercase tracking-widest">{t('language_settings')}</h3>
                         </div>
                         <div className="grid gap-3">
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('app-language')}
                             className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between hover:bg-blue-50/50 hover:border-blue-200 transition-all group"
                           >
@@ -680,7 +733,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             </div>
                           </button>
 
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('address-language')}
                             className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between hover:bg-blue-50/50 hover:border-blue-200 transition-all group"
                           >
@@ -710,7 +763,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             <p className="text-[10px] text-slate-400 font-medium">{t('theme_desc')}</p>
                           </div>
                           <div className="flex bg-white p-1.5 rounded-xl border border-slate-200">
-                            <button 
+                            <button
                               onClick={() => setThemeMode('light')}
                               className={cn(
                                 "flex-1 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
@@ -719,7 +772,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             >
                               {t('light')}
                             </button>
-                            <button 
+                            <button
                               onClick={() => setThemeMode('dark')}
                               className={cn(
                                 "flex-1 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
@@ -728,7 +781,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             >
                               {t('dark')}
                             </button>
-                            <button 
+                            <button
                               onClick={() => setThemeMode('system')}
                               className={cn(
                                 "flex-1 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
@@ -755,7 +808,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             </div>
                               <div className="flex bg-white p-1.5 rounded-xl border border-slate-200">
                                 {['automatic', 'kilometers', 'miles', 'nautical'].map((unit) => (
-                                  <button 
+                                  <button
                                     key={unit}
                                     onClick={() => setDistanceUnit(unit as any)}
                                     className={cn(
@@ -791,8 +844,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                   onClick={() => setDefaultNavApp(app.id as any)}
                                   className={cn(
                                     "px-4 py-4 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-2 active:scale-95",
-                                    defaultNavApp === app.id 
-                                      ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-200" 
+                                    defaultNavApp === app.id
+                                      ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-200"
                                       : "bg-white border-slate-100 text-slate-500 hover:bg-slate-50"
                                   )}
                                 >
@@ -816,7 +869,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               <p className="text-sm font-bold text-slate-700">{t('map_style')}</p>
                               <p className="text-[10px] text-slate-400 font-medium md:hidden">{t('map_style_desc')}</p>
                             </div>
-                            <select 
+                            <select
                               value={mapStyle}
                               onChange={(e) => changeStyle(e.target.value)}
                               className="w-full md:w-auto bg-white border border-slate-200 rounded-xl px-4 py-3 md:py-1.5 text-sm font-bold text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 appearance-none text-center"
@@ -848,9 +901,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               ))}
                             </div>
                           </div>
-                          
+
                           <div className="p-4 md:p-6 bg-slate-50 rounded-2xl border border-slate-100 md:col-span-1">
-                            <button 
+                            <button
                               onClick={() => setIs3DEnabled(!is3DEnabled)}
                               className={cn(
                                 "w-full flex items-center justify-between p-5 md:p-6 rounded-2xl border transition-all active:scale-[0.98]",
@@ -902,12 +955,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                     onClick={() => setGridOpacityLevel(lv)}
                                     className={cn(
                                       "flex-1 py-3 rounded-xl transition-all border-2 flex items-center justify-center",
-                                      gridOpacityLevel === lv 
-                                        ? "bg-blue-600 border-blue-600 shadow-lg shadow-blue-100" 
+                                      gridOpacityLevel === lv
+                                        ? "bg-blue-600 border-blue-600 shadow-lg shadow-blue-100"
                                         : "bg-white border-slate-100 hover:border-slate-200"
                                     )}
                                   >
-                                    <div 
+                                    <div
                                       className={cn(
                                         "w-full h-1 rounded-full mx-2",
                                         gridOpacityLevel === lv ? "bg-white/80" : "bg-slate-200"
@@ -925,7 +978,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   )}
 
                   {settingsTab === 'location' && (
-                    <motion.div 
+                    <motion.div
                       key="location"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -941,11 +994,64 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                              <p className="text-sm font-bold text-slate-700 mb-1">{t('anonymous_usage')}</p>
                              <p className="text-xs text-slate-500 leading-relaxed">
-                               Your AGID searches and location interactions are stored locally on your device and are never transmitted to our servers identifying you.
+                               {t('privacy_local_first_desc')}
                              </p>
                           </div>
-                          
-                          <button 
+
+                          <div className="p-4 bg-white rounded-2xl border border-slate-100 space-y-4">
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <p className="text-sm font-bold text-slate-700">{t('external_address_data')}</p>
+                                <p className="mt-1 text-xs text-slate-500 leading-relaxed">{t('external_address_data_desc')}</p>
+                              </div>
+                              <button
+                                onClick={() => setExternalAddressDataEnabled(!externalAddressDataEnabled)}
+                                className={cn(
+                                  "relative h-8 w-14 rounded-full transition-colors shrink-0",
+                                  externalAddressDataEnabled ? "bg-emerald-500" : "bg-slate-300"
+                                )}
+                                aria-pressed={externalAddressDataEnabled}
+                              >
+                                <span
+                                  className={cn(
+                                    "absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-transform",
+                                    externalAddressDataEnabled ? "translate-x-6" : "translate-x-1"
+                                  )}
+                                />
+                              </button>
+                            </div>
+
+                            <div className="border-t border-slate-100 pt-4">
+                              <p className="text-sm font-bold text-slate-700 mb-2">{t('qr_payload_privacy')}</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {[
+                                  { id: 'public', label: t('qr_public'), desc: t('qr_public_desc') },
+                                  { id: 'full', label: t('qr_full'), desc: t('qr_full_desc') },
+                                ].map(option => (
+                                  <button
+                                    key={option.id}
+                                    onClick={() => setQrPayloadPrivacy(option.id as 'full' | 'public')}
+                                    className={cn(
+                                      "p-3 rounded-xl border text-left transition-all",
+                                      qrPayloadPrivacy === option.id
+                                        ? "bg-slate-900 border-slate-900 text-white shadow-lg"
+                                        : "bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100"
+                                    )}
+                                  >
+                                    <span className="block text-[11px] font-black uppercase tracking-widest">{option.label}</span>
+                                    <span className={cn(
+                                      "mt-1 block text-[10px] font-bold leading-relaxed",
+                                      qrPayloadPrivacy === option.id ? "text-white/65" : "text-slate-400"
+                                    )}>
+                                      {option.desc}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          <button
                             onClick={() => {
                               showConfirm(
                                 t('clear_history_title'),
@@ -964,13 +1070,33 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             </div>
                             <ChevronRight className="w-4 h-4 opacity-30 group-hover:opacity-100" />
                           </button>
+
+                          <button
+                            onClick={() => {
+                              showConfirm(
+                                t('clear_private_data_title'),
+                                t('clear_private_data_desc'),
+                                async () => {
+                                  await clearPrivateData();
+                                  showAlert(t('private_data_cleared'), t('private_data_cleared_desc'));
+                                }
+                              );
+                            }}
+                            className="w-full p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 flex items-center justify-between hover:bg-slate-800 transition-all group"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Database className="w-4 h-4" />
+                              <span className="text-xs font-black uppercase tracking-widest">{t('clear_private_data')}</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 opacity-40 group-hover:opacity-100" />
+                          </button>
                         </div>
                       </section>
                     </motion.div>
                   )}
-                  
+
                   {settingsTab === 'offline' && (
-                    <motion.div 
+                    <motion.div
                       key="offline"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -996,28 +1122,28 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   )}
 
                   {settingsTab === 'about' && (
-                    <motion.div 
+                    <motion.div
                       key="about"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: 20, opacity: 0 }}
                       className="p-5 md:p-6 space-y-4"
                     >
-                      <button 
+                      <button
                         onClick={() => setActiveLegalDoc('terms')}
                         className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between hover:bg-slate-100 transition-all"
                       >
                          <span className="text-xs font-black uppercase tracking-widest text-slate-700">{t('terms_of_service')}</span>
                          <ChevronRight className="w-4 h-4 text-slate-300" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => setActiveLegalDoc('privacy')}
                         className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between hover:bg-slate-100 transition-all"
                       >
                          <span className="text-xs font-black uppercase tracking-widest text-slate-700">{t('privacy_policy')}</span>
                          <ChevronRight className="w-4 h-4 text-slate-300" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => setShowLicenses(true)}
                         className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between hover:bg-slate-100 transition-all"
                       >
@@ -1028,7 +1154,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   )}
 
                   {settingsTab === 'help' && (
-                    <motion.div 
+                    <motion.div
                       key="help"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -1071,7 +1197,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               ))}
                             </div>
                           </section>
-                          
+
                           <section className="grid gap-3">
                             <div className="flex items-center gap-2 px-1">
                               <BookOpen className="w-4 h-4 text-blue-500" />
@@ -1120,7 +1246,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               </div>
                               <Activity className="w-5 h-5 text-emerald-500 shrink-0" />
                             </div>
-                            <button 
+                            <button
                               onClick={fetchQualityReport}
                               disabled={isQualityLoading}
                               className="mt-4 w-full px-4 py-3 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 disabled:opacity-50 transition-all"
@@ -1133,7 +1259,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   )}
 
                   {settingsTab === 'app-language' && (
-                    <motion.div 
+                    <motion.div
                       key="app-language"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -1142,7 +1268,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     >
                       <AnimatePresence mode="wait">
                         {!selectedAppBaseLang ? (
-                          <motion.div 
+                          <motion.div
                             key="bases"
                             initial={{ x: -10, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
@@ -1162,8 +1288,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                 }}
                                 className={cn(
                                   "w-full p-4 rounded-2xl border flex items-center justify-between transition-all group",
-                                  appLanguage.startsWith(bl.base) 
-                                    ? "bg-blue-50 border-blue-200 text-blue-900 shadow-sm" 
+                                  appLanguage.startsWith(bl.base)
+                                    ? "bg-blue-50 border-blue-200 text-blue-900 shadow-sm"
                                     : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
                                 )}
                               >
@@ -1184,21 +1310,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             ))}
                           </motion.div>
                         ) : (
-                          <motion.div 
+                          <motion.div
                             key="variants"
                             initial={{ x: 10, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: 10, opacity: 0 }}
                             className="space-y-4"
                           >
-                            <button 
+                            <button
                               onClick={() => setSelectedAppBaseLang(null)}
                               className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors mb-4"
                             >
                               <ChevronRight className="w-3 h-3 rotate-180" />
                               Back to Languages
                             </button>
-                            
+
                             <div className="grid gap-2">
                               {appGroupedLanguages[selectedAppBaseLang].map((lang) => (
                                 <button
@@ -1210,8 +1336,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                   }}
                                   className={cn(
                                     "w-full p-4 rounded-2xl border flex items-center justify-between transition-all",
-                                    appLanguage === lang.code 
-                                      ? "bg-blue-600 border-blue-700 text-white shadow-lg" 
+                                    appLanguage === lang.code
+                                      ? "bg-blue-600 border-blue-700 text-white shadow-lg"
                                       : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
                                   )}
                                 >
@@ -1235,7 +1361,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   )}
 
                   {settingsTab === 'address-language' && (
-                    <motion.div 
+                    <motion.div
                       key="address-language"
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -1244,7 +1370,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     >
                       <AnimatePresence mode="wait">
                         {!selectedAddressBaseLang ? (
-                          <motion.div 
+                          <motion.div
                             key="bases"
                             initial={{ x: -10, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
@@ -1258,8 +1384,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                               }}
                               className={cn(
                                 "w-full p-4 rounded-2xl border flex items-center justify-between transition-all",
-                                addressLanguage === 'local' 
-                                  ? "bg-emerald-50 border-emerald-200 text-emerald-900 shadow-sm" 
+                                addressLanguage === 'local'
+                                  ? "bg-emerald-50 border-emerald-200 text-emerald-900 shadow-sm"
                                   : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
                               )}
                             >
@@ -1283,8 +1409,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                 }}
                                 className={cn(
                                   "w-full p-4 rounded-2xl border flex items-center justify-between transition-all group",
-                                  addressLanguage.startsWith(bl.base) 
-                                    ? "bg-blue-50 border-blue-200 text-blue-900 shadow-sm" 
+                                  addressLanguage.startsWith(bl.base)
+                                    ? "bg-blue-50 border-blue-200 text-blue-900 shadow-sm"
                                     : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
                                 )}
                               >
@@ -1305,21 +1431,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                             ))}
                           </motion.div>
                         ) : (
-                          <motion.div 
+                          <motion.div
                             key="variants"
                             initial={{ x: 10, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: 10, opacity: 0 }}
                             className="space-y-4"
                           >
-                            <button 
+                            <button
                               onClick={() => setSelectedAddressBaseLang(null)}
                               className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors mb-4"
                             >
                               <ChevronRight className="w-3 h-3 rotate-180" />
                               Back to Languages
                             </button>
-                            
+
                             <div className="grid gap-2">
                               {addressGroupedLanguages[selectedAddressBaseLang].map((lang) => (
                                 <button
@@ -1331,8 +1457,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                                   }}
                                   className={cn(
                                     "w-full p-4 rounded-2xl border flex items-center justify-between transition-all",
-                                    addressLanguage === lang.code 
-                                      ? "bg-blue-600 border-blue-700 text-white shadow-lg" 
+                                    addressLanguage === lang.code
+                                      ? "bg-blue-600 border-blue-700 text-white shadow-lg"
                                       : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
                                   )}
                                 >

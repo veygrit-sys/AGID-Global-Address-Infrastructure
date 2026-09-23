@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "postal-context-m2-validation/v1",
+  "countryCode": "LI",
+  "generatedAt": "2026-08-30T14:39:53.180Z",
+  "releaseId": "li-swisstopo-plzo-20260811",
+  "summary": {
+    "passed": 204,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "name": "country-runtime-api-and-deterministic-rendering",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextCountryPolicy.test.ts src/lib/postalContextLiechtensteinRepository.test.ts src/lib/postalContextLiechtensteinRuntime.test.ts src/lib/postalContextLiechtensteinM2Topology.test.ts src/lib/postalSearchArea.test.ts src/lib/postalSearchAreaGeometryValidation.test.ts src/server/postalContextMultiCountryStore.test.ts src/server/routes/postalContextLiechtensteinRoutes.test.ts src/server/routes/postalContextLiechtensteinM2Routes.test.ts src/data/liechtensteinOpenGeoSources.test.ts src/lib/officialPostalSourceCatalog.test.ts src/data/address_formats/addressFormatRulesJson.test.ts",
+      "passed": 150,
+      "failed": 0,
+      "evidence": "Real 9490 lookup traversed the shared API route, app feature conversion, map fit, translucent fill and visible outline, clear, and re-search. Missing and invalid inputs remained explicit."
+    },
+    {
+      "name": "shared-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/server/postalContextPackStore.test.ts src/server/routes/postalContextRoutes.test.ts src/services/PostalContextService.test.ts src/lib/openApiSpec.test.ts",
+      "passed": 49,
+      "failed": 0
+    },
+    {
+      "name": "full-repository-typecheck",
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p <temporary-workspace-resolver-config>",
+      "passed": 1,
+      "failed": 0,
+      "evidence": "The temporary configuration changed only workspace package resolution for the isolated worktree; compiler options and repository source set remained those of tsconfig.json."
+    },
+    {
+      "name": "reproducible-build-byte-equality",
+      "command": "node scripts/build-postal-context-li-m2.mjs <official-shp> <official-dbf> <official-csv> <replay-output> <replay-report>",
+      "passed": 4,
+      "failed": 0,
+      "evidence": {
+        "descriptor": "sha256:3860959238e86ad87a9377b0640f08d1c98cb788fd66ef08f41e5a5c858ec06b",
+        "graph": "sha256:e5763ad9fc37d6811bb2ba5b71696f4d0df548b152527f2a3b9b9c264db507f3",
+        "geometry": "sha256:6fe679982604ba84da1e8416fda56b78fa5561f21d6c5bc88b24afa3837aae15",
+        "buildReport": "sha256:58af888c2561c1a0be43115e862f27be78548e03ee22c36d6c41fc9fd23f4eac"
+      }
+    }
+  ],
+  "environmentNotes": [
+    "The isolated worktree reused a dependency junction that omitted npm workspace symlinks, so the unmodified npm lint wrapper initially reported only unresolved @agid workspace package names. A full-source tsc run with explicit paths to the same checked-out workspace sources passed with no diagnostics."
+  ]
+}

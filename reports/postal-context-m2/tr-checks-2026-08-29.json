@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "TR",
+  "generatedAt": "2026-08-29T05:22:58.738Z",
+  "baseCommit": "19ef049886a98c1e11374ca3f197ea5b81ce5210",
+  "m2Achieved": false,
+  "sourceReview": {
+    "path": "reports/postal-context-m2/tr-source-review-2026-08-29.json",
+    "referencesReviewed": 9,
+    "contentVerified": 9,
+    "currentPostalAssignmentRowsValidated": 3269,
+    "uniqueFiveDigitPostcodesInBoundedSample": 8,
+    "postalAreaGeometryRecords": 0,
+    "scope": "Current PTT public province/district/neighbourhood/street lookup, PTT rights notice, July 2022 UPU format and exceptions, and TUCBS access policy/schema; bounded ALTINDAĞ sample, no complete area data"
+  },
+  "verification": [
+    {"name":"Türkiye source-review contract and rollout policy","command":"node --test scripts/inspect-postal-context-tr-sources.test.mjs scripts/postal-context-m2-rollout.test.mjs","passed":15,"failed":0},
+    {"name":"Türkiye source and ledger digest contract","command":"node --test scripts/inspect-postal-context-tr-sources.test.mjs scripts/postal-context-m2-tr-ledger.test.mjs","passed":11,"failed":0},
+    {"name":"Postal search area, API routes and client service","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/services/PostalContextService.test.ts src/server/routes/postalContextRoutes.test.ts","passed":23,"failed":0},
+    {"name":"Shared Postal Context runtime","command":"node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-runtime files>","passed":159,"failed":0},
+    {"name":"Address format and official-source catalog","command":"node node_modules/tsx/dist/cli.mjs --test src/data/address_formats/addressFormatRulesJson.test.ts src/lib/officialPostalSourceCatalog.test.ts","passed":122,"failed":0},
+    {"name":"TypeScript","command":"node node_modules/typescript/bin/tsc --noEmit","passed":1,"failed":0}
+  ],
+  "appVisualization": {
+    "sharedExactPostcodeCandidateResolution": "verified by deterministic unit test",
+    "sharedGeometryContract": "only postal-feature Polygon and MultiPolygon accepted; point-only or text-only lookup produces no drawable area",
+    "sharedMapRendering": "verified fill opacity 0.22, outline opacity 0.95, width 3, bounds calculation, update and removal",
+    "sharedApiContract": "explicit geometry=geojson opt-in and unsupported-country failure verified",
+    "turkiyeRuntime": "unavailable",
+    "turkiyeRealDataEndToEnd": "not verified",
+    "browserE2e": "not run because no eligible Türkiye area artifact exists; a synthetic result would not satisfy M2",
+    "remainingUiGap": "distinct authority class, basis date and confidence are not yet rendered by the shared notice"
+  },
+  "authoritySeparation": {
+    "postalSyntax": "Current PTT API and July 2022 UPU evidence support five digits; neither establishes reusable national delivery areas",
+    "assignmentSample": "3,269 current ALTINDAĞ street/neighbourhood rows remain bounded assignment context",
+    "postalGeometry": "none verified or generated",
+    "administrativeGeometry": "province, district and neighbourhood boundaries cannot become official postal boundaries",
+    "nonAreaGeometry": "points, address rows, routes, P.O. boxes, poste restante, organizations and buildings remain non-area",
+    "buildings": "require explicit permitted address/building relations",
+    "agid": "no TR real-data runtime, area response or deployment asserted"
+  },
+  "publication": {
+    "rawSourceDataCommitted": false,
+    "immutableRealDataArtifactPublished": false,
+    "newRepositoryCreated": false,
+    "productionDeploymentPerformed": false,
+    "paidAuthenticatedPermissionedOrContractSourceUsed": false
+  },
+  "environment": {
+    "dependencyRestore": "npm ci --ignore-scripts --prefer-offline succeeded through the installed npm CLI; node_modules is ignored and not committed",
+    "runtimeInvocation": "Tests were executed directly with node and node_modules/tsx/dist/cli.mjs to avoid dependence on the roaming npm shim",
+    "dependencyFilesCommitted": false
+  },
+  "remainingBlocker": "No current complete-for-declared-coverage, rights-cleared Türkiye assignment and postal-area data, explicit derivative/API rights, approved immutable artifact, TR runtime/API or real app visualization exists; bounded address rows are non-area and the shared provenance notice contract is incomplete."
+}

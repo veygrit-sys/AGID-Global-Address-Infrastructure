@@ -10,10 +10,22 @@ pub struct AgidResult {
     pub lon: f64,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct AgidBounds {
+    pub min_lat: f64,
+    pub max_lat: f64,
+    pub min_lon: f64,
+    pub max_lon: f64,
+}
+
 pub fn encode(_lat: f64, _lon: f64) -> Result<AgidResult, &'static str> {
     Err("wire the generated SDK to the agid-core reference implementation")
 }
 
 pub fn decode(_id: &str) -> Option<AgidResult> {
     None
+}
+
+pub fn cell_bounds(_id: &str) -> Result<AgidBounds, &'static str> {
+    Err("wire the generated SDK to the agid-core reference implementation")
 }

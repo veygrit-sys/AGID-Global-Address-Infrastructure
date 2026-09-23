@@ -18,6 +18,7 @@ test('keeps AGID core and SDK packages portable without central dependency', () 
 
     assert.equal(policy.primaryAuthority, 'sdk');
     assert.equal(policy.centralRole, 'none');
+    assert.equal(policy.identityLayer, 'AGID');
     assert.equal(policy.canUseSdkWithoutCentral, true);
     assert.equal(online.shouldCallCentral, false);
     assert.equal(offline.mode, 'sdk-portable');
@@ -71,6 +72,7 @@ test('private address sync requires opt-in and never publishes personal records'
   assert.equal(withoutOptIn.shouldCallCentral, false);
   assert.equal(withOptIn.shouldCallCentral, true);
   assert.equal(withOptIn.privacyScope, 'private-record');
+  assert.equal(withOptIn.identityLayer, 'AOID');
   assert.equal(withOptIn.sendsPersonalDataToPublicLayer, false);
 });
 
@@ -78,6 +80,8 @@ test('sync queue entities map to hybrid policies explicitly', () => {
   assert.equal(getHybridWorkflowForSyncEntity('savedAgid'), 'agid-core');
   assert.equal(getHybridWorkflowForSyncEntity('registeredAddress'), 'registered-address-sync');
   assert.equal(getHybridWorkflowForSyncEntity('aoid'), 'registered-address-sync');
+  assert.equal(getHybridSyncEntityPolicy('savedAgid').identityLayer, 'AGID');
+  assert.equal(getHybridSyncEntityPolicy('aoid').identityLayer, 'AOID');
   assert.equal(getHybridSyncEntityPolicy('settings').privacyScope, 'settings');
 });
 

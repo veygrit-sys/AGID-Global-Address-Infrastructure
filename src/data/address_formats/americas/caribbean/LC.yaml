@@ -5,49 +5,88 @@ native:
   addressFormat: |-
     {{organization}}
     {{houseNumber}} {{street}}
-    {{city}}
-    {{state}}
+    {{subdistrict}}
+    {{poBox}}
+    {{postOffice}}
+    {{city}}, {{postcode}}
   ordering: small-to-big
   fields:
     - key: organization
-      label: Company
+      label: Organization / Recipient
       placeholder: ""
+      required: false
     - key: houseNumber
-      label: House No.
-      placeholder: "1"
+      label: Premises / Door
+      placeholder: Block A, Apt 146
+      required: false
     - key: street
       label: Street
-      placeholder: William Peter Blvd
+      placeholder: High Street
+      required: false
+    - key: subdistrict
+      label: Community / Area
+      placeholder: Bishops Gap
+      required: false
+    - key: poBox
+      label: P.O. Box
+      placeholder: P.O. Box CX 99
+      required: false
+    - key: postOffice
+      label: Post Office
+      placeholder: La Clery Post Office
+      required: false
     - key: city
-      label: Town/City
-      placeholder: Castries
-    - key: state
-      label: Quarter
-      placeholder: Castries
+      label: District / Quarter
+      placeholder: CASTRIES
+      required: true
+    - key: postcode
+      label: Postcode
+      placeholder: LC04  101
+      required: true
 english:
   name: International English
   addressFormat: |-
     {{organization}}
     {{houseNumber}} {{street}}
-    {{city}}, {{state}}
+    {{subdistrict}}
+    {{poBox}}
+    {{postOffice}}
+    {{city}}, {{postcode}}
     SAINT LUCIA
   ordering: small-to-big
   fields:
     - key: organization
-      label: Building / Company
+      label: Organization / Recipient
       placeholder: ""
+      required: false
     - key: houseNumber
-      label: House No.
-      placeholder: "1"
+      label: Premises / Door
+      placeholder: Block A, Apt 146
+      required: false
     - key: street
       label: Street
-      placeholder: William Peter Blvd
+      placeholder: High Street
+      required: false
+    - key: subdistrict
+      label: Community / Area
+      placeholder: Bishops Gap
+      required: false
+    - key: poBox
+      label: P.O. Box
+      placeholder: P.O. Box CX 99
+      required: false
+    - key: postOffice
+      label: Post Office
+      placeholder: La Clery Post Office
+      required: false
     - key: city
-      label: City / Town
-      placeholder: Castries
-    - key: state
-      label: State / Province
-      placeholder: Castries
+      label: District / Quarter
+      placeholder: CASTRIES
+      required: true
+    - key: postcode
+      label: Postcode
+      placeholder: LC04  101
+      required: true
 openSourceIds:
   - osm-nominatim
   - osm-overpass
@@ -69,10 +108,10 @@ openSourceIds:
   - ibge-geosciences
   - inpe-terrabrasilis
 postalCode:
-  format: country specific or not used
-  regex: null
+  format: LCNN  NNN
+  regex: ^LC\d{2} {2}\d{3}$
   api: null
-  source: GeoNames / UPU
+  source: Saint Lucia Postal Service customer notice effective 1 December 2015; UPU Saint Lucia addressing sheet 07/2019
 addressRules:
   languages:
     - code: en
@@ -82,42 +121,31 @@ addressRules:
       name: English
   nativeOrder:
     - name
+    - organization
+    - building
     - street
+    - subdistrict
+    - poBox
+    - postOffice
     - city
-    - region
     - postcode
     - country
   englishOrder:
     - name
+    - organization
+    - building
     - street
+    - subdistrict
+    - poBox
+    - postOffice
     - city
-    - region
     - postcode
     - country
   regionalHierarchy:
-    - region
-    - city
+    - district
+    - postOffice
+    - areaCommunity
   postalCode:
-    label: country specific or not used
-    required: false
-    usage: optional
-  openSourceIds:
-    - osm-nominatim
-    - osm-overpass
-    - openaddresses
-    - geonames-postal
-    - geonames-gazetteer
-    - geoboundaries
-    - upu-addressing
-    - zippopotam
-    - noaa-etopo
-    - geobc-global-multi-resolution-topography
-    - hydrosheds
-    - protected-planet-wdpa
-    - gbif-occurrence
-    - esa-worldcover
-    - usgs-3dep
-    - nrcan-geospatial
-    - conabio-geoportal
-    - ibge-geosciences
-    - inpe-terrabrasilis
+    label: LCNN  NNN
+    required: true
+    usage: "Use integral LC, two district digits, two literal spaces and three post-office/community digits only with a current Saint Lucia Postal Service assignment. The 2015 official table contains 54 normalized delivery-point codes; LC04  113 is a home-delivery address example, not a row in that table. Delivery points may be post offices, private letter boxes, residential or business addresses and are not necessarily areas. Do not turn offices, mailboxes, communities, districts, quarters, administrative boundaries, parcels, buildings, addresses, Points, buffers, hulls, cells or models into postal areas. Derived or virtual geometry requires an explicit competent-authority postcode crosswalk, compatible rights, edition, CRS, topology, method, confidence and exceptions. Building display requires a separately rights-cleared civic-address identity, building identity and explicit relation. AGID remains an independent spatial index."

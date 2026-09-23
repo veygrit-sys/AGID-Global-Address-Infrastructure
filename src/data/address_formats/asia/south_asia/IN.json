@@ -134,9 +134,9 @@
   },
   "postalCode": {
     "format": "NNNNNN",
-    "regex": "^\\d{6}$",
-    "api": "https://api.postalpincode.in/pincode/{{postcode}}",
-    "source": "India Post / Data.gov.in All India Pincode Directory / PostalPINCodeIndia OSS fallback"
+    "regex": "^[1-9]\\d{5}$",
+    "api": "https://www.data.gov.in/resource/all-india-pincode-directory-till-last-month",
+    "source": "India Post Regulations 2024 / Department of Posts OGD PIN Directory and PIN Boundary catalog / GODL-India / DIGIPIN / LGD / Survey of India ABDB; third-party APIs are fallback only"
   },
   "addressRules": {
     "languages": [
@@ -210,12 +210,22 @@
       "country"
     ],
     "regionalHierarchy": [
+      "postalCircleOrRegion",
       "stateOrUnionTerritory",
       "district",
-      "cityOrTownOrLocality"
+      "subdistrictOrTaluk",
+      "villageOrUrbanLocalBody",
+      "locality",
+      "sixDigitPin",
+      "deliveryAndNonDeliveryPostOfficeRecords",
+      "officialPinBoundaryOrNoCanonicalGeometry",
+      "optionalDigipinCell",
+      "explicitCivicAddressPoint",
+      "explicitAddressLinkedBuildingFeature",
+      "exactRightsClearedBuilding"
     ],
     "postalCode": {
-      "label": "6 digits required",
+      "label": "6 digits beginning 1–9; region/circle/sorting district/delivery office hierarchy; preserve Delivery and Non Delivery office rows; require exact official boundary or report no canonical geometry; DIGIPIN is a parallel location grid; exact building requires an explicit address link",
       "required": true,
       "usage": "required"
     },
@@ -249,17 +259,23 @@
       }
     },
     "normalizationPriority": [
-      "postal authority API or official/open postal dataset",
-      "OSM/Nominatim namedetails name:en and alternate tags",
-      "GeoNames alternateNames with English language tag",
-      "libpostal parser when configured server-side",
-      "local fallback aliases only when open-source lookups are unavailable"
+      "pinned Department of Posts OGD PIN and typed post-office assignment edition",
+      "exact licensed Department of Posts PIN Boundary artifact with CRS and digest",
+      "pinned India Post DIGIPIN specification and encoder version as a parallel grid",
+      "LGD and Survey of India context without promoting administrative geometry to PIN geometry",
+      "rights-cleared civic-address and explicit building relation",
+      "third-party PIN APIs and OSM only for discrepancy validation or fallback"
     ]
   },
   "openSourceIds": [
-    "postalpincode-in",
+    "india-post-regulations-2024",
     "data-gov-in-pincode",
+    "data-gov-in-pincode-boundary",
+    "data-gov-in-godl",
+    "india-lgd-pin-crosswalk",
     "india-digipin",
+    "survey-of-india-abdb",
+    "postalpincode-in",
     "india-pincode-api-oss",
     "survey-of-india",
     "datameet-maps",

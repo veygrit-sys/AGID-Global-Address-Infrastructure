@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "SG",
+  "generatedAt": "2026-08-29T02:13:02.384Z",
+  "m2Achieved": false,
+  "sourceReview": {
+    "path": "reports/postal-context-m2/sg-source-review-2026-08-29.json",
+    "digest": "sha256:692b19c4a9acb6df9ddc0874bf7dba0f50e4903a824490fe895d90bbe034a67c",
+    "referencesReviewed": 11,
+    "previewFeatureRows": 1420,
+    "validSixDigitPostcodes": 1416,
+    "scope": "SLA private-residential dwelling preview only; completeness and national coverage not established"
+  },
+  "verification": [
+    {
+      "name": "Singapore source-review contract",
+      "command": "node --test scripts/inspect-postal-context-sg-sources.test.mjs",
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "name": "Singapore blocked-ledger digest contract",
+      "command": "node --test scripts/postal-context-m2-sg-ledger.test.mjs",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "name": "Singapore Postal Context runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <Singapore runtime files>",
+      "passed": 16,
+      "failed": 0
+    },
+    {
+      "name": "M2 rollout policy",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "name": "Postal search area UI unit tests",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "name": "Shared Postal Context runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test <verify:postal-context-runtime files>",
+      "passed": 159,
+      "failed": 0
+    },
+    {
+      "name": "TypeScript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "name": "Production build",
+      "command": "node node_modules/vite/bin/vite.js build",
+      "passed": 1,
+      "failed": 0,
+      "notes": ["Vite built 3262 modules; existing large-chunk warning only"]
+    },
+    {
+      "name": "Rendered application flow",
+      "command": "Codex in-app Browser against an isolated synthetic QA pack and local geocoding proxy",
+      "passed": 1,
+      "failed": 0,
+      "notes": [
+        "app loads -> postal code search -> API returns Polygon -> translucent blue fill and outline plus provenance notice render",
+        "QA fixture and proxy stayed in tmp/untracked paths and are not publication or M2 evidence"
+      ]
+    }
+  ],
+  "authoritySeparation": {
+    "postalGeometry": "Only postal_feature Polygon/MultiPolygon is drawable",
+    "points": "Point-only results do not become postal areas",
+    "buildings": "Building geometry is not promoted to postal geometry",
+    "agid": "No SG real-data AGID runtime was asserted"
+  },
+  "publication": {
+    "rawSourceDataCommitted": false,
+    "immutableRealDataArtifactPublished": false,
+    "newRepositoryCreated": false,
+    "productionDeploymentPerformed": false,
+    "paidOrContractApiUsed": false
+  },
+  "remainingBlocker": "A rights-cleared, complete and immutable SG point dataset or authorized API receipt has not been obtained or published; no official postal polygon source was found."
+}

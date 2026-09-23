@@ -1,0 +1,90 @@
+{
+  "schema_version": "agid-postal-ie-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-ie",
+    "country_code": "IE",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "country-definition-and-blocker-evidence-only"
+  },
+  "postal_system": {
+    "full_code_name": "Eircode",
+    "full_code_format": "seven alphanumeric characters, normally ANN ANNN; D6W is the only letter-number-letter Routing Key exception",
+    "routing_key_format": "three characters: letter-number-number, except D6W",
+    "full_code_default_geometry": "address_or_property_identity_point_or_non_area",
+    "assignment_rule": "A current Eircode assignment is a unique identifier for one postal address and its geographic location. The first three characters are the Routing Key and the final four are the Unique Identifier. Syntax, a Routing Key, an Eircode Finder marker, a coordinate, a NUTS match or a licensed database field alone does not authorize publication or prove a Polygon/MultiPolygon for the seven-character code.",
+    "normalization_rule": "Trim, uppercase and remove at most the separator between Routing Key and Unique Identifier, then display as three characters, one space and four characters. Preserve D6W and reject the letter O as an issued character; normalization does not prove assignment.",
+    "full_code_geometry_rule": "A seven-character Eircode identifies an address or property and is non-area unless an independent competent source explicitly supplies a truthful area. Never buffer, Voronoi-partition or dissolve its point into an Eircode polygon.",
+    "routing_key_geometry_rule": "A Routing Key identifies a principal post-town span. A routing-key surface may be served only from an authoritative or rights-cleared real Polygon/MultiPolygon release with all 139 keys, edition, effective date, CRS, topology, coverage, exceptions, terms and SHA-256. It must be labelled as Routing Key context, not as the exact seven-character Eircode geometry.",
+    "po_box_rule": "Eircodes are not currently assigned to PO Box numbers. PO boxes and other routing endpoints remain non-area and never receive an invented polygon.",
+    "address_rule": "ECAF contains Eircode and postal-address identity; ECAD adds coordinates and other address-related fields. Both are licensed products. An address coordinate is not a building footprint, parcel, occupancy, ownership or postal perimeter.",
+    "building_rule": "Exact building output requires an explicit rights-cleared source relation from the Eircode or address identifier to a building feature. ECAD availability, an Eircode Finder marker, point containment, proximity or shared text does not establish a redistributable building relation.",
+    "administrative_rule": "NUTS, counties, local authorities, local electoral areas and CSO statistical geography are separate context. Routing Key areas may cross county boundaries; no administrative unit may be relabelled as an Eircode or Routing Key perimeter.",
+    "licence_rule": "Every ECAF, ECAD, GeoDirectory, CSO, GISCO, TERCET or other artifact pins the exact access terms, provider, URL, capture/download time, edition, scope, CRS, reviewed transform, byte length and SHA-256. Public Finder access and evaluation samples do not establish bulk extraction, redistribution, derivative-database or public API rights.",
+    "territory_rule": "The IE pack covers Ireland only and does not merge Northern Ireland or any other identity. Postal Routing Keys do not determine sovereignty or silently import cross-border geometry."
+  },
+  "integration": {
+    "agid_country_code": "IE",
+    "postcode_flow": "normalized seven-character Eircode -> current licensed or rights-cleared assignment -> explicit non-area address identity -> separately labelled rights-cleared Routing Key Polygon/MultiPolygon when available -> address/building relation from a separate authority -> IE AGID cells",
+    "coordinate_flow": "Eircode address coordinate or honest unavailable result -> optional separately labelled Routing Key context area -> explicit address-to-building relation -> rights-cleared building -> IE AGID cell",
+    "building_output_gate": "current Eircode or address identity plus an explicit source-defined rights-cleared building identifier/relation and exact building geometry"
+  },
+  "quality_gates": [
+    { "id": "canonical-eircode", "pass": "Every code remains text, normalizes to seven characters with the D6W exception preserved, and distinguishes syntax from current assignment." },
+    { "id": "current-assignment", "pass": "The nationwide Eircode denominator pins current edition, effective date, update cadence, terms, coverage, exceptions, byte length and SHA-256." },
+    { "id": "full-code-non-area", "pass": "Every seven-character address identifier remains point/non-area unless an independent competent source explicitly supplies area geometry; no buffer, Voronoi cell or proxy is created." },
+    { "id": "routing-key-area", "pass": "Every displayed routing-key area comes from a complete authoritative or rights-cleared real 139-key Polygon/MultiPolygon release and remains visibly separate from the exact Eircode." },
+    { "id": "rights", "pass": "ECAF/ECAD/GeoDirectory licences, Finder conditions, CSO confidentiality and GISCO/TERCET terms remain enforceable per artifact; access is never treated as redistribution authority." },
+    { "id": "authority-separation", "pass": "Eircode assignment, Routing Key area, address, building, administration, occupancy and ownership remain distinct authorities and relations." },
+    { "id": "privacy", "pass": "No resident, recipient, occupant, owner, rightsholder, personal contact, title/value, credential, shipment or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Generic IE planning cells and synthetic fixtures verify behavior only and never satisfy production M2 evidence." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country-specific contracts, authority separation and synthetic conformance fixtures are reviewable." },
+      {
+        "id": "M2_current_eircode_identity_and_routing_key_area_visualization",
+        "definition": "A current rights-cleared nationwide seven-character Eircode assignment denominator, preserving the D6W Routing Key exception and the fact that each full Eircode is an address/property identity rather than an area, and an authoritative or rights-cleared real Polygon/MultiPolygon release for all 139 Routing Keys are pinned by edition, validity, terms, CRS, SHA-256, coverage and exceptions and published as an approved immutable artifact. Searching a normalized full Eircode through the real IE API/app must return its honest point/non-area reason and, when available, the separately labelled official/derived/virtual Routing Key context surface, fit the map and render translucent fill plus a clear outline with selected code, geometry kind, source, reference date and confidence. Finder markers, ECAF/ECAD fields without publication rights, GISCO/TERCET point or NUTS correspondence, CSO statistical classifications, counties, buildings, parcels, buffers, Voronoi cells and synthetic planning fixtures never satisfy M2."
+      },
+      { "id": "M3_derived_geometry", "definition": "Complete rights-cleared address membership and coordinates pass derivation, topology, coverage, uncertainty and correction gates for explicitly derived Routing Key context only." },
+      { "id": "M4_address_building", "definition": "Licensed address identity and exact rights-cleared building relationships pass identifier, privacy, CRS, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "seven-character-eircode-presented-as-area",
+      "routing-key-point-or-nuts-match-presented-as-polygon",
+      "finder-marker-buffered-or-voronoi-partitioned",
+      "county-or-statistical-area-presented-as-routing-key-boundary",
+      "ecaf-or-ecad-access-presented-as-public-redistribution",
+      "cso-confidential-coordinates-or-microdata-published",
+      "address-coordinate-presented-as-building-footprint",
+      "parcel-or-nearest-building-presented-as-exact-address-link",
+      "occupant-owner-rightsholder-or-private-address-list-published",
+      "northern-ireland-geometry-silently-imported",
+      "synthetic-planning-cell-presented-as-real-postal-area"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_IE_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_IE_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_IE_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_IE_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-eircode-ecaf-ecad-geodirectory-address-or-coordinate-rows",
+    "seven-character-eircode-is-polygon",
+    "routing-key-point-or-nuts-match-is-polygon",
+    "county-is-routing-key-area",
+    "finder-marker-is-public-bulk-data",
+    "address-coordinate-is-building-footprint",
+    "parcel-or-nearest-footprint-is-exact-building",
+    "eircode-identifies-occupant-owner-or-rightsholder"
+  ]
+}

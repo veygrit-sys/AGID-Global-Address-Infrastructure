@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
 buildChineseAddressProfile,
+normalizeChineseRegionalAddressPart,
 renderChineseLocaleAddress,
 renderInternationalCN,
 } from './chineseAddressUtils';
@@ -66,7 +67,7 @@ test('renders Chinese-region addresses by locale instead of one generic Chinese 
       house_number: '45',
       postcode: '110',
     }),
-    'No. 45, Shifu Rd., Xinyi District, Taipei City, 110, TAIWAN'
+    'No. 45, Shifu Road, Xinyi District, Taipei City, 110, TAIWAN'
   );
 
   assert.equal(
@@ -88,5 +89,27 @@ test('renders Chinese-region addresses by locale instead of one generic Chinese 
       house_number: '100',
     }),
     'No. 100, Avenida de Almeida Ribeiro, MACAU'
+  );
+});
+
+test('uses country context for Han readings and fails closed where Mandarin fallback is unsafe', () => {
+  assert.equal(normalizeChineseRegionalAddressPart('沙田', 'HK'), 'Sha Tin');
+  assert.equal(normalizeChineseRegionalAddressPart('沙田', 'CN'), 'Shatian');
+  assert.equal(normalizeChineseRegionalAddressPart('長洲', 'HK'), 'Cheung Chau');
+  assert.equal(normalizeChineseRegionalAddressPart('長洲', 'CN'), 'Changzhou');
+  assert.equal(normalizeChineseRegionalAddressPart('高雄市', 'TW'), 'Kaohsiung City');
+  assert.equal(normalizeChineseRegionalAddressPart('氹仔', 'MO'), 'Taipa');
+  assert.equal(normalizeChineseRegionalAddressPart('牛車水', 'SG'), 'Chinatown');
+  assert.equal(normalizeChineseRegionalAddressPart('合成區', 'HK'), '');
+});
+
+test('resolves adjacent known regional names without applying one generic reading system', () => {
+  assert.equal(
+    normalizeChineseRegionalAddressPart('九龍尖沙咀彌敦道', 'HK'),
+    'Kowloon Tsim Sha Tsui Nathan Road',
+  );
+  assert.equal(
+    normalizeChineseRegionalAddressPart('台北市信義區市府路', 'TW'),
+    'Taipei City Xinyi District Shifu Road',
   );
 });

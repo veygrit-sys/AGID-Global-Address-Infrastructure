@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import React from 'react';
 
 export type EnsureSourceAndLayer = (

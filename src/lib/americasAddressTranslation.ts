@@ -1,6 +1,8 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
+import { isFrenchShippingCountry,normalizeFrenchShippingField } from './frenchShippingAddress';
+import { isSpanishShippingCountry,normalizeSpanishShippingField } from './spanishShippingAddress';
 
 export type AmericasAddressTopology =
   | 'english-address'
@@ -390,8 +392,29 @@ function replaceCommonAmericasTerms(text: string) {
   return normalized;
 }
 
-function normalizeAmericasEnglish(text: string, countryCode: string, fieldKey: string) {
+function normalizeAmericasEnglish(
+  text: string,
+  countryCode: string,
+  fieldKey: string,
+  sourceLanguage: string,
+) {
   const code = countryCodeOf(countryCode);
+  if (sourceLanguage === 'fr' && isFrenchShippingCountry(code)) {
+    return normalizeFrenchShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
+  if (isSpanishShippingCountry(code)) {
+    return normalizeSpanishShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
   const aliases = AMERICAS_ENGLISH_ALIASES[code] || {};
   if (aliases[text]) return aliases[text];
   if (COMMON_AMERICAS_ADDRESS_TERMS[text]) return COMMON_AMERICAS_ADDRESS_TERMS[text];
@@ -434,7 +457,12 @@ export async function translateAmericasAddressField(options: {
     fieldKey: options.fieldKey,
     sourceLanguage,
     targetLanguage,
-    normalizeEnglish: value => normalizeAmericasEnglish(value, profile.countryCode, options.fieldKey),
+    normalizeEnglish: value => normalizeAmericasEnglish(
+      value,
+      profile.countryCode,
+      options.fieldKey,
+      sourceLanguage,
+    ),
     translator: options.translator,
     translatorSourceLanguage,
   });

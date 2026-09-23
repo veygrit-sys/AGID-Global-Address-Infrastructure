@@ -1,3 +1,5 @@
+import { apiV1Path } from './apiVersion';
+
 export type AdvancedSearchCategory =
   | 'all'
   | 'address'
@@ -110,6 +112,7 @@ export function buildNominatimSearchUrl(
   lat?: number,
   lon?: number,
   options?: Partial<AdvancedSearchOptions>,
+  acceptLanguage?: string,
 ) {
   const normalized = normalizeAdvancedSearchOptions(options);
   const params = new URLSearchParams({
@@ -121,13 +124,17 @@ export function buildNominatimSearchUrl(
     params.set('countrycodes', normalized.countryCodes);
   }
 
+  if (acceptLanguage) {
+    params.set('accept_language', acceptLanguage);
+  }
+
   if (lat !== undefined && lon !== undefined) {
     const delta = Math.max(0.02, normalized.radiusKm / 111);
     params.set('viewbox', `${lon - delta},${lat + delta},${lon + delta},${lat - delta}`);
     params.set('bounded', normalized.nearbyOnly ? '1' : '0');
   }
 
-  return `/api/osm-search?${params.toString()}`;
+  return `${apiV1Path('/osm-search')}?${params.toString()}`;
 }
 
 export function describeAdvancedSearchOptions(options?: Partial<AdvancedSearchOptions>) {

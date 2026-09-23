@@ -1,6 +1,20 @@
 import Dexie,{ Table } from 'dexie';
 
+import { normalizeAOIDRecord } from './aoid';
+import type { AgidAoidAuditEvent } from './agidAoidGovernance';
+import type { DeliveryPosScenarioKind } from './deliveryPosSimulation';
+import type { PosAcceptanceReceipt } from './posAcceptance';
+import {
+  normalizePosOfflineUsageEntries,
+  type PosOfflineUsageLedgerEntry,
+} from './posOfflineUsageLedger';
+import type {
+  PosDeviceDiagnostic,
+  PosExceptionAuditCase,
+  PosHandoffReverificationReport,
+} from './posOperationalControls';
 import type { RegisteredAddressRecord,SavedRegisteredAddressQr } from './registeredAddressQr';
+import type { TradeComplianceSourceId } from './tradeComplianceDataPlan';
 
 export type SavedAgidRecord = {
   id: string;
@@ -22,12 +36,119 @@ export type AoidDatabaseRecord = RegisteredAddressRecord & {
   [key: string]: unknown;
 };
 
+export type DeliveryPosPrivacyFlags = {
+  rawPayloadStored: false;
+  rawAddressStored: false;
+  decryptedAgidStored: false;
+  rawAgidSecureStored: false;
+};
+
+export type DeliveryPosShipmentStatus =
+  | 'draft'
+  | 'accepted'
+  | 'review'
+  | 'rejected'
+  | 'handoff'
+  | 'completed'
+  | 'cancelled';
+
+export type DeliveryPosShipmentRecord = DeliveryPosPrivacyFlags & {
+  id: string;
+  kind: DeliveryPosScenarioKind;
+  status: DeliveryPosShipmentStatus;
+  receiptId?: string;
+  crossBorderDeclarationId?: string;
+  handoffId?: string;
+  terminalId?: string;
+  operatorId?: string;
+  originCountry?: string;
+  destinationCountry?: string;
+  addressLanguage?: string;
+  addressQuality?: number;
+  agidTail?: string;
+  aoidTail?: string;
+  privacyMode: 'metadata-only' | 'redacted-receipt' | 'encrypted-envelope';
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeliveryPosReceiptRecord = PosAcceptanceReceipt & {
+  id: string;
+  shipmentId?: string;
+  rawPayloadStored: false;
+  rawAddressStored: false;
+  decryptedAgidStored: false;
+  rawAgidSecureStored: false;
+};
+
+export type DeliveryPosAuditRecord = PosExceptionAuditCase & {
+  id: string;
+  shipmentId?: string;
+  rawPayloadStored: false;
+  rawAddressStored: false;
+  decryptedAgidStored: false;
+  rawAgidSecureStored: false;
+};
+
+export type DeliveryPosHandoffRecord = DeliveryPosPrivacyFlags & {
+  id: string;
+  shipmentId: string;
+  receiptId?: string;
+  terminalId?: string;
+  operatorId?: string;
+  carrierId?: string;
+  status: 'pending' | 'in-transit' | 'completed' | 'blocked';
+  report?: PosHandoffReverificationReport;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+};
+
+export type DeliveryPosDeviceDiagnosticRecord = PosDeviceDiagnostic & {
+  id: string;
+  terminalId: string;
+  operatorId?: string;
+  rawPayloadStored: false;
+  rawAddressStored: false;
+  decryptedAgidStored: false;
+  rawAgidSecureStored: false;
+};
+
+export type DeliveryPosCrossBorderDeclarationRecord = DeliveryPosPrivacyFlags & {
+  id: string;
+  shipmentId: string;
+  status: 'draft' | 'complete' | 'review' | 'blocked';
+  originCountry: string;
+  destinationCountry: string;
+  hsCode?: string;
+  declaredValue?: number;
+  currency?: string;
+  evidenceSourceIds: TradeComplianceSourceId[];
+  advisoryOnly: true;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeliveryPosOfflineUsageRecord = PosOfflineUsageLedgerEntry & DeliveryPosPrivacyFlags;
+
 export type SyncQueueAction = 'create' | 'update' | 'delete';
 export type SyncQueueStatus = 'pending' | 'sending' | 'failed';
 
 export type SyncQueueRecord = {
   id: string;
-  entityType: 'savedAgid' | 'savedQr' | 'registeredAddress' | 'aoid' | 'settings';
+  entityType:
+    | 'savedAgid'
+    | 'savedQr'
+    | 'registeredAddress'
+    | 'aoid'
+    | 'settings'
+    | 'posShipment'
+    | 'posReceipt'
+    | 'posAuditCase'
+    | 'posHandoff'
+    | 'posDeviceDiagnostic'
+    | 'posCrossBorderDeclaration'
+    | 'posOfflineUsage';
   entityId: string;
   action: SyncQueueAction;
   payload?: unknown;
@@ -37,6 +158,7 @@ export type SyncQueueRecord = {
   updatedAt: number;
   nextAttemptAt?: number;
   lastError?: string;
+  audit?: AgidAoidAuditEvent;
 };
 
 export type AppDatabaseSnapshot = {
@@ -45,6 +167,13 @@ export type AppDatabaseSnapshot = {
   registeredAddresses: RegisteredAddressRecord[];
   aoids: AoidDatabaseRecord[];
   syncQueue: SyncQueueRecord[];
+  posShipments: DeliveryPosShipmentRecord[];
+  posReceipts: DeliveryPosReceiptRecord[];
+  posAuditCases: DeliveryPosAuditRecord[];
+  posHandoffs: DeliveryPosHandoffRecord[];
+  posDeviceDiagnostics: DeliveryPosDeviceDiagnosticRecord[];
+  posCrossBorderDeclarations: DeliveryPosCrossBorderDeclarationRecord[];
+  posOfflineUsageLedger: DeliveryPosOfflineUsageRecord[];
 };
 
 export const EMPTY_APP_DATABASE_SNAPSHOT: AppDatabaseSnapshot = {
@@ -53,6 +182,13 @@ export const EMPTY_APP_DATABASE_SNAPSHOT: AppDatabaseSnapshot = {
   registeredAddresses: [],
   aoids: [],
   syncQueue: [],
+  posShipments: [],
+  posReceipts: [],
+  posAuditCases: [],
+  posHandoffs: [],
+  posDeviceDiagnostics: [],
+  posCrossBorderDeclarations: [],
+  posOfflineUsageLedger: [],
 };
 
 class AgidAppDatabase extends Dexie {
@@ -61,6 +197,13 @@ class AgidAppDatabase extends Dexie {
   registeredAddresses!: Table<RegisteredAddressRecord, string>;
   aoids!: Table<AoidDatabaseRecord, string>;
   syncQueue!: Table<SyncQueueRecord, string>;
+  posShipments!: Table<DeliveryPosShipmentRecord, string>;
+  posReceipts!: Table<DeliveryPosReceiptRecord, string>;
+  posAuditCases!: Table<DeliveryPosAuditRecord, string>;
+  posHandoffs!: Table<DeliveryPosHandoffRecord, string>;
+  posDeviceDiagnostics!: Table<DeliveryPosDeviceDiagnosticRecord, string>;
+  posCrossBorderDeclarations!: Table<DeliveryPosCrossBorderDeclarationRecord, string>;
+  posOfflineUsageLedger!: Table<DeliveryPosOfflineUsageRecord, string>;
 
   constructor() {
     super('AGID_AppDB');
@@ -77,6 +220,33 @@ class AgidAppDatabase extends Dexie {
       aoids: 'id, type, agid, country, updatedAt, registeredAt, name, address',
       syncQueue: 'id, status, entityType, entityId, updatedAt, nextAttemptAt',
     });
+    this.version(3).stores({
+      savedAgids: 'id, savedAt, prefix, address',
+      savedQrs: 'id, savedAt, source, address, regionName',
+      registeredAddresses: 'id, type, agid, country, updatedAt, registeredAt, name, address',
+      aoids: 'id, type, agid, country, updatedAt, registeredAt, name, address',
+      syncQueue: 'id, status, entityType, entityId, updatedAt, nextAttemptAt',
+      posShipments: 'id, kind, status, receiptId, terminalId, updatedAt, destinationCountry',
+      posReceipts: 'id, shipmentId, status, channel, terminalId, createdAt',
+      posAuditCases: 'id, shipmentId, receiptId, status, severity, createdAt',
+      posHandoffs: 'id, shipmentId, receiptId, status, terminalId, updatedAt',
+      posDeviceDiagnostics: 'id, terminalId, kind, status, checkedAt',
+      posCrossBorderDeclarations: 'id, shipmentId, status, originCountry, destinationCountry, updatedAt',
+    });
+    this.version(4).stores({
+      savedAgids: 'id, savedAt, prefix, address',
+      savedQrs: 'id, savedAt, source, address, regionName',
+      registeredAddresses: 'id, type, agid, country, updatedAt, registeredAt, name, address',
+      aoids: 'id, type, agid, country, updatedAt, registeredAt, name, address',
+      syncQueue: 'id, status, entityType, entityId, updatedAt, nextAttemptAt',
+      posShipments: 'id, kind, status, receiptId, terminalId, updatedAt, destinationCountry',
+      posReceipts: 'id, shipmentId, status, channel, terminalId, createdAt',
+      posAuditCases: 'id, shipmentId, receiptId, status, severity, createdAt',
+      posHandoffs: 'id, shipmentId, receiptId, status, terminalId, updatedAt',
+      posDeviceDiagnostics: 'id, terminalId, kind, status, checkedAt',
+      posCrossBorderDeclarations: 'id, shipmentId, status, originCountry, destinationCountry, updatedAt',
+      posOfflineUsageLedger: 'id, nullifier, receiptId, terminalId, syncStatus, updatedAt',
+    });
   }
 }
 
@@ -89,6 +259,13 @@ function cloneSnapshot(snapshot: Partial<AppDatabaseSnapshot> = {}): AppDatabase
     registeredAddresses: [...(snapshot.registeredAddresses || [])],
     aoids: [...(snapshot.aoids || [])],
     syncQueue: [...(snapshot.syncQueue || [])],
+    posShipments: [...(snapshot.posShipments || [])],
+    posReceipts: [...(snapshot.posReceipts || [])],
+    posAuditCases: [...(snapshot.posAuditCases || [])],
+    posHandoffs: [...(snapshot.posHandoffs || [])],
+    posDeviceDiagnostics: [...(snapshot.posDeviceDiagnostics || [])],
+    posCrossBorderDeclarations: [...(snapshot.posCrossBorderDeclarations || [])],
+    posOfflineUsageLedger: [...(snapshot.posOfflineUsageLedger || [])],
   };
 }
 
@@ -117,6 +294,79 @@ export function mergeRecordsById<T extends { id?: unknown }>(primary: unknown, f
   return Array.from(merged.values());
 }
 
+function normalizeAoidRecords(records: unknown) {
+  return sanitizeDatabaseRecords<AoidDatabaseRecord>(records)
+    .flatMap(record => {
+      try {
+        return [normalizeAOIDRecord({ ...record, type: 'AOID' })];
+      } catch {
+        return [];
+      }
+    });
+}
+
+function withDeliveryPosPrivacyFlags<T extends object>(record: T): T & DeliveryPosPrivacyFlags {
+  return {
+    ...record,
+    rawPayloadStored: false,
+    rawAddressStored: false,
+    decryptedAgidStored: false,
+    rawAgidSecureStored: false,
+  };
+}
+
+function normalizePosShipmentRecords(records: unknown) {
+  return sanitizeDatabaseRecords<DeliveryPosShipmentRecord>(records)
+    .map(record => withDeliveryPosPrivacyFlags(record));
+}
+
+function normalizePosReceiptRecords(records: unknown) {
+  return sanitizeDatabaseRecords<DeliveryPosReceiptRecord>(records)
+    .map(record => withDeliveryPosPrivacyFlags(record));
+}
+
+function normalizePosAuditRecords(records: unknown) {
+  return sanitizeDatabaseRecords<DeliveryPosAuditRecord>(records)
+    .map(record => withDeliveryPosPrivacyFlags(record));
+}
+
+function normalizePosHandoffRecords(records: unknown) {
+  return sanitizeDatabaseRecords<DeliveryPosHandoffRecord>(records)
+    .map(record => withDeliveryPosPrivacyFlags(record));
+}
+
+function normalizePosDeviceDiagnosticRecords(records: unknown) {
+  return sanitizeDatabaseRecords<DeliveryPosDeviceDiagnosticRecord>(records)
+    .map(record => withDeliveryPosPrivacyFlags(record));
+}
+
+function normalizePosCrossBorderDeclarationRecords(records: unknown) {
+  return sanitizeDatabaseRecords<DeliveryPosCrossBorderDeclarationRecord>(records)
+    .map(record => ({
+      ...withDeliveryPosPrivacyFlags(record),
+      advisoryOnly: true as const,
+      evidenceSourceIds: Array.isArray(record.evidenceSourceIds) ? record.evidenceSourceIds : [],
+    }));
+}
+
+function normalizePosOfflineUsageRecords(records: unknown) {
+  return normalizePosOfflineUsageEntries(records)
+    .map(record => withDeliveryPosPrivacyFlags(record));
+}
+
+export function toDeliveryPosReceiptRecord(
+  receipt: PosAcceptanceReceipt,
+  options: {
+    shipmentId?: string;
+  } = {},
+): DeliveryPosReceiptRecord {
+  return withDeliveryPosPrivacyFlags({
+    ...receipt,
+    id: receipt.receiptId,
+    ...(options.shipmentId ? { shipmentId: options.shipmentId } : {}),
+  });
+}
+
 async function replaceTable<T, TKey>(table: Table<T, TKey>, records: T[]) {
   await table.clear();
   if (records.length > 0) {
@@ -136,15 +386,49 @@ export async function loadAppDatabaseSnapshot(
   fallback: Partial<AppDatabaseSnapshot> = EMPTY_APP_DATABASE_SNAPSHOT,
 ): Promise<AppDatabaseSnapshot> {
   const fallbackSnapshot = cloneSnapshot(fallback);
-  if (!isClientDatabaseSupported()) return fallbackSnapshot;
+  if (!isClientDatabaseSupported()) {
+    return {
+      ...fallbackSnapshot,
+      aoids: normalizeAoidRecords(fallbackSnapshot.aoids),
+      posShipments: normalizePosShipmentRecords(fallbackSnapshot.posShipments),
+      posReceipts: normalizePosReceiptRecords(fallbackSnapshot.posReceipts),
+      posAuditCases: normalizePosAuditRecords(fallbackSnapshot.posAuditCases),
+      posHandoffs: normalizePosHandoffRecords(fallbackSnapshot.posHandoffs),
+      posDeviceDiagnostics: normalizePosDeviceDiagnosticRecords(fallbackSnapshot.posDeviceDiagnostics),
+      posCrossBorderDeclarations: normalizePosCrossBorderDeclarationRecords(
+        fallbackSnapshot.posCrossBorderDeclarations,
+      ),
+      posOfflineUsageLedger: normalizePosOfflineUsageRecords(fallbackSnapshot.posOfflineUsageLedger),
+    };
+  }
 
   try {
-    const [savedAgids, savedQrs, registeredAddresses, aoids, syncQueue] = await Promise.all([
+    const [
+      savedAgids,
+      savedQrs,
+      registeredAddresses,
+      aoids,
+      syncQueue,
+      posShipments,
+      posReceipts,
+      posAuditCases,
+      posHandoffs,
+      posDeviceDiagnostics,
+      posCrossBorderDeclarations,
+      posOfflineUsageLedger,
+    ] = await Promise.all([
       orderedByNewest(appDatabase.savedAgids, 'savedAt'),
       orderedByNewest(appDatabase.savedQrs, 'savedAt'),
       orderedByNewest(appDatabase.registeredAddresses, 'updatedAt'),
       orderedByNewest(appDatabase.aoids, 'updatedAt'),
       orderedByNewest(appDatabase.syncQueue, 'updatedAt'),
+      orderedByNewest(appDatabase.posShipments, 'updatedAt'),
+      orderedByNewest(appDatabase.posReceipts, 'createdAt'),
+      orderedByNewest(appDatabase.posAuditCases, 'createdAt'),
+      orderedByNewest(appDatabase.posHandoffs, 'updatedAt'),
+      orderedByNewest(appDatabase.posDeviceDiagnostics, 'checkedAt'),
+      orderedByNewest(appDatabase.posCrossBorderDeclarations, 'updatedAt'),
+      orderedByNewest(appDatabase.posOfflineUsageLedger, 'updatedAt'),
     ]);
 
     return {
@@ -154,8 +438,38 @@ export async function loadAppDatabaseSnapshot(
         registeredAddresses,
         fallbackSnapshot.registeredAddresses,
       ),
-      aoids: mergeRecordsById<AoidDatabaseRecord>(aoids, fallbackSnapshot.aoids),
+      aoids: normalizeAoidRecords(mergeRecordsById<AoidDatabaseRecord>(aoids, fallbackSnapshot.aoids)),
       syncQueue: mergeRecordsById<SyncQueueRecord>(syncQueue, fallbackSnapshot.syncQueue),
+      posShipments: normalizePosShipmentRecords(
+        mergeRecordsById<DeliveryPosShipmentRecord>(posShipments, fallbackSnapshot.posShipments),
+      ),
+      posReceipts: normalizePosReceiptRecords(
+        mergeRecordsById<DeliveryPosReceiptRecord>(posReceipts, fallbackSnapshot.posReceipts),
+      ),
+      posAuditCases: normalizePosAuditRecords(
+        mergeRecordsById<DeliveryPosAuditRecord>(posAuditCases, fallbackSnapshot.posAuditCases),
+      ),
+      posHandoffs: normalizePosHandoffRecords(
+        mergeRecordsById<DeliveryPosHandoffRecord>(posHandoffs, fallbackSnapshot.posHandoffs),
+      ),
+      posDeviceDiagnostics: normalizePosDeviceDiagnosticRecords(
+        mergeRecordsById<DeliveryPosDeviceDiagnosticRecord>(
+          posDeviceDiagnostics,
+          fallbackSnapshot.posDeviceDiagnostics,
+        ),
+      ),
+      posCrossBorderDeclarations: normalizePosCrossBorderDeclarationRecords(
+        mergeRecordsById<DeliveryPosCrossBorderDeclarationRecord>(
+          posCrossBorderDeclarations,
+          fallbackSnapshot.posCrossBorderDeclarations,
+        ),
+      ),
+      posOfflineUsageLedger: normalizePosOfflineUsageRecords(
+        mergeRecordsById<DeliveryPosOfflineUsageRecord>(
+          posOfflineUsageLedger,
+          fallbackSnapshot.posOfflineUsageLedger,
+        ),
+      ),
     };
   } catch (error) {
     console.warn('[AGID DB] Falling back to localStorage snapshot:', error);
@@ -199,7 +513,7 @@ export async function persistRegisteredAddresses(records: RegisteredAddressRecor
 export async function persistAoids(records: AoidDatabaseRecord[]) {
   if (!isClientDatabaseSupported()) return false;
   try {
-    await replaceTable(appDatabase.aoids, sanitizeDatabaseRecords<AoidDatabaseRecord>(records));
+    await replaceTable(appDatabase.aoids, normalizeAoidRecords(records));
     return true;
   } catch (error) {
     console.warn('[AGID DB] Failed to persist AOIDs:', error);
@@ -214,6 +528,107 @@ export async function persistSyncQueue(records: SyncQueueRecord[]) {
     return true;
   } catch (error) {
     console.warn('[AGID DB] Failed to persist sync queue:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosShipments(records: DeliveryPosShipmentRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posShipments, normalizePosShipmentRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS shipments:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosReceipts(records: DeliveryPosReceiptRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posReceipts, normalizePosReceiptRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS receipts:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosAuditCases(records: DeliveryPosAuditRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posAuditCases, normalizePosAuditRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS audit cases:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosHandoffs(records: DeliveryPosHandoffRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posHandoffs, normalizePosHandoffRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS handoffs:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosDeviceDiagnostics(records: DeliveryPosDeviceDiagnosticRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posDeviceDiagnostics, normalizePosDeviceDiagnosticRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS device diagnostics:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosCrossBorderDeclarations(records: DeliveryPosCrossBorderDeclarationRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posCrossBorderDeclarations, normalizePosCrossBorderDeclarationRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS cross-border declarations:', error);
+    return false;
+  }
+}
+
+export async function persistDeliveryPosOfflineUsageLedger(records: DeliveryPosOfflineUsageRecord[]) {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await replaceTable(appDatabase.posOfflineUsageLedger, normalizePosOfflineUsageRecords(records));
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to persist POS offline usage ledger:', error);
+    return false;
+  }
+}
+
+export async function clearAppDatabasePrivateData() {
+  if (!isClientDatabaseSupported()) return false;
+  try {
+    await Promise.all([
+      appDatabase.savedAgids.clear(),
+      appDatabase.savedQrs.clear(),
+      appDatabase.registeredAddresses.clear(),
+      appDatabase.aoids.clear(),
+      appDatabase.syncQueue.clear(),
+      appDatabase.posShipments.clear(),
+      appDatabase.posReceipts.clear(),
+      appDatabase.posAuditCases.clear(),
+      appDatabase.posHandoffs.clear(),
+      appDatabase.posDeviceDiagnostics.clear(),
+      appDatabase.posCrossBorderDeclarations.clear(),
+      appDatabase.posOfflineUsageLedger.clear(),
+    ]);
+    return true;
+  } catch (error) {
+    console.warn('[AGID DB] Failed to clear private data:', error);
     return false;
   }
 }

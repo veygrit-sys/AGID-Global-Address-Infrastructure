@@ -1,0 +1,71 @@
+{
+  "repository": {
+    "name": "agid-postal-cl",
+    "country_code": "CL",
+    "maturity": "M1_metadata",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false
+  },
+  "postal_system": {
+    "code_format": "NNNNNNN",
+    "assignment_rule": "CorreosChile defines a unique seven-digit code derived from commune, street and municipal number. The March 2017 UPU Chile sheet identifies the first three digits as a postal distribution area, usually a commune, and the final four as a sequential block face. It also documents commune fallback codes where no block-face code exists and post-office codes for P.O. boxes. Syntax, a three-digit prefix, commune, address text, API example or third-party row is not proof of a current assignment.",
+    "geometry_rule": "A normal seven-digit code is address-range-first and identifies one side of a block, not automatically a polygon. No reusable national official postcode geometry release has been verified for this seed. Store an exact operator observation as a typed block-face, commune-fallback or post-office object without inventing geometry. A road-side segment, address-range interpolation, buffer, Voronoi cell, administrative join or model output is derived review geometry only and cannot fill unknown official coverage.",
+    "address_format_rule": "Store recipient, attention, organization, street or road, municipal number, address remainder, village or settlement, building or premises, floor, apartment or office, P.O. box, post office, commune or locality, region and seven-digit postcode separately. Rural no-number and post-office-box formats remain distinct. UPU and CorreosChile examples are never production address rows.",
+    "postal_object_rule": "Store postal object type independently as block_face, commune_fallback, postal_distribution_area, post_office, po_box, rural_route, organization or unknown. A three-digit distribution area, seven-digit block face, commune fallback and post-office code must never be collapsed into one polygon class.",
+    "building_rule": "Building-level display requires a rights-cleared stable civic-address identifier, an explicit reviewed relation to a permitted building or construction identifier, and separately permitted point or footprint geometry with producer, edition, validity, privacy, CRS and digest pinned. A CorreosChile normalized string, postcode, block face, commune, census block, SII role, parcel, coordinate, containment or proximity is not an exact address-to-building relation.",
+    "administrative_rule": "IDE Chile DPA and SUBDERE CUT provide versioned region, province and commune identities and boundaries. INE provides statistical block and entity context. These sources remain distinct from CorreosChile assignment and block-face semantics; pin edition, source-defined boundary type, territorial scope, CRS, terms and digest before crosswalking.",
+    "cadastre_rule": "SII digital real-estate maps provide official parcel, role, land, construction and valuation context for authorized purposes, but public consultation is not bulk reuse permission and detailed owner-linked records or interoperability are controlled. Owner RUT, valuation, parcel, construction and property fields remain independently governed and cannot be inferred from a postcode or publicly replicated without authority.",
+    "derived_and_realtime_rule": "Authorized CorreosChile lookup and normalization responses plus rights-cleared IDE, SUBDERE, INE, SII and road data may normalize input, validate strict joins, construct block-face review segments, compress geometry, build indexes, detect drift and train or run review models. Every output preserves service or release version, input and artifact digests, observed_at, retrieved_at, generated_at, cache TTL, confidence, uncertainty and official-observation or derived-review status. It never overwrites evidence, fills unknown coverage or infers a municipal number, unit, building, person, owner, occupant or delivery entitlement.",
+    "agid_rule": "AGID remains an independent spatial index. Versioned crosswalks may relate time-bound CorreosChile assignments, typed postal objects, derived block-face review geometry, permitted civic addresses, explicit address-to-building relations and administrative or cadastral context to AGID cells without relabelling any source object as an AGID cell or claiming AGID geometry is official Chilean postal geometry.",
+    "licence_rule": "Public CorreosChile lookup access and developer documentation do not grant bulk address or postcode redistribution rights; pin the applicable customer and service terms. UPU publications are standards references, not bulk-data licences. IDE, SUBDERE and INE resources require item-level producer, edition and reuse terms. SII public consultation and restricted interoperability stay non-bulk. ODbL content remains separately attributed and partitioned.",
+    "jurisdiction_rule": "The pack is ISO CL scope and stores mainland, island, Antarctic-claim, maritime, border, region, province, commune, locality and source-specific coverage independently. Postal, administrative, statistical, cadastral, address, building and AGID coverage, asserted_by, legal status and vintage must not be conflated or extended beyond an artifact's declared jurisdiction.",
+    "privacy_rule": "Addresses, municipal numbers, apartment and office identifiers, coordinates, CorreosChile queries, SII roles, owner RUT, valuations, parcels, buildings, recipients, organizations, credentials and logs can expose household, property, tax, security or commercial context. Apply purpose limitation, minimisation, retention, access control and publication review; exclude private or owner-linked fields from public artifacts.",
+    "temporal_rule": "CorreosChile assignments and observations, the March 2017 UPU sheet, DPA editions, CUT editions, Census 2024 and precensus cartography, SII revaluations, licence texts, derived ranges and AGID crosswalks are time-dependent. Store valid_from, valid_to, observed_at, retrieved_at, generated_at, service and artifact version, edition, digest and supersession independently.",
+    "hugging_face_rule": "A Hugging Face Dataset may publish only rights-cleared versioned Parquet or GeoParquet partitions with source release, item terms, schema, CRS, digest and provenance. Credentialed CorreosChile responses, real addresses, SII details, owner-linked data, query logs and restricted records stay private, gated or external. Dataset Viewer is discovery, a Space is demonstration, and production AGID readers pin a Hub commit and verify shard digests."
+  },
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "hard_blockers": [
+      "valid-seven-digit-text-presented-as-current-correoschile-assignment",
+      "block-face-or-commune-fallback-presented-as-an-automatic-polygon",
+      "interactive-or-credentialed-response-republished-as-a-bulk-address-dataset",
+      "distribution-area-block-face-commune-fallback-post-office-and-po-box-conflated",
+      "ide-subdere-ine-sii-community-api-cache-or-model-geometry-presented-as-correoschile-postal-geometry",
+      "postcode-address-text-sii-role-parcel-coordinate-containment-or-proximity-presented-as-exact-building-relation",
+      "owner-rut-valuation-recipient-occupant-credential-or-query-data-published-without-authority",
+      "derived-range-buffer-voronoi-or-model-surface-presented-as-official-or-used-to-fill-unknown-coverage",
+      "hugging-face-artifact-published-without-release-terms-crs-and-digest",
+      "postal-or-administrative-coverage-silently-extended-beyond-declared-cl-scope",
+      "current-complete-assignment-release-requires-unapproved-customer-integration-or-contract-workflow",
+      "dpa-commune-or-other-administrative-polygon-presented-as-seven-digit-postal-area",
+      "synthetic-fixture-or-shared-ui-presented-as-cl-m2"
+    ],
+    "target_stage": "M2_current_correoschile_assignment_and_area_visualization",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "Chile generic address-format inventory and source links only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Digest-bound CorreosChile, ChileAtiende, UPU and Geoportal source, semantics, rights, privacy, identity and no-proxy contracts."
+      },
+      {
+        "id": "M2_current_correoschile_assignment_and_area_visualization",
+        "definition": "M2 requires an exact current CorreosChile release containing a complete finite denominator of every seven-digit assignment, alias, validity interval, correction, exception and typed postal object, fixed with retrieval time, edition, stable identity, schema, coverage, bytes and SHA-256 under written rights compatible with AGID processing, storage, derivation, redistribution and public serving. Seven-digit syntax, a three-digit distribution-area prefix, one public lookup or credentialed API observation, a UPU example or a commune match is never assignment-completion evidence. Every drawable full code must reconcile to a fixed real finite closed valid Polygon/MultiPolygon whose postal authority, official/derived/virtual class, source, release, reference date, CRS, topology, reproducible method, confidence and exceptions are explicit. A full code normally identifies one side of a block, while commune fallback, post-office, P.O. box, rural no-number, route, organization and other non-area objects must expose type and reason without a fabricated surface. DPA/commune and census areas, roads, address ranges, parcels, cadastral or address points, buildings, buffers, hulls, Voronoi/raster cells, models, AGID cells and synthetic fixtures are prohibited postal-area proxies. An approved immutable artifact must drive the real CL API/app, which handles loading, no-match, multiple, API-failure and invalid-geometry states, fits and renders translucent fill with a clear outline only for eligible real geometry, supports clear/re-search, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence."
+      }
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "CL metadata and synthetic runtime contracts only; no real CL Postal Context descriptor is enabled.",
+    "enablement_gate": "A current complete rights-compatible CorreosChile assignment release, immutable seven-digit geometry/non-area artifacts and actual CL loader/API/app verification are required before enablement.",
+    "geometry_rule": "Do not manufacture a CL postal polygon or substitute DPA/commune, census, road, address, parcel, point, building, model or AGID geometry."
+  }
+}

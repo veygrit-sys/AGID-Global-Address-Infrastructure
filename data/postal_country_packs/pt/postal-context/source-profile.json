@@ -1,0 +1,67 @@
+{
+  "schema_version": "agid-postal-pt-source-profile-v0.1",
+  "country_code": "PT",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
+    { "id": "R1_public_validation_only", "meaning": "Public official pages and lookup behavior retained only as audit receipts; access does not grant bulk extraction, transformation, database redistribution or public serving." },
+    { "id": "R2_open_official_context", "meaning": "An exact official distribution under explicit open reuse terms with attribution, edition, date, schema, CRS, coverage and digest pinned; its authority remains limited to its declared subject." },
+    { "id": "R3_controlled_or_contract", "meaning": "Licensed, purchased, permissioned, credentialed or otherwise controlled material used only as specifically permitted." },
+    { "id": "R4_private_excluded", "meaning": "Personal, customer, shipment, credential, ownership and private property evidence is excluded from public artifacts." }
+  ],
+  "sources": [
+    {
+      "source_id": "ctt-postcode-definition-and-search",
+      "provider": "CTT - Correios de Portugal, S.A.",
+      "source_url": "https://www.ctt.pt/ajuda/empresas/enviar-correio-e-encomendas/codigos-postais/o-que-sao",
+      "search_url": "https://www.ctt.pt/feapl_2/app/open/postalCodeSearch/postalCodeSearch.jspx",
+      "role": ["official-postcode-format", "operator-search-contract", "address-membership-and-po-box-validation"],
+      "production_scope": "The public pages establish the NNNN-NNN format, postal designation and address-driven lookup behavior. They are audit receipts, not a current complete assignment/exception distribution, reuse grant or geometry authority.",
+      "assignment_authority": "official_postal_operator_lookup_only",
+      "geometry_authority": "none",
+      "validation_readiness": "current-complete-edition-terms-schema-byte-length-digest-and-compatible-public-serving-permission-required",
+      "redistribution_class": "R1_public_validation_only",
+      "bundled_here": false,
+      "promotion_requirements": ["obtain-explicit-compatible-permission", "pin-current-complete-assignment-and-exception-edition", "retain-canonical-hyphen-and-leading-zeroes", "reconcile-every-code-to-authoritative-area-or-explicit-non-area"],
+      "prohibited_claims": ["public-search-is-bulk-source", "search-result-is-polygon", "address-membership-is-postcode-area", "po-box-code-always-has-area"]
+    },
+    {
+      "source_id": "ctt-national-address-database-and-postal-gis",
+      "provider": "CTT - Correios de Portugal, S.A.",
+      "source_url": "https://www.ctt.pt/empresas/marketing-publicidade/servicos-geograficos/fornecimento-de-moradas?language_id=1555597541833",
+      "treatment_url": "https://www.ctt.pt/empresas/marketing-publicidade/servicos-geograficos/tratamento-de-moradas",
+      "role": ["authoritative-address-database-description", "controlled-geographic-services-description", "door-coordinate-point-context"],
+      "production_scope": "CTT describes database licensing, portions of its address database, minimum use periods and geographic webservices. Door coordinates in WGS84 EPSG:4326 are address points, not postcode polygons. No controlled source may be used beyond a separately reviewed agreement.",
+      "assignment_authority": "official_postal_operator_controlled_service",
+      "geometry_authority": "door_point_and_address_context_not_postcode_area",
+      "validation_readiness": "explicit-agid-processing-derivation-storage-redistribution-and-public-serving-terms-plus-exact-distribution-required",
+      "redistribution_class": "R3_controlled_or_contract",
+      "bundled_here": false,
+      "promotion_requirements": ["obtain-and-review-explicit-compatible-terms", "pin-exact-edition-schema-date-byte-length-and-digest", "obtain-separate-authoritative-postcode-area-release"],
+      "prohibited_claims": ["commercial-page-is-open-data-grant", "door-coordinate-is-area", "address-point-buffer-is-postcode-area", "webservice-description-is-fixed-artifact"]
+    },
+    {
+      "source_id": "dgt-administrative-and-open-geodata-context",
+      "provider": "Direcao-Geral do Territorio (DGT)",
+      "source_url": "https://www.dgterritorio.gov.pt/node/1305",
+      "catalogue_url": "https://www.dgterritorio.gov.pt/dados-abertos",
+      "role": ["official-authority-separation", "official-administrative-boundary-context", "open-geodata-catalogue-context"],
+      "production_scope": "DGT states that CTT assigns postcodes and that DGT does not create or otherwise intervene in postcode codes. DGT open administrative, land-use, cadastral and imagery collections retain their own authority and cannot substitute for postal areas.",
+      "assignment_authority": "none_for_postcodes",
+      "geometry_authority": "official_administrative_or_land_context_not_postcode_area",
+      "validation_readiness": "exact-open-distribution-license-edition-schema-crs-coverage-and-digest-required-for-context-only",
+      "redistribution_class": "R2_open_official_context",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-exact-open-reuse-terms-and-distribution", "retain-source-feature-authority", "obtain-separate-authoritative-postcode-area-source"],
+      "prohibited_claims": ["caop-boundary-is-postcode-area", "parish-or-municipality-is-postcode-area", "cadastral-parcel-is-postcode-area", "open-catalogue-proves-postcode-polygon"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "operator-assignment", "rule": "Current CTT assignment, postal designation, exception/non-area semantics, edition, date, terms and digest remain operator evidence separate from geometry." },
+    { "id": "authoritative-postcode-area-or-non-area", "rule": "Only exact authoritative postcode Polygon/MultiPolygon features can be served as areas; P.O.-box, organization, route, point, membership-only and missing features remain explicit non-areas." },
+    { "id": "administrative-and-address-context", "rule": "DGT/CAOP, parish, municipality, cadastral, street, address and door-point geometry retain their own authority and never become postal area by relabelling, union, buffer or nearest match." },
+    { "id": "public-search-validation", "rule": "Minimal non-personal lookup receipts may test expected public behavior but never become a bulk distribution or production artifact." },
+    { "id": "private-and-controlled", "rule": "Licensed databases, credentials, customers, recipients, occupants, owners, shipments and private property records never enter the open country seed." },
+    { "id": "synthetic-conformance", "rule": "Non-production fixture metadata only; never promotion evidence." }
+  ]
+}

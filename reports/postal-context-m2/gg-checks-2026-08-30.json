@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "GG",
+  "checkedAt": "2026-08-30T08:29:00.000Z",
+  "baseCommit": "5cb830ddcb38c311b4a006071230b1d32b367c85",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/gg-source-review-2026-08-30.json",
+    "digest": "sha256:96da6d237e9f4b3b700f18b54fdd53a356ea0ad83ae33eea403e73a4e8b102ef"
+  },
+  "verification": [
+    {
+      "name": "official GG source, rights, coordinate-placeholder and geometry-grain audit",
+      "passed": true,
+      "result": "Eighteen official observations are pinned by retrieval time, byte length and SHA-256. ONSPD has 3,384 GY rows but all Channel Islands positions are unavailable (PQI 9/placeholders), while authorized postcode Polygon/MultiPolygon records available to AGID remain zero."
+    },
+    {
+      "name": "GG metadata, source-role, count-reconciliation and blocked-runtime contract",
+      "command": "tsx --test src/lib/postalContextGuernseyRepository.test.ts",
+      "testsPassed": 4,
+      "testsFailed": 0
+    },
+    {
+      "name": "shared Postal Context graph, runtime, schema, topology, API, UI service and store regression",
+      "command": "tsx --test <verify:postal-context-runtime file set>",
+      "testsPassed": 161,
+      "testsFailed": 0
+    },
+    {
+      "name": "shared postcode-search, map fit, translucent fill, outline and interaction contract",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "testsPassed": 23,
+      "testsFailed": 0
+    },
+    {
+      "name": "GG ledger and rollout ordering/integrity",
+      "command": "node --test scripts/postal-context-m2-gg-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+      "testsPassed": 12,
+      "testsFailed": 0
+    },
+    {
+      "name": "repository-wide TypeScript",
+      "command": "tsc --noEmit",
+      "errors": 0
+    }
+  ],
+  "totals": {
+    "testsPassed": 200,
+    "testsFailed": 0,
+    "typeErrors": 0
+  },
+  "runtime": {
+    "packStatus": "metadata-only",
+    "onspdVersion": "May 2026",
+    "onspdGyRecords": 3384,
+    "onspdUsableGyPointRecords": 0,
+    "authorizedPostcodePolygonRecordsAvailableToAgid": 0,
+    "productionEligibleRecords": 0,
+    "productionArtifactPublished": false,
+    "realGgApiToAppToMapVerified": false,
+    "sharedAppAreaPathVerified": true,
+    "postcodeNormalizationVerified": true,
+    "polygonAndMultiPolygonFilteringVerified": true,
+    "fitBoundsCapabilityVerified": true,
+    "translucentFillCapabilityVerified": true,
+    "outlineCapabilityVerified": true,
+    "loadingNoMatchMultipleFailureAndInvalidGeometryStatesVerified": true,
+    "provenanceMetadataContractVerified": true,
+    "clearAndResearchCapabilityVerified": true,
+    "currentGgAreaVisualizationEnabled": false,
+    "correctRealDataOutcome": "blocked-unavailable-no-invented-area"
+  },
+  "visualizationEvidence": {
+    "realCountryPolygonRendered": false,
+    "deterministicSharedMapContractVerified": true,
+    "browserE2EAttempted": false,
+    "reason": "There is no authorized real GG Polygon/MultiPolygon artifact to render. Rendering ONSPD placeholders, a paid centroid, a parcel dissolve, base-map tiles or a synthetic surface would misstate M2; deterministic contract tests prove only the shared capability."
+  },
+  "operations": {
+    "authenticatedRequests": 0,
+    "paidOperations": 0,
+    "contractAcceptances": 0,
+    "apiKeysRequestedOrUsed": 0,
+    "newDestinations": 0,
+    "deployments": 0,
+    "rawSourceBodiesCommitted": 0,
+    "landOrCadastreRowsCommitted": 0
+  },
+  "npmLauncher": {
+    "status": "bypassed",
+    "detail": "The npm shim could not resolve the local tsx command on this Windows worktree, so the exact scripts were executed with the repository-pinned Node, tsx and TypeScript binaries."
+  }
+}

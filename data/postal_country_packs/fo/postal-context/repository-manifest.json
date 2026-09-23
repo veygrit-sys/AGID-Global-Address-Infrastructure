@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-fo-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-fo",
+    "country_code": "FO",
+    "country_name": "Faroe Islands",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": false,
+    "publication_claim": "current-umhvorvisstovan-postoki-official-and-topology-repaired-area"
+  },
+  "postal_system": {
+    "full_code_name": "postnummar",
+    "full_code_format": "NNN or FO-NNN",
+    "full_code_regex": "^(FO-)?\\d{3}$",
+    "full_code_default_geometry": "official_postoki_polygon_or_multipolygon",
+    "assignment_rule": "The pinned Umhvørvisstovan Postnr layer establishes the mapped three-digit postøki identity and geometry for this release. It does not establish recipient-specific deliverability or postal-operator service eligibility.",
+    "geometry_rule": "Publish source Polygon or MultiPolygon geometry after WGS84 transformation and validation. Postal code 476 alone receives the documented deterministic topology repair and is labelled derived; no buffer is used to invent an absent postal area.",
+    "non_area_rule": "A PO box, organization, route, service point or delivery exception without source area geometry remains non-area. Municipality, place, point, building, Voronoi and AGID geometry are never substituted.",
+    "address_rule": "Address points and address components belong to the separate Umhvørvisstovan address register and are not included in this M2 release.",
+    "building_rule": "No address-to-building relation or building geometry is inferred from the postal area. Buildings require a separately licensed explicit source relation.",
+    "licence_rule": "Every source page, service definition and query snapshot pins URL, retrieval time, service version, SHA-256, attribution and the June 2019 free-map-data terms.",
+    "territory_rule": "FO retains its own country/territory identity. This release neither merges FO into DK nor changes the source layer's coverage."
+  },
+  "exception_classes": [
+    {
+      "id": "source-topology-repair-476",
+      "rule": "Eight source self-intersections are repaired with Turf buffer 0.000001 metre, steps 8; output is derived with recorded relative area delta."
+    },
+    {
+      "id": "non-area-postal-use",
+      "rule": "Return available source geometry and reason, or no area; never synthesize a surface for a PO box, route, organization or point."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_umhvorvisstovan_postoki_visualization",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Source and authority contracts are reviewable."
+      },
+      {
+        "id": "M2_current_umhvorvisstovan_postoki_visualization",
+        "definition": "Pinned current Umhvørvisstovan Postnr areas, explicit rights and attribution, reproducible immutable artifacts, topology and exception receipts, and real API/app search-to-translucent-area verification all pass."
+      },
+      {
+        "id": "M3_address_building",
+        "definition": "Separately authorized address and building relations pass identifier, privacy, accuracy and redistribution gates."
+      }
+    ],
+    "hard_blockers": [
+      "postnr-web-view-presented-without-pinned-query",
+      "invalid-source-geometry-published-as-valid",
+      "topology-repair-presented-as-unchanged-official-geometry",
+      "operator-deliverability-inferred-from-map-layer",
+      "municipality-place-point-building-voronoi-or-agid-substituted-for-postoki",
+      "address-or-building-inferred-from-postal-containment",
+      "recipient-customer-owner-or-land-rights-published",
+      "postcode-stored-as-number"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "recipient_identity",
+    "address_or_building_identity",
+    "occupancy_or_land_rights",
+    "legal_or_cadastral_boundary"
+  ]
+}

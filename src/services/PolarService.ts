@@ -1,8 +1,13 @@
 
 import {
-type PolarOpenGeoSource,
-getPolarOpenGeoSourcesForCoordinate,
-getPolarOpenSourceIdsForCoordinate,
+  getNearbyAntarcticFacilities,
+  getNearestAntarcticFacility,
+  type AntarcticResearchFacilityCandidate,
+} from '../data/antarcticResearchStations';
+import {
+  type PolarOpenGeoSource,
+  getPolarOpenGeoSourcesForCoordinate,
+  getPolarOpenSourceIdsForCoordinate,
 } from '../data/polarOpenGeoSources';
 import { fetchWithRetry } from '../lib/utils';
 import { RegionalLandmark } from './WestAsiaService';
@@ -13,7 +18,10 @@ export interface PolarContext {
   seaIce?: string;
   bathymetry?: string;
   openSourceIds?: string[];
+  openSources?: PolarOpenGeoSource[];
   naturalSources?: PolarOpenGeoSource[];
+  facilitySources?: PolarOpenGeoSource[];
+  researchFacilities?: AntarcticResearchFacilityCandidate[];
 }
 
 /**
@@ -28,7 +36,10 @@ export async function fetchPolarContext(lat: number, lon: number): Promise<Polar
   const features: RegionalLandmark[] = [];
   let region = isArctic ? "Arctic Region" : "Antarctic Region";
   const openSourceIds = getPolarOpenSourceIdsForCoordinate(lat);
-  const naturalSources = getPolarOpenGeoSourcesForCoordinate(lat);
+  const openSources = getPolarOpenGeoSourcesForCoordinate(lat);
+  const naturalSources = openSources.filter(source => source.kind !== 'facility');
+  const facilitySources = openSources.filter(source => source.kind === 'facility');
+  let researchFacilities: AntarcticResearchFacilityCandidate[] = [];
 
   try {
     // 1. Marine Regions API via Proxy
@@ -62,6 +73,23 @@ export async function fetchPolarContext(lat: number, lon: number): Promise<Polar
         type: "Territory",
         distance: 0,
       });
+      researchFacilities = getNearbyAntarcticFacilities(lat, lon, 100, {
+        includeSubantarctic: true,
+        limit: 5,
+      });
+      for (const facility of researchFacilities) {
+        features.push({
+          name: facility.name,
+          type: `Research ${facility.type.replaceAll('-', ' ')}`,
+          distance: Math.round(facility.distanceKm * 1000),
+          tags: {
+            operatorCountry: facility.operatorCountry ?? '',
+            seasonality: facility.seasonality,
+            status: facility.status,
+            source: 'antarcticResearchStations.json',
+          },
+        });
+      }
     } catch (e) {
       console.error('SCAR Gazetteer error:', e);
     }
@@ -84,7 +112,10 @@ export async function fetchPolarContext(lat: number, lon: number): Promise<Polar
       ? "Data available via IBCSO and GEBCO"
       : "Data available via IBCAO and GEBCO",
     openSourceIds,
+    openSources,
     naturalSources,
+    facilitySources,
+    researchFacilities,
   };
 }
 
@@ -129,5 +160,24 @@ export async function fetchPolarOfficialData(lat: number, lon: number): Promise<
     console.error('Polar Overpass error:', e);
   }
 
-  return null;
+  const localStation = getNearestAntarcticFacility(lat, lon, 50, {
+    includeSubantarctic: true,
+  });
+
+  if (!localStation) return null;
+
+  return {
+    address: {
+      research_station: localStation.name,
+      operator: localStation.operatorCountry,
+      operator_country_code: localStation.operatorCountryCode,
+      country: "Antarctica",
+      type: "Polar Research Station",
+      facility_type: localStation.type,
+      seasonality: localStation.seasonality,
+      source: "antarcticResearchStations.json",
+      source_record_id: localStation.sourceRecordId,
+      distance_meters: Math.round(localStation.distanceKm * 1000),
+    }
+  };
 }

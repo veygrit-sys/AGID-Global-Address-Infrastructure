@@ -1,0 +1,131 @@
+{
+  "schema_version": "agid-postal-li-source-profile-v0.1",
+  "country_code": "LI",
+  "artifact_scope": "current-swisstopo-plzo-li-domicile-area-runtime",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-geographic fixtures only." },
+    { "id": "R1_llv_ogd", "meaning": "Liechtenstein National Administration official directories and permitted geodata with required attribution and license-link propagation." },
+    { "id": "R2_swisstopo_ogd", "meaning": "Pinned swisstopo OGD release with source attribution, modifications, release, CRS, and digest retained." },
+    { "id": "R3_post_reference", "meaning": "Swiss Post or Liechtensteinische Post public search and service evidence; product-specific automation, retention, and redistribution rights remain qualified." },
+    { "id": "R4_contract_partitioned", "meaning": "Licensed street, sorting, GeoPost, coordinate, or delivery products kept outside public artifacts unless contract review explicitly permits release." }
+  ],
+  "sources": [
+    {
+      "source_id": "swiss-post-postcodes",
+      "provider": "Post CH AG",
+      "source_url": "https://www.post.ch/en/business-solutions/address-management/address-and-geodata",
+      "role": ["official-plz4-assignment", "street-and-house-number-postcode", "sorting-reference", "shared-ch-li-system"],
+      "production_scope": "Pinned permitted search receipts or contract release, filtered to LI and retaining product, edition, postcode type, query, capture time, and digest.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "validation_readiness": "public_search_or_contract_source",
+      "redistribution_class": "R4_contract_partitioned",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-product-edition-rights-and-digest", "retain-postcode-type-and-country-evidence", "separate-public-search-from-licensed-products", "exclude-private-recipient-and-change-of-address-data"],
+      "prohibited_claims": ["unrestricted-geopost-redistribution", "public-search-is-bulk-license", "every-postcode-has-area", "deliverability-guarantee"]
+    },
+    {
+      "source_id": "swisstopo-plzo-postal-localities",
+      "provider": "Federal Office of Topography swisstopo",
+      "source_url": "https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities",
+      "role": ["official-domicile-postcode-perimeter", "official-locality-perimeter", "plz4-and-plz6", "monthly-history"],
+      "production_scope": "Pinned monthly PLZO release containing only authoritative LI-classified locality and postcode perimeter rows.",
+      "assignment_authority": "official_addressing_directory",
+      "geometry_authority": "official_public_postal_locality_geometry",
+      "validation_readiness": "open_and_reproducible",
+      "redistribution_class": "R2_swisstopo_ogd",
+      "bundled_here": true,
+      "observed_release": {
+        "version": "STAC item 2026-08-11; assets updated 2026-08-11",
+        "retrieved_at": "2026-08-30T14:39:53.180Z",
+        "shapefile_zip_digest": "sha256:a58e105be27c1b4f4797ccbb5765861711ada593163059969c49a33489e0a60a",
+        "csv_zip_digest": "sha256:0542e70aaf2890a5e48d8bb22e2aec233a413bc26a8420d506551ac3a1af1e26",
+        "source_polygon_records": 4073,
+        "li_csv_rows": 20,
+        "li_domicile_polygons": 13
+      },
+      "promotion_requirements": ["pin-release-schema-crs-row-count-byte-length-and-digest", "retain-plz4-plz6-locality-and-postcode-type", "prove-li-country-partition", "emit-swisstopo-attribution"],
+      "prohibited_claims": ["all-swiss-post-codes-have-plzo-area", "plzo-proves-address-or-building", "ch-row-is-li-from-shared-source-alone", "deliverability-guarantee"]
+    },
+    {
+      "source_id": "liechtenstein-post-access-points",
+      "provider": "Liechtensteinische Post AG",
+      "source_url": "https://post.li/standorte/",
+      "role": ["local-delivery-operator", "post-office", "po-box-facility", "parcel-terminal-and-access-point"],
+      "production_scope": "Pinned public service-location receipts used only for delivery endpoint and facility context.",
+      "assignment_authority": "official_local_delivery_operator",
+      "geometry_authority": "official_facility_point_when_published",
+      "validation_readiness": "interactive_reference_available",
+      "redistribution_class": "R3_post_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["record-capture-time-url-and-result-class", "keep-facility-and-po-box-non-areal", "qualify-automation-and-retention-rights"],
+      "prohibited_claims": ["postcode-assignment-from-access-point-alone", "facility-is-residential-area", "po-box-is-domicile", "recipient-identity"]
+    },
+    {
+      "source_id": "llv-liechtenstein-building-addresses",
+      "provider": "Liechtenstein National Administration",
+      "source_url": "https://service.geo.llv.li/download/",
+      "role": ["official-building-address", "official-street-and-locality", "address-coordinate", "building-identifier"],
+      "production_scope": "Pinned official building-address SHP/CSV release with schema, CRS, identifier, status, rights, attribution, and digest retained.",
+      "assignment_authority": "official_national_address_directory",
+      "geometry_authority": "official_cadastral_address_point",
+      "validation_readiness": "open_and_reproducible",
+      "redistribution_class": "R1_llv_ogd",
+      "bundled_here": false,
+      "promotion_requirements": ["accept-and-archive-license-reference", "attribute-liechtensteinische-landesverwaltung", "retain-building-identifier-status-crs-and-release", "cross-check-postal-assignment"],
+      "prohibited_claims": ["address-point-is-building-footprint", "postal-operator-authority", "resident-owner-or-recipient", "deliverability-guarantee"]
+    },
+    {
+      "source_id": "llv-liechtenstein-gwr-public",
+      "provider": "Liechtenstein National Administration, Office of Statistics",
+      "source_url": "https://service.geo.llv.li/download/",
+      "role": ["public-building-register", "building-identifier", "building-category", "parcel-and-coordinate-context"],
+      "production_scope": "Pinned public GWR fields only, excluding dwelling, occupant, owner, and all non-published register attributes.",
+      "assignment_authority": "official_national_building_register",
+      "geometry_authority": "official_building_register_point",
+      "validation_readiness": "open_public_fields_only",
+      "redistribution_class": "R1_llv_ogd",
+      "bundled_here": false,
+      "promotion_requirements": ["retain-building-identifier-category-status-release-and-digest", "publish-only-fields-authorized-by-statistics-law", "exclude-dwelling-and-person-data"],
+      "prohibited_claims": ["point-is-building-footprint", "dwelling-or-occupant-context", "owner-or-rightsholder", "postal-assignment-authority"]
+    },
+    {
+      "source_id": "llv-liechtenstein-official-survey",
+      "provider": "Liechtenstein National Administration, Office for Civil Engineering and Geoinformation",
+      "source_url": "https://service.geo.llv.li/download/",
+      "role": ["municipal-official-survey", "building-footprint", "parcel-and-topographic-context"],
+      "production_scope": "Pinned complete set of eleven municipal official-survey packages with format, schema, CRS, release, coverage, rights, and digest retained per municipality.",
+      "assignment_authority": "none",
+      "geometry_authority": "official_cadastral_geometry",
+      "validation_readiness": "open_with_explicit_link_required",
+      "redistribution_class": "R1_llv_ogd",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-all-eleven-municipal-packages", "retain-source-object-identifiers-and-release", "require-same-building-identifier-or-reviewed-crosswalk", "record-coverage-and-omissions"],
+      "prohibited_claims": ["nearest-building-is-exact-address-link", "postal-assignment-authority", "owner-or-rightsholder", "survey-geometry-is-deliverability"]
+    },
+    {
+      "source_id": "llv-liechtenstein-sovereign-boundaries",
+      "provider": "Liechtenstein National Administration, Office for Civil Engineering and Geoinformation",
+      "source_url": "https://service.geo.llv.li/download/",
+      "role": ["sovereign-boundary", "municipality-context", "ch-li-at-partition"],
+      "production_scope": "Pinned official sovereign-boundary release used for jurisdiction, border rejection, and administrative context only.",
+      "assignment_authority": "official_national_boundary_authority",
+      "geometry_authority": "official_sovereign_geometry",
+      "validation_readiness": "open_and_reproducible",
+      "redistribution_class": "R1_llv_ogd",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-release-crs-and-digest", "retain-boundary-object-identity-and-validity", "reject-ch-and-at-features-without-inventing-postal-membership", "emit-required-attribution"],
+      "prohibited_claims": ["postcode-boundary", "postal-assignment-authority", "border-clip-proves-address", "legal-survey-certification"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "shared-postal-assignment", "rule": "Swiss Post rows retain product, edition, postcode type, country evidence, rights, and digest; licensed rows never silently enter public artifacts." },
+    { "id": "li-plzo", "rule": "Only PLZO rows whose ZIP_ID resolves exclusively to official municipality BFS 7001-7011 rows enter the pack; the 13 selected PLZ6 suffix-00 polygons retain PLZ4, ZIP_ID, source edition and attribution." },
+    { "id": "local-delivery-endpoints", "rule": "Liechtensteinische Post facilities, post offices, parcel terminals, and PO boxes remain point or non-area evidence." },
+    { "id": "llv-open-address", "rule": "Official addresses retain building identifier, object status, hierarchy, coordinates, CRS, release, attribution, and postal cross-check status." },
+    { "id": "llv-public-building", "rule": "Public GWR identity and survey geometry remain distinct until the same source identifier or reviewed crosswalk proves the link." },
+    { "id": "ch-li-at-territory-boundary", "rule": "CH and AT features are rejected from LI artifacts, and LI features never receive CH country or AGID identity." },
+    { "id": "private-and-sensitive", "rule": "Recipients, residents, owners, tenants, dwellings, forwarding records, phone numbers, credentials, and non-public register fields never enter public artifacts." },
+    { "id": "synthetic-conformance", "rule": "Non-geographic fixture metadata only; never promotion evidence." }
+  ]
+}

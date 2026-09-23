@@ -1,0 +1,93 @@
+{
+  "schema_version": "agid-postal-je-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-je",
+    "country_code": "JE",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "country-definition-and-blocker-evidence-only"
+  },
+  "postal_system": {
+    "full_code_name": "Jersey unit postcode",
+    "full_code_format": "JE plus one digit and an optional alphanumeric outward character, one inward digit and two letters; normally displayed with one space before the final three characters",
+    "observed_current_outward_codes": ["JE1", "JE2", "JE3", "JE4"],
+    "assignment_rule": "A current Jersey unit postcode is a Jersey Post and Royal Mail routing assignment. Syntax, an ONSPD row, a JSearch point, a placeholder coordinate, a parish or another government boundary does not prove a Polygon/MultiPolygon for the unit postcode.",
+    "normalization_rule": "Trim, uppercase, remove internal whitespace for validation, require ^JE\\d[A-Z\\d]?\\d[A-Z]{2}$, then display one space before the final three characters. Preserve the code as text. Normalization does not prove that the code is live, geographic or eligible for an area.",
+    "full_code_geometry_rule": "Serve an exact unit-postcode surface only from an authoritative or rights-cleared real Polygon/MultiPolygon explicitly related to that current unit code. Never buffer, Voronoi-partition, dissolve or relabel a JSearch point, ONSPD placeholder, address, delivery route, PO box, organisation, parish, building or land parcel into a postcode polygon.",
+    "broader_context_geometry_rule": "A postal-district, sector or outward-code context surface may be served only from a complete authoritative or rights-cleared real postal-boundary release with deterministic current unit-code membership, edition, date, CRS, topology, coverage, exceptions, terms and SHA-256. It must be labelled as broader postal context and never as the exact searched unit-postcode geometry.",
+    "po_box_route_organization_rule": "Non-geographic, large-user, PO-box, route and organisation codes remain non-area. Every record requires source-defined classification; text shape alone is not enough to infer an area.",
+    "jsearch_rule": "The observed government JSearchSept2023 postcode layer contains 1,914 point records and no polygons. It is incomplete against the May 2026 live ONSPD denominator, contains terminated and non-matching values, and exposes blank licence/access fields. It is search evidence only and cannot be promoted, buffered, redistributed or served as a postcode surface.",
+    "onspd_rule": "The May 2026 ONSPD provides 3,215 live and 459 terminated Jersey unit-code records, all with GRIDIND 9, null eastings/northings, documented Channel Islands coordinate sentinels and no returned geometry. OGL reuse rights do not create missing geometry.",
+    "address_rule": "A Jersey Post address-finder result, JSearch point or ONSPD assignment is not permission to publish an address, recipient, occupant, delivery instruction or customer record. Address identity requires a separately authorised source and purpose.",
+    "building_rule": "Exact building output requires an explicit rights-cleared relation from an address or postcode assignment to a building feature. Postcode membership, point proximity, point containment or shared text does not establish a building relation.",
+    "administrative_rule": "Jersey parishes, vingtaines, electoral districts, census areas, roads and other administrative or service layers remain separate context. None may be relabelled as a unit-postcode, sector or outward-code perimeter.",
+    "licence_rule": "Every ONS, Jersey Post, Government of Jersey or other artifact pins provider, exact URL, capture time, edition/effective date, terms, attribution, scope, bytes and SHA-256. OGL-J applies only to qualifying information hosted on opendata.gov.je and does not automatically license an uncatalogued roadworks.gov.je service; ONS OGL reuse does not create geometry withheld for the Channel Islands; public finder access does not authorize bulk extraction, redistribution or API serving.",
+    "territory_rule": "The JE pack preserves Jersey identity. It does not merge Guernsey, the United Kingdom, the Isle of Man or another territory and does not treat ONS directory inclusion as a change in postal or territorial authority."
+  },
+  "integration": {
+    "agid_country_code": "JE",
+    "postcode_flow": "normalized JE unit postcode -> current rights-cleared assignment -> truthful exact non-area/unavailable reason or explicit unit surface -> separately labelled rights-cleared broader postal context when available -> explicit address/building relation from separate authority -> JE AGID cells",
+    "coordinate_flow": "honest no-coordinate result or competent source coordinate -> optional separately labelled postal context Polygon/MultiPolygon -> explicit address-to-building relation -> rights-cleared building -> JE AGID cell",
+    "building_output_gate": "current postcode or address identity plus an explicit source-defined rights-cleared building identifier/relation and exact building geometry"
+  },
+  "quality_gates": [
+    { "id": "canonical-unit-postcode", "pass": "Every code remains text, normalizes to the country grammar with one display space and distinguishes syntax from a live assignment." },
+    { "id": "current-assignment", "pass": "The nationwide live JE unit-postcode denominator pins edition, effective date, update cadence, terms, coverage, exceptions, byte length and SHA-256." },
+    { "id": "truthful-unit-geometry", "pass": "Every displayed exact unit surface comes from an explicit competent Polygon/MultiPolygon relation; points, GRIDIND 9, null geometry and placeholder coordinates remain point/non-area or unavailable." },
+    { "id": "broader-postal-context", "pass": "Every broader postal context comes from a complete authoritative or rights-cleared real postal-boundary release and is labelled separately from the searched unit code." },
+    { "id": "rights", "pass": "ONS, Jersey Post and Government of Jersey terms and attributions remain enforceable per artifact; public pages and uncatalogued services are never treated as bulk or public-serving authority without an explicit grant." },
+    { "id": "authority-separation", "pass": "Postcode assignment, postal context area, search point, address, building, administration, occupancy and ownership remain distinct authorities and relations." },
+    { "id": "privacy", "pass": "No resident, recipient, occupant, owner, rightsholder, personal contact, delivery instruction, title/value, credential or customer record is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Generic JE planning cells and synthetic fixtures verify behavior only and never satisfy production M2 evidence." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Country-specific contracts, authority separation and synthetic conformance fixtures are reviewable." },
+      {
+        "id": "M2_current_jersey_unit_postcode_and_truthful_postal_area_visualization",
+        "definition": "A current rights-cleared nationwide Jersey unit-postcode denominator and an authoritative or rights-cleared real Polygon/MultiPolygon explicitly corresponding to every searchable geographic unit postcode, or an honest source-defined non-area classification plus a separately labelled real outward-code, sector or district postal-context surface, are pinned by edition, effective date, terms, attribution, CRS, topology, coverage, exceptions and SHA-256 and published as an approved immutable artifact. Searching a normalized JE postcode through the real AGID API/app must preserve unit versus broader-context grain, fit and render only the eligible surface with translucent fill and a clear outline, and show selected code, geometry kind, official/derived/virtual class, source, reference date, confidence and any non-area reason. ONSPD GRIDIND 9 placeholders, null geometry, 99.999999 or rounded 100 latitude, longitude 0, JSearch points, addresses, routes, PO boxes, organisations, parishes, administrative areas, buffers, Voronoi cells, parcels/buildings and synthetic fixtures never satisfy M2."
+      },
+      { "id": "M3_derived_geometry", "definition": "Complete rights-cleared address membership and coordinates pass derivation, topology, coverage, uncertainty and correction gates for explicitly derived postal context only." },
+      { "id": "M4_address_building", "definition": "Licensed address identity and exact rights-cleared building relationships pass identifier, privacy, CRS, coverage and redistribution gates." }
+    ],
+    "hard_blockers": [
+      "onspd-gridind9-or-null-geometry-presented-as-postcode-area",
+      "channel-islands-placeholder-latitude-longitude-presented-as-real-point",
+      "jsearch-point-buffered-voronoi-partitioned-or-relabeled-as-postcode-surface",
+      "parish-administration-road-building-or-land-layer-presented-as-postal-boundary",
+      "address-finder-presented-as-bulk-or-redistribution-right",
+      "opendata-oglj-applied-to-uncatalogued-service-without-an-explicit-grant",
+      "unit-postcode-presented-as-broader-postal-context-area",
+      "address-or-postcode-point-presented-as-building-footprint",
+      "parcel-or-nearest-building-presented-as-exact-address-link",
+      "occupant-owner-rightsholder-or-private-address-list-published",
+      "another-country-or-territory-geometry-silently-imported",
+      "synthetic-planning-cell-presented-as-real-postal-area"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_JE_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_JE_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_JE_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_JE_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-address-finder-jsearch-or-raw-onspd-rows",
+    "gridind9-placeholder-is-real-coordinate",
+    "unit-postcode-is-invented-polygon",
+    "outward-code-sector-or-district-is-administrative-area",
+    "jsearch-point-is-postcode-surface",
+    "finder-is-public-bulk-data",
+    "address-coordinate-is-building-footprint",
+    "parcel-or-nearest-footprint-is-exact-building",
+    "postcode-identifies-occupant-owner-or-rightsholder"
+  ]
+}

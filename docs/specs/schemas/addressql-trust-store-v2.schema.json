@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-trust-store-v2.schema.json",
+  "title": "AddressQL Trust Store v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "policy", "keys"],
+  "properties": {
+    "version": {
+      "const": "addressql-trust-store-v2"
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimumSignatures"],
+      "properties": {
+        "minimumSignatures": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 10
+        }
+      }
+    },
+    "keys": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/reviewerKey"
+      }
+    }
+  },
+  "$defs": {
+    "reviewerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewerId",
+        "publicKey",
+        "status",
+        "validFrom",
+        "validUntil",
+        "addedAt"
+      ],
+      "properties": {
+        "reviewerId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "publicKey": {
+          "type": "string",
+          "pattern": "^-----BEGIN PUBLIC KEY-----"
+        },
+        "status": {
+          "enum": ["active", "revoked", "rotated"]
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "addedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "replacesKeyId": {
+          "type": "string"
+        },
+        "replacedByKeyId": {
+          "type": "string"
+        },
+        "rotatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revokedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revocationReason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      }
+    }
+  }
+}

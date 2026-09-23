@@ -3,7 +3,7 @@
   "name": "Jordan",
   "native": {
     "name": "الأردن",
-    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}",
+    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{governorate}} {{postcode}}",
     "ordering": "small-to-big",
     "fields": [
       {
@@ -16,42 +16,70 @@
       {
         "key": "houseNumber",
         "label": "رقم البناء",
-        "placeholder": "1",
+        "placeholder": "99",
         "required": true,
         "type": "text"
       },
       {
         "key": "street",
         "label": "الشارع",
-        "placeholder": "شارع الرينبو",
+        "placeholder": "شارع تجريبي",
         "required": true,
         "type": "text"
       },
       {
         "key": "suburb",
         "label": "المنطقة/الحي",
-        "placeholder": "جبل عمان",
+        "placeholder": "منطقة تجريبية",
         "required": true,
+        "type": "text"
+      },
+      {
+        "key": "governorate",
+        "label": "المحافظة",
+        "placeholder": "",
+        "required": false,
         "type": "text"
       },
       {
         "key": "city",
         "label": "المدينة",
-        "placeholder": "عمان",
+        "placeholder": "مدينة تجريبية",
         "required": true,
+        "type": "text"
+      },
+      {
+        "key": "poBox",
+        "label": "صندوق البريد",
+        "placeholder": "",
+        "required": false,
         "type": "text"
       },
       {
         "key": "postcode",
         "label": "الرمز البريدي",
-        "placeholder": "11118",
+        "placeholder": "99999",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "civicAddressId",
+        "label": "معرّف العنوان المدني المصرح",
+        "placeholder": "",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "معرّف المبنى المرتبط صراحة",
+        "placeholder": "",
         "required": false,
         "type": "text"
       }
     ]
   },
   "english": {
-    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{postcode}}\n{{country}}",
+    "addressFormat": "{{houseNumber}} {{street}}\n{{suburb}}\n{{city}} {{governorate}} {{postcode}}\n{{country}}",
     "ordering": "small-to-big",
     "fields": [
       {
@@ -64,35 +92,63 @@
       {
         "key": "houseNumber",
         "label": "Building No.",
-        "placeholder": "1",
+        "placeholder": "99",
         "required": true,
         "type": "text"
       },
       {
         "key": "street",
         "label": "Street",
-        "placeholder": "Rainbow St",
+        "placeholder": "Synthetic Street",
         "required": true,
         "type": "text"
       },
       {
         "key": "suburb",
         "label": "Area/District",
-        "placeholder": "Jabal Amman",
+        "placeholder": "Synthetic District",
         "required": true,
+        "type": "text"
+      },
+      {
+        "key": "governorate",
+        "label": "Governorate",
+        "placeholder": "",
+        "required": false,
         "type": "text"
       },
       {
         "key": "city",
         "label": "City",
-        "placeholder": "Amman",
+        "placeholder": "Synthetic Locality",
         "required": true,
+        "type": "text"
+      },
+      {
+        "key": "poBox",
+        "label": "P.O. Box",
+        "placeholder": "",
+        "required": false,
         "type": "text"
       },
       {
         "key": "postcode",
         "label": "Postal Code",
-        "placeholder": "11118",
+        "placeholder": "99999",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "civicAddressId",
+        "label": "Rights-cleared Civic Address ID",
+        "placeholder": "",
+        "required": false,
+        "type": "text"
+      },
+      {
+        "key": "buildingId",
+        "label": "Explicitly Linked Building ID",
+        "placeholder": "",
         "required": false,
         "type": "text"
       }
@@ -101,8 +157,8 @@
   "postalCode": {
     "format": "NNNNN",
     "regex": "^\\d{5}$",
-    "api": "https://jordanpost.com.jo/en/post-code-search/",
-    "source": "Jordan Post"
+    "api": "https://jordanpost.com.jo/",
+    "source": "Jordan Post; UPU Jordan Addressing Sheet 2004; Jordan ICT and Postal Policy 2025; Jordan Open Data Portal; Royal Jordanian Geographic Centre"
   },
   "addressRules": {
     "languages": [
@@ -129,17 +185,37 @@
     ],
     "regionalHierarchy": [
       "governorate",
-      "city"
+      "districtOrDirectorate",
+      "cityTownOrVillage",
+      "localityNeighbourhoodOrStreet",
+      "buildingPremiseApartmentOrPoBox",
+      "fiveDigitRoutingCode",
+      "postOfficeOrCarrierRouteObject",
+      "optionalDerivedAdministrativeJoinSurface",
+      "explicitRightsClearedCivicAddress",
+      "explicitAddressLinkedBuilding",
+      "exactRightsClearedBuildingGeometry",
+      "agidIndependentSpatialIndex"
     ],
     "postalCode": {
-      "label": "5 digits used",
+      "label": "5 digits when assigned",
       "required": false,
-      "usage": "used"
+      "usage": "routing/locality and post-office context; not guaranteed polygon or building address"
     }
   },
   "openSourceIds": [
     "jordanpost",
+    "upu-jordan-addressing-2004",
+    "modee-jordan-postal-policy-2025",
+    "trc-jordan-postal-sector",
+    "jordan-post-offices-open-data-2023",
+    "jordan-open-government-data-license-v1",
     "rjgc-jordan",
+    "rjgc-jordan-eservices",
+    "rjgc-gam-building-mou",
+    "dls-jordan-village-codes-2022",
+    "gam-jordan-streets-2019",
+    "jordan-digital-mailbox-pilot-2026",
     "osm-jordan",
     "osm-nominatim",
     "osm-overpass",

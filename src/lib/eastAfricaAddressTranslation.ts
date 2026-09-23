@@ -1,6 +1,7 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
+import { isFrenchShippingCountry,normalizeFrenchShippingField } from './frenchShippingAddress';
 
 export type EastAfricaAddressTopology =
   | 'english-address'
@@ -309,8 +310,21 @@ function shouldUseBuildingEnglish(fieldKey: string) {
   return isAddressBuildingField(fieldKey);
 }
 
-function normalizeEastAfricaEnglish(text: string, countryCode: string, fieldKey: string) {
+function normalizeEastAfricaEnglish(
+  text: string,
+  countryCode: string,
+  fieldKey: string,
+  sourceLanguage: string,
+) {
   const code = countryCodeOf(countryCode);
+  if (sourceLanguage === 'fr' && isFrenchShippingCountry(code)) {
+    return normalizeFrenchShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
   const aliases = EAST_AFRICA_ENGLISH_ALIASES[code] || {};
   if (aliases[text]) return aliases[text];
   if (COMMON_EAST_AFRICA_ADDRESS_TERMS[text]) return COMMON_EAST_AFRICA_ADDRESS_TERMS[text];
@@ -349,7 +363,12 @@ export async function translateEastAfricaAddressField(options: {
     fieldKey: options.fieldKey,
     sourceLanguage,
     targetLanguage,
-    normalizeEnglish: value => normalizeEastAfricaEnglish(value, profile.countryCode, options.fieldKey),
+    normalizeEnglish: value => normalizeEastAfricaEnglish(
+      value,
+      profile.countryCode,
+      options.fieldKey,
+      sourceLanguage,
+    ),
     translator: options.translator,
     normalizeEnglishIdentity: true,
   });

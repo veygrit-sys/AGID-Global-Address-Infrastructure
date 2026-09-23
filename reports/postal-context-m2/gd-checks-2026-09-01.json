@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "GD",
+  "observedAt": "2026-09-01T02:05:43.142Z",
+  "completedAt": "2026-09-01T02:29:33.3882062Z",
+  "baseCommit": "16cd3d158f0471949abf9eefe6ba7a6821640f17",
+  "scope": "GD-specific fixed Grenada Postal Corporation, Government of Grenada and UPU no-postcode, address-format, rights and no-proxy evidence plus shared application contracts. No raw source body, address, person/customer/postal-box/property/cadastral/land-right data, island/parish/office proxy, synthetic planning cell/code seed, airport code, production pack, real GD AGID API response or browser area was promoted.",
+  "checks": [
+    {
+      "id": "gd-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-gd-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "six exact official bodies reproduce current GPC/government operator evidence, three postcode-free UPU examples and the UPU no-postcode row while emitting no source rows or geometry"
+    },
+    {
+      "id": "gd-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-gd-sources.test.py -v",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "complete set, changed body, missing/extra/renamed body, HTML marker/forbidden postcode and PDF signature/page/marker/forbidden postcode drift conditions fail closed"
+    },
+    {
+      "id": "address-format-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/data/address_formats/addressFormatRulesJson.test.ts",
+      "result": "pass",
+      "tests": 68,
+      "assertion": "global address-format contracts accept GD format None with no postcode field, template token or optional postal rule"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area, invalid geometry and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker retry policy and evidence gates"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/data/address_formats/addressFormatRulesJson.test.ts src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "GD address-format and shared postal-search area test graph passes noEmit type checking"
+    },
+    {
+      "id": "gd-address-format-sync",
+      "command": "deterministic Node checks for GD JSON/YAML/embedded Americas hierarchy",
+      "result": "pass",
+      "tests": 2,
+      "assertion": "JSON equals the embedded hierarchy and both JSON and YAML omit postcode fields/tokens/rules while recording format None"
+    },
+    {
+      "id": "changed-python-json-yaml-syntax",
+      "command": "py_compile for two changed Python modules, JSON.parse for six changed JSON contract files and yaml.parse for GD.yaml",
+      "result": "pass",
+      "tests": 9,
+      "assertion": "inspector, inspector tests, manifest, profile, source review, engineering checks, address JSON, Americas hierarchy and GD YAML are syntactically valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 8,
+    "testsPassed": 123,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 6,
+    "exactBodiesByteAndSha256Bound": 6,
+    "exactOfficialBodiesBytes": 1195959,
+    "designatedOperator": "Grenada Postal Corporation",
+    "currentPostalCodeFormat": "none",
+    "gpcCurrentLocationsReviewedWithoutPostcode": 10,
+    "governmentPostalStations": 52,
+    "governmentSubOffices": 6,
+    "upuAddressingExamplesWithoutPostcode": 3,
+    "upuListsGrenadaAsNotRequiringPostalCodes": true,
+    "currentCompleteAssignmentAliasValidityExceptionAndExplicitNonAreaDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "officialDerivedOrVirtualPostalGeometryArtifactsEligibleForAgid": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realGdRuntimeVerified": false,
+    "realGdApiVerified": false,
+    "realGdAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because Grenada has no valid postcode input and no eligible real postal Polygon/MultiPolygon for the AGID API/app path",
+    "separateDataApp": "not built because zero GD records are eligible and an empty visual could imply unsupported coverage"
+  },
+  "knownLimitations": [
+    "The current authoritative denominator is zero postcodes; it cannot satisfy a milestone that requires postcode-to-Polygon/MultiPolygon visualization.",
+    "GPC office addresses, the government network count and UPU address examples do not establish assignments or postal geometry.",
+    "GPC and government pages publish no compatible postal dataset licence; UPU reference/database material is copyright-controlled.",
+    "No country, island, parish, locality, address, office, route, P.O. box, parcel, building, Point, buffer, hull, Voronoi/raster cell, AGID cell, airport code or synthetic GD planning fixture was promoted."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "The UPU Grenada sheet and no-postcode list page rendered to non-empty 993x1404 RGB PNGs with fixed SHA-256 values. The local image-view helper returned Windows error 206 through original and short paths; exact PDF bytes, page counts, page markers, image dimensions and render SHA-256 values were validated and no image was committed.",
+    "The literal npm status script was invoked before work, but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with the bundled Node binary."
+  ],
+  "countryM2Achieved": false
+}

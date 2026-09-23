@@ -125,6 +125,34 @@ test('uses local East Asian alias policy before generic Chinese pinyin', async (
   assert.equal(macao?.text, 'Taipa');
 });
 
+test('distinguishes Cantonese place readings from Mainland Hanyu Pinyin', async () => {
+  const hongKong = await translateEastAsiaAddressField({
+    countryCode: 'HK',
+    fieldKey: 'district',
+    text: '沙田',
+    sourceLanguage: 'zh-Hant',
+    targetLanguage: 'en',
+  });
+  const mainland = await translateEastAsiaAddressField({
+    countryCode: 'CN',
+    fieldKey: 'district',
+    text: '沙田',
+    sourceLanguage: 'zh-Hans',
+    targetLanguage: 'en',
+  });
+  const unknownHongKong = await translateEastAsiaAddressField({
+    countryCode: 'HK',
+    fieldKey: 'district',
+    text: '合成區',
+    sourceLanguage: 'zh-Hant',
+    targetLanguage: 'en',
+  });
+
+  assert.equal(hongKong?.text, 'Sha Tin');
+  assert.equal(mainland?.text, 'Shatian');
+  assert.equal(unknownHongKong, null);
+});
+
 test('converts Chinese script variants without machine translation', async () => {
   const traditional = await translateEastAsiaAddressField({
     countryCode: 'CN',

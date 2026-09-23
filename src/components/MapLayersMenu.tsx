@@ -10,10 +10,11 @@ Landmark,
 Layers,
 Map as MapIcon,
 MountainSnow,
+WifiOff,
 Waves,
 X
 } from 'lucide-react';
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import { AnimatePresence,motion } from 'motion/react';
 import React from 'react';
 import { MAP_STYLES } from '../constants/appConstants';
@@ -46,6 +47,8 @@ interface MapLayersMenuProps {
   setIsGridVisible: (v: boolean) => void;
   gridOpacityLevel: number;
   setGridOpacityLevel: (l: number) => void;
+  isLowBandwidthMapMode: boolean;
+  setIsLowBandwidthMapMode: (enabled: boolean) => void;
   mapRef: React.MutableRefObject<maplibregl.Map | null>;
 }
 
@@ -76,20 +79,24 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
   setIsGridVisible,
   gridOpacityLevel,
   setGridOpacityLevel,
+  isLowBandwidthMapMode,
+  setIsLowBandwidthMapMode,
   mapRef
 }) => {
+  const heavyMapControlDisabled = isLowBandwidthMapMode;
+
   return (
     <AnimatePresence>
       {show && (
         <>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] pointer-events-auto"
           />
-          <motion.div 
+          <motion.div
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -98,7 +105,7 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
           >
             <div className="max-w-4xl mx-auto p-4 md:p-6 pb-12">
               <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6" />
-              
+
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-50 rounded-xl">
@@ -106,7 +113,7 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                   </div>
                   <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">Map Layers</h3>
                 </div>
-                <button 
+                <button
                   onClick={onClose}
                   className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-400 hover:text-slate-600"
                 >
@@ -116,22 +123,67 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
 
               <div className="space-y-6">
                 <section>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isLowBandwidthMapMode}
+                    onClick={() => setIsLowBandwidthMapMode(!isLowBandwidthMapMode)}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-4 rounded-2xl border p-3 text-left transition-all",
+                      isLowBandwidthMapMode
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-emerald-200 hover:bg-emerald-50/40"
+                    )}
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className={cn(
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                        isLowBandwidthMapMode ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-500"
+                      )}>
+                        <WifiOff className="h-4.5 w-4.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black uppercase tracking-[0.18em]">Low Bandwidth</p>
+                        <p className="truncate text-[9px] font-bold uppercase tracking-wider text-slate-400">Vector only / AGID + address candidates</p>
+                      </div>
+                    </div>
+                    <span className={cn(
+                      "flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors",
+                      isLowBandwidthMapMode ? "bg-emerald-600" : "bg-slate-200"
+                    )}>
+                      <span className={cn(
+                        "h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
+                        isLowBandwidthMapMode && "translate-x-5"
+                      )} />
+                    </span>
+                  </button>
+                </section>
+
+                <section>
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Map Type (地図の種類)</h4>
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x">
-                    {MAP_STYLES.map((style) => (
+                    {MAP_STYLES.map((style) => {
+                      const styleDisabled = isLowBandwidthMapMode && style.id === 'satellite';
+                      return (
                       <button
                         key={style.id}
-                        onClick={() => changeStyle(style.url)}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start"
+                        disabled={styleDisabled}
+                        onClick={() => {
+                          if (!styleDisabled) changeStyle(style.url);
+                        }}
+                        className={cn(
+                          "flex flex-col items-center gap-1.5 group/item shrink-0 snap-start",
+                          styleDisabled && "cursor-not-allowed opacity-40"
+                        )}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all overflow-hidden relative shadow-sm",
                           mapStyle === style.url ? "border-blue-500 ring-4 ring-blue-500/10 scale-105" : "border-slate-100 group-hover/item:border-blue-200"
                         )}>
-                          <img 
-                            src={style.thumb} 
+                          <img
+                            src={style.thumb}
                             alt={style.name}
                             className="w-full h-full object-cover"
                             referrerPolicy="no-referrer"
@@ -146,7 +198,8 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                           {style.name}
                         </span>
                       </button>
-                    ))}
+                    );
+                    })}
                   </div>
                 </section>
 
@@ -154,18 +207,22 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                   <section>
                     <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Map Tilt (傾き: {mapPitch}°)</h4>
                     <div className="px-1 py-2">
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="85" 
+                      <input
+                        type="range"
+                        min="0"
+                        max="85"
                         step="5"
-                        value={mapPitch} 
+                        value={mapPitch}
                         onChange={(e) => {
                           const val = parseInt(e.target.value);
                           setMapPitch(val);
                           if (mapRef.current) mapRef.current.setPitch(val);
                         }}
-                        className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                        disabled={heavyMapControlDisabled}
+                        className={cn(
+                          "w-full h-1.5 bg-slate-200 rounded-lg appearance-none accent-blue-600",
+                          heavyMapControlDisabled ? "cursor-not-allowed opacity-40" : "cursor-pointer"
+                        )}
                       />
                       <div className="flex justify-between mt-1 px-0.5">
                         <span className="text-[7px] font-bold text-slate-400">Flat (平坦)</span>
@@ -181,7 +238,8 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                     <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x">
                       <button
                         onClick={() => setIsSystematicMode(!isSystematicMode)}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14"
+                        disabled={heavyMapControlDisabled}
+                        className={cn("flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14", heavyMapControlDisabled && "cursor-not-allowed opacity-40")}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all flex items-center justify-center relative shadow-sm",
@@ -197,7 +255,8 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
 
                       <button
                         onClick={() => setIsRegionalMode(!isRegionalMode)}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14"
+                        disabled={heavyMapControlDisabled}
+                        className={cn("flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14", heavyMapControlDisabled && "cursor-not-allowed opacity-40")}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all flex items-center justify-center relative shadow-sm",
@@ -250,7 +309,8 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                     <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x">
                       <button
                         onClick={() => setIs3DEnabled(!is3DEnabled)}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14"
+                        disabled={heavyMapControlDisabled}
+                        className={cn("flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14", heavyMapControlDisabled && "cursor-not-allowed opacity-40")}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all flex items-center justify-center relative shadow-sm",
@@ -266,7 +326,8 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
 
                       <button
                         onClick={() => setIsDisasterMode(!isDisasterMode)}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14"
+                        disabled={heavyMapControlDisabled}
+                        className={cn("flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14", heavyMapControlDisabled && "cursor-not-allowed opacity-40")}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all flex items-center justify-center relative shadow-sm",
@@ -282,7 +343,8 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
 
                       <button
                         onClick={() => setIsMountainMode(!isMountainMode)}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14"
+                        disabled={heavyMapControlDisabled}
+                        className={cn("flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14", heavyMapControlDisabled && "cursor-not-allowed opacity-40")}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all flex items-center justify-center relative shadow-sm",
@@ -298,9 +360,11 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
 
                       <button
                         onClick={() => {
+                          if (heavyMapControlDisabled) return;
                           setProjection(projection === 'globe' ? 'mercator' : 'globe');
                         }}
-                        className="flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14"
+                        disabled={heavyMapControlDisabled}
+                        className={cn("flex flex-col items-center gap-1.5 group/item shrink-0 snap-start w-12 md:w-14", heavyMapControlDisabled && "cursor-not-allowed opacity-40")}
                       >
                         <div className={cn(
                           "w-12 h-12 md:w-14 md:h-14 rounded-xl border-2 transition-all flex items-center justify-center relative shadow-sm",
@@ -343,12 +407,12 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                            </div>
                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-lg text-[9px] font-black tracking-tighter">{gridOpacityLevel}x</span>
                          </div>
-                         <input 
-                           type="range" 
-                           min="0" 
-                           max="5" 
+                         <input
+                           type="range"
+                           min="0"
+                           max="5"
                            step="1"
-                           value={gridOpacityLevel} 
+                           value={gridOpacityLevel}
                            onChange={(e) => setGridOpacityLevel(parseInt(e.target.value))}
                            className="w-full h-1.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-blue-600"
                          />

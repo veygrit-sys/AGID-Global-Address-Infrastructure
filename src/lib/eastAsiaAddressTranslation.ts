@@ -1,7 +1,7 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
-import { normalizeMainlandChineseAddressPart,toSimplified,toTraditional } from './chineseAddressUtils';
+import { normalizeChineseRegionalAddressPart,toSimplified,toTraditional } from './chineseAddressUtils';
 
 export type EastAsiaAddressTopology =
   | 'cjk-kana-kanji'
@@ -95,52 +95,6 @@ const EAST_ASIA_TOPOLOGY_BY_LANGUAGE: Record<string, EastAsiaAddressTopology> = 
   en: 'latin-address',
 };
 
-const TAIWAN_ADDRESS_ENGLISH_ALIASES: Record<string, string> = {
-  台北市: 'Taipei City',
-  臺北市: 'Taipei City',
-  新北市: 'New Taipei City',
-  台中市: 'Taichung City',
-  臺中市: 'Taichung City',
-  台南市: 'Tainan City',
-  臺南市: 'Tainan City',
-  高雄市: 'Kaohsiung City',
-  高雄: 'Kaohsiung',
-  新竹市: 'Hsinchu City',
-  信義區: 'Xinyi District',
-  市府路: 'Shifu Road',
-};
-
-const HONG_KONG_ADDRESS_ENGLISH_ALIASES: Record<string, string> = {
-  香港: 'Hong Kong',
-  香港島: 'Hong Kong Island',
-  九龍: 'Kowloon',
-  新界: 'New Territories',
-  中環: 'Central',
-  尖沙咀: 'Tsim Sha Tsui',
-  旺角: 'Mong Kok',
-  銅鑼灣: 'Causeway Bay',
-  灣仔: 'Wan Chai',
-  彌敦道: 'Nathan Road',
-};
-
-const MACAO_ADDRESS_ENGLISH_ALIASES: Record<string, string> = {
-  澳門: 'Macau',
-  澳门: 'Macau',
-  氹仔: 'Taipa',
-  路環: 'Coloane',
-  新馬路: 'Avenida de Almeida Ribeiro',
-  新马路: 'Avenida de Almeida Ribeiro',
-  大馬路: 'Avenida',
-  大马路: 'Avenida',
-};
-
-const CHINESE_ALIAS_BY_COUNTRY: Record<string, Record<string, string>> = {
-  TW: TAIWAN_ADDRESS_ENGLISH_ALIASES,
-  HK: HONG_KONG_ADDRESS_ENGLISH_ALIASES,
-  MO: MACAO_ADDRESS_ENGLISH_ALIASES,
-};
-
-
 function countryCodeOf(countryCode: string) {
   return normalizeAddressTranslationCountryCode(countryCode);
 }
@@ -211,34 +165,19 @@ function shouldUseBuildingEnglish(fieldKey: string) {
   return isAddressBuildingField(fieldKey);
 }
 
-function chineseAliasForCountry(text: string, countryCode: string) {
-  const aliases = CHINESE_ALIAS_BY_COUNTRY[countryCode];
-  if (!aliases) return '';
-  const region = countryCode === 'MO' ? 'MO' : countryCode === 'HK' ? 'HK' : 'TW';
-  return aliases[text] || aliases[toTraditional(text, region)] || aliases[toSimplified(text)] || '';
-}
-
 function normalizeEastAsiaEnglish(text: string, countryCode: string, fieldKey: string) {
   const code = countryCodeOf(countryCode);
-  const chineseAlias = ['TW', 'HK', 'MO'].includes(code) ? chineseAliasForCountry(text, code) : '';
-  if (chineseAlias) return chineseAlias;
+  if (['CN', 'TW', 'HK', 'MO'].includes(code) && /[\u3400-\u9fff]/.test(text)) {
+    return normalizeChineseRegionalAddressPart(text, code);
+  }
 
   if (shouldUseBuildingEnglish(fieldKey)) {
     const building = normalizeEnglishAddressBuildingName(text, code);
     if (building) return building;
   }
 
-  if (code === 'CN') {
-    const mainland = normalizeMainlandChineseAddressPart(text);
-    if (mainland) return mainland;
-  }
-
   const generic = normalizeEnglishAddressPart(text, code);
   if (generic) return generic;
-
-  if (['TW', 'HK', 'MO'].includes(code) && /[\u3400-\u9fff]/.test(text)) {
-    return normalizeMainlandChineseAddressPart(text);
-  }
 
   return '';
 }

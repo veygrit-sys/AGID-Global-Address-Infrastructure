@@ -73,7 +73,58 @@ test('VATT structures, verifies, reorders, and regenerates Japanese native and i
   assert.match(result.renderings.internationalEnglish, /JAPAN|Japan/);
   assert.deepEqual(result.orders.native, japanFormat.addressRules?.nativeOrder);
   assert.deepEqual(result.orders.internationalEnglish, japanFormat.addressRules?.englishOrder);
-  assert.equal(result.pipeline.map(stage => stage.id).join('>'), 'parse>normalize>verify>render');
+  assert.equal(result.pipeline.map(stage => stage.id).join('>'), 'parse>normalize>verify>transform>render');
+  assert.equal(result.purpose, 'international_shipping');
+  assert.equal(result.outputFormat, 'shipping_label');
+  assert.equal(result.postalCodeMatch, 'valid');
+  assert.equal(result.deliveryRisk, 'low');
+  assert.deepEqual(result.unverifiedFields, []);
+  assert.equal(result.structured, result.normalized);
+  assert.equal(result.normalized.countryCode, 'JP');
+  assert.equal(result.normalized.postalCode, '100-6728');
+  assert.equal(result.interlingua.country, 'JP');
+  assert.equal(result.interlingua.privacyLevel, 'building_required');
+  assert.match(result.interlingua.agid, /^AGID-JP-/);
+  assert.equal(result.evaluation.postalMatchRate, 1);
+  assert.equal(result.evaluation.privacyPreservation, 1);
+  assert.ok(result.formatted.some(line => /Japan|JAPAN/.test(line)));
+});
+
+test('VATT accepts public API-style request fields and returns normalized, formatted, and risk metadata', async () => {
+  const result = await executeVerifiedAddressTranslation({
+    input_address: '東京都渋谷区神南1-19-11',
+    input_language: 'ja',
+    target_language: 'en',
+    purpose: 'international_shipping',
+    country_model: 'JP',
+    output_format: 'shipping_label',
+    details: {
+      country_code: 'jp',
+      country: 'Japan',
+      postcode: '150-0041',
+      state: '東京都',
+      city: '渋谷区',
+      road: '神南',
+      house_number: '1-19-11',
+    },
+    format: japanFormat,
+    sources: ['japan-postcode-api', 'jageocoder', 'geolonia-address'],
+  });
+
+  assert.equal(result.targetLanguage, 'en');
+  assert.equal(result.normalized.country, 'Japan');
+  assert.equal(result.normalized.adminLevel1, '東京都');
+  assert.equal(result.normalized.adminLevel2, '渋谷区');
+  assert.equal(result.normalized.street, '神南');
+  assert.equal(result.normalized.houseNumber, '1-19-11');
+  assert.equal(result.postalCodeMatch, 'valid');
+  assert.equal(result.deliveryRisk, 'low');
+  assert.equal(result.validation.quality.label, 'Verified');
+  assert.ok(result.confidence >= 0.9);
+  assert.deepEqual(result.warnings, []);
+  assert.equal(result.interlingua.adminPath[0], '東京都');
+  assert.equal(result.evaluation.carrierAcceptance, 0.95);
+  assert.ok(result.formatted.length >= 2);
 });
 
 test('VATT keeps no-postal strong geography as geo verified instead of inventing a postal address', async () => {
@@ -118,6 +169,9 @@ test('VATT keeps no-postal strong geography as geo verified instead of inventing
 
   assert.equal(result.validation.quality.label, 'Geo Verified');
   assert.equal(result.graph.postal.code, '');
+  assert.equal(result.postalCodeMatch, 'not_applicable');
+  assert.notEqual(result.deliveryRisk, 'high');
+  assert.equal(result.evaluation.geocodeMatchRate, 1);
   assert.equal(result.graph.geo.hasCoordinateOrCode, true);
   assert.doesNotMatch(result.renderings.internationalEnglish, /Postal Code/i);
 });

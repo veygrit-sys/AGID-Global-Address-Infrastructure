@@ -201,6 +201,10 @@ export function buildRegistrationAddressLanguageTabs(
     addTab(code, languageFormat.name);
   }
 
+  if (hasDomesticEnglish && !seen.has('en_domestic')) {
+    addTab('en', 'English', 'domestic');
+  }
+
   if (!tabs.length && format?.native) {
     addTab('local', format.native.name || 'Local address');
     if (!tabs.length) {

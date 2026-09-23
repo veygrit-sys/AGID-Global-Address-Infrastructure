@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-bd-synthetic-fixtures-v0.1",
+  "country_code": "BD",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "9999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "bd-syn-delivery-office",
+      "synthetic_address": {
+        "postcode": "9999",
+        "assignment_class": "typed_delivery_post_office",
+        "office_class": "SYN-SO",
+        "post_office": "Synthetic Post Office",
+        "upazila": "Synthetic Upazila"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-four-character-string",
+          "office-assignment-only"
+        ],
+        "must_not_assert": [
+          "syntax-proves-current-assignment",
+          "district-page-row-is-official-postal-boundary",
+          "office-is-delivery-point-or-building",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "bd-syn-blank-code-office",
+      "synthetic_address": {
+        "assignment_class": "blank_code_subordinate_office",
+        "office_class": "SYN-EDBO",
+        "post_office": "Synthetic Subordinate Office"
+      },
+      "expected": {
+        "must_assert": [
+          "blank-code-remains-unassigned"
+        ],
+        "must_not_assert": [
+          "blank-code-inherits-neighbor-postcode",
+          "office-is-home-or-catchment",
+          "enumeration-area-is-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "bd-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "9999",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "BD-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "topographic-building-is-civic-address-link",
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-or-recipient",
+          "portal-or-paid-map-is-automatic-redistribution-right"
+        ]
+      }
+    }
+  ]
+}

@@ -69,12 +69,18 @@ test('African countries map to geodata, address, and postal-code validation sour
 
 test('priority African countries map to national and regional open geospatial sources', () => {
   const expectedSourceIdsByCountry: Record<string, AfricaOpenGeoSourceId[]> = {
-    NG: ['nipost-postcode', 'hot-osm-west-africa'],
+    NG: ['nipost-postcode', 'nipost-national-digital-postcode-2026', 'nipost-addressing-standard-2017', 'upu-nigeria-addressing-2022', 'npc-nigeria-ead-2023', 'fcta-nigeria-agis', 'ndpc-nigeria-data-protection-act-2023', 'ndpc-nigeria-gaid-2025', 'osm-nigeria', 'hot-osm-west-africa'],
+    NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    NE: ['niger-poste', 'niger-poste-agencies', 'upu-niger-addressing-2005', 'ignniger-national-geography', 'hapdp-niger-data-protection-2022', 'osm-niger', 'hot-osm-west-africa'],
+    MG: ['paositra-malagasy', 'paositra-malagasy-agencies', 'upu-madagascar-addressing-2011', 'openstat-madagascar-postcodes-2021', 'un-salb-madagascar-ftm', 'matsf-madagascar-geospatial-land', 'madagascar-data-protection-2014-038', 'osm-madagascar', 'hot-osm-east-southern-africa'],
+    MU: ['mauritius-post-postcode', 'upu-mauritius-postcode-rollout-2014', 'mauritius-open-data-mainland-postcodes', 'mauritius-open-data-rodrigues-postcodes', 'mauritius-open-data-agalega-postcodes', 'mauritius-open-data-post-offices', 'mauritius-open-data-districts', 'stats-mauritius-census-2022-admin', 'mauritius-cadastral-survey-act-dcdb', 'mauritius-data-protection-act-2017', 'osm-mauritius', 'hot-osm-east-southern-africa'],
     KE: ['rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
-    TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    LR: ['upu-liberia-addressing-2017', 'mopt-liberia-postal-services', 'mopt-liberia-service-charter-2025', 'mopt-liberia-digital-postal-address-contract-2022', 'lisgis-liberia-census-2022-geography', 'lla-liberia-land-administration', 'liberia-data-governance-policy-2026-draft', 'osm-liberia', 'hot-osm-west-africa'],
+    TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'nbs-tanzania-wards-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
     UG: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-    ZA: ['ngi-south-africa', 'sapo-postcodes', 'postafind-za'],
-    MZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    ZA: ['upu-south-africa-postal-addressing', 'sapo-postcodes', 'sapo-website-terms', 'postafind-za', 'ngi-south-africa', 'stats-sa-geography', 'stats-sa-census-2022-geography', 'mdb-south-africa-wards-2025', 'csg-south-africa-cadastre', 'sasdi-south-africa', 'nspdr-south-africa-terms', 'south-africa-popia-2013', 'osm-south-africa', 'hot-osm-east-southern-africa'],
+    MZ: ['incm-mozambique-cep-2024', 'incm-mozambique-postal-law-2016', 'incm-mozambique-corre-universal-2024', 'incm-mozambique-postal-operators', 'mozambique-correios-dissolution-2021', 'correios-mocambique-codigos-postais', 'incm-mozambique-cep-rollout-2019-2022', 'ine-mozambique-admin-cartography', 'fnds-mozambique-land-cadastre', 'intic-mozambique-data-protection-status-2026', 'osm-mozambique', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+    SO: ['somalia-moct-postal-revival-2025', 'somalia-sobs-address-observation', 'somalia-snbs-gis', 'osm-somalia', 'hot-osm-east-southern-africa'],
   };
 
   for (const [countryCode, expectedSourceIds] of Object.entries(expectedSourceIdsByCountry)) {

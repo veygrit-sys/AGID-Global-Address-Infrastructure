@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/agid-openapi-linked-verifiers-v0.1.schema.json",
+  "title": "AGID OpenAPI Linked Verifier Allowlist v0.1",
+  "description": "Local-only allowlist for verifier commands that may be executed from x-agid-evidence-fixtures. This file is CI control data, not hosted evidence or production verifier configuration.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact",
+    "version",
+    "localOnly",
+    "description",
+    "nonClaims",
+    "verifiers"
+  ],
+  "properties": {
+    "artifact": {
+      "const": "agid-openapi-linked-verifier-allowlist"
+    },
+    "version": {
+      "const": "v0.1"
+    },
+    "localOnly": {
+      "const": true
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "not-production-traffic"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-raw-address-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-proof-witness-intake"
+          }
+        }
+      ]
+    },
+    "verifiers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "command",
+          "script",
+          "runner",
+          "timeoutMs",
+          "managedServiceBoundary"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "pattern": "^npm run verify:[a-z0-9:-]+$"
+          },
+          "script": {
+            "type": "string",
+            "pattern": "^verify:[a-z0-9:-]+$"
+          },
+          "runner": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^(scripts/[a-z0-9-]+\\.ts|src/lib/[A-Za-z0-9]+\\.test\\.ts)$"
+            }
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1000
+          },
+          "managedServiceBoundary": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          }
+        }
+      }
+    }
+  }
+}

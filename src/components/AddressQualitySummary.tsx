@@ -35,11 +35,6 @@ export const AddressQualitySummary: React.FC<AddressQualitySummaryProps> = ({ va
             {summary.postalLabel}
           </span>
         )}
-        {summary.sources.map(source => (
-          <span key={source} className="rounded-full border border-white/5 bg-white/5 px-2 py-0.5 normal-case tracking-normal">
-            {source}
-          </span>
-        ))}
       </div>
       <div className="mt-1.5 flex gap-1.5 text-[9px] font-semibold leading-snug text-slate-300/90">
         <Info className="mt-0.5 h-2.5 w-2.5 shrink-0 text-slate-500" />

@@ -1,0 +1,19 @@
+# Djibouti Postal Context M2 review
+
+Status: **blocked at M1 metadata**. Djibouti has a current five-digit postcode system, but M2 is not achieved.
+
+The UPU 05/2020 Djibouti sheet places five digits before the locality, defines the digit hierarchy as country, region and post office, and lists ten distribution/postcode rows: `77101` through `77601`. The UPU August 2026 table confirms numeric `99999`. The public sheet is dated and does not prove a complete current 2026 denominator of assignments, aliases, validity, corrections, exceptions and area/non-area objects.
+
+Nine exact UPU and Djibouti-government files were fixed by byte length and SHA-256 (8,796,563 bytes). The two-page Djibouti sheet and 12-page current general table were text-inspected; both Djibouti pages were rendered deterministically. The UPU public Africa sample ZIP contains Nigeria, Egypt, Morocco, South Africa and Somalia files, but no Djibouti data. The current world database release is 2026.1 under a licence contract, NDA, data-use declaration and rates. No provider contact, registration, authentication, terms acceptance, contract or payment was attempted. Raw PDF, HTML, ZIP and screenshots are not committed.
+
+No rights-cleared postal Polygon/MultiPolygon was found. Official regional maps are administrative context and cannot define the five Djibouti Ville post-office areas. Post-office points, roads, addresses, buildings, buffers, hulls, Voronoi/raster surfaces, OSM, Hugging Face or other model output and AGID cells were not promoted. Postal-code geometry quality therefore remains zero official, zero derived, zero virtual and zero production-eligible records.
+
+The address schema now follows the UPU line order and keeps geocoded address, P.O. box, five-digit postcode and locality separate. A deterministic country gate normalizes exactly five digits and rejects dated rows, administrative surfaces and model output unless complete current operator authority, compatible rights and exact postal-area geometry all exist. More detailed address or building information is allowed only as source-qualified needs-review context; an exact building requires an independent explicit rights-cleared relation.
+
+The actual app ran at `http://127.0.0.1:3038/`. Searching `La Poste de Djibouti, Djibouti` selected `La Poste de Djibouti, Rue de Mohamed Doura, Le Plateau du Marabout, Djibouti` from OSM via Photon, rendered two map canvases and independent AGID `DJ02RHS2MYNN`. The result was high but ambiguous/needs-review and was not asserted as an authoritative building. The unmocked `GET /api/v1/postal/DJ/77101?geometry=geojson` returned 404 `Postal Context country is not supported`; no postal-area notice or translucent postal overlay rendered.
+
+In-app Browser setup failed before navigation with a Windows ACL helper error. Deterministic Playwright fallback passed, but local screenshot/PDF image viewing failed with Windows error 206. Manual visual inspection is explicitly false, and deterministic rendering is not disguised as browser E2E or visual approval.
+
+Hugging Face, libpostal and other open-source/model components can improve parsing evaluation, candidate ranking, topology QA and bounded-error compression after authority and rights are established. They cannot supply the missing denominator, manufacture postal boundaries, grant reuse rights or identify an exact building.
+
+Reconsider M2 only after La Poste de Djibouti or another competent authority releases a complete current immutable assignment denominator and exact real postal Polygon/MultiPolygon under compatible rights. Then verify the real DJ API/app states for normalization, loading, no match, multiple candidates, failure, invalid geometry, fit, translucent fill, clear outline, metadata, clear and re-search. Retry after the pending-country sweep or 2026-12-03 unless an official release appears earlier.

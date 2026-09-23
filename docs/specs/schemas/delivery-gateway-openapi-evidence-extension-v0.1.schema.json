@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/delivery-gateway-openapi-evidence-extension-v0.1.schema.json",
+  "title": "Delivery Gateway OpenAPI Evidence Fixtures Extension Profile v0.1",
+  "description": "Delivery Gateway profile for the generic x-agid-evidence-fixtures OpenAPI extension. This profile fixes the exact sandbox carrier smoke fixture, schema, verifier commands, and non-claims.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "preflightFixture",
+    "historyFixture",
+    "evidenceFixture",
+    "evidenceSchema",
+    "verifierCommand",
+    "aggregateVerifierCommand",
+    "managedServiceBoundary",
+    "localOnly",
+    "forbiddenMaterial",
+    "nonClaims",
+    "nonClaimsProfile"
+  ],
+  "properties": {
+    "preflightFixture": {
+      "const": "docs/specs/fixtures/delivery-gateway-sandbox-carrier-smoke-v0.1.json"
+    },
+    "historyFixture": {
+      "const": "docs/specs/fixtures/delivery-gateway-sandbox-carrier-smoke-v0.1.json"
+    },
+    "evidenceFixture": {
+      "const": "docs/specs/fixtures/delivery-gateway-sandbox-carrier-smoke-v0.1.json"
+    },
+    "evidenceSchema": {
+      "const": "docs/specs/schemas/delivery-gateway-sandbox-carrier-smoke-v0.1.schema.json"
+    },
+    "verifierCommand": {
+      "const": "npm run verify:delivery-gateway-carrier-api"
+    },
+    "aggregateVerifierCommand": {
+      "const": "npm run verify:address-login-spec"
+    },
+    "managedServiceBoundary": {
+      "const": "fixture-only-not-production-carrier"
+    },
+    "localOnly": {
+      "const": true
+    },
+    "forbiddenMaterial": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "raw_address"
+          }
+        },
+        {
+          "contains": {
+            "const": "recipient_phone"
+          }
+        },
+        {
+          "contains": {
+            "const": "proof_witness"
+          }
+        },
+        {
+          "contains": {
+            "const": "private_key"
+          }
+        },
+        {
+          "contains": {
+            "const": "raw_label_payload"
+          }
+        },
+        {
+          "contains": {
+            "const": "carrier_api_key"
+          }
+        },
+        {
+          "contains": {
+            "const": "production_webhook_secret"
+          }
+        }
+      ]
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "not-raw-address-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-proof-witness-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-production-carrier-traffic"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-real-label-purchase"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-delivery-guarantee"
+          }
+        }
+      ]
+    },
+    "nonClaimsProfile": {
+      "const": "delivery-gateway-sandbox-carrier-v0.1"
+    }
+  }
+}

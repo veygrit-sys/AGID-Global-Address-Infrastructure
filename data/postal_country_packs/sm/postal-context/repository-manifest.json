@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-sm-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-sm",
+    "country_code": "SM",
+    "maturity": "M1_metadata"
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "CAP",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "operator_assignment_or_explicit_non_area",
+    "assignment_rule": "A current Poste San Marino assignment release or separately permitted operator evidence establishes a five-digit 4789x CAP assignment. A postal-office address proves only that office address and does not establish a complete national assignment denominator, delivery coverage, or area boundary.",
+    "postcode_area_rule": "No nationwide official CAP polygon source is assumed. Castello or sobborgo administration, cadastral/cartographic objects, office locations, embedded map points, settlements, streets, addresses, buildings, parcels, buffers, hulls, Voronoi/raster cells, or synthetic fixtures never become CAP perimeters. Dogana 47891 and Serravalle 47899 require a source-defined split rather than an inferred partition of Serravalle.",
+    "address_rule": "Postal assignment, address identity, Castello/sobborgo administration, cadastral/cartographic geometry, office service state, and building relationships remain separate assertions.",
+    "building_rule": "Building output requires a separately sourced explicit distributable address-building relationship or common authoritative identifier; postcode, administration, proximity, containment, office, parcel, and point evidence are insufficient.",
+    "administrative_rule": "The nine Castelli and their sobborgo subdivisions are administrative context, not postal authority. The official CASTELLI feature layer contains twelve subdivision polygons and cannot be relabelled as ten CAP areas.",
+    "service_status_rule": "Office presence, opening, contact, and embedded map location are time-stamped service assertions separate from assignment, area, and deliverability."
+  },
+  "integration": {
+    "agid_country_code": "SM",
+    "coordinate_flow": "coordinate -> rights-cleared CAP area or explicit non-area -> address graph -> explicit building relation -> AGID cell",
+    "postcode_flow": "canonical five-digit CAP -> operator assignment evidence -> valid official/derived/virtual area or explicit non-area -> address context -> explicit building relation -> AGID cells",
+    "building_output_gate": "explicit distributable relation, common authoritative identifier, or reviewed crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-cap", "pass": "CAP is stored as five-character text matching ^4789\\d$ without losing leading zeroes." },
+    { "id": "complete-operator-denominator", "pass": "A current complete assignment and exception denominator is fixed with version, date, bytes, SHA-256, correction policy, and compatible rights." },
+    { "id": "dogana-serravalle-separation", "pass": "47891 Dogana and 47899 Serravalle are reconciled using source-defined membership and geometry rather than an inferred administrative split." },
+    { "id": "valid-area-only", "pass": "Every drawable CAP uses finite closed valid Polygon/MultiPolygon geometry in the declared CRS with class, lineage, date, confidence, and exceptions." },
+    { "id": "resource-rights", "pass": "Every assignment and geometry resource pins exact processing, storage, derivation, redistribution, public-serving, and attribution permission." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures and shared code capability never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_san_marino_cap_assignment_and_area_visualization", "definition": "A current complete Poste San Marino five-digit CAP assignment and exception denominator is pinned under explicit reviewed AGID processing, storage, derivation, redistribution and public-serving permission. Every drawable code is reconciled to a valid fixed Polygon/MultiPolygon whose official/derived/virtual status, provider, edition, reference date, rights, attribution, bytes, SHA-256, schema, CRS, topology, coverage, method, confidence and exceptions are recorded; non-area codes retain an explicit source-grounded reason. The nine Castelli and twelve CASTELLI sub-polygons remain administrative context and never substitute for CAP areas; in particular, 47891 Dogana and 47899 Serravalle require a source-defined postal split. The approved immutable artifact drives the real SM API/app, which normalizes five text digits, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_address", "definition": "Explicit address identifiers and points pass rights, schema, coverage, validity, privacy, and correction gates." },
+      { "id": "M4_geometry", "definition": "CAP surfaces and building joins pass topology, ambiguity, identifier, rights, and quality gates." }
+    ],
+    "hard_blockers": [
+      "office-address-presented-as-complete-cap-assignment",
+      "castello-or-sobborgo-presented-as-cap-area",
+      "dogana-serravalle-split-inferred-without-postal-authority",
+      "misprojected-geojson-presented-as-wgs84-san-marino",
+      "public-map-access-substituted-for-resource-specific-license",
+      "point-buffer-hull-voronoi-raster-or-synthetic-area",
+      "postcode-presented-as-building-or-delivery-guarantee"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_SM_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SM_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_SM_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SM_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-office-address-or-administrative-rows",
+    "every-cap-is-a-polygon",
+    "office-location-equals-cap-perimeter",
+    "castello-or-sobborgo-equals-cap",
+    "inferred-dogana-serravalle-partition",
+    "nearest-building-is-exact-address-link",
+    "public-portal-access-is-blanket-redistribution-license"
+  ]
+}

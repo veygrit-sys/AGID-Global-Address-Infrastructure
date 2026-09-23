@@ -1,0 +1,75 @@
+{
+  "schema_version": "agid-postal-ph-synthetic-fixtures-v0.1",
+  "country_code": "PH",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "9999",
+    "coordinates_are_geographic": false,
+    "postcodes_are_assignment_evidence": false
+  },
+  "fixtures": [
+    {
+      "fixture_id": "ph-syn-routing-locality",
+      "synthetic_address": {
+        "postcode": "9999",
+        "assignment_class": "typed_phlpost_routing_locality",
+        "region": "Synthetic Region",
+        "province": "Synthetic Province",
+        "city_municipality": "Synthetic Municipality"
+      },
+      "expected": {
+        "must_assert": [
+          "typed-four-character-string",
+          "routing-assignment-only"
+        ],
+        "must_not_assert": [
+          "syntax-proves-current-assignment",
+          "locator-row-is-official-postal-boundary",
+          "city-or-municipality-is-complete-zip-coverage",
+          "derived-surface-is-official-postal-boundary"
+        ]
+      }
+    },
+    {
+      "fixture_id": "ph-syn-administrative-context",
+      "synthetic_address": {
+        "postcode": "9999",
+        "assignment_class": "explicit_synthetic_psgc_context",
+        "psgc_id": "PH-SYN-PSGC"
+      },
+      "expected": {
+        "must_assert": [
+          "administration-remains-separate"
+        ],
+        "must_not_assert": [
+          "psgc-barangay-is-postal-boundary",
+          "administrative-overlap-proves-delivery",
+          "census-or-cbms-feature-is-public-address"
+        ]
+      }
+    },
+    {
+      "fixture_id": "ph-syn-explicit-building",
+      "synthetic_address": {
+        "postcode": "9999",
+        "assignment_class": "explicit_civic_address_building_link",
+        "building_id": "PH-SYN-BLDG"
+      },
+      "expected": {
+        "must_assert": [
+          "explicit-rights-cleared-link-required"
+        ],
+        "must_not_assert": [
+          "topographic-or-statistical-building-is-civic-address-link",
+          "containment-or-proximity-is-exact-building-link",
+          "address-identifies-owner-occupant-or-recipient",
+          "portal-download-or-title-is-automatic-redistribution-right"
+        ]
+      }
+    }
+  ]
+}

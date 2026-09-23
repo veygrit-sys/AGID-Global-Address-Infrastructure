@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "CW",
+  "observedAt": "2026-08-31T22:53:09.194Z",
+  "completedAt": "2026-08-31T23:15:36.8554694Z",
+  "baseCommit": "18f30b5092b5f11bd79d54ceb72a0fb4a14490c2",
+  "scope": "CW-specific current Cpost service, UPU no-postcode, exact-body, rights, identity, address-metadata correction and no-proxy fail-closed evidence plus shared application contracts. No raw source body, address, postal row, island/district/locality/address/route/service-area/parcel/building proxy, Point, synthetic planning code, production pack, real CW API response or browser area was promoted.",
+  "checks": [
+    {
+      "id": "cw-source-inspector",
+      "command": "<bundled-python> scripts/inspect-postal-context-cw-sources.py --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "four exact official bodies reproduce current Cpost service/non-area objects, CUW identity/operator and UPU September 2025 no-postcode evidence without source rows or geometry"
+    },
+    {
+      "id": "cw-source-inspector-unit",
+      "command": "<bundled-python> scripts/inspect-postal-context-cw-sources.test.py -v",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "complete set, changed body, missing/extra/renamed body, HTML marker and PDF signature/page/marker drift conditions fail closed"
+    },
+    {
+      "id": "cw-address-metadata",
+      "command": "node --test scripts/postal-context-cw-address-metadata.test.mjs",
+      "result": "pass",
+      "tests": 2,
+      "assertion": "JSON, YAML and Americas hierarchy remove the unsupported four-digit format and represent no postcode with null regex/API/rule"
+    },
+    {
+      "id": "shared-area-runtime-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 29,
+      "assertion": "normalization, no-match, Polygon/MultiPolygon-only draw, fit, translucent fill, visible outline, clear, non-area and country routing remain fail closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, blocker policy and evidence gates"
+    },
+    {
+      "id": "cw-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-cw-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country definition, current no-postcode authority, exact receipts, rights/no-proxy boundary, report digests and next DM"
+    },
+    {
+      "id": "focused-typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --target ES2022 --module ESNext --lib ES2022,DOM,DOM.Iterable --moduleResolution bundler --isolatedModules --moduleDetection force --allowJs --jsx react-jsx --allowImportingTsExtensions --skipLibCheck src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "shared postal-search area, pack runtime and multi-country-store test graph passes noEmit type checking"
+    },
+    {
+      "id": "changed-python-javascript-json-and-yaml-syntax",
+      "command": "py_compile for two changed Python modules, node --check for two changed JavaScript modules, JSON.parse for seven changed JSON files, and CW YAML no-postcode marker validation",
+      "result": "pass",
+      "tests": 11,
+      "assertion": "inspector, inspector tests, metadata/ledger tests, manifest, profile, source review, checks, rollout ledger, CW address JSON, hierarchy JSON and YAML markers are valid"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 8,
+    "testsPassed": 62,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 4,
+    "exactBodiesByteAndSha256Bound": 4,
+    "exactOfficialBodiesBytes": 926717,
+    "sourceReviewDigest": "sha256:378cb59069f9bd466da025d489be4507cd183c12aa3a0e44ddaf1b1ad57a67ea",
+    "currentPostalCodeFormat": "none",
+    "upuEdition": "Sep. 2025",
+    "upuListsCuracaoAsNotRequiringPostalCodes": true,
+    "cpostCurrentServicesReviewed": true,
+    "unverifiedFourDigitMetadataCorrected": true,
+    "currentCompletePostalCodeAssignmentsValidated": 0,
+    "currentCompleteAssignmentAliasValidityExceptionAndExplicitNonAreaDenominatorEstablished": false,
+    "compatiblePublicServingPermissionEstablished": false,
+    "fixedOfficialPostalGeometryArtifactsInspected": 0,
+    "officialPostalPolygonOrMultiPolygonRecords": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realCwRuntimeVerified": false,
+    "realCwApiVerified": false,
+    "realCwAppAreaVisualizationVerified": false,
+    "browserE2e": "not run because Curaçao has no valid postcode input or eligible real postal Polygon/MultiPolygon artifact"
+  },
+  "knownLimitations": [
+    "Current authoritative no-postcode status is represented as none and cannot be promoted into an island-wide placeholder code or polygon.",
+    "Current Cpost service pages are not a complete postcode assignment or geometry dataset.",
+    "Cpost site copyright was recorded; no open postal dataset licence or compatible public-serving right was found.",
+    "Draft CW country-pack localities, planning cells and test vectors are synthetic and not Cpost assignments.",
+    "No island, district, locality, neighbourhood, address, route, service area, postal box, parcel, building, Point, buffer, hull, Voronoi/raster cell, AGID cell, commerce ZIP placeholder, unverified four-digit validator or synthetic CW code was promoted."
+  ],
+  "environmentNotes": [
+    "Dependencies were restored from the existing npm cache into the isolated worktree with npm ci --offline --ignore-scripts; no network dependency retrieval or install script ran.",
+    "The UPU Curaçao sheet and physical page 4 of the no-postcode list rendered to non-empty 1191x1684 RGB PNGs, but the local image-view helper returned Windows error 206 even at C:\\tmp paths. Exact PDF bytes, page counts, page markers, render dimensions and render SHA-256 values were validated; no image was committed.",
+    "The repository-wide address common/YAML test command exposed two unrelated pre-existing failures at KM duplicate openSourceIds and missing EH/HM YAML files. CW-specific metadata tests and all shared Postal Context tests pass.",
+    "The literal npm status script was invoked but the host npm child shell did not inherit a node executable. The same scripts/postal-context-m2-rollout.mjs status implementation was run with an absolute Node binary."
+  ],
+  "countryM2Achieved": false
+}

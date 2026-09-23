@@ -1,0 +1,149 @@
+{
+  "schema_version": "agid-postal-sa-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-sa",
+    "country_code": "SA",
+    "maturity": "M1_metadata",
+    "external_repository_created": false
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "m2-source-audit-blocked"
+  },
+  "postal_system": {
+    "full_code_name": "SPL five-digit postal code within the National Address",
+    "full_code_format": "NNNNN",
+    "full_code_default_geometry": "non_area_until_exact_rights_cleared_source_or_explicitly_derived_membership_surface",
+    "assignment_rule": "SPL defines a five-digit Postal Code as one of the six National Address components. The code remains text and preserves leading zeroes. Only a pinned current SPL result or approved artifact establishes an address-to-code assignment; valid syntax, digit meaning, a city or district, geocoder point, Short Address, BuildingNumber, AdditionalNumber or PKAddressID alone does not.",
+    "assignment_granularity_rule": "A National Address combines Building Number, Street, District, City, five-digit Postal Code and four-digit Secondary or Additional Number. The four-letter plus four-number Short Address is a lookup identifier. None of those identifiers independently establishes a postal polygon, cadastral parcel, building footprint, unit, occupant or delivery guarantee.",
+    "geometry_rule": "No nationwide redistributable official SPL postcode polygon product is asserted by this seed. An API point, nullable or undocumented PolygonString, map extent, region, city, district, road buffer, parcel, building, centroid, Voronoi cell, interpolation or model output never becomes official postal geometry. A rights-cleared surface derived from pinned member addresses remains derived, uncertainty-bearing, non-canonical and versioned; a missing official surface remains a gap.",
+    "address_rule": "A pinned SPL National Address API response may supply public BuildingNumber, Street, District, City, PostCode, AdditionalNumber, RegionName, coordinates, opaque PKAddressID and optional UnitNumber under the exact API version and terms. Each field remains typed address evidence. PolygonString is unusable as geometry unless non-null semantics, layer, CRS and rights are explicitly documented. Account, subscriber, contact, proof-of-address and query data are excluded.",
+    "building_rule": "SPL BuildingNumber or PKAddressID identifies a National Address object only within the pinned source scope; neither is a footprint. Exact building display requires a separately rights-cleared GEOSA or other authoritative building feature and a source-defined stable relationship, common identifier or reviewed explicit crosswalk to that exact SPL address. Postal, point, parcel or administrative containment, text similarity, overlap and proximity create candidates only.",
+    "cadastral_rule": "REGA Real Estate Maps and Sheets are cadastral and legal evidence under their own law, regulations and access terms. A plot does not prove postcode, National Address, building identity or occupancy. Public output excludes owners, rightsholders, residents, occupants, titles, encumbrances, contracts, values, transactions, taxes and personal identifiers.",
+    "administration_rule": "Pinned official regions, cities and neighborhoods provide dated context only. They do not create postal assignments, replace postal geometry, prove a building relation, authorize cadastral reuse or determine sovereignty.",
+    "licence_rule": "SPL API access is limited, credentialed and purpose-bound; product plan, current terms, rate limits, privacy disclosure, retention, deletion requests, allowed public fields, display, derivative and redistribution rights must be pinned. API access, portal visibility, open-data requestability, law, regulation, governance or theme metadata never implies bulk harvesting or repository redistribution rights.",
+    "crs_rule": "Every geometry retains its exact product-specific Saudi Arabia National Spatial Reference System realization, source CRS and epoch when supplied. No SANSRS code, WGS84 equivalence or transform is guessed. WGS84 output requires a reviewed versioned transform, axis order and accuracy statement; source coordinates are never relabelled EPSG:4326.",
+    "territory_rule": "The release uses ISO code SA and only Kingdom of Saudi Arabia coverage explicitly stated by each source. Postal, address, administrative, building, cadastral or map coverage is not a sovereignty determination, and clipping or modeling cannot fill border, desert, offshore or absent source coverage as official.",
+    "freshness_rule": "SPL address assignments and API schemas, Short Address resolution, GEOSA themes, building artifacts, REGA cadastral context, terms and administrative boundaries refresh independently. Mixed-edition joins fail closed unless validity and knowledge intervals overlap and the explicit relationship remains valid."
+  },
+  "integration": {
+    "agid_country_code": "SA",
+    "coordinate_flow": "coordinate -> pinned SPL National Address point or permitted derived postal membership -> five-digit postcode -> administrative context -> exact SPL address identity -> explicit licensed building relation -> SA AGID cell",
+    "postcode_flow": "canonical five digits -> pinned assignments -> optional derived non-canonical membership surface -> National Address candidates -> explicit building relation -> exact permitted building -> AGID cells",
+    "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    {
+      "id": "canonical-postcode",
+      "pass": "Five-digit postcodes remain text and preserve leading zeroes; SA prefixes, hyphens and four- or six-digit values are rejected."
+    },
+    {
+      "id": "typed-national-address-components",
+      "pass": "BuildingNumber, PostCode, AdditionalNumber, UnitNumber, Short Address and PKAddressID retain distinct source-defined types and versions."
+    },
+    {
+      "id": "derived-postal-surface",
+      "pass": "Member-address source, method, uncertainty, coverage, exclusions, time, topology and digest are recorded and output stays derived and non-canonical."
+    },
+    {
+      "id": "polygon-string-semantics",
+      "pass": "PolygonString is rejected unless non-null layer semantics, geometry type, CRS, validity, rights and digest are documented."
+    },
+    {
+      "id": "product-specific-crs",
+      "pass": "Every spatial product pins its actual SANSRS realization or other CRS, epoch, axis order and reviewed transform."
+    },
+    {
+      "id": "explicit-building-link",
+      "pass": "Building output has an explicit authoritative relation or reviewed crosswalk; containment, overlap, text match and proximity alone never pass."
+    },
+    {
+      "id": "licence-and-access",
+      "pass": "Exact SPL product plan, terms, purpose, credentials, limits, retention, deletion, display, derivatives and redistribution are pinned."
+    },
+    {
+      "id": "privacy",
+      "pass": "No subscriber, account, proof-of-address, contact, resident, owner, rightsholder, occupant, title, value, transaction, tax or query-history data is published."
+    },
+    {
+      "id": "synthetic-evidence-never-promotes",
+      "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates."
+    }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      {
+        "id": "M1_metadata",
+        "definition": "Contracts and synthetic conformance fixtures are reviewable."
+      },
+      {
+        "id": "M2_assignment_and_derived_geometry",
+        "definition": "Pinned SPL assignments and any rights-cleared derived membership surface pass API terms, method, uncertainty, coverage, topology, CRS, freshness and digest gates."
+      },
+      {
+        "id": "M3_address",
+        "definition": "Exact National Address API artifacts pass public-field, identifier, validity, privacy, access, retention and redistribution gates."
+      },
+      {
+        "id": "M4_building",
+        "definition": "Exact permitted authoritative building geometry and explicit address-building joins pass identifier, ambiguity, privacy and quality gates."
+      }
+    ],
+    "hard_blockers": [
+      "api-point-nullable-polygonstring-or-valid-syntax-presented-as-official-postal-polygon",
+      "region-city-district-road-buffer-parcel-building-voronoi-or-model-presented-as-official-postal-area",
+      "derived-membership-surface-published-without-derived-noncanonical-label-uncertainty-lineage-and-version",
+      "buildingnumber-pkaddressid-address-point-or-cadastral-plot-presented-as-building-footprint",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "credential-api-viewer-open-data-request-law-governance-or-theme-metadata-presented-as-redistribution-right",
+      "subscriber-account-proof-contact-resident-owner-rightsholder-occupant-title-value-transaction-tax-or-query-data-published",
+      "administrative-cadastral-map-or-address-coverage-presented-as-sovereignty-determination",
+      "source-crs-published-as-wgs84-without-reviewed-transform",
+      "postcode-buildingnumber-additionalnumber-shortaddress-or-pkaddressid-stored-as-number-or-derived-by-concatenation"
+    ],
+    "data_completion_verified": false
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_SA_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SA_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_SA_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_SA_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postal-address-building-cadastral-administrative-or-account-rows",
+    "national-address-api-result-is-postal-polygon",
+    "polygonstring-without-semantics-is-geometry",
+    "district-parcel-or-building-is-postal-area",
+    "model-generated-gap-is-official-postal-geometry",
+    "buildingnumber-or-address-point-is-building-footprint",
+    "nearest-building-is-exact-address-link",
+    "real-estate-owner-or-rights-data-is-public-address-output"
+  ],
+  "m2_review": {
+    "status": "blocked",
+    "observed_at": "2026-08-29T00:26:26.437Z",
+    "retry_after": "2026-09-05T00:26:26.437Z",
+    "source_report": "reports/postal-context-m2/sa-source-review-2026-08-29.json",
+    "source_report_digest": "sha256:9a140235ef32e39a96c0d733aa2095c38336b24c9ebadc61ae2be47ad4d23849",
+    "source_receipts": 25,
+    "content_reviewed": 22,
+    "failed_acquisitions": 3,
+    "public_csv_datasets": 14,
+    "physical_csv_records": 14014,
+    "blank_csv_records": 381,
+    "nonblank_csv_records": 13633,
+    "current_assignment_rows_validated": 0,
+    "official_postal_geometry_records": 0,
+    "derived_postal_geometry_records": 0,
+    "explicit_address_building_relations": 0,
+    "published_immutable_data_artifacts": 0,
+    "real_agid_runtime_verified": false,
+    "result": "No current nationwide rights-cleared SPL assignment membership artifact or postal surface was obtained."
+  }
+}

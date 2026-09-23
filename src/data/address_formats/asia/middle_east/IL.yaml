@@ -3,76 +3,151 @@ name: Israel
 native:
   name: ישראל
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{street}} {{houseNumber}}
-    {{city}}
-    {{postcode}}
+    {{street}} {{houseNumber}} {{entrance}}
+    {{floor}} {{apartment}}
+    {{poBox}}
+    {{postcode}} {{locality}}
+    {{country}}
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: שם הנמען
+      placeholder: ""
+      required: false
+      type: text
     - key: organization
-      label: שם הבניין/חברה
-      placeholder: מגדל עזריאלי
+      label: שם הארגון/החברה
+      placeholder: ""
+      required: false
+      type: text
+    - key: street
+      label: רחוב
+      placeholder: ""
       required: false
       type: text
     - key: houseNumber
       label: מספר בית
-      placeholder: "1"
-      required: true
+      placeholder: ""
+      required: false
       type: text
-    - key: street
-      label: רחוב
-      placeholder: דרך מנחם בגין
-      required: true
+    - key: entrance
+      label: כניסה
+      placeholder: ""
+      required: false
       type: text
-    - key: city
-      label: עיר
-      placeholder: תל אביב
+    - key: floor
+      label: קומה
+      placeholder: ""
+      required: false
+      type: text
+    - key: apartment
+      label: דירה
+      placeholder: ""
+      required: false
+      type: text
+    - key: locality
+      label: יישוב
+      placeholder: ""
       required: true
       type: text
     - key: postcode
-      label: מיקוד
-      placeholder: "6701101"
+      label: מיקוד בן שבע ספרות
+      placeholder: ""
       required: true
+      type: text
+    - key: poBox
+      label: תא דואר
+      placeholder: ""
+      required: false
+      type: text
+    - key: civicAddressId
+      label: מזהה מען אזרחי
+      placeholder: ""
+      required: false
+      type: text
+    - key: buildingId
+      label: מזהה מבנה
+      placeholder: ""
+      required: false
       type: text
 english:
   addressFormat: |-
+    {{recipient}}
     {{organization}}
-    {{houseNumber}} {{street}}
-    {{city}}
-    {{postcode}}
+    {{houseNumber}} {{street}} {{entrance}}
+    {{floor}} {{apartment}}
+    {{poBox}}
+    {{postcode}} {{locality}}
     {{country}}
   ordering: small-to-big
   fields:
+    - key: recipient
+      label: Recipient
+      placeholder: ""
+      required: false
+      type: text
     - key: organization
-      label: Building/Company
-      placeholder: Azrieli Tower
+      label: Organization
+      placeholder: ""
       required: false
       type: text
     - key: houseNumber
-      label: House No.
-      placeholder: "1"
-      required: true
+      label: House number
+      placeholder: ""
+      required: false
       type: text
     - key: street
       label: Street
-      placeholder: Menachem Begin Rd
-      required: true
+      placeholder: ""
+      required: false
       type: text
-    - key: city
-      label: City
-      placeholder: Tel Aviv
+    - key: entrance
+      label: Entrance
+      placeholder: ""
+      required: false
+      type: text
+    - key: floor
+      label: Floor
+      placeholder: ""
+      required: false
+      type: text
+    - key: apartment
+      label: Apartment or unit
+      placeholder: ""
+      required: false
+      type: text
+    - key: locality
+      label: Locality
+      placeholder: ""
       required: true
       type: text
     - key: postcode
-      label: Postal Code
-      placeholder: "6701101"
+      label: Seven-digit postcode
+      placeholder: ""
       required: true
+      type: text
+    - key: poBox
+      label: P.O. Box
+      placeholder: ""
+      required: false
+      type: text
+    - key: civicAddressId
+      label: Civic address identifier
+      placeholder: ""
+      required: false
+      type: text
+    - key: buildingId
+      label: Building identifier
+      placeholder: ""
+      required: false
       type: text
 postalCode:
   format: NNNNNNN
   regex: ^\d{7}$
-  api: https://israelpost.co.il/%D7%A9%D7%99%D7%A8%D7%95%D7%AA%D7%99%D7%9D/%D7%90%D7%99%D7%AA%D7%95%D7%A8-%D7%9e%D7%99%D7%A7%D7%95%D7%93/
-  source: Israel Post
+  api: https://israelpost.co.il/שירותים/איתור-מיקוד/
+  source: Israel Post mail guide and lookup; UPU Israel addressing sheet 10/2022; Survey of Israel GovMap; Data.gov.il terms updated 2025-08-30
 addressRules:
   languages:
     - code: he
@@ -82,29 +157,57 @@ addressRules:
     - code: en
       name: English
   nativeOrder:
-    - postcode
-    - city
+    - recipient
+    - organization
     - street
-    - buildingNumber
+    - houseNumber
+    - entrance
+    - floor
     - apartment
-    - name
+    - poBox
+    - postcode
+    - locality
+    - country
   englishOrder:
-    - postcode
-    - city
+    - recipient
+    - organization
+    - houseNumber
     - street
-    - buildingNumber
+    - entrance
+    - floor
     - apartment
-    - name
+    - poBox
+    - postcode
+    - locality
+    - country
   regionalHierarchy:
-    - city
+    - officialSevenDigitPostalAssignment
+    - recipientOrOrganization
+    - streetHouseEntranceFloorApartmentOrPoBox
+    - locality
+    - officialPostalObjectGeometryWhenExactlyRightsCleared
+    - govMapAddressCandidate
+    - cbsAdministrativeAndStatisticalContextIndependentFromPostcode
+    - optionalDerivedPostalContextSurface
+    - explicitRightsClearedCivicAddress
+    - explicitAddressLinkedBuilding
+    - exactRightsClearedBuildingGeometry
+    - agidIndependentSpatialIndex
+    - territorialScopeExplicitAndVersioned
   postalCode:
-    label: 7 digits required
+    label: 7 digits required for postal addressing
     required: true
-    usage: required
+    usage: The seven-digit postcode is an opaque Israel Post assignment representing a delivery address and updated from time to time. It may describe an address, route, P.O. Box, delivery centre, large recipient, point or other non-area object, so a polygon is never presumed. Israel Post lookup, its separate nine-digit distribution code, UPU examples, GovMap search, street lists, CBS geography, coordinates, parcels, administrative boundaries, OSM or models do not independently prove a reusable postal polygon, exact civic-address relation, building relation, delivery entitlement or territorial scope.
   openSourceIds:
     - israel-post
+    - israel-post-mail-guide-2020
+    - israel-post-terms
+    - upu-israel-addressing-2022
     - govmap-israel
+    - population-authority-israel-street-list
+    - cbs-israel-geography
     - data-gov-il
+    - data-gov-il-terms-2025
     - osm-israel
     - osm-nominatim
     - osm-overpass
@@ -123,8 +226,14 @@ addressRules:
     - gbif-occurrence
 openSourceIds:
   - israel-post
+  - israel-post-mail-guide-2020
+  - israel-post-terms
+  - upu-israel-addressing-2022
   - govmap-israel
+  - population-authority-israel-street-list
+  - cbs-israel-geography
   - data-gov-il
+  - data-gov-il-terms-2025
   - osm-israel
   - osm-nominatim
   - osm-overpass

@@ -81,6 +81,13 @@ test('translates representative East Africa native address fields to English', a
     targetLanguage: 'en',
   }))?.text, 'Comoros');
   assert.equal((await translateEastAfricaAddressField({
+    countryCode: 'MG',
+    fieldKey: 'street',
+    text: 'Rue des Baobabs',
+    sourceLanguage: 'fr',
+    targetLanguage: 'en',
+  }))?.text, 'Rue des Baobabs');
+  assert.equal((await translateEastAfricaAddressField({
     countryCode: 'SO',
     fieldKey: 'city',
     text: 'Muqdisho',

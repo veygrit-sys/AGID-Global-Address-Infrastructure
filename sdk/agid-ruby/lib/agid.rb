@@ -7,6 +7,7 @@ module Agid
   TOTAL_LENGTH = 12
 
   Result = Struct.new(:id, :lat, :lon, :face, keyword_init: true)
+  Bounds = Struct.new(:minLat, :maxLat, :minLon, :maxLon, keyword_init: true)
 
   def self.encode(lat, lon)
     raise NotImplementedError, "wire this package to the AGID reference implementation"
@@ -14,5 +15,9 @@ module Agid
 
   def self.decode(id)
     nil
+  end
+
+  def self.cellBounds(id)
+    raise NotImplementedError, "wire this package to the AGID reference implementation"
   end
 end

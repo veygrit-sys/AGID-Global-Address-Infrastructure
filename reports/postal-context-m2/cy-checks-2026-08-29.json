@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "CY",
+  "checkedAt": "2026-08-29T13:16:00.825Z",
+  "baseCommit": "c972b5d87a50d74c4e97a69435f3138ef43f24d7",
+  "sourceReview": {
+    "path": "reports/postal-context-m2/cy-source-review-2026-08-29.json",
+    "digest": "sha256:7fd942da912dd082ed5dd44d6efc31fb210e03ea9534e65cfde9551e50aec30a"
+  },
+  "verification": [
+    {
+      "name": "official source byte audit and assignment-to-history comparison",
+      "command": "node scripts/inspect-postal-context-cy-sources.mjs . reports/postal-context-m2/cy-source-review-2026-08-29.json",
+      "passed": true,
+      "result": "Both exact official data bodies matched size and SHA-256; 832 current codes matched, 299 lacked 2011 geometry, and 13 historical codes were absent from current assignment."
+    },
+    {
+      "name": "CY source, ledger and rollout tests",
+      "command": "node --test scripts/inspect-postal-context-cy-sources.test.mjs scripts/postal-context-m2-cy-ledger.test.mjs scripts/postal-context-m2-rollout.test.mjs",
+      "testsPassed": 18,
+      "testsFailed": 0
+    },
+    {
+      "name": "existing Cyprus Postal Context regression",
+      "command": "tsx --test <verify:postal-context-cyprus file set>",
+      "testsPassed": 139,
+      "testsFailed": 0
+    },
+    {
+      "name": "shared postcode-search and translucent-area map regression",
+      "command": "tsx --test src/lib/postalSearchArea.test.ts src/App.gridUi.test.ts",
+      "testsPassed": 23,
+      "testsFailed": 0
+    },
+    {
+      "name": "TypeScript",
+      "command": "tsc --noEmit",
+      "errors": 0
+    }
+  ],
+  "totals": {
+    "testsPassed": 180,
+    "testsFailed": 0,
+    "typeErrors": 0
+  },
+  "runtime": {
+    "packStatus": "metadata-only",
+    "currentAddressableCodes": 1131,
+    "historicalFourDigitGeometryCodes": 845,
+    "matchedCurrentCodes": 832,
+    "currentCodesWithoutHistoricalGeometry": 299,
+    "historicalCodesAbsentFromCurrentAssignment": 13,
+    "geometryAuthority": "official-statistical-historical",
+    "currentOperatorPerimeterRecords": 0,
+    "productionArtifactPublished": false,
+    "realCyprusApiToAppToMapVerified": false,
+    "sharedAppAreaPathVerified": true,
+    "fitBoundsCapabilityVerified": true,
+    "translucentFillCapabilityVerified": true,
+    "outlineCapabilityVerified": true,
+    "clearAndResearchCapabilityVerified": true,
+    "currentCyprusAreaVisualizationEnabled": false
+  },
+  "operations": {
+    "authenticatedRequests": 0,
+    "paidOperations": 0,
+    "contractAcceptances": 0,
+    "newDestinations": 0,
+    "deployments": 0,
+    "rawSourceBodiesCommitted": 0
+  },
+  "npmLauncher": {
+    "status": "environment-broken",
+    "detail": "The user npm shim references a missing npm-cli.js; the exact scripts were executed with the repository's shared Node, tsx and TypeScript binaries instead."
+  }
+}

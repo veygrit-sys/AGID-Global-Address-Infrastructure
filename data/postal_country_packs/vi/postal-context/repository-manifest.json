@@ -1,0 +1,59 @@
+{
+  "repository": {
+    "name": "agid-postal-vi",
+    "country_code": "VI",
+    "maturity": "M1_metadata",
+    "schema_version": "postal-context-repository-manifest-v1"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "contains_fixed_2020_census_zcta_geometry": true,
+    "current_complete_usps_vi_assignment_denominator_established": false
+  },
+  "postal_system": {
+    "code_format": "NNNNN or NNNNN-NNNN",
+    "assignment_rule": "USPS Publication 28 confirms VI delivery-line formatting and the VI territorial abbreviation. Current assignment truth requires the licensed USPS City State, Five-Digit, ZIP+4 and Carrier Route products; text matching 008NN is not an assignment.",
+    "geometry_rule": "The fixed January 1, 2020 Census ZCTA layer supplies real statistical Polygon/MultiPolygon geometry. Census explicitly states that ZCTAs are generalized representations, omit some valid ZIP Codes and may represent unique or P.O. Box ZIP Codes. Store them as derived display and validation context, never as current USPS delivery boundaries.",
+    "postal_object_rule": "Keep USPS ZIP assignment, ZIP+4, route, P.O. box, organization and Census ZCTA as distinct typed objects with separate IDs, authority and validity.",
+    "building_rule": "A ZIP Code, ZCTA, Census internal point or AGID cell does not establish an address or building relation. More-detailed display requires a separately authorized civic-address/building source and explicit stable crosswalk.",
+    "agid_rule": "AGID is an independent spatial index. Crosswalk a Census internal point only when its computed jurisdiction prefix remains VI; withhold the 00830 crosswalk because the current encoder returns a VG-prefixed cell instead of changing or merging territory identity.",
+    "licence_rule": "Census release geometry is public-domain federal data with attribution retained. USPS licensed product bytes are not redistributed; public product pages and Publication 28 do not grant an open complete assignment denominator.",
+    "jurisdiction_rule": "Preserve VI identity. Do not merge or reinterpret Puerto Rico, the British Virgin Islands or any neighbouring territory.",
+    "privacy_rule": "Exclude addresses, recipients, customers, occupants, owners, parcels and land-right records from public artifacts.",
+    "temporal_rule": "Store USPS assignment time, Census reference date, retrieval time, release ID, exact source digest, generated time and supersession independently."
+  },
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "hard_blockers": [
+      "2020-census-zcta-presented-as-current-usps-assignment-or-delivery-boundary",
+      "missing-current-licensed-usps-assignment-non-area-denominator",
+      "zip-zcta-internal-point-or-agid-cell-presented-as-address-or-building",
+      "vi-identity-merged-with-vg-or-another-territory"
+    ],
+    "target_stage": "M2_current_usps_vi_complete_typed_assignment_and_postal_area_runtime",
+    "stages": [
+      {
+        "id": "M0_inventory",
+        "definition": "U.S. Virgin Islands address-format and source inventory only."
+      },
+      {
+        "id": "M1_metadata",
+        "definition": "Digest-bound USPS format and rights policy plus fixed real 2020 Census ZCTA validation surfaces, with postal, geometry, Census, release and AGID IDs separated."
+      },
+      {
+        "id": "M2_current_usps_vi_complete_typed_assignment_and_postal_area_runtime",
+        "definition": "M2 requires a current authoritative complete immutable VI five-digit and ZIP+4 USPS assignment denominator with aliases, validity, corrections, exceptions and explicit area/non-area object types under rights compatible with AGID processing, storage, derivation, redistribution and public serving. Every drawable code must reconcile to a fixed real Polygon/MultiPolygon with official/derived/virtual class, source, edition, reference date, CRS, topology, confidence and exceptions. Census ZCTAs remain derived statistical context and cannot stand in for current USPS boundaries or omitted assignments. The approved artifact must drive the real VI API/app, normalize five-digit and ZIP+4 inputs, handle loading/no-match/multiple/API-failure/invalid-geometry/non-area states, fit and render a translucent fill and clear outline, clear and re-search, and display selected code, object and geometry kinds, provenance, source, date, confidence and separate postal, Census, geometry, assertion, release, address, building and AGID IDs without inferring unavailable relations."
+      }
+    ],
+    "data_completion_verified": false
+  },
+  "agid_integration": {
+    "current_scope": "Six real coordinate-preserving 2020 Census ZCTA validation surfaces and five safe VI-prefixed internal-point AGID crosswalks; zero current complete USPS assignment rows.",
+    "enablement_gate": "Current complete typed USPS assignments, compatible public-serving rights and actual VI production API/app/browser verification are required.",
+    "geometry_rule": "Never manufacture a postal, address or building polygon from an AGID cell, internal point, island, administrative boundary, buffer, hull, interpolation or model."
+  }
+}

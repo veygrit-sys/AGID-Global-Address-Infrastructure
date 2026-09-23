@@ -4,7 +4,7 @@ type ViewportPoint = {
   lat: number;
 } | [number, number];
 
-export const GRID_VIEWPORT_MAX_METERS = 200;
+export const GRID_VIEWPORT_MAX_METERS = Number.POSITIVE_INFINITY;
 export const GRID_VIEWPORT_RENDER_PADDING_RATIO = 1.25;
 
 function getLon(point: ViewportPoint) {
@@ -38,6 +38,8 @@ export function getViewportSpanMeters(points: ViewportPoint[]) {
 }
 
 export function shouldShowGridForViewport(points: ViewportPoint[], maxMeters = GRID_VIEWPORT_MAX_METERS) {
+  if (points.length < 4) return false;
+  if (!Number.isFinite(maxMeters)) return true;
   const { widthMeters } = getViewportSpanMeters(points);
   return widthMeters <= maxMeters;
 }

@@ -1,0 +1,72 @@
+{
+  "schema_version": "agid-postal-xu-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-xu", "country_code": "XU", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "Akrotiri BFPO route and Cyprus postal sector",
+    "full_code_format": "BFPO 57 | BF1 2AT | 4640",
+    "full_code_default_geometry": "operator_reconciled_postal_area_or_explicit_non_area",
+    "assignment_rule": "Current GOV.UK evidence maps Akrotiri to BFPO 57 and shadow postcode BF1 2AT. Cyprus DLS separately publishes one Akrotiri postal-sector Polygon for 4640. These are separate authority assertions and do not establish equivalence, XU coverage or BFPO area geometry.",
+    "postcode_area_rule": "Only a rights-cleared fixed Cyprus postal-sector geometry whose current postal-operator assignment and XU/BFPO relationship are explicitly reconciled may be drawn. Name equality, containment, XU territory, the combined Sovereign Base Areas, administrative or environmental maps, offices, addresses, points, buffers, hulls, Voronoi/raster cells and synthetic fixtures never establish a postal perimeter.",
+    "address_rule": "BFPO routing, shadow-postcode equivalence, Cyprus postal assignment, DLS postal-sector membership, XU identity, address and service state remain separate assertions.",
+    "building_rule": "Building output requires a separately sourced explicit distributable address-building relationship or common authoritative identifier.",
+    "administrative_rule": "XU remains distinct from Cyprus, Dhekelia, Episkopi, Ayios Nikolaos and the combined Sovereign Base Areas. Source identities and territories are not changed, merged or relabelled.",
+    "service_status_rule": "BFPO eligibility, route/office state and delivery service are time-stamped assertions separate from area membership and deliverability."
+  },
+  "integration": {
+    "agid_country_code": "XU",
+    "coordinate_flow": "coordinate -> rights-cleared operator-reconciled postal area or explicit non-area -> address graph -> explicit building relation -> AGID cell",
+    "postcode_flow": "normalized BFPO 57, BF1 2AT or 4640 -> authority-specific assignment and exception evidence -> valid official/derived/virtual area or explicit non-area -> address context -> explicit building relation -> AGID cells",
+    "building_output_gate": "explicit distributable relation, common authoritative identifier, or reviewed crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "canonical-routing-and-code", "pass": "BFPO 57, BF1 2AT and 4640 retain exact authority, normalization, equivalence and non-equivalence semantics." },
+    { "id": "complete-dual-system-denominator", "pass": "Current complete BFPO eligibility/routing plus Cyprus Post assignment, alias, exception and explicit non-area denominators are fixed with dates, digests and correction policy." },
+    { "id": "operator-dls-reconciliation", "pass": "Every supported value is reconciled by postal authority to one eligible DLS postal sector or a source-grounded non-area reason; Akrotiri name equality alone is insufficient." },
+    { "id": "identity-separation", "pass": "XU, Cyprus, Dhekelia, Episkopi, Ayios Nikolaos and combined SBA identities remain distinct." },
+    { "id": "valid-area-only", "pass": "Every drawable record is finite, closed and valid Polygon/MultiPolygon in a declared CRS with lineage, class, date, confidence and exceptions." },
+    { "id": "resource-rights", "pass": "Assignment and geometry resources pin processing, storage, derivation, redistribution, public-serving and attribution permission." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures and shared code capability never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_akrotiri_bfpo_and_cyprus_postal_area_visualization", "definition": "The current complete Akrotiri BFPO 57 and BF1 2AT routing/eligibility denominator plus Cyprus Post 4640 assignment, alias, exception and explicit non-area denominator is pinned under reviewed rights compatible with AGID processing, storage, derivation, redistribution and public serving. Every normalized value is explicitly reconciled to a fixed DLS or other official/right-cleared finite closed valid Polygon/MultiPolygon whose authority, operator relationship, official/derived/virtual class, provider, edition, reference date, rights, attribution, bytes, SHA-256, schema, CRS, topology, coverage, method, confidence and exceptions are recorded, or retains a source-grounded route, office, P.O.-box, organization, point or other non-area reason. The DLS Akrotiri/4640 sector, Akrotiri or combined SBA territory, administrative/environmental maps, offices, addresses, buildings, parcels, points, buffers, hulls, Voronoi/raster cells and synthetic fixtures never become BFPO 57, BF1 2AT or XU postal perimeters merely by name or containment; XU, Cyprus, Dhekelia, Episkopi and Ayios Nikolaos identities are not changed or merged. The approved immutable artifact drives the real XU API/app, which normalizes all supported forms, handles loading/no-match/multiple/API-failure/invalid-geometry, fits and renders translucent fill with a clear outline, and displays selected code, geometry kind, official/derived/virtual class, source, reference date and confidence." },
+      { "id": "M3_address", "definition": "Explicit address identifiers and points pass rights, schema, coverage, validity, privacy and correction gates." },
+      { "id": "M4_geometry", "definition": "Postal surfaces and building joins pass topology, ambiguity, identifier, rights and quality gates." }
+    ],
+    "hard_blockers": [
+      "bfpo-route-or-shadow-postcode-presented-as-area",
+      "dls-4640-name-match-presented-as-bfpo-or-xu-perimeter",
+      "akrotiri-or-combined-sba-territory-presented-as-postal-area",
+      "cyprus-postal-sector-used-without-current-operator-reconciliation",
+      "public-download-or-page-access-substituted-for-resource-specific-license",
+      "xu-cyprus-dhekelia-episkopi-or-ayios-nikolaos-identity-merged",
+      "point-office-address-route-administrative-or-environmental-feature-buffered-to-area"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_XU_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_XU_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_XU_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_XU_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-raw-dls-or-address-source-bodies",
+    "bfpo-route-or-shadow-postcode-equals-polygon",
+    "dls-4640-equals-bfpo57-or-xu-by-name",
+    "akrotiri-or-combined-sba-territory-equals-postal-perimeter",
+    "administrative-or-environmental-map-tracing",
+    "office-address-route-or-point-buffer",
+    "public-download-is-blanket-redistribution-license"
+  ]
+}

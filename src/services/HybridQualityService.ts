@@ -1,4 +1,5 @@
 import { agidFetch,type AgidApiResult } from '../lib/agidHttpClient';
+import { apiV1Path } from '../lib/apiVersion';
 import {
 getHybridPolicy,
 resolveHybridRuntime,
@@ -62,7 +63,7 @@ export async function fetchHybridQualityDecision(
   if (!shouldUseCentral) return localResult;
 
   try {
-    return await agidFetch<HybridQualityResponse>('/api/hybrid/quality', {
+    return await agidFetch<HybridQualityResponse>(apiV1Path('/hybrid/quality'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),

@@ -18,6 +18,15 @@ test('international shipping labels keep deliberate line breaks', () => {
   assert.equal(shouldPreserveAddressDisplayLines('shipping_label'), true);
 });
 
+test('English display tab preserves shipping lines for non-English address countries', () => {
+  assert.equal(
+    formatAddressDisplayText('TESSALIT CERCLE\nKIDAL\nMALI', { tab: 'en', countryCode: 'ML' }),
+    'TESSALIT CERCLE\nKIDAL\nMALI'
+  );
+  assert.equal(shouldPreserveAddressDisplayLines('en', 'ML'), true);
+  assert.equal(shouldPreserveAddressDisplayLines('en', 'US'), false);
+});
+
 test('detects weak partial address displays before they reach the AGID panel', () => {
   const weak = assessAddressDisplayQuality('20.\nMali', {
     country: 'Mali',

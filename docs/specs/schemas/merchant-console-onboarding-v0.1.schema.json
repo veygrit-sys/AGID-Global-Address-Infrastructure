@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/merchant-console-onboarding-v0.1.schema.json",
+  "title": "Merchant Console Onboarding Fixture v0.1",
+  "description": "Local-only Merchant Console onboarding fixture. The fixture contains safe setup references and boundary expectations, not raw addresses, provider tokens, carrier credentials, proof secrets, private keys, or production traffic.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "fixtureId",
+    "localOnly",
+    "request",
+    "expected"
+  ],
+  "properties": {
+    "fixtureId": {
+      "const": "merchant-console-onboarding-v0.1"
+    },
+    "localOnly": {
+      "const": true
+    },
+    "request": {
+      "type": "object",
+      "required": [
+        "merchantAccount",
+        "storeEcPlatform",
+        "shippingPreferences",
+        "addressWalletSettings",
+        "apiKeysAndWebhooks"
+      ],
+      "properties": {
+        "storeEcPlatform": {
+          "type": "object",
+          "required": [
+            "addressLoginClientRef",
+            "addressLoginCallbackUrl"
+          ],
+          "properties": {
+            "addressLoginClientRef": {
+              "type": "string",
+              "pattern": "^address_login_client_ref_[a-z0-9_:-]+$"
+            },
+            "addressLoginCallbackUrl": {
+              "type": "string",
+              "pattern": "^https://"
+            }
+          }
+        },
+        "addressWalletSettings": {
+          "type": "object",
+          "required": [
+            "addressFormVersionRef",
+            "carrierSpecificAddressShapeBlocked"
+          ],
+          "properties": {
+            "addressFormVersionRef": {
+              "type": "string",
+              "pattern": "^wallet_country_form_ref_[a-z0-9_:-]+$"
+            },
+            "carrierSpecificAddressShapeBlocked": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "required": [
+        "requiredWalletBoundaryFields",
+        "safeOutputRefs",
+        "forbiddenPublicMaterial",
+        "nonClaims"
+      ],
+      "properties": {
+        "requiredWalletBoundaryFields": {
+          "type": "array",
+          "allOf": [
+            { "contains": { "const": "addressFormVersionRef" } },
+            { "contains": { "const": "carrierSpecificAddressShapeBlocked" } }
+          ]
+        },
+        "safeOutputRefs": {
+          "type": "array",
+          "allOf": [
+            { "contains": { "const": "merchantRef" } },
+            { "contains": { "const": "addressLoginClientRef" } },
+            { "contains": { "const": "addressLoginCallbackPreflightRef" } },
+            { "contains": { "const": "addressFormVersionRef" } }
+          ]
+        },
+        "forbiddenPublicMaterial": {
+          "type": "array",
+          "allOf": [
+            { "contains": { "const": "rawAddress" } },
+            { "contains": { "const": "carrierCredential" } },
+            { "contains": { "const": "rawCarrierPayload" } },
+            { "contains": { "const": "providerIdToken" } },
+            { "contains": { "const": "privateKey" } }
+          ]
+        },
+        "nonClaims": {
+          "type": "array",
+          "allOf": [
+            { "contains": { "const": "not-raw-address-intake" } },
+            { "contains": { "const": "not-proof-witness-intake" } },
+            { "contains": { "const": "not-provider-token-intake" } },
+            { "contains": { "const": "not-raw-carrier-payload-intake" } },
+            { "contains": { "const": "not-production-dhl-ups-traffic" } },
+            { "contains": { "const": "not-carrier-specific-address-form" } },
+            { "contains": { "const": "not-raw-address-callback" } }
+          ]
+        }
+      }
+    }
+  }
+}

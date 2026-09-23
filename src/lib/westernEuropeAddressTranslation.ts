@@ -1,6 +1,8 @@
 import { normalizeEnglishAddressBuildingName,normalizeEnglishAddressPart } from './addressEnglish';
 import { chooseCommonAddressTranslationRoute,translateAddressFieldByRoute,type AddressFieldTranslator,type AddressTranslationRoute } from './addressTranslationRouteCore';
 import { isAddressBuildingField,normalizeAddressTranslationCountryCode,normalizeAddressTranslationLanguage,type AddressTranslationProfile } from './addressTranslationRegion';
+import { isFrenchShippingCountry,normalizeFrenchShippingField } from './frenchShippingAddress';
+import { isMajorEuropeanShippingCountry,normalizeMajorEuropeanShippingField } from './majorEuropeanShippingAddress';
 
 export type WesternEuropeAddressTopology =
   | 'latin-address'
@@ -242,8 +244,29 @@ function shouldUseBuildingEnglish(fieldKey: string) {
   return isAddressBuildingField(fieldKey);
 }
 
-function normalizeWesternEuropeEnglish(text: string, countryCode: string, fieldKey: string) {
+function normalizeWesternEuropeEnglish(
+  text: string,
+  countryCode: string,
+  fieldKey: string,
+  sourceLanguage: string,
+) {
   const code = countryCodeOf(countryCode);
+  if (sourceLanguage === 'fr' && isFrenchShippingCountry(code)) {
+    return normalizeFrenchShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
+  if (isMajorEuropeanShippingCountry(code)) {
+    return normalizeMajorEuropeanShippingField({
+      countryCode: code,
+      fieldKey,
+      text,
+      mode: 'international-shipping',
+    });
+  }
   const aliases = WESTERN_EUROPE_ENGLISH_ALIASES[code] || {};
   if (aliases[text]) return aliases[text];
   if (COMMON_WESTERN_EUROPE_ADDRESS_TERMS[text]) return COMMON_WESTERN_EUROPE_ADDRESS_TERMS[text];
@@ -282,7 +305,12 @@ export async function translateWesternEuropeAddressField(options: {
     fieldKey: options.fieldKey,
     sourceLanguage,
     targetLanguage,
-    normalizeEnglish: value => normalizeWesternEuropeEnglish(value, profile.countryCode, options.fieldKey),
+    normalizeEnglish: value => normalizeWesternEuropeEnglish(
+      value,
+      profile.countryCode,
+      options.fieldKey,
+      sourceLanguage,
+    ),
     translator: options.translator,
   });
 }

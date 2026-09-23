@@ -55,13 +55,46 @@ export type EuropeOpenGeoSourceId =
   | 'jrc-esdac-soils'
   | 'zippopotam'
   | 'data-gouv-fr-postcodes'
+  | 'ban-fr'
+  | 'ign-bd-topo'
+  | 'insee-cog'
+  | 'deutsche-post-plz-server'
+  | 'deutsche-post-datafactory'
+  | 'bkg-postleitzahlgebiete'
+  | 'bkg-georeferenced-addresses'
+  | 'adv-hk-de'
+  | 'adv-hu-de'
+  | 'bkg-lod2-de'
+  | 'bkg-vg25'
   | 'openplzapi'
+  | 'austrian-post-postcode'
+  | 'austrian-post-address-data'
+  | 'bev-austria-address-register'
+  | 'statistics-austria-postcode-regions'
+  | 'bev-austria-administrative-boundaries'
+  | 'statistics-austria-gwr'
   | 'opendatasoft-nl-postcodes'
+  | 'pdok-bag'
+  | 'cbs-nl-postcode-areas'
+  | 'bpost-belgium-postcode-reference'
+  | 'bpost-belgium-postal-cantons'
+  | 'bpost-address-validation'
+  | 'bosa-belgium-best-address'
+  | 'digitaal-vlaanderen-address-register'
+  | 'digitaal-vlaanderen-building-register'
+  | 'digitaal-vlaanderen-grb'
+  | 'spw-wallonia-icar-addresses'
+  | 'spw-wallonia-picc-buildings'
+  | 'paradigm-brussels-urbis-buildings-addresses'
+  | 'fps-finance-belgium-cadastral-plan'
+  | 'fps-finance-belgium-administrative-units'
   | 'odwb-be-postcodes'
   | 'postcodes-io'
   | 'ons-postcode-directory'
   | 'ordnance-survey-open-names'
   | 'ordnance-survey-boundary-line'
+  | 'ordnance-survey-open-uprn'
+  | 'ordnance-survey-openmap-local'
   | 'ideal-postcodes-reference'
   | 'civictechsweden-posmkod'
   | 'lantmateriet-sweden'
@@ -70,31 +103,89 @@ export type EuropeOpenGeoSourceId =
   | 'data-norge'
   | 'kartverket-norway'
   | 'geonorge-norway'
+  | 'posten-bring-norway-postcode-register'
+  | 'kartverket-norway-postcode-areas'
+  | 'kartverket-norway-address-api'
+  | 'kartverket-norway-matrikkelen-address'
+  | 'kartverket-norway-matrikkelen-address-unit'
+  | 'kartverket-norway-matrikkelen-building-points'
+  | 'geovekst-norway-fkb-buildings'
+  | 'kartverket-norway-administrative-units'
   | 'brreg-address-register'
   | 'postcode-eu'
+  | 'postnord-dk-postcode-finder'
+  | 'dagi-denmark-postcode-areas'
   | 'dataforsyningen-denmark'
   | 'danish-address-register-dar'
+  | 'bbr-denmark-buildings'
+  | 'geodanmark-buildings'
+  | 'dagi-denmark-boundaries'
   | 'geodanmark'
+  | 'posti-finland-postal-code-services'
+  | 'posti-finland-basic-address-file'
+  | 'statistics-finland-paavo-postal-areas'
+  | 'dvv-finland-building-dwelling-register'
+  | 'syke-finland-ryhti-building-addresses'
+  | 'nls-finland-topographic-road-addresses'
+  | 'nls-finland-topographic-buildings'
+  | 'nls-finland-municipal-division'
+  | 'aland-post-postal-services'
   | 'avoindata-fi-postcodes'
   | 'nls-finland'
   | 'maanmittauslaitos-open-data'
   | 'dvv-finland-address-data'
+  | 'latvijas-pasts-check-address'
   | 'kartes-lv-postal-codes'
   | 'lgia-latvia'
   | 'vzd-latvia-address-register'
+  | 'vzd-latvia-cadastral-buildings'
+  | 'vzd-latvia-administrative-boundaries'
   | 'data-gov-lv-geodata'
   | 'maaamet-estonia'
   | 'estonia-address-data-system'
   | 'xgis-estonia'
+  | 'omniva-estonia-postcodes'
+  | 'estonia-aks-postal-codes'
+  | 'estonia-aks-postal-areas'
+  | 'estonia-aks-address-objects'
+  | 'estonia-aks-building-shapes'
+  | 'estonia-ehak-admin-boundaries'
+  | 'swiss-post-postcodes'
+  | 'swisstopo-plzo-postal-localities'
+  | 'swisstopo-building-address-directory'
+  | 'swiss-federal-gwr'
+  | 'swisstopo-swissbuildings3d'
+  | 'swisstopo-swissboundaries3d'
+  | 'liechtenstein-post-access-points'
+  | 'llv-liechtenstein-building-addresses'
+  | 'llv-liechtenstein-gwr-public'
+  | 'llv-liechtenstein-official-survey'
+  | 'llv-liechtenstein-sovereign-boundaries'
+  | 'lietuvos-pastas-postcode-search'
   | 'geoportal-lt'
   | 'registru-centras-address-register'
+  | 'registru-centras-ntr-buildings'
+  | 'registru-centras-address-boundaries'
   | 'open-data-lithuania'
   | 'okfn-index-postcodes'
   | 'lmmi-iceland'
   | 'iceland-national-registry-addresses'
   | 'island-is-open-data'
+  | 'posturinn-iceland-postcodes'
+  | 'byggdastofnun-iceland-postcode-register'
+  | 'hms-iceland-address-register'
+  | 'natt-is50v-buildings'
+  | 'statistics-iceland-geography'
+  | 'poste-italiane-cap-search'
+  | 'poste-italiane-cap-professional'
+  | 'anncsu-italy-addresses'
+  | 'istat-italy-admin-boundaries'
+  | 'italy-regional-dbgt-buildings'
   | 'eurostat-gisco-postcodes'
   | 'elta-gr'
+  | 'gisco-greece-postcode-points'
+  | 'elstat-greece-digital-cartography'
+  | 'greece-national-streets-numbers-plan'
   | 'istat-italy-geodata'
   | 'agenzia-entrate-catasto'
   | 'geoportale-nazionale-italy'
@@ -107,20 +198,38 @@ export type EuropeOpenGeoSourceId =
   | 'ktimatologio-greece'
   | 'geodata-gov-gr'
   | 'okxe-greece'
+  | 'maltapost-postcode-finder'
+  | 'malta-office-address-registrar'
+  | 'malta-oar-location-registers'
+  | 'malta-pa-large-scale-topography-buildings'
   | 'pa-malta-geoserver'
   | 'nso-malta-geodata'
   | 'identity-malta-addressing'
   | 'san-marino-geoportal'
   | 'san-marino-statistics'
+  | 'la-poste-official-postal-codes-monaco'
+  | 'la-poste-monaco-addressing'
+  | 'monaco-dpum-address-base'
+  | 'monaco-dpum-building-topography'
   | 'monaco-gouv-cartography'
   | 'monaco-imsee-geodata'
   | 'vatican-city-state'
   | 'openstreetmap-vatican'
+  | 'correos-andorra-postcodes'
+  | 'andorra-urban-address-guide'
+  | 'andorra-topographic-buildings'
   | 'andorra-cartografia'
   | 'andorra-open-data'
   | 'cyprus-department-lands-surveys'
   | 'cyprus-open-data-portal'
   | 'inspire-cyprus'
+  | 'cyprus-post-postcode-directory'
+  | 'cyprus-post-postcode-api'
+  | 'cyprus-dls-inspire-addresses'
+  | 'cyprus-dls-inspire-buildings'
+  | 'cyprus-dls-administrative-units'
+  | 'cystat-postal-sectors'
+  | 'eu-cyprus-protocol-10'
   | 'datahub-postal'
   | 'zauberware-postal-codes'
   | 'eu-postal-code-package'
@@ -128,12 +237,32 @@ export type EuropeOpenGeoSourceId =
   | 'scrape4u-postal-codes'
   | 'spotzi-postal-codes'
   | 'ceska-posta-psc'
+  | 'ceska-posta-customer-outputs'
   | 'cuzk-ruian'
+  | 'cuzk-ruian-addresses'
+  | 'cuzk-ruian-vfr'
+  | 'cuzk-inspire-buildings'
+  | 'cuzk-ruian-boundaries'
   | 'cuzk-geoportal'
+  | 'croatian-post-postcode-downloads'
+  | 'dgu-croatia-spatial-unit-register'
+  | 'dgu-croatia-inspire-addresses'
+  | 'dgu-croatia-inspire-buildings'
+  | 'dgu-croatia-inspire-administrative-units'
+  | 'dgu-croatia-cadastral-parcels'
+  | 'gisco-croatia-postcode-points'
   | 'posta-hr'
   | 'dgu-croatia-geoportal'
   | 'croatia-cadastre'
   | 'posta-hu'
+  | 'magyar-posta-partner-extra-postcodes'
+  | 'magyar-posta-addressing-database'
+  | 'hungary-central-address-register-kcr'
+  | 'lechner-hungary-eha'
+  | 'lechner-hungary-inspire-buildings'
+  | 'lechner-hungary-nta-buildings'
+  | 'hungary-land-registry-cadastral-map'
+  | 'ksh-hungary-administrative-units'
   | 'lechner-hungary-geodata'
   | 'hungary-public-road-data'
   | 'poczta-polska'
@@ -142,26 +271,89 @@ export type EuropeOpenGeoSourceId =
   | 'posta-si'
   | 'eprostor-slovenia'
   | 'gurs-slovenia'
+  | 'posta-slovenije-postcode-csv'
+  | 'posta-slovenije-special-postcodes'
+  | 'posta-slovenije-delivery-area-webgis'
+  | 'gurs-slovenia-postal-districts'
+  | 'gurs-slovenia-address-register'
+  | 'gurs-slovenia-public-features-api'
+  | 'gurs-slovenia-real-estate-cadastre-buildings'
+  | 'gurs-slovenia-spatial-unit-register'
+  | 'gurs-slovenia-cadastral-parcels'
   | 'slovenska-posta-psc'
   | 'zbgis-slovakia'
   | 'slovakia-address-register'
+  | 'slovak-post-postcode-search'
+  | 'slovak-post-access-point-xml'
+  | 'slovakia-register-addresses-portal'
+  | 'slovakia-register-addresses-openapi'
+  | 'zbgis-slovakia-inspire-buildings'
+  | 'zbgis-slovakia-administrative-units'
+  | 'zbgis-slovakia-cadastral-parcels'
+  | 'posta-romana-postcode-search'
+  | 'posta-romana-postcode-structure'
+  | 'posta-romana-infocod'
+  | 'posta-romana-postcode-geography-status'
+  | 'ancpi-romania-renns'
+  | 'ancpi-romania-inis-addresses-buildings'
+  | 'ancpi-romania-registered-property-viewer'
+  | 'insse-romania-siruta-localities'
   | 'ancpi-romania-geoportal'
   | 'romania-open-data'
+  | 'bulgarian-posts-postcode-reference'
+  | 'bulgarian-posts-post-office-directory'
+  | 'grao-bulgaria-address-classifier'
+  | 'agcc-bulgaria-cadastral-map'
+  | 'agcc-bulgaria-inspire-buildings'
+  | 'nsi-bulgaria-ekatte'
+  | 'nsi-bulgaria-administrative-spatial-data'
   | 'cadastre-bulgaria'
   | 'bulgaria-inspire-geoportal'
+  | 'ukrposhta-postcodes-open-data'
+  | 'ukrposhta-index-and-address-api'
+  | 'ukraine-unified-address-register'
+  | 'ukraine-building-register'
+  | 'ukraine-nsdi'
   | 'data-gov-ua-geodata'
   | 'ukraine-cadastre-map'
   | 'geoportal-moldova'
   | 'moldova-open-data'
+  | 'belpost-belarus-postcode-reference'
+  | 'nca-belarus-postal-code-zones'
+  | 'nca-belarus-address-register'
+  | 'nca-belarus-capital-structure-addresses'
+  | 'nca-belarus-real-estate-register'
+  | 'nca-belarus-property-characteristics-register'
+  | 'nca-belarus-ate-register'
+  | 'nca-belarus-soato-classifier'
+  | 'nca-belarus-public-cadastral-map'
   | 'belarus-nca-geoportal'
   | 'rosreestr-nspd'
   | 'russia-open-data-geo'
   | 'geosrbija'
   | 'rgz-serbia'
+  | 'posta-srbije-post-office-list'
+  | 'posta-srbije-pak-definition'
+  | 'posta-srbije-pak-lookup'
+  | 'posta-srbije-wsp-address-api'
+  | 'rgz-serbia-address-register-open-data'
+  | 'rgz-serbia-spatial-unit-register'
+  | 'rgz-serbia-geosrbija-buildings'
+  | 'rgz-serbia-real-estate-cadastre'
   | 'bosnia-geoportal'
   | 'bosnia-cadastre-reference'
+  | 'posta-crne-gore-postcode-office-directory'
+  | 'posta-crne-gore-pak-addressing'
+  | 'uzn-montenegro-address-register'
+  | 'uzn-montenegro-real-estate-cadastre'
+  | 'uzn-montenegro-geoportal'
+  | 'uzn-montenegro-spatial-unit-record'
+  | 'monstat-montenegro-spatial-register'
   | 'geoportal-montenegro'
   | 'montenegro-cadastre'
+  | 'posta-shqiptare-postcodes'
+  | 'albania-national-address-system'
+  | 'ashk-albania-cadastral-buildings'
   | 'kosovo-geoportal'
   | 'kosovo-cadastre'
   | 'asig-albania'
@@ -177,6 +369,7 @@ export type EuropeOpenGeoSourceId =
   | 'haypost-address-reference'
   | 'geonames-armenia'
   | 'azerbaijan-state-committee-property'
+  | 'azerbaijan-address-register'
   | 'azerbaijan-open-data'
   | 'azerpost-address-reference'
   | 'geonames-azerbaijan'
@@ -198,6 +391,9 @@ export type EuropeOpenGeoSourceId =
   | 'falkland-islands-gis'
   | 'british-overseas-postal-reference'
   | 'south-georgia-gis'
+  | 'saint-helena-postal'
+  | 'ascension-post-office'
+  | 'tristan-post-office'
   | 'saint-helena-gov';
 
 export interface EuropeOpenGeoSource {
@@ -206,6 +402,7 @@ export interface EuropeOpenGeoSource {
   url: string;
   kind:
     | 'postal-code'
+    | 'building'
     | 'address'
     | 'geocoding'
     | 'admin-boundary'
@@ -216,6 +413,7 @@ export interface EuropeOpenGeoSource {
     | 'bathymetry'
     | 'marine'
     | 'cryosphere'
+    | 'facility'
     | 'protected-area'
     | 'biodiversity'
     | 'topography';
@@ -682,12 +880,122 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'data-gouv-fr-postcodes': {
     id: 'data-gouv-fr-postcodes',
-    name: 'France API Codes Postaux',
-    url: 'https://www.data.gouv.fr/datasets/api-codes-postaux',
+    name: 'La Poste Base officielle des codes postaux',
+    url: 'https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'French official open-data postal-code API and dataset.',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official La Poste code-to-INSEE-commune assignment table; commune contours are administrative context, not official postal-code boundaries.',
+  },
+  'ban-fr': {
+    id: 'ban-fr',
+    name: 'Base Adresse Nationale',
+    url: 'https://adresse.data.gouv.fr/contenu-de-la-ban',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official French georeferenced address reference for house-number and street evidence; an address point does not by itself prove a building link.',
+  },
+  'ign-bd-topo': {
+    id: 'ign-bd-topo',
+    name: 'IGN BD TOPO',
+    url: 'https://geoservices.ign.fr/documentation/donnees/vecteur/bdtopo',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official IGN topographic building geometry and explicit BAN address-to-building link evidence; proximity alone remains derived.',
+  },
+  'insee-cog': {
+    id: 'insee-cog',
+    name: 'INSEE Code officiel géographique',
+    url: 'https://www.insee.fr/fr/information/2560452',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Licence Ouverte 2.0',
+    notes: 'Official administrative identities and histories; COG codes and boundaries are not La Poste postal assignments.',
+  },
+  'deutsche-post-plz-server': {
+    id: 'deutsche-post-plz-server',
+    name: 'Deutsche Post / Postdirekt Postcode Search',
+    url: 'https://www.postdirekt.de/plzserver/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Deutsche Post interactive postcode and locality search via Postdirekt.',
+  },
+  'deutsche-post-datafactory': {
+    id: 'deutsche-post-datafactory',
+    name: 'Deutsche Post Direkt DATAFACTORY',
+    url: 'https://www.deutschepost.de/de/d/deutsche-post-direkt/datafactory.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Commercial product; contract and redistribution review required per DATAFACTORY module',
+    notes: 'Official routing, street, addressable-building and GEOCODE evidence; postcode areas and coordinates remain contract-partitioned by product.',
+  },
+  'bkg-postleitzahlgebiete': {
+    id: 'bkg-postleitzahlgebiete',
+    name: 'BKG Postleitzahlgebiete Deutschland (PLZ)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/postleitzahlgebiete-deutschland-plz.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Restricted to eligible users after license agreement; Deutsche Post Direkt attribution required',
+    notes: 'Original Deutsche Post Direkt delivery-postcode Polygon/MultiPolygon data; multipart areas are preserved and large-recipient or other non-area codes are excluded.',
+  },
+  'bkg-georeferenced-addresses': {
+    id: 'bkg-georeferenced-addresses',
+    name: 'BKG Georeferenzierte Adressdaten (GA)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/georeferenzierte-adressdaten-ga.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Restricted authorized-user product; artifact-specific terms review required',
+    notes: 'Official nationwide addresses, coordinates and administrative keys derived from house coordinates; points are not building footprints or postcode polygons.',
+  },
+  'adv-hk-de': {
+    id: 'adv-hk-de',
+    name: 'GeoBasis-DE / ZSHH Amtliche Hauskoordinaten Deutschland (HK-DE)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/amtliche-hauskoordinaten-deutschland-hk-de.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Restricted V GeoBund or V GeoLänder authorized-user product',
+    notes: 'Official cadastral house coordinates with state-specific source and quality details; never convert the point or proximity into building identity.',
+  },
+  'adv-hu-de': {
+    id: 'adv-hu-de',
+    name: 'GeoBasis-DE / ZSHH Amtliche Hausumringe Deutschland (HU-DE)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/sonstige-geodaten/amtliche-hausumringe-deutschland-hu-de.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Restricted V GeoBund or V GeoLänder authorized-user product',
+    notes: 'Official cadastral building footprints with object identifier, AGS and function; AGS or proximity alone is not an exact address-to-building link.',
+  },
+  'bkg-lod2-de': {
+    id: 'bkg-lod2-de',
+    name: 'BKG / GeoBasis-DE 3D-Gebäudemodelle LoD2 Deutschland',
+    url: 'https://gdz.bkg.bund.de/index.php/default/3d-gebaudemodelle-lod2-deutschland-lod2-de.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Restricted authorized-user product; external use depends on agreement',
+    notes: 'Official 3D building geometry with object and optional address/2D references; exact address linkage requires an explicit identifier or crosswalk.',
+  },
+  'bkg-vg25': {
+    id: 'bkg-vg25',
+    name: 'BKG Verwaltungsgebiete 1:25 000 (VG25)',
+    url: 'https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/verwaltungsgebiete/verwaltungsgebiete-1-25-000-stand-31-12-vg25.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0; attribution required',
+    notes: 'Official administrative identities and boundaries from country through municipality; administration is context and never postal geometry.',
   },
   openplzapi: {
     id: 'openplzapi',
@@ -698,6 +1006,115 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'primary',
     notes: 'Open postal-code API for Germany, Austria, Switzerland, and Liechtenstein.',
   },
+  'swiss-post-postcodes': {
+    id: 'swiss-post-postcodes',
+    name: 'Swiss Post Postcodes and Address Geodata',
+    url: 'https://www.post.ch/en/business-solutions/address-management/address-and-geodata',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public search and account download; contract review required for GeoPost, coordinates and redistribution',
+    notes: 'Official four-digit postcode, locality, street and sorting evidence; NPA6, GeoPost polygons and delivery data remain contract-partitioned from public swisstopo geometry.',
+  },
+  'swisstopo-plzo-postal-localities': {
+    id: 'swisstopo-plzo-postal-localities',
+    name: 'swisstopo Official Directory of Towns and Cities (PLZO_CH)',
+    url: 'https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official monthly locality, four-digit postcode and NPA6 perimeter data for Switzerland and Liechtenstein domicile-address postcode types; special, company and administrative codes may be non-areal.',
+  },
+  'swisstopo-building-address-directory': {
+    id: 'swisstopo-building-address-directory',
+    name: 'swisstopo Official Directory of Building Addresses',
+    url: 'https://www.swisstopo.admin.ch/en/official-directory-of-building-addresses',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official daily building-entrance addresses with EGAID, EGID plus EDID, house number, street, postcode/locality, municipality, LV95 point and status.',
+  },
+  'swiss-federal-gwr': {
+    id: 'swiss-federal-gwr',
+    name: 'Swiss Federal Register of Buildings and Dwellings (GWR)',
+    url: 'https://www.housing-stat.ch/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Official public register/API; pin access class and terms per artifact',
+    notes: 'Federal building and entrance identity/status evidence; EGID plus EDID is nationwide unique for an entrance, while dwelling and occupant data remain outside public AGID output.',
+  },
+  'swisstopo-swissbuildings3d': {
+    id: 'swisstopo-swissbuildings3d',
+    name: 'swisstopo swissBUILDINGS3D 3.0 Beta',
+    url: 'https://www.swisstopo.admin.ch/en/landscape-model-swissbuildings3d-3-0-beta',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official 3D building geometry with phased EGID integration; a footprint is definitive only where the pinned canton/tile edition carries the same EGID as the address.',
+  },
+  'swisstopo-swissboundaries3d': {
+    id: 'swisstopo-swissboundaries3d',
+    name: 'swisstopo swissBOUNDARIES3D',
+    url: 'https://www.swisstopo.admin.ch/en/landscape-model-swissboundaries3d',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'swisstopo OGD; source attribution mandatory',
+    notes: 'Official national, canton, district and municipality geometry; administrative context never replaces a PLZO postcode/locality perimeter.',
+  },
+  'liechtenstein-post-access-points': {
+    id: 'liechtenstein-post-access-points',
+    name: 'Liechtensteinische Post Access Points',
+    url: 'https://post.li/standorte/',
+    kind: 'facility',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official post offices, PO-box facilities, parcel terminals and access points; facility evidence remains point or non-areal and cannot create a residential postcode polygon.',
+  },
+  'llv-liechtenstein-building-addresses': {
+    id: 'llv-liechtenstein-building-addresses',
+    name: 'Liechtenstein National Administration Official Building Addresses',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Liechtenstein National Administration OGD terms; attribution and license link required',
+    notes: 'Official SHP/CSV building addresses include the government building identifier and coordinates; an address point is not a building footprint or postal-operator assignment.',
+  },
+  'llv-liechtenstein-gwr-public': {
+    id: 'llv-liechtenstein-gwr-public',
+    name: 'Liechtenstein Public Building and Dwelling Register Fields',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Liechtenstein National Administration OGD terms; public fields and attribution only',
+    notes: 'Official public fields provide building identifier, municipality, address, name, category, parcel and coordinates; dwelling, occupant and non-published register data stay excluded.',
+  },
+  'llv-liechtenstein-official-survey': {
+    id: 'llv-liechtenstein-official-survey',
+    name: 'Liechtenstein Municipal Official Survey Packages',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Liechtenstein National Administration geodata terms; attribute source and retain license',
+    notes: 'Official-survey packages for all eleven municipalities provide building geometry; an exact address link requires an explicit common identifier or reviewed crosswalk, never proximity alone.',
+  },
+  'llv-liechtenstein-sovereign-boundaries': {
+    id: 'llv-liechtenstein-sovereign-boundaries',
+    name: 'Liechtenstein Official Sovereign Boundaries',
+    url: 'https://service.geo.llv.li/download/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Liechtenstein National Administration geodata terms; attribution required',
+    notes: 'Official sovereign geometry partitions LI from CH and AT and supplies jurisdiction context; it is not a postcode perimeter and cannot invent postal membership.',
+  },
   'opendatasoft-nl-postcodes': {
     id: 'opendatasoft-nl-postcodes',
     name: 'Netherlands PC4 Postcode Dataset',
@@ -706,6 +1123,146 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'validation',
     notes: 'OpenDataSoft Netherlands postcode reference dataset.',
+  },
+  'pdok-bag': {
+    id: 'pdok-bag',
+    name: 'PDOK BAG OGC API',
+    url: 'https://api.pdok.nl/kadaster/bag/ogc/v2?f=html&lang=nl',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public Domain Mark 1.0',
+    notes: 'Official daily Dutch address points, addressable objects, and building geometry from Kadaster LV-BAG.',
+  },
+  'cbs-nl-postcode-areas': {
+    id: 'cbs-nl-postcode-areas',
+    name: 'CBS PC4, PC5, and PC6 Postcode Areas',
+    url: 'https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/gegevens-per-postcode',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 3.0 NL',
+    notes: 'Annual CBS postcode GeoPackages with Esri Nederland derived geometry and required attribution.',
+  },
+  'bpost-belgium-postcode-reference': {
+    id: 'bpost-belgium-postcode-reference',
+    name: 'bpost Belgium Postcode Reference',
+    url: 'https://www.bpost.be/nl/postcodevalidatie-tool',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public operator reference; pin exact download terms, edition and redistribution rights',
+    notes: 'Official four-digit postcode lookup and downloadable list. Preserve leading zeroes and do not add B-/BE-; a row proves neither a polygon, exact address, deliverability nor building.',
+  },
+  'bpost-belgium-postal-cantons': {
+    id: 'bpost-belgium-postal-cantons',
+    name: 'bpost / NGI Belgium Postal Cantons',
+    url: 'https://publish.geo.be/geonetwork/F0ow2Say/api/records/9738c7c0-5255-11ea-8895-34e12d0f0423',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Internal use granted; commercial use strictly forbidden; bpost attribution required for public use. No reviewed public redistribution/API grant.',
+    notes: 'Official vector postal-canton boundaries are authoritative source geometry, but reviewed metadata UUID 9738c7c0-5255-11ea-8895-34e12d0f0423 limits use to internal use and forbids commercial use. Public AGID redistribution/API use is blocked without written permission. The EPSG:4326 artifact has leading-zero exceptions (612 and 9) that require explicit normalization; WMS pixels, municipalities and interpolation never substitute for the vector layer.',
+  },
+  'bpost-address-validation': {
+    id: 'bpost-address-validation',
+    name: 'bpost Address Validation Service',
+    url: 'https://www.bpost.be/nl/adres-controleren',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Public service/widget reference; exact API terms and response-retention rights apply',
+    notes: 'Official operator validation and formatting evidence. Responses are not bundled, do not create building geometry and do not replace a pinned BeSt or regional registry identifier.',
+  },
+  'bosa-belgium-best-address': {
+    id: 'bosa-belgium-best-address',
+    name: 'BOSA BeSt Address',
+    url: 'https://data.gov.be/nl/datasets/fpsbosa-dis-best-full',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0; retain BOSA and each regional source attribution and exact release lineage',
+    notes: 'Official weekly consolidation of the three regional address registers supplies street names, house numbers, postcodes, coordinates and source identifiers. A coordinate is not a building footprint and regional validity and licence lineage remain authoritative.',
+  },
+  'digitaal-vlaanderen-address-register': {
+    id: 'digitaal-vlaanderen-address-register',
+    name: 'Digitaal Vlaanderen Address Register',
+    url: 'https://www.vlaanderen.be/datavindplaats/catalogus/adressenregister-gemeenten',
+    kind: 'address',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Modellicentie Gratis Hergebruik; pin version, attribution and current terms',
+    notes: 'Authentic Flemish address source with stable address and addressable-object identity. Building, building unit, parcel, berth and stand types remain distinct; only an explicit registry relation may promote an exact building.',
+  },
+  'digitaal-vlaanderen-building-register': {
+    id: 'digitaal-vlaanderen-building-register',
+    name: 'Digitaal Vlaanderen Building Register',
+    url: 'https://www.vlaanderen.be/datavindplaats/catalogus/gebouwenregister-gebouwen',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Modellicentie Gratis Hergebruik; pin version, attribution and current terms',
+    notes: 'Stable Flemish building and building-unit identifiers and lifecycle records. Exact output requires an explicit Address Register relation or reviewed common identifier; building units and spatial proximity are not footprints.',
+  },
+  'digitaal-vlaanderen-grb': {
+    id: 'digitaal-vlaanderen-grb',
+    name: 'Grootschalig Referentie Bestand Vlaanderen',
+    url: 'https://www.vlaanderen.be/datavindplaats/catalogus/wfs-grb',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Gratis open data licentie Vlaanderen v1.02; required GRB attribution',
+    notes: 'Official large-scale Flemish reference geometry used by the Building Register. GRB geometry is released with its own edition and lineage and does not create an address-to-building relation by containment.',
+  },
+  'spw-wallonia-icar-addresses': {
+    id: 'spw-wallonia-icar-addresses',
+    name: 'SPW Wallonia ICAR Address Register',
+    url: 'https://geoportail.wallonie.be/catalogue/2998bccd-dae4-49fb-b6a5-867e6c37680f.html',
+    kind: 'address',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'CC BY 4.0; source attribution and modification notice required',
+    notes: 'Authentic Walloon address register supplies identifiers, street, police number, box, postcode, address zone and municipality. Geometry exists only for exact PICC matches and is a building centroid, not a footprint.',
+  },
+  'spw-wallonia-picc-buildings': {
+    id: 'spw-wallonia-picc-buildings',
+    name: 'SPW Wallonia PICC Buildings',
+    url: 'https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'CC BY 4.0 public PICC edition; attribution and modification notice required',
+    notes: 'Official high-precision Walloon reference building geometry with weekly maintenance. Exact building display requires an explicit ICAR-PICC relation or common identifier; centroid containment and restricted PICC-vTOPO content are excluded.',
+  },
+  'paradigm-brussels-urbis-buildings-addresses': {
+    id: 'paradigm-brussels-urbis-buildings-addresses',
+    name: 'Paradigm Brussels UrbIS Buildings and Addresses',
+    url: 'https://be.brussels/en/about-region/urbis-data',
+    kind: 'building',
+    coverage: 'territory',
+    usage: 'primary',
+    license: 'Brussels UrbIS open-data licence; pin exact product edition, attribution and third-party exclusions',
+    notes: 'Official regional addresses and buildings include maintained identifiers such as inspire_Id. Exact building display requires an explicit UrbIS address relation or common stable identifier; cadastral parcels and third-party FPS Finance terms remain separate.',
+  },
+  'fps-finance-belgium-cadastral-plan': {
+    id: 'fps-finance-belgium-cadastral-plan',
+    name: 'FPS Finance Belgium Cadastral Plan',
+    url: 'https://finances.belgium.be/fr/experts-partenaires/donnees-ouvertes-patrimoine/jeux-donnees/plan-cadastral',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'FPS Finance common open-data licence based on CC BY; pin exact edition and attribution',
+    notes: 'Nationwide public plan layers include parcels, buildings and some address context. The plan does not establish legal property boundaries, a parcel is not a building, and owner, rightsholder, title, tax, income and valuation fields are excluded.',
+  },
+  'fps-finance-belgium-administrative-units': {
+    id: 'fps-finance-belgium-administrative-units',
+    name: 'FPS Finance Belgium Administrative Units',
+    url: 'https://finances.belgium.be/fr/experts-partenaires/donnees-ouvertes-patrimoine/jeux-donnees/unites-administratives',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'FPS Finance common open-data licence based on CC BY; pin exact edition and attribution',
+    notes: 'Official dated Belgian administrative boundaries and identifiers add region, province, arrondissement and municipality context only. They do not replace postal cantons or establish postcode, address, building or delivery evidence.',
   },
   'odwb-be-postcodes': {
     id: 'odwb-be-postcodes',
@@ -728,11 +1285,12 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'ons-postcode-directory': {
     id: 'ons-postcode-directory',
     name: 'ONS Postcode Directory',
-    url: 'https://geoportal.statistics.gov.uk/',
+    url: 'https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'validation',
-    notes: 'UK postcode to administrative geography reference for post town, local authority, county, and statistical area checks.',
+    license: 'Open Government Licence v3.0; BT subject to separate LPS terms',
+    notes: 'Quarterly live and terminated UK postcode coordinates and administrative crosswalks; the address-mean point is not a delivery point or postal boundary.',
   },
   'ordnance-survey-open-names': {
     id: 'ordnance-survey-open-names',
@@ -753,6 +1311,26 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     license: 'Open Government Licence',
     notes: 'Official GB administrative boundary data for counties, districts, wards, and parishes.',
+  },
+  'ordnance-survey-open-uprn': {
+    id: 'ordnance-survey-open-uprn',
+    name: 'OS Open UPRN',
+    url: 'https://www.ordnancesurvey.co.uk/products/os-open-uprn',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open Government Licence v3.0',
+    notes: 'Authoritative GB UPRN identifiers and coordinate references for addressable locations; not full addresses or building footprints.',
+  },
+  'ordnance-survey-openmap-local': {
+    id: 'ordnance-survey-openmap-local',
+    name: 'OS OpenMap Local',
+    url: 'https://www.ordnancesurvey.co.uk/products/os-open-map-local',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Open Government Licence v3.0',
+    notes: 'Generalised GB building geometry and street-level context; proximity to a UPRN is not an exact premise relationship.',
   },
   'ideal-postcodes-reference': {
     id: 'ideal-postcodes-reference',
@@ -826,6 +1404,85 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Norwegian national geodata catalog for addresses, boundaries, roads, elevation, and place-name datasets.',
   },
+  'posten-bring-norway-postcode-register': {
+    id: 'posten-bring-norway-postcode-register',
+    name: 'Posten Bring Norway Postcode Register',
+    url: 'https://www.bring.no/en/services/address-verification-services/postcodes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit postcode register with G street-address, P post-office-box, B both and S special-service classes. It supplies assignment metadata, no polygon; Svalbard and Jan Mayen classification and exact redistribution terms must remain explicit.',
+  },
+  'kartverket-norway-postcode-areas': {
+    id: 'kartverket-norway-postcode-areas',
+    name: 'Kartverket Postnummerområder',
+    url: 'https://kartkatalog.geonorge.no/metadata/postnummeromraader/462a5297-33ef-438a-82a5-07fff5799be3',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official postcode areal extent with post-office-box codes additional to the area partition and a monthly end-of-month update cycle except July and December. A missing feature remains non-area; no invented area is allowed.',
+  },
+  'kartverket-norway-address-api': {
+    id: 'kartverket-norway-address-api',
+    name: 'Kartverket Address REST API',
+    url: 'https://ws.geonorge.no/adresser/v1/',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0; pin the exact distribution record',
+    notes: 'Public API for individual official address lookups; larger bulk use must come from the published download distribution. An address point is not a building footprint.',
+  },
+  'kartverket-norway-matrikkelen-address': {
+    id: 'kartverket-norway-matrikkelen-address',
+    name: 'Kartverket Matrikkelen Address',
+    url: 'https://kartkatalog.geonorge.no/metadata/matrikkelen-adresse/f7df7a18-b30f-4745-bd64-d0863812350c',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official address identity and point geometry with postcode district membership. An official address point is not a building footprint.',
+  },
+  'kartverket-norway-matrikkelen-address-unit': {
+    id: 'kartverket-norway-matrikkelen-address-unit',
+    name: 'Kartverket Matrikkelen Address Apartment Level',
+    url: 'https://kartkatalog.geonorge.no/metadata/matrikkelen-adresse-leilighetsnivaa/365b0591-b536-42a6-a20d-22e404fbfe55',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official dwelling-unit address data: addressId plus bruksenhetId form the composite identity. A unit record is not an occupant or household identity.',
+  },
+  'kartverket-norway-matrikkelen-building-points': {
+    id: 'kartverket-norway-matrikkelen-building-points',
+    name: 'Kartverket Matrikkelen Building Point',
+    url: 'https://kartkatalog.geonorge.no/metadata/matrikkelen-bygningspunkt/24d7e9d1-87f6-45a0-b38e-3447f8d7f9a1',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official building number, status and representation point with address and property identifiers. The representation point is not a footprint.',
+  },
+  'geovekst-norway-fkb-buildings': {
+    id: 'geovekst-norway-fkb-buildings',
+    name: 'Geovekst FKB-Bygning',
+    url: 'https://kartkatalog.geonorge.no/metadata/uuid/8b4304ea-4fb0-479c-a24d-fa225e2c6e97',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Norge digitalt licence; private actors require purchased access',
+    notes: 'Detailed building geometry has a stated 1:1 relation to Matrikkelen building number, but access is restricted and is not generally redistributable. Use only under separately pinned rights.',
+  },
+  'kartverket-norway-administrative-units': {
+    id: 'kartverket-norway-administrative-units',
+    name: 'Kartverket Administrative Units',
+    url: 'https://kartkatalog.geonorge.no/metadata/administrative-enheter-kommuner/041f1e6e-bdbc-4091-b48f-8a5990f3cc5b',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official county and municipality context, including multilingual names. Administrative units are not postcode areas and do not decide the NO versus ISO SJ territory partition.',
+  },
   'brreg-address-register': {
     id: 'brreg-address-register',
     name: 'Norway Address Register Reference',
@@ -844,6 +1501,24 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'European address and postal-code API reference; use where open alternatives are limited.',
   },
+  'postnord-dk-postcode-finder': {
+    id: 'postnord-dk-postcode-finder',
+    name: 'PostNord Denmark Postcode Finder',
+    url: 'https://www.postnord.dk/varktojer/find-postnummer/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'PostNord maintains Danish postcode assignment; the finder validates assignment and names, not polygon geometry.',
+  },
+  'dagi-denmark-postcode-areas': {
+    id: 'dagi-denmark-postcode-areas',
+    name: 'DAGI Postnummerinddeling',
+    url: 'https://confluence.sdfi.dk/display/DAGI/Postnummerinddeling',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official DAGI GM_MultiSurface postcode geometry; preserve ErGadepostnummer street-postcode status and bitemporal validity and registration intervals.',
+  },
   'dataforsyningen-denmark': {
     id: 'dataforsyningen-denmark',
     name: 'Dataforsyningen Denmark',
@@ -851,16 +1526,43 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'geocoding',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Danish national geodata service for address, cadastral, map, and geocoding reference.',
+    notes: 'Dataforsyningen and DAWA expose convenient DAGI and DAR views; they are delivery interfaces, not independent authority for postal assignment or address identity.',
   },
   'danish-address-register-dar': {
     id: 'danish-address-register-dar',
     name: 'Danish Address Register DAR',
-    url: 'https://danmarksadresser.dk/',
+    url: 'https://danmarksadresser.dk/om-adresser/danmarks-adresseregister-dar',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Official Danish address register for road names, house numbers, postal towns, and municipalities.',
+    usage: 'primary',
+    notes: 'Official DAR address UUID and access-point evidence includes source-backed building references; an access point is not footprint geometry.',
+  },
+  'bbr-denmark-buildings': {
+    id: 'bbr-denmark-buildings',
+    name: 'Danish Building and Dwelling Register (BBR)',
+    url: 'https://bbr.dk/bbr',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Statutory BBR register provides public building identity and attributes subject to field-specific distribution and privacy rules; identity is not a footprint by itself.',
+  },
+  'geodanmark-buildings': {
+    id: 'geodanmark-buildings',
+    name: 'GeoDanmark Buildings',
+    url: 'https://www.geodanmark.dk/home/vejledninger/geokoderen_vejledning/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Building geometry becomes exact only through an explicit DAR or BBR relation; containment and proximity remain candidate evidence under GeoDanmark-specific terms.',
+  },
+  'dagi-denmark-boundaries': {
+    id: 'dagi-denmark-boundaries',
+    name: 'DAGI Administrative Boundaries',
+    url: 'https://confluence.sdfi.dk/display/DAGI/DAGI',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official region and municipality context is administrative evidence and never postal geometry.',
   },
   geodanmark: {
     id: 'geodanmark',
@@ -869,7 +1571,94 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Danish topographic and geospatial reference data for map and administrative validation.',
+    notes: 'Compatibility catalog entry for Danish topographic data; prefer the explicit GeoDanmark building and DAGI boundary source identities for Postal Context lineage.',
+  },
+  'posti-finland-postal-code-services': {
+    id: 'posti-finland-postal-code-services',
+    name: 'Posti Finland Postal Code Services',
+    url: 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit postcode assignments retain release/effective time and terms; the file has no map data and is not a delivery perimeter or canonical polygon.',
+  },
+  'posti-finland-basic-address-file': {
+    id: 'posti-finland-basic-address-file',
+    name: 'Posti Finland Basic Address File',
+    url: 'https://www.posti.fi/en/for-businesses/customer-support/postal-code-services',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official street, municipality and house-number-selection membership updated weekly; it excludes Aland, supplies no geometry and is not a premise or building register.',
+  },
+  'statistics-finland-paavo-postal-areas': {
+    id: 'statistics-finland-paavo-postal-areas',
+    name: 'Statistics Finland Paavo Postal Code Areas',
+    url: 'https://stat.fi/en/services/statistical-data-services/geographic-data/geographic-data-by-postal-code-area',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Annual official-derived statistical areas generalized from building-address postcodes; an address postcode may differ, and release year plus sea/coastline variant are mandatory. Paavo is not a Posti delivery perimeter or canonical postal polygon.',
+  },
+  'dvv-finland-building-dwelling-register': {
+    id: 'dvv-finland-building-dwelling-register',
+    name: 'DVV Population Information System Building and Dwelling Register',
+    url: 'https://asiakastesti.elamantapahtumat.vtj.dvv.fi/doc/en',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled statutory or contract access; field-specific output rights',
+    notes: 'Authoritative building, dwelling, address and permanent identifiers require authorized access; this is not a public bulk mirror, and resident, occupant, owner and rightsholder fields are excluded.',
+  },
+  'syke-finland-ryhti-building-addresses': {
+    id: 'syke-finland-ryhti-building-addresses',
+    name: 'SYKE Ryhti Open Building and Address Data',
+    url: 'https://ryhti.syke.fi/en/front-page/services/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Dataset-specific open terms, normally CC BY 4.0; pin exact distribution',
+    notes: 'Open completed buildings and building addresses may carry a permanent identifier and explicit relation. Municipal transition continues through 2028, and detailed building fields can require a contract, so coverage is never assumed complete.',
+  },
+  'nls-finland-topographic-road-addresses': {
+    id: 'nls-finland-topographic-road-addresses',
+    name: 'NLS Finland Topographic Road Addresses',
+    url: 'https://www.maanmittauslaitos.fi/en/maps-and-spatial-data/datasets-and-interfaces/product-descriptions/topographic-database',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official open road-address locations can be calculated or interpolated; they are not exact entrances, building footprints or exact address-to-building links.',
+  },
+  'nls-finland-topographic-buildings': {
+    id: 'nls-finland-topographic-buildings',
+    name: 'NLS Finland Topographic Buildings',
+    url: 'https://www.maanmittauslaitos.fi/en/maps-and-spatial-data/datasets-and-interfaces/product-descriptions/topographic-database',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official open topographic building geometry is an independent feature. An exact address link requires a common identifier or reviewed crosswalk; containment, parcel and nearest matching are not exact.',
+  },
+  'nls-finland-municipal-division': {
+    id: 'nls-finland-municipal-division',
+    name: 'NLS Finland Administrative Divisions',
+    url: 'https://www.maanmittauslaitos.fi/en/maps-and-spatial-data/datasets-and-interfaces',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official region, subregion and municipality context is administrative evidence and not postcode assignment, postal geometry or delivery evidence.',
+  },
+  'aland-post-postal-services': {
+    id: 'aland-post-postal-services',
+    name: 'Aland Post Postal Services',
+    url: 'https://www.alandpost.ax/en/post-offices-and-agents',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official AX postal-operator reference. Posti Basic Address File excludes Aland, so postcode-level evidence is not expanded to street or geometry and FI/AX records never silently merge.',
   },
   'avoindata-fi-postcodes': {
     id: 'avoindata-fi-postcodes',
@@ -907,6 +1696,15 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'Finnish registry/open-data reference for municipality and address-related validation.',
   },
+  'latvijas-pasts-check-address': {
+    id: 'latvijas-pasts-check-address',
+    name: 'Latvijas Pasts Postcode Directory',
+    url: 'https://pasts.lv/en/services/tariffs-and-information/postcode-book',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Latvijas Pasts postcode and address-membership directories, including street/house-number and special-organization assignments; directory membership is not a canonical postcode boundary.',
+  },
   'kartes-lv-postal-codes': {
     id: 'kartes-lv-postal-codes',
     name: 'Baltic Postal Codes API',
@@ -928,11 +1726,29 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'vzd-latvia-address-register': {
     id: 'vzd-latvia-address-register',
     name: 'Latvia State Land Service Address Register',
-    url: 'https://www.vzd.gov.lv/en',
+    url: 'https://data.gov.lv/dati/dataset/varis-atvertie-dati',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Latvian address register and cadastral reference for street, building, village, and municipality validation.',
+    usage: 'primary',
+    notes: 'Official VZD State Address Register open data under CC BY 4.0, updated weekly with address codes, lifecycle, coordinates, cadastral relations, and postcode attributes that still require Latvijas Pasts cross-checking.',
+  },
+  'vzd-latvia-cadastral-buildings': {
+    id: 'vzd-latvia-cadastral-buildings',
+    name: 'VZD Latvia Open Cadastral Buildings',
+    url: 'https://data.gov.lv/dati/dataset/kadastra-informacijas-sistemas-atverti-telpiskie-dati',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official CC BY 4.0 cadastral building external contours; exact address-to-building display requires an explicit stable VZD relation, while nearest or containment matches remain candidates.',
+  },
+  'vzd-latvia-administrative-boundaries': {
+    id: 'vzd-latvia-administrative-boundaries',
+    name: 'VZD Latvia Address Register Boundaries',
+    url: 'https://www.vzd.gov.lv/lv/pakalpojumi/valsts-adresu-registra-atvertie-dati-0',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official municipality, village, and road context from the VZD Address Register; these geometries cannot create, clip, or replace a Latvijas Pasts postcode assignment.',
   },
   'data-gov-lv-geodata': {
     id: 'data-gov-lv-geodata',
@@ -970,6 +1786,75 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Estonian national map service for cadastral, address, and place-name reference layers.',
   },
+  'omniva-estonia-postcodes': {
+    id: 'omniva-estonia-postcodes',
+    name: 'Omniva Estonia ZIP Codes',
+    url: 'https://www.omniva.ee/en/zip-codes/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public operator search and download; review Omniva terms for redistribution',
+    notes: 'Official address-to-postcode search and download from Estonia postal operator; postal routing evidence is distinct from ADS geometry and delivery guarantees.',
+  },
+  'estonia-aks-postal-codes': {
+    id: 'estonia-aks-postal-codes',
+    name: 'Estonia AKS Postal Codes',
+    url: 'https://geoportaal.maaamet.ee/eng/spatial-data/address-data/postal-codes-p661.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open address data; attribute Estonian Land and Spatial Development Board and extraction date',
+    notes: 'Monthly current-address extract and AKS/ADS query evidence with ADR_ID, five-digit postcode and reference coordinates, based on Omniva postal zones.',
+  },
+  'estonia-aks-postal-areas': {
+    id: 'estonia-aks-postal-areas',
+    name: 'Estonia AKS Postal Code Areas',
+    url: 'https://geoportaal.maaamet.ee/eng/services/public-wms-wfs-p346.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open spatial data; attribute Estonian Land and Spatial Development Board and extraction date',
+    notes: 'Official public AKS OGC postal-code-area layer derived from Omniva-managed zones; pin service schema, CRS, retrieval time and digest.',
+  },
+  'estonia-aks-address-objects': {
+    id: 'estonia-aks-address-objects',
+    name: 'Estonia AKS/ADS Address Objects',
+    url: 'https://geoportaal.maaamet.ee/eng/spatial-data/address-data-p313.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open data; attribute Estonian Land and Spatial Development Board',
+    notes: 'Official addresses for parcels, buildings and building parts with stable ADS_OID, version ADOB_ID, object type, history and geometry.',
+  },
+  'estonia-aks-building-shapes': {
+    id: 'estonia-aks-building-shapes',
+    name: 'Estonia AKS/ADS Building Shapes',
+    url: 'https://geoportaal.maaamet.ee/eng/services/public-wms-wfs-p346.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open spatial data; attribute Estonian Land and Spatial Development Board and extraction date',
+    notes: 'Official ADS building point and polygon layers; a definitive address-to-building display requires the shared ADS object path, not proximity.',
+  },
+  'estonia-ehak-admin-boundaries': {
+    id: 'estonia-ehak-admin-boundaries',
+    name: 'Estonia EHAK Administrative and Settlement Division',
+    url: 'https://geoportaal.maaamet.ee/eng/Spatial-Data/Administrative-and-Settlement-Division-p312.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Unrestricted use with provider and validity-date attribution',
+    notes: 'Official county, municipality and settlement geometry with EHAK codes; administrative context is not a postal-code boundary.',
+  },
+  'lietuvos-pastas-postcode-search': {
+    id: 'lietuvos-pastas-postcode-search',
+    name: 'Lietuvos pastas Postal Code and Address Search',
+    url: 'https://www.post.lt/post/codes/search',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Lietuvos paštas search returns address and municipality membership for a five-digit code; it is assignment evidence, not an official postcode boundary.',
+  },
   'geoportal-lt': {
     id: 'geoportal-lt',
     name: 'Lithuania Geoportal',
@@ -981,12 +1866,33 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'registru-centras-address-register': {
     id: 'registru-centras-address-register',
-    name: 'Registru Centras Address Register Lithuania',
-    url: 'https://www.registrucentras.lt/',
+    name: 'Registrų centras Address Register Address Points',
+    url: 'https://data.gov.lt/datasets/1351/',
     kind: 'address',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Lithuanian address register and cadastral reference for municipality, street, and building validation.',
+    usage: 'primary',
+    license: 'CC BY 4.0; attribute Registrų centras and indicate modifications',
+    notes: 'CC BY 4.0 official address points for parcels, buildings and premises support civic identity and postal assignment cross-checking; they are not postal-operator boundaries.',
+  },
+  'registru-centras-ntr-buildings': {
+    id: 'registru-centras-ntr-buildings',
+    name: 'Registrų centras NTR Building Boundaries',
+    url: 'https://data.gov.lt/datasets/2838/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0; attribute Registrų centras and indicate modifications',
+    notes: 'Official NTR building boundaries may be exact only through an explicit registry relation or reviewed crosswalk; proximity remains candidate evidence.',
+  },
+  'registru-centras-address-boundaries': {
+    id: 'registru-centras-address-boundaries',
+    name: 'Registrų centras Address Register Administrative Geometry',
+    url: 'https://data.gov.lt/datasets/?q=Adres%C5%B3+registro+savivaldybi%C5%B3+erdviniai+duomenys',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0; attribute Registrų centras and indicate modifications',
+    notes: 'Official municipality, eldership, settlement and street context cannot create, clip or replace a Lietuvos paštas postcode assignment.',
   },
   'open-data-lithuania': {
     id: 'open-data-lithuania',
@@ -1005,6 +1911,56 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'europe',
     usage: 'reference',
     notes: 'Open Data Index postal-code references for countries with listed postcode data.',
+  },
+  'posturinn-iceland-postcodes': {
+    id: 'posturinn-iceland-postcodes',
+    name: 'Pósturinn Iceland Postcode Regions',
+    url: 'https://posturinn.is/einstaklingar/ymsar-upplysingar/verdskra/svaedaskipting-postnumera/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public web reference; operator terms apply',
+    notes: 'Official Pósturinn postcode groupings and rural-service context; reference evidence, not a bulk polygon or deliverability dataset.',
+  },
+  'byggdastofnun-iceland-postcode-register': {
+    id: 'byggdastofnun-iceland-postcode-register',
+    name: 'Byggðastofnun Iceland Postcode Register and Geographic Coverage',
+    url: 'https://www.byggdastofnun.is/is/postthjonusta/postnumer',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Icelandic public-sector information; verify metadata/download-service terms and attribution',
+    notes: 'Byggðastofnun has statutory authority to determine postcode boundaries and publish the register and geographic coverage; pin edition, CRS, schema, terms, attribution, and digest from the metadata download service.',
+  },
+  'hms-iceland-address-register': {
+    id: 'hms-iceland-address-register',
+    name: 'HMS Staðfangaskrá',
+    url: 'https://hms.is/gogn-og-maelabord/grunngogntilnidurhals/stadfangaskra',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Icelandic public-sector reuse with attribution',
+    notes: 'Official weekly address register with postcode, stable identifiers, coordinate type, review status, and estimated accuracy.',
+  },
+  'natt-is50v-buildings': {
+    id: 'natt-is50v-buildings',
+    name: 'Náttúrufræðistofnun IS 50V Buildings',
+    url: 'https://www.natt.is/en/resources/geospatial-data/base-map-data',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Icelandic public-sector reuse with attribution; verify layer metadata',
+    notes: 'Official 1:50,000 topographic building geometry; not an exact address-to-building link from proximity or containment.',
+  },
+  'statistics-iceland-geography': {
+    id: 'statistics-iceland-geography',
+    name: 'Statistics Iceland Municipalities and Urban Nuclei',
+    url: 'https://www.statice.is/statistics/population/inhabitants/municipalities-and-urban-nuclei/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0',
+    notes: 'Official statistical and administrative context; municipalities and urban nuclei are not postcode boundaries.',
   },
   'lmmi-iceland': {
     id: 'lmmi-iceland',
@@ -1044,12 +2000,92 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'elta-gr': {
     id: 'elta-gr',
-    name: 'ELTA Postal Code Search',
-    url: 'https://itemsearch.elta.gr/en-GB/',
+    name: 'ELTA Postal Code and Address Finder',
+    url: 'https://postalcodes.elta.gr/en/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Greek postal-code search.',
+    license: 'Public web reference; ELTA terms apply',
+    notes: 'Official five-digit postcode and address finder. A web result, code pattern, post office, locality, street, or island route is assignment evidence only and does not publish a reusable postcode polygon or guarantee delivery.',
+  },
+  'gisco-greece-postcode-points': {
+    id: 'gisco-greece-postcode-points',
+    name: 'Eurostat GISCO Greece Postal Code Points',
+    url: 'https://ec.europa.eu/eurostat/web/gisco/geodata/administrative-units/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY-SA 4.0',
+    notes: 'Official-derived point geography for NUTS correspondence. It may omit or mislocate codes and excludes many non-geographic codes; a point, Voronoi cell, buffer, or NUTS match is never an ELTA perimeter.',
+  },
+  'elstat-greece-digital-cartography': {
+    id: 'elstat-greece-digital-cartography',
+    name: 'ELSTAT Digital Cartographic Data',
+    url: 'https://www.statistics.gr/en/digital-cartographical-data',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Controlled/requested cartographic material; exact product and request terms apply',
+    notes: 'Official census-vintage street axes, blocks, building outlines and statistical/administrative context with locality and year-specific coverage. Request and third-party rights must be pinned; the layers are not current nationwide address identity, postal assignment, or legal-boundary proof.',
+  },
+  'greece-national-streets-numbers-plan': {
+    id: 'greece-national-streets-numbers-plan',
+    name: 'Greece National Streets and Numbers Register Plan',
+    url: 'https://digitalstrategy.gov.gr/project/mitroo_odon_kai_arithmon',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official digital-transformation project for municipality-maintained street and number updates. A project description is not a live national address dataset, API, building register, or redistribution grant.',
+  },
+  'poste-italiane-cap-search': {
+    id: 'poste-italiane-cap-search',
+    name: 'Poste Italiane CAP Search',
+    url: 'https://www.poste.it/cap',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public web reference; Poste Italiane terms apply',
+    notes: 'Official five-digit CAP search and change reference; not a reusable bulk dataset, official polygon source, or deliverability guarantee.',
+  },
+  'poste-italiane-cap-professional': {
+    id: 'poste-italiane-cap-professional',
+    name: 'Poste Italiane CAP Professional',
+    url: 'https://business.poste.it/professionisti-imprese/prodotti/cap-professional.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Commercial licensed data; contract-specific redistribution',
+    notes: 'Official locality, multiCAP city-zone, street-arc, and house-number range assignment; no open redistribution or official polygon claim.',
+  },
+  'anncsu-italy-addresses': {
+    id: 'anncsu-italy-addresses',
+    name: 'ANNCSU Italian Streets and Civic Numbers',
+    url: 'https://www.anncsu.gov.it/it/consultazione-dellarchivio/open-data/index.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official national street and civic-number register with monthly bulk and daily API updates; coordinates when present are not exact building links.',
+  },
+  'istat-italy-admin-boundaries': {
+    id: 'istat-italy-admin-boundaries',
+    name: 'ISTAT Administrative Boundaries',
+    url: 'https://www.istat.it/notizia/confini-delle-unita-amministrative-a-fini-statistici-al-1-gennaio-2018-2/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 3.0 Italy unless otherwise indicated',
+    notes: 'Official regions, provinces, metropolitan cities, and municipalities in WGS84; administrative context and derivation clip, never a CAP boundary.',
+  },
+  'italy-regional-dbgt-buildings': {
+    id: 'italy-regional-dbgt-buildings',
+    name: 'Italian Regional and Municipal DBGT Buildings',
+    url: 'https://geodati.gov.it/geoportale/datiterritoriali/regole-tecniche',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Federated per-dataset terms; review every provider and release',
+    notes: 'DBGT provides a national content specification, while actual building geometry is federated; proximity alone is not an exact civic-to-building link.',
   },
   'istat-italy-geodata': {
     id: 'istat-italy-geodata',
@@ -1134,12 +2170,13 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'ktimatologio-greece': {
     id: 'ktimatologio-greece',
-    name: 'Hellenic Cadastre',
-    url: 'https://www.ktimatologio.gr/',
+    name: 'Hellenic Cadastre Geoportal and INSPIRE Data',
+    url: 'https://maps.ktimatologio.gr/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Greek cadastre and mapping reference for municipalities, parcels, and address-adjacent geography.',
+    license: 'Geoportal general terms plus dataset-specific open-data/INSPIRE terms',
+    notes: 'Official cadastral and geospatial reference. Each layer retains its own licence, attribution, coverage and restrictions; parcels, rights, owners and proximity do not prove an addressed building or postcode membership.',
   },
   'geodata-gov-gr': {
     id: 'geodata-gov-gr',
@@ -1159,19 +2196,55 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Greek mapping/cadastre reference for historic OKXE-aligned national geospatial layers.',
   },
+  'maltapost-postcode-finder': {
+    id: 'maltapost-postcode-finder',
+    name: 'MaltaPost Postcode Finder',
+    url: 'https://www.maltapost.com/postcode/?l=1',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official MaltaPost address-based postcode assignment and seven-character format evidence; a finder result is not polygon or building geometry.',
+  },
+  'malta-office-address-registrar': {
+    id: 'malta-office-address-registrar',
+    name: 'Malta Office of the Address Registrar',
+    url: 'https://portal.data.gov.mt/data-service/about/address-register',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The OAR Address Register is intended as the primary source of address information, but current portal contents are work in progress and require confirmation before being treated as official records.',
+  },
+  'malta-oar-location-registers': {
+    id: 'malta-oar-location-registers',
+    name: 'Malta OAR Location Registers',
+    url: 'https://address.gov.mt/locate-a-street/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official regions, localities, local councils and streets provide address context and Gazette lineage, not postal geometry.',
+  },
+  'malta-pa-large-scale-topography-buildings': {
+    id: 'malta-pa-large-scale-topography-buildings',
+    name: 'Malta Large Scale Topography Buildings',
+    url: 'https://portal.data.gov.mt/dataset/large-scale-topography-buildings',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Planning Authority Buildings 2D are available through WFS/WMS; exact address linkage requires an explicit identifier or reviewed crosswalk, while containment and proximity remain candidate evidence.',
+  },
   'pa-malta-geoserver': {
     id: 'pa-malta-geoserver',
     name: 'Planning Authority Malta GeoServer',
     url: 'https://geoserver.pa.org.mt/',
-    kind: 'admin-boundary',
+    kind: 'geocoding',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Malta Planning Authority geospatial services for local councils, streets, development zones, and map layers.',
+    notes: 'Planning Authority map search provides planning and location context, not independent address or postal authority.',
   },
   'nso-malta-geodata': {
     id: 'nso-malta-geodata',
     name: 'National Statistics Office Malta Geodata',
-    url: 'https://nso.gov.mt/',
+    url: 'https://nso.gov.mt/maps/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'validation',
@@ -1184,7 +2257,7 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'address',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Malta government identity and civil registry reference useful for locality and address naming conventions.',
+    notes: 'Compatibility-only identity/civil-registry reference; person and resident data must not be used as public Postal Context evidence.',
   },
   'san-marino-geoportal': {
     id: 'san-marino-geoportal',
@@ -1204,23 +2277,60 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'San Marino official statistical geography for castelli and settlement validation.',
   },
+  'la-poste-official-postal-codes-monaco': {
+    id: 'la-poste-official-postal-codes-monaco',
+    name: 'La Poste Official Postal Codes - Monaco Scope',
+    url: 'https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Licence Ouverte / Open Licence 2.0',
+    notes: 'Official La Poste code-to-routing-label data includes Monaco; the catalogue explicitly says postcode contours are not provided as open data.',
+  },
+  'la-poste-monaco-addressing': {
+    id: 'la-poste-monaco-addressing',
+    name: 'La Poste Monaco Addressing Publications',
+    url: 'https://www.lapostemonaco.mc/2025_tarif_entreprises.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official addressing and CEDEX presentation evidence; published examples are not a complete allocation table or geometry source.',
+  },
+  'monaco-dpum-address-base': {
+    id: 'monaco-dpum-address-base',
+    name: 'Monaco DPUM Address Base',
+    url: 'https://www.gouv.mc/content/download/526542/6039959/file/Rapport%20Recensement%202023.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Government material confirms an internal DPUM address base covering Monaco buildings; production use requires a licensed extract, field allow-list and privacy review.',
+  },
+  'monaco-dpum-building-topography': {
+    id: 'monaco-dpum-building-topography',
+    name: 'Monaco DPUM Building and Topography SIG',
+    url: 'https://journaldemonaco.gouv.mc/Journaux/2023/Journal-8666/Avis-de-recrutement-n-2023-209-d-un-Chef-de-Division-Responsable-du-Pole-Informations-Geographiques-Topographie-3D-S.I.G.-foncier-a-la-Direction-de-la-Prospective-de-l-Urbanisme-et-de-la-Mobilite',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The official notice confirms an internal SIG for streets, addresses, buildings and parcels; it is system metadata, not a public building dataset or redistribution grant.',
+  },
   'monaco-gouv-cartography': {
     id: 'monaco-gouv-cartography',
-    name: 'Government of Monaco Cartography',
-    url: 'https://en.gouv.mc/',
+    name: 'Government of Monaco DPUM Urban Plans',
+    url: 'https://urbamonaco.gouv.mc/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Monaco government cartographic and administrative reference for quartiers, streets, and delivery geography.',
+    notes: 'Dated official regulatory-zone and planning context; plan linework is not automatically current postal or building geometry.',
   },
   'monaco-imsee-geodata': {
     id: 'monaco-imsee-geodata',
-    name: 'IMSEE Monaco Geodata',
-    url: 'https://www.imsee.mc/',
-    kind: 'gazetteer',
+    name: 'IMSEE Monaco Territorial Statistics',
+    url: 'https://www.imsee.mc/Publications/Monaco-en-chiffres-edition-2025',
+    kind: 'admin-boundary',
     coverage: 'country',
-    usage: 'validation',
-    notes: 'Monaco statistical and territorial reference for districts and address-adjacent geography.',
+    usage: 'reference',
+    notes: 'Official statistical district and territorial context; it is not postal assignment, address identity or building-link evidence.',
   },
   'vatican-city-state': {
     id: 'vatican-city-state',
@@ -1241,14 +2351,41 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     license: 'ODbL',
     notes: 'OSM relation and address-adjacent place reference for Vatican City where official open APIs are limited.',
   },
+  'correos-andorra-postcodes': {
+    id: 'correos-andorra-postcodes',
+    name: 'Correos Official Postcode Database - Andorra Scope',
+    url: 'https://www.correos.es/es/es/empresas/marketing/identifica-a-tus-clientes-potenciales/base-de-datos-de-codigos-postales',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Licensed official postcode database expressly includes Andorra rows. Any polygon authority requires the contract and product manifest to prove Andorra scope; the public product page is not a data license.',
+  },
+  'andorra-urban-address-guide': {
+    id: 'andorra-urban-address-guide',
+    name: 'Govern d’Andorra Urban Address Guide',
+    url: 'https://www.cartografia.ad/guia-urbana',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official search and location service for postal addresses, streets, and points of interest. Interactive availability is not a bulk extraction, retention, or redistribution license, and an address point is not a building footprint.',
+  },
+  'andorra-topographic-buildings': {
+    id: 'andorra-topographic-buildings',
+    name: 'Andorra 1:5,000 Topographic Buildings',
+    url: 'https://www.cartografia.ad/base-topografica-d-andorra-1-5-000',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official national topographic building geometry with stated scale and accuracy. Exact address display requires a common authoritative identifier or reviewed crosswalk; proximity and containment remain candidates, and dataset conditions of use must be pinned.',
+  },
   'andorra-cartografia': {
     id: 'andorra-cartografia',
-    name: 'Andorra Cartography and GIS',
-    url: 'https://www.cartografia.ad/',
+    name: 'IDE Andorra Cartography and Parish Boundaries',
+    url: 'https://www.cartografia.ad/geoportal',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Andorran cartographic reference for parishes, roads, buildings, and national geodata.',
+    notes: 'Official IDE and OGC catalog for parish boundaries, toponyms, and geodata. Layer-by-layer producer, conditions of use, schema, coverage, vintage, CRS, and digest review is required; a parish boundary is not automatically a full-code postal polygon.',
   },
   'andorra-open-data': {
     id: 'andorra-open-data',
@@ -1285,6 +2422,69 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Cyprus INSPIRE spatial data infrastructure for boundaries and national geospatial validation layers.',
+  },
+  'cyprus-post-postcode-directory': {
+    id: 'cyprus-post-postcode-directory',
+    name: 'Cyprus Post Code Directory and Street Assignments',
+    url: 'https://data.gov.cy/el/dataset/odigos-tahydromikoy-kodika-post-code-directory',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official annual CC BY 4.0 four-digit codes remain text; locality, street, and street-range assignments are not automatically a postal polygon or delivery guarantee.',
+  },
+  'cyprus-post-postcode-api': {
+    id: 'cyprus-post-postcode-api',
+    name: 'Cyprus Post Postal Codes API',
+    url: 'https://www.cypruspost.post/en/api-postal-codes',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official request-based postcode search API for current validation. Access, service availability, retention, and rate terms remain operational and controlled; API access is not a bulk license or geometry authority.',
+  },
+  'cyprus-dls-inspire-addresses': {
+    id: 'cyprus-dls-inspire-addresses',
+    name: 'Cyprus DLS INSPIRE Addresses',
+    url: 'https://www.data.gov.cy/el/dataset/dieythynseis-addresses-inspire',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official CC BY 4.0 DLS address points, locators, identifiers, and address-building/address-parcel relationship tables. Point, building relation, and parcel relation remain distinct and need pinned coverage and vintage.',
+  },
+  'cyprus-dls-inspire-buildings': {
+    id: 'cyprus-dls-inspire-buildings',
+    name: 'Cyprus DLS INSPIRE Buildings',
+    url: 'https://www.data.gov.cy/el/dataset/ktiria-inspire',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CC BY 4.0 DLS building features and footprints. Exact address-to-building display requires an explicit relationship or reviewed identifier crosswalk; containment and proximity are candidate-only.',
+  },
+  'cyprus-dls-administrative-units': {
+    id: 'cyprus-dls-administrative-units',
+    name: 'Cyprus DLS INSPIRE Administrative Units',
+    url: 'https://www.data.gov.cy/index.php/el/dataset/dioikitikes-enotites-administrative-units-inspire',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CC BY 4.0 district, municipality/community, quarter, and outline context. Administrative geometry is not postal membership, Cyprus Post service coverage, effective control, or a sovereignty decision.',
+  },
+  'cystat-postal-sectors': {
+    id: 'cystat-postal-sectors',
+    name: 'CYSTAT Statistical Postal Sectors',
+    url: 'https://www.data.gov.cy/en/dataset/481',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official CC BY 4.0 statistical postal-sector geometry tied to census/reference time; it is not a current Cyprus Post perimeter and does not prove address membership or deliverability.',
+  },
+  'eu-cyprus-protocol-10': {
+    id: 'eu-cyprus-protocol-10',
+    name: 'EU Cyprus Protocol 10',
+    url: 'https://eur-lex.europa.eu/eli/treaty/acc_2003/act_1/pro_10/sign/eng',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official legal context for areas where the Republic government does not exercise effective control and Green Line/SBA treatment. Effective control, EU-law application, postal service, country identity, and sovereignty remain separate assertions.',
   },
   'datahub-postal': {
     id: 'datahub-postal',
@@ -1343,30 +2543,147 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   },
   'ceska-posta-psc': {
     id: 'ceska-posta-psc',
-    name: 'Ceska posta PSC Search',
-    url: 'https://www.postaonline.cz/vyhledani-psc',
+    name: 'Česká pošta PSČ Search',
+    url: 'https://www.postaonline.cz/vyhledat-psc',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Czech postal-code lookup.',
+    notes: 'Official current PSČ, municipality, street and house-number routing lookup; a search result is assignment evidence, not a postal polygon.',
+  },
+  'ceska-posta-customer-outputs': {
+    id: 'ceska-posta-customer-outputs',
+    name: 'Česká pošta Certified Customer Outputs',
+    url: 'https://www.ceskaposta.cz/ke-stazeni/zakaznicke-vystupy',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official downloadable PSČ, address-PSČ, municipality and no-delivery-service lists. They are routing assignment evidence, not polygon authority; pin each certified release and rights receipt.',
   },
   'cuzk-ruian': {
     id: 'cuzk-ruian',
-    name: 'CUZK RUIAN',
-    url: 'https://www.cuzk.cz/',
+    name: 'ČÚZK VDP RÚIAN',
+    url: 'https://vdprefb.cuzk.gov.cz/vdp/ruian',
     kind: 'address',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Czech national register of territorial identification, addresses, and real estate for address validation.',
+    notes: 'Free public RÚIAN view and VFR download entry. VDP evidence is informational; legally referenceable basic-register evidence must preserve its separate source status.',
+  },
+  'cuzk-ruian-addresses': {
+    id: 'cuzk-ruian-addresses',
+    name: 'ČÚZK RÚIAN Address Places CSV',
+    url: 'https://geoportal.cuzk.cz/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official municipality-partitioned address places with stable codes, address components, PSČ, validity and S-JTSK definition points; points are not building footprints.',
+  },
+  'cuzk-ruian-vfr': {
+    id: 'cuzk-ruian-vfr',
+    name: 'ČÚZK RÚIAN Exchange Format (VFR)',
+    url: 'https://www.cuzk.gov.cz/Uvod/Produkty-a-sluzby/RUIAN/2-Poskytovani-udaju-RUIAN-ISUI-VDP/Vymenny-format-RUIAN-%28VFR%29.aspx',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official RÚIAN identifiers, relationships, definition points, street lines and polygons. Exact address-to-building display requires an explicit parent building or ISKN identifier.',
+  },
+  'cuzk-inspire-buildings': {
+    id: 'cuzk-inspire-buildings',
+    name: 'ČÚZK INSPIRE Buildings',
+    url: 'https://geoportal.cuzk.cz/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Public nationwide WFS and municipality ATOM/GML building geometry. Identifier linkage can be exact; footprint containment or proximity remains a candidate only.',
+  },
+  'cuzk-ruian-boundaries': {
+    id: 'cuzk-ruian-boundaries',
+    name: 'ČÚZK RÚIAN Territorial Boundaries',
+    url: 'https://geoportal.cuzk.cz/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official country, region, district, ORP, municipality and cadastral context. Administrative boundaries provide clipping and never postal geometry.',
   },
   'cuzk-geoportal': {
     id: 'cuzk-geoportal',
-    name: 'CUZK Geoportal',
+    name: 'ČÚZK Geoportal',
     url: 'https://geoportal.cuzk.cz/',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Czech cadastral and mapping geoportal for administrative and parcel-adjacent geography.',
+    notes: 'Generic discovery portal retained for compatibility; production lineage uses the explicit RÚIAN address, VFR, INSPIRE Buildings and boundary source IDs.',
+  },
+  'croatian-post-postcode-downloads': {
+    id: 'croatian-post-postcode-downloads',
+    name: 'Hrvatska pošta Post Office and Postcode Downloads',
+    url: 'https://www.posta.hr/preuzimanje-podataka-o-postanskim-uredima-6543/6543',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Permission required for redistribution',
+    notes: 'Official Excel/XML settlement-to-destination-office, post-office, Zagreb street/range, and parcel-locker downloads. Website access is not an open bulk licence; pin permission, capture time, fields, and digest before retaining or redistributing rows.',
+  },
+  'dgu-croatia-spatial-unit-register': {
+    id: 'dgu-croatia-spatial-unit-register',
+    name: 'DGU Croatia Spatial Unit Register',
+    url: 'https://dgu.gov.hr/registar-prostornih-jedinica-172/172',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Dataset-specific DGU Open Licence or issued terms',
+    notes: 'Official register includes delivery-office areas, administration, settlements, streets, buildings and house numbers. A delivery-office area becomes postcode geometry only through a pinned operator-office crosswalk; request, cost, licence, release, CRS, schema and digest remain dataset-specific.',
+  },
+  'dgu-croatia-inspire-addresses': {
+    id: 'dgu-croatia-inspire-addresses',
+    name: 'DGU Croatia INSPIRE Addresses',
+    url: 'https://geoportal.dgu.hr/services/atom/ad/xml',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Croatian Open Licence',
+    notes: 'Official anonymous address download under the DGU open-data terms. Exact display retains the address identifier, locator, hierarchy, validity, release, attribution and digest; an address feature alone does not prove current postal assignment or a building link.',
+  },
+  'dgu-croatia-inspire-buildings': {
+    id: 'dgu-croatia-inspire-buildings',
+    name: 'DGU Croatia INSPIRE Buildings',
+    url: 'https://geoportal.dgu.hr/services/atom/bu-core2d/xml',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Croatian Open Licence',
+    notes: 'Official building features and cadastral-plan WFS context. Exact address-to-building output requires an explicit relationship, common authoritative identifier or reviewed crosswalk; footprint containment and proximity are candidate-only.',
+  },
+  'dgu-croatia-inspire-administrative-units': {
+    id: 'dgu-croatia-inspire-administrative-units',
+    name: 'DGU Croatia INSPIRE Administrative Units',
+    url: 'https://geoportal.dgu.hr/services/atom/au/xml',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Croatian Open Licence',
+    notes: 'Official administrative context with separately pinned release and validity. Counties, the City of Zagreb, cities, municipalities and settlements never create postcode membership or operator delivery coverage.',
+  },
+  'dgu-croatia-cadastral-parcels': {
+    id: 'dgu-croatia-cadastral-parcels',
+    name: 'DGU Croatia INSPIRE Cadastral Parcels',
+    url: 'https://api.uredjenazemlja.hr/services/inspire/cp/wfs',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Croatian Open Licence',
+    notes: 'Official cadastral parcel geometry for candidate validation only. Parcel geometry is not a building, public address link, postal area or permission to publish land-registry owners, rightsholders, occupants or title records.',
+  },
+  'gisco-croatia-postcode-points': {
+    id: 'gisco-croatia-postcode-points',
+    name: 'Eurostat GISCO Croatia Postcode Points',
+    url: 'https://ec.europa.eu/eurostat/web/gisco/geodata/administrative-units/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY-SA 4.0',
+    notes: 'Official-derived postcode points for statistical correspondence. GISCO permits omissions and incorrect positions; a point, buffer, Voronoi cell or NUTS/LAU match is not a Hrvatska pošta or DGU delivery-area perimeter.',
   },
   'posta-hr': {
     id: 'posta-hr',
@@ -1412,6 +2729,84 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Hungarian national geospatial and planning data reference for settlements and administrative geography.',
+  },
+  'magyar-posta-partner-extra-postcodes': {
+    id: 'magyar-posta-partner-extra-postcodes',
+    name: 'Magyar Posta Partner Extra postcode master data',
+    url: 'https://www.posta.hu/partnerextra',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public Partner Extra terms; exact terms and release must be pinned',
+    notes: 'Official four-digit postcode and settlement XML intended for use as an application background database. Pin the exact file, release time, terms, schema and digest; it provides assignment evidence but no postcode polygon authority.',
+  },
+  'magyar-posta-addressing-database': {
+    id: 'magyar-posta-addressing-database',
+    name: 'Magyar Posta official addressing rules and validation',
+    url: 'https://www.posta.hu/ugyfelszolgalat/helyes_cimzes',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official addressing, post-office-box and dedicated or highlighted postcode semantics. The page or a validation receipt is not a public bulk address dataset, postcode polygon or building-footprint source.',
+  },
+  'hungary-central-address-register-kcr': {
+    id: 'hungary-central-address-register-kcr',
+    name: 'Hungary Central Address Register (KCR)',
+    url: 'https://kormany.hu/application/documents/a1d04d40-1689-4efd-96c7-aca55ac17219/download',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled statutory access; public redistribution not assumed',
+    notes: 'Authoritative unique address ID, postcode, public-place components, house number, building, staircase, floor, door, coordinate, cadastral identifier, object type and history. Statutory transfer to named recipients is not authority for a public mirror; personal, owner and rightsholder data remain excluded.',
+  },
+  'lechner-hungary-eha': {
+    id: 'lechner-hungary-eha',
+    name: 'Lechner Elérési Hely Adatbázis (EHA)',
+    url: 'https://lechnerkozpont.hu/cikk/teradatok-a-mindennapokban-cimadatok-tobb-mint-hazszam',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled access; exact output terms must be pinned',
+    notes: 'Official address-location geometry inside a parcel and address-to-cadastral-number relation. A point can mean an entrance or geometric centre and is not automatically a building footprint.',
+  },
+  'lechner-hungary-inspire-buildings': {
+    id: 'lechner-hungary-inspire-buildings',
+    name: 'Lechner INSPIRE Buildings download',
+    url: 'https://inspire.lechnerkozpont.hu/inspire/atom/DLS_Buildings.xml',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Per exact INSPIRE distribution metadata and product terms',
+    notes: 'Building feature candidate whose exact distribution, metadata identifier, edition, coverage, licence, schema, CRS and digest must be pinned. Sample or partial coverage is not nationwide completeness, and proximity is not an exact address link.',
+  },
+  'lechner-hungary-nta-buildings': {
+    id: 'lechner-hungary-nta-buildings',
+    name: 'Lechner National Base Map (NTA) buildings',
+    url: 'https://nta.lechnerkozpont.hu/adatretegek',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Registered NTA map-service terms; redistribution not assumed',
+    notes: 'Generalized building map layer exposed through WMTS, including cadastral and orthophoto-derived evidence. It is not an editable vector service or an exact building footprint source unless separate rights and identifiers are proven.',
+  },
+  'hungary-land-registry-cadastral-map': {
+    id: 'hungary-land-registry-cadastral-map',
+    name: 'Hungary land-registry cadastral map',
+    url: 'https://www.foldhivatal.hu/content/view/72/111/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Controlled or paid cadastral-map access; exact reuse rights required',
+    notes: 'Official parcel, mapped building or structure, street and house-number evidence. A parcel is not a building; owner, title, value and rightsholder fields are excluded from public address context.',
+  },
+  'ksh-hungary-administrative-units': {
+    id: 'ksh-hungary-administrative-units',
+    name: 'KSH Hungary administrative units',
+    url: 'https://www.ksh.hu/teruletiatlasz_kozigazgatasi_egysegek',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official region, county, district, municipality and Budapest-district context. Administrative units are not postcode areas and do not establish postal assignment, deliverability or building identity.',
   },
   'hungary-public-road-data': {
     id: 'hungary-public-road-data',
@@ -1476,6 +2871,93 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Slovenian surveying authority reference for address register, settlement, and boundary data.',
   },
+  'posta-slovenije-postcode-csv': {
+    id: 'posta-slovenije-postcode-csv',
+    name: 'Pošta Slovenije Postal Code and Post Office CSV',
+    url: 'https://www.posta.si/naslavljanje',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit postal-code CSV with post-office names; a row or office is not a polygon, and public download still requires exact terms and redistribution review.',
+  },
+  'posta-slovenije-special-postcodes': {
+    id: 'posta-slovenije-special-postcodes',
+    name: 'Pošta Slovenije Special Postal Codes',
+    url: 'https://www.posta.si/zasebno-site/Documents/Seznami/Seznam%20posebnih%20po%C5%A1tnih%20%C5%A1tevilk.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official organization, institution, postal-centre, and other special-code assignments are non-area by default and never become residential postal polygons.',
+  },
+  'posta-slovenije-delivery-area-webgis': {
+    id: 'posta-slovenije-delivery-area-webgis',
+    name: 'Pošta Slovenije Unaddressed Mail Delivery WebGIS',
+    url: 'https://webgis2.posta.si/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official unaddressed direct-mail delivery-office and A/B/C pricing areas are operational service geometry, not a normal postcode perimeter, addressed-delivery guarantee, or automatic redistribution grant.',
+  },
+  'gurs-slovenia-postal-districts': {
+    id: 'gurs-slovenia-postal-districts',
+    name: 'GURS Register prostorskih enot Postal Districts',
+    url: 'https://www.e-prostor.gov.si/podrocja/prostorske-enote-in-naslovi/register-prostorskih-enot/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official poštni okoliš geometry is available under GURS CC BY 4.0, but requires an explicit versioned Pošta Slovenije crosswalk and is not automatically an operator-authored current postcode perimeter.',
+  },
+  'gurs-slovenia-address-register': {
+    id: 'gurs-slovenia-address-register',
+    name: 'GURS Register naslovov',
+    url: 'https://www.e-prostor.gov.si/podrocja/prostorske-enote-in-naslovi/register-naslovov/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official unique address number, components, and centroid support address identity; the centroid is not a building footprint, and postal assignment remains separate.',
+  },
+  'gurs-slovenia-public-features-api': {
+    id: 'gurs-slovenia-public-features-api',
+    name: 'GURS Public WFS and OGC API Features',
+    url: 'https://www.e-prostor.gov.si/dostopi/javni-dostop/',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Public WFS and OGC API Features expose GURS collections in EPSG:3794 under CC BY 4.0; every release pins its collection, attribution, schema, date, digest, and reviewed WGS84 transform.',
+  },
+  'gurs-slovenia-real-estate-cadastre-buildings': {
+    id: 'gurs-slovenia-real-estate-cadastre-buildings',
+    name: 'GURS Kataster nepremičnin Buildings',
+    url: 'https://www.e-prostor.gov.si/podrocja/parcele-in-stavbe/kataster-nepremicnin/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC BY 4.0',
+    notes: 'Official cadastral building geometry needs a source-defined address-building relation or reviewed identifier crosswalk; centroid containment, footprint overlap, and proximity are candidate evidence only.',
+  },
+  'gurs-slovenia-spatial-unit-register': {
+    id: 'gurs-slovenia-spatial-unit-register',
+    name: 'GURS Register prostorskih enot Administration',
+    url: 'https://www.e-prostor.gov.si/podrocja/prostorske-enote-in-naslovi/register-prostorskih-enot/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0',
+    notes: 'Official municipality, settlement, administrative-unit, street, and statistical-region context does not create postcode membership, address existence, or delivery coverage.',
+  },
+  'gurs-slovenia-cadastral-parcels': {
+    id: 'gurs-slovenia-cadastral-parcels',
+    name: 'GURS Kataster nepremičnin Cadastral Parcels',
+    url: 'https://www.e-prostor.gov.si/podrocja/parcele-in-stavbe/kataster-nepremicnin/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'CC BY 4.0',
+    notes: 'A cadastral parcel is not a building, address link, or postal district and never authorizes publication of an owner, rightsholder, resident, occupant, title, value, encumbrance, or restriction record.',
+  },
   'slovenska-posta-psc': {
     id: 'slovenska-posta-psc',
     name: 'Slovenska posta PSC Search',
@@ -1503,6 +2985,150 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'validation',
     notes: 'Slovak open-data address and register reference for municipality, street, and building validation.',
   },
+  'slovak-post-postcode-search': {
+    id: 'slovak-post-postcode-search',
+    name: 'Slovenská pošta PSČ Search',
+    url: 'https://www.posta.sk/psc',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit PSČ search by street and municipality; a result is not an official postcode polygon, and public search is not an open bulk licence.',
+  },
+  'slovak-post-access-point-xml': {
+    id: 'slovak-post-access-point-xml',
+    name: 'Slovenská pošta Access Point XML',
+    url: 'https://www.posta.sk/podpora/dokumentacia-pre-vyvojarov',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Regularly updated XML for post offices, PoštaPOINT locations, and BalíkoBOX access points is operational service context, not a postcode area, address register, or delivery guarantee.',
+  },
+  'slovakia-register-addresses-portal': {
+    id: 'slovakia-register-addresses-portal',
+    name: 'Slovakia Register adries',
+    url: 'https://pes.minv.sk/wps/wcm/connect/sk/site/main/zivotne-situacie/Register%2Badries/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'The Ministry of Interior describes a central, data-consistent reference register for addresses of physical buildings; address identity is not a footprint, current PSČ assignment, or delivery guarantee.',
+  },
+  'slovakia-register-addresses-openapi': {
+    id: 'slovakia-register-addresses-openapi',
+    name: 'Register adries OpenAPI and Spatial Services',
+    url: 'https://rageo.minv.sk/openapi/docs/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address point, street, geocoding, initial-download, and building identifier services can support an explicit register relation; nearest or contained geometry is not an exact address-building link.',
+  },
+  'zbgis-slovakia-inspire-buildings': {
+    id: 'zbgis-slovakia-inspire-buildings',
+    name: 'ZBGIS Slovakia INSPIRE Buildings',
+    url: 'https://www.skgeodesy.sk/vugk/produkty-sluzby/inspire/ukladacie-sluzby/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official INSPIRE building geometry requires the exact dataset-specific licence, identifier, schema, coverage, validity, CRS, and digest. Exact linkage needs a register relation, common authoritative identifier, or reviewed crosswalk; proximity remains candidate evidence.',
+  },
+  'zbgis-slovakia-administrative-units': {
+    id: 'zbgis-slovakia-administrative-units',
+    name: 'ZBGIS Slovakia Administrative Units',
+    url: 'https://www.skgeodesy.sk/gku/produkty-sluzby/na-stiahnutie/zbgis.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'CC BY 4.0',
+    notes: 'Official CC BY 4.0 region, district, municipality, and cadastral-territory boundaries provide administrative context but not postcode membership, address identity, or delivery coverage.',
+  },
+  'zbgis-slovakia-cadastral-parcels': {
+    id: 'zbgis-slovakia-cadastral-parcels',
+    name: 'ZBGIS Slovakia INSPIRE Cadastral Parcels',
+    url: 'https://www.skgeodesy.sk/vugk/produkty-sluzby/inspire/ukladacie-sluzby/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'A cadastral parcel is not a building, address link, or postcode area and never authorizes publication of an owner, rightsholder, occupant, title, encumbrance, or restriction record.',
+  },
+  'posta-romana-postcode-search': {
+    id: 'posta-romana-postcode-search',
+    name: 'Poșta Română Postcode Search',
+    url: 'https://www.posta-romana.ro/cauta-cod-postal.html',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public query/reference; no public bulk or derivative rights inferred',
+    notes: 'Official six-digit postcode lookup returns county, locality, street and number or postal-subunit context. Each result is a pinned query receipt, not a bulk database, coordinate source, postcode polygon or universal delivery guarantee.',
+  },
+  'posta-romana-postcode-structure': {
+    id: 'posta-romana-postcode-structure',
+    name: 'Poșta Română Six-Digit Postcode Structure',
+    url: 'https://www.posta-romana.ro/cnpr-data/_editor/files/2016-09/Anexa%204A.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official public reference; exact document edition required',
+    notes: 'Official structure distinguishes street, street-part, building and locality assignment patterns. It is semantic evidence, not a current allocation list, geometry, deliverability guarantee or universal polygon.',
+  },
+  'posta-romana-infocod': {
+    id: 'posta-romana-infocod',
+    name: 'Poșta Română Infocod',
+    url: 'https://www.posta-romana.ro/cnpr-data/_editor/files/2016-09/Criterii%20si%20conditii.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled request and contract; exact redistribution and derivative rights required',
+    notes: 'Official electronic postcode database is supplied through request, handoff and update conditions. Availability and monthly updates do not make rows, addresses or derivatives open for public redistribution.',
+  },
+  'posta-romana-postcode-geography-status': {
+    id: 'posta-romana-postcode-geography-status',
+    name: 'Poșta Română Dated Postcode Geography Status',
+    url: 'https://www.posta-romana.ro/cnpr-data/_editor/files/Invitatie%20de%20participare%20la%20consultarea%20pietei%20-%20Proiecte%20Digitalizare%20Posta%20Romana%20%28update%201%29.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official public reference; time-specific negative evidence',
+    notes: 'The dated official consultation states that the then-current postcode database had no geographic coordinates. It prevents invented operator polygons but does not rule out a future exact official geography release.',
+  },
+  'ancpi-romania-renns': {
+    id: 'ancpi-romania-renns',
+    name: 'ANCPI RENNS National Street Nomenclature Register',
+    url: 'https://renns.ancpi.ro/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public search/view plus controlled institutional service; exact bulk and derivative rights required',
+    notes: 'Official RENNS can expose CUA, administrative number, SIRUTA context, parcel reference and an address point with dates. A public query or public character is not blanket bulk permission; a CUA point is not a postcode, building footprint, resident, domicile or legal-entity link.',
+  },
+  'ancpi-romania-inis-addresses-buildings': {
+    id: 'ancpi-romania-inis-addresses-buildings',
+    name: 'ANCPI INIS Addresses and Constructions',
+    url: 'https://geoportal.ancpi.ro/hosted_services/rest/services/INIS/INIS_Viewer/MapServer/layers',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Service- and layer-specific; exact public fields and redistribution rights required',
+    notes: 'Official INIS exposes address, construction and property candidates in source CRS EPSG:3844. Exact building display needs an explicit relationship or common stable identifier; query visibility is not a reusable vector or redistribution licence.',
+  },
+  'ancpi-romania-registered-property-viewer': {
+    id: 'ancpi-romania-registered-property-viewer',
+    name: 'ANCPI Registered Property Viewer',
+    url: 'https://geoportal.ancpi.ro/imobile.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Viewer and purpose-limited validation only',
+    notes: 'Official viewer is for individual registered-property validation, not a reusable vector or bulk professional dataset. A displayed property is not an exact building-address link and owner, rightsholder, land-book rights and other personal or property-right data remain excluded.',
+  },
+  'insse-romania-siruta-localities': {
+    id: 'insse-romania-siruta-localities',
+    name: 'INSSE SIRUTA Localities WebGIS',
+    url: 'https://webgis.insse.ro/servicii/rest/services/Operational/Localitati/MapServer/layers',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Romanian Open Government Licence; exact service and layer terms required',
+    notes: 'Official INSSE layer supplies SIRUTA locality codes, superior hierarchy, county, type and geometry. It is administrative and statistical context, not postal assignment, deliverability, exact building linkage or a sovereignty determination.',
+  },
   'ancpi-romania-geoportal': {
     id: 'ancpi-romania-geoportal',
     name: 'ANCPI Romania Geoportal',
@@ -1521,6 +3147,75 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Romanian open data portal for public administrative, locality, and geospatial datasets.',
   },
+  'bulgarian-posts-postcode-reference': {
+    id: 'bulgarian-posts-postcode-reference',
+    name: 'Bulgarian Posts Postcode Reference',
+    url: 'https://testdata.egov.bg/organisation/dataset/acb135ab-00a2-4aa7-b5e5-49c992385ef5',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'CC0; dataset version 2.4 dated 2020-10-27',
+    notes: 'Official Bulgarian Posts 2020 locality/postcode release. It is historical assignment evidence, not a current complete register, and supplies no Polygon/MultiPolygon or delivery perimeter.',
+  },
+  'bulgarian-posts-post-office-directory': {
+    id: 'bulgarian-posts-post-office-directory',
+    name: 'Bulgarian Posts Offices and Contacts',
+    url: 'https://www.bgpost.bg/en/contacts',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official post-office and service-point evidence. An office location is not a postcode area, recipient building or premise-delivery guarantee.',
+  },
+  'grao-bulgaria-address-classifier': {
+    id: 'grao-bulgaria-address-classifier',
+    name: 'GRAO Bulgaria Address Classifier / CAIS Address Register',
+    url: 'https://www.grao.bg/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled statutory or service access; field-specific output rights',
+    notes: 'Only an actual authorized deployed-service receipt may establish an address identifier or access point. Roadmap material is not production evidence; person and residence data are excluded.',
+  },
+  'agcc-bulgaria-cadastral-map': {
+    id: 'agcc-bulgaria-cadastral-map',
+    name: 'AGCC Bulgaria Cadastral Map and Registers',
+    url: 'https://kais.cadastre.bg/en/Map/Index',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Registered or paid services under artifact-specific KAIS terms; pin output rights',
+    notes: 'An exact cadastral building identifier, outline and address relation require authorized evidence. Parcels and independent objects are not buildings; owner, rightsholder, title-act and personal fields are excluded.',
+  },
+  'agcc-bulgaria-inspire-buildings': {
+    id: 'agcc-bulgaria-inspire-buildings',
+    name: 'AGCC Bulgaria INSPIRE Buildings',
+    url: 'https://www.cadastre.bg/privezhdane-na-nalichnite-geodanni-za-administrativni-edinici-i-sgradi-v-agkk-direktiva-2007/2/%D0%95%D0%9E',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Exact distribution-specific terms required; INSPIRE label is not a licence',
+    notes: 'Pin the exact distribution, coverage, identifiers, schema and licence. An INSPIRE project page is not a production dataset, and an exact address link requires a common identifier or explicit source relation.',
+  },
+  'nsi-bulgaria-ekatte': {
+    id: 'nsi-bulgaria-ekatte',
+    name: 'NSI Bulgaria EKATTE Register',
+    url: 'https://www.nsi.bg/nrnm/ekatte/index',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'NSI Licence 2.0; pin exact version and review derivative-work conditions',
+    notes: 'Official dated district, municipality, mayoralty and settlement identifiers provide administrative context, not postcode membership, delivery eligibility, address identity or building identity.',
+  },
+  'nsi-bulgaria-administrative-spatial-data': {
+    id: 'nsi-bulgaria-administrative-spatial-data',
+    name: 'NSI Bulgaria Administrative Spatial Data',
+    url: 'https://www.nsi.bg/nrnm/spatial-data-files',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'NSI Licence 2.0; pin exact version and review derivative-work conditions',
+    notes: 'Settlement points in EPSG:4326 and administrative polygons in EPSG:9391 are distinct dated context products, not postal geometry; transformed output requires reviewed lineage.',
+  },
   'cadastre-bulgaria': {
     id: 'cadastre-bulgaria',
     name: 'Bulgaria Cadastre Agency',
@@ -1538,6 +3233,105 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Bulgarian INSPIRE spatial data infrastructure for national geospatial validation layers.',
+  },
+  'austrian-post-postcode': {
+    id: 'austrian-post-postcode',
+    name: 'Österreichische Post Postal Encyclopedia',
+    url: 'https://www.post.at/en/g/c/postal-encyclopedia',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official current and historical four-digit postcode and destination-location reference. Codes stay text; a destination, route, office, or valid syntax is not automatically a polygon or a delivery guarantee.',
+  },
+  'austrian-post-address-data': {
+    id: 'austrian-post-address-data',
+    name: 'Österreichische Post Address Data and PAC',
+    url: 'https://www.post.at/en/g/c/address-data',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official contract-partitioned address, PAC, autocomplete, geodata, and house/building products. Product access and PAC do not license public redistribution, and household or person fields never enter public AGID artifacts.',
+  },
+  'bev-austria-address-register': {
+    id: 'bev-austria-address-register',
+    name: 'BEV Austria Address Register',
+    url: 'https://www.bev.gv.at/Themen/Adressregister.html',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official national address identity with immutable seven-digit Adresscode, three-digit building Subcode, and separately typed address coordinate and building coordinate. Exact product terms are pinned; search access and proximity are not bulk or exact building evidence.',
+  },
+  'statistics-austria-postcode-regions': {
+    id: 'statistics-austria-postcode-regions',
+    name: 'Statistik Austria Postcode Regions',
+    url: 'https://www.statistik.at/services/tools/regionale-internationale-daten/regionale-daten-und-gliederungen/regionale-gliederungen',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official statistical postcode-region geometry with product-specific methodology and reference date; it is not an Austrian Post perimeter and does not prove deliverability or cover every non-area code.',
+  },
+  'bev-austria-administrative-boundaries': {
+    id: 'bev-austria-administrative-boundaries',
+    name: 'BEV Austria Administrative Boundaries',
+    url: 'https://www.bev.gv.at/Services/Produkte/Kataster-und-Verzeichnisse/Verwaltungsgrenzen.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official federal-state, district, municipality, and cadastral context. Dataset-specific terms and vintage are required; administrative geometry does not create postal membership, delivery eligibility, or country identity from clipping.',
+  },
+  'statistics-austria-gwr': {
+    id: 'statistics-austria-gwr',
+    name: 'Statistik Austria Address, Buildings and Dwellings Register',
+    url: 'https://www.statistik.at/en/databases/address-buildings-and-dwellings-register/address-buildings-and-dwellings-register/information',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official GWR reference. Individual building and dwelling microdata access is restricted; only permitted aggregate or separately authorized fields may be used, and public metadata is not a record-level redistribution license.',
+  },
+  'ukrposhta-postcodes-open-data': {
+    id: 'ukrposhta-postcodes-open-data',
+    name: 'Ukrposhta Postcodes and Post Offices Open Data',
+    url: 'https://www.ukrposhta.ua/ua/publichna-informatsiia',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Ukrposhta open-data register for postcode and post-office resources. Five-digit codes stay text; an assignment, office point, route, or range is not a postal polygon or sovereignty evidence.',
+  },
+  'ukrposhta-index-and-address-api': {
+    id: 'ukrposhta-index-and-address-api',
+    name: 'Ukrposhta Index, Address, and Office Services',
+    url: 'https://index.ukrposhta.ua/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official postcode/address lookup and service APIs. AVAILBLE, LOCK_CODE, replacement-office, and closure fields are time-specific operational evidence, not postal geometry, territorial identity, or a delivery guarantee.',
+  },
+  'ukraine-unified-address-register': {
+    id: 'ukraine-unified-address-register',
+    name: 'Ukraine Unified State Address Register',
+    url: 'https://e-construction.gov.ua/ua/edini-derjavni-reestr-adres-dva-roki-vprovadjennja-ta-rezultati-cifrovoii-transformaciii-adresnoii-sistemi-ukraiini',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official government address identity and hierarchy. Exact records require authoritative identifiers and provider-approved public fields; the public portal or announcement is not automatically a bulk redistribution release.',
+  },
+  'ukraine-building-register': {
+    id: 'ukraine-building-register',
+    name: 'Ukraine Register of Buildings and Structures',
+    url: 'https://mtu.gov.ua/news/35373.html',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official building-register authority. Exact address-to-building display requires a shared identifier or reviewed explicit crosswalk; an address point, parcel, containment result, or proximity match is candidate evidence only.',
+  },
+  'ukraine-nsdi': {
+    id: 'ukraine-nsdi',
+    name: 'Ukraine National Spatial Data Infrastructure',
+    url: 'https://nsdi.gov.ua/docs/portal/1start/componentsnsdi.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official NSDI catalog for boundaries, settlements, streets, addresses, buildings, and structures. Wartime public access is restricted; every permitted artifact needs layer-by-layer holder, security, license, coverage, territorial policy, vintage, CRS, and digest review.',
   },
   'data-gov-ua-geodata': {
     id: 'data-gov-ua-geodata',
@@ -1574,6 +3368,96 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Moldovan open data portal for public administrative and locality datasets.',
+  },
+  'belpost-belarus-postcode-reference': {
+    id: 'belpost-belarus-postcode-reference',
+    name: 'Belpost Belarus Postcode Reference',
+    url: 'https://www.belpost.by/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public web reference; pin exact lookup terms before reuse',
+    notes: 'Official six-digit operator assignment reference. A code or post-office relationship is not a polygon, building, current deliverability guarantee or unrestricted bulk dataset.',
+  },
+  'nca-belarus-postal-code-zones': {
+    id: 'nca-belarus-postal-code-zones',
+    name: 'NCA Belarus Postal Code Zones',
+    url: 'https://nca.by/about/activity/adresnaya-sistema-respubliki-belarus/reestr-adresov/zony-deystviya-pochtovykh-kodov/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public map/reference; exact data-service terms or contract required for redistribution',
+    notes: 'NCA states nationwide postal zoning entered production in 2020 and boundaries are updated every six months. The layer is official-derived from Belpost assignments and state registers, not a Belpost-authored delivery perimeter; public-map viewing is not a bulk licence.',
+  },
+  'nca-belarus-address-register': {
+    id: 'nca-belarus-address-register',
+    name: 'NCA Belarus Address Register',
+    url: 'https://nca.by/about/activity/adresnaya-sistema-respubliki-belarus/reestr-adresov/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled or paid data service; exact contract and public output rights required',
+    notes: 'Authoritative state address identifiers, object types, components and geocodes. An address geocode is not a building footprint; land parcel, capital structure, isolated premise and parking space object types remain distinct, and person or residence data is excluded.',
+  },
+  'nca-belarus-capital-structure-addresses': {
+    id: 'nca-belarus-capital-structure-addresses',
+    name: 'NCA Belarus Capital Structure Address SHP Service',
+    url: 'https://nca.by/services/providing-information/from-addresses-of-belarus/information-unfinished-buildings-shp-format/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Paid district-scoped service; exact contract and output rights required',
+    notes: 'Controlled SHP address export for capital structures and unfinished structures includes address identity, object type, components and postcode. It does not by itself supply an exact building footprint or authorize a national mirror.',
+  },
+  'nca-belarus-real-estate-register': {
+    id: 'nca-belarus-real-estate-register',
+    name: 'NCA Unified State Register of Immovable Property',
+    url: 'https://nca.by/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Registered or paid access; exact query or contract terms required',
+    notes: 'Authoritative real-estate and capital-structure identity is usable only through allowed fields and an explicit address relation. Parcel, isolated-premise and parking-space records are not buildings; owners, rightsholders, title acts and transactions are excluded.',
+  },
+  'nca-belarus-property-characteristics-register': {
+    id: 'nca-belarus-property-characteristics-register',
+    name: 'NCA Property Characteristics Register',
+    url: 'https://nca.by/',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Registered or paid access; exact query or contract terms required',
+    notes: 'Source-qualified building characteristics may enrich an explicitly identified capital structure under field-level output rights. Characteristics, valuation or proximity never establish address identity or a footprint relation.',
+  },
+  'nca-belarus-ate-register': {
+    id: 'nca-belarus-ate-register',
+    name: 'NCA Belarus ATE/TE Register',
+    url: 'https://nca.by/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Controlled or paid register/API/SHP service; exact terms required',
+    notes: 'Official administrative-territorial and territorial unit identities and separately provided geometry add dated context only. They do not establish postcode membership, address identity, building identity or postal coverage.',
+  },
+  'nca-belarus-soato-classifier': {
+    id: 'nca-belarus-soato-classifier',
+    name: 'NCA Belarus SOATO Classifier',
+    url: 'https://nca.by/services/providing-information/from-unified-register-belarus/soato-classifier/',
+    kind: 'gazetteer',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Paid standard query; exact receipt and output rights required',
+    notes: 'Official SOATO codes, names, categories and administrative centres provide locality and hierarchy context. Classifier membership is not postal assignment or geometry and special-regime omissions must be retained.',
+  },
+  'nca-belarus-public-cadastral-map': {
+    id: 'nca-belarus-public-cadastral-map',
+    name: 'NCA Belarus Public Cadastral Map',
+    url: 'https://map.nca.by/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Public viewer/reference only; no bulk or derivative rights inferred',
+    notes: 'Viewer can expose postal-zone and cadastral context for validation. A visible map layer is not a downloadable licensed artifact, exact building-address relation or permission to reproduce the database.',
   },
   'belarus-nca-geoportal': {
     id: 'belarus-nca-geoportal',
@@ -1620,6 +3504,79 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Serbian cadastre and geodetic authority reference for address and parcel validation.',
   },
+  'posta-srbije-post-office-list': {
+    id: 'posta-srbije-post-office-list',
+    name: 'Pošta Srbije Post Office List',
+    url: 'https://www.posta.rs/DocumentViewer.aspx?Dokument=spisak-postatag-eng.pdf&IdDokument=2624',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official five-digit post-office list; an office point or address is not its postcode service perimeter, and exact terms and redistribution rights must be pinned.',
+  },
+  'posta-srbije-pak-definition': {
+    id: 'posta-srbije-pak-definition',
+    name: 'Pošta Srbije Postal Address Code (PAK)',
+    url: 'https://www.posta.rs/lat/stanovnistvo/usluga.aspx?usluga=postanske-usluge/postanski-adresni-kod-pak',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official six-digit PAK identifies a part of a street, including side and house-number range; it is route or address-range evidence, not automatically a polygon, building, household, or five-digit postcode.',
+  },
+  'posta-srbije-pak-lookup': {
+    id: 'posta-srbije-pak-lookup',
+    name: 'Pošta Srbije Find PAK',
+    url: 'https://www.posta.rs/lat/alati/pronadjite-pak.aspx',
+    kind: 'geocoding',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official query returns street, house number/subnumber, populated place, five-digit postcode, destination office and PAK; its map is a query reference, not a bulk geometry or extraction licence.',
+  },
+  'posta-srbije-wsp-address-api': {
+    id: 'posta-srbije-wsp-address-api',
+    name: 'Pošta Srbije WSP Address Verification API',
+    url: 'https://www.posta.rs/wsp-help/uvod/uvod.aspx',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official registered-user API can return current postcode and PAK from address inputs; credentials, contacts and shipment payloads are never public-pack data, and documentation is not authorization.',
+  },
+  'rgz-serbia-address-register-open-data': {
+    id: 'rgz-serbia-address-register-open-data',
+    name: 'RGZ Serbia Address Register Open Data',
+    url: 'https://data.gov.rs/sr/datasets/adresni-registar/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Serbian Open Data License 1.0',
+    notes: 'Official street and house-number CSV/GPKG include unique address code, administrative and cadastral references, and house-number point geometry. A point or parcel reference is not a building footprint or postal assignment.',
+  },
+  'rgz-serbia-spatial-unit-register': {
+    id: 'rgz-serbia-spatial-unit-register',
+    name: 'RGZ Serbia Spatial Unit Register',
+    url: 'https://www.rgz.gov.rs/%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D0%B0%D1%80-%D0%BF%D1%80%D0%BE%D1%81%D1%82%D0%BE%D1%80%D0%BD%D0%B8%D1%85-%D1%98%D0%B5%D0%B4%D0%B8%D0%BD%D0%B8%D1%86%D0%B0',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official administrative and statistical geometry requires layer-specific access, licence, coverage, exclusions and territorial vintage; it is not postal or PAK authority and never determines sovereignty.',
+  },
+  'rgz-serbia-geosrbija-buildings': {
+    id: 'rgz-serbia-geosrbija-buildings',
+    name: 'RGZ GeoSrbija Buildings',
+    url: 'https://www.rgz.gov.rs/geo-srbija',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official portal building data needs a dataset-specific licence and an explicit address-building relation or reviewed authoritative crosswalk; containment, parcel overlap and proximity remain candidate evidence.',
+  },
+  'rgz-serbia-real-estate-cadastre': {
+    id: 'rgz-serbia-real-estate-cadastre',
+    name: 'RGZ Serbia Real Estate Cadastre',
+    url: 'https://www.rgz.gov.rs/services-of-real-estate-cadastre',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    notes: 'Official cadastral validation context is dataset- and fee-specific. A parcel is not a building, address, postcode or PAK area, and owner, rightsholder, resident, title, value and restriction records stay excluded.',
+  },
   'bosnia-geoportal': {
     id: 'bosnia-geoportal',
     name: 'Bosnia and Herzegovina Geoportal Reference',
@@ -1637,6 +3594,34 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'country',
     usage: 'reference',
     notes: 'Bosnia and Herzegovina cadastre reference for entity-level cadastral and settlement validation.',
+  },
+  'posta-crne-gore-postcode-office-directory': {
+    id: 'posta-crne-gore-postcode-office-directory', name: 'Pošta Crne Gore Post Office Directory', url: 'https://www.postacg.me/centar-za-korisnike/lokacije-poslovnica/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official five-digit number identifies a unique post office and the directory records office address and delivery-office status. An office point or flag is not its service perimeter; exact version, terms and redistribution rights must be pinned.',
+  },
+  'posta-crne-gore-pak-addressing': {
+    id: 'posta-crne-gore-pak-addressing', name: 'Pošta Crne Gore Postal Address Code (PAK)', url: 'https://www.postacg.me/centar-za-korisnike/postanski-rjecnik/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official six-digit PAK marks a part of a street visited by a carrier. It is route or address-range evidence, not the five-digit postcode, automatically a polygon, building, household or resident identity.',
+  },
+  'uzn-montenegro-address-register': {
+    id: 'uzn-montenegro-address-register', name: 'UZN Montenegro Address Register', url: 'https://www.gov.me/clanak/usluge', kind: 'address', coverage: 'country', usage: 'primary', license: 'Controlled or fee-specific; exact product terms required',
+    notes: 'Official house numbers, streets and squares with municipal, settlement, cadastral-municipality and parcel references. An address record or point is not a building footprint or postal assignment; municipal coverage, completeness and terms must be pinned.',
+  },
+  'uzn-montenegro-real-estate-cadastre': {
+    id: 'uzn-montenegro-real-estate-cadastre', name: 'UZN Montenegro Real Estate Cadastre', url: 'https://www.gov.me/dokumenta/cee0bb11-5aa8-47c4-b07e-61a76184cd03', kind: 'building', coverage: 'country', usage: 'validation', license: 'Controlled, fee- and purpose-specific',
+    notes: 'Official fee-specific building and parcel evidence requires an exact permitted layer and explicit address relationship. A parcel is not a building; owner, rightsholder, resident, title, encumbrance, value and tax fields stay private.',
+  },
+  'uzn-montenegro-geoportal': {
+    id: 'uzn-montenegro-geoportal', name: 'UZN Montenegro Geoportal', url: 'https://geoportal.co.me/geoportal/geoportal.html', kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Viewer/reference only until layer-specific rights are pinned',
+    notes: 'Official viewer and metadata catalog can validate candidate layers. Viewer visibility is not bulk vector access, an exact address-building relation or a redistribution licence.',
+  },
+  'uzn-montenegro-spatial-unit-record': {
+    id: 'uzn-montenegro-spatial-unit-record', name: 'UZN Montenegro Spatial Unit Record', url: 'https://wapi.gov.me/download/cee0bb11-5aa8-47c4-b07e-61a76184cd03?version=1.0', kind: 'admin-boundary', coverage: 'country', usage: 'reference', license: 'Controlled or fee-specific; exact layer terms required',
+    notes: 'Official administrative, cadastral and statistical geometry provides dated context. Unit boundaries are not postal or PAK areas, delivery evidence, building links or sovereignty determinations.',
+  },
+  'monstat-montenegro-spatial-register': {
+    id: 'monstat-montenegro-spatial-register', name: 'MONSTAT Montenegro Spatial Register', url: 'https://monstat.org/cg/page.php?id=99&pageid=99', kind: 'gazetteer', coverage: 'country', usage: 'reference',
+    notes: 'Official spatial-unit names, codes and lower-to-higher hierarchy complement separately pinned UZN graphical authority. Statistical membership is not postal assignment, address existence or building identity.',
   },
   'geoportal-montenegro': {
     id: 'geoportal-montenegro',
@@ -1674,23 +3659,50 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     usage: 'reference',
     notes: 'Kosovo cadastral agency reference for parcels, municipalities, and settlement validation.',
   },
+  'posta-shqiptare-postcodes': {
+    id: 'posta-shqiptare-postcodes',
+    name: 'Posta Shqiptare Postcodes',
+    url: 'https://www.postashqiptare.al/c/45/kodi-postar',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official four-digit post-office and branch assignment reference. An office or branch point is not a canonical postcode polygon, and public pages do not imply bulk reuse rights.',
+  },
+  'albania-national-address-system': {
+    id: 'albania-national-address-system',
+    name: 'Albania National Address System',
+    url: 'https://geoportal.asig.gov.al/sq/sherbimet',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official National Address System and address-building reference published through ASIG. It retains source object identity, while service visibility is not a blanket bulk redistribution license.',
+  },
+  'ashk-albania-cadastral-buildings': {
+    id: 'ashk-albania-cadastral-buildings',
+    name: 'ASHK Albania Cadastral Buildings',
+    url: 'https://geoportal.asig.gov.al/sq/node/2843',
+    kind: 'building',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official ASHK cadastral-building and parcel geometry published through ASIG. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; proximity is insufficient.',
+  },
   'asig-albania': {
     id: 'asig-albania',
     name: 'ASIG Albania',
-    url: 'https://geoportal.asig.gov.al/',
+    url: 'https://geoportal.asig.gov.al/sq/sherbimet',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Albanian national geospatial information authority geoportal for spatial data and boundaries.',
+    notes: 'National geospatial service catalog for official administrative boundaries and other public-authority layers. Each layer needs a layer-by-layer owner, license, schema, coverage, vintage, CRS, and digest review.',
   },
   'albania-geoportal': {
     id: 'albania-geoportal',
-    name: 'Albania Open Geodata Reference',
-    url: 'https://geoportal.asig.gov.al/',
+    name: 'ASIG Albania Geographic Names and Transport Reference',
+    url: 'https://geoportal.asig.gov.al/sq/sherbimet',
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Albanian geodata reference for settlements, roads, and administrative geography.',
+    notes: 'Layer-specific validation reference for geographic names, settlements, and transport networks; the portal catalog alone does not establish a reusable license or postal authority.',
   },
   'katastar-north-macedonia': {
     id: 'katastar-north-macedonia',
@@ -1786,11 +3798,20 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'azerbaijan-state-committee-property': {
     id: 'azerbaijan-state-committee-property',
     name: 'Azerbaijan State Service on Property Issues',
-    url: 'https://emlak.gov.az/',
+    url: 'https://emlak.gov.az/az/news/view/5733-Da%C5%9F%C4%B1nmaz-%C9%99mlak-nec%C9%99-kadastr-u%C3%A7otuna-al%C4%B1n%C4%B1r',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'Azerbaijani cadastral and property reference for administrative geography and address-adjacent validation.',
+    notes: 'Official cadastral and property authority for parcel, building-object, and jurisdiction context. Exact address-to-building display requires an explicit common identifier or reviewed crosswalk; proximity is insufficient.',
+  },
+  'azerbaijan-address-register': {
+    id: 'azerbaijan-address-register',
+    name: 'Azerbaijan Address Register Information System (ÜRIS)',
+    url: 'https://emlak.gov.az/az/news/view/9349-%C3%9Cnvan-Reyestri-%C4%B0nformasiya-Sistemi-n%C9%99dir-v%C9%99-sistemin-hans%C4%B1-%C3%BCst%C3%BCnl%C3%BCkl%C9%99ri-var',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official address-register reference for settlements, postcodes, transport infrastructure, and immovable-property addresses with source object identifiers; portal visibility is not a bulk redistribution license.',
   },
   'azerbaijan-open-data': {
     id: 'azerbaijan-open-data',
@@ -1799,16 +3820,16 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     kind: 'gazetteer',
     coverage: 'country',
     usage: 'validation',
-    notes: 'Azerbaijan open-data reference for public administrative and geographic datasets where available.',
+    notes: 'Dataset-discovery and validation only until each publisher, license, schema, coverage, territorial vintage, update date, and digest passes dataset-by-dataset review.',
   },
   'azerpost-address-reference': {
     id: 'azerpost-address-reference',
     name: 'Azerpost Postal Reference',
-    url: 'https://www.azerpost.az/',
+    url: 'https://www.azerpost.az/az/tez-tez-verilen-suallar/umumi-br-suallar/yasadigim-unvanin-poct-indeksini-nece-oyrene-bilerem',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Azerbaijan postal and delivery reference for postcode and locality validation.',
+    notes: 'Official postcode, branch, and locality assignment reference. Search results and office points are not canonical postcode polygons, and public search does not imply bulk reuse rights.',
   },
   'geonames-azerbaijan': {
     id: 'geonames-azerbaijan',
@@ -1869,11 +3890,11 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'ctt-portugal': {
     id: 'ctt-portugal',
     name: 'CTT Portugal Postal Code Search',
-    url: 'https://www.ctt.pt/feapl_2/app/open/tools.jspx?tool=1',
+    url: 'https://www.ctt.pt/feapl_2/app/open/postalCodeSearch/postalCodeSearch.jspx?lang=def',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Portugal postal-code finder covering mainland, Azores, and Madeira.',
+    notes: 'CTT postal-code finder covering mainland Portugal, the Azores, and Madeira.',
   },
   'guernsey-post': {
     id: 'guernsey-post',
@@ -1896,11 +3917,11 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'jersey-post': {
     id: 'jersey-post',
     name: 'Jersey Post',
-    url: 'https://www.jerseypost.com/',
+    url: 'https://www.jerseypost.com/tools/address-finder/',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Jersey postcode and delivery reference.',
+    notes: 'Jersey Post official address and postcode finder.',
   },
   'jersey-gov-open-data': {
     id: 'jersey-gov-open-data',
@@ -1914,11 +3935,11 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'isle-of-man-post': {
     id: 'isle-of-man-post',
     name: 'Isle of Man Post Office',
-    url: 'https://www.iompost.com/',
+    url: 'https://www.iompost.com/tools-forms/postcode-finder/',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Isle of Man postcode and delivery reference.',
+    notes: 'Isle of Man Post Office official postcode finder.',
   },
   'isle-of-man-gov-data': {
     id: 'isle-of-man-gov-data',
@@ -1968,11 +3989,11 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
   'british-overseas-postal-reference': {
     id: 'british-overseas-postal-reference',
     name: 'British Overseas Territories Postal Reference',
-    url: 'https://www.royalmail.com/',
+    url: 'https://www.royalmail.com/sending/international/country-guides',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Fallback postal reference for UK overseas territories using assigned territory postcodes.',
+    notes: 'Royal Mail country guides provide current destination addressing and service reference for UK overseas territories using assigned territory postcodes.',
   },
   'south-georgia-gis': {
     id: 'south-georgia-gis',
@@ -1982,6 +4003,33 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
     coverage: 'territory',
     usage: 'reference',
     notes: 'Territory reference for South Georgia settlements, research stations, islands, and protected areas.',
+  },
+  'saint-helena-postal': {
+    id: 'saint-helena-postal',
+    name: 'St Helena Government Postal Service',
+    url: 'https://www.sainthelena.gov.sh/public-services/postal/',
+    kind: 'postal-code',
+    coverage: 'territory',
+    usage: 'reference',
+    notes: 'Official St Helena postal-service reference for Jamestown routing, postal operations, and STHL 1ZZ delivery conventions.',
+  },
+  'ascension-post-office': {
+    id: 'ascension-post-office',
+    name: 'Ascension Island Government Post Office',
+    url: 'https://www.ascension.gov.ac/postal-service/post-office',
+    kind: 'postal-code',
+    coverage: 'territory',
+    usage: 'reference',
+    notes: 'Official Ascension Island Post Office reference for ASCN 1ZZ routing, mail services, and settlement delivery handling.',
+  },
+  'tristan-post-office': {
+    id: 'tristan-post-office',
+    name: 'Tristan da Cunha Post Office',
+    url: 'https://www.tristandc.com/postoffice.php',
+    kind: 'postal-code',
+    coverage: 'territory',
+    usage: 'reference',
+    notes: 'Official Tristan da Cunha Post Office reference for TDCU 1ZZ routing, postage, and island mail handling.',
   },
   'saint-helena-gov': {
     id: 'saint-helena-gov',
@@ -1997,7 +4045,7 @@ export const EUROPE_OPEN_GEO_SOURCES: Record<EuropeOpenGeoSourceId, EuropeOpenGe
 export const EUROPE_COUNTRY_AND_TERRITORY_CODES = [
   'AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'BY', 'CH', 'CY', 'CZ',
   'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU',
-  'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'ME',
+  'EA', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'ME',
   'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE',
   'SI', 'SK', 'SM', 'UA', 'VA', 'XK',
   'SBA',
@@ -2028,51 +4076,106 @@ const BASE_OPEN_SOURCE_IDS: EuropeOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpenGeoSourceId[]>> = {
-  FR: ['data-gouv-fr-postcodes'],
-  DE: ['openplzapi'],
-  NL: ['opendatasoft-nl-postcodes'],
-  BE: ['odwb-be-postcodes'],
-  CH: ['openplzapi'],
-  AT: ['openplzapi'],
-  GB: ['postcodes-io', 'ons-postcode-directory', 'ordnance-survey-open-names', 'ordnance-survey-boundary-line'],
+  FR: ['data-gouv-fr-postcodes', 'ban-fr', 'ign-bd-topo', 'insee-cog'],
+  DE: ['deutsche-post-plz-server', 'deutsche-post-datafactory', 'bkg-postleitzahlgebiete', 'bkg-georeferenced-addresses', 'adv-hk-de', 'adv-hu-de', 'bkg-lod2-de', 'bkg-vg25'],
+  NL: ['pdok-bag', 'cbs-nl-postcode-areas', 'opendatasoft-nl-postcodes'],
+  BE: ['bpost-belgium-postcode-reference', 'bpost-belgium-postal-cantons', 'bpost-address-validation', 'bosa-belgium-best-address', 'digitaal-vlaanderen-address-register', 'digitaal-vlaanderen-building-register', 'digitaal-vlaanderen-grb', 'spw-wallonia-icar-addresses', 'spw-wallonia-picc-buildings', 'paradigm-brussels-urbis-buildings-addresses', 'fps-finance-belgium-cadastral-plan', 'fps-finance-belgium-administrative-units', 'odwb-be-postcodes'],
+  CH: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'swisstopo-building-address-directory', 'swiss-federal-gwr', 'swisstopo-swissbuildings3d', 'swisstopo-swissboundaries3d'],
+  AT: ['austrian-post-postcode', 'austrian-post-address-data', 'bev-austria-address-register', 'statistics-austria-postcode-regions', 'bev-austria-administrative-boundaries', 'statistics-austria-gwr', 'openplzapi'],
+  GB: [
+    'postcodes-io',
+    'ons-postcode-directory',
+    'ordnance-survey-open-names',
+    'ordnance-survey-boundary-line',
+    'ordnance-survey-open-uprn',
+    'ordnance-survey-openmap-local',
+  ],
   IE: ['ideal-postcodes-reference'],
-  LI: ['openplzapi'],
+  LI: ['swiss-post-postcodes', 'swisstopo-plzo-postal-localities', 'liechtenstein-post-access-points', 'llv-liechtenstein-building-addresses', 'llv-liechtenstein-gwr-public', 'llv-liechtenstein-official-survey', 'llv-liechtenstein-sovereign-boundaries', 'swisstopo-swissbuildings3d'],
   SE: ['civictechsweden-posmkod', 'lantmateriet-sweden', 'trafikverket-sweden', 'scb-sweden-geodata'],
-  NO: ['data-norge', 'kartverket-norway', 'geonorge-norway', 'brreg-address-register'],
-  DK: ['postcode-eu', 'dataforsyningen-denmark', 'danish-address-register-dar', 'geodanmark'],
-  FI: ['avoindata-fi-postcodes', 'nls-finland', 'maanmittauslaitos-open-data', 'dvv-finland-address-data'],
-  LV: ['kartes-lv-postal-codes', 'lgia-latvia', 'vzd-latvia-address-register', 'data-gov-lv-geodata'],
-  EE: ['kartes-lv-postal-codes', 'maaamet-estonia', 'estonia-address-data-system', 'xgis-estonia'],
-  LT: ['kartes-lv-postal-codes', 'geoportal-lt', 'registru-centras-address-register', 'open-data-lithuania'],
-  IS: ['okfn-index-postcodes', 'lmmi-iceland', 'iceland-national-registry-addresses', 'island-is-open-data'],
-  IT: ['datahub-postal', 'istat-italy-geodata', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
+  NO: [
+    'data-norge', 'kartverket-norway', 'geonorge-norway',
+    'posten-bring-norway-postcode-register',
+    'kartverket-norway-postcode-areas',
+    'kartverket-norway-address-api',
+    'kartverket-norway-matrikkelen-address',
+    'kartverket-norway-matrikkelen-address-unit',
+    'kartverket-norway-matrikkelen-building-points',
+    'geovekst-norway-fkb-buildings',
+    'kartverket-norway-administrative-units',
+  ],
+  DK: [
+    'postnord-dk-postcode-finder',
+    'dagi-denmark-postcode-areas',
+    'dataforsyningen-denmark',
+    'danish-address-register-dar',
+    'bbr-denmark-buildings',
+    'geodanmark-buildings',
+    'dagi-denmark-boundaries',
+    'geodanmark',
+  ],
+  FI: [
+    'posti-finland-postal-code-services',
+    'posti-finland-basic-address-file',
+    'statistics-finland-paavo-postal-areas',
+    'dvv-finland-building-dwelling-register',
+    'syke-finland-ryhti-building-addresses',
+    'nls-finland-topographic-road-addresses',
+    'nls-finland-topographic-buildings',
+    'nls-finland-municipal-division',
+    'aland-post-postal-services',
+    'avoindata-fi-postcodes',
+    'nls-finland',
+    'maanmittauslaitos-open-data',
+    'dvv-finland-address-data',
+  ],
+  LV: ['latvijas-pasts-check-address', 'vzd-latvia-address-register', 'vzd-latvia-cadastral-buildings', 'vzd-latvia-administrative-boundaries', 'kartes-lv-postal-codes', 'lgia-latvia', 'data-gov-lv-geodata'],
+  EE: ['omniva-estonia-postcodes', 'estonia-aks-postal-codes', 'estonia-aks-postal-areas', 'estonia-aks-address-objects', 'estonia-aks-building-shapes', 'estonia-ehak-admin-boundaries'],
+  LT: ['lietuvos-pastas-postcode-search', 'registru-centras-address-register', 'registru-centras-ntr-buildings', 'registru-centras-address-boundaries', 'geoportal-lt', 'open-data-lithuania'],
+  IS: ['byggdastofnun-iceland-postcode-register', 'posturinn-iceland-postcodes', 'hms-iceland-address-register', 'natt-is50v-buildings', 'statistics-iceland-geography', 'island-is-open-data'],
+  IT: ['poste-italiane-cap-search', 'poste-italiane-cap-professional', 'anncsu-italy-addresses', 'istat-italy-admin-boundaries', 'italy-regional-dbgt-buildings', 'agenzia-entrate-catasto', 'geoportale-nazionale-italy'],
   ES: ['eurostat-gisco-postcodes', 'correos-spain', 'ign-spain-cnig', 'catastro-spain', 'idee-spain'],
+  EA: ['correos-spain', 'ign-spain-cnig', 'idee-spain'],
   PT: ['eurostat-gisco-postcodes', 'ctt-portugal', 'dgterritorio-portugal', 'snig-portugal', 'bupi-portugal'],
-  GR: ['elta-gr', 'ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
-  MT: ['eurostat-gisco-postcodes', 'pa-malta-geoserver', 'nso-malta-geodata', 'identity-malta-addressing'],
+  GR: ['elta-gr', 'gisco-greece-postcode-points', 'elstat-greece-digital-cartography', 'greece-national-streets-numbers-plan', 'ktimatologio-greece', 'geodata-gov-gr', 'okxe-greece'],
+  MT: [
+    'maltapost-postcode-finder',
+    'malta-office-address-registrar',
+    'malta-oar-location-registers',
+    'malta-pa-large-scale-topography-buildings',
+    'pa-malta-geoserver',
+    'nso-malta-geodata',
+  ],
   SM: ['zauberware-postal-codes', 'san-marino-geoportal', 'san-marino-statistics'],
-  MC: ['eu-postal-code-package', 'monaco-gouv-cartography', 'monaco-imsee-geodata'],
+  MC: [
+    'la-poste-official-postal-codes-monaco',
+    'la-poste-monaco-addressing',
+    'monaco-dpum-address-base',
+    'monaco-dpum-building-topography',
+    'monaco-gouv-cartography',
+    'monaco-imsee-geodata',
+  ],
   VA: ['zauberware-postal-codes', 'vatican-city-state', 'openstreetmap-vatican'],
-  AD: ['postalcodes-info', 'andorra-cartografia', 'andorra-open-data'],
-  CY: ['postalcodes-info', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus'],
-  RO: ['okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
-  BG: ['scrape4u-postal-codes', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
-  UA: ['eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
+  AD: ['correos-andorra-postcodes', 'andorra-urban-address-guide', 'andorra-topographic-buildings', 'andorra-cartografia', 'andorra-open-data', 'postalcodes-info'],
+  CY: ['cyprus-post-postcode-directory', 'cyprus-post-postcode-api', 'cyprus-dls-inspire-addresses', 'cyprus-dls-inspire-buildings', 'cyprus-dls-administrative-units', 'cystat-postal-sectors', 'eu-cyprus-protocol-10', 'cyprus-department-lands-surveys', 'cyprus-open-data-portal', 'inspire-cyprus', 'postalcodes-info'],
+  RO: ['posta-romana-postcode-search', 'posta-romana-postcode-structure', 'posta-romana-infocod', 'posta-romana-postcode-geography-status', 'ancpi-romania-renns', 'ancpi-romania-inis-addresses-buildings', 'ancpi-romania-registered-property-viewer', 'insse-romania-siruta-localities', 'okfn-index-postcodes', 'ancpi-romania-geoportal', 'romania-open-data'],
+  BG: ['bulgarian-posts-postcode-reference', 'bulgarian-posts-post-office-directory', 'grao-bulgaria-address-classifier', 'agcc-bulgaria-cadastral-map', 'agcc-bulgaria-inspire-buildings', 'nsi-bulgaria-ekatte', 'nsi-bulgaria-administrative-spatial-data', 'cadastre-bulgaria', 'bulgaria-inspire-geoportal'],
+  UA: ['ukrposhta-postcodes-open-data', 'ukrposhta-index-and-address-api', 'ukraine-unified-address-register', 'ukraine-building-register', 'ukraine-nsdi', 'eurostat-gisco-postcodes', 'data-gov-ua-geodata', 'ukraine-cadastre-map'],
   MD: ['scrape4u-postal-codes', 'geoportal-moldova', 'moldova-open-data'],
-  BY: ['scrape4u-postal-codes', 'belarus-nca-geoportal'],
+  BY: ['belpost-belarus-postcode-reference', 'nca-belarus-postal-code-zones', 'nca-belarus-address-register', 'nca-belarus-capital-structure-addresses', 'nca-belarus-real-estate-register', 'nca-belarus-property-characteristics-register', 'nca-belarus-ate-register', 'nca-belarus-soato-classifier', 'nca-belarus-public-cadastral-map', 'belarus-nca-geoportal'],
   RU: ['datahub-postal', 'rosreestr-nspd', 'russia-open-data-geo'],
-  RS: ['datahub-postal', 'geosrbija', 'rgz-serbia'],
+  RS: ['datahub-postal', 'geosrbija', 'rgz-serbia', 'posta-srbije-post-office-list', 'posta-srbije-pak-definition', 'posta-srbije-pak-lookup', 'posta-srbije-wsp-address-api', 'rgz-serbia-address-register-open-data', 'rgz-serbia-spatial-unit-register', 'rgz-serbia-geosrbija-buildings', 'rgz-serbia-real-estate-cadastre'],
   BA: ['datahub-postal', 'bosnia-geoportal', 'bosnia-cadastre-reference'],
-  ME: ['eurostat-gisco-postcodes', 'geoportal-montenegro', 'montenegro-cadastre'],
+  ME: ['posta-crne-gore-postcode-office-directory', 'posta-crne-gore-pak-addressing', 'uzn-montenegro-address-register', 'uzn-montenegro-real-estate-cadastre', 'uzn-montenegro-geoportal', 'uzn-montenegro-spatial-unit-record', 'monstat-montenegro-spatial-register', 'eurostat-gisco-postcodes', 'geoportal-montenegro', 'montenegro-cadastre'],
   XK: ['spotzi-postal-codes', 'kosovo-geoportal', 'kosovo-cadastre'],
-  AL: ['spotzi-postal-codes', 'asig-albania', 'albania-geoportal'],
+  AL: ['posta-shqiptare-postcodes', 'albania-national-address-system', 'ashk-albania-cadastral-buildings', 'asig-albania', 'albania-geoportal'],
   MK: ['datahub-postal', 'katastar-north-macedonia', 'makstat-geodata'],
-  CZ: ['ceska-posta-psc', 'cuzk-ruian', 'cuzk-geoportal'],
-  HR: ['posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
-  HU: ['posta-hu', 'lechner-hungary-geodata', 'hungary-public-road-data'],
+  CZ: ['ceska-posta-psc', 'ceska-posta-customer-outputs', 'cuzk-ruian', 'cuzk-ruian-addresses', 'cuzk-ruian-vfr', 'cuzk-inspire-buildings', 'cuzk-ruian-boundaries', 'cuzk-geoportal'],
+  HR: ['croatian-post-postcode-downloads', 'dgu-croatia-spatial-unit-register', 'dgu-croatia-inspire-addresses', 'dgu-croatia-inspire-buildings', 'dgu-croatia-inspire-administrative-units', 'dgu-croatia-cadastral-parcels', 'gisco-croatia-postcode-points', 'posta-hr', 'dgu-croatia-geoportal', 'croatia-cadastre'],
+  HU: ['magyar-posta-partner-extra-postcodes', 'magyar-posta-addressing-database', 'hungary-central-address-register-kcr', 'lechner-hungary-eha', 'lechner-hungary-inspire-buildings', 'lechner-hungary-nta-buildings', 'hungary-land-registry-cadastral-map', 'ksh-hungary-administrative-units', 'lechner-hungary-geodata', 'hungary-public-road-data'],
   PL: ['poczta-polska', 'geoportal-gov-pl', 'gus-teryt-poland'],
-  SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia'],
-  SK: ['slovenska-posta-psc', 'zbgis-slovakia', 'slovakia-address-register'],
+  SI: ['posta-si', 'eprostor-slovenia', 'gurs-slovenia', 'posta-slovenije-postcode-csv', 'posta-slovenije-special-postcodes', 'posta-slovenije-delivery-area-webgis', 'gurs-slovenia-postal-districts', 'gurs-slovenia-address-register', 'gurs-slovenia-public-features-api', 'gurs-slovenia-real-estate-cadastre-buildings', 'gurs-slovenia-spatial-unit-register', 'gurs-slovenia-cadastral-parcels'],
+  SK: ['slovenska-posta-psc', 'zbgis-slovakia', 'slovakia-address-register', 'slovak-post-postcode-search', 'slovak-post-access-point-xml', 'slovakia-register-addresses-portal', 'slovakia-register-addresses-openapi', 'zbgis-slovakia-inspire-buildings', 'zbgis-slovakia-administrative-units', 'zbgis-slovakia-cadastral-parcels'],
   BQ: ['zippopotam'],
   AW: ['zippopotam'],
   CW: ['zippopotam'],
@@ -2105,9 +4208,9 @@ const COUNTRY_SOURCE_IDS: Partial<Record<EuropeCountryOrTerritoryCode, EuropeOpe
   GI: ['royal-gibraltar-post', 'gibraltar-gis'],
   FK: ['falkland-islands-post', 'falkland-islands-gis'],
   GS: ['british-overseas-postal-reference', 'south-georgia-gis', ...getPolarOpenSourceIds('GS')],
-  SH: ['british-overseas-postal-reference', 'saint-helena-gov'],
-  AC: ['british-overseas-postal-reference', 'saint-helena-gov'],
-  TA: ['british-overseas-postal-reference', 'saint-helena-gov'],
+  SH: ['british-overseas-postal-reference', 'saint-helena-postal'],
+  AC: ['british-overseas-postal-reference', 'ascension-post-office'],
+  TA: ['british-overseas-postal-reference', 'tristan-post-office'],
 };
 
 export function getEuropeOpenSourceIds(countryCode: string): EuropeOpenGeoSourceId[] {

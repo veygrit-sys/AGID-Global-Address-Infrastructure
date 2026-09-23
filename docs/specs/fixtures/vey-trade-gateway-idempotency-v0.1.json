@@ -1,0 +1,169 @@
+{
+  "$schema": "../schemas/vey-trade-gateway-idempotency-v0.1.schema.json",
+  "fixtureId": "vey-trade-gateway-idempotency-v0.1",
+  "status": "synthetic-local-fixture",
+  "source": {
+    "builder": "buildVeyTradeGatewayIdempotencyFixture",
+    "verifier": "npm run verify:vey-trade-gateway-idempotency-fixture-schema"
+  },
+  "boundaryGateId": "trade-gateway-local-idempotent-intent",
+  "privacy": {
+    "localOnly": true,
+    "productionTraffic": false,
+    "containsRawAddress": false,
+    "privateMaterialExposed": false
+  },
+  "vectors": [
+    {
+      "vectorId": "trade_gateway_intent_created_positive",
+      "ok": true,
+      "decision": "created",
+      "httpStatus": 201,
+      "replayed": false,
+      "attemptCount": 1,
+      "tradeGatewayIntentRef": "trade_gateway_intent_39C2D1B14A573D1DA280F094",
+      "bodyFingerprintRef": "trade_gateway_body_A4B8A99FC94B3DE7B32058C5",
+      "safeRefs": {
+        "tradingIntentId": "VT-B38600C6ADD0DA4FC268463F",
+        "operatorWorkspaceRef": "workspace_ref_ops_tyo_fixture_001",
+        "deliveryGatewayShipmentRef": "delivery_gateway_shipment_ref_tyo_fixture_001",
+        "playlistCommerceIntentRef": "playlist_intent_ref_tyo_fixture_001",
+        "listingAlias": "LIST-FIXTURE-001",
+        "orderAlias": "ORD-FIXTURE-001"
+      },
+      "errors": [],
+      "warnings": [
+        "vey-trading-is-a-market-and-contract-execution-layer-not-a-payment-app",
+        "futures-derivatives-and-energy-markets-require-licensed-venue-or-operator-review",
+        "digital-asset-trading-may-trigger-vasp-securities-consumer-protection-or-ip-review",
+        "do-not-store-raw-address-agid-aoid-counterparty-contact-private-keys-or-contract-body"
+      ],
+      "localOnly": true,
+      "productionTraffic": false,
+      "privateMaterialExposed": false,
+      "forbiddenValueMarkersFound": [],
+      "nonClaims": [
+        "local-only-idempotency-fixture-not-a-production-trading-venue",
+        "does-not-execute-payments-settle-funds-clear-customs-or-provide-legal-or-financial-advice",
+        "does-not-verify-identity-truth-or-sanctions-outcomes-beyond-caller-supplied-evidence-refs"
+      ]
+    },
+    {
+      "vectorId": "trade_gateway_intent_replayed_positive",
+      "ok": true,
+      "decision": "replayed",
+      "httpStatus": 201,
+      "replayed": true,
+      "attemptCount": 2,
+      "tradeGatewayIntentRef": "trade_gateway_intent_39C2D1B14A573D1DA280F094",
+      "bodyFingerprintRef": "trade_gateway_body_A4B8A99FC94B3DE7B32058C5",
+      "safeRefs": {
+        "tradingIntentId": "VT-B38600C6ADD0DA4FC268463F",
+        "operatorWorkspaceRef": "workspace_ref_ops_tyo_fixture_001",
+        "deliveryGatewayShipmentRef": "delivery_gateway_shipment_ref_tyo_fixture_001",
+        "playlistCommerceIntentRef": "playlist_intent_ref_tyo_fixture_001",
+        "listingAlias": "LIST-FIXTURE-001",
+        "orderAlias": "ORD-FIXTURE-001"
+      },
+      "errors": [],
+      "warnings": [
+        "vey-trading-is-a-market-and-contract-execution-layer-not-a-payment-app",
+        "futures-derivatives-and-energy-markets-require-licensed-venue-or-operator-review",
+        "digital-asset-trading-may-trigger-vasp-securities-consumer-protection-or-ip-review",
+        "do-not-store-raw-address-agid-aoid-counterparty-contact-private-keys-or-contract-body"
+      ],
+      "localOnly": true,
+      "productionTraffic": false,
+      "privateMaterialExposed": false,
+      "forbiddenValueMarkersFound": [],
+      "nonClaims": [
+        "local-only-idempotency-fixture-not-a-production-trading-venue",
+        "does-not-execute-payments-settle-funds-clear-customs-or-provide-legal-or-financial-advice",
+        "does-not-verify-identity-truth-or-sanctions-outcomes-beyond-caller-supplied-evidence-refs"
+      ]
+    },
+    {
+      "vectorId": "trade_gateway_intent_conflict_negative",
+      "ok": false,
+      "decision": "conflict",
+      "httpStatus": 409,
+      "replayed": false,
+      "attemptCount": 3,
+      "tradeGatewayIntentRef": "trade_gateway_intent_39C2D1B14A573D1DA280F094",
+      "bodyFingerprintRef": "trade_gateway_body_A4B8A99FC94B3DE7B32058C5",
+      "conflictRef": "trade_gateway_conflict_485E5E45A7547F46ED093BEE",
+      "errors": [
+        "idempotency-key-body-mismatch"
+      ],
+      "warnings": [],
+      "localOnly": true,
+      "productionTraffic": false,
+      "privateMaterialExposed": false,
+      "forbiddenValueMarkersFound": [],
+      "nonClaims": [
+        "local-only-idempotency-fixture-not-a-production-trading-venue",
+        "does-not-execute-payments-settle-funds-clear-customs-or-provide-legal-or-financial-advice",
+        "does-not-verify-identity-truth-or-sanctions-outcomes-beyond-caller-supplied-evidence-refs"
+      ]
+    },
+    {
+      "vectorId": "trade_gateway_intent_private_material_negative",
+      "ok": false,
+      "decision": "rejected",
+      "httpStatus": 400,
+      "replayed": false,
+      "attemptCount": 0,
+      "errors": [
+        "rawAddress-not-allowed-in-trade-gateway-intent",
+        "privateKey-not-allowed-in-trade-gateway-intent",
+        "evidence.0.rawAoid-not-allowed-in-trade-gateway-intent"
+      ],
+      "warnings": [],
+      "localOnly": true,
+      "productionTraffic": false,
+      "privateMaterialExposed": false,
+      "forbiddenValueMarkersFound": [],
+      "nonClaims": [
+        "local-only-idempotency-fixture-not-a-production-trading-venue",
+        "does-not-execute-payments-settle-funds-clear-customs-or-provide-legal-or-financial-advice",
+        "does-not-verify-identity-truth-or-sanctions-outcomes-beyond-caller-supplied-evidence-refs"
+      ]
+    }
+  ],
+  "forbiddenValueMarkers": [
+    "rawAddressValue",
+    "rawAgidValue",
+    "rawAoidValue",
+    "recipientNameValue",
+    "counterpartyNameValue",
+    "phoneValue",
+    "emailValue",
+    "privateKeyValue",
+    "seedPhraseValue",
+    "walletPrivateKeyValue",
+    "bankAccountValue",
+    "cardPanValue",
+    "contractBodyValue",
+    "customsDocumentBodyValue",
+    "raw_address_value",
+    "raw_agid_value",
+    "raw_aoid_value",
+    "recipient_name_value",
+    "counterparty_name_value",
+    "private_key_value",
+    "wallet_private_key_value",
+    "bank_account_value",
+    "card_pan_value",
+    "contract_body_value",
+    "customs_document_body_value"
+  ],
+  "localOnly": true,
+  "productionTraffic": false,
+  "privateMaterialExposed": false,
+  "nonClaims": [
+    "local-only-idempotency-fixture-not-a-production-trading-venue",
+    "does-not-execute-payments-settle-funds-clear-customs-or-provide-legal-or-financial-advice",
+    "does-not-verify-identity-truth-or-sanctions-outcomes-beyond-caller-supplied-evidence-refs"
+  ],
+  "validationErrors": []
+}

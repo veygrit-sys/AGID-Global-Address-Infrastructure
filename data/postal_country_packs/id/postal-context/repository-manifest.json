@@ -1,0 +1,84 @@
+{
+  "schema_version": "agid-postal-id-repository-manifest-v0.1",
+  "repository": { "name": "agid-postal-id", "country_code": "ID", "maturity": "M1_metadata" },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "current_code_name": "Indonesia five-digit kode pos",
+    "current_code_format": "NNNNN",
+    "current_code_default_geometry": "routing_locality_assignment",
+    "legal_rule": "Indonesia Postal Law 38/2009 defines Kode Pos as a series of numbers, letters, or their combination written after the city name to assist sorting, delivery and other purposes, and requires it to identify an address or area. Government Regulation 15/2013 makes the national system administrative-area based. Ministerial Regulation 8/2025 permits numeric, alphabetic or combined codes and requires a ministerial scheme down to the smallest area. Current Pos Indonesia and UPU presentation remains five digits, but the repository never assumes that all future legal codes are five numeric characters.",
+    "assignment_rule": "A current five-digit Pos Indonesia search result relates a code to province, city or regency, district and village or urban village names. A lookup result, UPU address example or locally published crosswalk remains assignment evidence and does not by itself prove complete history, one-to-one locality identity, delivery entitlement or polygon membership.",
+    "geometry_rule": "No reviewed national Pos Indonesia postcode boundary artifact is bundled. Canonical postal geometry requires an exact ministerial or operator-authorized boundary artifact with edition, coverage, assignment relation, licence, CRS, topology and digest pinned. Village or urban-village boundaries joined to postcode assignments create only derived, uncertainty-bearing surfaces; BIG administrative geometry, Thiessen-filled gaps, geocoding, interpolation, Voronoi and model output never become official postal polygons.",
+    "address_rule": "Province, city or regency, district, village or urban village, RT/RW, street or alley, premise number, postcode and post-office evidence remain typed. UPU states RT/RW supports neighbourhood administration but has no administrative power. None of these fields alone identifies an occupant, owner, exact entrance or exact building footprint.",
+    "building_rule": "Exact building display requires rights-cleared authoritative building geometry and a source-defined stable relation, common identifier or reviewed explicit crosswalk to the exact civic address. Postcode or locality containment, RT/RW text, RBI feature proximity, cadastral overlap, street-text match or nearest-building logic creates candidates only.",
+    "administration_rule": "Kemendagri administrative codes, BPS statistical-area codes and BIG province, city-or-regency, district and village-or-urban-village geometry refresh independently. They require explicit editioned crosswalks and never become Pos Indonesia assignment or postal geometry by name similarity alone. BIG's published village-boundary metadata warns that non-definitive boundaries are not an official reference and describes some equal-distance gap allocation.",
+    "licence_rule": "Satu Data, BIG, BPS, Kemendagri and Pos Indonesia access is artifact-specific. A public lookup, open label, viewer, WMS or WFS endpoint, download button, government authorship, portal listing or absent licence field never by itself grants bulk extraction or repository redistribution. Every production artifact pins provider, dataset, licence or permission, attribution, edition, coverage, schema, CRS and digest.",
+    "privacy_rule": "Recipients, contacts, correspondence, shipment and tracking records, query history, RT/RW household rosters, residents, occupants, owners, tenants, private access instructions and personal address registrations are excluded from public artifacts.",
+    "crs_rule": "Every spatial artifact retains source CRS, axis order, epoch, scale and accuracy. EPSG:4326 portal metadata does not imply that every downloaded resource uses identical axes or precision. Reprojection requires reviewed parameters and an accuracy statement; no coordinates are merely relabelled WGS84.",
+    "territory_rule": "The repository uses ISO code ID and exact source-stated coverage. Postal, administrative, statistical and cartographic coverage is recorded as source metadata and is not used to decide sovereignty, jurisdiction or borders; source gaps and disputed areas are not model-filled as official.",
+    "freshness_rule": "Ministerial code schemes, Pos Indonesia assignments, village-postcode crosswalks, Kemendagri codes, BPS codes, BIG boundaries, RBI buildings, civic addresses and licences refresh independently. Mixed-edition joins fail closed unless validity, known-time and an explicit relation overlap."
+  },
+  "integration": {
+    "agid_country_code": "ID",
+    "coordinate_flow": "coordinate -> exact official postal surface or permitted civic-address point -> current five-digit assignment -> village-or-urban-village/district/city-or-regency/province -> RT/RW and street/premise evidence -> explicit address-building relation -> ID AGID cell",
+    "postcode_flow": "canonical current five digits -> pinned Pos Indonesia assignment -> locality and administrative crosswalk -> official surface or no canonical geometry -> optional derived locality surface -> explicit civic-address/building relation -> AGID cells",
+    "building_output_gate": "source-defined stable address-building relation, common identifier, or reviewed explicit crosswalk required"
+  },
+  "quality_gates": [
+    { "id": "current-five-digit-code", "pass": "Current runtime accepts exactly five digits beginning 1 through 9; prefixes, punctuation and four- or six-digit values are rejected while legal future formats remain versioned separately." },
+    { "id": "assignment-versus-geometry", "pass": "Pos Indonesia assignment authority and official or derived geometry authority are recorded independently." },
+    { "id": "admin-code-crosswalk", "pass": "Kemendagri, BPS, Pos Indonesia and BIG identifiers retain separate namespaces, editions and explicit crosswalk lineage." },
+    { "id": "derived-locality-surface", "pass": "Generated surfaces record inputs, method, uncertainty, exclusions including islands and non-delivery areas, topology, version, time and digest and remain non-canonical." },
+    { "id": "rt-rw-and-building-separation", "pass": "RT/RW and locality context never substitute for a civic-address point or explicit address-building relation." },
+    { "id": "explicit-building-link", "pass": "Exact building output has an authoritative relation or reviewed crosswalk; containment, text and proximity alone never pass." },
+    { "id": "licence-crs-territory-privacy", "pass": "Dataset-specific rights, attribution, CRS, scale, coverage and privacy exclusions are pinned without geopolitical inference." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_assignment", "definition": "A complete rights-cleared current code-to-locality assignment passes authority, coverage, freshness, licence and digest gates." },
+      { "id": "M3_geometry_and_address", "definition": "Official or derived postal geometry and public civic-address artifacts pass authority, uncertainty, privacy, CRS, validity and redistribution gates." },
+      { "id": "M4_building", "definition": "Exact permitted building geometry and explicit civic-address joins pass identifier, ambiguity, privacy and quality gates." }
+    ],
+    "hard_blockers": [
+      "pos-indonesia-search-result-presented-as-bulk-redistributable-directory",
+      "locality-row-or-administrative-boundary-presented-as-official-postal-polygon",
+      "big-nondefinitive-or-thiessen-filled-boundary-presented-as-official-postal-geometry",
+      "derived-surface-voronoi-interpolation-or-model-output-presented-as-official-postal-polygon",
+      "current-five-digit-runtime-presented-as-the-only-future-legal-code-format",
+      "kemendagri-bps-pos-or-big-identifiers-joined-by-name-without-editioned-crosswalk",
+      "rt-rw-postcode-or-locality-presented-as-exact-address-building-or-recipient",
+      "containment-overlap-proximity-or-text-match-presented-as-exact-address-building-link",
+      "portal-viewer-service-download-government-authorship-or-missing-licence-presented-as-redistribution-right",
+      "recipient-contact-correspondence-tracking-query-household-resident-occupant-owner-or-private-access-data-published",
+      "source-crs-axis-scale-or-epoch-published-as-wgs84-without-reviewed-transform",
+      "source-coverage-used-as-sovereignty-claim-or-gap-model-filled-as-official",
+      "postcode-premise-building-or-delivery-point-stored-as-number-or-inferred-from-location"
+    ]
+  },
+  "required_runtime_environment": [
+    "AGID_POSTAL_CONTEXT_ID_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_ID_DESCRIPTOR_DIGEST",
+    "AGID_POSTAL_CONTEXT_ID_LKG_DESCRIPTOR_PATH",
+    "AGID_POSTAL_CONTEXT_ID_LKG_DESCRIPTOR_DIGEST"
+  ],
+  "non_goals": [
+    "bundling-current-postcode-locality-address-building-administrative-statistical-tracking-or-query-rows",
+    "all-current-five-digit-codes-have-polygons",
+    "village-or-urban-village-boundary-is-postal-area",
+    "rt-rw-is-canonical-postal-or-building-geometry",
+    "model-generated-gap-is-official-postal-geometry",
+    "nearest-building-is-exact-address-link",
+    "postal-coverage-decides-sovereignty"
+  ]
+}

@@ -1,0 +1,61 @@
+name: AGID OpenAPI Evidence Extensions
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    - cron: "27 3 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-extension-scan:
+    name: OpenAPI evidence extension scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Scan OpenAPI evidence fixture extensions
+        run: npm run verify:agid-openapi-evidence-extensions
+
+      - name: Check OpenAPI evidence workflow contract
+        run: npm run verify:agid-openapi-evidence-workflow
+
+  linked-evidence-verifiers:
+    name: Linked evidence verifiers
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Run allowlisted linked evidence verifiers
+        run: npm run verify:agid-openapi-evidence-extensions:linked

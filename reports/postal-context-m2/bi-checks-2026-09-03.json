@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "BI",
+  "observedAt": "2026-09-02T20:51:29.765Z",
+  "completedAt": "2026-09-02T21:35:00.000Z",
+  "baseCommit": "eb1a6aa71d2dc6553556d25ba9c8b19e3a3206ad",
+  "scope": "BI-specific RNP, Burundi Presidency, UPU no-postcode, exact-body, rights, address-metadata and no-proxy evidence plus real-app fail-closed verification. No raw body, real address, administrative/service proxy, Point, synthetic planning code, production geometry or successful BI postal-area visual was promoted.",
+  "checks": [
+    {"id":"bi-source-inspector","command":"<bundled-python> scripts/inspect-postal-context-bi-sources.py --source-dir <temporary-source-directory>","result":"pass","tests":1,"assertion":"five exact official bodies reproduce RNP identity, current UPU no-postcode/address format and rights evidence without rows or geometry"},
+    {"id":"bi-source-inspector-unit","command":"<bundled-python> scripts/inspect-postal-context-bi-sources.test.py -v","result":"pass","tests":4,"assertion":"digest, source-set and marker drift fail closed"},
+    {"id":"bi-address-metadata","command":"node --test scripts/postal-context-bi-address-metadata.test.mjs","result":"pass","tests":2,"assertion":"BI JSON and Africa hierarchy represent no postcode and separate BP, commune and province"},
+    {"id":"real-app-and-api","command":"GET http://127.0.0.1:3024/ and GET /api/v1/postal/BI/1000?geometry=geojson","result":"pass","tests":2,"assertion":"actual app HTTP 200; real unmocked BI postal API HTTP 404 unsupported and no fake geometry"},
+    {"id":"deterministic-browser-fallback","command":"temporary Playwright Chromium check against actual app","result":"pass-with-blocked-country","tests":1,"assertion":"title/page, two canvases and no framework overlay; live Bujumbura Address Context produced BI0371Z5KS11 while postal geometry and translucent overlay remained absent; no successful BI postal E2E or manual visual inspection is claimed"},
+    {"id":"shared-area-runtime-contracts","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts","result":"pass","tests":32,"assertion":"normalization, no-match, geometry validation, fit, translucent fill, outline, clear, non-area and routing stay fail closed"},
+    {"id":"official-source-catalog","command":"node node_modules/tsx/dist/cli.mjs --test src/lib/officialPostalSourceCatalog.test.ts","result":"pass","tests":54,"assertion":"RNP remains official context-only metadata and does not become postal-reference or geometry authority"},
+    {"id":"rollout-invariants-and-ledger","command":"node --test scripts/postal-context-m2-rollout.test.mjs scripts/postal-context-m2-bi-ledger.test.mjs","result":"pass","tests":14,"assertion":"stable queue, blocker policy, BI no-postcode evidence/report digests and next BJ"},
+    {"id":"research-catalog","command":"node --test scripts/build-postal-context-research-catalog.test.mjs","result":"pass","tests":2,"assertion":"rebuilt catalog is deterministic and reflects BI blocker while preserving runtime separation"},
+    {"id":"changed-syntax-json-and-types","command":"py_compile, node --check, JSON.parse and focused tsc","result":"pass","tests":12,"assertion":"changed code/data parse and focused source-registry/catalog type-check passes"}
+  ],
+  "totals": {"assertionGroups":10,"testsPassed":124,"testsFailed":0},
+  "applicationVerification": {
+    "actualAppStarted": true,
+    "actualAppHttpStatus": 200,
+    "realBiApiStatus": 404,
+    "realBiApiMessage": "Postal Context country is not supported",
+    "realBiAppAreaVisualizationVerified": false,
+    "inAppBrowser": "failed before navigation with Windows sandbox ACL helper error",
+    "deterministicPlaywrightFallback": "ran against the actual app using live app search proxies and an unmocked postal API; BI0371Z5KS11 and detailed civic context were visible, but no successful postcode-area overlay was produced",
+    "manualVisualInspection": false,
+    "browserE2eVerified": false
+  },
+  "environmentNotes": [
+    "The broad 68-test address-format suite passes all 67 checks unrelated to a pre-existing VC registration mismatch. The sole existing VC failure is svg-post-post-codes missing from the Americas source registry; BI itself and all African registration checks pass.",
+    "The repository-wide typecheck cannot resolve workspace package aliases through the reused dependency junction. Focused typechecking of the changed TypeScript source registries passes.",
+    "In-app Browser and local image viewing failed at the Windows ACL/path helper boundary; deterministic checks are recorded without claiming manual visual inspection."
+  ],
+  "countryM2Achieved": false
+}

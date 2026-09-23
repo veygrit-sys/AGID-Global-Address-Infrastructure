@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe,it } from 'node:test';
 import { encodeAGID } from './agid';
 import {
+areGridPolygonsEquivalent,
 findContainingGridCellPolygon,
 getDisplayCellPolygon,
 getDisplayGridStep,
@@ -297,12 +298,36 @@ describe('grid display geometry', () => {
     assert.ok(summary.averageAreaM2 > 0);
   });
 
-  it('shows only one red land highlight when active hover and selected cell differ', () => {
+  it('shows hover preview and selected cell together when active hover and selected cell differ', () => {
     const active = encodeAGID(35.6812, 139.7671);
     const selected = encodeAGID(35.682, 139.768);
     const highlights = resolveGridHighlightPolygons(active, selected, 16);
 
+    assert.ok(highlights.activePolygon);
+    assert.ok(highlights.selectedPolygon);
+  });
+
+  it('suppresses duplicate hover preview when active hover and selected cell are the same', () => {
+    const selected = encodeAGID(35.6812, 139.7671);
+    const highlights = resolveGridHighlightPolygons(selected, selected, 16);
+
     assert.equal(highlights.activePolygon, null);
     assert.ok(highlights.selectedPolygon);
+  });
+
+  it('suppresses hover preview when active and selected AGIDs are in the same rendered display cell', () => {
+    const active = { ...encodeAGID(35.681200, 139.767100), id: 'ACTIVE_DIFFERENT_ID' };
+    const selected = { ...encodeAGID(35.681201, 139.767101), id: 'SELECTED_DIFFERENT_ID' };
+    const highlights = resolveGridHighlightPolygons(active, selected, 18);
+
+    assert.ok(highlights.selectedPolygon);
+    assert.equal(highlights.activePolygon, null);
+  });
+
+  it('compares display-cell polygons by earth-fixed bounds', () => {
+    const a = getDisplayCellPolygon(encodeAGID(35.681200, 139.767100), 18);
+    const b = getDisplayCellPolygon(encodeAGID(35.681201, 139.767101), 18);
+
+    assert.equal(areGridPolygonsEquivalent(a, b), true);
   });
 });

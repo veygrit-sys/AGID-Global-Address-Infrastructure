@@ -1,0 +1,1877 @@
+openapi: 3.1.0
+info:
+  title: Delivery Gateway Carrier API
+  version: delivery-gateway-carrier-api-v0.1
+  summary: Stripe-like carrier integration API for safe rates, allocation, labels, tracking, and proof refs.
+  description: >
+    Delivery Gateway gives merchants and apps one carrier integration boundary
+    while raw addresses, recipient contacts, carrier API keys, raw labels,
+    proof witnesses, and production credentials stay out of public fixtures and
+    merchant callbacks.
+servers:
+  - url: https://api.veygrit.example
+    description: Placeholder host. Deployments must configure their own hosted or private endpoint.
+tags:
+  - name: Delivery Gateway Carrier API
+externalDocs:
+  description: Delivery Gateway sandbox carrier smoke fixture, schema, verifier commands, and non-claims.
+  url: ./README.md#delivery-gateway-sandbox-carrier-smoke
+paths:
+  /v1/shipment-intents:
+    post:
+      operationId: createShipmentIntent
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Create a sandbox ShipmentIntent from wallet-safe refs.
+      description: >
+        Creates a ref-first shipment intent before rate quote, carrier
+        allocation, label creation, or settlement. Public requests must use
+        recipient token, parcel profile, AddressQL validation, and optional
+        wallet consent refs only.
+      x-agid-contract-id: address-stripe-shipment-intent
+      x-agid-source-contract: src/lib/addressStripeFoundation.ts#createShipmentIntentSandbox
+      x-agid-redacted-fields:
+        - raw_address
+        - recipient_phone
+        - carrier_api_key
+        - carrier_credential
+        - proof_witness
+        - private_key
+        - proof_secret
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-wallet-consent
+        - not-proof-of-residence
+        - not-real-label-purchase
+        - not-production-carrier-traffic
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentIntentCreateRequest'
+            examples:
+              cheapestSynthetic:
+                summary: Safe synthetic shipment intent request
+                value:
+                  merchantRef: merchant_synthetic_demo
+                  recipientTokenRef: rectok_synthetic_friend_001
+                  parcelProfileRef: parcel_profile_synthetic_small_001
+                  addressValidationRef: addrval_synthetic_001
+                  walletConsentRef: consent_synthetic_001
+                  servicePreference: cheapest
+      responses:
+        '201':
+          description: Synthetic ShipmentIntent refs.
+          headers:
+            skipship-idempotency-key:
+              $ref: '#/components/headers/SkipshipIdempotencyKey'
+            skipship-idempotency-replayed:
+              $ref: '#/components/headers/SkipshipIdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentIntentResult'
+        '400':
+          description: Request contained missing refs or forbidden private material.
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+  /v1/delivery/rates:
+    post:
+      operationId: quoteDeliveryRates
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Quote normalized carrier rates from safe refs.
+      description: >
+        Quotes synthetic or managed carrier options from address aliases,
+        parcel profile refs, and delivery objectives. Public requests must use
+        refs and policy hints only; they must not contain raw address lines,
+        recipient contact fields, carrier credentials, or proof witnesses.
+      x-agid-contract-id: delivery-gateway-rate-quote
+      x-agid-source-contract: src/lib/deliveryGatewayCarrierApi.ts#DELIVERY_GATEWAY_API_SURFACES.rate-quote
+      x-agid-redacted-fields:
+        - raw_address
+        - recipient_name
+        - recipient_phone
+        - carrier_api_key
+        - proof_witness
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-production-carrier-traffic
+        - not-delivery-guarantee
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateQuoteRequest'
+            examples:
+              cheapestSynthetic:
+                summary: Safe synthetic rate quote request
+                value:
+                  addressAliasRef: addr_alias_synthetic_only
+                  parcelProfileRef: parcel_profile_synthetic_only
+                  objective: cheapest
+                  requestedServiceLevels:
+                    - standard
+                    - economy
+                  policyRef: merchant_policy_demo
+      responses:
+        '200':
+          description: Normalized safe carrier rate options.
+          headers:
+            skipship-idempotency-key:
+              $ref: '#/components/headers/SkipshipIdempotencyKey'
+            skipship-idempotency-replayed:
+              $ref: '#/components/headers/SkipshipIdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateQuoteResult'
+        '400':
+          description: Request contained missing refs or forbidden private material.
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+  /v1/delivery/allocate:
+    post:
+      operationId: allocateDeliveryCarrier
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Allocate a carrier choice from a rate ref and wallet consent ref.
+      description: >
+        Selects fastest, cheapest, balanced, or risk-minimized carrier options
+        using safe refs. Allocation is not a label purchase and does not expose
+        carrier credentials, decrypt material, raw carrier labels, or private
+        policy bodies.
+      x-agid-contract-id: delivery-gateway-carrier-allocation
+      x-agid-source-contract: src/lib/deliveryGatewayCarrierApi.ts#DELIVERY_GATEWAY_API_SURFACES.carrier-allocation
+      x-agid-redacted-fields:
+        - raw_address
+        - recipient_name
+        - recipient_phone
+        - unscoped_decrypt_material
+        - carrier_credential
+        - private_policy_body
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-real-label-purchase
+        - not-delivery-guarantee
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarrierAllocationRequest'
+            examples:
+              cheapestSynthetic:
+                summary: Safe synthetic carrier allocation request
+                value:
+                  rateRef: rate_dadbd84bc23fa9d12f6c0c54
+                  walletConsentRef: consent_synthetic_only
+                  objective: cheapest
+                  merchantPolicyRef: merchant_policy_demo
+      responses:
+        '200':
+          description: Carrier allocation decision refs.
+          headers:
+            skipship-idempotency-key:
+              $ref: '#/components/headers/SkipshipIdempotencyKey'
+            skipship-idempotency-replayed:
+              $ref: '#/components/headers/SkipshipIdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarrierAllocationResult'
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+  /v1/shipments:
+    post:
+      operationId: createSkipshipShipment
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Create a Skipship sandbox shipment from a recipient ID.
+      description: >
+        Developer-facing shipment facade for the Delivery Gateway sandbox flow.
+        The request uses a recipient ID, parcel profile ref, wallet consent ref,
+        and service preference, then maps internally to rate, allocation, label,
+        tracking, and delivery proof refs. Public requests must not contain raw
+        address lines, recipient contacts, carrier credentials, proof witnesses,
+        or raw carrier label payloads.
+      x-agid-contract-id: skipship-create-shipment
+      x-agid-source-contract: src/lib/deliveryGatewayCarrierApi.ts#createSkipshipShipment
+      x-agid-redacted-fields:
+        - raw_address
+        - recipient_name
+        - recipient_phone
+        - carrier_api_key
+        - raw_label_payload
+        - proof_witness
+      x-agid-non-claims:
+        - not-production-carrier-traffic
+        - not-real-label-purchase
+        - not-delivery-guarantee
+        - not-live-rate-comparison
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkipshipShipmentCreateRequest'
+            examples:
+              cheapestSynthetic:
+                summary: Safe synthetic shipment creation request
+                value:
+                  recipientId: ship_recipient_synthetic_001
+                  addressFormVersion: wallet_country_form_ref_synthetic_001
+                  parcelProfileRef: parcel_profile_synthetic_small_box_001
+                  walletConsentRef: consent_synthetic_skipship_001
+                  servicePreference: cheapest
+                  requestedAt: '2026-07-03T00:00:00.000Z'
+      responses:
+        '201':
+          description: Synthetic shipment refs created by the sandbox Delivery Gateway facade.
+          headers:
+            skipship-idempotency-key:
+              $ref: '#/components/headers/SkipshipIdempotencyKey'
+            skipship-idempotency-replayed:
+              $ref: '#/components/headers/SkipshipIdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkipshipShipmentCreateResult'
+        '400':
+          description: Request contained missing refs or forbidden private material.
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+  /v1/hexaship/mvp-v0.1/shipments:
+    post:
+      operationId: createHexashipMvpV01Shipment
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Run the Hexaship MVP v0.1 DHL/UPS sandbox shipment flow.
+      description: >
+        Stripe-style shipment creation facade for the Vey/Hexaship MVP. The
+        merchant sends an EC order ref, Address Wallet recipient ID, wallet
+        consent ref, parcel profile ref, and a selection mode. The sandbox
+        resolves the recipient by ID, compares safe DHL/UPS candidates, selects
+        fastest or cheapest, creates a label ref, records a tracking alias, and
+        emits normalized webhook ledger entries. This endpoint is local sandbox
+        evidence only and does not purchase real DHL or UPS labels.
+      x-agid-contract-id: hexaship-mvp-v0.1-create-shipment
+      x-agid-source-contract: src/lib/hexashipDeliveryGateway.ts#runHexashipMvpV01Sandbox
+      x-agid-redacted-fields:
+        - raw_address
+        - recipient_name
+        - recipient_phone
+        - carrier_api_key
+        - carrier_credential
+        - raw_label_payload
+        - raw_tracking_payload
+        - proof_witness
+        - proof_secret
+        - private_key
+      x-agid-non-claims:
+        - local-sandbox-only
+        - not-real-dhl-or-ups-purchase
+        - not-live-rate-comparison
+        - not-delivery-guarantee
+        - not-raw-address-disclosure
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HexashipMvpV01ShipmentRequest'
+            examples:
+              cheapestWalletRecipient:
+                summary: Safe MVP shipment request using an Address Wallet recipient ID
+                value:
+                  merchantRef: merchant_sandbox_vey_001
+                  ecOrderRef: ec_order_sandbox_001
+                  recipientId: ship_recipient_synthetic_001
+                  addressFormVersion: wallet_country_form_ref_synthetic_001
+                  parcelProfileRef: parcel_profile_synthetic_small_box_001
+                  walletConsentRef: consent_synthetic_hexaship_001
+                  carrierCapabilityRef: carrier_capability_synthetic_hexaship_001
+                  selectionMode: cheapest
+                  selectedBy: ec
+                  requestedAt: '2026-07-04T00:00:00.000Z'
+      responses:
+        '201':
+          description: Hexaship MVP sandbox shipment orchestration result.
+          headers:
+            skipship-idempotency-key:
+              $ref: '#/components/headers/SkipshipIdempotencyKey'
+            skipship-idempotency-replayed:
+              $ref: '#/components/headers/SkipshipIdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HexashipMvpV01ShipmentResult'
+        '400':
+          description: Request contained missing refs or forbidden private material.
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+  /v1/merchant-console/onboarding:
+    post:
+      operationId: createMerchantConsoleOnboarding
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Create a Merchant Console onboarding record from safe setup refs.
+      description: >
+        Captures the Stripe-like merchant setup flow for Hexaship without raw
+        recipient address material, carrier credentials, raw carrier payloads,
+        or webhook secrets. Address Wallet country-form selection is represented
+        by `addressFormVersionRef`; carrier-specific address forms are blocked
+        in EC and converted to DHL/UPS label payload shapes server-side only.
+        EC Social Login setup is represented by `addressLoginClientRef` and an
+        HTTPS callback URL preflight, without provider tokens or raw profiles.
+      x-agid-contract-id: merchant-console-onboarding-v0.1
+      x-agid-source-contract: src/lib/merchantConsoleEcPlugin.ts#buildMerchantConsoleEcPluginPlan
+      x-agid-redacted-fields:
+        - raw_address
+        - address_line_1
+        - address_line_2
+        - recipient_name
+        - recipient_phone
+        - carrier_api_key
+        - carrier_credential
+        - raw_carrier_payload
+        - raw_label_payload
+        - webhook_secret
+        - production_webhook_secret
+        - proof_witness
+        - proof_secret
+        - private_key
+        - provider_id_token
+        - provider_access_token
+        - provider_refresh_token
+        - raw_provider_profile
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-provider-token-intake
+        - not-raw-carrier-payload-intake
+        - not-live-carrier-credential
+        - not-raw-address-disclosure
+        - not-production-dhl-ups-traffic
+        - not-carrier-specific-address-form
+        - not-raw-address-callback
+      x-agid-evidence-fixtures:
+        preflightFixture: docs/specs/fixtures/merchant-console-onboarding-v0.1.json
+        historyFixture: docs/specs/fixtures/merchant-console-onboarding-v0.1.json
+        evidenceFixture: docs/specs/fixtures/merchant-console-onboarding-v0.1.json
+        evidenceSchema: docs/specs/schemas/merchant-console-onboarding-v0.1.schema.json
+        verifierCommand: npm run verify:merchant-console-ec-plugin
+        aggregateVerifierCommand: npm run verify:address-login-spec
+        managedServiceBoundary: delivery-gateway-carrier-api
+        localOnly: true
+        forbiddenMaterial:
+          - raw_address
+          - address_line_1
+          - address_line_2
+          - recipient_name
+          - recipient_phone
+          - carrier_api_key
+          - carrier_credential
+          - raw_carrier_payload
+          - raw_label_payload
+          - webhook_secret
+          - production_webhook_secret
+          - proof_witness
+          - proof_secret
+          - private_key
+          - provider_id_token
+          - provider_access_token
+          - provider_refresh_token
+          - raw_provider_profile
+        nonClaims:
+          - not-raw-address-intake
+          - not-proof-witness-intake
+          - not-provider-token-intake
+          - not-raw-carrier-payload-intake
+          - not-live-carrier-credential
+          - not-raw-address-disclosure
+          - not-production-dhl-ups-traffic
+          - not-carrier-specific-address-form
+          - not-raw-address-callback
+        nonClaimsProfile: merchant-console-onboarding-v0.1
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantConsoleOnboardingRequest'
+            examples:
+              dhlUpsWalletFormBoundary:
+                summary: Safe synthetic Merchant Console onboarding request
+                value:
+                  merchantAccount:
+                    displayName: Synthetic Demo Store
+                    adminUserRef: admin_user_ref_synthetic_001
+                    businessProfileRef: business_profile_ref_synthetic_001
+                    billingProfileRef: billing_profile_ref_synthetic_001
+                    twoFactorEnabled: true
+                  storeEcPlatform:
+                    storeRef: store_ref_synthetic_001
+                    platformStoreRef: platform_store_ref_synthetic_shopify_like_001
+                    platform: shopify-like
+                    orderSchemaRef: order_schema_ref_synthetic_001
+                    addressLoginClientRef: address_login_client_ref_synthetic_001
+                    addressLoginCallbackUrl: https://merchant.example/veygrit/callback
+                    currency: USD
+                    timezone: America/New_York
+                  shippingPreferences:
+                    carrierPolicyRef: carrier_policy_ref_synthetic_dhl_ups_001
+                    enabledCarriers:
+                      - dhl
+                      - ups
+                    selectionRule: cheapest
+                    parcelProfileRefs:
+                      - parcel_profile_ref_small_box
+                    labelFormat: pdf
+                    returnsEnabled: true
+                  addressWalletSettings:
+                    walletPolicyRef: wallet_policy_ref_synthetic_001
+                    recipientApprovalPolicyRef: recipient_approval_policy_ref_required_001
+                    addressFormVersionRef: wallet_country_form_ref_us_en_v1
+                    carrierSpecificAddressShapeBlocked: true
+                    hideAddressFromBuyer: true
+                    friendDeliveryEnabled: true
+                    addressWalletLoginEnabled: true
+                    qrRailPolicyRef: qr_rail_policy_ref_synthetic_001
+                  apiKeysAndWebhooks:
+                    apiKeySetRef: api_key_set_ref_test_only_001
+                    testPublishableKeyRef: pk_test_ref_synthetic_001
+                    testSecretKeyRef: sk_test_ref_synthetic_001
+                    webhookEndpointRef: webhook_endpoint_ref_synthetic_001
+                    webhookEventRefs:
+                      - webhook_event_ref_shipment_created
+                    productionReviewRef: production_review_ref_pending_001
+      responses:
+        '201':
+          description: Merchant Console onboarding refs accepted for local sandbox setup.
+          headers:
+            skipship-idempotency-key:
+              $ref: '#/components/headers/SkipshipIdempotencyKey'
+            skipship-idempotency-replayed:
+              $ref: '#/components/headers/SkipshipIdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantConsoleOnboardingResult'
+        '400':
+          description: Request contained missing refs or forbidden private material.
+        '409':
+          $ref: '#/components/responses/IdempotencyConflict'
+  /v1/delivery/webhooks/tracking:
+    post:
+      operationId: receiveDeliveryTrackingWebhook
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Receive a signed sandbox tracking webhook event.
+      description: >
+        Receives normalized, signed carrier tracking events as safe refs. This
+        contract is for replay-safe webhook intake only; it does not accept raw
+        carrier payloads, raw addresses, recipient contacts, carrier secrets, or
+        proof witnesses in public fixtures.
+      x-agid-contract-id: delivery-gateway-tracking-webhook
+      x-agid-source-contract: src/lib/deliveryGatewayCarrierApi.ts#DELIVERY_GATEWAY_API_SURFACES.tracking-webhook
+      x-agid-redacted-fields:
+        - raw_tracking_payload
+        - raw_address
+        - recipient_name
+        - recipient_phone
+        - carrier_secret
+        - proof_witness
+      x-agid-non-claims:
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-production-carrier-traffic
+        - not-final-proof-of-delivery
+      x-agid-event-idempotency:
+        eventKey: eventId
+        fingerprint: signed-normalized-body
+        replayBehavior: ack-same-event
+        conflictBehavior: reject-same-event-different-body
+        replayWindowSeconds: 300
+        minimumStoreTtlDays: 30
+        deadLetterAfterAttempts: 12
+        durableStoreRequiredForProduction: true
+        blockedMaterial:
+          - raw_address
+          - recipient_phone
+          - carrier_secret
+          - proof_witness
+          - raw_tracking_payload
+      parameters:
+        - $ref: '#/components/parameters/DeliveryWebhookSignature'
+        - $ref: '#/components/parameters/DeliveryWebhookTimestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackingWebhookRequest'
+            examples:
+              syntheticInTransit:
+                summary: Safe signed tracking event
+                value:
+                  eventId: evt_tracking_synthetic_001
+                  carrierAlias: sandbox-carrier
+                  trackingAlias: tracking_receipt_synthetic_001
+                  status: in_transit
+                  occurredAt: '2026-07-04T08:00:00.000Z'
+      responses:
+        '202':
+          description: Tracking event accepted as a redacted lifecycle receipt.
+          headers:
+            skipship-webhook-event-replayed:
+              $ref: '#/components/headers/SkipshipWebhookEventReplayed'
+            skipship-webhook-event-attempt:
+              $ref: '#/components/headers/SkipshipWebhookEventAttempt'
+            skipship-webhook-event-expires-at:
+              $ref: '#/components/headers/SkipshipWebhookEventExpiresAt'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingWebhookReceipt'
+        '400':
+          $ref: '#/components/responses/TrackingWebhookBadRequest'
+        '401':
+          $ref: '#/components/responses/TrackingWebhookUnauthorized'
+        '409':
+          $ref: '#/components/responses/TrackingWebhookConflict'
+  /v1/delivery/test-vectors/sandbox-carrier-smoke:
+    get:
+      operationId: getDeliveryGatewaySandboxCarrierSmoke
+      tags:
+        - Delivery Gateway Carrier API
+      summary: Return the local-only sandbox carrier smoke fixture refs.
+      description: >
+        Returns the synthetic rate -> allocate -> label -> tracking webhook ->
+        delivery proof fixture projection for developer conformance. This
+        endpoint is a specification surface only; the checked-in fixture does
+        not call production carrier APIs or purchase real labels.
+      externalDocs:
+        description: Local-only sandbox carrier smoke fixture, schema, verifier commands, and non-claims.
+        url: ./README.md#delivery-gateway-sandbox-carrier-smoke
+      x-agid-contract-id: delivery-gateway-sandbox-carrier-smoke
+      x-agid-source-contract: src/lib/deliveryGatewayCarrierApi.ts#runSandboxCarrierGatewaySmoke
+      x-agid-evidence-fixtures:
+        preflightFixture: docs/specs/fixtures/delivery-gateway-sandbox-carrier-smoke-v0.1.json
+        historyFixture: docs/specs/fixtures/delivery-gateway-sandbox-carrier-smoke-v0.1.json
+        evidenceFixture: docs/specs/fixtures/delivery-gateway-sandbox-carrier-smoke-v0.1.json
+        evidenceSchema: docs/specs/schemas/delivery-gateway-sandbox-carrier-smoke-v0.1.schema.json
+        verifierCommand: npm run verify:delivery-gateway-carrier-api
+        aggregateVerifierCommand: npm run verify:address-login-spec
+        managedServiceBoundary: fixture-only-not-production-carrier
+        localOnly: true
+        forbiddenMaterial:
+          - raw_address
+          - recipient_phone
+          - proof_witness
+          - private_key
+          - raw_label_payload
+          - carrier_api_key
+          - production_webhook_secret
+        nonClaims:
+          - not-raw-address-intake
+          - not-proof-witness-intake
+          - not-production-carrier-traffic
+          - not-real-label-purchase
+          - not-delivery-guarantee
+        nonClaimsProfile: delivery-gateway-sandbox-carrier-v0.1
+      x-agid-internal-evidence:
+        evidenceId: carrier-only-handoff-ref-v0.1
+        sourceContract: src/lib/deliveryGatewayCarrierApi.ts#buildCarrierOnlyHandoffRefEvidence
+        visibility: carrier-adapter-only
+        publicSchemaFieldAllowed: false
+        safeRefPattern: '^carrier_handoff_[0-9a-f]{24}$'
+        localOnly: true
+        productionTraffic: false
+        prerequisiteRefs:
+          - addressAliasRef
+          - walletConsentRef
+          - carrierCapabilityRef
+          - allocationRef
+          - labelRef
+        merchantVisibleRefFields:
+          - allocationRef
+          - labelRef
+          - trackingReceiptRef
+          - deliveryProofRef
+        forbiddenPublicSchemaFields:
+          - carrierHandoffRef
+          - rawAddress
+          - recipientPhone
+          - carrierApiKey
+          - proofWitness
+          - privateKey
+          - proofSecret
+          - rawCarrierPayload
+        nonClaims:
+          - not-public-api-field
+          - not-merchant-visible-receipt
+          - not-raw-address-material
+          - not-production-carrier-traffic
+          - not-real-label-purchase
+      x-agid-redacted-fields:
+        - raw_address
+        - recipient_name
+        - recipient_phone
+        - proof_witness
+        - private_key
+        - raw_label_payload
+        - carrier_api_key
+      responses:
+        '200':
+          description: Synthetic sandbox carrier smoke refs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SandboxCarrierSmokeSummary'
+components:
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: >
+        Optional replay-safety key supplied by SDKs or server integrations.
+        Sandbox routes replay the same response for the same method, path, key,
+        and body, and return 409 if the same key is reused with a different body.
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 255
+        pattern: '^[A-Za-z0-9_:-]+$'
+    DeliveryWebhookSignature:
+      name: Skipship-Signature
+      in: header
+      required: true
+      description: Detached signature over the timestamp and normalized webhook body.
+      schema:
+        type: string
+        pattern: '^t=[0-9]+,v1=[A-Fa-f0-9]{64}$'
+    DeliveryWebhookTimestamp:
+      name: Skipship-Timestamp
+      in: header
+      required: true
+      description: Unix timestamp used for replay-window validation.
+      schema:
+        type: string
+        pattern: '^[0-9]{10,}$'
+  headers:
+    SkipshipIdempotencyKey:
+      description: Echoes the accepted Idempotency-Key when present.
+      schema:
+        type: string
+    SkipshipIdempotencyReplayed:
+      description: Indicates whether the response was replayed from the sandbox idempotency registry.
+      schema:
+        type: string
+        enum:
+          - 'true'
+          - 'false'
+    SkipshipWebhookEventReplayed:
+      description: Indicates whether the tracking webhook receipt was replayed from the event idempotency registry.
+      schema:
+        type: string
+        enum:
+          - 'true'
+          - 'false'
+    SkipshipWebhookEventAttempt:
+      description: Count of accepted attempts observed for this tracking webhook eventId.
+      schema:
+        type: string
+        pattern: '^[1-9][0-9]*$'
+    SkipshipWebhookEventExpiresAt:
+      description: ISO timestamp after which the sandbox event idempotency entry may be evicted.
+      schema:
+        type: string
+        format: date-time
+  responses:
+    IdempotencyConflict:
+      description: The same Idempotency-Key was reused for the same endpoint with a different request body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IdempotencyConflictError'
+    TrackingWebhookBadRequest:
+      description: Request contained missing refs or forbidden private material.
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/InvalidTrackingWebhookBodyError'
+              - $ref: '#/components/schemas/RejectedPrivateMaterialError'
+    TrackingWebhookUnauthorized:
+      description: Missing or invalid webhook signature.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrackingWebhookSignatureError'
+    TrackingWebhookConflict:
+      description: Event fingerprint has already been accepted or conflicts with a prior event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrackingWebhookConflictError'
+  schemas:
+    MerchantConsoleOnboardingRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - merchantAccount
+        - storeEcPlatform
+        - shippingPreferences
+        - addressWalletSettings
+        - apiKeysAndWebhooks
+      properties:
+        merchantAccount:
+          type: object
+          additionalProperties: false
+          required:
+            - displayName
+            - adminUserRef
+            - businessProfileRef
+            - billingProfileRef
+            - twoFactorEnabled
+          properties:
+            displayName:
+              type: string
+            adminUserRef:
+              type: string
+              pattern: '^admin_user_ref_[a-z0-9_:-]+$'
+            businessProfileRef:
+              type: string
+              pattern: '^business_profile_ref_[a-z0-9_:-]+$'
+            billingProfileRef:
+              type: string
+              pattern: '^billing_profile_ref_[a-z0-9_:-]+$'
+            twoFactorEnabled:
+              type: boolean
+              const: true
+        storeEcPlatform:
+          type: object
+          additionalProperties: false
+          required:
+            - storeRef
+            - platformStoreRef
+            - platform
+            - orderSchemaRef
+            - addressLoginClientRef
+            - addressLoginCallbackUrl
+            - currency
+            - timezone
+          properties:
+            storeRef:
+              type: string
+              pattern: '^store_ref_[a-z0-9_:-]+$'
+            platformStoreRef:
+              type: string
+              pattern: '^platform_store_ref_[a-z0-9_:-]+$'
+            platform:
+              type: string
+              enum:
+                - shopify-like
+                - woocommerce
+                - ec-cube
+                - custom-ec
+            orderSchemaRef:
+              type: string
+              pattern: '^order_schema_ref_[a-z0-9_:-]+$'
+            addressLoginClientRef:
+              type: string
+              description: Vey ID / Address Login client ref. This is not a provider token.
+              pattern: '^address_login_client_ref_[a-z0-9_:-]+$'
+            addressLoginCallbackUrl:
+              type: string
+              format: uri
+              description: HTTPS callback URL that must pass Address Login callback preflight before live enablement.
+              pattern: '^https://'
+            currency:
+              type: string
+              pattern: '^[A-Z]{3}$'
+            timezone:
+              type: string
+        shippingPreferences:
+          type: object
+          additionalProperties: false
+          required:
+            - carrierPolicyRef
+            - enabledCarriers
+            - selectionRule
+            - parcelProfileRefs
+            - labelFormat
+            - returnsEnabled
+          properties:
+            carrierPolicyRef:
+              type: string
+              pattern: '^carrier_policy_ref_[a-z0-9_:-]+$'
+            enabledCarriers:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                enum:
+                  - dhl
+                  - ups
+            selectionRule:
+              type: string
+              enum:
+                - cheapest
+                - fastest
+                - balanced
+                - merchant-manual
+                - user-choice
+            parcelProfileRefs:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                pattern: '^parcel_profile_ref_[a-z0-9_:-]+$'
+            labelFormat:
+              type: string
+              enum:
+                - pdf
+                - zpl
+                - qr
+            returnsEnabled:
+              type: boolean
+        addressWalletSettings:
+          type: object
+          additionalProperties: false
+          required:
+            - walletPolicyRef
+            - recipientApprovalPolicyRef
+            - addressFormVersionRef
+            - carrierSpecificAddressShapeBlocked
+            - hideAddressFromBuyer
+            - friendDeliveryEnabled
+            - addressWalletLoginEnabled
+            - qrRailPolicyRef
+          properties:
+            walletPolicyRef:
+              type: string
+              pattern: '^wallet_policy_ref_[a-z0-9_:-]+$'
+            recipientApprovalPolicyRef:
+              type: string
+              pattern: '^recipient_approval_policy_ref_[a-z0-9_:-]+$'
+            addressFormVersionRef:
+              type: string
+              description: Safe Address Wallet country-form version ref. This is not raw address material.
+              pattern: '^wallet_country_form_ref_[a-z0-9_:-]+$'
+            carrierSpecificAddressShapeBlocked:
+              type: boolean
+              const: true
+              description: EC must not collect DHL/UPS-specific address shapes; Gateway performs server-side label mapping.
+            hideAddressFromBuyer:
+              type: boolean
+              const: true
+            friendDeliveryEnabled:
+              type: boolean
+            addressWalletLoginEnabled:
+              type: boolean
+            qrRailPolicyRef:
+              type: string
+              pattern: '^qr_rail_policy_ref_[a-z0-9_:-]+$'
+        apiKeysAndWebhooks:
+          type: object
+          additionalProperties: false
+          required:
+            - apiKeySetRef
+            - testPublishableKeyRef
+            - testSecretKeyRef
+            - webhookEndpointRef
+            - webhookEventRefs
+            - productionReviewRef
+          properties:
+            apiKeySetRef:
+              type: string
+              pattern: '^api_key_set_ref_[a-z0-9_:-]+$'
+            testPublishableKeyRef:
+              type: string
+              pattern: '^pk_test_ref_[a-z0-9_:-]+$'
+            testSecretKeyRef:
+              type: string
+              pattern: '^sk_test_ref_[a-z0-9_:-]+$'
+            webhookEndpointRef:
+              type: string
+              pattern: '^webhook_endpoint_ref_[a-z0-9_:-]+$'
+            webhookEventRefs:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                pattern: '^webhook_event_ref_[a-z0-9_:-]+$'
+            productionReviewRef:
+              type: string
+              pattern: '^production_review_ref_[a-z0-9_:-]+$'
+    MerchantConsoleOnboardingResult:
+      type: object
+      additionalProperties: false
+      required:
+        - onboardingRef
+        - merchantRef
+        - safeOutputRefs
+        - localOnly
+        - productionTraffic
+        - blockedMaterial
+        - requiredNextAction
+        - addressLoginBoundary
+      properties:
+        onboardingRef:
+          type: string
+          pattern: '^merchant_onboarding_ref_[a-z0-9_:-]+$'
+        merchantRef:
+          type: string
+          pattern: '^merchant_[a-z0-9_:-]+$'
+        safeOutputRefs:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        localOnly:
+          type: boolean
+          const: true
+        productionTraffic:
+          type: boolean
+          const: false
+        blockedMaterial:
+          type: array
+          items:
+            type: string
+        requiredNextAction:
+          type: string
+          enum:
+            - issue_test_keys
+            - run_sandbox_shipment
+            - submit_limited_production_review
+        addressLoginBoundary:
+          type: object
+          additionalProperties: false
+          required:
+            - addressLoginClientRef
+            - addressLoginCallbackUrl
+            - addressLoginCallbackPreflightRef
+            - callbackContractVersion
+            - callbackUrlHttps
+            - forbiddenCallbackParamsAbsent
+            - rawAddressCallbackBlocked
+          properties:
+            addressLoginClientRef:
+              type: string
+              pattern: '^address_login_client_ref_[a-z0-9_:-]+$'
+            addressLoginCallbackUrl:
+              type: string
+              format: uri
+              pattern: '^https://'
+            addressLoginCallbackPreflightRef:
+              type: string
+              pattern: '^address_login_callback_preflight_ref_[a-z0-9_:-]+$'
+            callbackContractVersion:
+              type: string
+            callbackUrlHttps:
+              type: boolean
+              const: true
+            forbiddenCallbackParamsAbsent:
+              type: boolean
+              const: true
+            rawAddressCallbackBlocked:
+              type: boolean
+              const: true
+    IdempotencyConflictError:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - message
+      properties:
+        ok:
+          const: false
+        error:
+          const: idempotency_key_conflict
+        message:
+          type: string
+    InvalidTrackingWebhookBodyError:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - message
+      properties:
+        ok:
+          const: false
+        error:
+          const: invalid_tracking_webhook_body
+        message:
+          type: string
+    RejectedPrivateMaterialError:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - rejectedKeys
+        - message
+      properties:
+        ok:
+          const: false
+        error:
+          const: private_material_rejected
+        rejectedKeys:
+          type: array
+          items:
+            type: string
+            enum:
+              - rawAddress
+              - recipientName
+              - recipientPhone
+              - phone
+              - carrierApiKey
+              - carrierCredential
+              - commercialRateSecret
+              - rawLabelPayload
+              - proofWitness
+              - privateKey
+              - proofSecret
+        message:
+          type: string
+    TrackingWebhookSignatureError:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - message
+      properties:
+        ok:
+          const: false
+        error:
+          type: string
+          enum:
+            - missing_signature
+            - malformed_signature
+            - timestamp_mismatch
+            - signature_mismatch
+        message:
+          type: string
+    TrackingWebhookConflictError:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - message
+      properties:
+        ok:
+          const: false
+        error:
+          const: tracking_webhook_event_conflict
+        message:
+          type: string
+    DeliveryObjective:
+      type: string
+      enum:
+        - fastest
+        - cheapest
+        - balanced
+        - risk-minimized
+    SkipshipServicePreference:
+      type: string
+      enum:
+        - fastest
+        - cheapest
+        - balanced
+    ShipmentIntentCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - merchantRef
+        - recipientTokenRef
+        - parcelProfileRef
+        - addressValidationRef
+      properties:
+        merchantRef:
+          type: string
+        recipientTokenRef:
+          type: string
+          pattern: '^(rectok_|recipient_token_)[a-z0-9_:-]+$'
+        parcelProfileRef:
+          type: string
+          pattern: '^parcel_profile_[a-z0-9_:-]+$'
+        addressValidationRef:
+          type: string
+          pattern: '^(addrval_|address_validation_)[a-z0-9_:-]+$'
+        walletConsentRef:
+          type: string
+          pattern: '^(consent_|wallet_consent_)[a-z0-9_:-]+$'
+        servicePreference:
+          $ref: '#/components/schemas/SkipshipServicePreference'
+        requestedAt:
+          type: string
+          format: date-time
+    ShipmentIntentResult:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+        - intent_id
+        - merchant_ref
+        - recipient_token_ref
+        - parcel_profile_ref
+        - service_preference
+        - address_validation_ref
+        - wallet_consent_ref
+        - status
+        - required_next_action
+        - privacy
+        - blocked_material
+        - local_only
+        - non_claims
+      properties:
+        version:
+          const: shipment-intent-v0.1
+        intent_id:
+          type: string
+          pattern: '^shipintent_sandbox_[0-9a-f]{8}$'
+        merchant_ref:
+          type: string
+        recipient_token_ref:
+          type: string
+        parcel_profile_ref:
+          type: string
+        service_preference:
+          $ref: '#/components/schemas/SkipshipServicePreference'
+        address_validation_ref:
+          type: string
+        wallet_consent_ref:
+          type: string
+        status:
+          type: string
+          enum:
+            - requires_wallet_consent
+            - ready_for_rate_quote
+        required_next_action:
+          type: string
+          enum:
+            - request_wallet_consent
+            - quote_rates
+        privacy:
+          type: object
+          additionalProperties: false
+          required:
+            - contains_raw_address
+            - production_traffic
+            - carrier_credentials_present
+            - log_safe
+          properties:
+            contains_raw_address:
+              const: false
+            production_traffic:
+              const: false
+            carrier_credentials_present:
+              const: false
+            log_safe:
+              const: true
+        blocked_material:
+          type: array
+          items:
+            type: string
+        local_only:
+          const: true
+        non_claims:
+          type: array
+          minItems: 1
+          items:
+            type: string
+    ServiceLevel:
+      type: string
+      enum:
+        - economy
+        - standard
+        - express
+        - same-day
+    RateQuoteRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - addressAliasRef
+        - parcelProfileRef
+        - objective
+        - requestedServiceLevels
+      properties:
+        addressAliasRef:
+          type: string
+          pattern: '^(addr_alias_|address_alias_)[a-z0-9_:-]+$'
+        parcelProfileRef:
+          type: string
+          pattern: '^parcel_profile_[a-z0-9_:-]+$'
+        objective:
+          $ref: '#/components/schemas/DeliveryObjective'
+        requestedServiceLevels:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ServiceLevel'
+        policyRef:
+          type: string
+    RateQuoteResult:
+      type: object
+      additionalProperties: false
+      required:
+        - rateRef
+        - carrierAlias
+        - serviceLevel
+        - objective
+        - etaWindow
+        - priceQuote
+        - capabilityWarnings
+      properties:
+        rateRef:
+          type: string
+          pattern: '^rate_[0-9a-f]{24}$'
+        carrierAlias:
+          type: string
+        serviceLevel:
+          $ref: '#/components/schemas/ServiceLevel'
+        objective:
+          $ref: '#/components/schemas/DeliveryObjective'
+        etaWindow:
+          type: object
+          additionalProperties: false
+          required:
+            - earliest
+            - latest
+          properties:
+            earliest:
+              type: string
+              format: date-time
+            latest:
+              type: string
+              format: date-time
+        priceQuote:
+          type: object
+          additionalProperties: false
+          required:
+            - amount
+            - currency
+          properties:
+            amount:
+              type: number
+              minimum: 0
+            currency:
+              type: string
+              pattern: '^[A-Z]{3}$'
+        capabilityWarnings:
+          type: array
+          items:
+            type: string
+    CarrierAllocationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - rateRef
+        - walletConsentRef
+        - objective
+        - merchantPolicyRef
+      properties:
+        rateRef:
+          type: string
+          pattern: '^rate_[0-9a-f]{24}$'
+        walletConsentRef:
+          type: string
+          pattern: '^(consent_|wallet_consent_)[a-z0-9_:-]+$'
+        objective:
+          $ref: '#/components/schemas/DeliveryObjective'
+        merchantPolicyRef:
+          type: string
+    CarrierAllocationResult:
+      type: object
+      additionalProperties: false
+      required:
+        - allocationRef
+        - selectedCarrierAlias
+        - objective
+        - selectionReasonCodes
+      properties:
+        allocationRef:
+          type: string
+          pattern: '^alloc_[0-9a-f]{24}$'
+        selectedCarrierAlias:
+          type: string
+        objective:
+          $ref: '#/components/schemas/DeliveryObjective'
+        selectionReasonCodes:
+          type: array
+          minItems: 1
+          items:
+            type: string
+    SkipshipShipmentCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - recipientId
+        - parcelProfileRef
+        - walletConsentRef
+      properties:
+        merchantRef:
+          type: string
+        recipientId:
+          type: string
+          pattern: '^(ship_recipient_|wallet_recipient_|recipient_)[a-z0-9_:-]+$'
+        addressFormVersion:
+          type: string
+          description: Address Wallet country-form version ref. This is not raw address material.
+          pattern: '^wallet_country_form_ref_[a-z0-9_:-]+$'
+        parcelProfileRef:
+          type: string
+          pattern: '^parcel_profile_[a-z0-9_:-]+$'
+        walletConsentRef:
+          type: string
+          pattern: '^(consent_|wallet_consent_)[a-z0-9_:-]+$'
+        servicePreference:
+          $ref: '#/components/schemas/SkipshipServicePreference'
+        requestedAt:
+          type: string
+          format: date-time
+    SkipshipShipmentRefs:
+      type: object
+      additionalProperties: false
+      required:
+        - rateRef
+        - allocationRef
+        - labelRef
+        - trackingReceiptRef
+        - deliveryProofRef
+      properties:
+        rateRef:
+          type: string
+          pattern: '^rate_[0-9a-f]{24}$'
+        allocationRef:
+          type: string
+          pattern: '^alloc_[0-9a-f]{24}$'
+        labelRef:
+          type: string
+          pattern: '^label_[0-9a-f]{24}$'
+        trackingReceiptRef:
+          type: string
+          pattern: '^tracking_receipt_[0-9a-f]{24}$'
+        deliveryProofRef:
+          type: string
+          pattern: '^delivery_proof_[0-9a-f]{24}$'
+    SkipshipShipmentCreateResult:
+      type: object
+      additionalProperties: false
+      required:
+        - shipmentId
+        - apiVersion
+        - developerCall
+        - status
+        - servicePreference
+        - carrierAlias
+        - recipientId
+        - safeRefs
+        - webhookEvents
+        - blockedMaterial
+        - localOnly
+        - productionTraffic
+        - rawAddressFixtures
+        - nonClaims
+        - validationErrors
+      properties:
+        shipmentId:
+          type: string
+          pattern: '^ship_[0-9a-f]{24}$'
+        apiVersion:
+          type: string
+          const: delivery-gateway-carrier-api-v0.1
+        developerCall:
+          type: string
+          const: shipping.createShipment
+        status:
+          type: string
+          const: sandbox_label_ready
+        servicePreference:
+          $ref: '#/components/schemas/SkipshipServicePreference'
+        carrierAlias:
+          type: string
+          const: sandbox-carrier
+        recipientId:
+          type: string
+        safeRefs:
+          $ref: '#/components/schemas/SkipshipShipmentRefs'
+        webhookEvents:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+              - shipment.created
+              - shipment.rated
+              - shipment.label_created
+              - shipment.in_transit
+              - shipment.delivered
+        blockedMaterial:
+          type: array
+          items:
+            type: string
+        localOnly:
+          type: boolean
+          const: true
+        productionTraffic:
+          type: boolean
+          const: false
+        rawAddressFixtures:
+          type: boolean
+          const: false
+        nonClaims:
+          type: array
+          items:
+            type: string
+        validationErrors:
+          type: array
+          items:
+            type: string
+    HexashipMvpSelectionMode:
+      type: string
+      enum:
+        - fastest
+        - cheapest
+    HexashipMvpV01ShipmentRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - merchantRef
+        - ecOrderRef
+        - recipientId
+        - parcelProfileRef
+        - walletConsentRef
+        - carrierCapabilityRef
+        - selectionMode
+      properties:
+        merchantRef:
+          type: string
+          pattern: '^merchant_[a-z0-9_:-]+$'
+        ecOrderRef:
+          type: string
+          pattern: '^ec_order_[a-z0-9_:-]+$'
+        recipientId:
+          type: string
+          pattern: '^(ship_recipient_|wallet_recipient_|recipient_)[a-z0-9_:-]+$'
+        addressFormVersion:
+          type: string
+          description: Address Wallet country-form version ref used before server-side DHL/UPS label mapping.
+          pattern: '^wallet_country_form_ref_[a-z0-9_:-]+$'
+        parcelProfileRef:
+          type: string
+          pattern: '^parcel_profile_[a-z0-9_:-]+$'
+        walletConsentRef:
+          type: string
+          pattern: '^(consent_|wallet_consent_)[a-z0-9_:-]+$'
+        carrierCapabilityRef:
+          type: string
+          pattern: '^carrier_capability_[a-z0-9_:-]+$'
+        selectionMode:
+          $ref: '#/components/schemas/HexashipMvpSelectionMode'
+        selectedBy:
+          type: string
+          enum:
+            - user
+            - ec
+        requestedAt:
+          type: string
+          format: date-time
+    HexashipMvpRateCandidate:
+      type: object
+      additionalProperties: false
+      required:
+        - carrier
+        - rateRef
+        - serviceLevel
+        - priceMinor
+        - currency
+        - etaMinutes
+        - priceEstimateRef
+        - etaWindowRef
+      properties:
+        carrier:
+          type: string
+          enum:
+            - dhl
+            - ups
+        rateRef:
+          type: string
+          pattern: '^rate_[0-9a-f]{24}$'
+        serviceLevel:
+          type: string
+          enum:
+            - economy
+            - express
+        priceMinor:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          enum:
+            - JPY
+            - USD
+        etaMinutes:
+          type: integer
+          minimum: 1
+        priceEstimateRef:
+          type: string
+          pattern: '^price_estimate_[0-9a-f]{24}$'
+        etaWindowRef:
+          type: string
+          pattern: '^eta_window_[0-9a-f]{24}$'
+    HexashipMvpWebhookLedgerEntry:
+      type: object
+      additionalProperties: false
+      required:
+        - eventRef
+        - eventType
+        - shipmentRef
+        - trackingAlias
+        - status
+        - receivedAt
+        - rawPayloadStored
+      properties:
+        eventRef:
+          type: string
+          pattern: '^evt_[0-9a-f]{24}$'
+        eventType:
+          type: string
+          enum:
+            - shipment.created
+            - rates.created
+            - carrier.selected
+            - label.created
+            - shipment.in_transit
+        shipmentRef:
+          type: string
+          pattern: '^ship_[0-9a-f]{24}$'
+        trackingAlias:
+          type: string
+          pattern: '^tracking_[0-9a-f]{24}$'
+        status:
+          type: string
+          enum:
+            - created
+            - rated
+            - label_created
+            - in_transit
+            - delivered
+            - return_created
+        receivedAt:
+          type: string
+          format: date-time
+        rawPayloadStored:
+          type: boolean
+          const: false
+    HexashipMvpV01ShipmentResult:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - version
+        - flow
+        - ecOrderRef
+        - recipientResolution
+        - capability
+        - shipment
+        - candidates
+        - selection
+        - label
+        - tracking
+        - webhookLedger
+        - privacy
+        - localOnly
+        - productionTraffic
+        - nonClaims
+      properties:
+        ok:
+          type: boolean
+          const: true
+        version:
+          type: string
+          const: hexaship-mvp-v0.1
+        flow:
+          type: string
+          const: ec-request-wallet-id-rates-select-label-track-webhook
+        ecOrderRef:
+          type: string
+        recipientResolution:
+          type: object
+          additionalProperties: false
+          required:
+            - recipientId
+            - addressResolved
+            - walletConsentRef
+            - addressAliasRef
+          properties:
+            recipientId:
+              type: string
+            addressResolved:
+              type: boolean
+              const: true
+            walletConsentRef:
+              type: string
+            addressAliasRef:
+              type: string
+              pattern: '^addr_alias_[0-9a-f]{24}$'
+        capability:
+          type: object
+          additionalProperties: false
+          required:
+            - carrierCapabilityRef
+            - requiredNextAction
+            - localOnly
+          properties:
+            carrierCapabilityRef:
+              type: string
+              pattern: '^carrier_capability_[a-z0-9_:-]+$'
+            requiredNextAction:
+              type: string
+              const: getRates
+            localOnly:
+              type: boolean
+              const: true
+        shipment:
+          type: object
+          additionalProperties: false
+          required:
+            - shipmentRef
+            - merchantRef
+            - parcelProfileRef
+            - status
+          properties:
+            shipmentRef:
+              type: string
+              pattern: '^ship_[0-9a-f]{24}$'
+            merchantRef:
+              type: string
+            parcelProfileRef:
+              type: string
+            status:
+              type: string
+              const: label_created
+        candidates:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/HexashipMvpRateCandidate'
+        selection:
+          type: object
+          additionalProperties: false
+          required:
+            - mode
+            - selectedBy
+            - selectedCarrier
+            - selectedRateRef
+            - reason
+          properties:
+            mode:
+              $ref: '#/components/schemas/HexashipMvpSelectionMode'
+            selectedBy:
+              type: string
+              enum:
+                - user
+                - ec
+            selectedCarrier:
+              type: string
+              enum:
+                - dhl
+                - ups
+            selectedRateRef:
+              type: string
+            reason:
+              type: string
+        label:
+          type: object
+          additionalProperties: false
+          required:
+            - labelRef
+            - carrier
+            - created
+          properties:
+            labelRef:
+              type: string
+              pattern: '^label_[0-9a-f]{24}$'
+            carrier:
+              type: string
+              enum:
+                - dhl
+                - ups
+            created:
+              type: boolean
+              const: true
+        tracking:
+          type: object
+          additionalProperties: false
+          required:
+            - trackingAlias
+            - carrier
+            - status
+          properties:
+            trackingAlias:
+              type: string
+              pattern: '^tracking_[0-9a-f]{24}$'
+            carrier:
+              type: string
+              enum:
+                - dhl
+                - ups
+            status:
+              type: string
+              const: in_transit
+        webhookLedger:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/HexashipMvpWebhookLedgerEntry'
+        privacy:
+          type: object
+          additionalProperties: false
+          required:
+            - recipientAddressVisibleToBuyer
+            - rawAddressStored
+            - recipientContactStored
+            - carrierCredentialsAcceptedFromClient
+            - rawCarrierPayloadStored
+          properties:
+            recipientAddressVisibleToBuyer:
+              type: boolean
+              const: false
+            rawAddressStored:
+              type: boolean
+              const: false
+            recipientContactStored:
+              type: boolean
+              const: false
+            carrierCredentialsAcceptedFromClient:
+              type: boolean
+              const: false
+            rawCarrierPayloadStored:
+              type: boolean
+              const: false
+        localOnly:
+          type: boolean
+          const: true
+        productionTraffic:
+          type: boolean
+          const: false
+        nonClaims:
+          type: array
+          items:
+            type: string
+    TrackingWebhookStatus:
+      type: string
+      enum:
+        - label_created
+        - in_transit
+        - delivered
+        - failed
+        - returned
+    TrackingWebhookRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - eventId
+        - carrierAlias
+        - trackingAlias
+        - status
+        - occurredAt
+      properties:
+        eventId:
+          type: string
+          pattern: '^evt_tracking_[a-z0-9_:-]+$'
+        carrierAlias:
+          type: string
+        trackingAlias:
+          type: string
+          pattern: '^(tracking_receipt_|tracking_alias_)[a-z0-9_:-]+$'
+        status:
+          $ref: '#/components/schemas/TrackingWebhookStatus'
+        occurredAt:
+          type: string
+          format: date-time
+    TrackingWebhookReceipt:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - trackingReceiptRef
+        - eventFingerprint
+        - eventId
+        - status
+        - accepted
+        - localOnly
+        - rawAddressStored
+        - productionTraffic
+      properties:
+        ok:
+          const: true
+        trackingReceiptRef:
+          type: string
+          pattern: '^tracking_receipt_[a-z0-9_:-]+$'
+        eventFingerprint:
+          type: string
+          pattern: '^evtfp_[0-9a-f]{24}$'
+        eventId:
+          type: string
+          pattern: '^evt_tracking_[a-z0-9_:-]+$'
+        status:
+          $ref: '#/components/schemas/TrackingWebhookStatus'
+        accepted:
+          const: true
+        localOnly:
+          const: true
+        rawAddressStored:
+          const: false
+        productionTraffic:
+          const: false
+    SandboxCarrierSmokeSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - fixtureId
+        - localOnly
+        - productionTraffic
+        - rawAddressFixtures
+        - merchantVisible
+      properties:
+        fixtureId:
+          type: string
+          const: delivery-gateway-sandbox-carrier-smoke-v0.1
+        localOnly:
+          type: boolean
+          const: true
+        productionTraffic:
+          type: boolean
+          const: false
+        rawAddressFixtures:
+          type: boolean
+          const: false
+        merchantVisible:
+          type: object
+          additionalProperties:
+            type: string

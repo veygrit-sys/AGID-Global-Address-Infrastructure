@@ -93,8 +93,8 @@ const FAQ_ITEMS: LocalizedFaq[] = [
       en: 'What is AGID?',
     },
     answer: {
-      ja: 'AGIDは緯度経度から計算する位置識別コードです。住所そのものではなく、住所が弱い場所、海・山・水辺、建物名が曖昧な場所でも同じ地点を指しやすくするための補助IDです。',
-      en: 'AGID is a location identifier calculated from latitude and longitude. It is not a postal address; it helps point to the same place when addresses are weak, ambiguous, or unavailable.',
+      ja: 'AGIDは緯度経度から計算する位置識別コードで、公開住所ラベル、建物名、道路・橋・水辺・自然地形・遺跡・世界遺産などの公開地物名、郵便・行政情報を重ねて表示できます。住所が弱い場所、海・山・水辺、建物名が曖昧な場所でも同じ地点を指しやすくするための公開IDです。',
+      en: 'AGID is a location identifier calculated from latitude and longitude, and it can carry public address labels, building names, road, bridge, water, natural-feature, ruins, heritage, place, postal, and administrative evidence. It helps point to the same place when addresses are weak, ambiguous, or unavailable.',
     },
   },
   {
@@ -106,6 +106,39 @@ const FAQ_ITEMS: LocalizedFaq[] = [
     answer: {
       ja: 'コード計算は座標に基づきますが、実際の現在地精度は端末GPS、ブラウザ許可、周囲の建物、地図データの新しさに左右されます。配送や登記の正式住所は、郵便番号と公的住所データでも確認してください。',
       en: 'The code is coordinate-based, but practical accuracy depends on device GPS, browser permission, buildings around you, and map-data freshness. For delivery or official use, also verify postal codes and authoritative address data.',
+    },
+  },
+  {
+    id: 'agid-vs-aoid',
+    question: {
+      ja: 'AGIDとAOIDは何が違いますか？',
+      en: 'How are AGID and AOID different?',
+    },
+    answer: {
+      ja: 'AGIDは「どこか」と「そこにある公開住所・建物・地物」を表す公開IDです。公開建物名、住所ラベル、自然地形や遺産ラベルは含めますが、個人情報である部屋番号・受取人・電話番号・私的な配送指示は含めません。AOIDは「誰が受け取るか」を表す所有者管理の私的住所IDで、部屋番号、配送指示、受取人情報などを所有者だけが更新できます。中央サービスはAGIDの仕様と品質を管理し、AOIDは明示的な同意がある場合だけ私的同期や品質補助に使います。',
+      en: 'AGID is a public ID for where something is and what public address, building, or map feature is there. It can include public building names, address labels, natural features, and heritage labels, but not unit numbers, recipients, phone numbers, or private delivery instructions. AOID is an owner-controlled private address ID for who receives something; only the owner can update unit, delivery, and recipient details. Central services govern AGID quality and specification, while AOID uses private sync or quality assistance only after explicit consent.',
+    },
+  },
+  {
+    id: 'aoid-storage-sync',
+    question: {
+      ja: 'AOIDは端末だけに保存しますか？クラウドにも置けますか？',
+      en: 'Is AOID stored only on the device, or can it sync to cloud?',
+    },
+    answer: {
+      ja: 'AOIDはローカル優先です。受取人、電話番号、部屋番号、配送指示などの平文データは端末に保存します。クラウド同期は利用者が明示的に許可し、所有者デバイスで暗号化され、所有者キーIDと端末キーIDがある場合だけ扱います。公開QRや公開APIにはAOIDの参照ハンドルと紐付くAGIDだけを出します。公開AOID QRを読み込んでも、自分の所有AOIDとして登録されません。',
+      en: 'AOID is local-first. Plain recipient, phone, unit, and delivery-instruction data stays on the owner device. Cloud sync is allowed only after explicit consent, owner-device encryption, and owner/device key ids. Public QR and public APIs expose only an AOID reference handle plus the linked AGID. Scanning a public AOID QR does not register it as your owner-managed AOID.',
+    },
+  },
+  {
+    id: 'agid-aoid-communication',
+    question: {
+      ja: 'AGIDとAOIDは通信の扱いも違いますか？',
+      en: 'Do AGID and AOID use different communication rules?',
+    },
+    answer: {
+      ja: '違います。AGID通信は公開位置・公開住所・建物名・公開地物名・郵便や地理の根拠を扱うため、API、SDK、QR、キャッシュ、データパックに載せられます。AOID通信は受取人、部屋番号、電話番号、配送指示を含み得るためローカル優先です。公開APIや公開QRには参照ハンドルと紐付くAGIDだけを出し、クラウド同期は所有者同意、所有者デバイス暗号化、所有者キーID、端末キーIDがある場合だけです。',
+      en: 'Yes. AGID communication carries public location, public address, building, public map-feature, postal, and geographic evidence, so it can be used through APIs, SDKs, QR, caches, and data packs. AOID communication may contain recipient, unit, phone, and delivery instructions, so it is local-first. Public APIs and public QR expose only a reference handle plus the linked AGID. Cloud sync requires owner consent, owner-device encryption, an owner key id, and a device key id.',
     },
   },
   {
@@ -126,8 +159,8 @@ const FAQ_ITEMS: LocalizedFaq[] = [
       en: 'What should I try when search does not find a place?',
     },
     answer: {
-      ja: '地名、郵便番号、AGID、緯度経度、現地語表記、英語表記を順に試してください。OSM系検索はデータ登録状況と言語表記に影響されるため、同じ場所でも国や地域で結果の出方が変わります。',
-      en: 'Try place name, postal code, AGID, coordinates, native spelling, and English spelling. OSM-based search depends on mapped data and language tags, so results can differ by country and region.',
+      ja: '地名、郵便番号、AGID、緯度経度、現地語表記、英語表記を順に試してください。地名検索は入力文字から検索専用の言語ヒントを推定し、アプリ言語や住所言語タブとは分けて扱います。OSM系検索はデータ登録状況と言語表記に影響されるため、同じ場所でも国や地域で結果の出方が変わります。',
+      en: 'Try place name, postal code, AGID, coordinates, native spelling, and English spelling. Place search derives search-only language hints from the query text and keeps them separate from the app language and address-language tabs. OSM-based search depends on mapped data and language tags, so results can differ by country and region.',
     },
   },
   {

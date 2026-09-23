@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "MC",
+  "observedAt": "2026-08-30T17:24:29.593Z",
+  "completedAt": "2026-08-30T17:45:56.6606035Z",
+  "baseCommit": "fba76646fe3706ff5800883ef683c4651165e3f6",
+  "scope": "Country-specific definition, current official source and rights reconciliation, deterministic source profiling, and conservative blocker evidence; no raw source body, real postcode pack, API geometry route, or browser area was promoted.",
+  "checks": [
+    {
+      "id": "monaco-country-contracts",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextCountryPolicy.test.ts src/lib/postalContextMonacoRepository.test.ts src/lib/postalContextMonacoRuntime.test.ts src/server/routes/postalContextMonacoRoutes.test.ts src/data/monacoOpenGeoSources.test.ts",
+      "result": "pass",
+      "tests": 14,
+      "assertion": "980NN normalization, ordinary/special routing classification, authority separation, derived-surface gates, route behavior and synthetic-fixture exclusion remain fail-closed"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "monaco-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-mc-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, exact current assignment and absent geometry evidence, prohibited proxy separation, report digests and Moldova next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes with package-lock dependencies installed locally"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 6,
+    "testsPassed": 57,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialObservations": 7,
+    "exactBodiesOrDistributionsByteAndSha256Bound": 17,
+    "officialPostalRows": 39192,
+    "officialDistinctPostalCodes": 6328,
+    "officialMonacoRows": 1,
+    "officialMonacoGeopoints": 0,
+    "completeOrdinaryAndExceptionAllocationDenominatorAvailable": false,
+    "historicalDerivedHullFeatures": 6158,
+    "historicalDerivedHullPrefix98Features": 0,
+    "publicOfficialPostcodePolygonRecords": 0,
+    "rightsClearedDerivedPostcodePolygonRecords": 0,
+    "rawSourceBodiesInGit": 0,
+    "openLicenceObserved": true
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realMcRuntimeVerified": false,
+    "realMcApiVerified": false,
+    "realMcAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no official or rights-cleared derived real MC Polygon/MultiPolygon artifact exists"
+  },
+  "knownLimitations": [
+    "The current Open-Licence La Poste base proves ordinary 98000 but publishes no Monaco geometry and does not enumerate a complete current CEDEX/organization/service/PO-box denominator.",
+    "The current operator publication shows 98020 MONACO CEDEX only as an example and contains no postal-area distribution or bulk data grant.",
+    "The reviewed Open-Licence BAN-derived convex-hull GeoJSON is dated 2021, is noncanonical and contains zero 98xxx records.",
+    "No real MC postcode Polygon/MultiPolygon can be exercised; country runtime, API map fit, translucent rendering and browser E2E are therefore unverified."
+  ],
+  "countryM2Achieved": false
+}

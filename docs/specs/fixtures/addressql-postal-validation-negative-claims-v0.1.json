@@ -1,0 +1,40 @@
+{
+  "fixture_id": "addressql-postal-validation-negative-claims-v0.1",
+  "status": "synthetic-negative-fixture",
+  "purpose": "Block over-claiming in AddressQL PostalValidationResult adapter outputs.",
+  "privacy": {
+    "contains_raw_address": false,
+    "synthetic_only": true,
+    "production_traffic": false
+  },
+  "cases": [
+    {
+      "id": "format-pass-claims-existence",
+      "blocked_claim": "format pass proves that the address exists",
+      "required_boundary": "format_pass_does_not_imply_existence",
+      "safe_replacement": "A passing format check does not claim that the address exists.",
+      "expected_status": "blocked"
+    },
+    {
+      "id": "existence-pass-claims-delivery",
+      "blocked_claim": "existence pass proves delivery availability",
+      "required_boundary": "existence_pass_does_not_imply_delivery",
+      "safe_replacement": "A passing existence check does not prove delivery availability.",
+      "expected_status": "blocked"
+    },
+    {
+      "id": "delivery-pass-claims-identity",
+      "blocked_claim": "delivery pass proves recipient identity",
+      "required_boundary": "delivery_pass_does_not_imply_identity",
+      "safe_replacement": "Delivery-related validation does not imply residence, ownership, legal identity, or recipient authorization.",
+      "expected_status": "blocked"
+    },
+    {
+      "id": "identity-validation-discloses-full-address",
+      "blocked_claim": "identity relationship validation may disclose a full address",
+      "required_boundary": "identity_pass_does_not_disclose_full_address",
+      "safe_replacement": "Identity-relationship validation must not disclose the full address in public fixtures.",
+      "expected_status": "blocked"
+    }
+  ]
+}

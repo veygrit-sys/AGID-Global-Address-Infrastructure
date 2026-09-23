@@ -63,7 +63,7 @@ test('translates representative Americas native address fields to English', asyn
     text: 'Ciudad de México',
     sourceLanguage: 'es-MX',
     targetLanguage: 'en',
-  }))?.text, 'Mexico City');
+  }))?.text, 'Ciudad de México');
   assert.equal((await translateAmericasAddressField({
     countryCode: 'BR',
     fieldKey: 'street',
@@ -79,6 +79,13 @@ test('translates representative Americas native address fields to English', asyn
     targetLanguage: 'en',
   }))?.text, 'Haiti');
   assert.equal((await translateAmericasAddressField({
+    countryCode: 'CA',
+    fieldKey: 'city',
+    text: 'Montréal',
+    sourceLanguage: 'fr',
+    targetLanguage: 'en',
+  }))?.text, 'Montréal');
+  assert.equal((await translateAmericasAddressField({
     countryCode: 'AW',
     fieldKey: 'street',
     text: 'Kaya Grandi',
@@ -91,7 +98,7 @@ test('translates representative Americas native address fields to English', asyn
     text: 'Asunción',
     sourceLanguage: 'es',
     targetLanguage: 'en',
-  }))?.text, 'Asuncion');
+  }))?.text, 'Asunción');
 });
 
 test('uses English pivot for Americas multilingual native address tabs', async () => {

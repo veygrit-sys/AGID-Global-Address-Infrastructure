@@ -1,4 +1,18 @@
 export type AfricaOpenGeoSourceId =
+  | 'botswanapost-addressing'
+  | 'upu-central-african-republic-no-postcode-2026'
+  | 'upu-central-african-republic-addressing-2022'
+  | 'arcep-central-african-republic-postal'
+  | 'osm-central-african-republic'
+  | 'upu-congo-republic-no-postcode-2026'
+  | 'upu-congo-republic-addressing-2004'
+  | 'sopeco-congo-location'
+  | 'osm-congo-republic'
+  | 'scpt-rdc-postcode-directory'
+  | 'upu-dr-congo-addressing-2022'
+  | 'arptc-dr-congo-postal-market-2021-2022'
+  | 'osm-dr-congo'
+  | 'hf-libpostal-address-parser-candidate'
   | 'osm-nominatim'
   | 'osm-overpass'
   | 'openaddresses'
@@ -29,15 +43,230 @@ export type AfricaOpenGeoSourceId =
   | 'rcmrd-gmes-africa-geoportal'
   | 'rcmrd-geoportal'
   | 'kenya-open-data'
+  | 'posta-kenya'
+  | 'posta-kenya-customer-service-charter-2022'
+  | 'posta-kenya-properties-2026'
+  | 'upu-kenya-addressing-2004'
+  | 'ca-kenya-national-addressing-system'
+  | 'kenya-national-addressing-policy-2023'
+  | 'survey-of-kenya-mapping-policy-2021'
+  | 'ardhisasa-kenya'
+  | 'odpc-kenya-address-location-privacy'
+  | 'osm-kenya'
+  | 'ethiopost-branches'
+  | 'ethiopost-delivery-address-form'
+  | 'upu-ethiopia-addressing-2002'
+  | 'ethiopia-ssgi-edas'
+  | 'ethiopia-nsdi-geoportal'
+  | 'ethiopia-bishoftu-address-book'
+  | 'ethiopia-addis-land-registration-edas'
+  | 'osm-ethiopia'
+  | 'mcpt-djibouti-poste'
+  | 'upu-djibouti-addressing-2020'
+  | 'upu-djibouti-postcode-length-2026'
+  | 'upu-postcode-database-licensing-2026'
+  | 'djibouti-decentralisation-cartography'
+  | 'osm-djibouti'
+  | 'snpsf-comores-poste'
+  | 'paositra-malagasy'
+  | 'paositra-malagasy-agencies'
+  | 'upu-madagascar-addressing-2011'
+  | 'openstat-madagascar-postcodes-2021'
+  | 'un-salb-madagascar-ftm'
+  | 'matsf-madagascar-geospatial-land'
+  | 'madagascar-data-protection-2014-038'
+  | 'osm-madagascar'
+  | 'mauritius-post-postcode'
+  | 'upu-mauritius-postcode-rollout-2014'
+  | 'mauritius-open-data-mainland-postcodes'
+  | 'mauritius-open-data-rodrigues-postcodes'
+  | 'mauritius-open-data-agalega-postcodes'
+  | 'mauritius-open-data-post-offices'
+  | 'mauritius-open-data-districts'
+  | 'stats-mauritius-census-2022-admin'
+  | 'mauritius-cadastral-survey-act-dcdb'
+  | 'mauritius-data-protection-act-2017'
+  | 'osm-mauritius'
+  | 'somalia-moct-posta'
+  | 'somalia-moct-postal-revival-2025'
+  | 'somalia-national-postal-policy-2026'
+  | 'somalia-moct-digital-addressing'
+  | 'somalia-sobs-address-observation'
+  | 'somalia-sobs-cbca-jurisdiction'
+  | 'somalia-snbs-gis'
+  | 'somalia-nira-principles'
+  | 'somalia-nca-privacy'
+  | 'osm-somalia'
+  | 'tcra-tanzania-postcodes'
+  | 'tcra-tanzania-postcode-plan-2026'
+  | 'tcra-tanzania-addressing'
+  | 'tanzania-postal-regulations-2018'
+  | 'nbs-tanzania-wards-2022'
+  | 'tcra-tanzania-napa'
+  | 'pdpc-tanzania-act-2022'
+  | 'pdpc-tanzania-enforcement-2026'
+  | 'osm-tanzania'
+  | 'south-sudan-nca-postal-sector'
+  | 'malawi-postcodes-macra'
+  | 'posta-uganda-physical-address'
+  | 'nampost-postal-codes'
+  | 'nampost-post-offices'
+  | 'upu-namibia-addressing'
+  | 'nsa-namibia-geo-portal'
+  | 'mawlr-namibia-survey-mapping'
+  | 'namibia-constitution-article-13'
+  | 'namibia-access-to-information-act-2022'
+  | 'namibia-data-protection-status-2026'
+  | 'osm-namibia'
+  | 'seychelles-postal-regulator-nas'
+  | 'seychelles-statehouse-nas-2024'
+  | 'seychelles-finance-nas-2025'
+  | 'seychelles-statehouse-nas-bill-2026'
+  | 'seychelles-postal-regulator-operators'
+  | 'seychelles-nbs-gis'
+  | 'seychelles-lands-webgis'
+  | 'seychelles-webgis-disclaimer'
+  | 'seychelles-land-registration-act'
+  | 'seychelles-data-protection-act-2023'
+  | 'osm-seychelles'
+  | 'osm-seychelles-building-import'
+  | 'ghanapostgps'
   | 'nipost-postcode'
+  | 'nipost-national-digital-postcode-2026'
+  | 'nipost-addressing-standard-2017'
+  | 'upu-nigeria-addressing-2022'
+  | 'npc-nigeria-ead-2023'
+  | 'fcta-nigeria-agis'
+  | 'ndpc-nigeria-data-protection-act-2023'
+  | 'ndpc-nigeria-gaid-2025'
+  | 'osm-nigeria'
+  | 'upu-cote-divoire-no-postcode-2026'
+  | 'upu-cote-divoire-addressing-2004'
+  | 'artci-cote-divoire-postal-sector-2024'
+  | 'osm-cote-divoire'
+  | 'la-poste-cote-divoire'
+  | 'upu-cameroon-no-postcode-2026'
+  | 'upu-cameroon-addressing-2002'
+  | 'minpostel-cameroon-postal-operators-2024'
+  | 'minesup-cameroon-bp-address-example'
+  | 'osm-cameroon'
+  | 'correios-cabo-verde'
+  | 'correios-cabo-verde-contact-identifiers'
+  | 'correios-cabo-verde-cip'
+  | 'upu-cabo-verde-addressing-2014'
+  | 'upu-cabo-verde-postcode-length-2026'
+  | 'ingt-cabo-verde-idecv'
+  | 'ingt-cabo-verde-admin-feature-service'
+  | 'ingt-cabo-verde-cadastre'
+  | 'osm-cabo-verde'
+  | 'la-poste-benin'
+  | 'la-poste-burkina'
+  | 'rnp-burundi'
+  | 'gambia-post-services'
+  | 'guinee-poste'
+  | 'mopt-liberia-postal-services'
+  | 'upu-liberia-addressing-2017'
+  | 'mopt-liberia-service-charter-2025'
+  | 'mopt-liberia-digital-postal-address-contract-2022'
+  | 'lisgis-liberia-census-2022-geography'
+  | 'lla-liberia-land-administration'
+  | 'liberia-data-governance-policy-2026-draft'
+  | 'osm-liberia'
+  | 'la-poste-senegal-codes'
+  | 'la-poste-senegal-po-box'
+  | 'upu-senegal-addressing-2015'
+  | 'artp-senegal-national-addressing-2015'
+  | 'geosenegal-basegeo'
+  | 'geosenegal-basegeo-license'
+  | 'geosenegal-urban-buildings-2019'
+  | 'dgid-senegal-nicad'
+  | 'senegal-data-protection-law-2008-12'
+  | 'osm-senegal'
+  | 'societe-postes-togo'
+  | 'la-poste-mali'
+  | 'niger-poste'
+  | 'niger-poste-agencies'
+  | 'upu-niger-addressing-2005'
+  | 'ignniger-national-geography'
+  | 'hapdp-niger-data-protection-2022'
+  | 'osm-niger'
+  | 'salpost-sierra-leone'
+  | 'algerie-poste'
+  | 'algerie-poste-mobile-offices'
+  | 'algerie-poste-privacy'
+  | 'upu-algeria-addressing-2002'
+  | 'upu-algeria-postcode-format-2026'
+  | 'algeria-postal-addressing-regulation-2019'
+  | 'algeria-national-address-referential'
+  | 'algeria-local-authorities-directory'
+  | 'inct-algeria-digital-geodata'
+  | 'osm-algeria'
+  | 'libya-post-services'
+  | 'upu-morocco-postcode-manual'
+  | 'poste-maroc-codepostal'
+  | 'morocco-open-data-postal'
+  | 'morocco-open-data-license'
+  | 'ancfcc-morocco-cartography'
+  | 'mauripost'
+  | 'la-poste-tunisienne-codes'
+  | 'upu-tunisia-addressing-2014'
+  | 'tunisian-open-data-national-license'
+  | 'tunisian-open-data-delegations-2025'
+  | 'tunisian-open-data-governorates-2025'
+  | 'otc-tunisia-cadastral-geoportal'
+  | 'inpdp-tunisia-law-2004-63'
+  | 'la-poste-tunisienne-privacy'
+  | 'osm-tunisia'
+  | 'sudapost'
+  | 'correios-mocambique-codigos-postais'
+  | 'incm-mozambique-cep-2024'
+  | 'incm-mozambique-postal-law-2016'
+  | 'incm-mozambique-corre-universal-2024'
+  | 'incm-mozambique-postal-operators'
+  | 'mozambique-correios-dissolution-2021'
+  | 'incm-mozambique-cep-rollout-2019-2022'
+  | 'ine-mozambique-admin-cartography'
+  | 'fnds-mozambique-land-cadastre'
+  | 'intic-mozambique-data-protection-status-2026'
+  | 'osm-mozambique'
+  | 'upu-south-africa-postal-addressing'
+  | 'stats-sa-geography'
+  | 'sasdi-south-africa'
+  | 'nspdr-south-africa-terms'
   | 'ngi-south-africa'
   | 'datahub-postal'
+  | 'upu-egypt-postal-addressing-2023'
+  | 'egypt-post-new-postcode-guide'
+  | 'egypt-post'
+  | 'capmas-egypt-gis'
+  | 'esa-egypt-geoportal'
   | 'egy-list'
   | 'sapo-postcodes'
+  | 'sapo-website-terms'
+  | 'stats-sa-census-2022-geography'
+  | 'mdb-south-africa-wards-2025'
+  | 'csg-south-africa-cadastre'
+  | 'south-africa-popia-2013'
+  | 'osm-south-africa'
   | 'postafind-za'
   | 'british-overseas-postal-reference'
-  | 'saint-helena-gov'
-  | 'biot-gov';
+  | 'saint-helena-postal'
+  | 'ascension-post-office'
+  | 'tristan-post-office'
+  | 'biot-gov'
+  | 'zampost'
+  | 'zampost-locations'
+  | 'upu-zambia-addressing-2013'
+  | 'zicta-zambia-national-addressing-postcode'
+  | 'zambia-parliament-addressing-statement-2013'
+  | 'zambia-ecommerce-strategy-2023'
+  | 'znsdi-zambia-policy-2026'
+  | 'znsdi-zambia-cadastre-lots'
+  | 'zilas-zambia'
+  | 'zambia-data-protection-act-2021'
+  | 'dpc-zambia-location-data-guidance'
+  | 'osm-zambia'
+  | 'zimpost';
 
 export interface AfricaOpenGeoSource {
   id: AfricaOpenGeoSourceId;
@@ -353,23 +582,1361 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     usage: 'validation',
     notes: 'Kenya open-data reference for counties, administrative datasets, and public geospatial context where available.',
   },
-  'nipost-postcode': {
-    id: 'nipost-postcode',
-    name: 'Nigerian Postal Service Postcode Finder',
-    url: 'https://nipost.gov.ng/postcode-finder/',
+  'posta-kenya': {
+    id: 'posta-kenya',
+    name: 'Postal Corporation of Kenya postcode and mail-service guidance',
+    url: 'https://posta.co.ke/services/services/',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'NIPOST postcode finder and national addressing reference for Nigerian state, city, street, and postcode validation.',
+    license: 'Posta Kenya website copyright and exact observation or reuse terms must be pinned',
+    notes: 'The official operator defines a five-digit postcode as an identifier for an individual post office within a postal region. It does not define a postcode catchment polygon, civic address, building, delivery entitlement, complete history, stable bulk API or reuse licence.',
   },
-  'ngi-south-africa': {
-    id: 'ngi-south-africa',
-    name: 'National Geospatial Information South Africa',
-    url: 'https://www.ngi.gov.za/',
+  'posta-kenya-customer-service-charter-2022': {
+    id: 'posta-kenya-customer-service-charter-2022',
+    name: 'Posta Kenya Customer Service Charter 2022',
+    url: 'https://posta.co.ke/wp-content/uploads/2023/08/CUSTOMER-SERVICE-CHARTER-2022sep-6th-2022.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Posta Kenya publication terms; no address-row redistribution permission inferred',
+    notes: 'Official examples keep P.O. Box number, five-digit post-office code and post-office name as separate fields; EMS geographic addressing adds street, estate or building, house, floor, room and telephone. Examples and form requirements are not reusable customer rows, official postcode polygons or address-building crosswalks.',
+  },
+  'posta-kenya-properties-2026': {
+    id: 'posta-kenya-properties-2026',
+    name: 'Posta Kenya property and post-office list (February 2026)',
+    url: 'https://posta.co.ke/wp-content/uploads/2026/02/The-following-is-the-list-of-Postal-Corporation-of-Kenya-properties-that-was-omitted-from-Clause-1-of-the-Terms-of-Reference-TORs.pdf',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Tender publication context; exact table reuse and redistribution terms must be pinned',
+    notes: 'The official 2026 tender addendum lists operator properties with postcodes, office names, regions, counties and constituencies. It may support a pinned office observation but is not asserted to be a complete current assignment table, service-area geometry, address database, building crosswalk or open-data licence.',
+  },
+  'upu-kenya-addressing-2004': {
+    id: 'upu-kenya-addressing-2004',
+    name: 'UPU Kenya addressing sheet (September 2004)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/kenEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; Universal POST*CODE data is separately licensed',
+    notes: 'Dated five-digit format, delivery-post-office position and postal-region, regional-distribution-centre and delivery-office coding semantics only. It is not a current complete assignment table, postal polygon, address row release, building relation or blanket reuse right.',
+  },
+  'ca-kenya-national-addressing-system': {
+    id: 'ca-kenya-national-addressing-system',
+    name: 'Communications Authority of Kenya National Addressing System status',
+    url: 'https://www.ca.go.ke/kenya-moves-towards-national-addressing-system-stakeholders-support-bill',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government publication; exact future address dataset terms remain dataset-specific',
+    notes: 'The June 2026 official status describes a proposed geographically tied address for every dwelling while the National Addressing Bill 2025 remains before Parliament. It does not expose an operational nationwide row release, public API, geometry, property link or redistribution licence.',
+  },
+  'kenya-national-addressing-policy-2023': {
+    id: 'kenya-national-addressing-policy-2023',
+    name: 'Kenya National Addressing Policy (March 2023)',
+    url: 'https://ict.go.ke/sites/default/files/2024-09/National%20Addressing%20Policy%20-%20March%202023.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government policy publication; no operational address database reuse right inferred',
+    notes: 'The policy defines addressable objects, child addresses, geocoding, GIS, geospatial referencing and a proposed unique alphanumeric NASK address. Policy definitions and planned governance do not prove a current assignment, postcode polygon, public address row or exact building crosswalk.',
+  },
+  'survey-of-kenya-mapping-policy-2021': {
+    id: 'survey-of-kenya-mapping-policy-2021',
+    name: 'Survey of Kenya mapping and cadastral authority context',
+    url: 'https://lands.go.ke/wp-content/uploads/2021/10/Draft-National-Land-Surveying-and-Mapping-Policy-2021.pdf',
     kind: 'admin-boundary',
     coverage: 'country',
     usage: 'reference',
-    notes: 'South African national mapping authority reference for geodetic control, aerial imagery, topographic mapping, and SDI context.',
+    license: 'Draft policy context; exact map, boundary and cadastral artifact rights are dataset-specific',
+    notes: 'The official draft identifies Survey of Kenya as the government surveying and mapping authority maintaining geodetic control and property-boundary plans. This authority context is not a postcode assignment, postal surface, public address-building relation or reuse licence.',
+  },
+  'ardhisasa-kenya': {
+    id: 'ardhisasa-kenya',
+    name: 'Kenya Ardhisasa land-information platform',
+    url: 'https://ardhisasa.lands.go.ke/home',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government land information with service-specific access, privacy and reuse controls',
+    notes: 'The Ministry and National Land Commission platform supports property search, registration, survey and mapping workflows. Portal availability does not publish a reusable national parcel-building-address-postcode crosswalk, owner data, title data or postal geometry.',
+  },
+  'odpc-kenya-address-location-privacy': {
+    id: 'odpc-kenya-address-location-privacy',
+    name: 'Kenya ODPC address, location and property privacy guidance',
+    url: 'https://www.odpc.go.ke/faqs/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Kenyan data-protection law and official guidance',
+    notes: 'ODPC identifies physical and postal address and location as personal data and property details as sensitive personal data. Precise address, household, phone, MPost, parcel, title, owner and query data therefore require a lawful purpose, minimisation, access control, retention and disclosure review.',
+  },
+  'osm-kenya': {
+    id: 'osm-kenya',
+    name: 'OpenStreetMap Kenya community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/OSM_Kenya',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community roads, places, addresses and buildings remain in a separate attributed ODbL partition. They are not Posta Kenya assignments, NASK addresses, Survey of Kenya boundaries, cadastral relations or exact delivery-building authority.',
+  },
+  'ethiopost-branches': {
+    id: 'ethiopost-branches',
+    name: 'Ethiopost branch locator',
+    url: 'https://ethio.post/branches/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact Ethiopost website, observation and reuse terms must be pinned',
+    notes: 'Official branch, region, service and available location observation; a pinned result does not itself publish a complete four-digit assignment table, postal perimeter, history, bulk API or redistribution right.',
+  },
+  'ethiopost-delivery-address-form': {
+    id: 'ethiopost-delivery-address-form',
+    name: 'Ethiopost pickup and delivery address form',
+    url: 'https://ethio.post/delivery/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Current operator input schema exposes sub-city, woreda, house number, city, province and ZIP/postal-code fields; an input form and its examples are not assignment rows, geometry, deliverability evidence or reuse permission.',
+  },
+  'upu-ethiopia-addressing-2002': {
+    id: 'upu-ethiopia-addressing-2002',
+    name: 'UPU Ethiopia addressing sheet (July 2002)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ethEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'Dated four-digit format, left-of-locality position and region/central-office/delivery-office coding semantics only; it is not a current assignment release, polygon source, complete history, reusable address database or building link.',
+  },
+  'ethiopia-ssgi-edas': {
+    id: 'ethiopia-ssgi-edas',
+    name: 'SSGI Ethiopian Digital Addressing System (eDAS)',
+    url: 'https://ssgi.gov.et/platform-and-application-development/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official national digital-address programme for buildings, parcels, neighbourhoods and physical locations, rolling out city by city; programme pages do not expose a nationwide row-level dataset, stable public API, licence, release digest or postal-code geometry.',
+  },
+  'ethiopia-nsdi-geoportal': {
+    id: 'ethiopia-nsdi-geoportal',
+    name: 'Ethiopia NSDI Geoportal',
+    url: 'https://ethionsdi.gov.et/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official SSGI metadata, map and OGC-service portal; each dataset may be public or access-controlled and needs its exact owner, licence, version, CRS and digest. Catalog visibility is not postal authority or blanket redistribution permission.',
+  },
+  'ethiopia-bishoftu-address-book': {
+    id: 'ethiopia-bishoftu-address-book',
+    name: 'SSGI Bishoftu Digital Addressing System address book',
+    url: 'https://www.ethionsdi.gov.et/uploaded/documents/Bishoftu_AddressBook.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official city-specific eDAS publication describing unique addresses for buildings, parcels and neighbourhoods; it is not nationwide coverage, a four-digit postal assignment file, an automatically reusable row dataset or unrestricted building geometry.',
+  },
+  'ethiopia-addis-land-registration-edas': {
+    id: 'ethiopia-addis-land-registration-edas',
+    name: 'SSGI and Addis Ababa land-registration eDAS cooperation',
+    url: 'https://ssgi.gov.et/ssgi-signed-mou-with-addis-ababa-city-land-acquisition-and-registration-agency/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official institutional context linking digital addressing and the city land-registration agency; the cooperation announcement supplies no address rows, parcel/building crosswalk, public licence, postal assignment or automatic exact-building relation.',
+  },
+  'osm-ethiopia': {
+    id: 'osm-ethiopia',
+    name: 'OpenStreetMap Ethiopia community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/Ethiopia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community road, place, address and building context retained in a separate attributed partition; it is not Ethiopost, SSGI, land-registry or exact address-building authority.',
+  },
+  'mcpt-djibouti-poste': {
+    id: 'mcpt-djibouti-poste',
+    name: 'Djibouti MCPT La Poste de Djibouti page',
+    url: 'https://communication.gouv.dj/structures-sous-tutelle/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Djibouti government public reference; no bulk assignment or redistribution grant inferred',
+    notes: 'Official Djibouti Ministry page identifies La Poste de Djibouti as the national postal service. Operator identity and postal law are not a complete current assignment denominator or postal Polygon/MultiPolygon release.',
+  },
+  'upu-djibouti-addressing-2020': {
+    id: 'upu-djibouti-addressing-2020',
+    name: 'UPU Djibouti addressing sheet (May 2020)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/djiEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright; public reference only and database redistribution requires separate permission',
+    notes: 'The two-page 05/2020 sheet defines five digits left of locality, country/region/post-office digit semantics, ten public distribution/postcode rows, separate geocoded address and BP fields, and examples. It is dated reference material, not proven complete for 2026 and contains no postal geometry.',
+  },
+  'upu-djibouti-postcode-length-2026': {
+    id: 'upu-djibouti-postcode-length-2026',
+    name: 'UPU Djibouti postcode length (August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright; Universal POST*CODE database separately licensed',
+    notes: 'The August 2026 UPU table confirms numeric 99999 for Djibouti. It does not provide assignments, validity, exceptions, postal geometry or redistribution rights.',
+  },
+  'upu-postcode-database-licensing-2026': {
+    id: 'upu-postcode-database-licensing-2026',
+    name: 'UPU Universal POST*CODE database licensing (release 2026.1)',
+    url: 'https://www.upu.int/en/Postal-Solutions/Programmes-Services/Addressing-Solutions',
+    kind: 'standard', coverage: 'global', usage: 'reference',
+    license: 'Licence contract, non-disclosure agreement, data-use declaration and rates apply',
+    notes: 'The current world postcode database is contractual. The public Africa sample ZIP contains Nigeria, Egypt, Morocco, South Africa and Somalia, but no Djibouti files. AGID did not register, authenticate, accept terms, contract or pay.',
+  },
+  'djibouti-decentralisation-cartography': {
+    id: 'djibouti-decentralisation-cartography',
+    name: 'Djibouti Ministry of Decentralisation cartography',
+    url: 'https://decentralisation.gouv.dj/cartographie/',
+    kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Djibouti government public reference; exact map reuse and redistribution terms not established',
+    notes: 'Official maps provide regional and administrative context only. They do not define the five Djibouti Ville delivery-office areas or any postcode Polygon/MultiPolygon and are not promoted as postal geometry.',
+  },
+  'osm-djibouti': {
+    id: 'osm-djibouti',
+    name: 'OpenStreetMap Djibouti candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0; separate attributed partition required',
+    notes: 'Community places, roads, post offices, addresses and buildings may support candidate context only. They cannot create current La Poste assignments, postal areas, rights or exact address-building relations.',
+  },
+  'snpsf-comores-poste': {
+    id: 'snpsf-comores-poste',
+    name: 'SNPSF Comoros postal services',
+    url: 'https://www.snpsf.com/poste',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official SNPSF postal-services portal covering Comoros postal products, tracking, EMS, mandates, postal guides, and customer contact channels.',
+  },
+  'paositra-malagasy': {
+    id: 'paositra-malagasy', name: 'Paositra Malagasy current operator website', url: 'https://www.paositramalagasy.mg/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'Public copyrighted reference; bulk extraction, caching, derivative and redistribution rights require written review',
+    notes: 'Current national operator website describes postal services and publishes its own BP 555, 101 ANTANANARIVO contact address. It exposes no reviewed complete current postcode register, canonical boundary coordinates, civic-address registry, building relation or blanket data licence.',
+  },
+  'paositra-malagasy-agencies': {
+    id: 'paositra-malagasy-agencies', name: 'Paositra Malagasy agency network', url: 'https://www.paositramalagasy.mg/nos_agence', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Public operational directory; exact reuse, caching and redistribution terms require review',
+    notes: 'Official agency identity and network context only. An agency name or point is not a postcode assignment, delivery catchment, civic address, building footprint, subscriber record or entitlement.',
+  },
+  'upu-madagascar-addressing-2011': {
+    id: 'upu-madagascar-addressing-2011', name: 'UPU Madagascar postal addressing sheet (August 2011)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/MDGEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated format places three digits to the left of the postal town and describes a historical province digit plus department/Fivondronana digits, with separate home and B.P. examples. Examples and dated semantics are not current assignments, current administrative equivalence, reusable addresses, geometry or building links.',
+  },
+  'openstat-madagascar-postcodes-2021': {
+    id: 'openstat-madagascar-postcodes-2021', name: 'OpenStat Madagascar manually collected postcode candidates (2021)', url: 'https://www.openstat-madagascar.mg/bdd/show/1/donnees-sur-les-codes-postaux-a-madagascar', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY 4.0 for the exact published artifact',
+    notes: 'Publisher states that rows were manually collected online and some communes may be missing. Under the exact artifact\'s CC BY 4.0 terms, it is an attributed candidate and discrepancy source, not Paositra Malagasy authority, completeness, deliverability, postal geometry or building evidence.',
+  },
+  'un-salb-madagascar-ftm': {
+    id: 'un-salb-madagascar-ftm', name: 'UN SALB Madagascar validated administrative boundaries and FTM authority record', url: 'https://salb.un.org/en/data/mdg', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'UN SALB artifact-specific terms, attribution, edition, validity and digest apply',
+    notes: 'UN SALB identifies FTM as the national geospatial authority and publishes validated, temporally versioned administrative polygons. Administrative validity is not postal assignment, postcode geometry, historical/current identity equivalence, civic address or building authority.',
+  },
+  'matsf-madagascar-geospatial-land': {
+    id: 'matsf-madagascar-geospatial-land', name: 'Madagascar territorial planning and land ministry', url: 'https://www.matsf.gov.mg/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Product-specific access, ownership, licence, edition, CRS and redistribution review required',
+    notes: 'Official territorial, geospatial, urban-planning and land governance context. Portal or procedure visibility is not a reusable dataset, postcode assignment or polygon, automatic civic address, exact building relation, title-holder, resident or occupant evidence.',
+  },
+  'madagascar-data-protection-2014-038': {
+    id: 'madagascar-data-protection-2014-038', name: 'Madagascar Law 2014-038 and CMIL personal-data framework', url: 'https://digital.gov.mg/en/2022/07/05/loi-n-2014-038-sur-la-protection-des-donnees-a-caractere-personnel/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official law requires legitimate specified purpose, proportionality, accuracy, security and bounded retention under CMIL oversight. Person-linked precise addresses, recipients, holders, residents, owners, occupants and query histories remain controlled and are not public-pack content.',
+  },
+  'osm-madagascar': {
+    id: 'osm-madagascar', name: 'OpenStreetMap Madagascar community mapping', url: 'https://wiki.openstreetmap.org/wiki/Madagascar', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, settlements, addresses and buildings are candidate context only. They do not establish a Paositra Malagasy assignment or polygon, cadastre, deliverability or exact address-to-building relation without explicit common evidence.',
+  },
+  'mauritius-post-postcode': {
+    id: 'mauritius-post-postcode', name: 'Mauritius Post current postcode finder', url: 'https://www.mauritiuspost.mu/find-your-post-code/', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'Public interactive lookup; no reviewed bulk redistribution licence or canonical boundary grant',
+    notes: 'Current Mauritius Post postcode finder is operator evidence for a normalized query result, not a reviewed bulk assignment release, canonical postcode boundary or address-linked building authority.',
+  },
+  'upu-mauritius-postcode-rollout-2014': {
+    id: 'upu-mauritius-postcode-rollout-2014', name: 'UPU Mauritius five-digit postcode rollout report (2014)', url: 'https://www.upu.int/UPU/media/upu/publications/Union%20Postale/2014/union_postale_3_2014_en.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 2014 rollout report covers Mauritius, Rodrigues and Agalega, but it is not a current assignment table or postcode geometry release.',
+  },
+  'mauritius-open-data-mainland-postcodes': {
+    id: 'mauritius-open-data-mainland-postcodes', name: 'Open Data Mauritius main-island post office codes', url: 'https://data.govmu.org/dataset/mauritius-post-office-codes', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Each pinned locality, sublocality, street and code record is an official assignment-reference row for the main-island partition, not a canonical postcode boundary or address-linked building relation.',
+  },
+  'mauritius-open-data-rodrigues-postcodes': {
+    id: 'mauritius-open-data-rodrigues-postcodes', name: 'Open Data Mauritius Rodrigues post office codes', url: 'https://data.govmu.org/dataset/rodrigues-post-office-codes', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Each pinned locality and R-prefixed code record is an official assignment-reference row for the Rodrigues partition, not a canonical postcode boundary or address-linked building relation.',
+  },
+  'mauritius-open-data-agalega-postcodes': {
+    id: 'mauritius-open-data-agalega-postcodes', name: 'Open Data Mauritius Agalega post office codes', url: 'https://data.govmu.org/dataset/agalega-post-office-codes', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Each pinned locality and A-prefixed code record is an official assignment-reference row for the Agalega partition, not a canonical postcode boundary or address-linked building relation.',
+  },
+  'mauritius-open-data-post-offices': {
+    id: 'mauritius-open-data-post-offices', name: 'Open Data Mauritius post-office facilities and addresses', url: 'https://data.govmu.org/dataset/list-post-offices-and-addresses-mauritius', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Facility identity and facility-address data only: a facility is not a delivery catchment, customer record or postcode polygon.',
+  },
+  'mauritius-open-data-districts': {
+    id: 'mauritius-open-data-districts', name: 'Open Data Mauritius geographical districts', url: 'https://data.govmu.org/dataset/mauritius-districts', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'CC BY-SA 4.0 for the exact pinned artifact; attribution and share-alike apply',
+    notes: 'Geographical district boundaries only. A geographical district is not an administrative entity or postal boundary and must remain a versioned non-postal layer.',
+  },
+  'stats-mauritius-census-2022-admin': {
+    id: 'stats-mauritius-census-2022-admin', name: 'Statistics Mauritius 2022 administrative atlas', url: 'https://statsmauritius.govmu.org/Documents/Census_and_Surveys/Census2022/HPC_AR_Vol4_Atlas_Yr22-041225.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'The 2022 atlas describes municipal wards and VCA units and records boundaries changed since 2011; these statistical and administrative contexts are not postal assignments or postcode polygons.',
+  },
+  'mauritius-cadastral-survey-act-dcdb': {
+    id: 'mauritius-cadastral-survey-act-dcdb', name: 'Mauritius Cadastral Survey Act 2011 and DCDB', url: 'https://housing.govmu.org/Documents/Acts/surv11.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled cadastral access; confidentiality and product-specific reuse terms apply',
+    notes: 'The controlled DCDB concerns parcel geometry, PIN and street address; its access and confidentiality rules do not make it postcode authority or an open address-to-building relation.',
+  },
+  'mauritius-data-protection-act-2017': {
+    id: 'mauritius-data-protection-act-2017', name: 'Mauritius Data Protection Act 2017', url: 'https://dataprotection.govmu.org/Pages/The%20Law/Data-Protection-Act-2017.aspx', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Personal and location data require a lawful specified purpose, security, accuracy and bounded retention; person-linked addresses and query histories are not public-pack content.',
+  },
+  'osm-mauritius': {
+    id: 'osm-mauritius', name: 'OpenStreetMap Mauritius community mapping', url: 'https://wiki.openstreetmap.org/wiki/Mauritius', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and buildings are candidate context only and do not establish Mauritius Post assignment, canonical postcode geometry, cadastre, deliverability or an exact address-to-building relation.',
+  },
+  'somalia-moct-posta': {
+    id: 'somalia-moct-posta',
+    name: 'Somalia MOCT Postal Service',
+    url: 'https://moct.gov.so/en/posta/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Somalia Ministry of Communications and Technology postal-service department page; use with current MOCT postal-exchange updates as the primary official postal reference while public postcode tooling remains limited.',
+  },
+  'somalia-moct-postal-revival-2025': {
+    id: 'somalia-moct-postal-revival-2025', name: 'Somalia MOCT National Postal Service revival 2025', url: 'https://moct.gov.so/en/inauguration-of-the-national-postal-service-revival-at-aden-adde-international-airport-led-by-minister-mohamed-soomaali/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    notes: 'Official July 2025 ministry report says sending and receiving mail resumed in May 2025. Operational service evidence is not a postcode assignment table, delivery catchment or polygon release.',
+  },
+  'somalia-national-postal-policy-2026': {
+    id: 'somalia-national-postal-policy-2026', name: 'Somalia Cabinet National Postal Policy 2025-2030 approval', url: 'https://sonna.so/en/article/somali-cabinet-commends-army-victory-in-kudhaa-approves-maritime-agreements-and-national-postal-policy', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official national news agency reports Cabinet approval in January 2026. Policy approval does not prove an effective public assignment register or postcode geometry.',
+  },
+  'somalia-moct-digital-addressing': {
+    id: 'somalia-moct-digital-addressing', name: 'Somalia MOCT digital addressing programme', url: 'https://moct.gov.so/en/pillars/', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'Current ministry pillars include setting up an address system and operationalising post offices. Programme status is not a complete nationwide civic-address or building registry.',
+  },
+  'somalia-sobs-address-observation': {
+    id: 'somalia-sobs-address-observation', name: 'Somali Bureau of Standards official contact address observation', url: 'https://sobs.gov.so/contact-us/', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    notes: 'Official organisation contact page publicly displays P.O. Box 67 with BN03010. It validates an observed AA plus five-digit shape only, not nationwide assignment, code semantics, subscriber data or geometry.',
+  },
+  'somalia-sobs-cbca-jurisdiction': {
+    id: 'somalia-sobs-cbca-jurisdiction', name: 'Somali Bureau of Standards CBCA jurisdiction context', url: 'https://sobs.gov.so/wp-content/uploads/2023/08/CBCA.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official conformity document demonstrates that operational territorial scopes and entry points must remain explicit. It is not postal or address assignment evidence.',
+  },
+  'somalia-snbs-gis': {
+    id: 'somalia-snbs-gis', name: 'Somalia National Bureau of Statistics cartography and GIS', url: 'https://nbs.gov.so/directorate-of-information-communication-technology/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    notes: 'Official statistical cartography and GIS capability provides contextual mapping only; enumeration areas, administrative units and service points are not postal polygons or address-building links.',
+  },
+  'somalia-nira-principles': {
+    id: 'somalia-nira-principles', name: 'Somalia NIRA identity and data-sovereignty principles', url: 'https://nira.gov.so/nira-principles', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The 11-digit National Identification Number identifies a person, not a postcode or address. Identity data remains controlled and subject to stated in-country data-sovereignty principles.',
+  },
+  'somalia-nca-privacy': {
+    id: 'somalia-nca-privacy', name: 'Somalia NCA privacy policy', url: 'https://nca.gov.so/privacy-policy', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Public authority site privacy notice supports minimisation, security and data-subject controls for site processing; it is not represented as a comprehensive national privacy statute.',
+  },
+  'osm-somalia': {
+    id: 'osm-somalia', name: 'OpenStreetMap Somalia project', url: 'https://wiki.openstreetmap.org/wiki/Somalia', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, localities and buildings are candidate context only. OSM does not establish official Somali postcode assignments, jurisdiction, cadastre, delivery entitlement or exact address-to-building links.',
+  },
+  'tcra-tanzania-postcodes': {
+    id: 'tcra-tanzania-postcodes', name: 'TCRA Tanzania postcode search', url: 'https://www.tcra.go.tz/services/postcodes', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'TCRA public lookup; bulk extraction and redistribution rights are not inferred',
+    notes: 'Official current lookup publishes region, district, postcode-for text and five-digit code. Rows are reference observations, not a blanket reusable bulk release, category proof, building relation or polygon.',
+  },
+  'tcra-tanzania-postcode-plan-2026': {
+    id: 'tcra-tanzania-postcode-plan-2026', name: 'TCRA National Postcode Allocation Plan July 2026', url: 'https://tcra.go.tz/publications/guidebooks', kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'Official plan publication; database and redistribution rights remain source-specific',
+    notes: 'Current official plan version metadata. Tanzania uses five digits across administrative wards, post offices, big mailers, landmarks and temporary events, so syntax alone cannot identify an area or current assignment.',
+  },
+  'tcra-tanzania-addressing': {
+    id: 'tcra-tanzania-addressing', name: 'TCRA National Addressing and Postcode service', url: 'https://address.tcra.go.tz/services/postcode', kind: 'address', coverage: 'country', usage: 'primary',
+    license: 'TCRA public reference; address-file and bulk reuse rights are not inferred',
+    notes: 'Official system semantics define six postcode zones plus Zanzibar, the digit hierarchy, five postcode categories and address examples. Landmark/event coordinates are not automatically polygons, and P.O. Box remains separate from the physical address.',
+  },
+  'tanzania-postal-regulations-2018': {
+    id: 'tanzania-postal-regulations-2018', name: 'Tanzania Electronic and Postal Communications (Postal) Regulations 2018', url: 'https://www.tcra.go.tz/download/sw-1619086897-The%20Electronic%20and%20Postal%20Communications%20%28Postal%29%20Regulations%2C%202018.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official legislation publication',
+    notes: 'Regulation 28 places the national address database and address/postcode map under TCRA management and makes TCRA the sole disseminator of address files. Public postcode access does not grant unrestricted address-file redistribution.',
+  },
+  'nbs-tanzania-wards-2022': {
+    id: 'nbs-tanzania-wards-2022', name: 'NBS Tanzania 2022 Census ward/shehia boundaries', url: 'https://microdata.nbs.go.tz/index.php/catalog/49', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'NBS terms: statistical/scientific research only; no redistribution or sale without written agreement',
+    notes: 'Official v0.1 ward-area polygons use GCS Arc 1960 and are continually improved. They are administrative/census geometry, not TCRA postcode polygons; redistribution, exact ward assignment crosswalk, edition, CRS transformation and Zanzibar/shehia scope must be approved.',
+  },
+  'tcra-tanzania-napa': {
+    id: 'tcra-tanzania-napa', name: 'Tanzania National Physical Addressing system (NaPA)', url: 'https://testnapa.mawasiliano.go.tz/', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Controlled operational/test interface; no bulk address or building reuse right inferred',
+    notes: 'NaPA exposes address-code and postcode search concepts. LGAs allocate and register residential addresses and house numbers; only an explicit rights-cleared stable address-to-building relation can support exact building display.',
+  },
+  'pdpc-tanzania-act-2022': {
+    id: 'pdpc-tanzania-act-2022', name: 'Tanzania Personal Data Protection Act 2022', url: 'https://www.pdpc.go.tz/media/media/THE_PERSONAL_DATA_PROTECTION_ACT.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official legislation publication',
+    notes: 'The Act treats address information as personal data and governs collection, processing, disclosure, security and transfers. It supplies governance, not postal, address or geometry data.',
+  },
+  'pdpc-tanzania-enforcement-2026': {
+    id: 'pdpc-tanzania-enforcement-2026', name: 'Tanzania PDPC full-enforcement notice 2026', url: 'https://www.pdpc.go.tz/media/media/PUBLIC_NOTICE_MARCH_2026.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official regulator notice',
+    notes: 'PDPC announced full enforcement from 9 April 2026, including controller/processor registration and compliance. Precise addresses, residents, owners, occupants, deliveries and query logs remain controlled.',
+  },
+  'osm-tanzania': {
+    id: 'osm-tanzania', name: 'OpenStreetMap Tanzania community mapping', url: 'https://wiki.openstreetmap.org/wiki/Tanzania', kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Community roads, names, addresses and buildings are useful candidate context but are not TCRA assignments, NBS/OCGS boundaries, LGA address registrations, cadastre or exact address-building authority.',
+  },
+  'south-sudan-nca-postal-sector': {
+    id: 'south-sudan-nca-postal-sector',
+    name: 'South Sudan NCA postal-sector oversight',
+    url: 'https://www.nca.gov.ss/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official South Sudan National Communication Authority site stating the agency regulates the postal and courier sectors; use as current country-specific official postal evidence while direct public postal-operator tooling remains limited.',
+  },
+  'malawi-postcodes-macra': {
+    id: 'malawi-postcodes-macra',
+    name: 'MACRA Malawi post codes',
+    url: 'https://macra.mw/post-codes/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Malawi Communications Regulatory Authority postcode table covering national region, district, town, and traditional authority codes.',
+  },
+  'posta-uganda-physical-address': {
+    id: 'posta-uganda-physical-address',
+    name: 'Posta Uganda physical address service',
+    url: 'https://ugapost.co.ug/our-services/physical-address/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Posta Uganda physical-address and postal-address application guidance used as current postal-network evidence while postcode tooling remains service-led.',
+  },
+  'nampost-postal-codes': {
+    id: 'nampost-postal-codes',
+    name: 'NamPost postal codes',
+    url: 'https://www.nampost.com.na/postal/postal-codes',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public reference; exact bulk extraction, caching, derivative and redistribution rights are unresolved',
+    notes: 'Official current five-digit Phase 1 directory and hierarchy. NamPost expressly says the codes concern sorting/delivery infrastructure, not administrative or geographic areas; the third digit is currently zero. A listed office/code pair is not a catchment, postal polygon, address point, building relation or bulk-redistribution licence.',
+  },
+  'nampost-post-offices': {
+    id: 'nampost-post-offices', name: 'NamPost Post Office Finder', url: 'https://www.nampost.com.na/contact-us/post-offices', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Public operational directory; exact reuse, caching and redistribution terms require review',
+    notes: 'Official office type, public location/contact and postcode reference. It can validate a delivery-office identity or a pinned public observation, but it does not publish an office catchment, national civic-address registry, customer address, building assignment or postal polygon. Personal and staff contact fields are excluded from public packs.',
+  },
+  'upu-namibia-addressing': {
+    id: 'upu-namibia-addressing', name: 'UPU Namibia postal addressing sheet', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/NAMEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated five-digit placement and address-line semantics distinguish PO Box, Private Bag, Poste Restante, urban physical address, rural six-digit delivery-point identifier, informal address and internal building routing. Examples are not current assignments, public address rows, postal areas, coordinates or exact address-to-building links.',
+  },
+  'nsa-namibia-geo-portal': {
+    id: 'nsa-namibia-geo-portal', name: 'Namibia Statistics Agency Geo Portal', url: 'https://nsa.org.na/client/namibia-geo-portal/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Dataset-specific portal terms, vintage, access route and redistribution rights required',
+    notes: 'Official discovery/exchange portal for Namibian map-based geographic information. Region, constituency, census or statistical geography is context only and is not NamPost assignment, a postal catchment, civic address, parcel, building or delivery entitlement.',
+  },
+  'mawlr-namibia-survey-mapping': {
+    id: 'mawlr-namibia-survey-mapping', name: 'Namibia Directorate of Survey and Mapping', url: 'https://mawlr.gov.na/directorate-of-survey-and-mapping', kind: 'geocoding', coverage: 'country', usage: 'reference',
+    license: 'Official service metadata; exact product, access, copyright, personal-data and redistribution terms required',
+    notes: 'The Directorate maintains cadastral datasets, survey records, topographic and GIS/cartographic databases. A parcel, title plan, map or building footprint is independent context and cannot prove a NamPost code, postal polygon, civic-address assignment, resident, owner, occupant or exact address-building relation.',
+  },
+  'namibia-constitution-article-13': {
+    id: 'namibia-constitution-article-13', name: 'Constitution of Namibia Article 13 Privacy', url: 'https://www.gov.na/documents/146489/641903/Namibia_Constitution.pdf/d2d4c4cd-3f19-ab0b-8bdb-8d5a5da3ee79', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official constitutional privacy baseline for homes, correspondence and communications. It is governance context only and does not grant a right to publish precise private addresses, recipients, residents, owners, occupants, delivery instructions or query trails.',
+  },
+  'namibia-access-to-information-act-2022': {
+    id: 'namibia-access-to-information-act-2022', name: 'Namibia Access to Information Act 2022', url: 'https://namiblii.org/akn/na/act/2022/8/eng%402022-12-28', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'The enacted framework defines personal information to include an individual address and protects third-party personal information. It supplies disclosure/privacy governance, not postal, cadastral, address or building data and not permission to publish residents or precise private-address links.',
+  },
+  'namibia-data-protection-status-2026': {
+    id: 'namibia-data-protection-status-2026', name: 'Namibia Data Protection Bill status 2026', url: 'https://www.parliament.na/wp-content/uploads/2026/03/Question-Paper-No.-7.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current parliamentary material records the absence of a Data Protection Act while the Bill remains under development. Absence of a comprehensive Act is not permission to publish personal location data; constitutional, ATI, contractual, security and purpose-limitation review still applies.',
+  },
+  'osm-namibia': {
+    id: 'osm-namibia', name: 'OpenStreetMap Namibia community mapping', url: 'https://wiki.openstreetmap.org/wiki/Namibia', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and building footprints are candidate context only. OSM cannot establish a NamPost assignment, official postal catchment, cadastre, deliverability or an exact address-to-building link.',
+  },
+  'seychelles-postal-regulator-nas': {
+    id: 'seychelles-postal-regulator-nas', name: 'Seychelles Postal Regulator National Addressing System', url: 'https://seychellespostalregulator.com/pages/national-addressing-system', kind: 'address', coverage: 'country', usage: 'primary',
+    notes: 'Current regulator page marks the S42-aligned national addressing and postcode system as coming soon. It does not publish an authoritative postcode assignment table, national address directory or postcode geometry.',
+  },
+  'seychelles-statehouse-nas-2024': {
+    id: 'seychelles-statehouse-nas-2024', name: 'Seychelles Cabinet National Addressing System decision 2024', url: 'https://www.statehouse.gov.sc/index.php/cabinet-decisions/6201/cabinet-business-thursday-25th-july-2024', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Cabinet approved S42 implementation and a postcode proposition with a Beau Vallon pilot and planned March 2025 rollout; a plan or target does not prove completed national assignments.',
+  },
+  'seychelles-finance-nas-2025': {
+    id: 'seychelles-finance-nas-2025', name: 'Seychelles National Address System update 2025', url: 'https://www.finance.gov.sc/blog/2025/04/17/postal-courier-shipment-and-national-address-system-update-2024/', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'Official update says Beau Vallon building-address work was underway and described a future Mahé, Praslin and La Digue objective; it is rollout evidence, not a complete current address or postcode database.',
+  },
+  'seychelles-statehouse-nas-bill-2026': {
+    id: 'seychelles-statehouse-nas-bill-2026', name: 'Seychelles National Addressing System Bill Cabinet approval 2026', url: 'https://statehouse.gov.sc/news/6905/vice-president-pillay-outlines-cabinet-decisions-on-public-safety-system-reform-and-service-delivery', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official April 2026 briefing says 0000 is a placeholder rather than a proper postcode and describes a place-linked system. Cabinet approval of a Bill is not enactment, commencement or proof of an assigned code.',
+  },
+  'seychelles-postal-regulator-operators': {
+    id: 'seychelles-postal-regulator-operators', name: 'Seychelles Postal Regulator operator register', url: 'https://seychellespostalregulator.com/pages/postal-and-courier-operators', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'Official regulator identifies Seychelles Postal Services and licensed courier context; operator status does not establish a reusable P.O. Box subscriber directory, postcode or delivery catchment.',
+  },
+  'seychelles-nbs-gis': {
+    id: 'seychelles-nbs-gis', name: 'Seychelles National Bureau of Statistics GIS', url: 'https://www.nbs.gov.sc/statistics/gis', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    notes: 'Official census GIS maintains enumeration-area frames using household and facility locations. Statistical areas and confidential household frames are not postal areas or public exact-address/building links.',
+  },
+  'seychelles-lands-webgis': {
+    id: 'seychelles-lands-webgis', name: 'Seychelles Department of Lands WebGIS', url: 'https://www.lh.gov.sc/webgis', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    notes: 'Government WebGIS describes parcel, planning and geographic layers, but public maps are informational, partner raw-data access is controlled and exact artifact rights and lineage must be pinned.',
+  },
+  'seychelles-webgis-disclaimer': {
+    id: 'seychelles-webgis-disclaimer', name: 'Seychelles WebGIS disclaimer', url: 'https://www.webgis.gov.sc/mobile/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official disclaimer says map data are informational, not live, do not replace licensed surveys and are not official court documents; WebGIS display is not postal or cadastral title authority.',
+  },
+  'seychelles-land-registration-act': {
+    id: 'seychelles-land-registration-act', name: 'Seychelles Land Registration Act', url: 'https://seylii.org/akn/sc/act/1965/25/eng%402014-12-01/source', kind: 'standard', coverage: 'country', usage: 'reference', license: 'CC BY 4.0 legal text reproduction',
+    notes: 'Legal land-registration context for parcels and interests. A parcel identifier or WebGIS parcel does not equal a postcode, national address, building identifier, owner or occupant record.',
+  },
+  'seychelles-data-protection-act-2023': {
+    id: 'seychelles-data-protection-act-2023', name: 'Seychelles Data Protection Act 2023', url: 'https://seylii.org/akn/sc/act/2023/24/eng%402023-12-22/source.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official privacy framework includes safe custody, privacy by design, security, records, impact assessment and cross-border data-flow duties for personal and location-linked data.',
+  },
+  'osm-seychelles': {
+    id: 'osm-seychelles', name: 'OpenStreetMap WikiProject Seychelles', url: 'https://wiki.openstreetmap.org/wiki/WikiProject_Seychelles', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
+    notes: 'Community road, locality and building context only; it is not authoritative NAS assignment, postal coverage, cadastral title or exact occupant evidence.',
+  },
+  'osm-seychelles-building-import': {
+    id: 'osm-seychelles-building-import', name: 'OpenStreetMap Seychelles building import 2018', url: 'https://wiki.openstreetmap.org/wiki/Seychelles_Building_Import', kind: 'address', coverage: 'country', usage: 'fallback', license: 'ODbL; separate attributed partition required',
+    notes: 'Dated one-time 2018 import of about 31,000 government/NBS-derived building outlines, mainly on Mahé, Praslin and La Digue. A footprint is not a current national address, postcode, parcel-title or occupant link.',
+  },
+  ghanapostgps: {
+    id: 'ghanapostgps',
+    name: 'GhanaPostGPS National Digital Address System',
+    url: 'https://www.ghanapostgps.com/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official Ghana Post digital addressing system with postcode-area and unique digital address lookup for Ghanaian delivery and location validation.',
+  },
+  'nipost-postcode': {
+    id: 'nipost-postcode',
+    name: 'NIPOST Numeric Postcode and Mail Services',
+    url: 'https://nipost.gov.ng/Mails/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public NIPOST reference; no bulk extraction or redistribution rights inferred',
+    notes: 'The current NIPOST mails page describes the numeric postcode system for mail processing and delivery. The postcode-finder page exposes no stable documented public API or reusable nationwide assignment table, address corpus, building relation or polygon.',
+  },
+  'nipost-national-digital-postcode-2026': {
+    id: 'nipost-national-digital-postcode-2026', name: 'NIPOST National Digital Alphanumeric Postcode', url: 'https://www.postcode.gov.ng/', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'NIPOST site is all rights reserved; developer and data redistribution terms are not yet published',
+    notes: 'Official site schedules nationwide launch for 1 October 2026 and describes an 11-character State/LGA/District/Area/Building hierarchy. Before that effective date, and without a current official assignment response, a syntax-shaped value is prelaunch metadata only; the site says the developer portal is still forthcoming.',
+  },
+  'nipost-addressing-standard-2017': {
+    id: 'nipost-addressing-standard-2017', name: 'Nigerian National Addressing Standard and Guidelines July 2017', url: 'https://nipost.gov.ng/wp-content/uploads/2024/09/NIGERIAN-NATIONAL-ADDRESSING-STANDARD-AND-GUIDELINES.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official standard covers street naming, property numbering, address components, the six-digit postcode system and building-identification methodology. It is not a current public address/building database, postcode assignment table, geometry release or reuse licence.',
+  },
+  'upu-nigeria-addressing-2022': {
+    id: 'upu-nigeria-addressing-2022', name: 'UPU Nigeria postal addressing sheet', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ngaEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated UPU semantics place six digits with locality and distinguish street addresses, organisations, P.O. Boxes and poste restante. Examples do not prove current assignments, exclusive areas, public address rows, buildings or geometry.',
+  },
+  'npc-nigeria-ead-2023': {
+    id: 'npc-nigeria-ead-2023', name: 'Nigeria National Population Commission Enumeration Area Demarcation', url: 'https://nationalpopulation.gov.ng/EAD', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'NPC states EAD products are available to researchers/users at a cost; exact contract, confidentiality and redistribution terms required',
+    notes: 'EA, supervisory area, locality, ward/registration area, LGA, building and road layers are census/statistical context. They are not NIPOST postal geometry, current digital-code assignments, civic-address records or automatic address-to-building links.',
+  },
+  'fcta-nigeria-agis': {
+    id: 'fcta-nigeria-agis', name: 'FCT Abuja Geographic Information Systems', url: 'https://fcta.gov.ng/ova_dep/abuja-geographic-information-systems/', kind: 'geocoding', coverage: 'territory', usage: 'reference',
+    license: 'FCT land/cadastral system; exact service, contract, fields, privacy and redistribution rights required',
+    notes: 'AGIS supports FCT land registry, cadastre, street naming and house numbering only within its jurisdiction. A parcel or property record is not a national NIPOST assignment, postcode polygon or exact civic-address-to-building relation unless explicitly linked by an authorized source.',
+  },
+  'ndpc-nigeria-data-protection-act-2023': {
+    id: 'ndpc-nigeria-data-protection-act-2023', name: 'Nigeria Data Protection Act 2023', url: 'https://ndpc.gov.ng/download/nigeria-data-protection-act-2023', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official data-protection law governs lawful, fair, accountable and secure processing and cross-border transfer safeguards. It supplies governance only, not permission to publish precise private addresses, building codes, residents, owners, occupants or query trails.',
+  },
+  'ndpc-nigeria-gaid-2025': {
+    id: 'ndpc-nigeria-gaid-2025', name: 'NDPC General Application and Implementation Directive 2025', url: 'https://ndpc.gov.ng/wp-content/uploads/2025/03/NDP-ACT-GAID-2025-MARCH-20TH.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Current implementation guidance covers lawful basis, DPIA, security, data processing agreements, retention and cross-border processing. It is legal metadata, not a postal, address, cadastral or building dataset.',
+  },
+  'osm-nigeria': {
+    id: 'osm-nigeria', name: 'OpenStreetMap Nigeria community mapping', url: 'https://wiki.openstreetmap.org/wiki/Nigeria', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and building footprints are candidate context only. OSM does not establish NIPOST assignment, postal authority, cadastre, delivery entitlement or an exact address-to-building link.',
+  },
+  'la-poste-cote-divoire': {
+    id: 'la-poste-cote-divoire',
+    name: "La Poste de Cote d'Ivoire",
+    url: 'https://www.laposte.ci/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: "Official La Poste de Cote d'Ivoire portal is postal-operator context only. It does not override the current UPU no-postcode classification or publish a complete assignment denominator, postal geometry or open redistribution licence.",
+  },
+  'upu-cote-divoire-no-postcode-2026': {
+    id: 'upu-cote-divoire-no-postcode-2026',
+    name: "UPU countries not requiring postal codes (Cote d'Ivoire, September 2025 list; file updated August 2026)",
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright and database restrictions; reference evidence only unless written permission is obtained',
+    notes: "The current UPU list explicitly includes Cote d'Ivoire among countries that do not require postal codes. It is authoritative absence metadata, not a reusable assignment or geometry dataset.",
+  },
+  'upu-cote-divoire-addressing-2004': {
+    id: 'upu-cote-divoire-addressing-2004',
+    name: "UPU Cote d'Ivoire addressing sheet (September 2004)",
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/civEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU reference publication; database reproduction requires separate permission',
+    notes: 'Dated guidance identifies 06 and 17 as two-digit post-office codes in BP address lines and 104 as a home-delivery indicator for office 04. These routing/office components are not current national postcodes, assignments or areas.',
+  },
+  'artci-cote-divoire-postal-sector-2024': {
+    id: 'artci-cote-divoire-postal-sector-2024',
+    name: "ARTCI Cote d'Ivoire postal-sector operator list (July 2024)",
+    url: 'https://www.artci.ci/index.php?Itemid=145&catid=56&id=681%3Aliste-operateurs-autorises-juillet-2024&option=com_content&view=article',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'ARTCI all-rights-reserved public reference; no bulk or derivative redistribution grant inferred',
+    notes: 'The regulator identifies La Poste as universal-service operator and repeats office-code/BP forms such as 17 BP 105 Abidjan 17. Operator addresses and licence coverage are not a postcode assignment register or postal polygons.',
+  },
+  'osm-cote-divoire': {
+    id: 'osm-cote-divoire',
+    name: "OpenStreetMap Cote d'Ivoire candidate context",
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0; separate attributed partition required',
+    notes: 'Community place, road, address, building and administrative features may enrich independently sourced context. They cannot create CI postal authority, assignments, postal surfaces, deliverability or address-to-building identity.',
+  },
+  'upu-cameroon-no-postcode-2026': {
+    id: 'upu-cameroon-no-postcode-2026',
+    name: 'UPU countries not requiring postal codes (Cameroon, September 2025 list; file updated August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'primary',
+    license: 'UPU copyright and database restrictions; reference evidence only unless written permission is obtained',
+    notes: 'The current UPU list explicitly includes Cameroon among countries that do not require postal codes. It is authoritative absence metadata, not a reusable assignment or geometry dataset.',
+  },
+  'upu-cameroon-addressing-2002': {
+    id: 'upu-cameroon-addressing-2002',
+    name: 'UPU Cameroon addressing sheet (July 2002)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cmrEn.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU reference publication; database reproduction requires separate permission',
+    notes: 'The dated addressing example uses BP 6000 followed by YAOUNDE without a postcode. BP is a P.O.-box identifier, not a national postcode, assignment or postal area.',
+  },
+  'minpostel-cameroon-postal-operators-2024': {
+    id: 'minpostel-cameroon-postal-operators-2024',
+    name: 'MINPOSTEL Cameroon authorized postal operators (March 2024)',
+    url: 'https://www.minpostel.gov.cm/index.php/en/actualites/475-reseaux-postaux-les-42-operateurs-prives-agrees',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Cameroon government all-rights-reserved public reference; no bulk or derivative redistribution grant inferred',
+    notes: 'MINPOSTEL identifies Campost as the public operator and 42 authorized private operators. Operator authorization is not a postcode assignment register or postal Polygon/MultiPolygon source.',
+  },
+  'minesup-cameroon-bp-address-example': {
+    id: 'minesup-cameroon-bp-address-example',
+    name: 'Cameroon MINESUP BP address examples',
+    url: 'https://www.minesup.gov.cm/index.php/centre/institut-superieur-technologique/',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Cameroon government all-rights-reserved public reference; no bulk or derivative redistribution grant inferred',
+    notes: 'The official page labels 54190 and 1739 as BP/address-postale values. A five-digit BP value must not be reclassified as a Cameroon postcode.',
+  },
+  'osm-cameroon': {
+    id: 'osm-cameroon',
+    name: 'OpenStreetMap Cameroon candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0; separate attributed partition required',
+    notes: 'ODbL place, address, post-office, road, building and administrative features remain separately attributed context. They cannot create Cameroon postcode authority, assignments, postal geometry, building identity or deliverability.',
+  },
+  'correios-cabo-verde': {
+    id: 'correios-cabo-verde',
+    name: 'Correios de Cabo Verde four-digit postcode guidance',
+    url: 'https://correios.cv/faq',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Correios website copyright and exact reuse terms must be pinned',
+    notes: 'Official operator guidance states a four-digit postcode followed by the locality or zone and gives locality examples; it is not a bulk assignment release, polygon source, complete history or redistribution licence.',
+  },
+  'correios-cabo-verde-contact-identifiers': {
+    id: 'correios-cabo-verde-contact-identifiers',
+    name: 'Correios de Cabo Verde contact-location identifiers',
+    url: 'https://www.correios.cv/contactos',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Correios website all-rights-reserved notice; observation-only unless permission is pinned',
+    notes: 'The operator contact page publishes NNNN-NNN values labelled Codigo Postal for branches. It does not document a nationwide extended-code schema, mapping to the four-digit UPU postcode, CIP mapping, geometry, bulk API or reuse right.',
+  },
+  'correios-cabo-verde-cip': {
+    id: 'correios-cabo-verde-cip',
+    name: 'Correios de Cabo Verde CIP user portal',
+    url: 'https://www.correios.cv/cip',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Authenticated personal or company account data; no bulk redistribution',
+    notes: 'The operator describes CIP as a numeric domiciliary postal identifier for a person or company associated with a georeference. It is separate from a public four-digit postcode table and may expose personal or business location data.',
+  },
+  'upu-cabo-verde-addressing-2014': {
+    id: 'upu-cabo-verde-addressing-2014',
+    name: 'UPU Cabo Verde addressing sheet (April 2014)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/CPVEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'Dated four-digit format and island, commune, commune-district and post-office digit semantics only; not a current complete assignment table, polygon, address database or building relation.',
+  },
+  'upu-cabo-verde-postcode-length-2026': {
+    id: 'upu-cabo-verde-postcode-length-2026',
+    name: 'UPU Universal POST*CODE general addressing issues (August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; Universal POST*CODE data is separately licensed',
+    notes: 'The August 2026 UPU length table lists Cabo Verde as four digits. It establishes current length context only, not assignments, geometry, a CIP mapping or redistribution rights.',
+  },
+  'ingt-cabo-verde-idecv': {
+    id: 'ingt-cabo-verde-idecv',
+    name: 'INGT Cabo Verde Spatial Data Infrastructure (IDE-CV)',
+    url: 'https://ingt.gov.cv/ingt/Servi%C3%A7os/idecv/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Dataset-specific owner, access and reuse terms',
+    notes: 'Official OGC-oriented metadata, viewer and geoservice infrastructure. Catalog visibility and public query capability do not make every layer open or postal authority.',
+  },
+  'ingt-cabo-verde-admin-feature-service': {
+    id: 'ingt-cabo-verde-admin-feature-service',
+    name: 'INGT Cabo Verde administrative division feature service',
+    url: 'https://ingtgeo.gov.cv/arcgisingt/rest/services/SDI/Divisao_Administrativa_CaboVerde/FeatureServer',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'INGT copyright; exact layer reuse and redistribution terms must be pinned',
+    notes: 'Official 2010 cartography at 1:5000 for island, municipality, parish, zone, city, town, place and neighbourhood context. These layers are administrative or toponymic, not postcode polygons.',
+  },
+  'ingt-cabo-verde-cadastre': {
+    id: 'ingt-cabo-verde-cadastre',
+    name: 'INGT Cabo Verde property cadastre programme',
+    url: 'https://ingt.gov.cv/ingt/Servi%C3%A7os/cadastro-predial/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Public access subject to personal-data law and exact artifact terms',
+    notes: 'Official cadastral programme for physical, economic and legal property identity. Programme access language does not publish a nationwide reusable parcel-building-address-CIP crosswalk or authorize disclosure of owners.',
+  },
+  'osm-cabo-verde': {
+    id: 'osm-cabo-verde',
+    name: 'OpenStreetMap Cabo Verde community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/Cabo_Verde',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community roads, places, addresses and buildings retained in a separate attributed partition; not Correios, UPU, INGT, cadastral or exact CIP-building authority.',
+  },
+  'la-poste-benin': {
+    id: 'la-poste-benin',
+    name: 'La Poste du Bénin address and agency references',
+    url: 'https://laposte.bj/nos-agences/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Website All Rights Reserved; reference access only, no dataset redistribution right inferred',
+    notes: 'Official operator references. The UPU November 2025 Benin sheet treats the leading two digits in 10 BP 648 as a delivery-office identifier and BP 648 as a P.O. box, not a postcode. The UPU September 2025 list says Benin does not require postal codes. Agency, locality and service data remain non-postcode context and are not postal geometry.',
+  },
+  'botswanapost-addressing': {
+    id: 'botswanapost-addressing',
+    name: 'BotswanaPost address and delivery references',
+    url: 'https://botswanapost.post/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Website copyright notice; reference access only, no dataset redistribution right inferred',
+    notes: 'Official operator reference. BotswanaPost displays a P.O. Box plus Gaborone without a postcode, the UPU Botswana sheet uses P.O. Box or private bag plus locality, and the UPU September 2025 list says Botswana does not require postal codes. Boxes, bags, plots, streets, localities and AGID cells remain non-postcode context and are not postal geometry.',
+  },
+  'upu-central-african-republic-no-postcode-2026': {
+    id: 'upu-central-african-republic-no-postcode-2026',
+    name: 'UPU countries not requiring postal codes (September 2025 list, file updated August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'The current UPU file explicitly lists Central African Rep. among countries that do not require postal codes. This is absence evidence, not a postcode dataset or geometry source.',
+  },
+  'upu-central-african-republic-addressing-2022': {
+    id: 'upu-central-african-republic-addressing-2022',
+    name: 'UPU Central African Republic addressing sheet (March 2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cafEn.pdf',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'Official examples use BP plus BANGUI and the country without a postcode. BP is a P.O.-box delivery object and must not be promoted to a postcode or area.',
+  },
+  'arcep-central-african-republic-postal': {
+    id: 'arcep-central-african-republic-postal',
+    name: 'ARCEP Central African Republic postal-sector page',
+    url: 'https://www.arcep.cf/page.php?slug=postes',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'ARCEP website All Rights Reserved; reference access only, no dataset redistribution right inferred',
+    notes: 'Current regulator page describes postal licensing and publishes a BP 1046 Bangui contact address without a postcode. It supplies no assignment register or geometry.',
+  },
+  'osm-central-african-republic': {
+    id: 'osm-central-african-republic',
+    name: 'OpenStreetMap Central African Republic candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Candidate-only place and administrative context. Points, buildings, roads, localities and administrative polygons are not postal assignments or postcode areas.',
+  },
+  'upu-congo-republic-no-postcode-2026': {
+    id: 'upu-congo-republic-no-postcode-2026',
+    name: 'UPU countries not requiring postal codes (Congo Rep., September 2025 list; file updated August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'The current UPU file explicitly lists Congo (Rep.) among countries that do not require postal codes. It is absence evidence, not an assignment dataset or geometry source.',
+  },
+  'upu-congo-republic-addressing-2004': {
+    id: 'upu-congo-republic-addressing-2004',
+    name: 'UPU Congo (Rep.) addressing sheet (September 2004)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/cogEn.pdf',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'Official example ends with BRAZZAVILLE / CONGO (REP.) without a postcode; BP 652 is a P.O.-box contact, not a postcode or postal polygon.',
+  },
+  'sopeco-congo-location': {
+    id: 'sopeco-congo-location',
+    name: 'SOPECO La Poste Congo location and network page',
+    url: 'https://www.laposte.cg/a-propos/ou-sommes-nous.html',
+    kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'SOPECO website all-rights-reserved notice; reference access only',
+    notes: 'Current designated-operator page gives its Brazzaville street address without a postcode and reports 39 active establishments. Addresses and offices are non-postcode context and not postal areas.',
+  },
+  'osm-congo-republic': {
+    id: 'osm-congo-republic',
+    name: 'OpenStreetMap Republic of the Congo candidate context',
+    url: 'https://www.openstreetmap.org/copyright',
+    kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Candidate-only place, address, building and administrative context. CG must not be confused with CD; no feature is a postcode assignment or postal area.',
+  },
+  'scpt-rdc-postcode-directory': {
+    id: 'scpt-rdc-postcode-directory', name: 'SCPT Code Postal RDC directory',
+    url: 'https://www.codepostal.cd/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'SCPT website copyright; reference access only, no bulk redistribution right inferred',
+    notes: 'Official seven-digit lookup and hierarchical assignment reference. Its public API returns locality rows and IDs but no geometry, national version denominator or reusable dataset licence.',
+  },
+  'upu-dr-congo-addressing-2022': {
+    id: 'upu-dr-congo-addressing-2022', name: 'UPU DR Congo addressing sheet (September 2022)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/codEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU copyright and database terms; reference material only',
+    notes: 'Defines seven digits and gives urban, rural, P.O.-box and poste-restante examples; not a complete assignment register or geometry release.',
+  },
+  'arptc-dr-congo-postal-market-2021-2022': {
+    id: 'arptc-dr-congo-postal-market-2021-2022', name: 'ARPTC postal-market observatory 2021-2022',
+    url: 'https://arptc.gouv.cd/app/uploads/2023/10/Rapport-annuel-sur-lobservatoire-du-marche%CC%81-de-la-Poste-en-RDC-2021-2022.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official publication; no postal dataset redistribution licence inferred',
+    notes: 'Reports approximately 429 post offices, 379 SCPT offices and weak coverage. Facilities and statistics are not postcode areas.',
+  },
+  'osm-dr-congo': {
+    id: 'osm-dr-congo', name: 'OpenStreetMap DR Congo candidate context',
+    url: 'https://www.openstreetmap.org/copyright', kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Candidate-only place/admin context. Observed Residentiel and Bulungu results are Points or unrelated features; Limete geometry is too coarse for postcode 1004131.',
+  },
+  'hf-libpostal-address-parser-candidate': {
+    id: 'hf-libpostal-address-parser-candidate', name: 'Hugging Face ellenhp/libpostal candidate corpus',
+    url: 'https://huggingface.co/datasets/ellenhp/libpostal', kind: 'address', coverage: 'global', usage: 'validation',
+    license: 'Dataset card has no licence tag and refers to upstream mixed-source licensing; do not ingest',
+    notes: 'Under-construction parser corpus considered only for future offline evaluation. Samples did not establish CD coverage, official assignment authority, geometry or reusable rights.',
+  },
+  'la-poste-burkina': {
+    id: 'la-poste-burkina',
+    name: 'La Poste Burkina Faso postcode search',
+    url: 'https://codespostaux.laposte.bf/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    notes: 'Official La Poste Burkina Faso postcode search for locality and five-digit postal-code confirmation.',
+  },
+  'rnp-burundi': {
+    id: 'rnp-burundi',
+    name: 'Régie nationale des postes du Burundi',
+    url: 'https://posteburundi.bi/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official RNP operator and delivery-context reference. The November 2025 UPU Burundi sheet uses BP, commune and province without a postcode; no postcode assignment or postal area is implied.',
+  },
+  'gambia-post-services': {
+    id: 'gambia-post-services',
+    name: 'Gambia Postal Services Corporation',
+    url: 'https://gambiapost.gm/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official GAMPOST operator portal used as current postal-network evidence while direct public postcode search remains limited.',
+  },
+  'mopt-liberia-postal-services': {
+    id: 'mopt-liberia-postal-services', name: 'Liberia Ministry of Posts and Telecommunications', url: 'https://mopt.gov.lr/about-us/', kind: 'postal-code', coverage: 'country', usage: 'primary',
+    license: 'Official public reference; exact assignment artifact and field-level reuse rights must be pinned',
+    notes: 'Government postal authority and nationwide service mandate. The authority page is not a public postcode assignment register, postcode geometry, customer-address dataset or building relation.',
+  },
+  'upu-liberia-addressing-2017': {
+    id: 'upu-liberia-addressing-2017', name: 'UPU Liberia addressing sheet (August 2017)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/lbrEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU publication terms; examples are reference material, not reusable production rows',
+    notes: 'Dated official sheet places four digits to the left of the locality and shows street and P.O. Box examples; it is not a current complete assignment register, postcode polygon, civic-address release or building link.',
+  },
+  'mopt-liberia-service-charter-2025': {
+    id: 'mopt-liberia-service-charter-2025', name: 'Liberia MoPT Service Delivery Charter 2025-2027', url: 'https://mopt.gov.lr/wp-content/uploads/2025/03/FINAL-Updated-Service-Delivery-Charter-SDC.pdf', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Official charter; contact, customer and table reuse require field-level review',
+    notes: 'Current services and regional offices plus customer privacy and confidentiality commitments. A service code, office or contact is not a postcode assignment, delivery catchment, public customer-address row or exact building link.',
+  },
+  'mopt-liberia-digital-postal-address-contract-2022': {
+    id: 'mopt-liberia-digital-postal-address-contract-2022', name: 'Liberia National Digital Postal Address contract', url: 'https://mopt.gov.lr/wp-content/uploads/2022/06/National-Digital-Postal-Address-Contract.pdf', kind: 'address', coverage: 'country', usage: 'reference',
+    license: 'Contract-specific ownership, deliverable, privacy and redistribution terms',
+    notes: 'The ministry contract listing is project evidence, not proof of a deployed current public national address register, accepted reusable deliverables, authoritative postcode assignment, building relation or complete coverage.',
+  },
+  'lisgis-liberia-census-2022-geography': {
+    id: 'lisgis-liberia-census-2022-geography', name: 'LISGIS Liberia Census 2022 geography', url: 'https://www.lisgis.gov.lr/document/LiberiaCensus2022Report.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact boundary artifact, edition, identifiers and reuse terms must be pinned; structure and household fields are restricted',
+    notes: 'Census 2022 counties, districts, clans and enumeration areas are versioned administrative context. Structure GPS and household estimates are not postal assignment, postal geometry, public civic addresses or exact buildings.',
+  },
+  'lla-liberia-land-administration': {
+    id: 'lla-liberia-land-administration', name: 'Liberia Land Authority land administration and LIS', url: 'https://lla.gov.lr/index.php/about-us/organizational-arrangements/land-administration-department', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled or product-specific access, charges, privacy and redistribution terms apply',
+    notes: 'Cadastre, land register, parcels, geodetic reference and developing Land Information System are controlled land evidence, not postcode polygons, civic addresses, automatic building links or authority to publish holders and interests.',
+  },
+  'liberia-data-governance-policy-2026-draft': {
+    id: 'liberia-data-governance-policy-2026-draft', name: 'Liberia draft Data Governance Policy 2026', url: 'https://mopt.gov.lr/wp-content/uploads/2022/06/2026-Liberia-Data-Governance-Policy-REVISED-CIPESA-1.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Official draft says comprehensive legislation is not enacted yet and recommends personal-data protections. It supplies no postal assignment or geometry authority and absence of a comprehensive act never permits publishing person-linked addresses or locations.',
+  },
+  'osm-liberia': {
+    id: 'osm-liberia', name: 'OpenStreetMap Liberia community mapping', url: 'https://wiki.openstreetmap.org/wiki/Liberia', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed share-alike partition required',
+    notes: 'Community roads, addresses and buildings are candidates only and do not establish ministry postcode assignment, canonical postal geometry, cadastral rights, deliverability or an exact address-building relation.',
+  },
+  'guinee-poste': {
+    id: 'guinee-poste',
+    name: 'La Poste Guineenne',
+    url: 'https://www.laposte.gn/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Guinea postal-operator portal used as current postal-network evidence while direct public postcode lookup remains limited.',
+  },
+  'la-poste-senegal-codes': {
+    id: 'la-poste-senegal-codes', name: 'La Poste Senegal postcode and office locator', url: 'https://www.laposte.sn/services/code-postal-senegal/', kind: 'postal-code', coverage: 'country', usage: 'primary', license: 'La Poste website and service terms; bulk reuse right is not inferred', notes: 'Current operator page resolves a user location or address to a five-digit code, nearest post office and distance. A permitted successful response is a dated assignment and office observation, not a complete reusable directory, customer-address release, catchment or delivery entitlement.',
+  },
+  'la-poste-senegal-po-box': {
+    id: 'la-poste-senegal-po-box', name: 'La Poste Senegal P.O. Box service', url: 'https://www.laposte.sn/services/boite-postale/', kind: 'address', coverage: 'country', usage: 'reference', license: 'La Poste website copyright; subscriber and holder records are not reusable', notes: 'Official service defines a nominative BP number at a chosen post office and explicitly separates postal reception from the home address. BP, subscriber, key and confidentiality records remain separate from postcode, residence and building.',
+  },
+  'upu-senegal-addressing-2015': {
+    id: 'upu-senegal-addressing-2015', name: 'UPU Senegal addressing sheet (February 2015)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/senFr.pdf', kind: 'standard', coverage: 'country', usage: 'reference', license: 'UPU publication terms; Universal POST*CODE database rights are separate', notes: 'Dated five-digit syntax, code position before delivery-office name, routing components and examples for geographic and P.O. Box delivery. It is not a current assignment database, postal geometry, customer-address release or blanket reuse right.',
+  },
+  'artp-senegal-national-addressing-2015': {
+    id: 'artp-senegal-national-addressing-2015', name: 'ARTP national addressing workshop report (2015)', url: 'https://artp.sn/sites/default/files/documents/rapport_synthese_atelier_adressage_version_finale.pdf', kind: 'standard', coverage: 'country', usage: 'reference', license: 'Official regulatory report; operational datasets and participant material retain separate rights', notes: 'Dated report documents the five-digit plan, street and villa numbering gaps, non-exhaustive addressing and the need for a single national system. Historical findings do not prove current incompleteness, assignments, boundaries or public address rows.',
+  },
+  'geosenegal-basegeo': {
+    id: 'geosenegal-basegeo', name: 'ANAT BaseGeo Senegal', url: 'https://www.geosenegal.gouv.sn/-base-de-donnees-geographiques-.html', kind: 'admin-boundary', coverage: 'country', usage: 'validation', license: 'BaseGeo Senegal licence acceptance, attribution, downstream terms, duration and termination obligations', notes: 'Official multi-scale topography includes administration, transport, toponyms and selected buildings. Scale, coverage and edition vary; these layers are not La Poste assignments, postcode catchments, civic-address rows or cadastral relations.',
+  },
+  'geosenegal-basegeo-license': {
+    id: 'geosenegal-basegeo-license', name: 'BaseGeo Senegal data-use licence', url: 'https://www.geosenegal.gouv.sn/conditions-d-utilisation.html', kind: 'standard', coverage: 'country', usage: 'reference', license: 'Contractual BaseGeo Senegal data-use agreement', notes: 'Licence grants conditional use and distribution with ANAT attribution, requires prior Senegal agreement for commercial derived products, imposes downstream terms, renews annually and requires deletion after termination. Exact acceptance and artifact lineage must be recorded.',
+  },
+  'geosenegal-urban-buildings-2019': {
+    id: 'geosenegal-urban-buildings-2019', name: 'Geo Senegal city building datasets (2019)', url: 'https://www.geosenegal.gouv.sn/-terra-.html', kind: 'address', coverage: 'country', usage: 'validation', license: 'BaseGeo Senegal licence; dataset edition and city coverage are separate', notes: 'Official city-specific 2019 building datasets exist for Dakar and selected cities. The catalog country scope is not nationwide feature coverage; a footprint is not a current structure, a postal assignment, an address relation, a NICAD parcel or occupancy evidence.',
+  },
+  'dgid-senegal-nicad': {
+    id: 'dgid-senegal-nicad', name: 'DGID Senegal NICAD parcel identification', url: 'https://www.dgid.sn/wp-content/uploads/2023/02/NICAD.pdf', kind: 'address', coverage: 'country', usage: 'reference', license: 'Official cadastral documentation; parcel, owner and domain records are controlled', notes: 'NICAD is a 16-character parcel identifier administered by DGID and encodes administrative and cadastral section/parcel context. It is not a postcode, postal polygon, building ID or public owner-address relation.',
+  },
+  'senegal-data-protection-law-2008-12': {
+    id: 'senegal-data-protection-law-2008-12', name: 'Senegal Personal Data Protection Law No. 2008-12', url: 'https://www.archives.sn/docs/codes/loi-protection-donnees-a-caractere-personnel', kind: 'standard', coverage: 'country', usage: 'reference', license: 'Official Senegalese law publication', notes: 'The law governs collection, processing, transmission, storage and use of directly or indirectly identifying personal data, requires declarations or authorizations for relevant processing and conditions transfers to third countries. It provides governance, not postal or geometry data.',
+  },
+  'osm-senegal': {
+    id: 'osm-senegal', name: 'OpenStreetMap Senegal community mapping', url: 'https://wiki.openstreetmap.org/wiki/Senegal', kind: 'address', coverage: 'country', usage: 'validation', license: 'ODbL 1.0 separate partition', notes: 'Community roads, names, addresses and buildings require ODbL attribution and lineage. They are not La Poste assignments, ANAT BaseGeo, DGID NICAD or exact delivery-building authority.',
+  },
+  'societe-postes-togo': {
+    id: 'societe-postes-togo',
+    name: 'Societe des Postes du Togo office network',
+    url: 'https://www.laposte.tg/bureaux-poste',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Togo postal-operator office network and service portal used as current postal-reference evidence while direct postcode search remains limited.',
+  },
+  'la-poste-mali': {
+    id: 'la-poste-mali',
+    name: 'La Poste du Mali official portal',
+    url: 'https://laposte.ml/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Mali postal operator portal used as current postal-network evidence while direct public postcode lookup remains limited.',
+  },
+  'niger-poste': {
+    id: 'niger-poste',
+    name: 'Niger Poste official postal code directory',
+    url: 'https://nigerposte.ne/code-postal/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public copyrighted reference; bulk extraction, caching, derivative and redistribution rights require written review',
+    notes: 'Current official four-digit code-to-locality and region directory. The first digit corresponds to one of eight regions in the dated UPU method and the remaining digits identify a post office. A row may validate a pinned routing assignment, but the page publishes no boundary coordinates, address registry, building relation or blanket redistribution licence.',
+  },
+  'niger-poste-agencies': {
+    id: 'niger-poste-agencies', name: 'Niger Poste agency network', url: 'https://nigerposte.ne/agences/', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Public operational directory; exact reuse, caching and redistribution terms require review',
+    notes: 'Official agency names grouped by region support office-identity checks only. They do not define code catchments, civic addresses, building footprints, subscribers, box holders or delivery entitlement.',
+  },
+  'upu-niger-addressing-2005': {
+    id: 'upu-niger-addressing-2005', name: 'UPU Niger postal addressing sheet (March 2005)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/nerEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Dated four-digit placement and coding method: first digit region, remaining digits post office, code to the left of locality, with a P.O. Box example. Its 2005 statement that delivery was P.O.-Box-only must not override current Niger Poste services; examples are not live assignments, reusable addresses, geometry or building links.',
+  },
+  'ignniger-national-geography': {
+    id: 'ignniger-national-geography', name: 'Institut Géographique National du Niger', url: 'https://ignniger.org/domaines-de-competences-de-lign-n.html', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Official product metadata; geographic information is commercialized and each product requires access, licence, vintage, CRS and redistribution review',
+    notes: 'IGN.N is the national cartographic, geodetic, topographic and spatial-database authority and lists administrative, departmental, cadastral and digital products. A licensed geometry supplies administrative or land context only and cannot prove a Niger Poste assignment, postcode polygon, civic address, building relation, owner or occupant.',
+  },
+  'hapdp-niger-data-protection-2022': {
+    id: 'hapdp-niger-data-protection-2022', name: 'Niger HAPDP personal-data legal framework', url: 'https://www.hapdp.ne/legislation-nationale', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'HAPDP publishes the consolidated Law 2022-59 and subsequent amendments and requires purpose, proportionality, security and bounded retention. Precise addresses, recipients, box holders, residents, owners, occupants and query histories that identify a person remain controlled and are not public-pack content.',
+  },
+  'osm-niger': {
+    id: 'osm-niger', name: 'OpenStreetMap Niger community mapping', url: 'https://wiki.openstreetmap.org/wiki/Niger', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, settlements, addresses and buildings are candidate context only. They do not establish an official Niger Poste row or polygon, cadastre, deliverability or an exact address-to-building relation without explicit common evidence.',
+  },
+  'salpost-sierra-leone': {
+    id: 'salpost-sierra-leone',
+    name: 'SALPOST Sierra Leone',
+    url: 'https://salpost.gov.sl/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Sierra Leone Postal Services portal used as current postal-network evidence while direct public postcode lookup remains limited.',
+  },
+  'algerie-poste': {
+    id: 'algerie-poste',
+    name: 'Algérie Poste postal establishment directory',
+    url: 'https://www.poste.dz/customer/bureaux_postaux',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact Algérie Poste web and observation terms must be pinned',
+    notes: 'Official wilaya-filtered establishment, five-digit code, address and hours observations; one pinned result supports only its stated postal object, not bulk reuse, complete history, geometry or redistribution.',
+  },
+  'algerie-poste-mobile-offices': {
+    id: 'algerie-poste-mobile-offices',
+    name: 'Algérie Poste mobile postal establishments',
+    url: 'https://www.poste.dz/customer/bureaux_postaux_itinerant',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact Algérie Poste web and observation terms must be pinned',
+    notes: 'Official mobile-establishment and five-digit-code reference showing that a postal code can identify a non-area service object; it does not publish a stable route or polygon.',
+  },
+  'algerie-poste-privacy': {
+    id: 'algerie-poste-privacy',
+    name: 'Algérie Poste privacy policy',
+    url: 'https://www.poste.dz/page/confidentialite',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official access-log and personal-data processing context; it is not a data licence, assignment source, address dataset or geometry authority.',
+  },
+  'upu-algeria-addressing-2002': {
+    id: 'upu-algeria-addressing-2002',
+    name: 'UPU Algeria addressing sheet (July 2002)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/dzaEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'Dated five-digit address-format and delivery-area/wilaya coding context only; it is not a current assignment table, polygon source, complete history or reusable postal database.',
+  },
+  'upu-algeria-postcode-format-2026': {
+    id: 'upu-algeria-postcode-format-2026',
+    name: 'UPU Algeria current postcode format table (August 2026)',
+    url: 'https://www.upu.int/UPU/media/upu/documents/PostCode/General-Addressing-Issues.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; database reproduction requires separate permission',
+    notes: 'The current Universal POST*CODE table lists Algeria as a postcode country with numeric 99999 format. It supplies no assignment rows, aliases, validity, exceptions, geometry, address-to-building relation or blanket redistribution permission.',
+  },
+  'algeria-postal-addressing-regulation-2019': {
+    id: 'algeria-postal-addressing-regulation-2019',
+    name: 'Algeria Executive Decree 19-258 postal addressing regulation',
+    url: 'https://www.mpt.gov.dz/wp-content/uploads/2023/11/Decret-executif-n%C2%B0-19-258.fr_.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official six-line address structure ending in five-digit postcode and commune; legal formatting context is not reusable address rows, current assignments, geometry or building linkage.',
+  },
+  'algeria-national-address-referential': {
+    id: 'algeria-national-address-referential',
+    name: 'Algeria National Addressing Referential',
+    url: 'https://interieur.gov.dz/2024/10/13/referentiel-national-dadressage-2/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official institutional and rollout context for geospatial address databases; the article is not a public nationwide row dataset, API, schema, licence, geometry release or building relation.',
+  },
+  'algeria-local-authorities-directory': {
+    id: 'algeria-local-authorities-directory',
+    name: 'Algeria Ministry of Interior local authorities directory',
+    url: 'https://www.interieur.gov.dz/index.php/fr/component/annuaires/annuairecommunes.html',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official commune, daïra and wilaya identity context; directory access does not establish bulk reuse, postal assignment, postal geometry, address rows or buildings.',
+  },
+  'inct-algeria-digital-geodata': {
+    id: 'inct-algeria-digital-geodata',
+    name: 'INCT Algeria digital geographic information',
+    url: 'https://www.inct.mdn.dz/source/act-dn.php',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Commercial or product-specific permission required',
+    notes: 'Official topographic, administrative, toponymic and construction-capable GIS product context that INCT states it commercialises; it is not open postal geometry, an address-building link or blanket redistribution permission.',
+  },
+  'osm-algeria': {
+    id: 'osm-algeria',
+    name: 'OpenStreetMap Algeria community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/Algeria',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community road, address, building and postcode discrepancy context; it is not Algérie Poste, government, cadastral or exact address-building authority.',
+  },
+  'upu-morocco-postcode-manual': {
+    id: 'upu-morocco-postcode-manual',
+    name: 'UPU Morocco postcode case study',
+    url: 'https://www.upu.int/UPU/media/upu/publications/manualAddressingAddressingAndPostcodeManualEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines five digits: routeing zone and province positions; endings 0, 1, 7 and 8 are home-delivery sectors, 2 through 6 use an agency or centre code, and 9 is a large-volume recipient. It is not an assignment table or polygon source.',
+  },
+  'poste-maroc-codepostal': {
+    id: 'poste-maroc-codepostal',
+    name: 'Barid Al-Maghrib postcode directory',
+    url: 'https://www.codepostal.ma/search.aspx',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact operator record and terms must be pinned',
+    notes: 'Official postcode search and directory; only a pinned record validates its stated code or locality, not geometry, completeness, live bulk API access or redistribution permission.',
+  },
+  'morocco-open-data-postal': {
+    id: 'morocco-open-data-postal',
+    name: 'Morocco Open Data – Poste Maroc datasets',
+    url: 'https://www.data.gov.ma/data/fr/organization/poste-maroc',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Open Data Commons Open Database License (ODbL), exact resource metadata controls',
+    notes: 'Official district, locality, agency-code, agency-address and agency-coordinate resources; postcode lists state September 2018. Agency coordinates are points, not sector surfaces, and freshness plus exact resource licence must be pinned.',
+  },
+  'morocco-open-data-license': {
+    id: 'morocco-open-data-license',
+    name: 'Morocco Open Data reuse licence',
+    url: 'https://www.data.gov.ma/fr/la-licence',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'ODbL-derived portal licence',
+    notes: 'ODbL-derived attribution, licence notice, share-alike and open-access duties apply to the exact covered dataset; the policy is legal metadata, not postal assignment or geometry evidence.',
+  },
+  'ancfcc-morocco-cartography': {
+    id: 'ancfcc-morocco-cartography',
+    name: 'ANCFCC Morocco cartography and cadastre',
+    url: 'https://www.ancfcc.gov.ma/nos-m%C3%A9tiers/cartographie/produits/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact product order, permission and terms required',
+    notes: 'Official topographic, administrative, city-plan, cadastral and geodetic context; these products are not postal sectors or explicit address-building links, and catalogue visibility or payment is not public redistribution permission.',
+  },
+  'la-poste-tunisienne-codes': {
+    id: 'la-poste-tunisienne-codes',
+    name: 'La Poste Tunisienne postcode search',
+    url: 'https://www.poste.tn/codes.php',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Public interactive lookup; bulk extraction, mirroring and redistribution rights are not inferred',
+    notes: 'Official search accepts governorate, delegation and locality criteria and returns four-digit postcode context. A dated permitted result may validate an assignment observation; it is not a bulk release, delivery catchment, address-to-building relation or polygon.',
+  },
+  'upu-tunisia-addressing-2014': {
+    id: 'upu-tunisia-addressing-2014', name: 'UPU Tunisia postal addressing sheet (April 2014)', url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/tunEn.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'UPU reference publication; no national assignment database or geometry redistribution right',
+    notes: 'Dated official addressing guidance places four digits before the delivery office, delivery centre or locality and models building, entrance, staircase and letter-box details as separate address components. Examples are not current production rows or polygon evidence.',
+  },
+  'tunisian-open-data-national-license': {
+    id: 'tunisian-open-data-national-license', name: 'Tunisia national open-data licence framework', url: 'https://data.gov.tn/fr/licences/licence-nationale/', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'National open-data licence framework under Government Decree 2021-3; dataset-specific licence still required',
+    notes: 'The framework describes attribution and reuse principles. Portal visibility or the framework alone does not cure a dataset whose resource metadata says licence not specified or supply postal/address/building authority.',
+  },
+  'tunisian-open-data-delegations-2025': {
+    id: 'tunisian-open-data-delegations-2025', name: 'Tunisia administrative delegations GeoJSON metadata 2025', url: 'https://catalog.data.gov.tn/fr/dataset/a04051fe-0b5c-4ff1-bc7d-59dfc2732866/resource/01b6fc4a-e490-451c-b932-96e63b4aa7e6', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'Resource metadata says licence not specified; no bundling until exact terms are pinned',
+    notes: 'Official-portal delegation geometry metadata updated 11 March 2025. Delegations are administrative context, not La Poste catchments; exact producer authority, fields, CRS, edition, licence and digest are promotion blockers.',
+  },
+  'tunisian-open-data-governorates-2025': {
+    id: 'tunisian-open-data-governorates-2025', name: 'Tunisia governorates GeoJSON 2025', url: 'https://catalog.data.gov.tn/fr/dataset/49344be7-06aa-45f9-bc5d-4a1d37b42f06/resource/492e157e-a8a8-4741-b2e9-c059ddacfc93', kind: 'admin-boundary', coverage: 'country', usage: 'validation',
+    license: 'CC BY as stated by resource metadata; exact attribution, artifact, edition and digest required',
+    notes: 'Official open-data portal governorate geometry updated 7 March 2025 is coarse administrative context only. It does not define four-digit postcode delivery areas, civic addresses, parcels or buildings.',
+  },
+  'otc-tunisia-cadastral-geoportal': {
+    id: 'otc-tunisia-cadastral-geoportal', name: 'Office de la Topographie et du Cadastre geoportal', url: 'https://www.otc.nat.tn/geoportail', kind: 'geocoding', coverage: 'country', usage: 'reference',
+    license: 'Cadastral portal access; no blanket public bulk or redistribution permission inferred',
+    notes: 'Official cadastral information context remains a separate parcel/title domain. A parcel, map search result or footprint is not a postcode or La Poste assignment, civic-address identifier, address-to-building link, owner or occupant publication permission.',
+  },
+  'inpdp-tunisia-law-2004-63': {
+    id: 'inpdp-tunisia-law-2004-63', name: 'INPDP Organic Law No. 2004-63', url: 'https://www.inpdp.tn/ressources/loi_2004.pdf', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official legislation publication',
+    notes: 'The official personal-data law governs identifiable natural-person data, transparency, purpose and controls. Articles 50-52 regulate foreign transfers and require INPDP authorization; it supplies no postal, address or geometry data.',
+  },
+  'la-poste-tunisienne-privacy': {
+    id: 'la-poste-tunisienne-privacy', name: 'La Poste Tunisienne personal-data charter', url: 'https://www.poste.tn/page.php?code_menu=155', kind: 'standard', coverage: 'country', usage: 'reference',
+    license: 'Official operator privacy notice',
+    notes: 'Current operator charter covers postal addresses and geolocation, minimisation, retention, recipients, security and foreign-transfer authorization. It does not authorize scraping, address publication or query-log export.',
+  },
+  'osm-tunisia': {
+    id: 'osm-tunisia', name: 'OpenStreetMap Tunisia community mapping', url: 'https://wiki.openstreetmap.org/wiki/Tunisia', kind: 'address', coverage: 'country', usage: 'validation',
+    license: 'ODbL 1.0 separate attributed partition',
+    notes: 'Community Arabic/French names, roads, addresses and buildings are candidate context only and retain ODbL lineage. They are not La Poste assignments, official administrative or cadastral geometry, or an exact address-to-building authority.',
+  },
+  'libya-post-services': {
+    id: 'libya-post-services',
+    name: 'Libya Post services portal',
+    url: 'https://libyapost.ly/en/services/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Libya Post service portal covering postal boxes, mail, parcels, and postal-network service information for postcode/address validation fallback.',
+  },
+  mauripost: {
+    id: 'mauripost',
+    name: 'MAURIPOST official portal',
+    url: 'https://www.mauripost.mr/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official MAURIPOST portal for postal-network, service, and customer-information reference where public postcode tooling is limited.',
+  },
+  sudapost: {
+    id: 'sudapost',
+    name: 'Sudapost official site',
+    url: 'https://sudapost.sd/wp/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Sudan Post site with operator, service, and network information used as current postal-reference evidence.',
+  },
+  'incm-mozambique-cep-2024': {
+    id: 'incm-mozambique-cep-2024', name: 'INCM revised Mozambique Postal Addressing Code (Decreto 74/2024)', url: 'https://www.incm.gov.mz/wp-content/uploads/2025/10/CEP-Revisto.pdf', kind: 'postal-code', coverage: 'country', usage: 'validation',
+    license: 'Official public decree; exact table extraction and redistribution terms must be reviewed and pinned',
+    notes: 'The current CEP has eight digits grouped as five and three, with general territorial and urban variants plus capital-city rules; it is assignment-reference evidence, not canonical postal boundary coordinates or building authority.',
+  },
+  'incm-mozambique-postal-law-2016': {
+    id: 'incm-mozambique-postal-law-2016', name: 'Mozambique Postal Law 1/2016 and INCM remit', url: 'https://www.incm.gov.mz/atribuicoes/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Postal Law 1/2016 establishes INCM as regulator; this legal framework is not a current CEP assignment table or geometry source.',
+  },
+  'incm-mozambique-corre-universal-2024': {
+    id: 'incm-mozambique-corre-universal-2024', name: 'INCM universal postal operator licence to CORRE (2024)', url: 'https://www.incm.gov.mz/2024/10/14/incm-entrega-licenca-ao-operador-postal-universal/', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    notes: 'INCM licensed CORRE as the universal postal operator in 2024; operator status is not an exact current assignment register or postcode polygon.',
+  },
+  'incm-mozambique-postal-operators': {
+    id: 'incm-mozambique-postal-operators', name: 'INCM licensed postal operators', url: 'https://www.incm.gov.mz/operadores-do-sector-postal/', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'The licensed operator and facility register provides network context, not a delivery catchment, customer record or postcode polygon.',
+  },
+  'mozambique-correios-dissolution-2021': {
+    id: 'mozambique-correios-dissolution-2021', name: 'Decreto 32/2021 dissolving Correios de Moçambique E.P.', url: 'https://www.inm.gov.mz/pt-br/content/conselho-de-ministros-suplemento-n%C2%BA-1-de-310521-pag-684-1-2-br-n%C2%BA-103-boletim-da-rep%C3%BAblica-i', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Correios de Moçambique E.P. was extinguished in 2021; its legacy materials are not current operator or current CEP assignment evidence.',
+  },
+  'correios-mocambique-codigos-postais': {
+    id: 'correios-mocambique-codigos-postais', name: 'Historical Correios de Moçambique four-digit postal-code directory', url: 'https://www.correios.co.mz/?cod=11&pagina=codigo', kind: 'postal-code', coverage: 'country', usage: 'reference',
+    license: 'Historical public lookup; no reviewed bulk redistribution or geometry grant',
+    notes: 'Historical four-digit directory retained only for legacy interpretation; it is not current CEP assignment or geometry evidence.',
+  },
+  'incm-mozambique-cep-rollout-2019-2022': {
+    id: 'incm-mozambique-cep-rollout-2019-2022', name: 'INCM 2019 CEP introduction and 2022 pilot report', url: 'https://www.incm.gov.mz/wp-content/uploads/2025/10/Relatorio-de-Regulacao-das-Comunicacoes-2022-PT.pdf', kind: 'address', coverage: 'country', usage: 'reference',
+    notes: 'The six-digit 2019 method is revoked; reported pilot georeferenced doors are not a current national building-address release.',
+  },
+  'ine-mozambique-admin-cartography': {
+    id: 'ine-mozambique-admin-cartography', name: 'INE Mozambique administrative cartography', url: 'https://ine.gov.mz/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact edition, CRS, identifiers and reuse terms must be pinned',
+    notes: 'Versioned administrative province, district, administrative-post and locality context by exact edition; it is not postal assignment, canonical CEP geometry or building authority.',
+  },
+  'fnds-mozambique-land-cadastre': {
+    id: 'fnds-mozambique-land-cadastre', name: 'FNDS Terra Segura land and community delimitation context', url: 'https://www.fnds.gov.mz/index.php/pt/nossos-projectos/listagem-de-projectos/ordenamento-e-reassentamento', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled or restricted land, parcel and holder data; no public-pack redistribution',
+    notes: 'Land, parcel, DUAT and holder information is controlled or restricted context, not postcode authority or automatic public building evidence.',
+  },
+  'intic-mozambique-data-protection-status-2026': {
+    id: 'intic-mozambique-data-protection-status-2026', name: 'INTIC Mozambique personal-data legislation status (2026)', url: 'https://intic.gov.mz/proposta-de-lei-de-proteccao-de-dados-pessoais-segue-para-debate-na-assembleia-da-republica/', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'In 2026 the standalone bill remained in the legislative process while constitutional and sector safeguards already govern personal location data; recipients and query histories stay outside public packs.',
+  },
+  'osm-mozambique': {
+    id: 'osm-mozambique', name: 'OpenStreetMap Mozambique community mapping', url: 'https://wiki.openstreetmap.org/wiki/Mozambique', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed partition required',
+    notes: 'Community roads, addresses and buildings are candidate context only and do not establish INCM assignment, canonical CEP geometry, deliverability or an exact address-to-building relation.',
+  },
+  'upu-south-africa-postal-addressing': {
+    id: 'upu-south-africa-postal-addressing',
+    name: 'UPU South Africa Postal Addressing System',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/zafEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines four digits and separates physical, rural, PO Box and Private Bag delivery semantics; it is not a current code table or polygon source.',
+  },
+  'stats-sa-geography': {
+    id: 'stats-sa-geography',
+    name: 'Statistics South Africa Geography Metadata',
+    url: 'https://apps.statssa.gov.za/census01/html/Geography_Metadata.htm',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact release terms must be pinned',
+    notes: 'Official statistical and administrative geography; exact edition and licence are required and boundaries are not postal areas.',
+  },
+  'sasdi-south-africa': {
+    id: 'sasdi-south-africa',
+    name: 'South African Spatial Data Infrastructure Act',
+    url: 'https://www.gov.za/documents/acts/spatial-data-infrastructure-act-54-2003-04-feb-2004',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official spatial-data governance and metadata framework, not a dataset licence, postal assignment, or feature source.',
+  },
+  'nspdr-south-africa-terms': {
+    id: 'nspdr-south-africa-terms',
+    name: 'National Spatial Planning Data Repository access terms',
+    url: 'https://nspdr.dlrrd.gov.za/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Portal access and disclaimer boundary; visibility or credentials do not grant public redistribution of postal, address, or building features.',
+  },
+  'ngi-south-africa': {
+    id: 'ngi-south-africa',
+    name: 'Chief Directorate: National Geospatial Information',
+    url: 'https://ngi.dlrrd.gov.za/',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'National mapping, geodetic control, aerial imagery and topographic authority; the authority page is not postal geometry or an explicit address-building link.',
   },
   'datahub-postal': {
     id: 'datahub-postal',
@@ -381,23 +1948,101 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     license: 'Varies by dataset',
     notes: 'Reusable postal-code CSV datasets for countries where maintained open packages exist.',
   },
+  'upu-egypt-postal-addressing-2023': {
+    id: 'upu-egypt-postal-addressing-2023',
+    name: 'UPU Egypt Postal Addressing System (July 2023)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/egyEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Defines seven digits as province, locality, neighbourhood and community components; it is not a current assignment table, crosswalk or polygon source.',
+  },
+  'egypt-post-new-postcode-guide': {
+    id: 'egypt-post-new-postcode-guide',
+    name: 'Egypt Post GIS New Postcode User Guide',
+    url: 'https://www.eta.gov.eg/sites/default/files/2021-12/%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%20%D9%84%D9%84%D8%B9%D8%AB%D9%88%D8%B1%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%AF%D9%8A%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF.pdf',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official GPS or structured-address lookup workflow; a pinned result may establish a point and code, not a postal surface, reusable bulk dataset or app licence.',
+  },
+  'egypt-post': {
+    id: 'egypt-post',
+    name: 'Egypt Post',
+    url: 'https://www.egyptpost.org/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'Exact Egypt Post product permission and terms must be pinned',
+    notes: 'Official operator reference; only a pinned record validates its stated code or office, not geometry, building linkage or bulk licence.',
+  },
+  'capmas-egypt-gis': {
+    id: 'capmas-egypt-gis',
+    name: 'CAPMAS Egypt GIS services',
+    url: 'https://capmas.gov.eg/Admin/Pages%20Files/20242714302%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%202024.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Exact product terms must be pinned',
+    notes: 'Official statistical, administrative and described building-level GIS services; service metadata is not postal geometry, an address-building relation or a product licence.',
+  },
+  'esa-egypt-geoportal': {
+    id: 'esa-egypt-geoportal',
+    name: 'Egyptian Survey Authority Geoportal',
+    url: 'https://www.esa.gov.eg/geoportal.aspx',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Copyright and product-specific permission required',
+    notes: 'National survey, cadastral and topographic context; portal visibility is not postal authority, explicit address-building linkage or redistribution permission.',
+  },
   'egy-list': {
     id: 'egy-list',
     name: 'Egy.List',
     url: 'https://github.com/Badawy403/Egy.List',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'primary',
-    notes: 'Egypt governorate, city, district, and postal-code reference data.',
+    usage: 'validation',
+    license: 'Dataset licence and Egypt Post provenance must be proven',
+    notes: 'Community legacy candidate and discrepancy data only; it is not current Egypt Post authority, a seven-digit migration crosswalk or geometry evidence.',
   },
   'sapo-postcodes': {
     id: 'sapo-postcodes',
     name: 'South African Post Office Postal Codes',
-    url: 'https://www.postoffice.co.za/',
+    url: 'https://www.postoffice.co.za/Tools/postalcodes.html',
     kind: 'postal-code',
     coverage: 'country',
     usage: 'primary',
-    notes: 'Official South African postal-code lookup reference for suburb, street, PO Box, city, and province validation.',
+    license: 'Public download; personal non-commercial website use unless SAPO grants prior written permission for broader use',
+    notes: 'Official downloadable domestic Excel and TXT postcode tables; exact file digest, capture time, delivery type and written reuse authority are required, and a row is not geometry, a building link or bulk redistribution permission.',
+  },
+  'sapo-website-terms': {
+    id: 'sapo-website-terms', name: 'South African Post Office website terms', url: 'https://www.postoffice.co.za/Legal/termsconditions.html', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'Visible content is ordinarily reusable only for personal non-commercial use; commercial use needs prior written permission, and the terms are not postal assignment or geometry evidence.',
+  },
+  'stats-sa-census-2022-geography': {
+    id: 'stats-sa-census-2022-geography', name: 'Statistics South Africa Census 2022 geography', url: 'https://census.statssa.gov.za/assets/documents/2022/Census_2022_Municipal_factsheet-Web.pdf', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact downloadable release terms, edition, identifiers and CRS must be pinned',
+    notes: 'Census 2022 municipal and statistical geography is versioned administrative context, not a SAPO assignment, postcode polygon, civic address or building relation.',
+  },
+  'mdb-south-africa-wards-2025': {
+    id: 'mdb-south-africa-wards-2025', name: 'Municipal Demarcation Board 2024/2025 ward cycle', url: 'https://www.demarcation.org.za/ward-delimitation-2024-2026/', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Exact final gazette, downloadable artifact terms, edition and valid time must be pinned',
+    notes: 'The revised ward cycle was handed to the IEC in December 2025, with exact final gazettes and outstanding areas requiring version control; a ward is not a postcode or delivery catchment.',
+  },
+  'csg-south-africa-cadastre': {
+    id: 'csg-south-africa-cadastre', name: 'Chief Surveyor-General cadastral spatial information', url: 'https://csg.dlrrd.gov.za/spatial.htm', kind: 'admin-boundary', coverage: 'country', usage: 'reference',
+    license: 'Controlled or product-specific access, cost and redistribution terms apply',
+    notes: 'Parcels, erven, servitudes, plans and surveyed rights are cadastral context, not postcode polygons, civic-address points, exact buildings or authority to publish holders.',
+  },
+  'south-africa-popia-2013': {
+    id: 'south-africa-popia-2013', name: 'Protection of Personal Information Act 4 of 2013', url: 'https://www.gov.za/documents/protection-personal-information-act', kind: 'standard', coverage: 'country', usage: 'reference',
+    notes: 'POPIA includes identifiable physical address and location information as personal information and requires lawful purpose, minimisation, accuracy and security; it supplies no postcode or geometry authority.',
+  },
+  'osm-south-africa': {
+    id: 'osm-south-africa', name: 'OpenStreetMap South Africa community mapping', url: 'https://wiki.openstreetmap.org/wiki/South_Africa', kind: 'address', coverage: 'country', usage: 'fallback',
+    license: 'ODbL; separate attributed share-alike partition required',
+    notes: 'Community roads, addresses and buildings are candidate context only and do not establish SAPO assignment, canonical postcode geometry, cadastral rights, deliverability or an exact address-building relation.',
   },
   'postafind-za': {
     id: 'postafind-za',
@@ -405,26 +2050,45 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     url: 'https://pcf.postafind.co.za/search',
     kind: 'postal-code',
     coverage: 'country',
-    usage: 'fallback',
-    notes: 'Public South African postal-code search useful as a fallback/reference alongside SAPO and open geodata.',
+    usage: 'validation',
+    license: 'Terms and provenance must be pinned',
+    notes: 'Third-party discrepancy and fallback search; it is not silently promoted to SAPO assignment authority or bulk redistribution permission.',
   },
   'british-overseas-postal-reference': {
     id: 'british-overseas-postal-reference',
     name: 'British Overseas Territories Postal Reference',
-    url: 'https://www.royalmail.com/',
+    url: 'https://www.royalmail.com/sending/international/country-guides',
     kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Fallback postal reference for UK overseas territories using assigned territory postcodes.',
+    notes: 'Royal Mail destination guide reference for UK overseas territories using assigned territory postcodes.',
   },
-  'saint-helena-gov': {
-    id: 'saint-helena-gov',
-    name: 'Saint Helena Government',
-    url: 'https://www.sainthelena.gov.sh/',
-    kind: 'gazetteer',
+  'saint-helena-postal': {
+    id: 'saint-helena-postal',
+    name: 'St Helena Government Postal Service',
+    url: 'https://www.sainthelena.gov.sh/public-services/postal/',
+    kind: 'postal-code',
     coverage: 'territory',
     usage: 'reference',
-    notes: 'Government reference for Saint Helena, Ascension, and Tristan da Cunha settlements and delivery locations.',
+    notes: 'Official St Helena postal-service reference for Jamestown routing, postal operations, and STHL 1ZZ delivery conventions.',
+  },
+  'ascension-post-office': {
+    id: 'ascension-post-office',
+    name: 'Ascension Island Government Post Office',
+    url: 'https://www.ascension.gov.ac/postal-service/post-office',
+    kind: 'postal-code',
+    coverage: 'territory',
+    usage: 'reference',
+    notes: 'Official Ascension Island Post Office reference for ASCN 1ZZ routing, mail services, and settlement delivery handling.',
+  },
+  'tristan-post-office': {
+    id: 'tristan-post-office',
+    name: 'Tristan da Cunha Post Office',
+    url: 'https://www.tristandc.com/postoffice.php',
+    kind: 'postal-code',
+    coverage: 'territory',
+    usage: 'reference',
+    notes: 'Official Tristan da Cunha Post Office reference for TDCU 1ZZ routing, postage, and island mail handling.',
   },
   'biot-gov': {
     id: 'biot-gov',
@@ -434,6 +2098,135 @@ export const AFRICA_OPEN_GEO_SOURCES: Record<AfricaOpenGeoSourceId, AfricaOpenGe
     coverage: 'territory',
     usage: 'reference',
     notes: 'Territory reference for Diego Garcia, BIOT place names, and restricted delivery handling.',
+  },
+  zampost: {
+    id: 'zampost',
+    name: 'Zambia Postal Services Corporation',
+    url: 'https://www.zampost.com.zm/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'primary',
+    license: 'ZAMPOST website copyright; exact observation and redistribution terms must be pinned',
+    notes: 'Official postal-operator and service context. The portal does not expose a rights-cleared complete current postcode assignment table, official postcode polygons, public address database, building crosswalk or stable bulk API.',
+  },
+  'zampost-locations': {
+    id: 'zampost-locations',
+    name: 'ZAMPOST locations and service-centre search',
+    url: 'https://www.zampost.com.zm/index.php/locations',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Interactive operator directory; no bulk reuse right inferred',
+    notes: 'The operator page supports search by city, province or postal code and distinguishes post offices, agency services and smart post boxes. A permitted successful result is a dated network observation only, not a complete assignment release, service boundary or delivery entitlement.',
+  },
+  'upu-zambia-addressing-2013': {
+    id: 'upu-zambia-addressing-2013',
+    name: 'UPU Zambia addressing sheet (January 2013)',
+    url: 'https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/zmbEn.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'UPU publication terms; Universal POST*CODE database rights are separate',
+    notes: 'Dated five-digit formatting, routing hierarchy and examples for street, rural delivery, P.O. Box, private bag, Postnet agency and poste restante. It is not a current complete assignment database, postal geometry, customer-address release or blanket reuse right.',
+  },
+  'zicta-zambia-national-addressing-postcode': {
+    id: 'zicta-zambia-national-addressing-postcode',
+    name: 'ZICTA National Addressing and Postcode Project',
+    url: 'https://www.zicta.zm/services/postal-courier-regulation/projects',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government project description; operational dataset terms remain source-specific',
+    notes: 'The current regulator page describes a project with councils to give each property a deliverable address. It does not publish a nationwide operational address row set, stable property identifier, postcode directory, geometry artifact, public API or redistribution licence.',
+  },
+  'zambia-parliament-addressing-statement-2013': {
+    id: 'zambia-parliament-addressing-statement-2013',
+    name: 'Zambia National Assembly postal addressing statement (2013)',
+    url: 'https://www.parliament.gov.zm/node/609',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official parliamentary record; no operational database reuse right inferred',
+    notes: 'The ministerial statement says 10101 was a proposal not representative of a particular location and describes a phased street, property-number, national-database and GIS project. It is dated legal and implementation context, not proof of current assignments or completion.',
+  },
+  'zambia-ecommerce-strategy-2023': {
+    id: 'zambia-ecommerce-strategy-2023',
+    name: 'Zambia National E-Commerce Strategy 2023',
+    url: 'https://www.mcti.gov.zm/wp-content/uploads/2024/01/National-E-Commerce-Strategy-2023.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government strategy publication; resulting address database terms are separate',
+    notes: 'The strategy calls for street naming, property addresses, digital addresses and development of a national postcode. Planned outputs and targets do not prove current nationwide operational assignments, public rows, polygons or building links.',
+  },
+  'znsdi-zambia-policy-2026': {
+    id: 'znsdi-zambia-policy-2026',
+    name: 'Zambia National Spatial Data Infrastructure Policy 2026',
+    url: 'https://www.szi.gov.zm/wp-content/uploads/2026/06/NSDI_Policy.pdf',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Government policy; every geospatial dataset retains custodian-specific access and reuse terms',
+    notes: 'The policy establishes custodian-led geodetic, topographic, administrative, parcel and imagery governance and protects sensitive data and sovereignty. Policy openness and portal software do not make every layer open, postal or an address-building crosswalk.',
+  },
+  'znsdi-zambia-cadastre-lots': {
+    id: 'znsdi-zambia-cadastre-lots',
+    name: 'ZNSDI / ZILMIS cadastral lots feature service',
+    url: 'https://map.gov.zm/arcgis/rest/services/NSDI_Vector/CadasterNew/MapServer/0',
+    kind: 'admin-boundary',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'Dataset-specific; service metadata exposes no blanket redistribution licence',
+    notes: 'The official service exposes polygon lots, plot identifiers, survey references and land-use fields. A queryable parcel is not a postcode polygon, public title record, building footprint or explicit national-address relation and requires exact permission, version, CRS, fields and privacy review.',
+  },
+  'zilas-zambia': {
+    id: 'zilas-zambia',
+    name: 'Zambia Integrated Lands Administration System',
+    url: 'https://www.mlnr.gov.zm/',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Controlled government land services; access, property and reuse rights are service-specific',
+    notes: 'The Ministry exposes land registration, survey, deeds and ZILAS service context. Portal access does not provide a reusable nationwide parcel-owner-title-address-postcode crosswalk or authorize publication of controlled records.',
+  },
+  'zambia-data-protection-act-2021': {
+    id: 'zambia-data-protection-act-2021',
+    name: 'Zambia Data Protection Act No. 3 of 2021',
+    url: 'https://www.parliament.gov.zm/sites/default/files/documents/acts/Act%20No.%203%20The%20Data%20Protection%20Act%202021_0.pdf',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Zambian law and official parliamentary publication',
+    notes: 'Personal-data processing requires lawful, explicit and limited purposes, accuracy, retention and security controls; cross-border transfers are conditional. The Act is governance evidence, not postal or geometry data.',
+  },
+  'dpc-zambia-location-data-guidance': {
+    id: 'dpc-zambia-location-data-guidance',
+    name: 'Zambia Data Protection Commission location-data guidance',
+    url: 'https://www.dataprotection.gov.zm/faq/',
+    kind: 'standard',
+    coverage: 'country',
+    usage: 'reference',
+    license: 'Official regulatory guidance',
+    notes: 'The Commission identifies location data as personal data and requires lawful, transparent, purpose-limited, minimized, accurate, retained and secured processing. Precise address, household, query and property relations therefore remain gated.',
+  },
+  'osm-zambia': {
+    id: 'osm-zambia',
+    name: 'OpenStreetMap Zambia community mapping',
+    url: 'https://wiki.openstreetmap.org/wiki/WikiProject_Zambia',
+    kind: 'address',
+    coverage: 'country',
+    usage: 'validation',
+    license: 'ODbL 1.0 separate partition',
+    notes: 'Community roads, localities, addresses and buildings remain a separately attributed ODbL partition. They are not ZAMPOST assignments, ZICTA national addresses, ZNSDI cadastre or exact delivery-building authority.',
+  },
+  zimpost: {
+    id: 'zimpost',
+    name: 'Zimbabwe Posts official portal',
+    url: 'https://www.zimpost.co.zw/',
+    kind: 'postal-code',
+    coverage: 'country',
+    usage: 'reference',
+    notes: 'Official Zimbabwe postal operator portal used as current postal-network evidence while public postcode search remains limited.',
   },
 };
 
@@ -527,39 +2320,54 @@ const BASE_OPEN_SOURCE_IDS: AfricaOpenGeoSourceId[] = [
 ];
 
 const COUNTRY_POSTAL_SOURCE_IDS: Partial<Record<AfricaCountryCode, AfricaOpenGeoSourceId[]>> = {
-  EG: ['egy-list', 'datahub-postal'],
-  MA: ['datahub-postal'],
-  NG: ['nipost-postcode', 'hot-osm-west-africa'],
-  GH: ['hot-osm-west-africa'],
-  CI: ['hot-osm-west-africa'],
-  SN: ['hot-osm-west-africa'],
-  BF: ['hot-osm-west-africa'],
-  ML: ['hot-osm-west-africa'],
-  NE: ['hot-osm-west-africa'],
-  TG: ['hot-osm-west-africa'],
-  BJ: ['hot-osm-west-africa'],
-  LR: ['hot-osm-west-africa'],
-  SL: ['hot-osm-west-africa'],
-  GM: ['hot-osm-west-africa'],
-  GN: ['hot-osm-west-africa'],
+  DZ: ['algerie-poste', 'algerie-poste-mobile-offices', 'algerie-poste-privacy', 'upu-algeria-addressing-2002', 'upu-algeria-postcode-format-2026', 'algeria-postal-addressing-regulation-2019', 'algeria-national-address-referential', 'algeria-local-authorities-directory', 'inct-algeria-digital-geodata', 'osm-algeria'],
+  EG: ['upu-egypt-postal-addressing-2023', 'egypt-post-new-postcode-guide', 'egypt-post', 'capmas-egypt-gis', 'esa-egypt-geoportal', 'egy-list', 'datahub-postal'],
+  LY: ['libya-post-services'],
+  MA: ['upu-morocco-postcode-manual', 'poste-maroc-codepostal', 'morocco-open-data-postal', 'morocco-open-data-license', 'ancfcc-morocco-cartography', 'datahub-postal'],
+  MR: ['mauripost'],
+  NG: ['nipost-postcode', 'nipost-national-digital-postcode-2026', 'nipost-addressing-standard-2017', 'upu-nigeria-addressing-2022', 'npc-nigeria-ead-2023', 'fcta-nigeria-agis', 'ndpc-nigeria-data-protection-act-2023', 'ndpc-nigeria-gaid-2025', 'osm-nigeria', 'hot-osm-west-africa'],
+  SD: ['sudapost'],
+  TN: ['la-poste-tunisienne-codes', 'upu-tunisia-addressing-2014', 'tunisian-open-data-national-license', 'tunisian-open-data-delegations-2025', 'tunisian-open-data-governorates-2025', 'otc-tunisia-cadastral-geoportal', 'inpdp-tunisia-law-2004-63', 'la-poste-tunisienne-privacy', 'osm-tunisia'],
+  GH: ['ghanapostgps', 'hot-osm-west-africa'],
+  CI: ['upu-cote-divoire-no-postcode-2026', 'upu-cote-divoire-addressing-2004', 'artci-cote-divoire-postal-sector-2024', 'la-poste-cote-divoire', 'osm-cote-divoire', 'hot-osm-west-africa'],
+  CM: ['upu-cameroon-no-postcode-2026', 'upu-cameroon-addressing-2002', 'minpostel-cameroon-postal-operators-2024', 'minesup-cameroon-bp-address-example', 'osm-cameroon', 'hot-osm-africa'],
+  BF: ['la-poste-burkina', 'hot-osm-west-africa'],
+  GN: ['guinee-poste', 'hot-osm-west-africa'],
+  ML: ['la-poste-mali', 'hot-osm-west-africa'],
+  NE: ['niger-poste', 'niger-poste-agencies', 'upu-niger-addressing-2005', 'ignniger-national-geography', 'hapdp-niger-data-protection-2022', 'osm-niger', 'hot-osm-west-africa'],
+  SN: ['la-poste-senegal-codes', 'la-poste-senegal-po-box', 'upu-senegal-addressing-2015', 'artp-senegal-national-addressing-2015', 'geosenegal-basegeo', 'geosenegal-basegeo-license', 'geosenegal-urban-buildings-2019', 'dgid-senegal-nicad', 'senegal-data-protection-law-2008-12', 'osm-senegal', 'hot-osm-west-africa'],
+  TG: ['societe-postes-togo', 'hot-osm-west-africa'],
+  BJ: ['la-poste-benin', 'hot-osm-west-africa'],
+  LR: ['upu-liberia-addressing-2017', 'mopt-liberia-postal-services', 'mopt-liberia-service-charter-2025', 'mopt-liberia-digital-postal-address-contract-2022', 'lisgis-liberia-census-2022-geography', 'lla-liberia-land-administration', 'liberia-data-governance-policy-2026-draft', 'osm-liberia', 'hot-osm-west-africa'],
+  SL: ['salpost-sierra-leone', 'hot-osm-west-africa'],
+  GM: ['gambia-post-services', 'hot-osm-west-africa'],
   GW: ['hot-osm-west-africa'],
-  CV: ['hot-osm-west-africa'],
-  KE: ['rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
-  TZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  UG: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  CV: ['correios-cabo-verde', 'correios-cabo-verde-contact-identifiers', 'correios-cabo-verde-cip', 'upu-cabo-verde-addressing-2014', 'upu-cabo-verde-postcode-length-2026', 'ingt-cabo-verde-idecv', 'ingt-cabo-verde-admin-feature-service', 'ingt-cabo-verde-cadastre', 'osm-cabo-verde', 'hot-osm-west-africa'],
+  KM: ['snpsf-comores-poste', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
+  MG: ['paositra-malagasy', 'paositra-malagasy-agencies', 'upu-madagascar-addressing-2011', 'openstat-madagascar-postcodes-2021', 'un-salb-madagascar-ftm', 'matsf-madagascar-geospatial-land', 'madagascar-data-protection-2014-038', 'osm-madagascar', 'hot-osm-east-southern-africa'],
+  MU: ['mauritius-post-postcode', 'upu-mauritius-postcode-rollout-2014', 'mauritius-open-data-mainland-postcodes', 'mauritius-open-data-rodrigues-postcodes', 'mauritius-open-data-agalega-postcodes', 'mauritius-open-data-post-offices', 'mauritius-open-data-districts', 'stats-mauritius-census-2022-admin', 'mauritius-cadastral-survey-act-dcdb', 'mauritius-data-protection-act-2017', 'osm-mauritius', 'hot-osm-east-southern-africa'],
+  KE: ['posta-kenya', 'posta-kenya-customer-service-charter-2022', 'posta-kenya-properties-2026', 'upu-kenya-addressing-2004', 'ca-kenya-national-addressing-system', 'kenya-national-addressing-policy-2023', 'survey-of-kenya-mapping-policy-2021', 'ardhisasa-kenya', 'odpc-kenya-address-location-privacy', 'osm-kenya', 'rcmrd-geoportal', 'kenya-open-data', 'hot-osm-east-southern-africa'],
+  TZ: ['tcra-tanzania-postcodes', 'tcra-tanzania-postcode-plan-2026', 'tcra-tanzania-addressing', 'tanzania-postal-regulations-2018', 'nbs-tanzania-wards-2022', 'tcra-tanzania-napa', 'pdpc-tanzania-act-2022', 'pdpc-tanzania-enforcement-2026', 'osm-tanzania', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  UG: ['posta-uganda-physical-address', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  BI: ['rnp-burundi', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   RW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  SS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ET: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  DJ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  MZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  MW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ZM: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ZW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  BW: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  NA: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  SO: ['somalia-moct-posta', 'somalia-moct-postal-revival-2025', 'somalia-national-postal-policy-2026', 'somalia-moct-digital-addressing', 'somalia-sobs-address-observation', 'somalia-sobs-cbca-jurisdiction', 'somalia-snbs-gis', 'somalia-nira-principles', 'somalia-nca-privacy', 'osm-somalia', 'rcmrd-gmes-africa-geoportal', 'hot-osm-east-southern-africa'],
+  SS: ['south-sudan-nca-postal-sector', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  ET: ['ethiopost-branches', 'ethiopost-delivery-address-form', 'upu-ethiopia-addressing-2002', 'ethiopia-ssgi-edas', 'ethiopia-nsdi-geoportal', 'ethiopia-bishoftu-address-book', 'ethiopia-addis-land-registration-edas', 'osm-ethiopia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  DJ: ['mcpt-djibouti-poste', 'upu-djibouti-addressing-2020', 'upu-djibouti-postcode-length-2026', 'upu-postcode-database-licensing-2026', 'djibouti-decentralisation-cartography', 'osm-djibouti', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  MZ: ['incm-mozambique-cep-2024', 'incm-mozambique-postal-law-2016', 'incm-mozambique-corre-universal-2024', 'incm-mozambique-postal-operators', 'mozambique-correios-dissolution-2021', 'correios-mocambique-codigos-postais', 'incm-mozambique-cep-rollout-2019-2022', 'ine-mozambique-admin-cartography', 'fnds-mozambique-land-cadastre', 'intic-mozambique-data-protection-status-2026', 'osm-mozambique', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  MW: ['malawi-postcodes-macra', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  ZM: ['zampost', 'zampost-locations', 'upu-zambia-addressing-2013', 'zicta-zambia-national-addressing-postcode', 'zambia-parliament-addressing-statement-2013', 'zambia-ecommerce-strategy-2023', 'znsdi-zambia-policy-2026', 'znsdi-zambia-cadastre-lots', 'zilas-zambia', 'zambia-data-protection-act-2021', 'dpc-zambia-location-data-guidance', 'osm-zambia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  ZW: ['zimpost', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  BW: ['botswanapost-addressing', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  CF: ['upu-central-african-republic-no-postcode-2026', 'upu-central-african-republic-addressing-2022', 'arcep-central-african-republic-postal', 'osm-central-african-republic', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
+  CG: ['upu-congo-republic-no-postcode-2026', 'upu-congo-republic-addressing-2004', 'sopeco-congo-location', 'osm-congo-republic', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
+  CD: ['scpt-rdc-postcode-directory', 'upu-dr-congo-addressing-2022', 'arptc-dr-congo-postal-market-2021-2022', 'osm-dr-congo', 'hf-libpostal-address-parser-candidate', 'rcmrd-gmes-africa-geoportal', 'hot-osm-africa'],
+  NA: ['nampost-postal-codes', 'nampost-post-offices', 'upu-namibia-addressing', 'nsa-namibia-geo-portal', 'mawlr-namibia-survey-mapping', 'namibia-constitution-article-13', 'namibia-access-to-information-act-2022', 'namibia-data-protection-status-2026', 'osm-namibia', 'rcmrd-geoportal', 'hot-osm-east-southern-africa'],
   LS: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
+  SC: ['seychelles-postal-regulator-nas', 'seychelles-statehouse-nas-2024', 'seychelles-finance-nas-2025', 'seychelles-statehouse-nas-bill-2026', 'seychelles-postal-regulator-operators', 'seychelles-nbs-gis', 'seychelles-lands-webgis', 'seychelles-webgis-disclaimer', 'seychelles-land-registration-act', 'seychelles-data-protection-act-2023', 'osm-seychelles', 'osm-seychelles-building-import', 'rcmrd-gmes-africa-geoportal'],
   SZ: ['rcmrd-geoportal', 'hot-osm-east-southern-africa'],
-  ZA: ['sapo-postcodes', 'postafind-za', 'ngi-south-africa', 'hot-osm-east-southern-africa'],
+  ZA: ['upu-south-africa-postal-addressing', 'sapo-postcodes', 'sapo-website-terms', 'postafind-za', 'ngi-south-africa', 'stats-sa-geography', 'stats-sa-census-2022-geography', 'mdb-south-africa-wards-2025', 'csg-south-africa-cadastre', 'sasdi-south-africa', 'nspdr-south-africa-terms', 'south-africa-popia-2013', 'osm-south-africa', 'hot-osm-east-southern-africa'],
 };
 
 export function getAfricaOpenSourceIds(countryCode: string): AfricaOpenGeoSourceId[] {

@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "postal-context-py-source-review/v1",
+  "countryCode": "PY",
+  "reviewedAt": "2026-09-02T05:02:03.144Z",
+  "conclusion": "eligible-for-M2-national-derived-display",
+  "officialSources": {
+    "dataset": {
+      "publisher": "DINACOPA",
+      "catalogUrl": "https://www.datos.gov.py/dataset/nuevo-codigo-postal-del-paraguay",
+      "apiUrl": "https://www.datos.gov.py/api/3/action/package_show?id=2ba6d169-85d9-433e-ad44-aefa320ceff7",
+      "datasetId": "2ba6d169-85d9-433e-ad44-aefa320ceff7",
+      "metadataCreated": "2019-10-17",
+      "metadataModified": "2023-11-08",
+      "metadataSha256": "29a677eff064f7426ea48350d0e43df653f63d39002f5bc4a410d07d294f358f"
+    },
+    "files": {
+      "shp": { "bytes": 39259920, "sha256": "abc2c58b04ab7de61436f01938e7c8a2e8d561738ff8392629a40815d55699e7" },
+      "dbf": { "bytes": 2179242, "sha256": "f513bddb1ccd368843c1da5968f254ebe85c546eba53fef581d6d556df9d8589" },
+      "shx": { "bytes": 69268, "sha256": "4ef8bea2dd8e9a3b07be77beb9eee017cb7262ab9364eef3c4eb47c6c9041324" },
+      "prj": { "bytes": 409, "sha256": "d26a953b5eb0782c31f0c8148f48177508cd0bf977e8667eaf7bf36b0ce97a5e" },
+      "csv": { "bytes": 614914, "sha256": "fe1d54c15d2d1e4c5ea4a170960397989105f45306e9a0a3e4b25afdd57945dd" },
+      "dictionary": { "bytes": 12261, "sha256": "ac8d2303aec3309d02bac672d8dc789ea868b7d58159c11f0951362f6dea588d" }
+    },
+    "currentPostalSystem": {
+      "url": "https://correoparaguayo.gov.py/sitio/la-importancia-del-codigo-postal-para-ubicar-las-direcciones-7/",
+      "lookupUrl": "https://codigopostal.paraguay.gov.py/",
+      "sha256": "4e7f6fc0549080ca97955a51d96c94398c1f71c7b8ec79d17313f891060d1c01",
+      "observedAt": "2026-09-02T05:02:03.144Z",
+      "structure": "first two digits department, next two district, final two barrio",
+      "officialExample": "001518 SANTISIMA TRINIDAD / SANTA ROSA"
+    }
+  },
+  "rights": {
+    "url": "https://www.paraguay.gov.py/datos-abiertos/licencias",
+    "license": "Licencia de Uso de la Informacion Publica - Decreto 4064 - Ley Nro. 5282/2014",
+    "shellSha256": "b6a6ca4ed6be1d9103434cec14f193580747cbf6fec8a2c82e73b0c2e3d442d7",
+    "bundleSha256": "2d5d19e86534e3f815ddc1b569143c86ed3fa553baec9ed162ed5b8f48477ade",
+    "redistributionAndTransformationAllowed": true,
+    "conditions": [
+      "cite the public source and licence",
+      "cite the last update when known",
+      "do not imply official or state-sponsored use"
+    ]
+  },
+  "sourceValidation": {
+    "sourceCrs": "EPSG:32721",
+    "sourceDate": "2018-02-19",
+    "features": 8646,
+    "distinctPostalCodes": 2887,
+    "departments": 18,
+    "districts": 259,
+    "invalidPolygons": 5,
+    "codeStructureMismatches": 0,
+    "rowsWithoutLegacyZona": 8489,
+    "industrialIslandExceptionsWithoutBarrioCode": 2,
+    "repeatedCodBarIdsAcrossPostalCodes": 229
+  },
+  "identityReview": {
+    "postalCodeIdentity": "six-digit COD_POST",
+    "departmentIdentity": "DPTO",
+    "districtIdentity": "DPTO plus DISTRITO",
+    "postalLocalityContextIdentity": "one context per official source row, keyed by postal code, cod_bar, BARLOC and fixed digest-pinned row number, preserving BARLO_DESC and OBS",
+    "globalCodBarCollapseAllowed": false,
+    "example001518": {
+      "department": "00 ASUNCION",
+      "district": "0015 SANTISIMA TRINIDAD",
+      "barloc": "052",
+      "codBar": "0000052",
+      "name": "SANTA ROSA"
+    }
+  },
+  "reproducibleTransform": {
+    "tool": "GDAL 3.12.1",
+    "steps": [
+      "repair source polygons in EPSG:32721",
+      "union repaired official source areas by COD_POST",
+      "topology-preserving simplify each postal-code union by 20 metres and make valid",
+      "transform to EPSG:4326",
+      "snap to 0.0000001-degree grid and apply zero-width repair",
+      "emit nine-decimal RFC 7946 GeoJSON and remove 63 closed sub-1e-12-square-degree hole rings that collapsed under display precision"
+    ],
+    "normalizedAttributesSha256": "31582c1fec56d3d2d21215c8c7472a8d56bddb97ac8ca29d5cd4690abf12a208",
+    "displayInputSha256": "6ce1239d15c20e80393c0c1457090095ff82df151f44f596aa36796d47340640",
+    "outputMultiPolygons": 2887,
+    "positions": 339723,
+    "rings": 8058,
+    "removedSubEpsilonNumericalHoles": 63,
+    "removedConsecutiveDuplicatePositions": 1,
+    "bounds": [-62.6446174, -27.5918336, -54.2589239, -19.2896],
+    "invalidOutputs": 0,
+    "inventedAreas": 0
+  },
+  "publication": {
+    "rawFilesCommitted": false,
+    "personalAddressBuildingParcelOrLandRightsRows": 0,
+    "outputProvenance": "derived",
+    "confidence": 0.98,
+    "accuracyMeters": 25
+  }
+}

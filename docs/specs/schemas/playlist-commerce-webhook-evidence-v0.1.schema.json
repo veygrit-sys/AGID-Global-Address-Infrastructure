@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dawnportinfo-design.github.io/agid/schemas/playlist-commerce-webhook-evidence-v0.1.schema.json",
+  "title": "Playlist Commerce Webhook Evidence Fixture v0.1",
+  "description": "Local-only redacted evidence fixture for Playlist Commerce webhook preflight history. This schema is an OSS contract for fixture shape, not a hosted Evidence Vault API guarantee.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact",
+    "version",
+    "generatedAt",
+    "source",
+    "summary",
+    "records",
+    "forbiddenMaterial",
+    "nonClaims"
+  ],
+  "properties": {
+    "artifact": {
+      "const": "playlist-commerce-webhook-evidence-fixture"
+    },
+    "version": {
+      "const": "v0.1"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historyFixture",
+        "safeCommand",
+        "localOnly",
+        "managedServiceBoundary"
+      ],
+      "properties": {
+        "historyFixture": {
+          "enum": [
+            "docs/specs/fixtures/playlist-commerce-webhook-preflight-history-v0.1.json",
+            "docs\\specs\\fixtures\\playlist-commerce-webhook-preflight-history-v0.1.json"
+          ]
+        },
+        "safeCommand": {
+          "const": "npm run verify:playlist-commerce"
+        },
+        "localOnly": {
+          "const": true
+        },
+        "managedServiceBoundary": {
+          "const": "fixture-only-not-hosted-evidence-vault"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "totalRecords",
+        "latestEvidenceRef",
+        "linkedHistoryRuns",
+        "allRecordsRedacted"
+      ],
+      "properties": {
+        "totalRecords": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "latestEvidenceRef": {
+          "$ref": "#/$defs/evidenceRef"
+        },
+        "linkedHistoryRuns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "allRecordsRedacted": {
+          "const": true
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/evidenceRecord"
+      }
+    },
+    "forbiddenMaterial": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "contains": {
+        "const": "production_webhook_secret"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "production_webhook_secret"
+          }
+        },
+        {
+          "contains": {
+            "const": "provider_token"
+          }
+        },
+        {
+          "contains": {
+            "const": "raw_carrier_payload"
+          }
+        }
+      ]
+    },
+    "nonClaims": {
+      "$ref": "#/$defs/nonClaims"
+    }
+  },
+  "$defs": {
+    "evidenceRef": {
+      "type": "string",
+      "pattern": "^pc_webhook_preflight_evidence_[0-9]{3}$"
+    },
+    "checkStatus": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "not-payment-settlement"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-raw-address-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-proof-witness-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-provider-token-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-raw-carrier-payload-intake"
+          }
+        },
+        {
+          "contains": {
+            "const": "not-production-delivery-attempt"
+          }
+        }
+      ]
+    },
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidenceRef",
+        "vaultRecordRef",
+        "kind",
+        "runId",
+        "routeId",
+        "eventRef",
+        "topic",
+        "capturedAt",
+        "status",
+        "publicProjection",
+        "commitments",
+        "privacyBoundary",
+        "retention",
+        "nonClaims"
+      ],
+      "properties": {
+        "evidenceRef": {
+          "$ref": "#/$defs/evidenceRef"
+        },
+        "vaultRecordRef": {
+          "type": "string",
+          "pattern": "^ev_vault_pc_webhook_preflight_evidence_[0-9]{3}$"
+        },
+        "kind": {
+          "const": "playlist-commerce-webhook-preflight"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^pc_webhook_preflight_run_[0-9]{3}$"
+        },
+        "routeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventRef": {
+          "type": "string",
+          "pattern": "^event_ref:.+"
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "capturedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "const": "accepted-and-replay-blocked"
+        },
+        "publicProjection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "passed",
+            "acceptedStatus",
+            "replayStatus",
+            "replayBlocked",
+            "checkIds",
+            "checkStatuses"
+          ],
+          "properties": {
+            "passed": {
+              "const": true
+            },
+            "acceptedStatus": {
+              "const": 202
+            },
+            "replayStatus": {
+              "const": 401
+            },
+            "replayBlocked": {
+              "const": true
+            },
+            "checkIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "allOf": [
+                {
+                  "contains": {
+                    "const": "redacted-response"
+                  }
+                },
+                {
+                  "contains": {
+                    "const": "activation-private-material-blocked"
+                  }
+                }
+              ]
+            },
+            "checkStatuses": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/checkStatus"
+              },
+              "required": [
+                "accepted-once",
+                "activation-private-material-blocked",
+                "local-only-boundary",
+                "non-claims-declared",
+                "redacted-response",
+                "replay-blocked",
+                "signature-present"
+              ],
+              "properties": {
+                "accepted-once": {
+                  "const": "pass"
+                },
+                "activation-private-material-blocked": {
+                  "const": "pass"
+                },
+                "local-only-boundary": {
+                  "const": "pass"
+                },
+                "non-claims-declared": {
+                  "const": "pass"
+                },
+                "redacted-response": {
+                  "const": "pass"
+                },
+                "replay-blocked": {
+                  "const": "pass"
+                },
+                "signature-present": {
+                  "const": "pass"
+                }
+              }
+            }
+          }
+        },
+        "commitments": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requestCommitmentRef",
+            "responseCommitmentRef",
+            "checkCommitmentRef"
+          ],
+          "properties": {
+            "requestCommitmentRef": {
+              "type": "string",
+              "pattern": "^pc_req_[a-f0-9]{8}$"
+            },
+            "responseCommitmentRef": {
+              "type": "string",
+              "pattern": "^pc_res_[a-f0-9]{8}$"
+            },
+            "checkCommitmentRef": {
+              "type": "string",
+              "pattern": "^pc_chk_[a-f0-9]{8}$"
+            }
+          }
+        },
+        "privacyBoundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "localOnly",
+            "rawPayloadStored",
+            "signatureStored",
+            "secretMaterialStored",
+            "rawAddressStored",
+            "proofWitnessStored",
+            "recipientContactStored"
+          ],
+          "properties": {
+            "localOnly": {
+              "const": true
+            },
+            "rawPayloadStored": {
+              "const": false
+            },
+            "signatureStored": {
+              "const": false
+            },
+            "secretMaterialStored": {
+              "const": false
+            },
+            "rawAddressStored": {
+              "const": false
+            },
+            "proofWitnessStored": {
+              "const": false
+            },
+            "recipientContactStored": {
+              "const": false
+            }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "ttlHours"
+          ],
+          "properties": {
+            "mode": {
+              "const": "fixture-regenerate-only"
+            },
+            "ttlHours": {
+              "const": 24
+            }
+          }
+        },
+        "nonClaims": {
+          "$ref": "#/$defs/nonClaims"
+        }
+      }
+    }
+  }
+}

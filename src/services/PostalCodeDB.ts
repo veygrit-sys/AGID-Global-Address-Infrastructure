@@ -9,7 +9,7 @@ import path from 'path';
 const DATA_DIR = path.join(process.cwd(), 'data', 'postal_codes');
 
 // Supported countries for this feature (Asia, Spanish-speaking regions)
-const SUPPORTED_COUNTRIES = ['JP', 'KR', 'CN', 'SG', 'TH', 'MY', 'ID', 'PH', 'ES', 'MX', 'CO', 'AR', 'CL'];
+export const SUPPORTED_POSTAL_CODE_COUNTRIES = ['JP', 'KR', 'CN', 'SG', 'TH', 'MY', 'ID', 'PH', 'ES', 'MX', 'CO', 'AR', 'CL'];
 
 interface PostalRecord {
   countryCode: string;
@@ -27,53 +27,128 @@ interface CountryIndex {
   index: KDBush;
 }
 
+export type PostalCodeDBInitOptions = {
+  preloadCountries?: string[];
+  allowDownload?: boolean;
+  maxPreloadCountries?: number;
+  preloadGapMs?: number;
+};
+
+export type PostalCodeDBLoadOptions = {
+  allowDownload?: boolean;
+  retryFailed?: boolean;
+};
+
 const db: Record<string, CountryIndex> = {};
 const loadingStatus: Record<string, boolean> = {};
+const loadingPromises: Record<string, Promise<void> | undefined> = {};
 const failedDownloads = new Set<string>();
 
-export async function initPostalCodeDB() {
+function normalizeCountryCode(value: unknown) {
+  return String(value ?? '').trim().toUpperCase().replace(/[^A-Z]/g, '');
+}
+
+function parseCountryList(value: string | undefined) {
+  return (value || '')
+    .split(/[,\s]+/g)
+    .map(normalizeCountryCode)
+    .filter(Boolean);
+}
+
+function uniqueCountries(values: string[]) {
+  return Array.from(new Set(values.map(normalizeCountryCode).filter(cc => /^[A-Z]{2}$/.test(cc))));
+}
+
+function listLocallyAvailableCountries() {
+  if (!fs.existsSync(DATA_DIR)) return [];
+  return uniqueCountries(
+    fs.readdirSync(DATA_DIR)
+      .map(file => file.match(/^([A-Z]{2})\.(txt|zip)$/)?.[1])
+      .filter(Boolean) as string[],
+  );
+}
+
+function resolvePreloadCountries(options: PostalCodeDBInitOptions) {
+  if (options.preloadCountries) return uniqueCountries(options.preloadCountries);
+  const fromEnv = parseCountryList(process.env.AGID_POSTAL_PRELOAD_COUNTRIES);
+  if (fromEnv.length) return fromEnv;
+  return process.env.AGID_POSTAL_PRELOAD_LOCAL === '1' ? listLocallyAvailableCountries() : [];
+}
+
+export async function initPostalCodeDB(options: PostalCodeDBInitOptions = {}) {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
- 
-  // Load data for supported countries SEQUENTIALLY to save memory
+
+  const preloadCountries = resolvePreloadCountries(options)
+    .filter(cc => SUPPORTED_POSTAL_CODE_COUNTRIES.includes(cc))
+    .slice(0, options.maxPreloadCountries ?? 8);
+  const allowDownload = options.allowDownload ?? process.env.AGID_POSTAL_PRELOAD_DOWNLOAD === '1';
+  const preloadGapMs = options.preloadGapMs ?? 750;
+  if (!preloadCountries.length) {
+    console.log('Postal Code DB initialized in lazy mode; countries load on demand.');
+    return;
+  }
+
   const loadSequentially = async () => {
-    for (const cc of SUPPORTED_COUNTRIES) {
+    for (const cc of preloadCountries) {
       try {
-        await loadCountryData(cc);
+        await loadCountryData(cc, { allowDownload });
       } catch (err) {
         console.error(`Failed to load data for ${cc}:`, err);
       }
-      // Give some breathing room for GC
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, preloadGapMs));
     }
   };
 
   loadSequentially().catch(err => console.error('Background postal data loading failed:', err));
 }
 
-async function loadCountryData(cc: string): Promise<void> {
-  if (db[cc] || loadingStatus[cc] || failedDownloads.has(cc)) return;
+async function loadCountryData(cc: string, options: PostalCodeDBLoadOptions = {}): Promise<void> {
+  const code = normalizeCountryCode(cc);
+  if (db[code]) return;
+  if (failedDownloads.has(code) && !options.retryFailed) return;
 
   // Only attempt for standard 2-letter alphabetic ISO codes.
   // Numeric codes (like '74') or alpha-numeric codes (like 'A1') are sea/other regions.
-  if (!/^[A-Z]{2}$/.test(cc)) {
+  if (!/^[A-Z]{2}$/.test(code)) {
+    return;
+  }
+  if (!SUPPORTED_POSTAL_CODE_COUNTRIES.includes(code)) {
     return;
   }
 
-  loadingStatus[cc] = true;
+  if (loadingPromises[code]) {
+    return loadingPromises[code];
+  }
 
+  loadingStatus[code] = true;
+  const loadPromise = loadCountryDataInner(code, options)
+    .finally(() => {
+      loadingStatus[code] = false;
+      delete loadingPromises[code];
+    });
+  loadingPromises[code] = loadPromise;
+  return loadPromise;
+}
+
+async function loadCountryDataInner(cc: string, options: PostalCodeDBLoadOptions): Promise<void> {
   const zipPath = path.join(DATA_DIR, `${cc}.zip`);
   const txtPath = path.join(DATA_DIR, `${cc}.txt`);
+  const allowDownload = options.allowDownload !== false;
 
   try {
     // 1. Download if not exists
     if (!fs.existsSync(txtPath)) {
       if (!fs.existsSync(zipPath)) {
+        if (!allowDownload) {
+          console.log(`Postal data for ${cc} is not cached locally; skipping startup download.`);
+          return;
+        }
         console.log(`Downloading postal data for ${cc}...`);
         await downloadFileWithRetry(`https://download.geonames.org/export/zip/${cc}.zip`, zipPath);
       }
-      
+
       // 2. Extract
       console.log(`Extracting postal data for ${cc}...`);
       try {
@@ -96,7 +171,7 @@ async function loadCountryData(cc: string): Promise<void> {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (!line.trim()) continue;
-      
+
       const parts = line.split('\t');
       if (parts.length >= 11) {
         const lat = parseFloat(parts[9]);
@@ -114,7 +189,7 @@ async function loadCountryData(cc: string): Promise<void> {
           });
         }
       }
-      
+
       // Yield every 5000 lines
       if (i % 5000 === 0) {
         await new Promise(resolve => setImmediate(resolve));
@@ -142,9 +217,28 @@ async function loadCountryData(cc: string): Promise<void> {
     } else {
       console.error(`Error processing postal data for ${cc}:`, error);
     }
-  } finally {
-    loadingStatus[cc] = false;
   }
+}
+
+export async function ensurePostalCodeCountryLoaded(
+  cc: string,
+  options: PostalCodeDBLoadOptions = {},
+): Promise<boolean> {
+  const code = normalizeCountryCode(cc);
+  await loadCountryData(code, options);
+  return Boolean(db[code]);
+}
+
+export function getPostalCodeDBStatus() {
+  return {
+    supportedCountries: SUPPORTED_POSTAL_CODE_COUNTRIES,
+    loadedCountries: Object.keys(db),
+    loadingCountries: Object.entries(loadingStatus)
+      .filter(([, loading]) => loading)
+      .map(([countryCode]) => countryCode),
+    failedCountries: Array.from(failedDownloads),
+    dataDirectoryConfigured: Boolean(DATA_DIR),
+  };
 }
 
 async function downloadFileWithRetry(url: string, dest: string, retries: number = 3): Promise<void> {
@@ -159,28 +253,28 @@ async function downloadFileWithRetry(url: string, dest: string, retries: number 
     const currentUrl = mirrors[i % mirrors.length];
     try {
       await downloadFile(currentUrl, dest);
-      
+
       // Basic check if the file is truly a zip
       const stats = fs.statSync(dest);
       if (stats.size < 1000) { // Zip usually > 1KB
         throw new Error(`Downloaded file is too small (${stats.size} bytes)`);
       }
-      
+
       // Try to read zip header
       try {
         new AdmZip(dest);
       } catch (e) {
         throw new Error('Downloaded file is not a valid zip archive');
       }
-      
+
       return;
     } catch (err: any) {
       if (fs.existsSync(dest)) {
         try { fs.unlinkSync(dest); } catch (e) {}
       }
-      
+
       if (i === retries - 1) throw err;
-      
+
       // Don't retry on 404 errors
       if (err.message && err.message.includes('Status 404')) {
         throw err;
@@ -197,7 +291,7 @@ function downloadFile(url: string, dest: string): Promise<void> {
   return new Promise((resolve, reject) => {
     let file = fs.createWriteStream(dest);
     let request: any;
-    
+
     const cleanup = (err: Error | null) => {
       if (request) {
         request.destroy();
@@ -242,9 +336,9 @@ function downloadFile(url: string, dest: string): Promise<void> {
          cleanup(new Error(`Server returned text (${contentType}) instead of binary data`));
          return;
       }
-      
+
       response.pipe(file);
-      
+
       file.on('finish', () => {
         if (file) {
           file.close();
@@ -252,7 +346,7 @@ function downloadFile(url: string, dest: string): Promise<void> {
           resolve();
         }
       });
-      
+
       response.on('error', (err) => {
         cleanup(err);
       });
@@ -268,16 +362,22 @@ function downloadFile(url: string, dest: string): Promise<void> {
   });
 }
 
-export async function getNearestPostalCode(lat: number, lon: number, cc: string): Promise<PostalRecord | null> {
+export async function getNearestPostalCode(
+  lat: number,
+  lon: number,
+  cc: string,
+  options: PostalCodeDBLoadOptions = {},
+): Promise<PostalRecord | null> {
+  const code = normalizeCountryCode(cc);
   // Only process standard 2-letter alphabetic ISO codes
-  if (!/^[A-Z]{2}$/.test(cc)) return null;
+  if (!/^[A-Z]{2}$/.test(code)) return null;
 
   // Ensure data is loaded
-  if (!db[cc]) {
-    await loadCountryData(cc);
+  if (!db[code]) {
+    await loadCountryData(code, { allowDownload: options.allowDownload ?? true, retryFailed: options.retryFailed });
   }
-  
-  const countryDb = db[cc];
+
+  const countryDb = db[code];
   if (!countryDb) return null;
 
   // Find nearest point
@@ -286,6 +386,6 @@ export async function getNearestPostalCode(lat: number, lon: number, cc: string)
     const index = nearestIndices[0];
     return countryDb.records[index];
   }
-  
+
   return null;
 }

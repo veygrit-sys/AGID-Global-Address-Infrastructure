@@ -1,0 +1,92 @@
+{
+  "schema_version": "agid-postal-sm-source-profile-v0.1",
+  "country_code": "SM",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-production fixtures only." },
+    { "id": "R1_public_reference", "meaning": "Public official pages or metadata used as validation receipts; access does not imply bulk redistribution or public-serving rights." },
+    { "id": "R2_open_resource", "meaning": "An exact official open resource whose licence, attribution, version, schema, coverage, CRS, and digest are pinned." },
+    { "id": "R3_controlled_or_contract", "meaning": "Permissioned, registered, paid, or otherwise controlled material retained and served only as permitted." },
+    { "id": "R4_validation_only", "meaning": "Unclear-rights, misprojected, personal, title/right, or non-redistributable evidence may detect discrepancies but cannot become public output." }
+  ],
+  "sources": [
+    {
+      "source_id": "poste-san-marino-offices",
+      "provider": "Poste San Marino S.p.A.",
+      "source_url": "https://www.poste.sm/uffici-postali/",
+      "role": ["official-office-directory", "observed-cap-examples", "service-location-context"],
+      "production_scope": "Pinned public office page retaining page modification time, capture time, office name/address/CAP, interface URL, rights review, bytes and digest; office rows never become a complete assignment denominator or area.",
+      "assignment_authority": "official_postal_operator_examples_only",
+      "geometry_authority": "office_point_only",
+      "validation_readiness": "ten-current-office-codes-observed-but-complete-assignment-and-rights-required",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-complete-operator-assignment-and-exception-release", "pin-compatible-processing-storage-derivation-redistribution-and-public-serving-rights", "separate-office-service-location-from-cap-area"],
+      "prohibited_claims": ["office-list-is-complete-delivery-denominator", "office-address-is-cap-area", "embedded-google-map-is-postal-geometry", "public-page-is-open-database-license"]
+    },
+    {
+      "source_id": "poste-san-marino-services",
+      "provider": "Poste San Marino S.p.A.",
+      "source_url": "https://www.poste.sm/servizi-in-filiale/",
+      "role": ["operator-network-context", "all-castelli-service-claim"],
+      "production_scope": "Public operator statement that offices serve all Castelli; never interpreted as one office, one Castello, one CAP, or delivery-area equivalence.",
+      "assignment_authority": "none",
+      "geometry_authority": "none",
+      "validation_readiness": "context-only",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["obtain-resource-specific-rights-and-assignment-artifact"],
+      "prohibited_claims": ["castello-service-coverage-is-cap-area", "office-network-proves-deliverability"]
+    },
+    {
+      "source_id": "san-marino-castelli-official-list",
+      "provider": "Segreteria di Stato per gli Affari Interni",
+      "source_url": "https://www.interni.sm/pub2/InterniSM/Giunte-di-Castello/Le-Giunte-di-Castello.html",
+      "role": ["official-nine-castelli-list", "administrative-identity-context"],
+      "production_scope": "Nine Castelli names and governmental context only.",
+      "assignment_authority": "official_administrative_authority",
+      "geometry_authority": "none_on_page",
+      "validation_readiness": "administration-only",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["keep-administration-and-postal-membership-separate"],
+      "prohibited_claims": ["nine-castelli-are-ten-cap-areas", "castello-name-proves-cap-membership"]
+    },
+    {
+      "source_id": "san-marino-castelli-arcgis-layer",
+      "provider": "Repubblica di San Marino territorial map service",
+      "source_url": "https://mappeonline.pa.sm/arcgiscata/rest/services/UTC_PianificazioneUrb_GR/MapServer/9",
+      "role": ["official-administrative-castello-sobborgo-geometry", "quality-and-authority-counter-evidence"],
+      "production_scope": "Administrative validation only unless exact resource rights and a correct CRS transformation are separately established. The inspected GeoJSON declares EPSG:4326 but lies at longitude 21.32-21.44 rather than San Marino, so it is fail-closed.",
+      "assignment_authority": "official_administrative_authority",
+      "geometry_authority": "administrative_only",
+      "validation_readiness": "misprojected-and-rights-unresolved-validation-only",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-explicit-reuse-rights", "obtain-correct-source-to-wgs84-transformation", "prove-source-defined-cap-crosswalk-including-dogana-and-serravalle"],
+      "prohibited_claims": ["castelli-layer-is-cap-layer", "sobborgo-split-is-postal-authority", "declared-epsg4326-proves-correct-location", "blank-copyrightText-is-open-license"]
+    },
+    {
+      "source_id": "san-marino-catasto-cartography-office",
+      "provider": "Ufficio Tecnico del Catasto e Cartografia",
+      "source_url": "https://www.gov.sm/pub1/GovSM/Dipartimenti/Dipartimento-Territorio-e-Ambiente/Ufficio-Tecnico-del-Catasto-e-Cartografia.html",
+      "role": ["official-base-cartography-and-gis-governance", "cadastral-boundary-context"],
+      "production_scope": "Mission and functions validate cartographic authority only; cadastral/building/right records and administrative GIS do not establish CAP membership.",
+      "assignment_authority": "official_cadastral_and_cartographic_authority",
+      "geometry_authority": "official-cadastral-and-base-cartography-only",
+      "validation_readiness": "resource-specific-license-schema-and-public-field-review-required",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-exact-resource-license-public-fields-schema-coverage-validity-crs-and-digest", "exclude-personal-and-land-right-data"],
+      "prohibited_claims": ["cadastre-is-cap-area", "parcel-is-building-or-address", "gis-access-is-blanket-public-serving-right"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "postal-assignment", "rule": "Poste San Marino assertions retain five-digit text, returned address/service context, capture time, version and digest; syntax and office occurrence never create a complete assignment." },
+    { "id": "cap-area", "rule": "Only a separately reviewed rights-cleared Polygon/MultiPolygon product with complete assignment/non-area reconciliation may be public output. Dogana/Serravalle membership and boundary must be source-defined." },
+    { "id": "administration", "rule": "Castelli and sobborghi remain administrative context and never create CAP membership." },
+    { "id": "service-state", "rule": "Office location, opening and contact remain service context separate from assignment, area and deliverability." },
+    { "id": "address-building-cadastre", "rule": "Address, building, parcel, land-right and base-map assertions remain separate; protected fields never enter public artifacts." },
+    { "id": "synthetic-conformance", "rule": "Non-production fixture metadata only; never promotion evidence." }
+  ]
+}

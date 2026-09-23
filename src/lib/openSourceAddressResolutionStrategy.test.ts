@@ -27,6 +27,23 @@ test('address resolution pipeline puts open APIs and OSS evidence before diction
   assert.equal(pipeline.slice(0, -1).some(step => step.dictionaryDependent), false);
 });
 
+test('natural and remote places add space-agency geodata after normal open geodata', () => {
+  const pipeline = buildOpenSourceAddressResolutionPipeline({
+    countryCode: 'AQ',
+    hasCoordinates: true,
+    needsNaturalGeographyContext: true,
+    sparseOrRemoteArea: true,
+  });
+  const stepIds = pipeline.map(step => step.id);
+
+  assert.deepEqual(stepIds.slice(0, 2), [
+    'open-geodata',
+    'space-agency-open-geodata',
+  ]);
+  assert.equal(pipeline[1].kind, 'space-agency-geodata');
+  assert.equal(pipeline[1].dictionaryDependent, false);
+});
+
 test('default app translation tries open-source/free APIs before local dictionaries', () => {
   assert.equal(shouldUseOpenSourceTranslationBeforeLocalFallback({
     hasCustomTranslator: false,

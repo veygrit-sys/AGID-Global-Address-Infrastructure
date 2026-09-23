@@ -99,7 +99,7 @@ test('multilingual native address tabs keep compatible street and routing fields
 
       assert.match(
         rendered,
-        new RegExp(`(^|, )${escapedRegExp(example.expectedStreetLine)}(,|$)`),
+        new RegExp(`(^|, |\\n)${escapedRegExp(example.expectedStreetLine)}(,|\\n|$)`),
         `${example.countryCode}/${language} should keep street before house number`,
       );
       assert.match(rendered, new RegExp(escapedRegExp(example.address.city)), `${example.countryCode}/${language} should keep city`);

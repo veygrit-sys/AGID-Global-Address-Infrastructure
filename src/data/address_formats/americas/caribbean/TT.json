@@ -3,7 +3,7 @@
   "name": "Trinidad and Tobago",
   "native": {
     "name": "English",
-    "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}}\n{{state}}",
+    "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}} {{postcode}}\n{{state}}",
     "ordering": "small-to-big",
     "fields": [
       {
@@ -27,6 +27,12 @@
         "placeholder": "Port of Spain"
       },
       {
+        "key": "postcode",
+        "label": "Postal Code",
+        "placeholder": "170505",
+        "required": true
+      },
+      {
         "key": "state",
         "label": "Parish/County",
         "placeholder": "Saint George"
@@ -35,7 +41,7 @@
   },
   "english": {
     "name": "International English",
-    "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}}, {{state}}\nTRINIDAD AND TOBAGO",
+    "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}} {{postcode}}\n{{state}}\nTRINIDAD AND TOBAGO",
     "ordering": "small-to-big",
     "fields": [
       {
@@ -57,6 +63,12 @@
         "key": "city",
         "label": "City / Town",
         "placeholder": "Port of Spain"
+      },
+      {
+        "key": "postcode",
+        "label": "Postal Code",
+        "placeholder": "170505",
+        "required": true
       },
       {
         "key": "state",
@@ -87,8 +99,8 @@
     "inpe-terrabrasilis"
   ],
   "postalCode": {
-    "format": null,
-    "regex": null,
+    "format": "NNNNNN",
+    "regex": "^\\d{6}$",
     "api": "https://ttpost.net/news/postal-code/",
     "source": "TTPost"
   },
@@ -122,13 +134,18 @@
       "country"
     ],
     "regionalHierarchy": [
-      "region",
-      "city"
+      "country",
+      "administrative_area",
+      "postal_district",
+      "delivery_loop",
+      "delivery_point_or_zone",
+      "civic_address",
+      "building_or_unit"
     ],
     "postalCode": {
-      "label": "not used",
-      "required": false,
-      "usage": "optional"
+      "label": "NNNNNN (postal district + delivery loop + delivery point/zone)",
+      "required": true,
+      "usage": "Use only an exact six-digit TTPost assignment. The first two digits identify the postal district, the next two a delivery loop and the last two a building or zone along that route. Syntax, prefixes, a district, route, locality, address, point, administrative boundary or AGID cell are not assignment or Polygon evidence. Keep postal district, loop, zone, building, P.O. Box and large-user objects independently typed. Displaying an exact address or building requires a separately rights-cleared stable civic-address-to-building relation; a postcode must not supply that authority."
     }
   }
 }

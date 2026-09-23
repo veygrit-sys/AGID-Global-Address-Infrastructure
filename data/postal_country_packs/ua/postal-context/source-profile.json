@@ -1,0 +1,108 @@
+{
+  "schema_version": "agid-postal-ua-source-profile-v0.1",
+  "country_code": "UA",
+  "artifact_scope": "metadata-only-contract-seed",
+  "redistribution_classes": [
+    { "id": "R0_synthetic", "meaning": "AGID-created metadata and non-geographic fixtures only." },
+    { "id": "R1_public_reference", "meaning": "Public official pages or documents used as pinned validation receipts; access does not imply bulk redistribution rights." },
+    { "id": "R2_rights_cleared_open_data", "meaning": "A dataset-specific official open-data release whose publisher, license, attribution, schema, coverage, validity, security status, and digest are pinned." },
+    { "id": "R3_controlled_service", "meaning": "Credentialed, rate-limited, contract, register, or operational API data retained only as permitted and kept outside public artifacts unless review permits release." },
+    { "id": "R4_validation_only", "meaning": "Restricted, security-sensitive, third-party, or unclear-rights data may detect discrepancies but cannot become authoritative public geometry." }
+  ],
+  "sources": [
+    {
+      "source_id": "ukrposhta-postcodes-open-data",
+      "provider": "JSC Ukrposhta",
+      "source_url": "https://www.ukrposhta.ua/ua/publichna-informatsiia",
+      "role": ["official-postcode-directory", "official-post-office-directory", "open-data-register"],
+      "production_scope": "A pinned Ukrposhta open-data resource and its dataset-level terms, schema, update timestamp, address or office scope, service fields, encoding, and digest. Five digits are stored as text so leading zeroes survive.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "none",
+      "validation_readiness": "audited-2026-08-31-august-2025-release-is-rights-cleared-but-stale-and-nongeometric",
+      "redistribution_class": "R2_rights_cleared_open_data",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-a-current-complete-assignment-operational-exception-and-explicit-non-area-release-newer-than-august-2025", "retain-full-five-digit-text-and-address-or-office-scope", "separate-assignment-from-service-status", "record-coverage-and-omissions", "do-not-promote-address-or-office-rows-without-a-rights-cleared-fixed-polygon-multipolygon-product"],
+      "prohibited_claims": ["postcode-is-official-polygon", "post-office-point-is-postcode-area", "every-valid-five-digit-value-is-allocated", "open-data-page-implies-every-linked-resource-has-identical-terms", "deliverability-guarantee", "routing-proves-sovereignty"]
+    },
+    {
+      "source_id": "ukrposhta-index-and-address-api",
+      "provider": "JSC Ukrposhta",
+      "source_url": "https://dev.ukrposhta.ua/documentation",
+      "role": ["official-postcode-search", "official-address-directory", "current-office-and-service-reference"],
+      "production_scope": "Pinned permitted search or API fields only, retaining request class, result identifier, canonical address components, postcode, office, AVAILBLE or LOCK_CODE status when supplied, replacement office, capture time, terms, and digest. The reviewed Address Classifier v3.20 dated 2026-02-11 requires an authorization bearer obtained after signing a contract and returns address membership, courier-area yes/no and office-point coordinates, not postcode Polygon/MultiPolygon geometry.",
+      "assignment_authority": "official_postal_operator",
+      "geometry_authority": "official_address_or_office_location_when_explicitly_published",
+      "validation_readiness": "contract-and-bearer-required-address-office-membership-only-no-postcode-area-geometry",
+      "redistribution_class": "R3_controlled_service",
+      "bundled_here": false,
+      "promotion_requirements": ["obtain-explicit-approval-before-provider-contact-contract-or-authentication", "pin-interface-or-api-version-terms-schema-rate-limit-and-digest", "retain-result-identifier-and-capture-time", "separate-address-office-and-service-status", "obtain-a-separate-rights-cleared-fixed-postcode-area-product", "do-not-cache-or-publish-beyond-permission"],
+      "prohibited_claims": ["interactive-search-is-bulk-license", "office-point-is-address-point", "address-point-is-building-footprint", "temporary-closure-deletes-postcode", "replacement-route-changes-sovereignty", "current-result-guarantees-future-delivery"]
+    },
+    {
+      "source_id": "upu-ukraine-addressing",
+      "provider": "Universal Postal Union",
+      "source_url": "https://www.upu.int/UPU/media/upu/PostalEntitiesFiles/addressingUnit/ukrEn.pdf",
+      "role": ["address-format", "five-digit-convention", "address-placement", "code-component-semantics"],
+      "production_scope": "Pinned UPU Ukraine addressing guide used for syntax, placement, examples, and code-component semantics only.",
+      "assignment_authority": "intergovernmental_addressing_reference",
+      "geometry_authority": "none",
+      "validation_readiness": "public_reference",
+      "redistribution_class": "R1_public_reference",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-guide-date-url-and-digest", "keep-format-and-examples-separate-from-current-allocation"],
+      "prohibited_claims": ["format-proves-current-allocation", "address-example-is-production-fixture", "code-component-is-postcode-boundary", "postcode-polygon-authority", "deliverability-guarantee"]
+    },
+    {
+      "source_id": "ukraine-unified-address-register",
+      "provider": "Ministry for Development / Unified State Electronic System in the Construction Sector",
+      "source_url": "https://e-construction.gov.ua/ua/edini-derjavni-reestr-adres-dva-roki-vprovadjennja-ta-rezultati-cifrovoii-transformaciii-adresnoii-sistemi-ukraiini",
+      "role": ["official-unified-address-register", "street-and-address-identifier", "address-status-and-hierarchy"],
+      "production_scope": "Only provider-approved public fields from a pinned Unified State Address Register interface or release, retaining authoritative identifier, object type, hierarchy, status, completeness, territorial coverage, access basis, update time, and digest.",
+      "assignment_authority": "official_state_address_register",
+      "geometry_authority": "official_address_location_when_published",
+      "validation_readiness": "public_interface_release_and_rights_review_required",
+      "redistribution_class": "R3_controlled_service",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-register-interface-or-release-terms-schema-coverage-update-and-digest", "retain-authoritative-address-identifier-and-status", "document-public-field-allowlist", "cross-check-postcode-with-ukrposhta"],
+      "prohibited_claims": ["register-announcement-is-bulk-release", "address-record-is-postal-assignment", "address-point-is-building-footprint", "incomplete-coverage-means-address-does-not-exist", "resident-owner-or-rightsholder-data", "restricted-field-publication"]
+    },
+    {
+      "source_id": "ukraine-building-register",
+      "provider": "Ministry for Development / Unified State Electronic System in the Construction Sector",
+      "source_url": "https://mtu.gov.ua/news/35373.html",
+      "role": ["official-register-of-buildings-and-structures", "building-identifier", "address-to-building-crosswalk-candidate"],
+      "production_scope": "A pinned provider-approved Register of Buildings and Structures interface or release, limited to permitted public fields and retaining authoritative building identifier, address relation, object status, geometry provenance, coverage, access basis, update time, and digest.",
+      "assignment_authority": "official_building_register",
+      "geometry_authority": "official_building_geometry_when_explicitly_published",
+      "validation_readiness": "register-availability-public-fields-and-rights-review_required",
+      "redistribution_class": "R3_controlled_service",
+      "bundled_here": false,
+      "promotion_requirements": ["pin-register-interface-or-release-terms-public-fields-schema-coverage-and-digest", "retain-building-and-address-identifiers", "require-explicit-address-to-building-relation", "exclude-rights-and-personal-data"],
+      "prohibited_claims": ["planned-or-mentioned-register-is-available-bulk-data", "nearest-building-is-exact-address-link", "parcel-is-building", "address-point-is-footprint", "owner-rightsholder-or-occupant-data"]
+    },
+    {
+      "source_id": "ukraine-nsdi",
+      "provider": "State Service of Ukraine for Geodesy, Cartography and Cadastre",
+      "source_url": "https://nsdi.gov.ua/docs/portal/1start/componentsnsdi.html",
+      "role": ["national-spatial-data-infrastructure", "administrative-boundary", "katottg-context", "addresses-buildings-and-structures-catalog"],
+      "production_scope": "Layer-by-layer review only. Each artifact pins producer, holder, dataset license or restriction, public-access state during martial law, security classification, schema, coverage, boundary policy and vintage, update time, CRS, and digest.",
+      "assignment_authority": "dataset_specific_public_authority",
+      "geometry_authority": "dataset_specific_official_geometry",
+      "validation_readiness": "wartime_access_restricted_layer_review_required",
+      "redistribution_class": "R4_validation_only",
+      "bundled_here": false,
+      "promotion_requirements": ["review-layer-not-portal-brand", "pin-holder-producer-license-restriction-schema-coverage-boundary-policy-vintage-crs-and-digest", "respect-wartime-access-and-security-restrictions", "record-gaps-and-update-history"],
+      "prohibited_claims": ["portal-cc-by-notice-overrides-dataset-restriction", "portal-implies-one-license", "catalog-record-is-postal-geometry", "administrative-boundary-is-postcode-boundary", "postal-assignment-authority", "restricted-access-may-be-circumvented", "routing-or-coverage-proves-sovereignty"]
+    }
+  ],
+  "artifact_partitions": [
+    { "id": "postal-assignment", "rule": "Ukrposhta postcode and address assertions retain five-digit text, source resource, address or office scope, identifiers, capture time, rights, and digest; syntax and examples never create current allocation." },
+    { "id": "service-status", "rule": "AVAILBLE, LOCK_CODE, closure, replacement-office, and routing facts are time-stamped operational assertions separate from postal identity, geometry, country, and historical validity." },
+    { "id": "official-address", "rule": "Ukrposhta and Unified State Address Register identities remain distinct, retain status and public-field provenance, and are linked only by reviewed identifiers or crosswalks." },
+    { "id": "official-building", "rule": "Address, building-register, cadastral parcel, and NSDI feature identities remain separate until a common authoritative identifier or reviewed explicit crosswalk proves the relation." },
+    { "id": "derived-postal-surface", "rule": "Rights-cleared address membership may create a versioned, uncertainty-bearing surface with method, clips, omissions, outage context, coverage, and lineage; it is never official geometry." },
+    { "id": "coverage-country-and-control", "rule": "Every boundary retains authority, territorial policy, coverage, vintage, restriction, and digest. Postal or service evidence never changes country, sovereignty, occupation, control, jurisdiction, or legal boundaries." },
+    { "id": "private-sensitive-and-security", "rule": "Addressees, residents, owners, rightsholders, tenants, occupants, phones, credentials, cadastral rights, protected register attributes, military sites, and security-restricted geodata never enter public artifacts." },
+    { "id": "synthetic-conformance", "rule": "Non-geographic fixture metadata only; never promotion evidence." }
+  ]
+}

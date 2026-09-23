@@ -6,6 +6,11 @@ This file defines the recommended license split for AGID, AOID, AGID-S,
 ZK address predicates, POS, resolver, documentation, and data packs. It is a
 policy document, not a relicensing action by itself.
 
+Repository ownership is routed separately in
+`docs/repository-owner-routing.md`: public research and open-source artifacts
+belong under `dawnportinfo-design`, while commercial product and hosted
+operations belong under `veygrit-sys`.
+
 The current repository software license remains the license stated in
 `LICENSE` and package metadata. Any future relicensing must follow the
 relicensing checklist below.

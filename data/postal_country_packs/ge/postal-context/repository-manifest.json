@@ -1,0 +1,85 @@
+{
+  "schema_version": "agid-postal-country-repository-v0.1",
+  "repository": {
+    "name": "agid-postal-ge",
+    "country_code": "GE",
+    "maturity": "M1_metadata",
+    "canonical_upstream": false
+  },
+  "release_scope": {
+    "metadata_only": true,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": false,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "contract-seed-only"
+  },
+  "postal_system": {
+    "full_code_name": "საფოსტო ინდექსი / postal code",
+    "full_code_format": "NNNN",
+    "full_code_default_geometry": "operator_assignment | derived_address_membership_surface | non_area",
+    "assignment_rule": "A pinned Georgian Post postcode-finder receipt or separately permitted release establishes a four-digit assignment to the returned locality or delivery context at its capture time. Four-digit syntax, an addressing example, post-office location or locality name does not establish current allocation, address membership or deliverability.",
+    "perimeter_rule": "No nationwide official Georgian postcode-polygon source is assumed. A rights-cleared, versioned NAPR/NSDI address-membership surface may be published only as derived with members, exclusions, method, uncertainty and source releases. Post-office points, registered parcels, settlements, municipalities, buffers and Voronoi cells never become official postcode perimeters.",
+    "address_rule": "Exact address display requires a permitted NAPR Address Registry or NSDI Address Layer identifier, Georgian-script locator, named geographic object, hierarchy, status, validity, release-specific access licence and digest, plus separately pinned Georgian Post assignment evidence.",
+    "building_rule": "Exact building display requires an explicit distributable address-building relationship, common authoritative identifier or reviewed crosswalk to an NSDI registered-building feature. A cadastral parcel, footprint, containment or proximity match is candidate-only.",
+    "administrative_rule": "Regions, autonomous republics, municipalities and settlements remain separately sourced context. They do not create postcode membership, Georgian Post service coverage or address identity.",
+    "service_status_rule": "Postal assignment, post-office operation, route availability, postcode-finder availability and delivery eligibility are time-stamped operational assertions separate from geometry, address identity and administrative context.",
+    "territory_rule": "Postal assignment, language, locality name, nearest feature and routing availability never determine sovereignty or a legal boundary. Temporarily occupied or otherwise coverage-limited areas remain explicit gaps unless a separately pinned boundary policy and source-specific evidence support the requested assertion."
+  },
+  "temporal_model": {
+    "valid_time": "Postal assignment, address, building, explicit link, derived surface, administration and service validity when supplied.",
+    "known_time": "Publication, lookup capture, NSDI metadata issue, ingest, licence review, correction and release timestamps retained independently.",
+    "history_rule": "New Georgian Post, NAPR, NSDI or GeoStat evidence appends versioned assertions. No refresh rewrites older evidence, converts a point into a perimeter or silently fills a territorial coverage gap."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Every four-digit code references a permitted Georgian Post receipt or release with locality or delivery context, capture time, interface/terms version and digest." },
+    { "id": "derived-postal-geometry", "pass": "Every derived surface retains address members, exclusions, method, parameters, uncertainty, validation metrics, source releases, access licences, validity and digest and is never labelled official." },
+    { "id": "official-address", "pass": "Each exact address retains a NAPR/NSDI identifier, Georgian locator and hierarchy, status, validity, release-specific licence, schema, CRS and digest, with postal assignment checked separately." },
+    { "id": "building-link", "pass": "An exact building has an explicit distributable relation, common authoritative identifier or reviewed crosswalk; parcels, footprints, containment and proximity never silently substitute." },
+    { "id": "dataset-specific-rights", "pass": "Every Georgian Post, NAPR, NSDI or GeoStat artifact pins its exact holder, access licence, attribution, schema, coverage, vintage, territorial policy, CRS and digest." },
+    { "id": "coverage-and-territory", "pass": "Coverage gaps and disputed or temporarily occupied areas remain explicit; postal evidence never assigns sovereignty or fills them from nearest data." },
+    { "id": "privacy", "pass": "No addressee, resident, owner, rightsholder, tenant, occupant, title, restriction, phone, credential or delivery instruction is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M1_metadata",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, identifiers, geometry semantics, coverage and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_experimental", "definition": "Pinned rights-cleared snapshots reproduce experimental packs with complete lineage." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, licence, freshness, coverage and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "postcode-syntax-presented-as-current-allocation",
+      "postcode-finder-result-presented-as-open-bulk-data",
+      "post-office-point-or-locality-presented-as-postcode-area",
+      "derived-surface-presented-as-official-postcode-boundary",
+      "nsdi-portal-access-substituted-for-resource-specific-license",
+      "address-feature-presented-as-current-postal-assignment",
+      "parcel-or-footprint-presented-as-exact-address-building-link",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postal-evidence-presented-as-sovereignty-or-legal-boundary",
+      "coverage-gap-filled-from-nearest-postal-or-geospatial-feature",
+      "postcode-stored-as-number",
+      "addressee-owner-rightsholder-occupant-title-or-protected-registry-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability",
+    "addressee_identity",
+    "occupancy",
+    "ownership",
+    "building_identity_from_proximity",
+    "every_postcode_is_a_polygon",
+    "post_office_or_locality_equals_postcode_perimeter",
+    "administrative_boundary_equals_postcode",
+    "parcel_is_building_or_address_link",
+    "sovereignty_or_legal_boundary",
+    "survey_cadastral_or_title_certification"
+  ]
+}

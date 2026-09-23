@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "postal-context-m2-engineering-checks/v1",
+  "countryCode": "PT",
+  "observedAt": "2026-08-30T21:59:04.571Z",
+  "completedAt": "2026-08-30T22:23:21.2723915Z",
+  "baseCommit": "3dcb4ce38b898edbd5edcefa69c7083258726a7b",
+  "scope": "Country-specific definition, current public CTT format/search and controlled national-address/postal-GIS rights and point-versus-area audit, DGT authority separation/open-data catalogue review, deterministic exact-body inspection and conservative blocker evidence; no raw source body, address/P.O.-box lookup submission, door point, geometry pack, API route or browser area was promoted.",
+  "checks": [
+    {
+      "id": "portugal-source-inspector",
+      "command": "node scripts/inspect-postal-context-pt-sources.mjs --source-dir <temporary-source-directory>",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "six byte/SHA-256-bound CTT bodies reproduce the NNNN-NNN definition, address/reverse/P.O.-box POST search, database licensing and geographic webservice signals, WGS84 EPSG:4326 door Point semantics, zero Polygon/MultiPolygon/GeoJSON tokens and the recorded DGT authority/capability observations"
+    },
+    {
+      "id": "shared-postal-area-ui",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalSearchArea.test.ts",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "only Polygon/MultiPolygon draws, point-only is non-area, fit layers use translucent fill and visible outline, and clearing removes both"
+    },
+    {
+      "id": "shared-postal-context-runtime",
+      "command": "node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextPackRuntime.test.ts src/server/postalContextMultiCountryStore.test.ts",
+      "result": "pass",
+      "tests": 24,
+      "assertion": "authority, validity, geometry, source-purpose, ambiguity, virtual/derived and multi-country gates remain fail-closed"
+    },
+    {
+      "id": "rollout-invariants",
+      "command": "node --test scripts/postal-context-m2-rollout.test.mjs",
+      "result": "pass",
+      "tests": 8,
+      "assertion": "stable order, one active country, due-blocker policy and fail-closed M2 proof gates"
+    },
+    {
+      "id": "portugal-ledger-and-evidence",
+      "command": "node --test scripts/postal-context-m2-pt-ledger.test.mjs",
+      "result": "pass",
+      "tests": 5,
+      "assertion": "country criterion, exact CTT bodies, controlled rights, door Point versus postal area, proxy gates, report digests and Romania next-country order"
+    },
+    {
+      "id": "typescript",
+      "command": "node node_modules/typescript/bin/tsc -p .tmp-pt-tsconfig.json --noEmit",
+      "result": "pass",
+      "tests": 1,
+      "assertion": "the full isolated-worktree TypeScript graph passes with temporary paths matching the six workspace package public src/index.ts entries"
+    },
+    {
+      "id": "changed-javascript-and-json-syntax",
+      "command": "node --check for both changed JavaScript modules plus JSON.parse for five changed JSON files",
+      "result": "pass",
+      "tests": 7,
+      "assertion": "the inspector and ledger test parse and the manifest, source profile, source report, checks report and rollout ledger are valid JSON"
+    }
+  ],
+  "totals": {
+    "assertionGroups": 7,
+    "testsPassed": 51,
+    "testsFailed": 0
+  },
+  "sourceAndRightsValidation": {
+    "officialReferencesReviewed": 6,
+    "exactBodiesByteAndSha256Bound": 6,
+    "exactCttBodiesBytes": 608046,
+    "canonicalPostcodeFormat": "NNNN-NNN",
+    "publicSearchMethod": "POST",
+    "publicSearchAddressDriven": true,
+    "publicSearchReverseCodeMode": true,
+    "publicSearchPoBoxMode": true,
+    "cttDatabaseLicensingObserved": true,
+    "cttSuppliedDatabasePortionsObserved": true,
+    "cttMinimumInformationNeedYears": 3,
+    "cttDoorCoordinateGeometry": "Point",
+    "cttDoorCoordinateCrs": "EPSG:4326",
+    "postcodeAreaGeometryTokens": 0,
+    "dgtStatesCttAssignsPostcodes": true,
+    "dgtPostcodeCreationOrIntervention": false,
+    "fixedAuthoritativeGeometryArtifactsInspected": 0,
+    "polygonOrMultiPolygonFeaturesValidated": 0,
+    "productionEligibleRecords": 0,
+    "approvedAgidRuntimeArtifacts": 0,
+    "rawSourceBodiesInGit": 0,
+    "cttAgidProcessingDerivationStorageRedistributionAndPublicServingPermissionEstablished": false
+  },
+  "applicationVerification": {
+    "sharedAreaCapabilityVerified": true,
+    "realPtRuntimeVerified": false,
+    "realPtApiVerified": false,
+    "realPtAppAreaVisualizationVerified": false,
+    "browserE2E": "not run because no approved fixed authoritative Portugal postcode-area artifact exists"
+  },
+  "knownLimitations": [
+    "Current CTT pages establish postcode format, search behavior and controlled geographic services, but not a fixed current complete assignment/exception artifact or compatible AGID processing, derivation, storage, redistribution and public-serving permission.",
+    "The CTT geometry explicitly described for address treatment is a door Point in EPSG:4326, not a postcode area; no point, lookup row or postal designation was buffered, enveloped or unioned.",
+    "DGT assigns postcode authority to CTT. DGT/CAOP, administrative, cadastral and open-geodata collections remain separate authorities and no national postcode-area collection was observed in the reviewed current catalogue.",
+    "Two direct DGT FAQ download attempts timed out, so DGT findings use the public web reader and are not byte-hash receipts. This is availability evidence only and no non-existence claim is made.",
+    "No fixed authoritative postcode-area body, digest, CRS, topology, coverage or complete assignment-to-area/non-area reconciliation could be verified.",
+    "The isolated worktree reused an existing read-only dependency tree through a temporary junction. Standard typecheck then lacked six workspace symlinks; a temporary tsconfig mapped the six package names to their declared local src/index.ts public entries, and the full graph passed.",
+    "No real PT postcode runtime, API map fit, translucent rendering or browser E2E can be exercised without an approved fixed reconciled artifact."
+  ],
+  "countryM2Achieved": false
+}

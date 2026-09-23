@@ -1,0 +1,319 @@
+openapi: 3.1.0
+info:
+  title: Playlist Commerce Merchant Webhooks
+  version: playlist-commerce-v0.1
+  summary: Signed merchant webhook route for Playlist Commerce events.
+  description: >
+    Machine-readable contract for the Playlist Commerce merchant webhook route.
+    The route accepts signed merchant events and only returns operational,
+    redacted acknowledgements. It is not a payment, settlement, raw-address,
+    proof-witness, provider-token, raw-carrier-payload, or merchant identity
+    verification API.
+servers:
+  - url: https://api.veygrit.example
+    description: Placeholder host. Deployments must configure their own hosted or private endpoint.
+tags:
+  - name: Playlist Commerce Webhooks
+externalDocs:
+  description: Playlist Commerce webhook evidence fixtures, schema, verifier commands, and non-claims.
+  url: ./README.md#playlist-commerce-webhook-evidence
+paths:
+  /webhooks/playlist-commerce:
+    post:
+      operationId: receivePlaylistCommerceMerchantWebhook
+      tags:
+        - Playlist Commerce Webhooks
+      summary: Receive a signed Playlist Commerce merchant webhook event.
+      description: >
+        Accepts checkout alias, delivery receipt, and aggregate analytics events
+        after HMAC-SHA256 signature verification, timestamp replay-window checks,
+        key status checks, event-id idempotency checks, and topic allowlist checks.
+      externalDocs:
+        description: Local-only synthetic preflight evidence fixture, schema, verifier commands, and non-claims.
+        url: ./README.md#playlist-commerce-webhook-evidence
+      x-agid-contract-id: merchant-webhook-route
+      x-agid-source-contract: src/lib/playlistCommerceSpec.ts#PLAYLIST_COMMERCE_WEBHOOK_ROUTES
+      x-agid-evidence-fixtures:
+        preflightFixture: docs/specs/fixtures/playlist-commerce-webhook-preflight-v0.1.json
+        historyFixture: docs/specs/fixtures/playlist-commerce-webhook-preflight-history-v0.1.json
+        evidenceFixture: docs/specs/fixtures/playlist-commerce-webhook-evidence-v0.1.json
+        evidenceSchema: docs/specs/schemas/playlist-commerce-webhook-evidence-v0.1.schema.json
+        verifierCommand: npm run verify:playlist-commerce-evidence
+        aggregateVerifierCommand: npm run verify:playlist-commerce
+        managedServiceBoundary: fixture-only-not-hosted-evidence-vault
+        localOnly: true
+        forbiddenMaterial:
+          - raw_address
+          - recipient_phone
+          - provider_token
+          - raw_provider_profile
+          - raw_carrier_payload
+          - proof_witness
+          - private_key
+          - biometric_template
+          - production_webhook_secret
+        nonClaims:
+          - not-payment-settlement
+          - not-raw-address-intake
+          - not-proof-witness-intake
+          - not-provider-token-intake
+          - not-raw-carrier-payload-intake
+          - not-production-delivery-attempt
+        nonClaimsProfile: playlist-commerce-webhook-v0.1
+      x-agid-accepted-topics:
+        - checkout.alias_created
+        - delivery.receipt_created
+        - analytics.aggregate_ready
+      x-agid-required-controls:
+        - hmac-sha256-signature
+        - constant-time-compare
+        - timestamp-replay-window
+        - keyring-status-active-next-retired
+        - event-id-idempotency-store
+        - topic-allowlist
+        - redacted-operational-response
+      x-agid-redacted-fields:
+        - payload
+        - playlistRef
+        - productRef
+        - orderAlias
+        - receiptRef
+        - raw_address
+        - recipient_phone
+        - provider_token
+        - raw_provider_profile
+        - raw_carrier_payload
+        - proof_witness
+        - private_key
+        - biometric_template
+      x-agid-non-claims:
+        - not-payment-settlement
+        - not-raw-address-intake
+        - not-proof-witness-intake
+        - not-provider-token-intake
+        - not-raw-carrier-payload-intake
+        - not-merchant-identity-verification
+      parameters:
+        - name: x-playlist-event-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Event id used for idempotency and replay protection.
+        - name: x-playlist-topic
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PlaylistCommerceWebhookTopic'
+          description: Event topic. Must match the signed payload topic.
+        - name: x-playlist-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Timestamp checked against the replay window.
+        - name: x-playlist-signature
+          in: header
+          required: true
+          schema:
+            type: string
+            pattern: '^sha256=[a-f0-9]{64}$'
+          description: HMAC-SHA256 signature over the canonical payload.
+        - name: x-playlist-key-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signing key id with active or next status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistCommerceWebhookEnvelope'
+            examples:
+              checkoutAliasCreated:
+                summary: Synthetic checkout alias event
+                value:
+                  version: playlist-commerce-webhook-v0.1
+                  payload:
+                    eventId: evt_pc_checkout_alias_001
+                    topic: checkout.alias_created
+                    createdAt: '2026-07-01T00:00:00.000Z'
+                    merchantRef: merchant_demo
+                    orderAlias: order_alias_demo_001
+                    subjectAlias: wallet_subject_alias_demo
+                    testVector: true
+                  headers:
+                    x-playlist-event-id: evt_pc_checkout_alias_001
+                    x-playlist-topic: checkout.alias_created
+                    x-playlist-timestamp: '2026-07-01T00:00:00.000Z'
+                    x-playlist-signature: sha256=0000000000000000000000000000000000000000000000000000000000000000
+                    x-playlist-key-id: key_demo_active
+      responses:
+        '202':
+          description: Accepted signed event and stored event id for idempotency.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistCommerceWebhookRouteResponseBody'
+        '400':
+          description: Missing or malformed webhook body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistCommerceWebhookRouteResponseBody'
+        '401':
+          description: Signature, timestamp, key status, topic allowlist, or idempotency check failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistCommerceWebhookRouteResponseBody'
+        '404':
+          description: Webhook route was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistCommerceWebhookRouteResponseBody'
+        '405':
+          description: Only POST is allowed for the webhook route.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistCommerceWebhookRouteResponseBody'
+components:
+  schemas:
+    PlaylistCommerceWebhookTopic:
+      type: string
+      enum:
+        - checkout.alias_created
+        - delivery.receipt_created
+        - analytics.aggregate_ready
+    PlaylistCommerceWebhookEnvelope:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+        - payload
+        - headers
+      properties:
+        version:
+          type: string
+          const: playlist-commerce-webhook-v0.1
+        payload:
+          type: object
+          additionalProperties: false
+          required:
+            - eventId
+            - topic
+            - createdAt
+            - merchantRef
+            - testVector
+          properties:
+            eventId:
+              type: string
+            topic:
+              $ref: '#/components/schemas/PlaylistCommerceWebhookTopic'
+            createdAt:
+              type: string
+              format: date-time
+            merchantRef:
+              type: string
+            playlistRef:
+              type: string
+            productRef:
+              type: string
+            orderAlias:
+              type: string
+            receiptRef:
+              type: string
+            subjectAlias:
+              type: string
+            deliveryStatus:
+              type: string
+              enum:
+                - pending
+                - handoff_ready
+                - in_transit
+                - delivered
+                - needs_review
+            aggregate:
+              type: object
+              additionalProperties: false
+              required:
+                - metricId
+                - playlistCategory
+                - window
+                - value
+              properties:
+                metricId:
+                  type: string
+                playlistCategory:
+                  type: string
+                window:
+                  type: string
+                value:
+                  type: number
+            testVector:
+              type: boolean
+              const: true
+        headers:
+          type: object
+          additionalProperties: false
+          required:
+            - x-playlist-event-id
+            - x-playlist-topic
+            - x-playlist-timestamp
+            - x-playlist-signature
+            - x-playlist-key-id
+          properties:
+            x-playlist-event-id:
+              type: string
+            x-playlist-topic:
+              $ref: '#/components/schemas/PlaylistCommerceWebhookTopic'
+            x-playlist-timestamp:
+              type: string
+              format: date-time
+            x-playlist-signature:
+              type: string
+              pattern: '^sha256=[a-f0-9]{64}$'
+            x-playlist-key-id:
+              type: string
+    PlaylistCommerceWebhookRouteResponseBody:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - errors
+        - nonClaims
+      properties:
+        ok:
+          type: boolean
+        eventId:
+          type: string
+        topic:
+          $ref: '#/components/schemas/PlaylistCommerceWebhookTopic'
+        keyId:
+          type: string
+        keyStatus:
+          type: string
+          enum:
+            - active
+            - next
+            - retired
+        resultRef:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+        nonClaims:
+          type: array
+          items:
+            type: string
+            enum:
+              - not-payment-settlement
+              - not-raw-address-intake
+              - not-proof-witness-intake
+              - not-merchant-identity-verification

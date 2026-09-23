@@ -1,0 +1,167 @@
+openapi: 3.1.0
+info:
+  title: Trade Gateway API
+  version: trade-gateway-api-v0.1
+  summary: Local-only Trade Gateway conformance surface for synthetic idempotency vectors.
+  description: >
+    Specification-only Trade Gateway surface for publishing local idempotency
+    test vectors. It exposes ref-only synthetic fixtures and does not execute
+    trades, settle payments, clear customs, verify identity truth, or provide
+    legal or financial advice.
+externalDocs:
+  description: Trade Gateway idempotency fixture, schema, verifier commands, and non-claims.
+  url: ./README.md#trade-gateway-idempotency-vectors
+servers:
+  - url: /api/trade-gateway
+paths:
+  /v1/trade/test-vectors/idempotency:
+    get:
+      operationId: getTradeGatewayIdempotencyTestVectors
+      tags:
+        - Trade Gateway
+      summary: Return local-only Trade Gateway idempotency fixture refs.
+      description: >
+        Returns the checked-in synthetic idempotency fixture projection for
+        created, replayed, conflict, and private-material rejection decisions.
+        This operation is a local conformance surface only and must not send
+        production traffic or accept raw address, recipient, witness, private
+        key, proof secret, credential, contract body, payment, or customs
+        material.
+      externalDocs:
+        description: Local-only Trade Gateway idempotency vectors.
+        url: ./README.md#trade-gateway-idempotency-vectors
+      security:
+        - TradeGatewayTestBearer: []
+      x-agid-contract-id: trade-gateway-idempotency-test-vectors
+      x-agid-source-contract: src/lib/veyTrading.ts#buildVeyTradeGatewayIdempotencyFixture
+      x-agid-evidence-fixtures:
+        preflightFixture: docs/specs/fixtures/vey-trade-gateway-idempotency-v0.1.json
+        historyFixture: docs/specs/fixtures/vey-trade-gateway-idempotency-v0.1.json
+        evidenceFixture: docs/specs/fixtures/vey-trade-gateway-idempotency-v0.1.json
+        evidenceSchema: docs/specs/schemas/vey-trade-gateway-idempotency-v0.1.schema.json
+        verifierCommand: npm run verify:vey-trade-gateway-idempotency-fixture-schema
+        aggregateVerifierCommand: npm run verify:vey-trading
+        managedServiceBoundary: trade-gateway-local-idempotent-intent
+        localOnly: true
+        forbiddenMaterial:
+          - raw_address
+          - raw_agid
+          - raw_aoid
+          - recipient_name
+          - recipient_phone
+          - counterparty_contact
+          - proof_witness
+          - proof_secret
+          - private_key
+          - wallet_private_key
+          - production_credential
+          - production_webhook_secret
+          - payment_card
+          - bank_account
+          - contract_body
+          - customs_document_body
+        nonClaims:
+          - not-raw-address-intake
+          - not-proof-witness-intake
+          - not-production-traffic
+          - not-production-trading-venue
+          - not-payment-settlement
+          - not-customs-clearance
+          - not-legal-or-financial-advice
+          - not-identity-truth-or-sanctions-outcome
+        nonClaimsProfile: trade-gateway-idempotency-v0.1
+      responses:
+        '200':
+          description: Local-only ref projection for the checked-in idempotency fixture.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeGatewayIdempotencyFixture'
+        '400':
+          description: Query material was rejected; the fixture route is deterministic.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeGatewayError'
+        '401':
+          description: Test publishable key is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeGatewayError'
+components:
+  securitySchemes:
+    TradeGatewayTestBearer:
+      type: http
+      scheme: bearer
+      description: Test publishable key only, using a pk_test_ prefix. Production credentials are not accepted by this conformance route.
+  schemas:
+    TradeGatewayError:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - message
+        - localOnly
+        - productionTraffic
+      properties:
+        ok:
+          const: false
+        error:
+          type: string
+          enum:
+            - auth_required
+            - query_not_allowed
+        message:
+          type: string
+        localOnly:
+          const: true
+        productionTraffic:
+          const: false
+    TradeGatewayIdempotencyFixture:
+      type: object
+      additionalProperties: false
+      required:
+        - fixtureId
+        - status
+        - boundaryGateId
+        - privacy
+        - vectors
+        - nonClaims
+      properties:
+        fixtureId:
+          type: string
+          const: vey-trade-gateway-idempotency-v0.1
+        status:
+          type: string
+          const: synthetic-local-fixture
+        boundaryGateId:
+          type: string
+          const: trade-gateway-local-idempotent-intent
+        privacy:
+          type: object
+          additionalProperties: false
+          required:
+            - localOnly
+            - productionTraffic
+            - containsRawAddress
+            - privateMaterialExposed
+          properties:
+            localOnly:
+              const: true
+            productionTraffic:
+              const: false
+            containsRawAddress:
+              const: false
+            privateMaterialExposed:
+              const: false
+        vectors:
+          type: array
+          minItems: 4
+          items:
+            type: object
+        nonClaims:
+          type: array
+          items:
+            type: string

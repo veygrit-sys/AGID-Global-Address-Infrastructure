@@ -1,0 +1,71 @@
+{
+  "schema_version": "agid-postal-country-repository-manifest-v0.1",
+  "repository": {
+    "name": "agid-postal-li",
+    "country_code": "LI",
+    "country_name": "Liechtenstein",
+    "maturity": "M2_experimental"
+  },
+  "release_scope": {
+    "metadata_only": false,
+    "contains_raw_source_data": false,
+    "contains_real_addresses": false,
+    "contains_personal_data": false,
+    "contains_production_geometry": true,
+    "fixtures_are_synthetic": true,
+    "publication_claim": "current-swisstopo-plzo-li-domicile-area-runtime"
+  },
+  "postal_system": {
+    "full_code_name": "Postleitzahl (PLZ4)",
+    "full_code_format": "94NN",
+    "full_code_default_geometry": "official_domicile_postcode_perimeter_or_non_area",
+    "assignment_rule": "Swiss Post postcode/place and street-directory evidence defines PLZ4 assignment in the shared Swiss-Liechtenstein system. Liechtensteinische Post supplies local delivery and endpoint evidence; syntax or an endpoint listing alone never proves a domicile assignment.",
+    "plz6_rule": "swisstopo PLZO PLZ6 combines PLZ4 with a two-digit locality suffix and remains separately stored from the public four-digit address code.",
+    "perimeter_rule": "The swisstopo official directory publishes monthly locality and PLZ6 perimeters for domicile-address postcode types in Switzerland and Liechtenstein. Company, professional, administrative, PO-box, parcel-terminal, and other special codes may remain non-areal.",
+    "m2_geometry_rule": "The 2026-08-11 swisstopo STAC edition supplies 13 official REAL PLZ6 suffix-00 Polygon features. Official municipality BFS codes 7001-7011 and ZIP_ID joins partition LI rows before EPSG:2056 to EPSG:4326 conversion; no address, building or special-code area is inferred.",
+    "address_rule": "The Liechtenstein National Administration official building-address directory supplies street, house number, postcode, locality, coordinates, and Gebäudeidentifikator evidence. It does not replace Swiss Post postal assignment authority.",
+    "building_rule": "The public GWR and municipal official-survey packages supply building identity and geometry. Exact display requires the same official building identifier or a reviewed explicit crosswalk; containment and proximity remain candidates.",
+    "administrative_rule": "Official sovereign and municipal boundaries supply jurisdiction context and country partitioning but never replace a PLZO perimeter.",
+    "territory_rule": "A shared CH-LI source release must be filtered with authoritative country and sovereign-boundary evidence. Switzerland and Austria features must never enter the LI artifact, and LI rows must never receive CH AGID identity."
+  },
+  "temporal_model": {
+    "valid_time": "Postal, address, building, and boundary validity when supplied by the source.",
+    "known_time": "Source publication, ingest, correction, and release timestamps retained independently.",
+    "history_rule": "Monthly PLZO and government registry changes append versioned evidence; a later assignment never rewrites an earlier release."
+  },
+  "geometry_classes": ["polygon", "multipolygon", "point", "route", "po_box", "organization", "unknown"],
+  "quality_gates": [
+    { "id": "postal-assignment", "pass": "Each PLZ4 assignment references a pinned Swiss Post receipt or permitted source edition and retains its postcode class." },
+    { "id": "plzo-perimeter", "pass": "Each domicile perimeter retains PLZ4, PLZ6, locality, release, rights, digest, and authoritative LI partition evidence." },
+    { "id": "llv-address", "pass": "Each official address retains the government building identifier, status, coordinates, CRS, source release, and attribution." },
+    { "id": "building-link", "pass": "An exact building result has the same official building identifier or a reviewed explicit crosswalk; spatial proximity is candidate-only." },
+    { "id": "cross-border", "pass": "Every artifact is inside the authoritative LI partition and contains no CH or AT address, perimeter, building, or AGID identity." },
+    { "id": "privacy", "pass": "No recipient, resident, owner, tenant, dwelling occupant, forwarding record, phone, credential, or protected register field is published." },
+    { "id": "synthetic-evidence-never-promotes", "pass": "Synthetic fixtures verify behavior but never satisfy production evidence gates." }
+  ],
+  "promotion": {
+    "current_stage": "M2_current_swisstopo_plzo_li_domicile_visualization",
+    "stages": [
+      { "id": "M0_inventory", "definition": "Source roles, rights, coverage, and blockers are inventoried." },
+      { "id": "M1_metadata", "definition": "Contracts and synthetic conformance fixtures are reviewable." },
+      { "id": "M2_current_swisstopo_plzo_li_domicile_visualization", "definition": "The current rights-cleared swisstopo PLZO edition reproduces all official LI domicile PLZ4 polygons with country-partition, lineage and topology evidence; the real API search reaches map fit, translucent fill, clear and re-search while non-area special codes remain explicit." },
+      { "id": "M3_candidate", "definition": "Holdout, topology, ambiguity, privacy, freshness, and correction gates pass." },
+      { "id": "M4_stable", "definition": "Two source refreshes pass and monitored rollback operates." }
+    ],
+    "hard_blockers": [
+      "swiss-or-austrian-feature-published-in-li-pack",
+      "special-postcode-given-invented-polygon",
+      "postal-endpoint-presented-as-residential-area",
+      "address-point-presented-as-building-footprint",
+      "building-proximity-presented-as-exact-identifier-link",
+      "postcode-stored-as-number",
+      "syntactically-valid-code-presented-as-current-li-allocation",
+      "recipient-resident-owner-or-dwelling-data-published",
+      "stale-or-unpinned-source-release",
+      "missing-assignment-or-geometry-authority"
+    ]
+  },
+  "non_guarantees": [
+    "deliverability", "recipient_identity", "occupancy", "building_identity_from_proximity", "every_postcode_is_a_polygon", "special_code_is_a_residential_area", "legal_boundary_or_survey_certification"
+  ]
+}

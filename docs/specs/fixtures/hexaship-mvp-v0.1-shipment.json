@@ -1,0 +1,54 @@
+{
+  "fixture": "hexaship-mvp-v0.1-shipment",
+  "contractId": "hexaship-mvp-v0.1-create-shipment",
+  "endpoint": "POST /v1/hexaship/mvp-v0.1/shipments",
+  "request": {
+    "merchantRef": "merchant_sandbox_vey_001",
+    "ecOrderRef": "ec_order_sandbox_001",
+    "recipientId": "ship_recipient_synthetic_001",
+    "addressFormVersion": "wallet_country_form_ref_synthetic_001",
+    "parcelProfileRef": "parcel_profile_synthetic_small_box_001",
+    "walletConsentRef": "consent_synthetic_hexaship_001",
+    "carrierCapabilityRef": "carrier_capability_synthetic_hexaship_001",
+    "selectionMode": "cheapest",
+    "selectedBy": "ec",
+    "requestedAt": "2026-07-04T00:00:00.000Z"
+  },
+  "expected": {
+    "version": "hexaship-mvp-v0.1",
+    "flow": "ec-request-wallet-id-rates-select-label-track-webhook",
+    "candidateCarriers": ["dhl", "ups"],
+    "requiredBeforeRates": ["recipientId", "addressFormVersion", "parcelProfileRef", "walletConsentRef", "carrierCapabilityRef"],
+    "selectionModes": ["fastest", "cheapest"],
+    "developerCalls": [
+      "createShipment",
+      "getRates",
+      "createLabel",
+      "trackShipment",
+      "createReturn"
+    ],
+    "webhookEvents": [
+      "shipment.created",
+      "rates.created",
+      "carrier.selected",
+      "label.created",
+      "shipment.in_transit"
+    ],
+    "privacy": {
+      "recipientAddressVisibleToBuyer": false,
+      "rawAddressStored": false,
+      "recipientContactStored": false,
+      "carrierCredentialsAcceptedFromClient": false,
+      "rawCarrierPayloadStored": false
+    },
+    "localOnly": true,
+    "productionTraffic": false,
+    "nonClaims": [
+      "local-sandbox-only",
+      "not-real-dhl-or-ups-purchase",
+      "not-live-rate-comparison",
+      "not-delivery-guarantee",
+      "not-raw-address-disclosure"
+    ]
+  }
+}

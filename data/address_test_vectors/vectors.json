@@ -1,0 +1,759 @@
+[
+  {
+    "vectorId": "addrvec-normalize-fullwidth-v1",
+    "title": "NFKC and whitespace normalization",
+    "surfaces": [
+      "normalization",
+      "privacy-boundary"
+    ],
+    "privacyClass": "synthetic-public",
+    "description": "Confirms public implementations normalize fullwidth alphanumerics and address whitespace without storing raw private material.",
+    "input": {
+      "rawText": "  ＡＧＩＤ　Ｔｅｓｔ　１２３　Ｂｌｏｃｋ  "
+    },
+    "license": "CC0",
+    "expected": {
+      "noRawPrivateMaterial": true,
+      "normalizedText": "AGID Test 123 Block",
+      "expectedFingerprint": "addrvec:f35462b252f80ea9deed794f"
+    }
+  },
+  {
+    "vectorId": "addrvec-jp-postal-render-v1",
+    "title": "Japan synthetic postal-verified rendering",
+    "surfaces": [
+      "validation",
+      "rendering",
+      "language-tabs",
+      "privacy-boundary"
+    ],
+    "countryCode": "JP",
+    "privacyClass": "synthetic-public",
+    "description": "Synthetic Japanese address fixture for postal validation, domestic rendering, international English rendering, and tabs.",
+    "input": {
+      "canonical": {
+        "country_code": "JP",
+        "country": "Japan",
+        "state": "東京都",
+        "city": "テスト市",
+        "district": "中央区",
+        "subdistrict": "サンプル町",
+        "road": "例通り",
+        "house_number": "1-2-3",
+        "building": "AGID検証ビル",
+        "postcode": "100-0001"
+      },
+      "format": {
+        "countryCode": "JP",
+        "name": "Japan synthetic postal metadata",
+        "native": {
+          "addressFormat": "〒{{postcode}}\n{{state}}{{city}}{{district}}{{subdistrict}}{{street}}{{houseNumber}}\n{{organization}}",
+          "fields": [
+            {
+              "key": "postcode",
+              "required": true
+            },
+            {
+              "key": "state",
+              "required": true
+            },
+            {
+              "key": "city",
+              "required": true
+            },
+            {
+              "key": "street",
+              "required": true
+            },
+            {
+              "key": "houseNumber",
+              "required": true
+            }
+          ]
+        },
+        "english": {
+          "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}, {{subdistrict}}, {{district}}\n{{city}}, {{state}} {{postcode}}\n{{country}}"
+        },
+        "postalCode": {
+          "regex": "^\\d{3}-?\\d{4}$",
+          "source": "Japan Post official-format synthetic fixture",
+          "api": "japan-post-synthetic-fixture",
+          "format": "NNN-NNNN"
+        },
+        "openSourceIds": [
+          "libaddressinput-synthetic",
+          "gsi-japan-synthetic"
+        ]
+      },
+      "sources": [
+        "japan-post-synthetic-fixture",
+        "gsi-japan-synthetic"
+      ],
+      "referenceMatches": [
+        {
+          "source": "synthetic-postal-reference",
+          "confidence": 0.93
+        }
+      ],
+      "rendererTabs": [
+        "ja",
+        "en",
+        "intl_en"
+      ],
+      "language": {
+        "countryCode": "JP",
+        "preferredLanguage": "ja",
+        "countryLanguages": [
+          "ja"
+        ],
+        "knownLanguageCodes": [
+          "ja",
+          "en",
+          "en_domestic"
+        ],
+        "registrationFormat": {
+          "countryCode": "JP",
+          "name": "Japan synthetic registration metadata",
+          "native": {
+            "name": "Japanese",
+            "addressFormat": "〒{{postcode}}\n{{state}}{{city}}{{district}}{{subdistrict}}{{street}}{{houseNumber}}\n{{organization}}",
+            "fields": [
+              {
+                "key": "postcode",
+                "required": true,
+                "label": "postcode"
+              },
+              {
+                "key": "state",
+                "required": true,
+                "label": "state"
+              },
+              {
+                "key": "city",
+                "required": true,
+                "label": "city"
+              },
+              {
+                "key": "street",
+                "required": true,
+                "label": "street"
+              },
+              {
+                "key": "houseNumber",
+                "required": true,
+                "label": "houseNumber"
+              }
+            ]
+          },
+          "english": {
+            "name": "English",
+            "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}, {{subdistrict}}, {{district}}\n{{city}}, {{state}} {{postcode}}\n{{country}}"
+          },
+          "addressRules": {
+            "languages": [
+              {
+                "code": "ja",
+                "name": "Japanese"
+              }
+            ],
+            "deliveryLanguages": [
+              {
+                "code": "en",
+                "name": "English (International Shipping)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "license": "CC0",
+    "expected": {
+      "noRawPrivateMaterial": true,
+      "validation": {
+        "status": "verified",
+        "score": 0.99,
+        "postalCodeValid": true,
+        "missingRequiredFields": [],
+        "qualityMode": "postal-verified",
+        "qualityLabel": "Verified",
+        "confidenceLabel": "Confidence 99%",
+        "checkedWith": [
+          "japan-post-synthetic-fixture",
+          "gsi-japan-synthetic",
+          "synthetic-postal-reference",
+          "Japan synthetic postal metadata",
+          "Japan Post official-format synthetic fixture",
+          "libaddressinput-synthetic",
+          "open-address-format-rules"
+        ]
+      },
+      "renderings": {
+        "ja": "〒100-0001東京都テスト市中央区サンプル町例通り1-2-3AGID検証ビル",
+        "en": "AGID\n1-2-3\nsanpuru Town, Chuo-ku, tesuto City\nTokyo 100-0001\nJAPAN",
+        "intl_en": "AGID\n1-2-3\nSANPURU TOWN, CHUO-KU, TESUTO CITY\nTOKYO 100-0001\nJAPAN"
+      },
+      "displayTabs": [
+        "ja",
+        "en"
+      ],
+      "languageTabs": [
+        {
+          "code": "ja",
+          "kind": "domestic"
+        },
+        {
+          "code": "en",
+          "kind": "international"
+        }
+      ],
+      "expectedFingerprint": "addrvec:4b7c2011f564ed75475ba9ac"
+    }
+  },
+  {
+    "vectorId": "addrvec-us-invalid-postcode-v1",
+    "title": "United States invalid postcode stays partial",
+    "surfaces": [
+      "validation",
+      "rendering",
+      "language-tabs",
+      "privacy-boundary"
+    ],
+    "countryCode": "US",
+    "privacyClass": "synthetic-public",
+    "description": "Synthetic US fixture with an invalid postcode; implementations must not auto-verify it.",
+    "input": {
+      "canonical": {
+        "country_code": "US",
+        "country": "United States",
+        "state": "CA",
+        "city": "Example City",
+        "road": "Sample Avenue",
+        "house_number": "42",
+        "building": "AGID Test Lab",
+        "postcode": "ABCDE"
+      },
+      "format": {
+        "countryCode": "US",
+        "name": "United States synthetic postal metadata",
+        "native": {
+          "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}}, {{state}} {{postcode}}\n{{country}}",
+          "fields": [
+            {
+              "key": "street",
+              "required": true
+            },
+            {
+              "key": "houseNumber",
+              "required": true
+            },
+            {
+              "key": "city",
+              "required": true
+            },
+            {
+              "key": "state",
+              "required": true
+            },
+            {
+              "key": "postcode",
+              "required": true
+            }
+          ]
+        },
+        "english": {
+          "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}}, {{state}} {{postcode}}\n{{country}}"
+        },
+        "postalCode": {
+          "regex": "^\\d{5}(-\\d{4})?$",
+          "source": "USPS official-format synthetic fixture",
+          "api": "usps-synthetic-fixture",
+          "format": "NNNNN"
+        },
+        "openSourceIds": [
+          "libaddressinput-synthetic",
+          "u.s. census synthetic fixture"
+        ]
+      },
+      "sources": [
+        "usps-synthetic-fixture"
+      ],
+      "rendererTabs": [
+        "en_domestic",
+        "en",
+        "intl_en"
+      ],
+      "language": {
+        "countryCode": "US",
+        "preferredLanguage": "en",
+        "countryLanguages": [
+          "en",
+          "es"
+        ],
+        "knownLanguageCodes": [
+          "en",
+          "en_domestic",
+          "es"
+        ],
+        "registrationFormat": {
+          "countryCode": "US",
+          "name": "United States synthetic registration metadata",
+          "native": {
+            "name": "English",
+            "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}}, {{state}} {{postcode}}\n{{country}}",
+            "fields": [
+              {
+                "key": "street",
+                "required": true,
+                "label": "street"
+              },
+              {
+                "key": "houseNumber",
+                "required": true,
+                "label": "houseNumber"
+              },
+              {
+                "key": "city",
+                "required": true,
+                "label": "city"
+              },
+              {
+                "key": "state",
+                "required": true,
+                "label": "state"
+              },
+              {
+                "key": "postcode",
+                "required": true,
+                "label": "postcode"
+              }
+            ]
+          },
+          "english": {
+            "name": "English",
+            "addressFormat": "{{organization}}\n{{houseNumber}} {{street}}\n{{city}}, {{state}} {{postcode}}\n{{country}}"
+          },
+          "addressRules": {
+            "languages": [
+              {
+                "code": "en",
+                "name": "English"
+              }
+            ],
+            "deliveryLanguages": [
+              {
+                "code": "en",
+                "name": "English (International Shipping)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "license": "CC0",
+    "expected": {
+      "noRawPrivateMaterial": true,
+      "validation": {
+        "status": "partial",
+        "score": 0.89,
+        "postalCodeValid": false,
+        "missingRequiredFields": [],
+        "qualityMode": "partial-postal",
+        "qualityLabel": "Partial",
+        "confidenceLabel": "Confidence 89%",
+        "checkedWith": [
+          "usps-synthetic-fixture",
+          "United States synthetic postal metadata",
+          "USPS official-format synthetic fixture",
+          "libaddressinput-synthetic",
+          "u.s. census synthetic fixture",
+          "open-address-format-rules"
+        ]
+      },
+      "renderings": {
+        "en_domestic": "AGID Test Lab\n42 Sample Avenue\nExample City\nCA ABCDE",
+        "en": "AGID Test Lab\n42 Sample Avenue\nExample City\nCA ABCDE",
+        "intl_en": "AGID TEST LAB\n42 SAMPLE AVE\nEXAMPLE CITY\nCA ABCDE\nUNITED STATES"
+      },
+      "displayTabs": [
+        "en_domestic",
+        "es",
+        "en"
+      ],
+      "languageTabs": [
+        {
+          "code": "en_domestic",
+          "kind": "domestic",
+          "englishCircle": "inner"
+        },
+        {
+          "code": "en",
+          "kind": "international"
+        }
+      ],
+      "expectedFingerprint": "addrvec:6e699a859d70fc9823bb33e3"
+    }
+  },
+  {
+    "vectorId": "addrvec-de-road-first-v1",
+    "title": "Germany road-first rendering",
+    "surfaces": [
+      "validation",
+      "rendering",
+      "language-tabs",
+      "privacy-boundary"
+    ],
+    "countryCode": "DE",
+    "privacyClass": "synthetic-public",
+    "description": "Synthetic German fixture for road-first house-number ordering and reliable postal format validation.",
+    "input": {
+      "canonical": {
+        "country_code": "DE",
+        "country": "Germany",
+        "state": "Testland",
+        "city": "Musterstadt",
+        "road": "Beispielstrasse",
+        "house_number": "7A",
+        "building": "AGID Musterhaus",
+        "postcode": "10115"
+      },
+      "format": {
+        "countryCode": "DE",
+        "name": "Germany synthetic postal metadata",
+        "native": {
+          "addressFormat": "{{street}} {{houseNumber}}\n{{postcode}} {{city}}\n{{country}}",
+          "fields": [
+            {
+              "key": "street",
+              "required": true
+            },
+            {
+              "key": "houseNumber",
+              "required": true
+            },
+            {
+              "key": "postcode",
+              "required": true
+            },
+            {
+              "key": "city",
+              "required": true
+            }
+          ]
+        },
+        "english": {
+          "addressFormat": "{{street}} {{houseNumber}}\n{{postcode}} {{city}}\n{{country}}"
+        },
+        "postalCode": {
+          "regex": "^\\d{5}$",
+          "source": "official-format synthetic fixture",
+          "api": "openplz-synthetic-fixture",
+          "format": "NNNNN"
+        },
+        "openSourceIds": [
+          "openplz-synthetic",
+          "libaddressinput-synthetic"
+        ]
+      },
+      "sources": [
+        "openplz-synthetic-fixture"
+      ],
+      "rendererTabs": [
+        "de",
+        "en",
+        "intl_en"
+      ],
+      "language": {
+        "countryCode": "DE",
+        "preferredLanguage": "de",
+        "countryLanguages": [
+          "de"
+        ],
+        "knownLanguageCodes": [
+          "de",
+          "en",
+          "en_domestic"
+        ],
+        "registrationFormat": {
+          "countryCode": "DE",
+          "name": "Germany synthetic registration metadata",
+          "native": {
+            "name": "Deutsch",
+            "addressFormat": "{{street}} {{houseNumber}}\n{{postcode}} {{city}}\n{{country}}",
+            "fields": [
+              {
+                "key": "street",
+                "required": true,
+                "label": "street"
+              },
+              {
+                "key": "houseNumber",
+                "required": true,
+                "label": "houseNumber"
+              },
+              {
+                "key": "postcode",
+                "required": true,
+                "label": "postcode"
+              },
+              {
+                "key": "city",
+                "required": true,
+                "label": "city"
+              }
+            ]
+          },
+          "english": {
+            "name": "English",
+            "addressFormat": "{{street}} {{houseNumber}}\n{{postcode}} {{city}}\n{{country}}"
+          },
+          "addressRules": {
+            "languages": [
+              {
+                "code": "de",
+                "name": "Deutsch"
+              }
+            ],
+            "deliveryLanguages": [
+              {
+                "code": "en",
+                "name": "English (International Shipping)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "license": "CC0",
+    "expected": {
+      "noRawPrivateMaterial": true,
+      "validation": {
+        "status": "verified",
+        "score": 0.99,
+        "postalCodeValid": true,
+        "missingRequiredFields": [],
+        "qualityMode": "postal-verified",
+        "qualityLabel": "Verified",
+        "confidenceLabel": "Confidence 99%",
+        "checkedWith": [
+          "openplz-synthetic-fixture",
+          "Germany synthetic postal metadata",
+          "official-format synthetic fixture",
+          "openplz-synthetic",
+          "libaddressinput-synthetic",
+          "open-address-format-rules"
+        ]
+      },
+      "renderings": {
+        "de": "AGID Musterhaus, Beispielstrasse 7A, Musterstadt, Testland, 10115",
+        "en": "AGID Musterhaus\nBeispielstrasse 7A\n10115 Musterstadt\nTestland\nGERMANY",
+        "intl_en": "AGID MUSTERHAUS\nBEISPIELSTRASSE 7A\n10115 MUSTERSTADT\nTESTLAND\nGERMANY"
+      },
+      "displayTabs": [
+        "de",
+        "en"
+      ],
+      "languageTabs": [
+        {
+          "code": "de",
+          "kind": "domestic"
+        },
+        {
+          "code": "en",
+          "kind": "international"
+        }
+      ],
+      "expectedFingerprint": "addrvec:d0044d506f19e07feb837cd6"
+    }
+  },
+  {
+    "vectorId": "addrvec-ae-no-postal-geo-v1",
+    "title": "No-postal-code geography-verified fixture",
+    "surfaces": [
+      "validation",
+      "rendering",
+      "language-tabs",
+      "privacy-boundary"
+    ],
+    "countryCode": "AE",
+    "privacyClass": "synthetic-public",
+    "description": "Synthetic no-postal-code fixture; strong open geography evidence can verify display without a postcode.",
+    "input": {
+      "canonical": {
+        "country_code": "AE",
+        "country": "United Arab Emirates",
+        "state": "Synthetic Emirate",
+        "city": "Example District",
+        "road": "Test Corridor",
+        "house_number": "8",
+        "building": "AGID Delivery Point"
+      },
+      "format": {
+        "countryCode": "AE",
+        "name": "United Arab Emirates synthetic no-postal metadata",
+        "native": {
+          "addressFormat": "{{organization}}\n{{street}} {{houseNumber}}\n{{city}}, {{state}}\n{{country}}"
+        },
+        "english": {
+          "addressFormat": "{{organization}}\n{{street}} {{houseNumber}}\n{{city}}, {{state}}\n{{country}}"
+        },
+        "postalCode": {
+          "regex": null,
+          "source": "no postal code used for this synthetic fixture",
+          "api": null,
+          "format": null
+        },
+        "openSourceIds": [
+          "overture-synthetic",
+          "natural-earth-synthetic",
+          "government-geoportal-synthetic"
+        ],
+        "addressRules": {
+          "openSourceIds": [
+            "overture-synthetic",
+            "natural-earth-synthetic"
+          ],
+          "postalCode": {
+            "label": "No postal code",
+            "required": false,
+            "usage": "optional"
+          }
+        }
+      },
+      "sources": [
+        "overture-synthetic",
+        "government-geoportal-synthetic"
+      ],
+      "referenceMatches": [
+        {
+          "source": "synthetic-agid-reverse-geocode",
+          "confidence": 0.8
+        }
+      ],
+      "rendererTabs": [
+        "en_domestic",
+        "en",
+        "intl_en"
+      ],
+      "language": {
+        "countryCode": "AE",
+        "preferredLanguage": "en",
+        "countryLanguages": [
+          "ar",
+          "en"
+        ],
+        "knownLanguageCodes": [
+          "ar",
+          "en",
+          "en_domestic"
+        ],
+        "registrationFormat": {
+          "countryCode": "AE",
+          "name": "United Arab Emirates synthetic registration metadata",
+          "native": {
+            "name": "Arabic",
+            "addressFormat": "{{organization}}\n{{street}} {{houseNumber}}\n{{city}}, {{state}}\n{{country}}"
+          },
+          "english": {
+            "name": "English",
+            "addressFormat": "{{organization}}\n{{street}} {{houseNumber}}\n{{city}}, {{state}}\n{{country}}"
+          },
+          "addressRules": {
+            "languages": [
+              {
+                "code": "ar",
+                "name": "Arabic"
+              },
+              {
+                "code": "en",
+                "name": "English"
+              }
+            ],
+            "deliveryLanguages": [
+              {
+                "code": "en",
+                "name": "English (International Shipping)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "license": "CC0",
+    "expected": {
+      "noRawPrivateMaterial": true,
+      "validation": {
+        "status": "verified",
+        "score": 0.92,
+        "postalCodeValid": null,
+        "missingRequiredFields": [],
+        "qualityMode": "geo-verified",
+        "qualityLabel": "Geo Verified",
+        "confidenceLabel": "Confidence 92%",
+        "checkedWith": [
+          "overture-synthetic",
+          "government-geoportal-synthetic",
+          "synthetic-agid-reverse-geocode",
+          "United Arab Emirates synthetic no-postal metadata",
+          "no postal code used for this synthetic fixture",
+          "natural-earth-synthetic",
+          "open-address-format-rules"
+        ]
+      },
+      "renderings": {
+        "en_domestic": "AGID Delivery Point\n8 Test Corridor\nExample District\nSynthetic Emirate",
+        "en": "AGID Delivery Point\n8 Test Corridor\nExample District\nSynthetic Emirate",
+        "intl_en": "AGID DELIVERY POINT\n8 TEST CORRIDOR\nEXAMPLE DISTRICT\nSYNTHETIC EMIRATE\nUNITED ARAB EMIRATES"
+      },
+      "displayTabs": [
+        "ar",
+        "en_domestic",
+        "en"
+      ],
+      "languageTabs": [
+        {
+          "code": "ar",
+          "kind": "domestic"
+        },
+        {
+          "code": "en_domestic",
+          "kind": "domestic",
+          "englishCircle": "outer"
+        },
+        {
+          "code": "en",
+          "kind": "international"
+        }
+      ],
+      "expectedFingerprint": "addrvec:66f3fd4658b99fac9c3a2e15"
+    }
+  },
+  {
+    "vectorId": "addrvec-redacted-public-event-v1",
+    "title": "Redacted public event payload",
+    "surfaces": [
+      "privacy-boundary"
+    ],
+    "privacyClass": "redacted-public",
+    "description": "Ensures public vectors can describe address events through commitments and refs without raw address, phone, proof code, or AOID secret.",
+    "input": {
+      "rawObject": {
+        "eventType": "address_intent.verified",
+        "addressRef": "addr_ref_synthetic_001",
+        "commitment": "addr_commitment:synthetic:7c9b1b2e",
+        "countryCode": "JP",
+        "scopes": [
+          "delivery:read",
+          "recipient:verify"
+        ]
+      }
+    },
+    "license": "CC0",
+    "expected": {
+      "noRawPrivateMaterial": true,
+      "normalizedObject": {
+        "country_code": "jp"
+      },
+      "expectedFingerprint": "addrvec:134d11be874d0a092172932e"
+    }
+  }
+]

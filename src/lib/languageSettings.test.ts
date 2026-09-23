@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import { TRANSLATIONS } from '../constants/translations';
 import { LANGUAGES } from './addressUtils';
 import { hasUiTranslation,translateUi } from './i18n';
-import { ADDRESS_LANGUAGES,APP_LANGUAGES,normalizeAppLanguage } from './languageSettings';
+import { APP_LANGUAGES,normalizeAppLanguage } from './languageSettings';
 
 const CURRENT_APP_UI_LANGUAGE_CODES = [
   'ja',
@@ -32,8 +32,10 @@ const CURRENT_APP_UI_LANGUAGE_CODES = [
 ] as const;
 
 test('keeps app language settings separate from address language options', () => {
-  assert.notEqual(APP_LANGUAGES, ADDRESS_LANGUAGES);
-  assert.deepEqual(ADDRESS_LANGUAGES, LANGUAGES);
+  const languageSettingsSource = readFileSync(join(process.cwd(), 'src', 'lib', 'languageSettings.ts'), 'utf8');
+
+  assert.notDeepEqual(APP_LANGUAGES, LANGUAGES);
+  assert.doesNotMatch(languageSettingsSource, /from '\.\/addressUtils'/);
 
   assert.ok(CURRENT_APP_UI_LANGUAGE_CODES.every(code =>
     hasUiTranslation(TRANSLATIONS as any, code)
@@ -41,7 +43,7 @@ test('keeps app language settings separate from address language options', () =>
   assert.ok(APP_LANGUAGES.some(language =>
     !hasUiTranslation(TRANSLATIONS as any, language.code)
   ));
-  assert.ok(ADDRESS_LANGUAGES.some(language =>
+  assert.ok(LANGUAGES.some(language =>
     !hasUiTranslation(TRANSLATIONS as any, language.code)
   ));
 
@@ -124,7 +126,7 @@ test('settings panel renders app and address language selectors from different s
   const panelSource = readFileSync(join(process.cwd(), 'src', 'components', 'SettingsPanel.tsx'), 'utf8');
 
   assert.match(panelSource, /APP_LANGUAGES/);
-  assert.match(panelSource, /ADDRESS_LANGUAGES/);
+  assert.match(panelSource, /LANGUAGES as ADDRESS_LANGUAGES/);
   assert.doesNotMatch(panelSource, /const groupedLanguages =/);
 });
 

@@ -1,0 +1,105 @@
+[
+  {
+    "id": "license-boundary",
+    "label": "License boundary",
+    "gateType": "license",
+    "requiredFor": [
+      "simulation",
+      "draft",
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "Do not bundle or redistribute third-party postal, map, boundary, or population datasets unless the source license explicitly permits it.",
+    "failureAction": "block"
+  },
+  {
+    "id": "governance-not-official-by-default",
+    "label": "Governance and official status",
+    "gateType": "governance",
+    "requiredFor": [
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "AGID Postal Forge outputs are simulation/draft unless a government, municipality, postal authority, or carrier pilot authority is explicitly recorded.",
+    "failureAction": "draft-only"
+  },
+  {
+    "id": "minimum-anonymity",
+    "label": "Minimum anonymity",
+    "gateType": "privacy",
+    "requiredFor": [
+      "draft",
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "A public postal zone cannot identify a single household, sensitive facility, or high-risk refuge location.",
+    "failureAction": "review-required"
+  },
+  {
+    "id": "data-trust-threshold",
+    "label": "Data trust threshold",
+    "gateType": "data-trust",
+    "requiredFor": [
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "Address, road, admin, population, and boundary evidence must pass the configured trust threshold before public pilot use.",
+    "failureAction": "draft-only"
+  },
+  {
+    "id": "existing-postal-non-replacement",
+    "label": "Existing postal non-replacement",
+    "gateType": "collision",
+    "requiredFor": [
+      "draft",
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "Class A mature postal countries cannot be replaced by AGID-generated postal codes; Class B countries only allow supplemental codes.",
+    "failureAction": "block"
+  },
+  {
+    "id": "country-boundary-and-municipality-boundary",
+    "label": "Country and municipality boundary",
+    "gateType": "territory-boundary",
+    "requiredFor": [
+      "simulation",
+      "draft",
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "Generated postal zones must stay inside one country, and user-selected locality codes must not cross municipalities.",
+    "failureAction": "block"
+  },
+  {
+    "id": "readability-and-error-distance",
+    "label": "Readability and error distance",
+    "gateType": "readability",
+    "requiredFor": [
+      "draft",
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "Public code sets should avoid visually confusable adjacent codes and keep human entry practical.",
+    "failureAction": "review-required"
+  },
+  {
+    "id": "lineage-and-migration-safety",
+    "label": "Lineage and migration safety",
+    "gateType": "migration",
+    "requiredFor": [
+      "pilot",
+      "supplementary",
+      "official"
+    ],
+    "rule": "Split, merge, rename, and reshaping events must keep old-to-new mappings and preserve stable locality IDs when names change.",
+    "failureAction": "review-required"
+  }
+]

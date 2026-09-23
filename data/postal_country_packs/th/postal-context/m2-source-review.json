@@ -1,0 +1,95 @@
+{
+  "schema_version": "agid-postal-th-m2-source-review-v0.1",
+  "country_code": "TH",
+  "m2_criterion": {
+    "id": "M2_exception_aware_postal_area_visualization",
+    "definition": "Current rights-cleared Thai postcode assignments and exact Polygon/MultiPolygon areas, including explicit resolution of subdistrict, village, road and house-range exceptions, immutable publication and actual TH API/app visualization verification."
+  },
+  "references": [
+    {
+      "id": "thailandpost-postcode-search",
+      "url": "https://www.thailandpost.co.th/index.php?language=th&page=search_zipcode",
+      "kind": "html",
+      "mime": "text/html",
+      "markers": ["search_zipcode", "รหัสไปรษณีย์"],
+      "expected_digest": "sha256:394d4221e33a86d06546d279fed934de4db658c0ba3a2c6e1efdef22bf97f40f",
+      "reviewed_bytes": 183967,
+      "reviewed_observed_at": "2026-08-29T03:09:44.464Z"
+    },
+    {
+      "id": "thailandpost-national-postcodes-article",
+      "url": "https://www.thailandpost.co.th/un/article_detail/article/3/17172",
+      "kind": "html",
+      "mime": "text/html",
+      "markers": ["รหัสไปรษณีย์ทั่วประเทศ", "_5e856abf6c77a.pdf"],
+      "expected_digest": "sha256:7e18d372215a6887edc593094bd3a8fe05fe1df1a76de369d92ba54648afeecc",
+      "reviewed_bytes": 185088,
+      "reviewed_observed_at": "2026-08-29T03:09:44.464Z"
+    },
+    {
+      "id": "thailandpost-national-postcodes-pdf",
+      "url": "https://file.thailandpost.com/upload/content/_5e856abf6c77a.pdf",
+      "kind": "reviewed-pdf",
+      "mime": "application/pdf",
+      "expected_digest": "sha256:4b6bc17183add816128d03ae61dbd6412d0863b354356c74de811f6b1c2e0a07",
+      "reviewed_bytes": 2865802,
+      "reviewed_observed_at": "2026-08-29T03:09:44.464Z",
+      "manual_pdf_review": {
+        "title": "DP6104-0034 Poster Thaipost adj cc G4",
+        "pdf_pages": 2,
+        "creation_date": "2018-07-02",
+        "modified_date": "2018-08-24",
+        "visually_reviewed_physical_pages": [1, 2],
+        "distinct_five_digit_codes": 979,
+        "exception_tokens": 219,
+        "contains_house_range_example": true,
+        "contains_village_range_example": true
+      }
+    },
+    {
+      "id": "thailandpost-postbase-terms",
+      "url": "https://postbase.thailandpost.co.th/en/terms-and-conditions",
+      "kind": "html",
+      "mime": "text/html",
+      "markers": ["ข้อกำหนด", "เงื่อนไข", "อนุญาต"],
+      "expected_digest": "sha256:ff60eaecd6d5512a015540d6ce508be8e34fa17f2717135e2d9b9f47b9e500e2",
+      "reviewed_bytes": 61471,
+      "reviewed_observed_at": "2026-08-29T03:09:44.464Z"
+    },
+    {
+      "id": "government-catalog-zipcode",
+      "url": "https://gdcatalognhic.nha.co.th/api/3/action/package_show?id=zipcode",
+      "kind": "json",
+      "mime": "application/json",
+      "markers": ["\"name\": \"zipcode\"", "Open Data Common", "0389a8b0-ad55-460b-a1f9-2bb14c5d5f20"],
+      "expected_digest": "sha256:a9b2ce25957b0259a95e9071439aa987c237f97048241074906fa98d5505411f",
+      "reviewed_bytes": 4794,
+      "reviewed_observed_at": "2026-08-29T03:09:44.464Z"
+    },
+    {
+      "id": "data-go-th-zipcode",
+      "url": "https://data.go.th/en/dataset/zipcode",
+      "kind": "expected-http-failure",
+      "reviewed_http_status": 403,
+      "reviewed_failure": "cloudflare-access-denied",
+      "reviewed_observed_at": "2026-08-29T03:09:44.464Z"
+    }
+  ],
+  "rights_gate": {
+    "thailand_post": "The search and assignment references establish format and assignment facts but provide no explicit bulk extraction, derivative polygon, redistribution or API-serving grant. Postbase terms restrict uses not clearly authorized and framing without written consent.",
+    "government_catalog": "Metadata declares Open Data Common, but the only resource is HTML with an empty URL and no downloadable version, bytes or validity evidence. Metadata is not the missing polygon artifact.",
+    "decision": "No exact current source grants reusable nationwide Thai postcode polygons or enough rights-cleared source relations to reproduce all published assignment exceptions.",
+    "legal_conclusion_claimed": false
+  },
+  "policy": {
+    "postal_code_pattern": "^[0-9]{5}$",
+    "official_postal_geometry": "none_verified",
+    "derived_postal_geometry": "not_generated",
+    "administrative_geometry_is_postal_geometry": false,
+    "postcode_point_is_postal_area": false,
+    "building_from_containment_allowed": false,
+    "raw_source_bodies_allowed_in_git": false
+  },
+  "limits": {"max_response_bytes": 5242880},
+  "live_allowed_hosts": ["www.thailandpost.co.th", "file.thailandpost.com", "postbase.thailandpost.co.th", "gdcatalognhic.nha.co.th", "data.go.th"]
+}

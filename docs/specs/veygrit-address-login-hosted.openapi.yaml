@@ -1,0 +1,935 @@
+openapi: 3.1.0
+info:
+  title: Veygrit ID Hosted Address Login API
+  version: 0.1.0
+  summary: Hosted Address Login API for purpose-bound address claims, consent envelopes, proof references, and carrier-only handoff.
+  description: |
+    Veygrit ID Hosted Address Login is a commercial hosted API surface built
+    around the open Address Login contract. It accepts merchant requests for
+    address-related claims and returns redacted references, not raw address
+    text. Public requests, responses, examples, webhooks, and audit payloads
+    MUST NOT contain raw address lines, recipient data, precise coordinates,
+    proof witnesses, proof secrets, private keys, or production credentials.
+servers:
+  - url: /api/veygrit/address-login
+security: []
+tags:
+  - name: Capabilities
+  - name: Authorization
+  - name: Token
+  - name: Proof
+  - name: Consent
+  - name: Carrier
+  - name: FriendDelivery
+  - name: TestVectors
+paths:
+  /capabilities:
+    get:
+      tags: [Capabilities]
+      summary: Return hosted Address Login capabilities and privacy posture.
+      responses:
+        '200':
+          description: Capabilities returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilitiesResult'
+  /authorize:
+    get:
+      tags: [Authorization]
+      summary: Start a wallet-mediated Address Login request.
+      description: |
+        This endpoint follows an OAuth/OIDC-style authorization shape with
+        redirect URI binding, state, nonce, and PKCE. It creates an authorization
+        session only; it does not accept or return raw address material.
+      parameters:
+        - name: client_id
+          in: query
+          required: true
+          schema: { type: string, minLength: 3 }
+        - name: redirect_uri
+          in: query
+          required: true
+          schema: { type: string, format: uri }
+        - name: response_type
+          in: query
+          required: true
+          schema: { type: string, const: code }
+        - name: state
+          in: query
+          required: true
+          schema: { type: string, minLength: 8 }
+        - name: nonce
+          in: query
+          required: true
+          schema: { type: string, minLength: 8 }
+        - name: code_challenge
+          in: query
+          required: true
+          schema: { type: string, minLength: 32 }
+        - name: code_challenge_method
+          in: query
+          required: true
+          schema: { type: string, enum: [S256] }
+        - name: purpose
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Purpose'
+        - name: disclosure_mode
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/DisclosureMode'
+        - name: risk_level
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/RiskLevel'
+        - name: requested_claims
+          in: query
+          required: true
+          description: Space-separated Address Login claim names.
+          schema:
+            type: string
+            examples: [address_credential_valid user_approved deliverable not_revoked freshness carrier_decryptable_address]
+        - name: display_language_mode
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/DisplayLanguageMode'
+        - name: country_hints
+          in: query
+          required: false
+          description: Optional comma-separated ISO country or region hints.
+          schema: { type: string, examples: [JP,US,HK] }
+        - name: carrier_id
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '302':
+          description: Redirect to wallet consent or back to redirect URI with an authorization error.
+          headers:
+            Location:
+              schema: { type: string, format: uri }
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+  /token:
+    post:
+      tags: [Token]
+      summary: Exchange an authorization code for a redacted Address Login result.
+      security:
+        - ClientAssertion: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+            examples:
+              carrierDecryptable:
+                value:
+                  grantType: authorization_code
+                  code: code_synthetic_123
+                  redirectUri: https://merchant.example/callback
+                  clientId: merchant_demo
+                  codeVerifier: verifier_synthetic_123
+      responses:
+        '200':
+          description: Redacted token result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressLoginResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+  /proof/verify:
+    post:
+      tags: [Proof]
+      summary: Verify proof bundle references and credential registry state.
+      description: |
+        This endpoint verifies proof references, commitments, roots, and policy
+        hashes. It is a verifier hook boundary and does not accept private
+        witnesses or proof secrets.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProofVerifyRequest'
+      responses:
+        '200':
+          description: Proof reference checked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProofVerifyResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '409':
+          description: Proof reference, registry state, freshness, or verifier policy is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProofVerifyResult'
+  /consent/revoke:
+    post:
+      tags: [Consent]
+      summary: Revoke a purpose-bound consent envelope.
+      security:
+        - UserOrAdminToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeConsentRequest'
+      responses:
+        '200':
+          description: Consent revoked or already inactive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentRevocationResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+  /carrier/decrypt-request:
+    post:
+      tags: [Carrier]
+      summary: Request a carrier-only decrypt authorization reference.
+      description: |
+        The response is a scoped reference and receipt for an authorized carrier.
+        The merchant never receives decrypt capability from this endpoint.
+      security:
+        - CarrierAssertion: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarrierDecryptRequest'
+      responses:
+        '200':
+          description: Carrier handoff authorization returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarrierDecryptResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          description: Carrier assertion is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+        '409':
+          description: Consent, purpose, carrier, or expiry does not allow handoff.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+  /friend-delivery/requests:
+    post:
+      tags: [FriendDelivery]
+      summary: Create a wallet-mediated friend delivery request.
+      description: |
+        The merchant submits only purchaser, friend, cart, purpose, and claim
+        references. The wallet notifies the friend for approval. This endpoint
+        does not accept raw destination address, contact data, proof witnesses,
+        or private keys.
+      security:
+        - ClientAssertion: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendDeliveryRequest'
+      responses:
+        '202':
+          description: Friend delivery request accepted and wallet notification queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendDeliveryRequestResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+  /friend-delivery/approvals:
+    post:
+      tags: [FriendDelivery]
+      summary: Record the friend wallet approval for a delivery request.
+      description: |
+        The approving wallet returns only approval, consent, selected address,
+        carrier handoff, and receipt references. The purchaser never receives
+        destination address material through this endpoint.
+      security:
+        - UserOrAdminToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendDeliveryApproval'
+      responses:
+        '200':
+          description: Friend delivery approval accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendDeliveryApprovalResult'
+        '400':
+          $ref: '#/components/responses/RejectedPrivateMaterial'
+        '401':
+          $ref: '#/components/responses/ClientAuthRequired'
+        '409':
+          description: Friend delivery request expired, denied, or no longer matches consent policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+  /test-vectors:
+    get:
+      tags: [TestVectors]
+      summary: Return synthetic Address Login conformance vectors.
+      externalDocs:
+        description: Local-only synthetic Address Login fixture set, schema, verifier command, and non-claims.
+        url: ./README.md#veygrit-id-hosted-address-login-test-vectors
+      x-agid-evidence-fixtures:
+        preflightFixture: docs/specs/fixtures/veygrit-address-login-hosted-v0.1.json
+        historyFixture: docs/specs/fixtures/veygrit-address-login-hosted-v0.1.json
+        evidenceFixture: docs/specs/fixtures/veygrit-address-login-hosted-v0.1.json
+        evidenceSchema: docs/specs/schemas/veygrit-address-login-hosted-fixture-v0.1.schema.json
+        verifierCommand: npm run verify:veygrit-address-login-hosted
+        aggregateVerifierCommand: npm run verify:address-login-spec
+        managedServiceBoundary: fixture-only-not-hosted-address-login
+        localOnly: true
+        forbiddenMaterial:
+          - raw_address
+          - recipient_phone
+          - proof_witness
+          - private_key
+          - biometric_template
+          - production_webhook_secret
+        nonClaims:
+          - not-raw-address-intake
+          - not-proof-witness-intake
+          - not-production-credential-intake
+        nonClaimsProfile: veygrit-address-login-hosted-v0.1
+      responses:
+        '200':
+          description: Synthetic test vectors returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestVectorResult'
+components:
+  securitySchemes:
+    ClientAssertion:
+      type: http
+      scheme: bearer
+      description: Client assertion or sandbox API token.
+    UserOrAdminToken:
+      type: http
+      scheme: bearer
+      description: Wallet user token, tenant admin token, or equivalent delegated token.
+    CarrierAssertion:
+      type: http
+      scheme: bearer
+      description: Carrier assertion bound to carrierId and deliverySessionRef.
+  responses:
+    ClientAuthRequired:
+      description: Client authentication is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResult'
+    RejectedPrivateMaterial:
+      description: Request contains private/raw address material and was rejected.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResult'
+  schemas:
+    Purpose:
+      type: string
+      enum: [shipping, anonymous_shipping, pickup, return, hotel_delivery, travel_checkin, identity_verification, customs]
+    DisclosureMode:
+      type: string
+      enum: [proof_only, selective_disclosure, carrier_decryptable, merchant_visible]
+    RiskLevel:
+      type: string
+      enum: [low, standard, high, regulated, emergency]
+    DisplayLanguageMode:
+      type: string
+      enum: [native, english, native_and_english]
+    Claim:
+      type: string
+      enum:
+        - address_credential_valid
+        - user_approved
+        - deliverable
+        - country
+        - region_membership
+        - postal_equivalent
+        - quality_threshold
+        - not_revoked
+        - freshness
+        - device_bound
+        - carrier_decryptable_address
+        - customs_minimum_fields
+    PrivacyPosture:
+      type: object
+      additionalProperties: false
+      required: [rawAddressAccepted, merchantCanDecrypt, witnessAccepted, productionCredentialAccepted, acceptedMaterial, rejectedMaterial]
+      properties:
+        rawAddressAccepted: { type: boolean, const: false }
+        merchantCanDecrypt: { type: boolean, const: false }
+        witnessAccepted: { type: boolean, const: false }
+        productionCredentialAccepted: { type: boolean, const: false }
+        acceptedMaterial:
+          type: array
+          items: { type: string }
+        rejectedMaterial:
+          type: array
+          items: { type: string }
+    TokenRequest:
+      type: object
+      additionalProperties: false
+      required: [grantType, code, redirectUri, clientId, codeVerifier]
+      properties:
+        grantType: { type: string, const: authorization_code }
+        code: { type: string, minLength: 8 }
+        redirectUri: { type: string, format: uri }
+        clientId: { type: string }
+        codeVerifier: { type: string, minLength: 32 }
+    AddressLoginResult:
+      type: object
+      additionalProperties: false
+      required: [status, subjectAlias, consentEnvelopeRef, publicClaims, safeDisplayLines, warnings, nextAction, privacy]
+      properties:
+        status:
+          type: string
+          enum: [approved, needs_review, denied, expired]
+        subjectAlias: { type: string }
+        consentEnvelopeRef: { type: string }
+        credentialRef: { type: string }
+        proofBundleRef: { type: string }
+        publicClaims:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: boolean
+              - type: string
+              - type: number
+        encryptedForCarrierRef: { type: string }
+        safeDisplayLines:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        nextAction:
+          type: string
+          enum: [continue_checkout, carrier_handoff, manual_review, request_consent_again, deny]
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    ProofVerifyRequest:
+      type: object
+      additionalProperties: false
+      required: [proofBundleRef, credentialRef, consentEnvelopeRef, verifierPolicyHash, challengeHash, requestedClaims]
+      properties:
+        proofBundleRef: { type: string }
+        credentialRef: { type: string }
+        consentEnvelopeRef: { type: string }
+        verifierPolicyHash: { type: string }
+        challengeHash: { type: string }
+        nullifierHash: { type: string }
+        requestedClaims:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claim'
+        now: { type: string, format: date-time }
+    ProofVerifyResult:
+      type: object
+      additionalProperties: false
+      required: [verified, status, errors, warnings, privacy]
+      properties:
+        verified: { type: boolean }
+        status:
+          type: string
+          enum: [valid, invalid, stale, revoked, policy_denied]
+        proofBundleRef: { type: string }
+        publicClaims:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: boolean
+              - type: string
+              - type: number
+        errors:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    RevokeConsentRequest:
+      type: object
+      additionalProperties: false
+      required: [consentEnvelopeRef, reason]
+      properties:
+        consentEnvelopeRef: { type: string }
+        reason:
+          type: string
+          enum: [user_requested, expired, credential_reissued, device_lost, merchant_policy_changed, incident]
+        requestedAt: { type: string, format: date-time }
+    ConsentRevocationResult:
+      type: object
+      additionalProperties: false
+      required: [status, consentEnvelopeRef, revoked, warnings, privacy]
+      properties:
+        status:
+          type: string
+          enum: [revoked, already_inactive, not_found]
+        consentEnvelopeRef: { type: string }
+        revoked: { type: boolean }
+        revocationReceiptRef: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    CarrierDecryptRequest:
+      type: object
+      additionalProperties: false
+      required: [carrierId, deliverySessionRef, consentEnvelopeRef, encryptedForCarrierRef, purpose, requestedAt]
+      properties:
+        carrierId: { type: string }
+        deliverySessionRef: { type: string }
+        consentEnvelopeRef: { type: string }
+        encryptedForCarrierRef: { type: string }
+        purpose: { type: string, const: shipping }
+        requestedAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+    CarrierDecryptResult:
+      type: object
+      additionalProperties: false
+      required: [authorized, carrierId, deliverySessionRef, handoffReceiptRef, expiresAt, warnings, privacy]
+      properties:
+        authorized: { type: boolean }
+        carrierId: { type: string }
+        deliverySessionRef: { type: string }
+        decryptAuthorizationRef: { type: string }
+        handoffReceiptRef: { type: string }
+        expiresAt: { type: string, format: date-time }
+        warnings:
+          type: array
+          items: { type: string }
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    FriendDeliveryRequest:
+      type: object
+      additionalProperties: false
+      required: [purchaserSubjectAlias, friendAlias, cartRef, purpose, requestedClaims, disclosureMode, requestedAt]
+      properties:
+        purchaserSubjectAlias: { type: string }
+        friendAlias: { type: string }
+        cartRef: { type: string }
+        purpose: { type: string, const: anonymous_shipping }
+        requestedClaims:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claim'
+        disclosureMode: { type: string, const: carrier_decryptable }
+        requestedAt: { type: string, format: date-time }
+    FriendDeliveryRequestResult:
+      type: object
+      additionalProperties: false
+      required: [status, friendDeliveryRequestRef, friendAlias, consentEnvelopeRef, notificationRef, expiresAt, privacy]
+      properties:
+        status:
+          type: string
+          enum: [notified, denied, expired]
+        friendDeliveryRequestRef: { type: string }
+        friendAlias: { type: string }
+        consentEnvelopeRef: { type: string }
+        notificationRef: { type: string }
+        expiresAt: { type: string, format: date-time }
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    FriendDeliveryApproval:
+      type: object
+      additionalProperties: false
+      required: [friendDeliveryRequestRef, approvalRef, selectedAddressRef, consentEnvelopeRef, approvedClaims, approvedAt]
+      properties:
+        friendDeliveryRequestRef: { type: string }
+        approvalRef: { type: string }
+        selectedAddressRef: { type: string }
+        consentEnvelopeRef: { type: string }
+        approvedClaims:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claim'
+        approvedAt: { type: string, format: date-time }
+    FriendDeliveryApprovalResult:
+      type: object
+      additionalProperties: false
+      required: [status, friendDeliveryRequestRef, approvalRef, carrierHandoffRef, deliveryReceiptRef, publicClaims, privacy]
+      properties:
+        status: { type: string, const: approved }
+        friendDeliveryRequestRef: { type: string }
+        approvalRef: { type: string }
+        carrierHandoffRef: { type: string }
+        deliveryReceiptRef: { type: string }
+        publicClaims:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: boolean
+              - type: string
+              - type: number
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    CapabilitiesResult:
+      type: object
+      additionalProperties: false
+      required: [mode, version, supportedPurposes, supportedDisclosureModes, callbackContract, privacy]
+      properties:
+        mode: { type: string, const: hosted-address-login }
+        version: { type: string, const: '0.1.0' }
+        supportedPurposes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Purpose'
+        supportedDisclosureModes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisclosureMode'
+        supportedStandards:
+          type: array
+          items: { type: string }
+        callbackContract:
+          $ref: '#/components/schemas/CallbackContract'
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+    CallbackContract:
+      type: object
+      additionalProperties: false
+      required: [version, canonicalParams, aliases, forbiddenParams, nonClaims]
+      properties:
+        version: { type: string, const: veygrit-address-login-callback-v0.1 }
+        canonicalParams:
+          type: array
+          items:
+            type: string
+            enum: [code, state, iss, session_ref, credential_ref, proof_bundle_ref, carrier_handoff_ref, error, error_description]
+        aliases:
+          type: object
+          additionalProperties: false
+          required: [issuer, proofBundleRef, carrierHandoffRef]
+          properties:
+            issuer:
+              type: array
+              items: { type: string, enum: [issuer] }
+            proofBundleRef:
+              type: array
+              items: { type: string, enum: [proof_ref] }
+            carrierHandoffRef:
+              type: array
+              items: { type: string, enum: [handoff_ref] }
+        forbiddenParams:
+          type: array
+          items:
+            type: string
+            enum: [raw_address, address_line1, recipient, witness, private_key, proof_secret]
+        nonClaims:
+          type: array
+          items: { type: string }
+    MerchantVisibleRedactionDisplayContract:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceFixture
+        - sdkPackage
+        - sdkHelper
+        - example
+        - boundaryGateId
+        - displayFields
+        - displayRefsByField
+        - requiredNextAction
+        - blockedClassCount
+        - nonClaimCount
+        - renderedMaterialPolicy
+      properties:
+        sourceFixture:
+          type: string
+          const: docs/specs/fixtures/veygrit-id-core-v0.1.json#merchantVisibleRedactionDisplayContract
+        sdkPackage:
+          type: string
+          const: '@veygrit/address-login-react'
+        sdkHelper:
+          type: string
+          const: createMerchantVisibleRedactionDisplayModel
+        example:
+          type: string
+          const: sdk/veygrit-address-login-react/examples/merchant-visible-redaction/MerchantVisibleRedactionCard.tsx
+        boundaryGateId:
+          type: string
+          const: merchant-visible-redaction
+        displayFields:
+          type: array
+          prefixItems:
+            - type: string
+              const: pairwiseSubjectAlias
+            - type: string
+              const: guestCheckoutAlias
+            - type: string
+              const: walletConsentRef
+            - type: string
+              const: addressCredentialRef
+            - type: string
+              const: carrierHandoffRef
+          minItems: 5
+          maxItems: 5
+        displayRefsByField:
+          type: object
+          additionalProperties: false
+          required: [pairwiseSubjectAlias, guestCheckoutAlias, walletConsentRef, addressCredentialRef, carrierHandoffRef]
+          properties:
+            pairwiseSubjectAlias:
+              type: string
+              const: pairwise_sub_synthetic_shipping_001
+            guestCheckoutAlias:
+              type: string
+              const: guest_checkout_alias_synthetic_hosted_001
+            walletConsentRef:
+              type: string
+              const: ace_synthetic_shipping_001
+            addressCredentialRef:
+              type: string
+              const: cred_ref_synthetic_address_001
+            carrierHandoffRef:
+              type: string
+              const: carrier_blob_ref_synthetic_shipping_001
+        requiredNextAction:
+          type: string
+          const: create-guest-order-from-refs
+        blockedClassCount:
+          type: integer
+          const: 7
+        nonClaimCount:
+          type: integer
+          const: 1
+        renderedMaterialPolicy:
+          type: object
+          additionalProperties: false
+          required: [copyBlockedMaterialNames, copyNonClaimText, showCountsOnly]
+          properties:
+            copyBlockedMaterialNames:
+              type: boolean
+              const: false
+            copyNonClaimText:
+              type: boolean
+              const: false
+            showCountsOnly:
+              type: boolean
+              const: true
+    TestVectorResult:
+      type: object
+      additionalProperties: false
+      required: [fixtureSet, callbackContract, callbackValidationVectors, webhookContract, webhookVectors, merchantVisibleRedactionDisplayContract, vectors, scenarioVectors, privacy]
+      properties:
+        fixtureSet: { type: string, const: synthetic-veygrit-address-login-hosted-v0.1 }
+        callbackContract:
+          $ref: '#/components/schemas/CallbackContract'
+        callbackValidationVectors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, endpoint, input, options, expectedResult, safeInputs]
+            properties:
+              id: { type: string }
+              endpoint: { type: string, const: GET merchant callback }
+              input:
+                type: object
+                additionalProperties:
+                  type: string
+              options:
+                type: object
+                additionalProperties: false
+                properties:
+                  expectedState: { type: string }
+                  allowedIssuer: { type: string }
+                  requireCode: { type: boolean }
+                  requireSessionRef: { type: boolean }
+                  requireCredentialRef: { type: boolean }
+                  requireProofBundleRef: { type: boolean }
+                  requireCarrierHandoffRef: { type: boolean }
+              expectedResult:
+                type: string
+                enum: [accepted, rejected]
+              expectedError:
+                type: string
+                enum: [forbidden_callback_param, unexpected_callback_param, callback_param_alias_conflict, state_mismatch, issuer_mismatch, missing_code, missing_session_ref, missing_credential_ref, missing_proof_bundle_ref, missing_carrier_handoff_ref]
+              expectedNormalizedParams:
+                type: object
+                additionalProperties:
+                  type: string
+              safeInputs:
+                type: array
+                items: { type: string }
+        webhookContract:
+          $ref: '#/components/schemas/WebhookContract'
+        webhookVectors:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookVector'
+        merchantVisibleRedactionDisplayContract:
+          $ref: '#/components/schemas/MerchantVisibleRedactionDisplayContract'
+        vectors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, purpose, disclosureMode, riskLevel, expectedClaims, expectedNextAction]
+            properties:
+              id: { type: string }
+              purpose:
+                $ref: '#/components/schemas/Purpose'
+              disclosureMode:
+                $ref: '#/components/schemas/DisclosureMode'
+              riskLevel:
+                $ref: '#/components/schemas/RiskLevel'
+              expectedClaims:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Claim'
+              expectedNextAction:
+                type: string
+        scenarioVectors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, purpose, disclosureMode, checkedRefs, steps, expectedNextAction]
+            properties:
+              id: { type: string }
+              purpose:
+                type: string
+                enum: [anonymous_shipping]
+              disclosureMode:
+                type: string
+                enum: [carrier_decryptable_preferred]
+              checkedRefs:
+                type: array
+                items: { type: string }
+              steps:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  required: [id, actor, inputRefs, outputRefs]
+                  properties:
+                    id:
+                      type: string
+                      enum: [checkout-select-friend, server-create-request, wallet-notify, wallet-approve, server-receive-handoff]
+                    actor:
+                      type: string
+                      enum: [purchaser, recipient, address-wallet, merchant, carrier]
+                    inputRefs:
+                      type: array
+                      items: { type: string }
+                    outputRefs:
+                      type: array
+                      items: { type: string }
+              expectedNextAction:
+                type: string
+                enum: [carrier_handoff]
+        privacy:
+          $ref: '#/components/schemas/PrivacyPosture'
+        warnings:
+          type: array
+          items: { type: string }
+    WebhookContract:
+      type: object
+      additionalProperties: false
+      required: [algorithm, signatureHeader, timestampHeader, replayWindowSeconds, signedPayload, eventIdIdempotencyRequired, keyIds, keyLifecycle, nonClaims]
+      properties:
+        algorithm: { type: string, const: hmac-sha256 }
+        signatureHeader: { type: string, const: x-veygrit-signature }
+        timestampHeader: { type: string, const: x-veygrit-timestamp }
+        replayWindowSeconds: { type: integer, minimum: 1, maximum: 900 }
+        signedPayload: { type: string, const: timestamp.payloadText }
+        eventIdIdempotencyRequired: { type: boolean, const: true }
+        keyIds:
+          type: array
+          minItems: 1
+          items: { type: string }
+        keyLifecycle:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required: [keyId, status, notBefore, notAfter]
+            properties:
+              keyId: { type: string }
+              status:
+                type: string
+                enum: [active, retired]
+              notBefore: { type: string, format: date-time }
+              notAfter: { type: string, format: date-time }
+        nonClaims:
+          type: array
+          items: { type: string }
+    WebhookVector:
+      type: object
+      additionalProperties: false
+      required: [id, endpoint, eventId, eventType, payloadFingerprint, timestamp, keyId, signatureHeader, expectedResult, safeInputs]
+      properties:
+        id: { type: string }
+        endpoint: { type: string, const: POST merchant webhook }
+        eventId: { type: string }
+        eventType: { type: string }
+        payloadFingerprint: { type: string }
+        timestamp: { type: string, format: date-time }
+        keyId: { type: string }
+        signatureHeader:
+          type: string
+          pattern: '^kid=[A-Za-z0-9_:-]+,v1='
+        expectedResult:
+          type: string
+          enum: [accepted, rejected]
+        expectedError:
+          type: string
+          enum: [signature_mismatch, duplicate_event_id, timestamp_replay, retired_key]
+        safeInputs:
+          type: array
+          items: { type: string }
+    ErrorResult:
+      type: object
+      additionalProperties: false
+      required: [ok, error, errors, warnings]
+      properties:
+        ok: { type: boolean, const: false }
+        error: { type: string }
+        message: { type: string }
+        rejectedKeys:
+          type: array
+          items: { type: string }
+        errors:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }

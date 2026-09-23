@@ -1,0 +1,173 @@
+{
+  "schema_version": "agid-postal-fr-synthetic-fixtures-v0.1",
+  "fixture_set_id": "france-like-contract-cases-v0.1",
+  "country_code": "FR",
+  "synthetic": true,
+  "promotion_eligible": false,
+  "fixture_policy": {
+    "contains_real_addresses": false,
+    "contains_upstream_rows": false,
+    "contains_personal_data": false,
+    "postal_prefix": "000",
+    "postal_prefix_is_test_only": true,
+    "coordinate_reference_system": "AGID_SYNTHETIC_LOCAL_GRID_V1",
+    "coordinates_are_geographic": false,
+    "names_with_prefix": "Synthétique",
+    "rule": "No value is a real La Poste assignment, BAN address, COG entity, IGN building, or production geometry."
+  },
+  "synthetic_sources": [
+    {
+      "source_id": "synthetic-postal-operator",
+      "models_source_role": "la-poste-base-officielle-codes-postaux",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "none"
+    },
+    {
+      "source_id": "synthetic-address-registry",
+      "models_source_role": "ban-fr",
+      "assignment_authority": "synthetic_fixture_assignment",
+      "geometry_authority": "synthetic_fixture_geometry"
+    },
+    {
+      "source_id": "synthetic-postcode-area",
+      "models_source_role": "derived-postcode-geometry",
+      "assignment_authority": "none",
+      "geometry_authority": "synthetic_fixture_geometry"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "fr-syn-ban-building",
+      "exception_class": "multi_code_commune",
+      "synthetic_address": {
+        "house_number": "1",
+        "street": "rue Synthétique",
+        "postal_code": "00000",
+        "commune": "Commune Synthétique"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "postal-code-assigned-to-delivery-locality",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        },
+        {
+          "source_id": "synthetic-address-registry",
+          "assertion": "ban-address-linked-to-building",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "resolved_level": "building",
+        "postal_assignment_geometry": "none",
+        "address_geometry": "point",
+        "building_geometry": "polygon",
+        "must_not_assert": [
+          "official-la-poste-polygon",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "fr-syn-derived-area",
+      "exception_class": "multi_code_commune",
+      "synthetic_address": {
+        "postal_code": "00001"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postcode-area",
+          "assertion": "derived-surface-from-ban-address-points",
+          "assignment_authority": "none",
+          "geometry_authority": "synthetic_fixture_geometry"
+        }
+      ],
+      "expected": {
+        "geometry_quality": "derived",
+        "geometry_type": "polygon",
+        "must_not_assert": [
+          "derived-is-la-poste-official",
+          "exact-building-from-polygon-alone",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "fr-syn-multi-commune",
+      "exception_class": "multi_commune_postal_code",
+      "synthetic_address": {
+        "postal_code": "00002"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "one-code-linked-to-two-communes",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "status": "ambiguous",
+        "alternatives": 2,
+        "must_not_assert": [
+          "single-commune-without-address-evidence",
+          "commune-centroid-is-address",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "fr-syn-cedex",
+      "exception_class": "cedex_or_large_user",
+      "synthetic_address": {
+        "postal_code": "00003",
+        "organization": "Organisation Synthétique CEDEX"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "cedex-routing-assignment",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": [
+          "surrounding-postal-area",
+          "building-without-independent-link",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    },
+    {
+      "fixture_id": "fr-syn-bp",
+      "exception_class": "bp_cs_tsa_poste_restante",
+      "synthetic_address": {
+        "postal_code": "00004",
+        "po_box": "BP Synthétique 7"
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-postal-operator",
+          "assertion": "non-spatial-special-distribution",
+          "assignment_authority": "synthetic_fixture_assignment",
+          "geometry_authority": "none"
+        }
+      ],
+      "expected": {
+        "geometry_type": "none",
+        "must_not_assert": [
+          "building-or-entrance",
+          "official-la-poste-polygon",
+          "occupant-or-recipient",
+          "deliverability"
+        ]
+      }
+    }
+  ]
+}

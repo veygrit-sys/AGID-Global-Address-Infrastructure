@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://addressql.org/schemas/addressql-l5-delivery-point-decision-v1.schema.json",
+  "title": "AddressQL L5 Delivery Point Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "level",
+    "scope",
+    "status",
+    "decision",
+    "processingDirective",
+    "stopProcessing",
+    "signatureVerified",
+    "verifiedCarrierCount",
+    "carrierIds",
+    "sourceRefs",
+    "boundaries",
+    "privacy",
+    "nonClaims"
+  ],
+  "properties": {
+    "version": {
+      "const": "addressql-l5-delivery-point-decision-v1"
+    },
+    "level": {
+      "const": "L5"
+    },
+    "scope": {
+      "const": "delivery-point"
+    },
+    "status": {
+      "enum": ["pass", "fail", "unknown", "conflict"]
+    },
+    "decision": {
+      "enum": ["reachable", "unreachable", "unknown", "conflict"]
+    },
+    "processingDirective": {
+      "enum": [
+        "continue",
+        "stop_unreachable",
+        "stop_unknown",
+        "stop_conflict"
+      ]
+    },
+    "stopProcessing": {
+      "type": "boolean"
+    },
+    "signatureVerified": {
+      "const": true
+    },
+    "verifiedCarrierCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "carrierIds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "sourceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "l4DeliveryAreaNotEvaluated",
+        "l4PassDoesNotImplyL5",
+        "l5DoesNotImplyIdentityOrResidence"
+      ],
+      "properties": {
+        "l4DeliveryAreaNotEvaluated": {
+          "const": true
+        },
+        "l4PassDoesNotImplyL5": {
+          "const": true
+        },
+        "l5DoesNotImplyIdentityOrResidence": {
+          "const": true
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "acceptsRawAddress",
+        "containsRawAddress",
+        "reflectsCommitment",
+        "storesCommitment",
+        "logsCommitment"
+      ],
+      "properties": {
+        "acceptsRawAddress": {
+          "const": false
+        },
+        "containsRawAddress": {
+          "const": false
+        },
+        "reflectsCommitment": {
+          "const": false
+        },
+        "storesCommitment": {
+          "const": false
+        },
+        "logsCommitment": {
+          "const": false
+        }
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

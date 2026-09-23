@@ -15,4 +15,8 @@ public final class Agid {
   public static AgidResult decode(String id) {
     return null;
   }
+
+  public static AgidBounds cellBounds(String id) {
+    throw new UnsupportedOperationException("wire this package to the AGID reference implementation");
+  }
 }

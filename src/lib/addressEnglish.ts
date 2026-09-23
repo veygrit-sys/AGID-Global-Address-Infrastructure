@@ -1,5 +1,5 @@
 import type { CanonicalAddress } from './addressRendering';
-import { normalizeMainlandChineseAddressPart } from './chineseAddressUtils';
+import { normalizeChineseRegionalAddressPart } from './chineseAddressUtils';
 import { normalizeIndianAddressPart } from './indiaAddressEnglish';
 import { normalizeSouthAfricanAddressPart } from './southAfricaAddressEnglish';
 import { deaccent,transliterate } from './transliteration';
@@ -790,6 +790,8 @@ function cleanEnglish(value: string) {
 }
 
 const LATIN_ADDRESS_TERM_REPLACEMENTS: Array<[RegExp, string]> = [
+  [/\bcercle\s+de\s+([\p{L}\p{M}'’.\-\s]+)\b/giu, '$1 Cercle'],
+  [/\bcercle\b/giu, 'Cercle'],
   [/\bnumero\s+civico\b/giu, 'House Number'],
   [/\bnumero\b/giu, 'Number'],
   [/\bnum(?:ero)?\b/giu, 'Number'],
@@ -1174,9 +1176,10 @@ export function normalizeEnglishAddressPart(value: unknown, countryCode = '') {
     const hepburnPlaceName = normalizeJapanesePlaceNameToHepburn(original);
     if (hepburnPlaceName) return hepburnPlaceName;
   }
-  if (code === 'CN') {
-    const pinyinPlaceName = normalizeMainlandChineseAddressPart(original);
-    if (pinyinPlaceName) return pinyinPlaceName;
+  if (['CN', 'TW', 'HK', 'MO', 'SG'].includes(code) && /[\u3400-\u9fff]/.test(original)) {
+    const regionalPlaceName = normalizeChineseRegionalAddressPart(original, code);
+    if (regionalPlaceName) return regionalPlaceName;
+    return '';
   }
   if (code === 'KR' || code === 'KP') {
     const revisedRomanization = normalizeKoreanPlaceNameToRevisedRomanization(original);
@@ -1235,18 +1238,19 @@ export function normalizeEnglishAddressBuildingName(value: unknown, countryCode 
   const exact = BUILDING_NAME_EXONYMS[original] || COMMON_ENGLISH_EXONYMS[original];
   if (exact) return exact;
 
-  if (code === 'JP' || /[\u3040-\u30ff\u3400-\u9fff]/.test(original)) {
-    const japaneseBuilding = tokenizeKnownTerms(original, JAPANESE_BUILDING_TERMS);
-    if (japaneseBuilding) return japaneseBuilding;
-  }
-
-  if ((code === 'CN' || code === 'TW' || code === 'HK' || code === 'MO') && /[\u3400-\u9fff]/.test(original)) {
-    const chineseBuilding = normalizeMainlandChineseAddressPart(original)
+  if (['CN', 'TW', 'HK', 'MO', 'SG'].includes(code) && /[\u3400-\u9fff]/.test(original)) {
+    const chineseBuilding = normalizeChineseRegionalAddressPart(original, code)
       .replace(/\bDasha\b/g, 'Building')
       .replace(/\bDalou\b/g, 'Building')
       .replace(/\bZhongxin\b/g, 'Zhongxin')
       .trim();
     if (chineseBuilding) return chineseBuilding;
+    return '';
+  }
+
+  if (code === 'JP' && /[\u3040-\u30ff\u3400-\u9fff]/.test(original)) {
+    const japaneseBuilding = tokenizeKnownTerms(original, JAPANESE_BUILDING_TERMS);
+    if (japaneseBuilding) return japaneseBuilding;
   }
 
   if ((code === 'KR' || code === 'KP') && /[\uac00-\ud7af]/.test(original)) {
@@ -1323,14 +1327,18 @@ export function renderEnglishPostalAddress(data: CanonicalAddress, options: { in
   const city = t(data.city);
   const state = t(data.state);
   const postcode = String(data.postcode || '').trim();
+  const stateRepeatsLocality =
+    normalizeComparable(state) === normalizeComparable(city) ||
+    normalizeComparable(state) === normalizeComparable(sublocalityLine);
+  const regionState = stateRepeatsLocality ? '' : state;
   const localityLine = POSTCODE_BEFORE_CITY_COUNTRIES.has(code)
     ? sublocalityLine
     : localeLine(sublocalityLine, city);
   const regionLine = POSTCODE_BEFORE_CITY_COUNTRIES.has(code)
     ? line(postcode, city)
-    : line(state, postcode);
-  const stateLine = POSTCODE_BEFORE_CITY_COUNTRIES.has(code) && normalizeComparable(state) !== normalizeComparable(city)
-    ? state
+    : line(regionState, postcode);
+  const stateLine = POSTCODE_BEFORE_CITY_COUNTRIES.has(code) && !stateRepeatsLocality
+    ? regionState
     : '';
   const lines = [
     organization,
