@@ -1,6 +1,6 @@
 # AGID Data License Index
 
-Last updated: 2026-06-17
+Last updated: 2026-09-24
 
 This file is the top-level entry point for AGID data-license handling. It
 separates software licensing from geographic, postal, map, trade, carrier,
@@ -28,6 +28,19 @@ front matter. Third-party data is not automatically covered by those licenses.
 | Space agency and Earth-observation datasets | Preserve mission, product, and provider terms; do not bundle uncertain data as redistributable. |
 | Trade, tariff, customs, and carrier data | Keep terms and allowed-use metadata separate from AGID software. |
 | Commercial or restricted sources | Do not bundle into public data packs unless redistribution is explicitly allowed. |
+
+## Address OSS Stack
+
+The operational catalog is defined in
+'src/lib/openSourceAddressStack.ts' and explained in
+'docs/open-source-address-stack.md'.
+
+| Component | Handling rule |
+| --- | --- |
+| libpostal | MIT software; keep model and training-data provenance separate. Use only through the loopback-only sidecar for private address text. |
+| Photon | Apache-2.0 software; preserve ODbL attribution and obligations for OSM-derived indexes. |
+| Pelias | MIT software and an optional self-hosted geocoder; record every imported dataset license independently. |
+| Overture Addresses | Treat as a versioned, source-specific, license-gated dataset. Do not treat alpha address IDs as stable AGIDs. |
 
 ## Required Manifest Fields
 

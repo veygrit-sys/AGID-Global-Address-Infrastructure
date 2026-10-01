@@ -2,9 +2,14 @@
 import {
   AppWindow,
   Bookmark,
+  ChevronDown,
+  ExternalLink,
+  Github,
   Home as HomeIcon,
   type LucideIcon,
+  MessageCircle,
   Plus,
+  Scale,
   ShieldCheck,
   X,
 } from 'lucide-react';
@@ -13,8 +18,6 @@ import React from 'react';
 import {
   getAgidAppSurfaces,
   getAppSurfaceCopy,
-  getAppSurfaceStatusLabel,
-  getSideMenuPrimaryAppSurfaces,
   isAppSurfaceActive,
   type AppSurfaceDefinition,
 } from '../lib/appNavigation';
@@ -27,11 +30,12 @@ interface SideMenuProps {
   setShowSaved: (show: boolean) => void;
   setAoidModeForced: (forced: boolean) => void;
   setShowAddressRegistration: (show: boolean) => void;
+  openLicenses: () => void;
   appLanguage: string;
 }
 
 type SavedTab = 'agid' | 'aoid';
-type MenuActionTone = 'add' | 'agid' | 'aoid';
+type MenuActionTone = 'add' | 'agid' | 'aoid' | 'oss';
 
 type MenuActionButtonProps = {
   ariaLabel: string;
@@ -65,27 +69,36 @@ const MENU_ACTION_STYLES: Record<
   }
 > = {
   add: {
-    button: 'border-emerald-200 bg-emerald-600 text-white hover:bg-emerald-500',
-    description: 'text-emerald-50',
-    icon: 'border-white/30 bg-white/15',
-    label: '',
+    button: 'text-emerald-700 hover:bg-emerald-50',
+    description: 'text-slate-500',
+    icon: 'text-emerald-600',
+    label: 'text-slate-900',
     status: '',
   },
   agid: {
-    button: 'border-blue-200 bg-blue-50 hover:border-blue-300',
+    button: 'hover:bg-slate-50',
     description: 'text-slate-500',
-    icon: 'border-blue-200 bg-blue-100 text-blue-700',
+    icon: 'text-blue-700',
     label: 'text-slate-900',
     status: 'bg-blue-100 text-blue-700',
   },
   aoid: {
-    button: 'border-emerald-200 bg-emerald-50 hover:border-emerald-300',
+    button: 'hover:bg-slate-50',
     description: 'text-slate-500',
-    icon: 'border-emerald-200 bg-emerald-100 text-emerald-700',
+    icon: 'text-emerald-700',
     label: 'text-slate-900',
     status: 'bg-emerald-100 text-emerald-700',
   },
+  oss: {
+    button: 'hover:bg-violet-50',
+    description: 'text-slate-500',
+    icon: 'text-violet-700',
+    label: 'text-slate-900',
+    status: '',
+  },
 };
+
+const AGID_REPOSITORY_URL = 'https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure';
 
 function MenuActionButton({
   ariaLabel,
@@ -107,13 +120,13 @@ function MenuActionButton({
       title={title}
       aria-label={ariaLabel}
       className={cn(
-        'flex min-h-[52px] w-full items-center gap-2.5 rounded-xl border px-3 py-2 text-left shadow-sm transition-all',
+        'flex min-h-[52px] w-full items-center gap-2.5 px-3 py-2 text-left transition-colors',
         styles.button,
       )}
     >
       <span
         className={cn(
-          'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border',
+          'flex h-8 w-8 shrink-0 items-center justify-center',
           styles.icon,
         )}
       >
@@ -159,19 +172,19 @@ function AppSurfaceMenuButton({
       title={`${copy.label} - ${copy.description}`}
       aria-label={`${copy.label}. ${copy.description}`}
       className={cn(
-        'flex min-h-[52px] w-full items-center gap-2.5 rounded-xl border bg-white px-3 py-2 text-left transition-all',
+        'flex min-h-[52px] w-full items-center gap-2.5 px-3 py-2 text-left transition-colors',
         active
-          ? 'border-blue-200 bg-blue-50 shadow-sm'
-          : 'border-slate-200/70 hover:border-slate-300 hover:bg-slate-50',
-        disabled && 'cursor-not-allowed opacity-55 hover:border-slate-200/70 hover:bg-white',
+          ? 'bg-blue-50'
+          : 'hover:bg-slate-50',
+        disabled && 'cursor-not-allowed opacity-55 hover:bg-transparent',
       )}
     >
       <span
         className={cn(
-          'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border',
+          'flex h-8 w-8 shrink-0 items-center justify-center',
           active
-            ? 'border-blue-200 bg-blue-100 text-blue-700'
-            : 'border-slate-200 bg-slate-50 text-slate-500',
+            ? 'text-blue-700'
+            : 'text-slate-500',
         )}
       >
         <SurfaceIcon className="h-4 w-4" aria-hidden="true" />
@@ -184,16 +197,42 @@ function AppSurfaceMenuButton({
           {copy.description}
         </span>
       </span>
-      <span
-        className={cn(
-          'rounded-full px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.12em]',
-          surface.status === 'ready' && 'bg-emerald-50 text-emerald-700',
-          surface.status === 'partial' && 'bg-amber-50 text-amber-700',
-        )}
-      >
-        {getAppSurfaceStatusLabel(surface.status, appLanguage)}
-      </span>
     </motion.button>
+  );
+}
+
+function OpenSourceLink({
+  description,
+  href,
+  icon: Icon,
+  label,
+}: {
+  description: string;
+  href: string;
+  icon: LucideIcon;
+  label: string;
+}) {
+  return (
+    <motion.a
+      whileHover={{ y: -1 }}
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="flex min-h-[52px] w-full items-center gap-2.5 px-3 py-2 text-left transition-colors hover:bg-violet-50"
+      title={`${label} - ${description}`}
+      aria-label={`${label}. ${description}`}
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center text-violet-700">
+        <Icon className="h-4 w-4" aria-hidden="true" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[13px] font-black text-slate-900">{label}</span>
+        <span className="mt-0.5 block truncate text-[10px] font-semibold text-slate-500">
+          {description}
+        </span>
+      </span>
+      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden="true" />
+    </motion.a>
   );
 }
 
@@ -204,13 +243,14 @@ export const SideMenu: React.FC<SideMenuProps> = ({
   setShowSaved,
   setAoidModeForced,
   setShowAddressRegistration,
+  openLicenses,
   appLanguage,
 }) => {
-  const primaryAppSurfaces = React.useMemo(
-    () => getSideMenuPrimaryAppSurfaces(getAgidAppSurfaces()),
+  const isJapanese = appLanguage.startsWith('ja');
+  const openSourceSurface = React.useMemo(
+    () => getAgidAppSurfaces().find(surface => surface.id === 'open-source-home'),
     [],
   );
-  const isJapanese = appLanguage.startsWith('ja');
 
   const openSavedLocations = (tab: SavedTab) => {
     setSavedTab(tab);
@@ -254,7 +294,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 350, mass: 1 }}
-            className="fixed top-0 left-0 bottom-0 w-80 max-w-[88vw] md:w-[22rem] bg-white/95 backdrop-blur-xl shadow-2xl z-[101] pointer-events-auto flex flex-col border-r border-white/20 md:rounded-r-[1.5rem]"
+            className="fixed top-0 left-0 bottom-0 w-72 max-w-[86vw] bg-white/95 backdrop-blur-xl shadow-2xl z-[101] pointer-events-auto flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label={isJapanese ? 'AGID統合ナビゲーション' : 'AGID integrated navigation'}
@@ -286,33 +326,25 @@ export const SideMenu: React.FC<SideMenuProps> = ({
             </div>
 
             <div className="flex-1 overflow-y-auto px-3 py-3 space-y-5 custom-scrollbar">
-              <section className="space-y-3">
+              <section className="space-y-3" aria-labelledby="side-menu-use">
                 <div className="space-y-1.5">
-                  <h3 className="truncate px-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                    {isJapanese ? 'メニュー' : 'Menu'}
+                  <h3 id="side-menu-use" className="truncate px-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    {isJapanese ? '利用する' : 'Use AGID'}
                   </h3>
                   <div className="space-y-1.5">
                     <MenuActionButton
                       tone="add"
                       icon={Plus}
                       onClick={openAddressRegistration}
-                      title={isJapanese ? '住所を追加する' : 'Add an address'}
+                      title={isJapanese ? '住所を保存・訂正する' : 'Save or correct an address'}
                       ariaLabel={isJapanese
-                        ? '追加する。住所を登録または修正します。'
-                        : 'Add. Register or correct an address.'}
-                      label={isJapanese ? '追加する' : 'Add'}
+                        ? '保存・訂正。住所をこの端末に保存または訂正します。'
+                        : 'Save or correct. Keep an address on this device or correct it.'}
+                      label={isJapanese ? '保存・訂正' : 'Save or correct'}
                       description={isJapanese
-                        ? '住所を登録・修正'
-                        : 'Register or correct an address'}
+                        ? 'この端末だけで住所を管理'
+                        : 'Manage addresses on this device'}
                     />
-                    {primaryAppSurfaces.map(surface => (
-                      <AppSurfaceMenuButton
-                        key={surface.id}
-                        surface={surface}
-                        appLanguage={appLanguage}
-                        onSelect={handleAppSurfaceClick}
-                      />
-                    ))}
                     <MenuActionButton
                       tone="agid"
                       icon={Bookmark}
@@ -325,7 +357,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({
                       description={isJapanese
                         ? '保存した公開ロケーションID'
                         : 'Saved public location IDs'}
-                      status={isJapanese ? '利用可' : 'Ready'}
                     />
                     <MenuActionButton
                       tone="aoid"
@@ -339,10 +370,58 @@ export const SideMenu: React.FC<SideMenuProps> = ({
                       description={isJapanese
                         ? '非公開のAddress Owner ID'
                         : 'Private Address Owner IDs'}
-                      status={isJapanese ? '利用可' : 'Ready'}
                     />
                   </div>
                 </div>
+              </section>
+
+              <section className="border-t border-slate-200 pt-2" aria-labelledby="side-menu-open-source">
+                <details className="group">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2.5 px-3 py-2 text-left text-slate-600 transition-colors hover:bg-violet-50 hover:text-violet-700">
+                    <span className="flex h-7 w-8 shrink-0 items-center justify-center">
+                      <Github className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <span id="side-menu-open-source" className="min-w-0 flex-1 text-[12px] font-black">
+                      {isJapanese ? 'オープンソース' : 'Open source'}
+                    </span>
+                    <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <div className="mt-1 space-y-1 border-l-2 border-violet-100 pl-1">
+                    {openSourceSurface && (
+                      <AppSurfaceMenuButton
+                        surface={openSourceSurface}
+                        appLanguage={appLanguage}
+                        onSelect={handleAppSurfaceClick}
+                      />
+                    )}
+                    <OpenSourceLink
+                      icon={Github}
+                      href={AGID_REPOSITORY_URL}
+                      label={isJapanese ? 'ソースコード' : 'Source code'}
+                      description={isJapanese ? 'GitHubでコードと履歴を確認' : 'Inspect code and history on GitHub'}
+                    />
+                    <OpenSourceLink
+                      icon={MessageCircle}
+                      href={`${AGID_REPOSITORY_URL}/issues`}
+                      label={isJapanese ? '改善に参加' : 'Contribute'}
+                      description={isJapanese ? '不具合や提案を共有' : 'Share bugs and proposals'}
+                    />
+                    <MenuActionButton
+                      tone="oss"
+                      icon={Scale}
+                      onClick={() => {
+                        openLicenses();
+                        onClose();
+                      }}
+                      title={isJapanese ? 'ライセンスとデータ出典を確認' : 'Review licenses and data sources'}
+                      ariaLabel={isJapanese
+                        ? 'ライセンス。ソフトウェアとデータの利用条件を確認します。'
+                        : 'Licenses. Review software and data usage terms.'}
+                      label={isJapanese ? 'ライセンスと出典' : 'Licenses & sources'}
+                      description={isJapanese ? 'MIT・データライセンス' : 'MIT and data licenses'}
+                    />
+                  </div>
+                </details>
               </section>
             </div>
           </motion.div>

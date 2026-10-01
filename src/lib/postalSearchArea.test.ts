@@ -5,6 +5,7 @@ import {
   POSTAL_SEARCH_AREA_FILL_LAYER_ID,
   POSTAL_SEARCH_AREA_OUTLINE_LAYER_ID,
   POSTAL_SEARCH_AREA_SOURCE_ID,
+  normalizePostalAreaQuery,
   createPostalAreaFeatureCollection,
   postalAreaBounds,
   resolvePostalAreaLookupCandidate,
@@ -57,6 +58,15 @@ const source = {
   digest,
 };
 const quality = { status: 'authoritative' as const, confidence: 1, accuracyMeters: 1 };
+
+test('direct postal search normalizes Japanese and international postal codes without a geocoder', () => {
+  assert.deepEqual(normalizePostalAreaQuery('jp', '〒１００−０００１'), { countryCode: 'JP', postalCode: '100-0001' });
+  assert.deepEqual(normalizePostalAreaQuery(' gb ', 'sw1a 1aa'), { countryCode: 'GB', postalCode: 'SW1A 1AA' });
+  assert.deepEqual(normalizePostalAreaQuery('US', '00501'), { countryCode: 'US', postalCode: '00501' });
+  for (const [country, code] of [['', '100-0001'], ['JP,US', '100'], ['JP', ''], ['JP', '東京都'], ['JP', '1'.repeat(65)]]) {
+    assert.equal(normalizePostalAreaQuery(country, code), null);
+  }
+});
 const validTime = { from: '2026-08-01T00:00:00.000Z', to: null };
 
 test('postal area lookup is attempted only when the query matches a result postcode', () => {

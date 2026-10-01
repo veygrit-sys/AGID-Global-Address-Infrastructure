@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const source = readFileSync(join(here, 'AddressRegistration.tsx'), 'utf8');
+const appSource = readFileSync(join(here, '..', 'App.tsx'), 'utf8');
 
 test('Address Registration header does not render the app language shortcut tabs', () => {
   assert.doesNotMatch(source, /App Language Toggle/);
@@ -20,6 +21,18 @@ test('Address Registration exposes an explicit AGID or AOID save mode', () => {
   assert.match(source, /onClick=\{\(\) => setIsAoidMode\(false\)\}/);
   assert.match(source, /onClick=\{\(\) => setIsAoidMode\(true\)\}/);
   assert.match(source, /\{isAoidMode \? t\('aoidTip'\) : t\('agidSaveTip'\)\}/);
+  assert.match(source, /addressRegistration: '住所を保存・訂正'/);
+  assert.match(source, /registerAddress: 'この端末に保存'/);
+  assert.match(source, /registerAsAoid: '非公開AOIDとして保存'/);
+  assert.match(source, /notPublished: '外部公開なし'/);
+  assert.match(source, /<LockKeyhole className="h-3 w-3"/);
+});
+
+test('address and AOID saves remain local instead of entering the sync queue', () => {
+  assert.doesNotMatch(appSource, /enqueueSyncQueueRecord\('aoid'/);
+  assert.doesNotMatch(appSource, /enqueueSyncQueueRecord\('registeredAddress'/);
+  assert.match(appSource, /AOID Saved Privately/);
+  assert.match(appSource, /Nothing was publicly registered/);
 });
 
 test('Address Registration opens as a full-screen surface instead of a centered modal', () => {
@@ -51,7 +64,7 @@ test('Address Registration defaults to a compact input-first layout with expanda
   assert.match(source, /field\.key === 'organization'[\s\S]*field\.key === 'street'[\s\S]*field\.key === 'postcode'[\s\S]*&& "col-span-2"/);
   assert.match(source, /rows=\{1\}/);
   assert.match(source, /className="h-9 w-full resize-none/);
-  assert.match(source, /className="h-9 w-full rounded-lg/);
+  assert.match(source, /className="h-10 w-full rounded-lg/);
   assert.match(source, /className="group flex h-9 w-full/);
   assert.match(source, /className="sticky bottom-2 z-10 flex justify-center sm:justify-end"/);
 });
@@ -174,6 +187,17 @@ test('Address Registration keeps feedback and privacy controls close to the addr
   assert.match(source, /t\('qrQualityMetadata'\)/);
 });
 
+test('Address Registration shows a live field-level diff while correcting an existing address', () => {
+  assert.match(source, /correctionBaselineRef/);
+  assert.match(source, /id="address-correction-diff"/);
+  assert.match(source, /liveCorrectionChanges\.map/);
+  assert.match(source, /data-correction-field=\{change\.field\}/);
+  assert.match(source, /t\('beforeChange'\)/);
+  assert.match(source, /t\('afterChange'\)/);
+  assert.match(source, /restoreCorrectionField\(change\.field\)/);
+  assert.match(source, /aria-live="polite"/);
+});
+
 test('address language tab clicks translate form fields automatically', () => {
   assert.match(source, /handleAddressLanguageTabClick/);
   assert.match(source, /translateRegistrationFormFields\(/);
@@ -201,7 +225,18 @@ test('postcode autofill and language tabs do not keep stale drafts', () => {
 test('Address Registration can prefill building names from reverse geocode details', () => {
   assert.match(source, /initialAddressDetails\?: any;/);
   assert.match(source, /initialAddressDetails\?\.address_analysis\?\.canonical/);
-  assert.match(source, /organization: details\.building \|\| details\.building_en \|\| details\.organization \|\| details\.poi \|\| prev\.organization/);
+  assert.match(source, /organization: details\.organization \|\| prev\.organization/);
+  assert.match(source, /building: details\.building \|\| details\.building_en \|\| details\.poi \|\| prev\.building/);
+  assert.match(source, /houseNumber: details\.house_number \|\| details\.houseNumber \|\| prev\.houseNumber/);
+  assert.match(source, /unit: details\.unit \|\| details\.room \|\| prev\.unit/);
+});
+
+test('Address Registration saves a Veygrit Address Wallet compatible form', () => {
+  assert.match(source, /buildVeygritAddressForm\(formData/);
+  assert.match(source, /data-veygrit-address-form=\{VEYGRIT_ADDRESS_FORM_VERSION\}/);
+  assert.match(source, /getVeygritAddressFieldBinding\(field\.key\)/);
+  assert.match(source, /data-veygrit-field=\{binding\.fieldKey\}/);
+  assert.match(source, /autoComplete=\{binding\.autoComplete\}/);
 });
 
 test('Address Registration uploads photos and PDFs for local address document autofill', () => {

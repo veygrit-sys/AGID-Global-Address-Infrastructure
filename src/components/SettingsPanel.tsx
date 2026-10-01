@@ -86,7 +86,7 @@ interface SettingsPanelProps {
   fetchQualityReport: () => void;
   registryStats: any;
   setShowResources: (v: boolean) => void;
-  setShowLicenses: (v: boolean) => void;
+  openLicenses: () => void;
   mapRef: React.MutableRefObject<maplibregl.Map | null>;
   jumpToAgid: (id: string) => void;
   externalAddressDataEnabled: boolean;
@@ -132,7 +132,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   setActiveLegalDoc,
   isQualityLoading,
   fetchQualityReport,
-  setShowLicenses,
+  openLicenses,
   mapRef,
   jumpToAgid,
   externalAddressDataEnabled,
@@ -1144,7 +1144,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                          <ChevronRight className="w-4 h-4 text-slate-300" />
                       </button>
                       <button
-                        onClick={() => setShowLicenses(true)}
+                        onClick={openLicenses}
                         className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between hover:bg-slate-100 transition-all"
                       >
                          <span className="text-xs font-black uppercase tracking-widest text-slate-700">{t('open_source_licenses')}</span>

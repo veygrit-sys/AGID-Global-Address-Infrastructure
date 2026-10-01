@@ -62,3 +62,20 @@ test('locale region can choose an overview when timezone is not specific', () =>
   assert.equal(view.source, 'regional');
   assert.equal(view.regionCode, 'US');
 });
+
+test('unknown region opens a world overview without selecting Mali', () => {
+  for (const width of [390, 800, 1280]) {
+    const view = resolveInitialMapView({ search: '', width, timeZone: 'UTC', languages: [], detailZoom: 19.5 });
+    assert.equal(view.source, 'world');
+    assert.equal(view.lat, 0);
+    assert.equal(view.lng, 0);
+    assert.ok(view.zoom <= 1);
+    assert.equal(view.shouldSelectInitialPoint, false);
+  }
+});
+
+test('bare Japanese locale opens Japan even when timezone is UTC', () => {
+  const view = resolveInitialMapView({ search: '', width: 1280, timeZone: 'UTC', languages: ['ja'], detailZoom: 19.5 });
+  assert.equal(view.regionCode, 'JP');
+  assert.equal(view.shouldSelectInitialPoint, false);
+});

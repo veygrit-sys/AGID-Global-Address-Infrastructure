@@ -12,12 +12,14 @@ import {
 } from './disputedTerritoryClaims';
 import type { TerritoryClaimOption } from './disputedTerritoryClaims';
 
-test('Japanese territorial claim areas expose only the Japanese display view', () => {
+test('Japanese territorial areas expose only the normal Japan display view', () => {
   for (const code of ['JP_TK', 'JP_SK', 'JP_NT']) {
     const options = getTerritoryClaimOptions(code);
     assert.equal(options.length, 1, `${code} should not expose other country display views`);
     assert.equal(options[0].id, 'jp');
-    assert.equal(options[0].label, '日本の主張');
+    assert.equal(options[0].label, '日本');
+    assert.equal(options[0].status, 'country');
+    assert.match(options[0].sourceUrl || '', /^https:\/\/www\.mofa\.go\.jp\//);
     assert.equal(isJapaneseClaimTerritory(code), true);
   }
 });
@@ -35,7 +37,7 @@ test('Japanese territorial claim areas always order the Japanese claim first for
     },
     {
       id: 'jp',
-      label: '日本の主張',
+      label: '日本',
       shortLabel: '日本',
       countryLine: 'Japan',
       status: 'claim',
@@ -95,7 +97,7 @@ test('display policy never exposes non-Japanese views for Japanese territorial c
     },
     {
       id: 'jp',
-      label: '日本の主張',
+      label: '日本',
       shortLabel: '日本',
       countryLine: 'Japan',
       status: 'claim',
@@ -107,6 +109,22 @@ test('display policy never exposes non-Japanese views for Japanese territorial c
   const ordered = orderTerritoryClaimOptionsByPolicy('JP_SK', syntheticOptions, 'administration-first');
   assert.equal(ordered[0].id, 'jp');
   assert.equal(getTerritoryClaimOptions('JP_SK', 'administration-first').length, 1);
+});
+
+test('Japan display uses Japanese territory names without logistics or entry warnings', () => {
+  const expected = new Map([
+    ['JP_NT', /択捉島、国後島、色丹島、歯舞群島/],
+    ['JP_TK', /竹島/],
+    ['JP_SK', /尖閣諸島/],
+  ]);
+
+  for (const [code, namePattern] of expected) {
+    const [option] = getTerritoryClaimOptions(code);
+    assert.equal(option.label, '日本');
+    assert.equal(option.countryLine, 'Japan');
+    assert.match(option.note, namePattern);
+    assert.equal(option.postalGuidance, '');
+  }
 });
 
 test('territory claim key can be resolved from AGID region names and codes', () => {

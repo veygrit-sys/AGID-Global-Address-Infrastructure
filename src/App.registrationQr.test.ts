@@ -19,7 +19,8 @@ test('App persists regular address registrations and links them to generated QR 
   assert.match(source, /import type \{ RegisteredAddressRecord \} from '\.\/lib\/registeredAddressQr';/);
   assert.doesNotMatch(source, /import \{[\s\S]*buildRegisteredAddressQrPayload[\s\S]*\} from '\.\/lib\/registeredAddressQr';/);
   assert.match(source, /await import\('\.\/lib\/registeredAddressQr'\)/);
-  assert.match(source, /enqueueSyncQueueRecord\('registeredAddress'/);
+  assert.doesNotMatch(source, /enqueueSyncQueueRecord\('registeredAddress'/);
+  assert.doesNotMatch(source, /enqueueSyncQueueRecord\('aoid'/);
   assert.match(source, /enqueueSyncQueueRecord\('savedAgid'/);
   assert.match(source, /enqueueSyncQueueRecord\('savedQr'/);
   assert.match(source, /setRegisteredAddresses/);

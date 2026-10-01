@@ -3,9 +3,11 @@ export type TerritoryClaimOption = {
   label: string;
   shortLabel: string;
   countryLine: string;
-  status: 'claim' | 'administration' | 'neutral' | 'unclaimed' | 'logistics-route';
+  status: 'country' | 'claim' | 'administration' | 'neutral' | 'unclaimed' | 'logistics-route';
   note: string;
   postalGuidance: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
 };
 
 export type TerritoryClaimDisplayPolicy =
@@ -54,14 +56,15 @@ type TerritoryClaimLookupInput = {
 
 const JAPANESE_CLAIM_TERRITORY_CODES = new Set(['JP_TK', 'JP_SK', 'JP_NT']);
 
-const japanClaim = (overrides: Partial<TerritoryClaimOption> = {}): TerritoryClaimOption => ({
+const japanTerritory = (overrides: Partial<TerritoryClaimOption> = {}): TerritoryClaimOption => ({
   id: 'jp',
-  label: '日本の主張',
+  label: '日本',
   shortLabel: '日本',
   countryLine: 'Japan',
-  status: 'claim',
-  note: 'Show the Japanese territorial view first while keeping alternate views available.',
-  postalGuidance: 'Use AGID, coordinates, Plus Code, and available local gazetteer evidence before assuming a postal route.',
+  status: 'country',
+  note: '日本の領土として表示します。',
+  postalGuidance: '',
+  sourceLabel: '外務省「日本の領土をめぐる情勢」',
   ...overrides,
 });
 
@@ -96,18 +99,24 @@ const territoryClaimsByCode: Record<string, TerritoryClaimOption[]> = {
     },
   ],
   JP_TK: [
-    japanClaim({
-      note: 'Japanese view: Takeshima. Do not show other country display buttons for Japanese territorial claim areas.',
+    japanTerritory({
+      note: '竹島を日本の領土として表示します。他国名の切替表示は行いません。',
+      sourceLabel: '外務省「竹島」',
+      sourceUrl: 'https://www.mofa.go.jp/mofaj/area/takeshima/index.html',
     }),
   ],
   JP_SK: [
-    japanClaim({
-      note: 'Japanese view: Senkaku Islands. Do not show other country display buttons for Japanese territorial claim areas.',
+    japanTerritory({
+      note: '尖閣諸島を日本の領土として表示します。他国名の切替表示は行いません。',
+      sourceLabel: '外務省「尖閣諸島についての基本見解」',
+      sourceUrl: 'https://www.mofa.go.jp/mofaj/area/senkaku/kenkai.html',
     }),
   ],
   JP_NT: [
-    japanClaim({
-      note: 'Japanese view: Northern Territories. Do not show other country display buttons for Japanese territorial claim areas.',
+    japanTerritory({
+      note: '択捉島、国後島、色丹島、歯舞群島を日本の領土として表示します。他国名の切替表示は行いません。',
+      sourceLabel: '外務省「北方領土問題に関するQ&A」',
+      sourceUrl: 'https://www.mofa.go.jp/mofaj/area/hoppo/mondai_qa.html',
     }),
   ],
   EH: [
@@ -410,6 +419,7 @@ function territoryClaimPolicyRank(
   status: TerritoryClaimOption['status'],
 ) {
   const neutralRank = status === 'neutral' || status === 'unclaimed';
+  if (status === 'country') return 0;
   if (policy === 'neutral-first') {
     if (neutralRank) return 0;
     if (status === 'administration') return 1;

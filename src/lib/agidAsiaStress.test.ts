@@ -29,7 +29,7 @@ const ASIA_AGID_STRESS_POINTS: readonly AsiaStressPoint[] = [
   { code: "UZ", name: "Tashkent", lat: 41.2995, lon: 69.2401 },
   { code: "JP_NT", name: "Northern Territories", lat: 44.5, lon: 146.8, expectedPrefix: "JP" },
   { code: "JP_SK", name: "Senkaku Islands", lat: 25.75, lon: 123.55, expectedPrefix: "JP" },
-  { code: "JP_TK", name: "Takeshima / Dokdo", lat: 37.24, lon: 131.86, expectedPrefix: "JP" },
+  { code: "JP_TK", name: "Takeshima", lat: 37.24, lon: 131.86, expectedPrefix: "JP" },
   { code: "KASH", name: "Kashmir", lat: 34.15, lon: 75.25 },
   { code: "SCSD", name: "South China Sea Islands", lat: 11, lon: 114.5 },
   { code: "JP", name: "Tokyo Station", lat: 35.6812, lon: 139.7671 },

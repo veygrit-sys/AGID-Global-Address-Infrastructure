@@ -6,6 +6,7 @@ import {
 W3W_STYLE_GRID_MIN_ZOOM,
 getCloseDistanceGridFade,
 getEffectiveGridOpacityLevel,
+getGridOpacityMultiplier,
 normalizeLongitude,
 shouldShowDisplayGrid,
 } from '../lib/gridDisplay';
@@ -21,13 +22,16 @@ type GridRenderFrame,
 import {
 getAgidGridCellFillPaint,
 getAgidGridFocusFillPaint,
-getAgidGridLinePaint,
+getAgidGridLineStyle,
 getAgidHoverCellFillPaint,
 getAgidHoverCellOutlinePaint,
 getAgidSelectionFillPaint,
+getAgidSelectionHaloPaint,
+getAgidSelectionOutlinePaint,
 } from '../lib/gridPaint';
 import {
 getMapViewportPoints,
+getGridPrefetchBounds,
 getPaddedGridBounds,
 getVisibleGridBounds,
 shouldHidePartialGridForViewport,
@@ -145,37 +149,35 @@ export function useAgidGridLayer({
       } : { type: 'FeatureCollection', features: [] };
 
       ensureSourceAndLayer(selectedSourceId, 'fill', selectedData, getAgidSelectionFillPaint(), {}, undefined, `${sourceId}-layer`);
-      ensureSourceAndLayer(`${selectedSourceId}-outline`, 'line', (showHighlight && renderedSelectedPolygon) ? {
+      const selectedOutlineData = (showHighlight && renderedSelectedPolygon) ? {
         type: 'Feature',
         geometry: { type: 'LineString', coordinates: renderedSelectedPolygon },
         properties: {},
-      } : { type: 'FeatureCollection', features: [] }, {
-        'line-color': '#dc2626',
-        'line-width': 3,
-        'line-opacity': 0.9,
-      }, {}, undefined, `${sourceId}-layer`);
+      } : { type: 'FeatureCollection', features: [] };
+      ensureSourceAndLayer(`${selectedSourceId}-halo`, 'line', selectedOutlineData, getAgidSelectionHaloPaint(), {}, undefined, `${sourceId}-layer`);
+      ensureSourceAndLayer(`${selectedSourceId}-outline`, 'line', selectedOutlineData, getAgidSelectionOutlinePaint(), {}, undefined, `${sourceId}-layer`);
 
       const selectionPointData: any = (showHighlight && selectedResult) ? {
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [selectedResult.lon, selectedResult.lat] },
-        properties: { title: selectedResult.id },
+        properties: { title: `AGID ${selectedResult.id}` },
       } : { type: 'FeatureCollection', features: [] };
 
       ensureSourceAndLayer('selection-point-glow', 'circle', selectionPointData, {
         'circle-radius': ['interpolate', ['linear'], ['zoom'], 15, 4, 20, 12],
-        'circle-color': '#ef4444',
-        'circle-opacity': 0.5,
+        'circle-color': '#0f172a',
+        'circle-opacity': 0,
         'circle-blur': 0.8,
       });
 
       ensureSourceAndLayer('selection-label', 'symbol', selectionPointData, {
-        'text-color': '#dc2626',
+        'text-color': '#0f172a',
         'text-halo-color': 'rgba(255, 255, 255, 0.9)',
-        'text-halo-width': 2,
+        'text-halo-width': 2.5,
       }, {
         'text-field': ['get', 'title'],
         'text-font': ['Open Sans Bold'],
-        'text-size': ['interpolate', ['linear'], ['zoom'], 15, 9, 18, 12],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 15, 10, 18, 13],
         'text-offset': [0, -2],
         'text-anchor': 'bottom',
         'text-letter-spacing': 0.1,
@@ -183,8 +185,9 @@ export function useAgidGridLayer({
     };
 
     const visibleBounds = getVisibleGridBounds(viewportPoints);
+    const prefetchBounds = getGridPrefetchBounds(viewportPoints, mapPitch);
     const renderBounds = getPaddedGridBounds(viewportPoints, mapPitch);
-    const shouldRefreshGrid = shouldRefreshGridForViewport(refreshGrid, renderedGridCellsRef.current, visibleBounds, pendingGridBoundsRef.current);
+    const shouldRefreshGrid = shouldRefreshGridForViewport(refreshGrid, renderedGridCellsRef.current, prefetchBounds, pendingGridBoundsRef.current);
     const highlightFrame = getGridHighlightFrame(currentGridFrame, renderedGridFrameRef.current, refreshGrid);
 
     if (!shouldShow) {
@@ -208,14 +211,14 @@ export function useAgidGridLayer({
       syncHighlightLayers(highlightFrame);
     }
 
-    const opacityMultiplier = (effectiveGridOpacityLevel / 3) * getCloseDistanceGridFade(gridZoom);
+    const opacityMultiplier = getGridOpacityMultiplier(effectiveGridOpacityLevel) * getCloseDistanceGridFade(gridZoom);
     const safeOpacityMultiplier = Number.isFinite(opacityMultiplier) ? opacityMultiplier : 1;
-    const gridLinePaint = getAgidGridLinePaint({
+    const gridLinePaint = getAgidGridLineStyle({
       isSatelliteOrDark: isSatellite || isDark,
       isCloseDistanceGrid: gridZoom >= W3W_STYLE_GRID_MIN_ZOOM,
+      zoom: gridZoom,
+      opacityMultiplier: safeOpacityMultiplier,
     });
-    const dynamicGridOpacity = ['interpolate', ['linear'], ['zoom'], 1, 0.3 * safeOpacityMultiplier, 8, 0.45 * safeOpacityMultiplier, 14, 0.6 * safeOpacityMultiplier, 18, 0.82 * safeOpacityMultiplier, 20, 0.92 * safeOpacityMultiplier];
-    const dynamicGridWidth = ['interpolate', ['linear'], ['zoom'], 1, 0.2, 10, 0.45, 15, 0.75, 18, 1.15, 20, 1.8];
 
     if (!gridWorker.current) return;
 
@@ -267,8 +270,9 @@ export function useAgidGridLayer({
         }],
       }, {
         ...gridLinePaint,
-        'line-width': dynamicGridWidth,
-        'line-opacity': dynamicGridOpacity,
+      }, {
+        'line-join': 'round',
+        'line-cap': 'round',
       });
 
       const cellsData = { type: 'FeatureCollection', features: gridCells };

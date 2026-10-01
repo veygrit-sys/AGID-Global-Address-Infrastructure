@@ -62,7 +62,7 @@ test('RootApp mounts the common field action bar across route surfaces', () => {
   assert.match(rootSource, /shouldShowAgidFieldActionBar/);
   assert.match(rootSource, /agid:navigation/);
   assert.match(designRulesSource, /AGID_ROUTE_ACTION_BAR_POLICY/);
-  assert.match(designRulesSource, /map: 'compact-current-location'/);
+  assert.match(designRulesSource, /map: 'hidden'/);
   assert.match(designRulesSource, /'open-source': 'hidden'/);
 });
 

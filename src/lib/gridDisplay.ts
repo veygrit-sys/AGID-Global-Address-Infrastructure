@@ -3,7 +3,7 @@ export const AGID_BASE_CELL_METERS = 4.4;
 export const W3W_STYLE_GRID_FADE_START_ZOOM = 17.25;
 export const W3W_STYLE_GRID_FULL_ZOOM = 18.25;
 export const W3W_STYLE_GRID_MIN_ZOOM = W3W_STYLE_GRID_FADE_START_ZOOM;
-export const W3W_STYLE_GRID_OPACITY_FLOOR = 3;
+export const W3W_STYLE_GRID_DEFAULT_OPACITY_LEVEL = 3;
 export const WEB_MERCATOR_RADIUS_METERS = EARTH_METERS_PER_DEGREE * 180 / Math.PI;
 export const MAX_WEB_MERCATOR_LAT = 85.05112878;
 export const ABSOLUTE_GRID_ANCHOR_VERSION = 'agid-grid-anchors-v1';
@@ -174,7 +174,8 @@ export function getDisplayCellSizeMeters(zoom: number) {
 export function getCloseDistanceGridFade(zoom: number) {
   if (zoom <= W3W_STYLE_GRID_FADE_START_ZOOM) return 0;
   if (zoom >= W3W_STYLE_GRID_FULL_ZOOM) return 1;
-  return (zoom - W3W_STYLE_GRID_FADE_START_ZOOM) / (W3W_STYLE_GRID_FULL_ZOOM - W3W_STYLE_GRID_FADE_START_ZOOM);
+  const progress = (zoom - W3W_STYLE_GRID_FADE_START_ZOOM) / (W3W_STYLE_GRID_FULL_ZOOM - W3W_STYLE_GRID_FADE_START_ZOOM);
+  return progress * progress * (3 - 2 * progress);
 }
 
 export function shouldShowDisplayGrid({ zoom, isGridVisible, gridOpacityLevel }: GridVisibilityState) {
@@ -185,10 +186,16 @@ export function shouldShowDisplayGrid({ zoom, isGridVisible, gridOpacityLevel }:
 
 export function getEffectiveGridOpacityLevel(state: GridVisibilityState) {
   if (!shouldShowDisplayGrid(state)) return 0;
-  const requestedOpacity = state.isGridVisible && Number.isFinite(state.gridOpacityLevel)
-    ? Math.max(0, Math.min(5, state.gridOpacityLevel))
-    : 0;
-  return Math.max(requestedOpacity, W3W_STYLE_GRID_OPACITY_FLOOR);
+  if (!Number.isFinite(state.gridOpacityLevel)) return W3W_STYLE_GRID_DEFAULT_OPACITY_LEVEL;
+  return Math.max(0, Math.min(5, state.gridOpacityLevel));
+}
+
+export function getGridOpacityMultiplier(opacityLevel: number) {
+  const multipliers = [0, 0.55, 0.75, 1, 1.2, 1.4] as const;
+  const normalizedLevel = Number.isFinite(opacityLevel)
+    ? Math.max(0, Math.min(5, Math.round(opacityLevel)))
+    : W3W_STYLE_GRID_DEFAULT_OPACITY_LEVEL;
+  return multipliers[normalizedLevel];
 }
 
 export type RegularMetricGridMetrics = {

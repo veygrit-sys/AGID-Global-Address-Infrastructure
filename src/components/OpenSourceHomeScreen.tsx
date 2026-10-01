@@ -3,19 +3,20 @@ import {
   Beaker,
   BookOpen,
   Box,
-  Building2,
   Code2,
   Download,
   Github,
-  HelpCircle,
   Map,
+  Plus,
   Settings,
   ShieldCheck,
   Terminal,
 } from 'lucide-react';
 import { useState } from 'react';
+import { OPEN_SOURCE_ADDRESS_STACK } from '../lib/openSourceAddressStack';
+import { OpenSourceHeroMap } from './OpenSourceHeroMap';
 
-const GITHUB_REPO_URL = 'https://github.com/dawnportinfo-design/Adreess-Grid-ID';
+const GITHUB_REPO_URL = 'https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure';
 const GITHUB_SOURCE_ARCHIVE_URL = `${GITHUB_REPO_URL}/archive/refs/heads/main.zip`;
 const DOWNLOAD_SDK_PACK_FILE = 'agid-sdk-pack.zip';
 const DOWNLOAD_SPEC_PACK_FILE = 'agid-spec-conformance.zip';
@@ -38,75 +39,70 @@ const heroCopy = {
     repository: 'Repository',
     languageToggleLabel: 'Hero language',
     localFirstShell: {
-      title: 'Local-first address infrastructure.',
-      text: 'No raw address by default. AGID/AOID, private QR, consent, revocation, receipts, and field handoff stay local-first before any connector is allowed.',
+      label: 'Local-first',
+      title: 'A local-first address workspace.',
+      text: 'Saved addresses remain on this device unless the user explicitly exports a QR or another file.',
     },
     menu: {
       map: 'Map',
       aoid: 'AOID',
-      posField: 'POS & Field',
       research: 'Research',
       developers: 'Developers',
     },
-    h1: 'A Global Address ID for Every Place',
-    lead: 'Open infrastructure for address IDs, private address QR, and machine-readable delivery handoff across countries, islands, rural areas, and places without reliable postal codes.',
+    h1: 'Open-source tools for working with addresses',
+    lead: 'Explore the AGID map and grid, country-aware address forms, postal-code search, and local address and QR workflows implemented in this repository.',
     visual: {
-      label: 'Global address layer',
-      title: 'One protocol, many address systems',
-      text: 'AGID links country formats, grids, aliases, and receipts without making raw address data the default public interface.',
-      ariaLabel: 'AGID global coverage visual',
+      label: 'Repository-backed features',
+      title: 'Country data and address tools in one app',
+      text: 'The current build combines country address-format files, grid display, postal search, and local saved-address flows. Coverage quality depends on available open data.',
+      ariaLabel: 'AGID country data visual',
       points: {
-        japan: { code: 'JP-13', label: 'Japan' },
-        somalia: { code: 'AGID-SO-00123', label: 'Somalia' },
-        tuvalu: { code: 'TO-ISL-004', label: 'Tuvalu' },
-        virtualTown: { code: 'AGID-VT-00041', label: 'Virtual Town' },
+        japan: { code: 'JP', label: 'Japan format' },
+        somalia: { code: 'SO', label: 'Somalia format' },
+        tuvalu: { code: 'TV', label: 'Tuvalu format' },
       },
     },
     primaryActions: {
-      useAgid: 'Use AGID',
-      buildWithAgid: 'Build with AGID',
-      readResearch: 'Read Research',
+      useAgid: 'Open Map',
+      buildWithAgid: 'Developer Tools',
+      readResearch: 'Research Notes',
     },
     trustItems: [
-      'No raw address by default',
-      'Local-first',
-      'Open data compatible',
-      'ZK-ready',
-      'Works without blockchain',
+      'Public source and tests',
+      'Local address storage',
+      'Country-format data',
+      'Postal-code tools',
+      'No blockchain required',
     ],
     entryCards: {
-      register: {
-        label: 'Register Address',
-        text: 'Create a private address QR, alias, receipt, and country-format record without exposing raw address by default.',
+      address: {
+        label: 'Save an address locally',
+        text: 'Use country-specific fields and save the address on this device. Export a QR only when you choose to share it.',
       },
-      aoid: {
-        label: 'AOID',
-        text: 'Manage private Address Owner IDs and register location identities without exposing raw address data.',
+      map: {
+        label: 'Explore the map and grid',
+        text: 'Inspect the grid, search by postal code, and view AGID details using the location data available in the app.',
       },
-      ops: {
-        label: 'POS & Field Ops',
-        text: 'Scan destination QR, decide, hand off, receipt, queue offline work, and report safely.',
+      source: {
+        label: 'Review source and tests',
+        text: 'Check the implementation, data sources, licenses, and automated tests in the public GitHub repository.',
       },
     },
     workspaceLanes: {
-      field: {
-        label: 'Field',
-        text: 'POS, field handoff, hotel, locker, and drone flows for teams that touch the delivery handoff.',
-      },
       operations: {
-        label: 'Operations',
-        text: 'Redacted review, audit, issuer, registry, sync, and launch readiness for operators.',
+        label: 'Review tools',
+        text: 'Inspect local dashboards, audit views, registry screens, and readiness checks included in the repository.',
       },
       research: {
-        label: 'Research & Design',
-        text: 'Protocol papers, postal zones, simulations, evidence, and release design work.',
+        label: 'Research & data',
+        text: 'Browse protocol notes, postal-zone tools, evidence models, and source-backed country data.',
       },
     },
     sdk: {
       github: 'GitHub',
-      title: 'Start with the SDK.',
-      text: 'Resolve address IDs, create private QR, and verify machine handoff without putting raw address data into examples.',
-      install: 'Install',
+      title: 'Run and inspect the repository.',
+      text: 'Install the repository dependencies, start the local app, and run the checks included in package.json. Downloadable SDK and conformance packs are available below.',
+      install: 'Local setup',
     },
     resources: {
       setup: 'Setup Guide',
@@ -116,42 +112,6 @@ const heroCopy = {
       conformance: 'Conformance Tests',
       dashboard: 'Dashboard',
       postalZones: 'Postal Zones',
-    },
-    research: {
-      label: 'Protocol research',
-      link: 'Research',
-      title: 'Turn the paper trail into buildable protocol decisions.',
-      signals: {
-        amt: {
-          label: 'Address Mapping Theory',
-          text: 'Grid math, AOID, and address rendering rules stay implementation-ready.',
-        },
-        forge: {
-          label: 'Postal Zone Models',
-          text: 'Country packs, split/merge rules, and quality gates are reviewed together.',
-        },
-        gate: {
-          label: 'Release Evidence',
-          text: 'Security, privacy, SDK parity, and conformance checks are tracked before release.',
-        },
-      },
-      papers: {
-        amt: {
-          title: 'Address Morphism Theory',
-          label: 'Core paper',
-          text: 'Address equivalence, mapping invariants, AGID/AOID relation, and multilingual rendering.',
-        },
-        application: {
-          title: 'AGID / AOID Application Paper',
-          label: 'Applied model',
-          text: 'Grid generation, resolver conformance, secure QR, field handoff, and country packs.',
-        },
-        zk: {
-          title: 'Zero-Knowledge Address Predicates',
-          label: 'Privacy paper',
-          text: 'No-raw-address proofs, nullifier flow, registry gates, and release safety checks.',
-        },
-      },
     },
     downloadSetup: {
       label: 'Download & setup',
@@ -226,32 +186,30 @@ const heroCopy = {
       },
     },
     footer: {
-      description: 'MIT licensed core. Local-first resolver. No raw address release gates.',
-      subtext: 'Open address infrastructure for people, field teams, operators, and developers.',
+      description: 'The application code is MIT-licensed. Individual data sources keep their own licenses. Demo and research screens are not production services.',
+      subtext: 'Use the map and local tools, inspect the source, or review the project information.',
+      navigationLabel: 'Open-source page links',
       groups: {
-        apps: 'All apps',
-        developers: 'Developers',
-        research: 'Research',
-        settings: 'Settings & Help',
+        apps: 'Available tools',
+        developers: 'Build & source',
+        research: 'Data & research',
+        settings: 'Settings',
       },
       links: {
-        aoid: 'AOID',
-        pos: 'POS',
-        hotel: 'Hotel',
-        opera: 'OPERA',
-        field: 'Field',
-        locker: 'Locker',
-        drone: 'Drone',
-        dashboard: 'Dashboard',
-        developer: 'Developer Console',
-        sdk: 'SDK',
+        aoid: 'AOID (local)',
+        hotel: 'Hotel demo',
+        opera: 'OPERA demo',
+        field: 'Field demo',
+        locker: 'Locker demo',
+        drone: 'Drone demo',
+        dashboard: 'Review dashboard',
+        developer: 'Developer tools',
+        sdk: 'SDK & downloads',
         github: 'GitHub',
-        research: 'Research',
-        postalZones: 'Postal Zones',
-        evidence: 'Evidence Vault',
-        settings: 'Settings',
-        help: 'Help',
-        security: 'Security Gates',
+        research: 'Research notes',
+        postalZones: 'Postal-zone tools',
+        evidence: 'Evidence models',
+        settings: 'App settings',
       },
     },
   },
@@ -261,75 +219,70 @@ const heroCopy = {
     repository: 'リポジトリ',
     languageToggleLabel: 'ヒーローの表示言語',
     localFirstShell: {
-      title: 'ローカルファーストの住所基盤。',
-      text: '生の住所は標準で出しません。AGID/AOID、非公開QR、同意、失効、受領証、現場引き渡しは、外部連携の前にローカルで扱います。',
+      label: 'ローカルファースト',
+      title: 'ローカルファーストの住所ワークスペース。',
+      text: '保存した住所は、利用者がQRやファイルとして明示的に出力しない限り、この端末内に残ります。',
     },
     menu: {
       map: '地図',
       aoid: 'AOID',
-      posField: 'POS・現場',
       research: '研究',
       developers: '開発',
     },
-    h1: 'すべての場所に使えるグローバル住所ID',
-    lead: '住所ID、非公開住所QR、機械が読める配送引き渡しを、国、島しょ部、農村部、郵便番号が弱い地域まで扱うためのオープン基盤です。',
+    h1: '住所を扱うためのオープンソースツール',
+    lead: 'このリポジトリで実装されているAGIDの地図とグリッド、国別住所フォーム、郵便番号検索、端末内の住所保存とQR機能を試せます。',
     visual: {
-      label: 'グローバル住所レイヤー',
-      title: '1つのプロトコルで多様な住所制度へ対応',
-      text: 'AGIDは国別住所形式、グリッド、別名、受領証を接続し、生の住所を標準の公開インターフェースにしません。',
-      ariaLabel: 'AGIDのグローバル対応ビジュアル',
+      label: 'リポジトリで確認できる機能',
+      title: '国別データと住所ツールを1つのアプリに',
+      text: '現在のビルドには、国別住所形式データ、グリッド表示、郵便番号検索、端末内の保存住所機能が含まれます。対応品質は利用できるオープンデータに依存します。',
+      ariaLabel: 'AGIDの国別データビジュアル',
       points: {
-        japan: { code: 'JP-13', label: '日本' },
-        somalia: { code: 'AGID-SO-00123', label: 'ソマリア' },
-        tuvalu: { code: 'TO-ISL-004', label: 'ツバル' },
-        virtualTown: { code: 'AGID-VT-00041', label: '仮想町' },
+        japan: { code: 'JP', label: '日本の住所形式' },
+        somalia: { code: 'SO', label: 'ソマリアの住所形式' },
+        tuvalu: { code: 'TV', label: 'ツバルの住所形式' },
       },
     },
     primaryActions: {
-      useAgid: 'AGIDを使う',
-      buildWithAgid: 'AGIDで開発',
-      readResearch: '研究を読む',
+      useAgid: '地図を開く',
+      buildWithAgid: '開発ツール',
+      readResearch: '研究ノート',
     },
     trustItems: [
-      '生の住所は標準非表示',
-      'ローカルファースト',
-      'オープンデータ互換',
-      'ZK対応準備',
-      'ブロックチェーンなしでも動作',
+      '公開ソースとテスト',
+      '端末内の住所保存',
+      '国別住所形式データ',
+      '郵便番号ツール',
+      'ブロックチェーン不要',
     ],
     entryCards: {
-      register: {
-        label: '住所登録',
-        text: '生の住所を標準で出さずに、非公開住所QR、別名、受領証、国別フォーマットの記録を作ります。',
+      address: {
+        label: '住所を端末に保存',
+        text: '国別の入力欄で住所を保存できます。共有するときだけ利用者がQRを書き出します。',
       },
-      aoid: {
-        label: 'AOID',
-        text: '生の住所を出さずに、非公開のAddress Owner IDと場所の識別情報を登録・管理します。',
+      map: {
+        label: '地図とグリッドを確認',
+        text: 'グリッドを確認し、郵便番号で検索して、アプリで利用できる位置データからAGID詳細を表示します。',
       },
-      ops: {
-        label: 'POS・現場運用',
-        text: '配送先QRを読み取り、判断、引き渡し、受領証、オフライン待ち行列、安全な報告を扱います。',
+      source: {
+        label: 'ソースとテストを確認',
+        text: '公開GitHubリポジトリで、実装、データ出典、ライセンス、自動テストを確認できます。',
       },
     },
     workspaceLanes: {
-      field: {
-        label: '現場',
-        text: 'POS、現場引き渡し、ホテル、ロッカー、ドローンなど、配送接点を扱うチーム向け。',
-      },
       operations: {
-        label: '運用',
-        text: '秘匿レビュー、監査、発行者、レジストリ、同期、公開準備を運用者向けに整理します。',
+        label: '確認ツール',
+        text: 'リポジトリに含まれるローカルダッシュボード、監査表示、レジストリ画面、準備チェックを確認できます。',
       },
       research: {
-        label: '研究・設計',
-        text: '論文、郵便区画、シミュレーション、証跡、リリース設計をプロトコルに接続します。',
+        label: '研究・データ',
+        text: 'プロトコルノート、郵便区画ツール、証跡モデル、出典付きの国別データを確認できます。',
       },
     },
     sdk: {
       github: 'GitHub',
-      title: 'SDKから始める。',
-      text: '生の住所を例に出さず、住所IDの解決、非公開QR作成、機械引き渡し検証を試せます。',
-      install: 'インストール',
+      title: 'リポジトリを実行・確認する。',
+      text: 'リポジトリの依存関係を入れ、ローカルアプリを起動し、package.jsonに含まれるチェックを実行できます。SDK・適合パックは下からダウンロードできます。',
+      install: 'ローカル設定',
     },
     resources: {
       setup: '設定ガイド',
@@ -339,42 +292,6 @@ const heroCopy = {
       conformance: '適合テスト',
       dashboard: 'ダッシュボード',
       postalZones: '郵便区画',
-    },
-    research: {
-      label: 'プロトコル研究',
-      link: '研究',
-      title: '論文の内容を、実装できるプロトコル判断へ変換します。',
-      signals: {
-        amt: {
-          label: '住所写像論',
-          text: 'グリッド数理、AOID、住所表示ルールを実装可能な形で維持します。',
-        },
-        forge: {
-          label: '郵便区画モデル',
-          text: '国別パック、分割・統合ルール、品質ゲートをまとめて確認します。',
-        },
-        gate: {
-          label: 'リリース証跡',
-          text: 'セキュリティ、プライバシー、SDK互換、適合チェックを公開前に追跡します。',
-        },
-      },
-      papers: {
-        amt: {
-          title: '住所写像論',
-          label: '中核論文',
-          text: '住所同値性、写像不変量、AGID/AOID関係、多言語表示を扱います。',
-        },
-        application: {
-          title: 'AGID / AOID 応用論文',
-          label: '応用モデル',
-          text: 'グリッド生成、リゾルバー適合、安全QR、現場引き渡し、国別パックを扱います。',
-        },
-        zk: {
-          title: 'ゼロ知識住所述語',
-          label: 'プライバシー論文',
-          text: '生住所非開示証明、無効化識別子、レジストリゲート、公開安全性を扱います。',
-        },
-      },
     },
     downloadSetup: {
       label: 'ダウンロードと設定',
@@ -449,43 +366,41 @@ const heroCopy = {
       },
     },
     footer: {
-      description: 'MITライセンスの中核。ローカルファーストのリゾルバー。生住所非公開のリリースゲート。',
-      subtext: '生活者、現場チーム、運用者、開発者のためのオープン住所基盤。',
+      description: 'アプリ本体はMITライセンスです。各データには個別のライセンスが適用されます。デモ・研究画面は実運用サービスではありません。',
+      subtext: '地図とローカル機能を使う、ソースを確認する、またはプロジェクト情報を確認できます。',
+      navigationLabel: 'オープンソースページのリンク',
       groups: {
-        apps: 'アプリ一覧',
-        developers: '開発者',
-        research: '研究',
-        settings: '設定とヘルプ',
+        apps: '利用できるツール',
+        developers: '開発・ソース',
+        research: 'データ・研究',
+        settings: '設定',
       },
       links: {
-        aoid: 'AOID',
-        pos: 'POS',
-        hotel: 'ホテル',
-        opera: 'OPERA',
-        field: '現場',
-        locker: 'ロッカー',
-        drone: 'ドローン',
-        dashboard: 'ダッシュボード',
-        developer: '開発コンソール',
-        sdk: 'SDK',
+        aoid: 'AOID（ローカル）',
+        hotel: 'ホテルデモ',
+        opera: 'OPERAデモ',
+        field: '現場デモ',
+        locker: 'ロッカーデモ',
+        drone: 'ドローンデモ',
+        dashboard: '確認ダッシュボード',
+        developer: '開発ツール',
+        sdk: 'SDK・ダウンロード',
         github: 'GitHub',
-        research: '研究',
-        postalZones: '郵便区画',
-        evidence: '証跡保管庫',
-        settings: '設定',
-        help: 'ヘルプ',
-        security: 'セキュリティゲート',
+        research: '研究ノート',
+        postalZones: '郵便区画ツール',
+        evidence: '証跡モデル',
+        settings: 'アプリ設定',
       },
     },
   },
 } as const;
 
-const developerInstallCommand = 'npm install @agid/sdk';
+const developerInstallCommand = 'npm install';
 
 const developerApiExamples = [
-  'resolveAGID()',
-  'createSecureAddressQR()',
-  'verifyMachineEnvelope()',
+  'npm run dev',
+  'npm run lint',
+  'npm run verify:app-shell',
 ];
 
 const heroPrimaryActions = [
@@ -498,7 +413,6 @@ const heroVisualPoints = [
   { key: 'japan', className: 'left-[58%] top-[15%]' },
   { key: 'somalia', className: 'left-[14%] top-[52%]' },
   { key: 'tuvalu', className: 'left-[45%] bottom-[12%]' },
-  { key: 'virtualTown', className: 'right-[4%] top-[46%]' },
 ] as const;
 
 const heroResourceLinks = [
@@ -514,35 +428,29 @@ const heroResourceLinks = [
 const heroMenuLinks = [
   { key: 'map', href: '/' },
   { key: 'aoid', href: '/?action=aoid' },
-  { key: 'posField', href: '/pos' },
   { key: 'research', href: '/research' },
   { key: 'developers', href: '/developer' },
 ] as const;
 
 const heroEntryLinks = [
   {
-    key: 'register',
+    key: 'address',
     href: '/?register=1',
     icon: ShieldCheck,
   },
   {
-    key: 'aoid',
-    href: '/?action=aoid',
-    icon: ShieldCheck,
+    key: 'map',
+    href: '/',
+    icon: Map,
   },
   {
-    key: 'ops',
-    href: '/pos',
-    icon: Terminal,
+    key: 'source',
+    href: GITHUB_REPO_URL,
+    icon: Github,
   },
 ] as const;
 
 const heroWorkspaceLanes = [
-  {
-    key: 'field',
-    href: '/pos',
-    icon: Terminal,
-  },
   {
     key: 'operations',
     href: '/dashboard',
@@ -560,12 +468,6 @@ const footerMenuGroups = [
     key: 'apps',
     links: [
       { key: 'aoid', href: '/?action=aoid', icon: ShieldCheck },
-      { key: 'pos', href: '/pos', icon: Terminal },
-      { key: 'hotel', href: '/hotel', icon: Building2 },
-      { key: 'opera', href: '/opera', icon: Building2 },
-      { key: 'field', href: '/field', icon: ArrowRight },
-      { key: 'locker', href: '/locker', icon: Box },
-      { key: 'drone', href: '/ops', icon: Box },
       { key: 'dashboard', href: '/dashboard', icon: BookOpen },
     ],
   },
@@ -589,34 +491,20 @@ const footerMenuGroups = [
     key: 'settings',
     links: [
       { key: 'settings', href: '/settings', icon: Settings },
-      { key: 'help', href: '/settings#help', icon: HelpCircle },
-      { key: 'security', href: '/settings#security', icon: ShieldCheck },
     ],
   },
-] as const;
-
-const researchDesignSignals = [
-  { key: 'amt', value: 'AMT' },
-  { key: 'forge', value: 'Forge' },
-  { key: 'gate', value: 'Gate' },
-] as const;
-
-const heroPapers = [
-  { key: 'amt' },
-  { key: 'application' },
-  { key: 'zk' },
 ] as const;
 
 const downloadSetupModes = [
   {
     key: 'pc',
-    command: ['git clone https://github.com/dawnportinfo-design/Adreess-Grid-ID.git', 'cd Adreess-Grid-ID', 'npm install', 'npm run dev'],
+    command: ['git clone https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure.git', 'cd AGID-Global-Address-Infrastructure', 'npm install', 'npm run dev'],
     href: GITHUB_REPO_URL,
     icon: Download,
   },
   {
     key: 'vscode',
-    command: ['code Adreess-Grid-ID', 'npm run verify:developer-console', 'npm run verify:app-shell', 'npm run lint'],
+    command: ['code AGID-Global-Address-Infrastructure', 'npm run verify:developer-console', 'npm run verify:app-shell', 'npm run lint'],
     href: '/developer#tutorial',
     icon: Code2,
   },
@@ -773,24 +661,24 @@ function DownloadSetupSection({ locale }: { locale: HeroLocale }) {
   const copy = heroCopy[locale].downloadSetup;
 
   return (
-    <section id="download-setup" className="bg-slate-950 px-5 py-14 sm:px-8 sm:py-16">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-6 border-t border-white/10 pt-10 lg:grid-cols-[0.45fr_1fr] lg:items-start">
-          <div>
-            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-blue-100/70">
+    <section id="download-setup" className="bg-slate-50 px-5 py-16 sm:px-8 sm:py-20">
+      <div className="mx-auto max-w-7xl border-t border-slate-200 pt-10">
+        <div className="grid gap-10 lg:grid-cols-[0.38fr_0.62fr] lg:items-start lg:gap-16">
+          <div className="lg:sticky lg:top-8">
+            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-blue-700">
               <Download className="h-4 w-4" />
               {copy.label}
             </div>
-            <h2 className="mt-3 max-w-xl text-[30px] font-black leading-tight tracking-normal text-white sm:text-[40px]">
+            <h2 className="mt-3 max-w-xl text-[30px] font-black leading-tight tracking-[-0.02em] text-slate-950 sm:text-[40px]">
               {copy.title}
             </h2>
-            <p className="mt-4 max-w-xl text-[14px] font-semibold leading-7 text-slate-300">
+            <p className="mt-4 max-w-xl text-[14px] font-semibold leading-7 text-slate-600">
               {copy.text}
             </p>
           </div>
 
-          <div className="space-y-4">
-            <div className="grid gap-3 lg:grid-cols-3">
+          <div>
+            <div className="divide-y divide-slate-200 border-y border-slate-200">
               {downloadSetupLinks.map(link => {
                 const Icon = link.icon;
                 const linkCopy = copy.downloads[link.key];
@@ -803,19 +691,17 @@ function DownloadSetupSection({ locale }: { locale: HeroLocale }) {
                     download={fileName}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noreferrer' : undefined}
-                    className="group flex min-h-[190px] flex-col rounded-lg border border-white/10 bg-white/[0.055] p-4 shadow-lg shadow-black/15 transition hover:border-blue-200/[0.32] hover:bg-blue-200/[0.10]"
+                    className="group grid gap-3 py-5 transition hover:bg-white sm:grid-cols-[auto_1fr_auto] sm:items-center sm:px-3"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-emerald-100/15 bg-emerald-300/[0.11] text-emerald-100">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <span className="rounded-lg border border-white/10 bg-slate-950/48 px-2.5 py-1 text-[10px] font-black uppercase text-slate-300">
-                        {linkCopy.label}
-                      </span>
-                    </div>
-                    <h3 className="mt-4 text-[18px] font-black leading-snug text-white">{linkCopy.title}</h3>
-                    <p className="mt-2 text-[12px] font-semibold leading-6 text-slate-300">{linkCopy.text}</p>
-                    <span className="mt-auto inline-flex min-h-10 items-center gap-2 text-[12px] font-black text-blue-100 transition group-hover:text-white">
+                    <span className="flex h-10 w-10 items-center justify-center border border-slate-200 bg-white text-blue-700">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span>
+                      <span className="block text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">{linkCopy.label}</span>
+                      <span className="mt-1 block text-[16px] font-black text-slate-950">{linkCopy.title}</span>
+                      <span className="mt-1 block text-[12px] font-semibold leading-5 text-slate-600">{linkCopy.text}</span>
+                    </span>
+                    <span className="inline-flex min-h-10 items-center gap-2 text-[12px] font-black text-blue-700 transition group-hover:text-blue-900">
                       {linkCopy.action}
                       <ArrowRight className="h-4 w-4" />
                     </span>
@@ -828,60 +714,60 @@ function DownloadSetupSection({ locale }: { locale: HeroLocale }) {
               href={DOWNLOAD_MANIFEST_HREF}
               target="_blank"
               rel="noreferrer"
-              className="flex flex-col gap-2 rounded-lg border border-white/10 bg-slate-950/48 p-4 text-left transition hover:border-emerald-200/30 hover:bg-emerald-200/[0.08] sm:flex-row sm:items-center sm:justify-between"
+              className="mt-4 flex flex-col gap-3 border border-slate-200 bg-white p-4 text-left transition hover:border-emerald-300 sm:flex-row sm:items-center sm:justify-between"
             >
               <span className="flex min-w-0 items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-emerald-100/15 bg-emerald-300/[0.11] text-emerald-100">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-emerald-50 text-emerald-700">
                   <ShieldCheck className="h-5 w-5" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[13px] font-black text-white">{copy.manifest.label}</span>
-                  <span className="mt-1 block text-[12px] font-semibold leading-5 text-slate-300">{copy.manifest.text}</span>
+                  <span className="block text-[13px] font-black text-slate-950">{copy.manifest.label}</span>
+                  <span className="mt-1 block text-[12px] font-semibold leading-5 text-slate-600">{copy.manifest.text}</span>
                 </span>
               </span>
-              <span className="inline-flex shrink-0 items-center gap-2 text-[12px] font-black text-emerald-100">
+              <span className="inline-flex shrink-0 items-center gap-2 text-[12px] font-black text-emerald-700">
                 {copy.manifest.action}
                 <ArrowRight className="h-4 w-4" />
               </span>
             </a>
 
-            <div className="grid gap-3 lg:grid-cols-3">
+            <div className="mt-8 divide-y divide-slate-200 border-y border-slate-200">
             {downloadSetupModes.map(mode => {
               const Icon = mode.icon;
               const modeCopy = copy.modes[mode.key];
               return (
-                <article
+                <details
                   key={mode.key}
-                  className="flex min-h-[300px] flex-col rounded-lg border border-white/10 bg-white/[0.045] p-4 shadow-lg shadow-black/15"
+                  className="group bg-transparent open:bg-white"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-blue-100/15 bg-blue-300/[0.11] text-blue-100">
+                  <summary className="flex min-h-16 cursor-pointer list-none items-center gap-3 px-3 py-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-slate-200 bg-white text-slate-700">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="rounded-lg border border-white/10 bg-slate-950/48 px-2.5 py-1 text-[10px] font-black uppercase text-slate-300">
-                      {modeCopy.label}
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">{modeCopy.label}</span>
+                      <span className="mt-1 block text-[15px] font-black text-slate-950">{modeCopy.title}</span>
                     </span>
-                  </div>
-                  <h3 className="mt-4 text-[18px] font-black leading-snug text-white">{modeCopy.title}</h3>
-                  <p className="mt-2 text-[12px] font-semibold leading-6 text-slate-300">{modeCopy.text}</p>
-                  <div className="mt-4 space-y-1.5">
+                    <Plus className="h-4 w-4 text-slate-500 transition group-open:rotate-45" />
+                  </summary>
+                  <div className="px-3 pb-5 sm:pl-[60px]">
+                    <p className="max-w-2xl text-[12px] font-semibold leading-6 text-slate-600">{modeCopy.text}</p>
+                    <div className="mt-3 space-y-1.5">
                     {mode.command.map(command => (
                       <code
                         key={command}
-                        className="block overflow-x-auto rounded-lg border border-white/10 bg-slate-950/72 px-3 py-2 text-[11px] font-bold text-emerald-100"
+                        className="block overflow-x-auto bg-slate-950 px-3 py-2 text-[11px] font-bold text-emerald-200"
                       >
                         {command}
                       </code>
                     ))}
+                    </div>
+                    <a href={mode.href} className="mt-3 inline-flex min-h-10 items-center gap-2 text-[12px] font-black text-blue-700 hover:text-blue-900">
+                      {modeCopy.action}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
                   </div>
-                  <a
-                    href={mode.href}
-                    className="mt-auto inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.07] px-3 text-[12px] font-black text-white transition hover:border-blue-200/[0.35] hover:bg-blue-200/[0.12]"
-                  >
-                    {modeCopy.action}
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
-                </article>
+                </details>
               );
             })}
             </div>
@@ -896,79 +782,76 @@ function DeveloperStarterSection({ locale }: { locale: HeroLocale }) {
   const hero = heroCopy[locale];
 
   return (
-    <section className="bg-slate-950 px-5 py-14 sm:px-8 sm:py-16">
-      <div className="mx-auto grid max-w-7xl gap-6 border-t border-white/10 pt-10 lg:grid-cols-[0.58fr_0.42fr] lg:items-start">
-        <div className="space-y-6">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-xl shadow-black/10">
-            <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-200/20 bg-emerald-300/[0.12] text-emerald-100">
-                <ShieldCheck className="h-4 w-4" />
-              </span>
-              <div>
-                <h2 className="text-[22px] font-black leading-tight text-white sm:text-[30px]">
-                  {hero.localFirstShell.title}
-                </h2>
-                <p className="mt-3 max-w-3xl text-[14px] font-semibold leading-7 text-slate-300">
-                  {hero.localFirstShell.text}
-                </p>
-              </div>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {hero.trustItems.map(item => (
-                <span
-                  key={item}
-                  className="rounded-lg border border-white/10 bg-slate-950/45 px-3 py-2 text-[11px] font-black text-blue-100/80"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </section>
-          <HeroWorkspaceLaneGrid locale={locale} className="grid gap-3 md:grid-cols-3" />
+    <section className="bg-white px-5 py-16 sm:px-8 sm:py-20">
+      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.56fr_0.44fr] lg:gap-16">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">
+            <ShieldCheck className="h-4 w-4" />
+            {hero.localFirstShell.label}
+          </div>
+          <h2 className="mt-3 max-w-2xl text-[30px] font-black leading-tight tracking-[-0.02em] text-slate-950 sm:text-[42px]">
+            {hero.localFirstShell.title}
+          </h2>
+          <p className="mt-4 max-w-2xl text-[15px] font-semibold leading-7 text-slate-600">
+            {hero.localFirstShell.text}
+          </p>
+          <ul className="mt-7 grid gap-x-8 gap-y-3 border-y border-slate-200 py-5 sm:grid-cols-2">
+            {hero.trustItems.map(item => (
+              <li key={item} className="flex items-center gap-3 text-[13px] font-bold text-slate-700">
+                <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <nav className="mt-7 divide-y divide-slate-200 border-y border-slate-200" aria-label="AGID workspace lanes">
+            {heroWorkspaceLanes.map(link => {
+              const Icon = link.icon;
+              const copy = hero.workspaceLanes[link.key];
+              return (
+                <a key={link.key} href={link.href} className="group grid gap-2 py-4 sm:grid-cols-[auto_150px_1fr_auto] sm:items-center">
+                  <Icon className="h-4 w-4 text-blue-700" />
+                  <span className="text-[13px] font-black text-slate-950">{copy.label}</span>
+                  <span className="text-[12px] font-semibold leading-5 text-slate-600">{copy.text}</span>
+                  <ArrowRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-700" />
+                </a>
+              );
+            })}
+          </nav>
         </div>
 
-        <section className="rounded-2xl border border-blue-200/[0.18] bg-slate-950/[0.72] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-6">
-          <div className="flex items-start justify-between gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-blue-100/[0.18] bg-blue-300/[0.14] text-blue-100">
+        <section className="border-l border-slate-200 pl-0 lg:pl-10">
+          <div className="flex items-center justify-between gap-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-slate-950 text-white">
               <Code2 className="h-5 w-5" />
             </span>
             <a
               href={GITHUB_REPO_URL}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.08] px-3.5 py-2 text-[12px] font-black text-white transition hover:bg-white/[0.13]"
+              className="inline-flex min-h-10 items-center gap-2 border-b border-slate-300 px-1 text-[12px] font-black text-slate-700 transition hover:border-blue-700 hover:text-blue-700"
             >
               <Github className="h-4 w-4" />
               {hero.sdk.github}
             </a>
           </div>
-          <h2 className="mt-6 text-[28px] font-black leading-tight tracking-normal text-white sm:text-[36px]">
+          <h2 className="mt-6 text-[28px] font-black leading-tight tracking-[-0.02em] text-slate-950 sm:text-[36px]">
             {hero.sdk.title}
           </h2>
-          <p className="mt-4 text-[14px] font-semibold leading-7 text-slate-300">
+          <p className="mt-4 text-[14px] font-semibold leading-7 text-slate-600">
             {hero.sdk.text}
           </p>
-          <div className="mt-6 space-y-4">
-            <div>
-              <div className="mb-1 flex items-center gap-2 text-[11px] font-black text-blue-100/70">
-                <Terminal className="h-3.5 w-3.5" />
-                {hero.sdk.install}
-              </div>
-              <code className="block overflow-x-auto rounded-xl border border-white/12 bg-slate-950/78 px-4 py-4 text-[13px] font-bold text-emerald-100 shadow-lg shadow-black/20">
-                {developerInstallCommand}
+          <div className="mt-6 bg-slate-950 p-4 text-emerald-200">
+            <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">
+              <Terminal className="h-3.5 w-3.5" />
+              {hero.sdk.install}
+            </div>
+            <code className="block overflow-x-auto text-[13px] font-bold">{developerInstallCommand}</code>
+            {developerApiExamples.map(example => (
+              <code key={example} className="mt-2 block overflow-x-auto border-t border-white/10 pt-2 text-[12px] font-bold text-blue-100">
+                {example}
               </code>
-            </div>
-            <div className="grid gap-2.5">
-              {developerApiExamples.map(example => (
-                <code
-                  key={example}
-                  className="rounded-xl border border-white/10 bg-white/[0.05] px-3.5 py-2.5 text-[12px] font-black text-blue-100"
-                >
-                  {example}
-                </code>
-              ))}
-            </div>
+            ))}
           </div>
-          <div className="mt-6 grid gap-2.5 sm:grid-cols-2">
-            {heroResourceLinks.map(link => {
+          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+            {heroResourceLinks.filter(link => ['setup', 'research', 'spec'].includes(link.key)).map(link => {
               const Icon = link.icon;
               const downloadName = 'download' in link ? link.download : undefined;
               return (
@@ -976,7 +859,7 @@ function DeveloperStarterSection({ locale }: { locale: HeroLocale }) {
                   key={link.key}
                   href={link.href}
                   download={downloadName}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.07] px-3 text-center text-[12px] font-black text-white transition hover:border-blue-200/[0.35] hover:bg-blue-200/[0.12]"
+                  className="inline-flex min-h-10 items-center gap-2 border-b border-slate-300 text-[12px] font-black text-slate-700 transition hover:border-blue-700 hover:text-blue-700"
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   {hero.resources[link.key]}
@@ -990,51 +873,102 @@ function DeveloperStarterSection({ locale }: { locale: HeroLocale }) {
   );
 }
 
-function ProtocolResearchSection({ locale }: { locale: HeroLocale }) {
-  const hero = heroCopy[locale];
+const addressStackCopy = {
+  en: {
+    label: 'Address OSS stack',
+    title: 'Use open components without blurring trust boundaries.',
+    text: 'AGID now records the parser, search service, full geocoder, and address corpus separately so software licenses never imply permission to redistribute imported address data.',
+    statuses: {
+      integrated: 'Integrated',
+      optional: 'Optional',
+      'license-gated': 'License review',
+    },
+    roles: {
+      'address-parsing': 'Local parsing',
+      'search-autocomplete': 'Search & autocomplete',
+      'full-geocoding': 'Self-hosted geocoding',
+      'address-corpus': 'Address corpus',
+    },
+    details: 'Review adoption notes',
+  },
+  ja: {
+    label: '住所OSSスタック',
+    title: '信頼境界を混ぜずに、オープンな部品を使う。',
+    text: 'パーサー、検索サービス、完全ジオコーダー、住所コーパスを分けて記録し、ソフトウェアのライセンスを住所データ再配布の許可と誤認しない構成にしました。',
+    statuses: {
+      integrated: '導入済み',
+      optional: '任意追加',
+      'license-gated': 'ライセンス確認',
+    },
+    roles: {
+      'address-parsing': 'ローカル解析',
+      'search-autocomplete': '検索・候補表示',
+      'full-geocoding': '自己ホスト検索',
+      'address-corpus': '住所コーパス',
+    },
+    details: '採用方針を確認',
+  },
+} as const;
+
+function AddressOpenSourceStackSection({ locale }: { locale: HeroLocale }) {
+  const copy = addressStackCopy[locale];
 
   return (
-    <section className="bg-slate-950 px-5 pb-14 sm:px-8 sm:pb-16">
-      <div className="mx-auto max-w-7xl border-t border-white/10 pt-10">
-        <section className="rounded-2xl border border-cyan-200/[0.14] bg-white/[0.04] p-5 shadow-xl shadow-black/15 sm:p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-[12px] font-black text-cyan-100/[0.82]">
-              <Beaker className="h-4 w-4" />
-              {hero.research.label}
+    <section className="bg-slate-50 px-5 py-16 sm:px-8 sm:py-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-10 lg:grid-cols-[0.38fr_0.62fr] lg:items-start lg:gap-16">
+          <div>
+            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">
+              <ShieldCheck className="h-4 w-4" />
+              {copy.label}
             </div>
-            <a href="/research" className="text-[12px] font-black text-cyan-100 transition hover:text-white">
-              {hero.research.link}
+            <h2 className="mt-3 max-w-xl text-[28px] font-black leading-tight tracking-[-0.02em] text-slate-950 sm:text-[36px]">
+              {copy.title}
+            </h2>
+            <p className="mt-4 max-w-xl text-[14px] font-semibold leading-7 text-slate-600">
+              {copy.text}
+            </p>
+            <a
+              href="https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure/blob/main/docs/open-source-address-stack.md"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex min-h-10 items-center gap-2 border-b border-slate-300 text-[12px] font-black text-blue-700 transition hover:border-blue-700 hover:text-blue-900"
+            >
+              {copy.details}
+              <ArrowRight className="h-4 w-4" />
             </a>
           </div>
-          <h2 className="mt-4 max-w-4xl text-[28px] font-black leading-snug text-white sm:text-[38px]">
-            {hero.research.title}
-          </h2>
-          <div className="mt-6 grid gap-3 md:grid-cols-3">
-            {researchDesignSignals.map(item => (
-              <div key={item.key} className="rounded-xl border border-white/10 bg-slate-950/35 p-4">
-                <span className="block text-[17px] font-black text-cyan-100">{item.value}</span>
-                <span className="mt-1 block text-[12px] font-black leading-5 text-slate-300">
-                  {hero.research.signals[item.key].label}
-                </span>
-                <span className="mt-2 block text-[12px] font-semibold leading-5 text-slate-400">
-                  {hero.research.signals[item.key].text}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-5 divide-y divide-white/10 border-y border-white/10">
-            {heroPapers.map(paper => (
+          <div className="divide-y divide-slate-200 border-y border-slate-200">
+            {OPEN_SOURCE_ADDRESS_STACK.map(entry => (
               <a
-                key={paper.key}
-                href="/research"
-                className="grid gap-2 py-3 transition hover:text-cyan-100 sm:grid-cols-[140px_minmax(0,1fr)]"
+                key={entry.id}
+                href={entry.projectUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="grid gap-2 py-4 transition hover:bg-white sm:grid-cols-[0.8fr_1fr_auto] sm:items-center sm:px-3"
               >
-                <span className="text-[12px] font-black leading-5 text-slate-400">{hero.research.papers[paper.key].label}</span>
-                <span className="text-[13px] font-black text-white">{hero.research.papers[paper.key].title}</span>
+                <span>
+                  <span className="block text-[15px] font-black text-slate-950">{entry.name}</span>
+                  <span className="mt-1 block text-[11px] font-bold text-slate-500">
+                    {entry.softwareLicense}
+                  </span>
+                </span>
+                <span className="text-[12px] font-semibold text-slate-600">
+                  {copy.roles[entry.role]}
+                </span>
+                <span className={
+                  entry.status === 'integrated'
+                    ? 'text-[11px] font-black text-emerald-700'
+                    : entry.status === 'optional'
+                      ? 'text-[11px] font-black text-blue-700'
+                      : 'text-[11px] font-black text-amber-700'
+                }>
+                  {copy.statuses[entry.status]}
+                </span>
               </a>
             ))}
           </div>
-        </section>
+        </div>
       </div>
     </section>
   );
@@ -1078,7 +1012,7 @@ function HeroGlobalVisual({ locale }: { locale: HeroLocale }) {
       })}
 
       <div className="absolute bottom-6 right-6 z-10 rounded-full border border-blue-100 bg-white/90 px-4 py-2 text-[12px] font-black text-blue-700 shadow-lg shadow-blue-200/45 backdrop-blur">
-        AGID / AOID / receipt
+        Grid / Address forms / QR
       </div>
     </section>
   );
@@ -1090,10 +1024,7 @@ export function OpenSourceHomeScreen() {
 
   return (
     <main className="agid-page-scroll bg-white text-slate-950">
-      <section className="relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_62%,#eef6ff_100%)]">
-        <div className="absolute inset-x-0 top-0 h-px bg-slate-200" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(37,99,235,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.055)_1px,transparent_1px)] bg-[size:72px_72px]" />
-
+      <section className="bg-white">
         <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:py-6">
           <button
             type="button"
@@ -1132,49 +1063,60 @@ export function OpenSourceHomeScreen() {
           </div>
         </header>
 
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-10 px-5 pb-10 pt-10 sm:px-8 sm:pb-12 sm:pt-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
-          <div className="max-w-2xl">
-            <h1 className="max-w-3xl text-[44px] font-black leading-[1.03] tracking-normal text-slate-950 sm:text-[62px] sm:leading-[1.01] lg:text-[72px]">
-              {hero.h1}
-            </h1>
-            <p className="mt-6 max-w-xl text-[17px] font-semibold leading-8 text-slate-600 sm:text-[19px]">
-              {hero.lead}
-            </p>
-            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
-              {heroPrimaryActions.map(action => {
-                const Icon = action.icon;
-                const className =
-                  'variant' in action && action.variant === 'primary'
-                    ? 'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-[14px] font-black text-white shadow-xl shadow-blue-200 transition hover:bg-blue-500 sm:h-[52px]'
-                    : 'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-[14px] font-black text-slate-800 shadow-sm transition hover:border-blue-200 hover:text-blue-600 sm:h-[52px]';
-                return (
-                  <a key={action.key} href={action.href} className={className}>
-                    <Icon className="h-4 w-4" />
-                    {hero.primaryActions[action.key]}
-                  </a>
-                );
-              })}
+        <OpenSourceHeroMap locale={heroLocale} />
+
+        <div className="bg-slate-950 px-5 py-9 text-white sm:px-8 sm:py-11">
+          <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[1.05fr_1fr_0.9fr] lg:items-start lg:gap-0">
+            <div className="lg:pr-10">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-300">
+                {hero.brandSubtitle}
+              </p>
+              <h1 className="mt-4 max-w-xl text-[38px] font-black leading-[1.03] tracking-[-0.025em] text-white sm:text-[48px]">
+                {hero.h1}
+              </h1>
+            </div>
+            <div className="border-white/15 lg:border-x lg:px-10">
+              <p className="max-w-xl text-[16px] font-semibold leading-7 text-slate-300">
+                {hero.lead}
+              </p>
+            </div>
+            <div className="lg:pl-10">
+              <a
+                href="/"
+                className="inline-flex min-h-12 w-full items-center justify-between gap-3 bg-blue-600 px-5 text-[14px] font-black text-white transition hover:bg-blue-500 sm:w-auto sm:min-w-[220px]"
+              >
+                <span className="inline-flex items-center gap-3">
+                  <Map className="h-5 w-5" />
+                  {hero.primaryActions.useAgid}
+                </span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-[13px] font-bold">
+                <a className="border-b border-slate-500 pb-0.5 text-slate-200 transition hover:border-white hover:text-white" href={GITHUB_REPO_URL}>
+                  {hero.repository}
+                </a>
+                <a className="border-b border-slate-500 pb-0.5 text-slate-200 transition hover:border-white hover:text-white" href="/research">
+                  {hero.primaryActions.readResearch}
+                </a>
+              </div>
             </div>
           </div>
-
-          <HeroGlobalVisual locale={heroLocale} />
         </div>
-        <HeroEntryCardGrid locale={heroLocale} className="relative z-10 mx-auto grid w-full max-w-7xl gap-4 px-5 pb-16 sm:px-8 md:grid-cols-3" />
       </section>
 
       <DeveloperStarterSection locale={heroLocale} />
-      <ProtocolResearchSection locale={heroLocale} />
+      <AddressOpenSourceStackSection locale={heroLocale} />
       <DownloadSetupSection locale={heroLocale} />
 
-      <section className="bg-slate-950 px-5 pb-16 sm:px-8">
-        <div className="mx-auto grid max-w-7xl gap-8 border-t border-white/10 pt-10 lg:grid-cols-[0.62fr_1fr]">
+      <section className="bg-slate-950 px-5 py-14 sm:px-8 sm:py-16">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.38fr_0.62fr] lg:gap-16">
           <div>
-            <h2 className="text-[30px] font-black tracking-normal text-white sm:text-[38px]">{hero.build.title}</h2>
+            <h2 className="text-[30px] font-black tracking-[-0.02em] text-white sm:text-[38px]">{hero.build.title}</h2>
             <p className="mt-4 max-w-xl text-[15px] font-semibold leading-7 text-slate-300">
               {hero.build.text}
             </p>
           </div>
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="divide-y divide-white/10 border-y border-white/10">
             {workstreams.map(item => {
               const Icon = item.icon;
               const itemCopy = hero.build.workstreams[item.key];
@@ -1182,36 +1124,35 @@ export function OpenSourceHomeScreen() {
                 <a
                   key={item.key}
                   href={item.href}
-                  className="group flex min-h-[172px] flex-col justify-between rounded-lg border border-white/10 bg-white/[0.04] p-4 transition hover:border-blue-300/40 hover:bg-white/[0.07]"
+                  className="group grid grid-cols-[auto_1fr_auto] items-start gap-x-3 gap-y-1 py-4 transition hover:bg-white/[0.04] sm:grid-cols-[auto_140px_1fr_auto] sm:items-center sm:gap-3 sm:px-3"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-slate-900 text-blue-100">
-                    <Icon className="h-5 w-5" />
+                  <span className="row-span-2 flex h-9 w-9 items-center justify-center border border-white/10 text-blue-200 sm:row-span-1">
+                    <Icon className="h-4 w-4" />
                   </span>
-                  <span>
-                    <span className="block text-[16px] font-black text-white">{itemCopy.title}</span>
-                    <span className="mt-2 block text-[13px] font-semibold leading-6 text-slate-300">{itemCopy.text}</span>
-                  </span>
+                  <span className="text-[14px] font-black text-white">{itemCopy.title}</span>
+                  <span className="col-start-2 text-[12px] font-semibold leading-5 text-slate-400 sm:col-start-auto">{itemCopy.text}</span>
+                  <ArrowRight className="col-start-3 row-span-2 row-start-1 h-4 w-4 self-center text-slate-500 transition group-hover:translate-x-1 group-hover:text-blue-200 sm:col-start-auto sm:row-span-1 sm:row-start-auto" />
                 </a>
               );
             })}
           </div>
         </div>
-        <footer className="mx-auto mt-10 grid max-w-7xl gap-8 border-t border-white/10 pt-7 lg:grid-cols-[0.46fr_1fr]">
+        <footer className="mx-auto mt-12 grid max-w-7xl gap-10 border-t border-white/10 pt-8 lg:grid-cols-[0.38fr_0.62fr] lg:gap-16">
           <div className="text-[12px] font-bold leading-6 text-slate-400">
             <p className="max-w-sm">{hero.footer.description}</p>
             <p className="mt-2 text-slate-500">{hero.footer.subtext}</p>
           </div>
-          <nav className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" aria-label="Open source footer menu">
+          <nav className="grid grid-cols-2 gap-x-5 gap-y-7 xl:grid-cols-4" aria-label={hero.footer.navigationLabel}>
             {footerMenuGroups.map(group => (
               <section key={group.key}>
                 <h3 className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">{hero.footer.groups[group.key]}</h3>
-                <div className="mt-3 space-y-2">
+                <div className="mt-3 space-y-1">
                   {group.links.map(link => {
                     const Icon = link.icon;
                     return (
                       <a
                         key={link.href}
-                        className="flex min-h-9 items-center gap-2 rounded-lg px-2 text-[12px] font-bold text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
+                        className="flex min-h-9 items-center gap-2 text-[12px] font-bold text-slate-300 transition hover:text-white"
                         href={link.href}
                       >
                         <Icon className="h-4 w-4 shrink-0 text-slate-500" />

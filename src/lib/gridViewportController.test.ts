@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
 getGridRenderPaddingRatio,
+getGridPrefetchPaddingRatio,
+getGridPrefetchBounds,
 getMapViewportPoints,
 getPaddedGridBounds,
 getVisibleGridBounds,
@@ -20,8 +22,10 @@ test('map viewport controller samples the full viewport through the map projecti
 });
 
 test('map viewport controller keeps pitch-based render padding in one place', () => {
-  assert.equal(getGridRenderPaddingRatio(0), 1.25);
-  assert.equal(getGridRenderPaddingRatio(31), 1.5);
+  assert.equal(getGridRenderPaddingRatio(0), 0.75);
+  assert.equal(getGridRenderPaddingRatio(31), 1);
+  assert.equal(getGridPrefetchPaddingRatio(0), 0.25);
+  assert.equal(getGridPrefetchPaddingRatio(31), 0.35);
 });
 
 test('map viewport controller separates visible bounds from padded render bounds', () => {
@@ -31,9 +35,12 @@ test('map viewport controller separates visible bounds from padded render bounds
   ];
 
   const visibleBounds = getVisibleGridBounds(points);
+  const prefetchBounds = getGridPrefetchBounds(points, 0);
   const paddedBounds = getPaddedGridBounds(points, 0);
 
   assert.deepEqual(visibleBounds, [[10, 20], [11, 21]]);
+  assert.ok(prefetchBounds[0][0] < visibleBounds[0][0]);
+  assert.ok(prefetchBounds[0][0] > paddedBounds[0][0]);
   assert.ok(paddedBounds[0][0] < visibleBounds[0][0]);
   assert.ok(paddedBounds[1][0] > visibleBounds[1][0]);
 });

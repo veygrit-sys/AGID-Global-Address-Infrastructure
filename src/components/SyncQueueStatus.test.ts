@@ -23,7 +23,7 @@ test('SyncQueueStatus keeps QR scan and saved QR actions one tap away', () => {
   assert.match(source, /QrCode/);
 });
 
-test('SyncQueueStatus is loaded only when a queue exists', () => {
-  assert.match(appSource, /const SyncQueueStatus = React\.lazy/);
-  assert.match(appSource, /syncQueue\.length > 0/);
+test('map does not display the sync queue overlay', () => {
+  assert.doesNotMatch(appSource, /<SyncQueueStatus/);
+  assert.doesNotMatch(appSource, /const SyncQueueStatus = React\.lazy/);
 });

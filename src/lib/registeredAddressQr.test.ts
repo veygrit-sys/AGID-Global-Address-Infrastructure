@@ -9,6 +9,7 @@ import {
   parseRegisteredAddressQrPayload,
 } from './registeredAddressQr';
 import { buildRegisteredAddressQualitySnapshot } from './registeredAddressQuality';
+import { buildVeygritAddressForm } from './veygritAddressForm';
 
 function decodeQrPayload(payload: string) {
   return JSON.parse(decodeURIComponent(payload.replace(/^agid:address:/, '')));
@@ -266,6 +267,35 @@ test('public registered address saved QR metadata does not expose raw address te
 
   assert.equal(savedQr.address, 'VN00TEST0001 public address reference');
   assert.doesNotMatch(JSON.stringify(savedQr), /Lan Nguyen|Landmark 81|Nguyen Huu Canh|Ward 22|2801/);
+});
+
+test('Veygrit Address Wallet fields round-trip privately and are removed from public QR', () => {
+  const formData = {
+    country: 'JP',
+    recipient: 'Aoi Kitau',
+    street: '丸の内通り',
+    houseNumber: '1-1',
+    building: 'AGIDビル',
+    unit: '101',
+    city: '千代田区',
+    state: '東京都',
+    postcode: '100-0005',
+  };
+  const record = buildRegisteredAddressRecord({
+    ...formData,
+    veygritAddressForm: buildVeygritAddressForm(formData, { agid: 'JP05AV8TJGH8' }),
+  }, {
+    agid: 'JP05AV8TJGH8',
+    now: '2026-09-24T00:00:00.000Z',
+  });
+
+  const privateParsed = parseRegisteredAddressQrPayload(buildRegisteredAddressQrPayload(record));
+  assert.equal(privateParsed?.veygritAddressForm?.fields.houseNumber, '1-1');
+  assert.equal(privateParsed?.veygritAddressForm?.fields.unit, '101');
+
+  const publicDecoded = decodeQrPayload(buildRegisteredAddressQrPayload(record, { privacy: 'public' }));
+  assert.equal(publicDecoded.record.veygritAddressForm, undefined);
+  assert.doesNotMatch(JSON.stringify(publicDecoded), /Aoi Kitau|AGIDビル|101/);
 });
 
 test('registered address QR carries public-safe quality metadata without adding private fields', () => {

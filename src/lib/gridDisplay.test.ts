@@ -12,6 +12,7 @@ getDisplayGridStep,
 getEffectiveGridOpacityLevel,
 getNearestAbsoluteGridAnchorPoint,
 getGridRenderRange,
+getGridOpacityMultiplier,
 metricSquareCellFromCenter,
 regularMetricCellFromPoint,
 shouldShowDisplayGrid,
@@ -41,6 +42,18 @@ describe('grid display shared utilities', () => {
   it('keeps close-distance grid opacity finite when saved opacity is invalid', () => {
     assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: Number.NaN }), 3);
     assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 999 }), 5);
+  });
+
+  it('preserves every user opacity level and maps it to a bounded multiplier', () => {
+    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 1 }), 1);
+    assert.equal(getEffectiveGridOpacityLevel({ zoom: 18.25, isGridVisible: true, gridOpacityLevel: 2 }), 2);
+    assert.equal(getGridOpacityMultiplier(0), 0);
+    assert.equal(getGridOpacityMultiplier(1), 0.55);
+    assert.equal(getGridOpacityMultiplier(2), 0.75);
+    assert.equal(getGridOpacityMultiplier(3), 1);
+    assert.equal(getGridOpacityMultiplier(4), 1.2);
+    assert.equal(getGridOpacityMultiplier(5), 1.4);
+    assert.equal(getGridOpacityMultiplier(Number.NaN), 1);
   });
 
   it('keeps far zoom grid hidden when the user turned it off', () => {

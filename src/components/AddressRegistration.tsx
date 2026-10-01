@@ -8,10 +8,13 @@ FileText,
 Globe,
 Hash,
 ListFilter,
+LockKeyhole,
 Loader2,
 Mail,
 MapPin,
+PencilLine,
 QrCode,
+Save,
 ShieldCheck as ShieldIcon,
 UploadCloud,
 Wand2,
@@ -112,6 +115,11 @@ buildRegisteredAddressQualitySnapshot,
 registeredQualitySnapshotToDecision,
 } from '../lib/registeredAddressQuality';
 import {
+buildVeygritAddressForm,
+getVeygritAddressFieldBinding,
+VEYGRIT_ADDRESS_FORM_VERSION,
+} from '../lib/veygritAddressForm';
+import {
 REGISTRATION_COUNTRY_TABS,
 RegistrationCountryTabId,
 getRegistrationCountryTabId,
@@ -164,6 +172,8 @@ const ADDRESS_COMPATIBILITY_FIELDS = [
   'street',
   'organization',
   'building',
+  'houseNumber',
+  'unit',
   'room',
   'recipient',
 ] as const;
@@ -230,9 +240,15 @@ function fieldValueFilled(record: Record<string, unknown> | null | undefined, fi
 const UI_STRINGS: Record<string, Record<string, string>> = {
   ja: {
     quickLookup: 'クイック検索',
-    addressRegistration: '住所登録',
+    addressRegistration: '住所を保存・訂正',
     globalAddressInput: 'グローバル住所入力 (libaddressinput)',
-    registerAddress: '住所を登録する',
+    registerAddress: 'この端末に保存',
+    addressWorkspaceDesc: '公開登録は行いません。入力内容はこの端末に保存され、訂正履歴もローカルで管理されます。',
+    localOnlyTitle: 'ローカル保存',
+    localOnlyDesc: '住所データを外部公開せず、必要なときだけQRなどで共有します。',
+    notPublished: '外部公開なし',
+    veygritCompatible: 'Veygrit Address Wallet互換',
+    correctionReady: '訂正内容を保存',
     countryRegion: '国 / 地域',
     phone: '電話番号',
     agid: 'AGID',
@@ -285,8 +301,8 @@ const UI_STRINGS: Record<string, Record<string, string>> = {
     floor: '階',
     room: '部屋',
     registerAoid: 'AOIDを生成・登録する',
-    aoidTip: 'AOIDは自分だけが管理できるプライベートな住所IDです。建物名や部屋番号、連絡先を含みます。',
-    registerAsAoid: 'AOIDとしてプライベート登録する',
+    aoidTip: 'AOIDはこの端末だけで管理する非公開IDです。検索・公開データ・外部同期の対象になりません。',
+    registerAsAoid: '非公開AOIDとして保存',
     identifierMode: '保存するID',
     agidSaveTip: 'AGIDを公開ロケーションIDとしてこの端末に保存します。',
     showDetails: '詳細',
@@ -393,6 +409,14 @@ const UI_STRINGS: Record<string, Record<string, string>> = {
     localCount: '{count} ローカル',
     unknownCountry: '不明な国',
     changedFieldsPrefix: '変更:',
+    changeReview: '変更内容',
+    changeReviewDesc: '保存前に、元の住所と訂正後の住所を項目ごとに確認できます。',
+    changedCount: '{count} 項目を変更',
+    beforeChange: '変更前',
+    afterChange: '変更後',
+    noAddressChanges: '住所はまだ変更されていません。',
+    restoreField: '元に戻す',
+    emptyValue: '未入力',
     assistanceSourceRefs: '{count} 補助ソース参照',
     noCorrectionHistory: 'ローカル修正履歴はまだありません。',
     professionalReadiness: '運用準備状況',
@@ -539,9 +563,15 @@ const UI_STRINGS: Record<string, Record<string, string>> = {
   },
   en: {
     quickLookup: 'Quick Lookup',
-    addressRegistration: 'Address Registration',
+    addressRegistration: 'Save or Correct Address',
     globalAddressInput: 'Global Address Input (libaddressinput)',
-    registerAddress: 'Register Address',
+    registerAddress: 'Save on this device',
+    addressWorkspaceDesc: 'Nothing is publicly registered. Address details and correction history remain on this device.',
+    localOnlyTitle: 'Local-only storage',
+    localOnlyDesc: 'Address data stays private and is shared only when you explicitly use QR or another export.',
+    notPublished: 'Not published',
+    veygritCompatible: 'Veygrit Address Wallet compatible',
+    correctionReady: 'Save correction',
     countryRegion: 'Country / Region',
     phone: 'Phone',
     agid: 'AGID',
@@ -594,8 +624,8 @@ const UI_STRINGS: Record<string, Record<string, string>> = {
     floor: 'Floor',
     room: 'Room',
     registerAoid: 'Generate & Register AOID',
-    aoidTip: 'AOID is a private ID containing fixed details like building, room, and phone. Not searchable by others.',
-    registerAsAoid: 'Register as Private AOID',
+    aoidTip: 'AOID is a private ID managed only on this device. It is excluded from search, open data, and external sync.',
+    registerAsAoid: 'Save as private AOID',
     identifierMode: 'Identifier to save',
     agidSaveTip: 'Save the AGID as a public location ID on this device.',
     showDetails: 'Details',
@@ -702,6 +732,14 @@ const UI_STRINGS: Record<string, Record<string, string>> = {
     localCount: '{count} local',
     unknownCountry: 'Unknown country',
     changedFieldsPrefix: 'Changed:',
+    changeReview: 'Review changes',
+    changeReviewDesc: 'Compare the original and corrected address field by field before saving.',
+    changedCount: '{count} fields changed',
+    beforeChange: 'Before',
+    afterChange: 'After',
+    noAddressChanges: 'No address fields have changed yet.',
+    restoreField: 'Restore',
+    emptyValue: 'Empty',
     assistanceSourceRefs: '{count} assistance source refs',
     noCorrectionHistory: 'No local correction history yet.',
     professionalReadiness: 'Professional readiness',
@@ -1274,6 +1312,8 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     suburb: '',
     phone: '',
     building: '',
+    houseNumber: '',
+    unit: '',
     room: '',
   });
 
@@ -1293,6 +1333,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
   const appliedInitialAddressDetailsRef = React.useRef('');
   const appliedInitialQrRecordRef = React.useRef('');
   const assistedDraftRef = React.useRef<typeof formData | null>(null);
+  const correctionBaselineRef = React.useRef<typeof formData | null>(null);
   const appliedAssistanceIdsRef = React.useRef<string[]>([]);
   const translationFeedbackRef = React.useRef<{
     sourceDraft: typeof formData;
@@ -1360,6 +1401,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
       appliedInitialAddressDetailsRef.current = '';
       appliedInitialQrRecordRef.current = '';
       assistedDraftRef.current = null;
+      correctionBaselineRef.current = null;
       appliedAssistanceIdsRef.current = [];
       translationFeedbackRef.current = null;
       setTranslationFeedbackStatus('idle');
@@ -1396,17 +1438,19 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
       const next = {
         ...prev,
         country: String(details.country_code || prev.country).toUpperCase(),
-        organization: details.building || details.building_en || details.organization || details.poi || prev.organization,
-        street: [
-          details.house_number || details.houseNumber,
-          details.road || details.street,
-        ].filter(Boolean).join(' ') || prev.street,
+        organization: details.organization || prev.organization,
+        street: details.road || details.street || prev.street,
+        houseNumber: details.house_number || details.houseNumber || prev.houseNumber,
+        building: details.building || details.building_en || details.poi || prev.building,
+        unit: details.unit || details.room || prev.unit,
+        room: details.unit || details.room || prev.room,
         city: details.city || details.town || details.village || prev.city,
         state: details.state || details.province || details.region || prev.state,
         postcode: details.postcode || prev.postcode,
         suburb: details.suburb || details.neighbourhood || details.district || prev.suburb,
       };
       assistedDraftRef.current = next;
+      correctionBaselineRef.current = next;
       appliedAssistanceIdsRef.current = Array.from(new Set([
         ...appliedAssistanceIdsRef.current,
         `reverse-geocode:${key.slice(0, 64)}`,
@@ -1445,9 +1489,12 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
         postcode: patch.postcode || prev.postcode,
         phone: patch.phone || prev.phone,
         building: patch.building || prev.building,
+        houseNumber: patch.houseNumber || prev.houseNumber,
+        unit: patch.unit || prev.unit,
         room: patch.room || prev.room,
       };
       assistedDraftRef.current = next;
+      correctionBaselineRef.current = next;
       appliedAssistanceIdsRef.current = Array.from(new Set([
         ...appliedAssistanceIdsRef.current,
         `qr-autofill:${initialQrRecord.id}`,
@@ -1768,6 +1815,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
 
     onRegister(buildRegisteredAddressRecord({
       ...formData,
+      veygritAddressForm: buildVeygritAddressForm(formData, {
+        agid: agidInput || initialAgid,
+      }),
       registrationAssistance: {
         sourceIds: appliedAssistanceIdsRef.current,
         correctionSampleId: correctionSample?.id,
@@ -1795,6 +1845,32 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     () => renderRegistrationAddressPreview(formData, activeTab, localFormat),
     [formData, activeTab, localFormat],
   );
+
+  const liveCorrectionChanges = useMemo(() => {
+    if (!correctionBaselineRef.current) return [];
+    return buildRegistrationCorrectionSample({
+      before: correctionBaselineRef.current,
+      after: formData,
+      assistanceSourceIds: appliedAssistanceIdsRef.current,
+      agid: agidInput || initialAgid,
+      addressLanguage: activeTab,
+      now: new Date(0),
+    })?.changedFields || [];
+  }, [activeTab, agidInput, formData, initialAgid]);
+
+  const correctionFieldLabels = useMemo(() => {
+    const selectedFormat = selectRegistrationAddressFormat(localFormat, activeTab);
+    return Object.fromEntries([
+      ['country', t('countryRegion')],
+      ...((selectedFormat?.fields || localFormat?.fields || []).map(field => [field.key, field.label])),
+    ]);
+  }, [activeTab, localFormat, registrationUiLanguage]);
+
+  const restoreCorrectionField = React.useCallback((field: string) => {
+    const baseline = correctionBaselineRef.current;
+    if (!baseline || !(field in baseline)) return;
+    handleFieldChange(field, String((baseline as Record<string, unknown>)[field] ?? ''));
+  }, [handleFieldChange]);
 
   const currentCountry = React.useMemo(() => {
     return COUNTRIES.find(c => c.code === formData.country);
@@ -1826,7 +1902,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
       city: formData.city,
       district: formData.suburb,
       street: formData.street,
-      building: formData.organization,
+      houseNumber: formData.houseNumber,
+      building: formData.building || formData.organization,
+      unit: formData.unit || formData.room,
       recipient: formData.recipient,
       phone: formData.phone,
     },
@@ -1837,7 +1915,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
       city: Boolean(formData.city),
       district: Boolean(formData.suburb),
       street: Boolean(formData.street),
-      building: Boolean(formData.organization),
+      houseNumber: Boolean(formData.houseNumber),
+      building: Boolean(formData.building || formData.organization),
+      unit: Boolean(formData.unit || formData.room),
       recipient: Boolean(formData.recipient),
       phone: Boolean(formData.phone),
       agid: Boolean(agidInput || initialAgid || agidAssistanceCandidate),
@@ -2515,6 +2595,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                         <h2 className="truncate text-lg font-black tracking-tight text-slate-950">
                           {t('addressRegistration')}
                         </h2>
+                        <p className="hidden max-w-xl truncate text-[10px] font-semibold text-slate-500 sm:block">
+                          {t('addressWorkspaceDesc')}
+                        </p>
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-1.5">
@@ -2553,6 +2636,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     onSubmit={handleRegister}
+                    data-veygrit-address-form={VEYGRIT_ADDRESS_FORM_VERSION}
                     className="mx-auto flex w-full max-w-3xl flex-col gap-3"
                   >
                     <aside className={cn("order-30", !showRegistrationDetails && "hidden")}>
@@ -2625,7 +2709,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                       {t('identifierMode')}
                     </div>
                     <div
-                      className="grid grid-cols-2 border border-slate-200 bg-slate-100 p-1"
+                      className="grid grid-cols-2 rounded-lg bg-slate-100 p-1"
                       role="group"
                       aria-label={t('identifierMode')}
                     >
@@ -2634,8 +2718,8 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                         aria-pressed={!isAoidMode}
                         onClick={() => setIsAoidMode(false)}
                         className={cn(
-                          "h-8 min-w-[68px] px-3 text-xs font-black transition-colors",
-                          !isAoidMode ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
+                          "h-8 min-w-[68px] rounded-md px-3 text-xs font-black transition-colors",
+                          !isAoidMode ? "bg-white text-blue-700 shadow-sm" : "text-slate-500 hover:text-slate-900"
                         )}
                       >
                         AGID
@@ -2645,10 +2729,11 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                         aria-pressed={isAoidMode}
                         onClick={() => setIsAoidMode(true)}
                         className={cn(
-                          "h-8 min-w-[68px] px-3 text-xs font-black transition-colors",
-                          isAoidMode ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
+                          "flex h-8 min-w-[68px] items-center justify-center gap-1.5 rounded-md px-3 text-xs font-black transition-colors",
+                          isAoidMode ? "bg-slate-950 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
                         )}
                       >
+                        <LockKeyhole className="h-3 w-3" aria-hidden="true" />
                         AOID
                       </button>
                     </div>
@@ -2662,8 +2747,28 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                   </p>
                 </div>
 
+                <div className="order-2 flex items-start gap-3 rounded-lg bg-slate-950 px-3 py-3 text-white shadow-sm">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white/10">
+                    {isAoidMode ? <LockKeyhole className="h-4 w-4" /> : <Save className="h-4 w-4" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs font-black">{t('localOnlyTitle')}</span>
+                      <span className="rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-slate-200">
+                        {t('notPublished')}
+                      </span>
+                      <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[9px] font-black tracking-wide text-emerald-200">
+                        {t('veygritCompatible')}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[10px] font-semibold leading-4 text-slate-300">
+                      {isAoidMode ? t('aoidTip') : t('localOnlyDesc')}
+                    </p>
+                  </div>
+                </div>
+
                 {(initialQrRecord || initialHotelCheckInSession) && (
-                  <div id="qr-address-intake" className="order-2 rounded-lg border border-blue-100 bg-blue-50/80 p-3 shadow-sm shadow-blue-100/60">
+                  <div id="qr-address-intake" className="order-3 rounded-lg border border-blue-100 bg-blue-50/80 p-3 shadow-sm shadow-blue-100/60">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="flex gap-3">
                         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-blue-600 shadow-sm">
@@ -2726,7 +2831,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                   </div>
                 )}
 
-                <div id="postal-coverage-policy" className="order-3 rounded-lg border border-slate-200 bg-white p-2 shadow-sm">
+                <div id="postal-coverage-policy" className="order-4 rounded-lg border border-slate-200 bg-white p-2 shadow-sm">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex min-w-0 items-center gap-2">
                       <div className={cn(
@@ -3528,6 +3633,85 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                       </div>
 
                       <div id="address-registration-primary-form" className="order-2 mx-auto w-full max-w-3xl space-y-2.5 rounded-lg border border-slate-200 bg-white p-2.5 shadow-sm">
+                      {correctionBaselineRef.current && (
+                        <section
+                          id="address-correction-diff"
+                          aria-labelledby="address-correction-diff-title"
+                          aria-live="polite"
+                          className={cn(
+                            "rounded-lg border p-3",
+                            liveCorrectionChanges.length
+                              ? "border-blue-200 bg-blue-50/70"
+                              : "border-slate-200 bg-slate-50",
+                          )}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <h3 id="address-correction-diff-title" className="flex items-center gap-2 text-xs font-black text-slate-900">
+                                <PencilLine className="h-4 w-4 text-blue-600" />
+                                {t('changeReview')}
+                              </h3>
+                              <p className="mt-1 text-[10px] font-bold leading-4 text-slate-500">
+                                {t('changeReviewDesc')}
+                              </p>
+                            </div>
+                            {liveCorrectionChanges.length > 0 && (
+                              <span className="shrink-0 rounded-full bg-blue-600 px-2.5 py-1 text-[9px] font-black text-white">
+                                {formatUiString('changedCount', { count: liveCorrectionChanges.length })}
+                              </span>
+                            )}
+                          </div>
+
+                          {liveCorrectionChanges.length === 0 ? (
+                            <div className="mt-3 flex items-center gap-2 rounded-md bg-white px-3 py-2 text-[11px] font-bold text-slate-500">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                              {t('noAddressChanges')}
+                            </div>
+                          ) : (
+                            <div className="mt-3 space-y-2">
+                              {liveCorrectionChanges.map(change => (
+                                <div
+                                  key={change.field}
+                                  data-correction-field={change.field}
+                                  className="rounded-lg border border-blue-100 bg-white p-2.5 shadow-sm"
+                                >
+                                  <div className="flex items-center justify-between gap-3">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                                      {correctionFieldLabels[change.field] || t(change.field)}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => restoreCorrectionField(change.field)}
+                                      className="rounded-md px-2 py-1 text-[10px] font-black text-blue-700 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                      {t('restoreField')}
+                                    </button>
+                                  </div>
+                                  <div className="mt-2 grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+                                    <div className="min-w-0 rounded-md bg-rose-50 px-2.5 py-2">
+                                      <div className="text-[9px] font-black uppercase tracking-wider text-rose-600">
+                                        {t('beforeChange')}
+                                      </div>
+                                      <div className="mt-1 break-words text-xs font-bold text-slate-600 line-through decoration-rose-400">
+                                        {change.before || t('emptyValue')}
+                                      </div>
+                                    </div>
+                                    <ChevronRight className="hidden h-4 w-4 text-slate-300 sm:block" aria-hidden="true" />
+                                    <div className="min-w-0 rounded-md bg-emerald-50 px-2.5 py-2">
+                                      <div className="text-[9px] font-black uppercase tracking-wider text-emerald-700">
+                                        {t('afterChange')}
+                                      </div>
+                                      <div className="mt-1 break-words text-xs font-black text-slate-900">
+                                        {change.after || t('emptyValue')}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </section>
+                      )}
                       <div id="address-registration-feedback-ui" className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5">
                         <div className="flex items-center justify-between gap-2">
                           <div className="min-w-0">
@@ -3606,7 +3790,10 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                         const currentFormat = selectRegistrationAddressFormat(localFormat, activeTab);
                         const fields = currentFormat?.fields || localFormat.fields || [];
 
-                        return fields.map(field => (
+                        return fields.map(field => {
+                          const binding = getVeygritAddressFieldBinding(field.key);
+                          const fieldValue = (formData as Record<string, string>)[binding.stateKey] || '';
+                          return (
                           <div
                             key={field.key}
                             className={cn(
@@ -3627,8 +3814,11 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                               <>
                                 <textarea
                                   rows={1}
-                                  value={(formData as any)[field.key] || ''}
-                                  onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                                  name={binding.name}
+                                  autoComplete={binding.autoComplete}
+                                  data-veygrit-field={binding.fieldKey}
+                                  value={fieldValue}
+                                  onChange={(e) => handleFieldChange(binding.stateKey, e.target.value)}
                                   placeholder={field.placeholder}
                                   autoFocus={field.key === fields[0]?.key}
                                   className="h-9 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-sm leading-5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -3694,6 +3884,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                                     countryCode={formData.country}
                                     fixedValue={postcodeInputConfig.fixedValue}
                                     source={postcodeInputConfig.source}
+                                    name={binding.name}
+                                    autoComplete={binding.autoComplete}
+                                    dataField={binding.fieldKey}
                                   />
                                   {postcodeLookupStatus === 'loading' && (
                                     <div className="mt-2 flex items-center gap-2 text-[10px] font-bold text-slate-400">
@@ -3753,15 +3946,19 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                             ) : (
                               <input
                                 type={field.type || 'text'}
-                                value={(formData as any)[field.key] || ''}
-                                onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                                name={binding.name}
+                                autoComplete={binding.autoComplete}
+                                data-veygrit-field={binding.fieldKey}
+                                value={fieldValue}
+                                onChange={(e) => handleFieldChange(binding.stateKey, e.target.value)}
                                 placeholder={field.placeholder}
                                 autoFocus={field.key === fields[0]?.key}
-                                className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
                               />
                             )}
                           </div>
-                        ));
+                          );
+                        });
                       })()
                     ) : (
                       <div className="p-8 text-center text-slate-400">{t('registrationLoadingFormat')}</div>
@@ -3780,8 +3977,16 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                             : "bg-blue-600 text-white shadow-blue-200 hover:bg-blue-700"
                         )}
                       >
-                        {isAoidMode ? <ShieldIcon className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
-                        {isAoidMode ? t('registerAsAoid') : t('registerAddress')}
+                        {isAoidMode
+                          ? <LockKeyhole className="h-4 w-4" />
+                          : initialAddressDetails
+                            ? <PencilLine className="h-4 w-4" />
+                            : <Save className="h-4 w-4" />}
+                        {isAoidMode
+                          ? t('registerAsAoid')
+                          : initialAddressDetails
+                            ? t('correctionReady')
+                            : t('registerAddress')}
                       </button>
                     </div>
                     </div>

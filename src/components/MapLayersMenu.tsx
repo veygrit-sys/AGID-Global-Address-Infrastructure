@@ -405,7 +405,9 @@ export const MapLayersMenu: React.FC<MapLayersMenuProps> = ({
                              <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5">GRID LINES</span>
                              <span className="text-[9px] font-black text-slate-900 leading-none">LINE VISIBILITY</span>
                            </div>
-                           <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-lg text-[9px] font-black tracking-tighter">{gridOpacityLevel}x</span>
+                           <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-lg text-[9px] font-black tracking-tighter">
+                             {gridOpacityLevel === 0 ? 'OFF' : (([0, 55, 75, 100, 120, 140][gridOpacityLevel] ?? 100) + '%')}
+                           </span>
                          </div>
                          <input
                            type="range"

@@ -47,7 +47,9 @@ export const PostalAreaNotice: React.FC<PostalAreaNoticeProps> = ({ model, onDis
         <h2 className="text-xs font-black uppercase tracking-wider text-slate-800">{model.title}</h2>
         <p className="mt-1 text-xs font-medium leading-relaxed text-slate-600">{model.detail}</p>
         {model.items?.length ? (
-          <dl className="mt-3 grid gap-2 border-t border-slate-100 pt-3 xl:grid-cols-2">
+          <details className="mt-3 border-t border-slate-100 pt-2">
+            <summary className="cursor-pointer text-xs text-slate-500">データの出典・詳細</summary>
+          <dl className="mt-2 grid gap-2 xl:grid-cols-2">
             {model.items.map(item => (
               <div key={`${item.label}:${item.value}`} className="min-w-0 rounded-xl bg-slate-50 px-3 py-2">
                 <dt className="text-[9px] font-black uppercase tracking-wider text-slate-400">{item.label}</dt>
@@ -58,6 +60,7 @@ export const PostalAreaNotice: React.FC<PostalAreaNoticeProps> = ({ model, onDis
               </div>
             ))}
           </dl>
+          </details>
         ) : null}
       </div>
       <button

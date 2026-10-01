@@ -8,6 +8,9 @@ interface PostcodeInputProps {
   countryCode?: string;
   fixedValue?: string | null;
   source?: string | null;
+  name?: string;
+  autoComplete?: string;
+  dataField?: string;
 }
 
 type PostcodeStructure =
@@ -25,6 +28,9 @@ export const PostcodeInput: React.FC<PostcodeInputProps> = ({
   countryCode,
   fixedValue,
   source,
+  name,
+  autoComplete,
+  dataField,
 }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const isFixed = Boolean(fixedValue);
@@ -124,6 +130,9 @@ export const PostcodeInput: React.FC<PostcodeInputProps> = ({
             key={i}
             ref={el => { if (el) inputRefs.current[fieldIndex] = el; }}
             type="text"
+            name={name ? name + '.' + fieldIndex : undefined}
+            autoComplete={fieldIndex === 0 ? autoComplete : 'off'}
+            data-veygrit-field={dataField}
             value={s.type === 'fixed' ? s.char : values[s.index] || ''}
             onChange={e => handleChange(e, fieldIndex)}
             onKeyDown={e => handleKeyDown(e, fieldIndex)}

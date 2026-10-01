@@ -36,6 +36,7 @@ import { createMultiCloudVeygritIdSecretResolverFromEnv } from './src/server/aut
 import { createVeygritSocialCallbackVerifierFromEnv } from './src/server/auth/veygritSocialProviderBroker';
 import { validateOverpassProxyQuery } from './src/server/proxySecurity';
 import { parseDevServerPort, resolveViteHmrConfig } from './src/server/devServerConfig';
+import { buildPhotonSearchUrl } from './src/server/photonEndpoint';
 import { initPostalCodeDB } from './src/services/PostalCodeDB';
 import {
   createVeygritShipRequestMiddleware,
@@ -1829,10 +1830,13 @@ Primary language: ${lang}. Output ONLY valid JSON.`;
   app.get('/api/photon', async (req, res) => {
     const { q, limit, lat, lon } = req.query;
     try {
-      let url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q as string)}&limit=${limit || 5}`;
-      if (lat && lon) {
-        url += `&lat=${lat}&lon=${lon}`;
-      }
+      const url = buildPhotonSearchUrl({
+        endpoint: process.env.AGID_PHOTON_SEARCH_URL,
+        query: String(q ?? ''),
+        limit: String(limit ?? ''),
+        lat: lat === undefined ? undefined : String(lat),
+        lon: lon === undefined ? undefined : String(lon),
+      });
       const response = await publicCachedGetFetch(url);
       if (response.ok) {
         const data = await response.json();

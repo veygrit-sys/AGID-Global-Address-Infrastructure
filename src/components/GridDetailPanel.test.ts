@@ -6,14 +6,25 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const source = readFileSync(join(here, 'GridDetailPanel.tsx'), 'utf8');
-const addressLanguageTabsSource = readFileSync(join(here, 'AddressLanguageTabs.tsx'), 'utf8');
+const appSource = readFileSync(join(here, '..', 'App.tsx'), 'utf8');
 const addressQualitySummarySource = readFileSync(join(here, 'AddressQualitySummary.tsx'), 'utf8');
 
-test('grid detail address language tabs use native-script labels', () => {
-  assert.match(source, /<AddressLanguageTabs/);
-  assert.match(addressLanguageTabsSource, /getAddressLanguageTabLabel\(langCode/);
-  assert.match(addressLanguageTabsSource, /getEnglishAddressCircle\(countryCode\)/);
-  assert.doesNotMatch(source, /font-black uppercase tracking-widest/);
+test('grid detail address language uses a two-mode dropdown', () => {
+  assert.doesNotMatch(source, /<AddressLanguageTabs/);
+  assert.match(source, /id="agid-address-language"/);
+  assert.match(source, /getAddressLanguageTabLabel\(domesticAddressTab/);
+  assert.match(source, /label: 'Intl\. English'/);
+  assert.match(source, /addressLanguageOptions\.map/);
+  assert.match(source, /onChange=\{\(event\) => handleAddressLanguageChange\(event\.target\.value\)\}/);
+});
+
+test('changing the address language fetches and displays the selected language address', () => {
+  assert.match(source, /const handleAddressLanguageChange = React\.useCallback/);
+  assert.match(source, /setClickedAddressTab\(tab\)/);
+  assert.match(source, /fetchAddressForLang\(lat, lon, tab, true, countryCode, true\)/);
+  assert.match(source, /\{addressDisplayText\}/);
+  assert.match(appSource, /setClickedAddressMap\(prev => \{[\s\S]*?\[langCode\]: formatted/);
+  assert.doesNotMatch(appSource, /setClickedAddressTranslated/);
 });
 
 test('English address tab renders international shipping English from canonical data', () => {
@@ -44,14 +55,17 @@ test('disputed territory address display exposes selectable claim views', () => 
   assert.match(source, /TERRITORY_CLAIM_DISPLAY_POLICIES\.map/);
   assert.match(source, /territoryClaimOptions\.map/);
   assert.match(source, /formatTerritoryClaimSummary\(selectedTerritoryClaim\)/);
+  assert.match(source, /selectedTerritoryClaim\.sourceUrl/);
+  assert.match(source, /selectedTerritoryClaim\.sourceLabel/);
+  assert.match(source, /selectedTerritoryClaim\?\.status === 'country'/);
+  assert.match(source, /territoryClaimOptions\.length > 0 && !isRegularCountryTerritory/);
+  assert.match(source, /selectedTerritoryClaim && !isRegularCountryTerritory/);
 });
 
-test('grid detail panel shows postal and geodata verification quality policy', () => {
+test('grid detail panel keeps address validation without showing confirmation notices', () => {
   assert.match(source, /executeVerifiedAddressTranslationSync/);
   assert.match(source, /const addressValidation = verifiedAddressTranslation\?\.validation \|\| null/);
-  assert.match(source, /getAddressQualityPublicCopy/);
-  assert.match(source, /qualityCopy\.shortLabel/);
-  assert.match(source, /missingRequiredFields\.slice\(0, 3\)\.join/);
+  assert.doesNotMatch(source, /qualityCopy/);
   assert.doesNotMatch(source, /<AddressQualitySummary/);
 });
 
@@ -60,17 +74,25 @@ test('grid detail panel scores address-language tabs before display', () => {
   assert.match(source, /selectVisibleAddressTabs\(displayTabs, addressTabQualities\)/);
   assert.match(source, /const alwaysVisibleTabs = displayTabs\.filter/);
   assert.match(source, /tab === 'en'/);
-  assert.match(source, /tabs=\{visibleDisplayTabs\}/);
-  assert.match(source, /qualityByTab=\{addressTabQualities\}/);
-  assert.match(addressLanguageTabsSource, /qualityByTab\?: Record<string, AddressTabQualityScore>/);
-  assert.doesNotMatch(addressLanguageTabsSource, /AlertTriangle/);
+  assert.match(source, /const domesticAddressTab = React\.useMemo/);
+  assert.match(source, /const internationalEnglishTab = React\.useMemo/);
+  assert.match(source, /const selectableTabs = \[domesticAddressTab, internationalEnglishTab\]/);
 });
 
 test('address tab quality score stays internal and is not rendered to users', () => {
   assert.doesNotMatch(source, /activeAddressTabQuality\.score/);
   assert.doesNotMatch(source, /\/100/);
-  assert.doesNotMatch(addressLanguageTabsSource, /quality\.score/);
-  assert.doesNotMatch(addressLanguageTabsSource, /\/100/);
+});
+
+test('clicking the AGID ID preserves the ID and announces copy status separately', () => {
+  assert.match(source, /navigator\.clipboard\.writeText\(clickedAgid\.id\)/);
+  assert.match(source, /aria-live="polite"/);
+  assert.match(source, /<span>\{clickedAgid\.id\}<\/span>/);
+  assert.match(source, /role="status"/);
+  assert.match(source, /await navigator\.clipboard\.writeText/);
+  assert.doesNotMatch(source, /copied === 'agid' \? 'コピーされました' : clickedAgid\.id/);
+  assert.doesNotMatch(source, /Copy ID & Address/);
+  assert.doesNotMatch(source, /<Copy/);
 });
 
 test('address quality summary hides open-source provider chips from the user panel', () => {
@@ -80,7 +102,7 @@ test('address quality summary hides open-source provider chips from the user pan
   assert.match(addressQualitySummarySource, /summary\.confidenceLabel/);
 });
 
-test('grid detail panel opens address feedback from the address action row', () => {
+test('grid detail panel opens address feedback directly below the address', () => {
   assert.match(source, /AddressFeedbackPanel/);
   assert.match(source, /isAddressFeedbackOpen/);
   assert.match(source, /setIsGridVisible\?: \(visible: boolean\) => void/);
@@ -88,10 +110,10 @@ test('grid detail panel opens address feedback from the address action row', () 
   assert.match(source, /setIsGridVisible\?\.\(true\)/);
   assert.match(source, /title="Address feedback"/);
   assert.match(source, /onClick=\{openAddressFeedbackPanel\}/);
+  assert.match(source, /\{addressDisplayText\}[\s\S]*?title="Address feedback"[\s\S]*?grid grid-cols-3/);
   assert.match(source, /presentation="map-left"/);
-  assert.match(source, /closeOnSaved/);
-  assert.match(source, /onLearningSaved=\{\(summary\) => showAlert/);
-  assert.match(source, /onFieldFeedbackSubmitted=\{\(result\) => showAlert/);
+  assert.doesNotMatch(source, /closeOnSaved/);
+  assert.match(source, /onApplyCorrection=\{\(text\) => setFeedbackCorrection/);
   assert.match(source, /sourceIds=\{addressFeedbackSourceIds\}/);
 });
 
@@ -102,5 +124,13 @@ test('grid detail panel keeps the user panel concise and does not render Geo add
   assert.match(source, /grid grid-cols-3 gap-2/);
   assert.match(source, />Save<\/button>/);
   assert.match(source, />QR<\/button>/);
-  assert.match(source, />Report<\/button>/);
+  assert.match(source, /title="Get Directions"[\s\S]*?<Bookmark className="w-3 h-3" \/>Save/);
+});
+
+test('grid detail panel keeps one outer panel while inner address and QR sections stay unboxed', () => {
+  assert.match(source, /className="group relative py-1"/);
+  assert.match(source, /className="flex items-center gap-3 py-2"/);
+  assert.doesNotMatch(source, /group relative rounded-2xl border border-slate-200 bg-white p-3/);
+  assert.doesNotMatch(source, /items-center gap-3 rounded-xl border border-slate-200 bg-white p-2/);
+  assert.doesNotMatch(source, /grid grid-cols-3 gap-2 mt-2 pt-2 border-t/);
 });

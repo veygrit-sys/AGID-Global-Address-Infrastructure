@@ -91,6 +91,7 @@ const FORMAT_FIELD_KEY_MAP: Record<string, AddressElementFieldKey> = {
   state: 'state',
   street: 'street',
   streetaddress: 'street',
+  suburb: 'district',
   suite: 'unit',
   tel: 'phone',
   telephone: 'phone',
