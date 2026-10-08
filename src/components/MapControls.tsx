@@ -18,7 +18,6 @@ interface MapControlsProps {
   jumpToMyLocation: () => void;
   setShowStyleMenu: (s: boolean) => void;
   clickedAgid: any;
-  isAgidPanelCollapsed: boolean;
   mapRef: React.MutableRefObject<maplibregl.Map | null>;
   t: (key: string) => string;
 }
@@ -31,27 +30,26 @@ export const MapControls: React.FC<MapControlsProps> = ({
   jumpToMyLocation,
   setShowStyleMenu,
   clickedAgid,
-  isAgidPanelCollapsed,
   mapRef,
   t
 }) => {
   return (
     <>
-      <div className="absolute right-2 top-20 z-50 pointer-events-none md:right-3 md:top-6">
+      <div className="absolute right-2 top-20 z-50 pointer-events-none md:right-5 md:top-6">
         <div className="pointer-events-auto">
           <button
             type="button"
             onClick={jumpToMyLocation}
             disabled={isLocating}
             className={cn(
-              "flex h-11 w-11 items-center justify-center rounded-2xl border bg-white shadow-xl transition-all active:scale-95 md:h-10 md:w-10",
-              isTracking ? "border-blue-200 text-blue-600" : "border-slate-200 text-slate-700 hover:bg-blue-50 hover:text-blue-600",
+              "flex h-9 w-9 items-center justify-center rounded-full border border-white/90 bg-white text-blue-600 shadow-lg shadow-slate-900/15 transition-all hover:bg-blue-50 hover:text-blue-700 active:scale-95 md:h-8 md:w-8",
+              isTracking && "border-blue-600 bg-blue-600 text-white ring-4 ring-blue-200/70",
               isLocating && "cursor-wait opacity-80"
             )}
             title={t('current_location')}
             aria-label={t('current_location')}
           >
-            <LocateFixed className={cn("h-5 w-5 md:h-4.5 md:w-4.5", (isTracking || isLocating) && "animate-pulse")} />
+            <LocateFixed className={cn("h-4 w-4", (isTracking || isLocating) && "animate-pulse")} />
           </button>
         </div>
       </div>
@@ -59,9 +57,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
       <div className={cn(
         "absolute z-40 flex flex-col gap-2 md:gap-1.5 pointer-events-none transition-all duration-500 items-end",
         "right-2 md:right-3",
-        clickedAgid
-          ? (isAgidPanelCollapsed ? "bottom-24 md:bottom-8" : "bottom-72 md:bottom-8")
-          : "bottom-8 md:bottom-8"
+        clickedAgid ? "bottom-72 md:bottom-8" : "bottom-8 md:bottom-8"
       )}>
       {/* Upper Group: Compass (Only when tilted) */}
       <div className="flex flex-col gap-2 md:gap-2 items-end">

@@ -12,7 +12,7 @@ test('keeps the map current-location button in a fixed visible position', () => 
   assert.match(source, /locationPermissionState/);
   assert.match(source, /jumpToMyLocation=\{jumpToMyLocation\}/);
   assert.match(mapControlsSource, /right-2 top-20 z-50/);
-  assert.match(mapControlsSource, /md:right-3 md:top-6/);
+  assert.match(mapControlsSource, /md:right-5 md:top-6/);
   assert.match(mapControlsSource, /onClick=\{jumpToMyLocation\}/);
   assert.match(mapControlsSource, /aria-label=\{t\('current_location'\)\}/);
   assert.doesNotMatch(source, /isMapLoaded && !userLocation && locationPermissionState !== 'unsupported' && locationPermissionState !== 'denied'/);

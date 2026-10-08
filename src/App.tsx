@@ -22,9 +22,6 @@ import { calculateBearing,calculateDistance,formatDistance } from './lib/nav';
 import { fetchWithRetry } from './lib/utils';
 
 // Extracted Components
-import { GridCanvasOverlay } from './components/GridCanvasOverlay';
-import { MapControls } from './components/MapControls';
-import { SearchSidebar } from './components/SearchSidebar';
 import { PostalAreaNotice,type PostalAreaNoticeModel } from './components/PostalAreaNotice';
 
 import type { Html5QrcodeScanner } from 'html5-qrcode';
@@ -75,9 +72,10 @@ resolvePostalAreaLookupCandidate,
 summarizePostalAreaIdentity,
 subscribePostalAreaMapLayer,
 type PostalAreaFeatureCollection,
+type PostalAreaLookupCandidate,
 } from './lib/postalSearchArea';
 import { applySmartPattern,getPatternForPrefix } from './lib/postalPatterns';
-import { clearAppDatabasePrivateData,type SyncQueueRecord } from './lib/appDatabase';
+import type { SyncQueueRecord } from './lib/appDatabase';
 import type { HotelCheckInSession } from './lib/addressQrIntake';
 import type { RegisteredAddressQrPrivacy } from './lib/privacyPolicy';
 import type { RegisteredAddressRecord } from './lib/registeredAddressQr';
@@ -95,8 +93,9 @@ RouteStop,
 SearchResultFeature,
 } from './types/navigation';
 const GridDetailPanel = React.lazy(() => import('./components/GridDetailPanel').then(m => ({ default: m.GridDetailPanel })));
+const MapControls = React.lazy(() => import('./components/MapControls').then(m => ({ default: m.MapControls })));
+const SearchSidebar = React.lazy(() => import('./components/SearchSidebar').then(m => ({ default: m.SearchSidebar })));
 const DeliveryStopCandidatePanel = React.lazy(() => import('./components/DeliveryStopCandidatePanel').then(m => ({ default: m.DeliveryStopCandidatePanel })));
-const SyncQueueStatus = React.lazy(() => import('./components/SyncQueueStatus').then(m => ({ default: m.SyncQueueStatus })));
 const MapLayersMenu = React.lazy(() => import('./components/MapLayersMenu').then(m => ({ default: m.MapLayersMenu })));
 const SideMenu = React.lazy(() => import('./components/SideMenu').then(m => ({ default: m.SideMenu })));
 const AddressRegistration = React.lazy(() => import('./components/AddressRegistration').then(m => ({ default: m.AddressRegistration })));
@@ -109,7 +108,6 @@ const QrScannerModal = React.lazy(() => import('./components/modals/QrScannerMod
 const QrReaderActionScreen = React.lazy(() => import('./components/modals/QrReaderActionScreen').then(m => ({ default: m.QrReaderActionScreen })));
 const CustomAlert = React.lazy(() => import('./components/modals/FeedbackOverlays').then(m => ({ default: m.CustomAlert })));
 const ConfirmModal = React.lazy(() => import('./components/modals/FeedbackOverlays').then(m => ({ default: m.ConfirmModal })));
-const LicensesOverlay = React.lazy(() => import('./components/modals/LegalOverlays').then(m => ({ default: m.LicensesOverlay })));
 const LegalOverlay = React.lazy(() => import('./components/modals/LegalOverlays').then(m => ({ default: m.LegalOverlay })));
 const FullSeaRegistryView = React.lazy(() => import('./components/RegistryViews').then(m => ({ default: m.FullSeaRegistryView })));
 const FullCountryRegistryView = React.lazy(() => import('./components/RegistryViews').then(m => ({ default: m.FullCountryRegistryView })));
@@ -199,13 +197,13 @@ export default function App() {
     return DEVICE_ZOOM_BREAKPOINTS.find(({ maxWidth }) => w < maxWidth)?.zoom ?? 19.5;
   };
 
-  const initialMapView = resolveInitialMapView({
+  const [initialMapView] = useState(() => resolveInitialMapView({
     search: window.location.search,
     width: window.innerWidth,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     languages: navigator.languages?.length ? navigator.languages : [navigator.language].filter(Boolean),
     detailZoom: getDeviceZoom(),
-  });
+  }));
   const shouldSelectInitialMapPointRef = useRef(initialMapView.shouldSelectInitialPoint);
   const centerSelectionEnabledRef = useRef(initialMapView.shouldSelectInitialPoint);
 
@@ -279,7 +277,6 @@ export default function App() {
   const [clickedAgid, setClickedAgid] = useState<AGIDResult | null>(null);
   const [clickedAddress, setClickedAddress] = useState<string>("");
   const [, setClickedAddressEn] = useState<string>("");
-  const [clickedAddressTranslated, setClickedAddressTranslated] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -324,7 +321,6 @@ export default function App() {
   });
   const [settingsTab, setSettingsTab] = useState<'main' | 'home' | 'app' | 'location' | 'pos-terminal' | 'offline' | 'about' | 'app-language' | 'address-language' | 'help' | 'export'>('main');
   const [activeLegalDoc, setActiveLegalDoc] = useState<'privacy' | 'terms' | null>(null);
-  const [showLicenses, setShowLicenses] = useState(false);
   const [clickedAddressLang, setClickedAddressLang] = useState<string>("Local");
   const [clickedAddressTab, setClickedAddressTab] = useState<string>(() => {
     if (addressLanguage === 'local') return 'local';
@@ -382,7 +378,6 @@ export default function App() {
   const [isQrReaderOpen, setIsQrReaderOpen] = useState(false);
   const [isQrVisible, setIsQrVisible] = useState(false);
   const [showLocationAnalysis, setShowLocationAnalysis] = useState(false);
-  const [isAgidPanelCollapsed, setIsAgidPanelCollapsed] = useState(false);
 
   const qrScannerRef = useRef<Html5QrcodeScanner | null>(null);
   const qrFileRef = useRef<HTMLInputElement>(null);
@@ -726,8 +721,14 @@ export default function App() {
 
   const [showFullSeaRegistry, setShowFullSeaRegistry] = useState(false);
   const [showFullCountryRegistry, setShowFullCountryRegistry] = useState(false);
-  const fullSeaRegistry = useMemo(() => generateFullSeaRegistry(), []);
-  const fullCountryRegistry = useMemo(() => generateFullCountryRegistry(), []);
+  const fullSeaRegistry = useMemo(
+    () => showFullSeaRegistry ? generateFullSeaRegistry() : [],
+    [showFullSeaRegistry],
+  );
+  const fullCountryRegistry = useMemo(
+    () => showFullCountryRegistry ? generateFullCountryRegistry() : [],
+    [showFullCountryRegistry],
+  );
 
   const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system'>(() => {
     try {
@@ -798,7 +799,11 @@ export default function App() {
     if (clickedAddress && addressLanguage && addressLanguage !== 'local' && !clickedActiveLangs.includes(addressLanguage)) {
       translateAddress(clickedAddress, addressLanguage, clickedAddressDetails).then(translated => {
         if (isMounted) {
-          setClickedAddressTranslated(prev => prev !== translated ? translated : prev);
+          setClickedAddressMap(prev => (
+            prev[addressLanguage] === translated
+              ? prev
+              : { ...prev, [addressLanguage]: translated }
+          ));
         }
       });
     }
@@ -2011,14 +2016,10 @@ export default function App() {
       if (!externalAddressDataEnabled) {
         const localOnly = `${countryCode || 'AGID'} ${encodeAGID(l, n).id}`;
         if (isClicked) {
-          if (langCode === addressLanguage) {
-            setClickedAddressTranslated(prev => prev !== localOnly ? localOnly : prev);
-          } else {
-            setClickedAddressMap(prev => {
-              if (prev[langCode] === localOnly) return prev;
-              return { ...prev, [langCode]: localOnly };
-            });
-          }
+          setClickedAddressMap(prev => {
+            if (prev[langCode] === localOnly) return prev;
+            return { ...prev, [langCode]: localOnly };
+          });
         }
         return;
       }
@@ -2072,14 +2073,10 @@ export default function App() {
         }
 
         if (isClicked) {
-          if (langCode === addressLanguage) {
-            setClickedAddressTranslated(prev => prev !== formatted ? formatted : prev);
-          } else {
-            setClickedAddressMap(prev => {
-              if (prev[langCode] === formatted) return prev;
-              return { ...prev, [langCode]: formatted };
-            });
-          }
+          setClickedAddressMap(prev => {
+            if (prev[langCode] === formatted) return prev;
+            return { ...prev, [langCode]: formatted };
+          });
         }
       }
     } catch (e) {
@@ -2394,15 +2391,9 @@ export default function App() {
     setPostalAreaNotice(null);
   }, []);
 
-  const updatePostalAreaForSearchResult = React.useCallback(async (
-    result: SearchResultFeature,
-    query: string,
+  const updatePostalAreaForCandidate = React.useCallback(async (
+    candidate: PostalAreaLookupCandidate | null,
   ) => {
-    const candidate = resolvePostalAreaLookupCandidate(
-      result,
-      query,
-      advancedSearchOptions.countryCodes,
-    );
     const requestId = ++postalAreaRequestRef.current;
     setPostalAreaFeatureCollection(null);
     if (!candidate) {
@@ -2583,7 +2574,17 @@ export default function App() {
         detail: 'Postal Context APIへ接続できませんでした。推定ポリゴンは表示していません。',
       });
     }
-  }, [advancedSearchOptions.countryCodes]);
+  }, []);
+
+  const updatePostalAreaForSearchResult = (result: SearchResultFeature, query: string) =>
+    updatePostalAreaForCandidate(resolvePostalAreaLookupCandidate(result, query, advancedSearchOptions.countryCodes));
+
+  const searchPostalArea = (candidate: PostalAreaLookupCandidate) => {
+    setIsSearchFocused(false);
+    setSearchResults([]);
+    setClickedAgid(null);
+    void updatePostalAreaForCandidate(candidate);
+  };
 
   const selectSearchResult = async (result: SearchResultFeature) => {
     if (!map.current) return;
@@ -2851,22 +2852,8 @@ export default function App() {
           if (!exists && prev.length >= 3) return prev;
           return [registeredAddressQr, ...prev.filter(a => a.id !== registeredAddressQr.id)];
         });
-        enqueueSyncQueueRecord('aoid', registeredAddressQr.id, 'create', {
-          id: registeredAddressQr.id,
-          agid: registeredAddressQr.agid,
-          type: 'AOID',
-          country: registeredAddressQr.country,
-          registeredAt: registeredAddressQr.registeredAt,
-        });
       } else if (registeredAddressQr.type === 'ADDRESS') {
         setRegisteredAddresses(prev => [registeredAddressQr, ...prev.filter(address => address.id !== registeredAddressQr.id)]);
-        enqueueSyncQueueRecord('registeredAddress', registeredAddressQr.id, 'create', {
-          id: registeredAddressQr.id,
-          agid: registeredAddressQr.agid,
-          type: registeredAddressQr.type,
-          country: registeredAddressQr.country,
-          registeredAt: registeredAddressQr.registeredAt,
-        });
       }
 
       const qrLat = registeredAddressQr.lat;
@@ -3142,6 +3129,7 @@ export default function App() {
     setHomeAgid('');
     const { clearPrivateLocalStorage } = await import('./lib/privacyPolicy');
     clearPrivateLocalStorage(localStorage);
+    const { clearAppDatabasePrivateData } = await import('./lib/appDatabase');
     await clearAppDatabasePrivateData();
   }, []);
 
@@ -3181,6 +3169,7 @@ export default function App() {
         'selected-cell-layer',
         'agid-grid-layer',
         'active-cell-outline-layer',
+        'selected-cell-halo-layer',
         'selected-cell-outline-layer',
         'selection-point-glow-layer',
         'selection-label-layer',
@@ -3398,7 +3387,6 @@ export default function App() {
     const result = encodeAGID(clickLat, clickLng);
     setClickedAgid(result);
     setClickedAddress("住所を取得中...");
-    setIsAgidPanelCollapsed(false);
 
     // Use consolidated logic for resolving address with pre-fetching
     reverseGeocode(clickLat, clickLng, result.prefix, result.isSea, true);
@@ -4817,14 +4805,6 @@ export default function App() {
     <div className="relative w-full h-screen font-sans bg-slate-50 text-slate-900">
       {/* Map Background */}
       <div ref={mapContainer} className="map-container" />
-      <GridCanvasOverlay
-        map={map}
-        isMapLoaded={isMapLoaded}
-        isGridVisible={isGridVisible}
-        gridOpacityLevel={gridOpacityLevel}
-        selectedResult={clickedAgid}
-      />
-
       {!isMapLoaded && (
         <div className="absolute inset-0 bg-white flex flex-col items-center justify-center z-[100]">
           <div className="flex flex-col items-center gap-6">
@@ -4832,6 +4812,9 @@ export default function App() {
               <img
                 src="/agid-logo.png"
                 alt="AGID"
+                width="476"
+                height="305"
+                fetchPriority="high"
                 className="h-20 w-auto max-w-[280px] object-contain"
               />
             </div>
@@ -4873,7 +4856,9 @@ export default function App() {
       </div>
 
       {/* Unified Search Sidebar */}
-      <SearchSidebar
+      {isMapLoaded && (
+        <React.Suspense fallback={null}>
+          <SearchSidebar
         t={t}
         isSearchFocused={isSearchFocused}
         setIsSearchFocused={setIsSearchFocused}
@@ -4894,6 +4879,8 @@ export default function App() {
         clearHistory={clearHistory}
         removeFromHistory={removeFromHistory}
         performSearch={performSearch}
+        searchPostalArea={searchPostalArea}
+        isPostalSearching={postalAreaNotice?.status === 'loading'}
         handleSearch={handleSearch}
         selectSearchResult={selectSearchResult}
         getCurrentMapCenter={() => {
@@ -4931,8 +4918,10 @@ export default function App() {
         destinationResults={destinationResults}
         selectOrigin={selectOrigin}
         selectDestination={selectDestination}
-        mapRef={map}
-      />
+            mapRef={map}
+          />
+        </React.Suspense>
+      )}
 
       <PostalAreaNotice
         model={postalAreaNotice}
@@ -4946,20 +4935,6 @@ export default function App() {
             routingMode={routingMode}
             appLanguage={appLanguage}
             lowBandwidth={isLowBandwidthMapMode}
-          />
-        </React.Suspense>
-      )}
-
-      {syncQueue.length > 0 && (
-        <React.Suspense fallback={null}>
-          <SyncQueueStatus
-            records={syncQueue}
-            appLanguage={appLanguage}
-            onScanQr={startQrScanner}
-            onOpenQrLibrary={() => {
-              setSavedTab('qr');
-              setShowSaved(true);
-            }}
           />
         </React.Suspense>
       )}
@@ -5006,7 +4981,7 @@ export default function App() {
             fetchQualityReport={fetchQualityReport}
             registryStats={registryStats}
             setShowResources={setShowResources}
-            setShowLicenses={setShowLicenses}
+            openLicenses={() => { window.location.href = '/licenses'; }}
             mapRef={map}
             jumpToAgid={jumpToAgid}
             externalAddressDataEnabled={externalAddressDataEnabled}
@@ -5029,14 +5004,14 @@ export default function App() {
             setShowSaved={setShowSaved}
             setAoidModeForced={setAoidModeForced}
             setShowAddressRegistration={setShowAddressRegistration}
+            openLicenses={() => { window.location.href = '/licenses'; }}
             appLanguage={appLanguage}
           />
         </React.Suspense>
       )}
 
       <div className={cn(
-        "absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-[450px] px-4 flex flex-col gap-4 pointer-events-none transition-all duration-500",
-        isAgidPanelCollapsed && "bottom-2",
+        "absolute bottom-4 left-1/2 z-40 flex w-full max-w-[450px] -translate-x-1/2 flex-col gap-4 px-4 pointer-events-none transition-all duration-500 md:bottom-auto md:left-auto md:right-5 md:top-[84px] md:w-[420px] md:max-w-[calc(100vw-40px)] md:translate-x-0 md:px-0",
         postalAreaNotice && "hidden md:flex"
       )}>
         {/* Selected Location Panel - Improved UX */}
@@ -5045,8 +5020,6 @@ export default function App() {
             <GridDetailPanel
               clickedAgid={clickedAgid}
               setClickedAgid={setClickedAgid}
-              isAgidPanelCollapsed={isAgidPanelCollapsed}
-              setIsAgidPanelCollapsed={setIsAgidPanelCollapsed}
               isManualSelection={isManualSelection}
               setIsManualSelection={setIsManualSelection}
               isAgidPinnedToGps={isAgidPinnedToGps}
@@ -5067,7 +5040,6 @@ export default function App() {
               clickedAddressTab={clickedAddressTab}
               setClickedAddressTab={setClickedAddressTab}
               clickedActiveLangs={clickedActiveLangs}
-              clickedAddressTranslated={clickedAddressTranslated}
               clickedAddressDetails={clickedAddressDetails}
               setClickedAddress={setClickedAddress}
               fetchAddressForLang={fetchAddressForLang}
@@ -5170,18 +5142,21 @@ export default function App() {
         </React.Suspense>
       )}
 
-       <MapControls
-        clickedAgid={clickedAgid}
-        isAgidPanelCollapsed={isAgidPanelCollapsed}
-        mapBearing={mapBearing}
-        setMapBearing={setMapBearing}
-        setShowStyleMenu={setShowStyleMenu}
-        jumpToMyLocation={jumpToMyLocation}
-        isTracking={isTracking}
-        isLocating={isLocating}
-        mapRef={map}
-        t={t}
-      />
+      {isMapLoaded && (
+        <React.Suspense fallback={null}>
+          <MapControls
+            clickedAgid={clickedAgid}
+            mapBearing={mapBearing}
+            setMapBearing={setMapBearing}
+            setShowStyleMenu={setShowStyleMenu}
+            jumpToMyLocation={jumpToMyLocation}
+            isTracking={isTracking}
+            isLocating={isLocating}
+            mapRef={map}
+            t={t}
+          />
+        </React.Suspense>
+      )}
 
       <React.Suspense fallback={null}>
         {showGeoArchitect && (
@@ -5234,31 +5209,12 @@ export default function App() {
               const newSavedQrs = [savedQr, ...savedQrs.filter(q => q.id !== savedQr.id)];
               setSavedQrs(newSavedQrs);
               localStorage.setItem('saved_qrs', JSON.stringify(newSavedQrs));
-              enqueueSyncQueueRecord('savedQr', savedQr.id, 'create', {
-                id: savedQr.id,
-                source: savedQr.source,
-                savedAt: savedQr.savedAt,
-              });
 
               if (isAoidRegistration) {
                 setAoids(prev => [data, ...prev.filter(aoid => aoid.id !== data.id)]);
-                enqueueSyncQueueRecord('aoid', data.id, 'create', {
-                  id: data.id,
-                  agid: data.agid,
-                  type: 'AOID',
-                  country: data.country,
-                  registeredAt: data.registeredAt,
-                });
-                showAlert("AOID Registered", `Standard ID ${data.id} has been registered as your private Address Owner ID.`);
+                showAlert("AOID Saved Privately", `${data.id} was saved only on this device and was not published.`);
               } else {
                 setRegisteredAddresses(prev => [data, ...prev.filter(address => address.id !== data.id)]);
-                enqueueSyncQueueRecord('registeredAddress', data.id, 'create', {
-                  id: data.id,
-                  agid: data.agid,
-                  type: data.type,
-                  country: data.country,
-                  registeredAt: data.registeredAt,
-                });
                 const registrationLat = typeof data.lat === 'number' ? data.lat : lat;
                 const registrationLon = typeof data.lon === 'number'
                   ? data.lon
@@ -5270,7 +5226,7 @@ export default function App() {
                   ...registeredAgid,
                   id: data.agid || registeredAgid.id,
                 }, data.address);
-                showAlert("Address Registered", `Address for ${data.name || data.recipient} has been saved locally and a QR has been generated.`);
+                showAlert("Address Saved", `Address for ${data.name || data.recipient || data.agid} was saved on this device. Nothing was publicly registered.`);
               }
               setSavedTab(isAoidRegistration ? 'aoid' : 'agid');
               setShowSaved(true);
@@ -5410,12 +5366,6 @@ export default function App() {
           });
         }}
       />
-
-      {showLicenses && (
-        <React.Suspense fallback={null}>
-          <LicensesOverlay show={showLicenses} onClose={() => setShowLicenses(false)} />
-        </React.Suspense>
-      )}
 
       {activeLegalDoc && (
         <React.Suspense fallback={null}>

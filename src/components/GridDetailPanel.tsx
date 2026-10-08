@@ -2,9 +2,7 @@
 import {
 ArrowUpRight,
 Bookmark,
-Check,
 ChevronDown,
-Copy,
 Download,
 Flag,
 MapPin,
@@ -42,18 +40,15 @@ getAgidAddressTabLanguages,
 isEnglishAddressCountry,
 isInternationalShippingEnglishTab,
 } from '../lib/languageTabs';
+import { getAddressLanguageTabLabel } from '../lib/languageLabels';
 import { cn } from '../lib/utils';
 import { executeVerifiedAddressTranslationSync } from '../lib/verifiedAddressTranslation';
 import type { AddressDetails } from '../types/address';
 import type { RouteStop } from '../types/navigation';
-import { AddressLanguageTabs } from './AddressLanguageTabs';
 import { AddressFeedbackPanel } from './AddressFeedbackPanel';
-import { decideAddressQuality,getAddressQualityPublicCopy } from '../lib/addressQualityDecision';
 
 interface GridDetailPanelProps {
   clickedAgid: AGIDResult | null;
-  isAgidPanelCollapsed: boolean;
-  setIsAgidPanelCollapsed: (c: boolean) => void;
   isAgidPinnedToGps: boolean;
   setIsAgidPinnedToGps: (p: boolean) => void;
   isManualSelection: boolean;
@@ -66,7 +61,6 @@ interface GridDetailPanelProps {
   clickedAddressMap: Record<string, string>;
   clickedAddressTab: string;
   setClickedAddressTab: (t: string) => void;
-  clickedAddressTranslated: string;
   clickedAddressDetails: AddressDetails | null;
   clickedActiveLangs: string[];
   copied: string | null;
@@ -100,8 +94,6 @@ interface GridDetailPanelProps {
 
 export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   clickedAgid,
-  isAgidPanelCollapsed,
-  setIsAgidPanelCollapsed,
   isAgidPinnedToGps,
   setIsManualSelection,
   setClickedAgid,
@@ -112,7 +104,6 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   clickedAddressMap,
   clickedAddressTab,
   setClickedAddressTab,
-  clickedAddressTranslated,
   clickedAddressDetails,
   copied,
   setCopied,
@@ -120,6 +111,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   mapRef,
   mapPitch,
   getDeviceZoom,
+  fetchAddressForLang,
   saveAgid,
   saveQrCode,
   setDestination,
@@ -138,7 +130,12 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   const [territoryClaimDisplayPolicy, setTerritoryClaimDisplayPolicy] = React.useState<TerritoryClaimDisplayPolicy>('neutral-first');
   const [selectedTerritoryClaimId, setSelectedTerritoryClaimId] = React.useState<string | null>(null);
   const [isAddressFeedbackOpen, setIsAddressFeedbackOpen] = React.useState(false);
+  const [feedbackCorrection, setFeedbackCorrection] = React.useState<{ agid: string; tab: string; text: string } | null>(null);
   const claimPolicyRef = React.useRef<TerritoryClaimDisplayPolicy>(territoryClaimDisplayPolicy);
+  const copyAnnouncementTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  React.useEffect(() => () => {
+    if (copyAnnouncementTimer.current) clearTimeout(copyAnnouncementTimer.current);
+  }, []);
 
   const openAddressFeedbackPanel = React.useCallback(() => {
     setIsGridVisible?.(true);
@@ -365,6 +362,46 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
     return displayTabs.filter(tab => visibleSet.has(tab));
   }, [addressTabQualities, displayTabs]);
 
+  const domesticAddressTab = React.useMemo(
+    () => (
+      visibleDisplayTabs.find(tab => tab === 'en_domestic') ||
+      visibleDisplayTabs.find(tab => !isInternationalEnglishDisplayTab(tab)) ||
+      'en_domestic'
+    ),
+    [isInternationalEnglishDisplayTab, visibleDisplayTabs]
+  );
+  const internationalEnglishTab = React.useMemo(
+    () => (
+      visibleDisplayTabs.find(tab => tab === 'en') ||
+      visibleDisplayTabs.find(tab => isInternationalEnglishDisplayTab(tab)) ||
+      'en'
+    ),
+    [isInternationalEnglishDisplayTab, visibleDisplayTabs]
+  );
+  const addressLanguageOptions = React.useMemo(() => {
+    const domesticLanguage = LANGUAGES.find(language => language.code === domesticAddressTab);
+    return [
+      {
+        value: domesticAddressTab,
+        label: getAddressLanguageTabLabel(domesticAddressTab, domesticLanguage?.name, {
+          englishMode: domesticAddressTab === 'en_domestic' ? 'domestic' : 'plain',
+        }),
+      },
+      {
+        value: internationalEnglishTab,
+        label: 'Intl. English',
+      },
+    ];
+  }, [domesticAddressTab, internationalEnglishTab]);
+
+  const handleAddressLanguageChange = React.useCallback((tab: string) => {
+    setClickedAddressTab(tab);
+    if (!clickedAgid) return;
+    const lat = (clickedAgid.bounds.minLat + clickedAgid.bounds.maxLat) / 2;
+    const lon = (clickedAgid.bounds.minLon + clickedAgid.bounds.maxLon) / 2;
+    void fetchAddressForLang(lat, lon, tab, true, countryCode, true);
+  }, [clickedAgid, countryCode, fetchAddressForLang, setClickedAddressTab]);
+
   const addressFeedbackSourceIds = React.useMemo(() => {
     const values = verifiedAddressTranslation?.sources || [];
     return values
@@ -379,15 +416,14 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
       .filter(Boolean);
   }, [verifiedAddressTranslation?.sources]);
 
-  // If current tab is not in display list (e.g. was 'local'), default to the first official lang
+  // Keep the AGID panel on one of the two public address display modes.
   React.useEffect(() => {
     if (!clickedAgid) return;
-    if (clickedAddressTab === 'local' || !visibleDisplayTabs.includes(clickedAddressTab)) {
-      if (visibleDisplayTabs.length > 0 && !isInternationalShippingEnglishTab(clickedAddressTab) && clickedAddressTab !== 'shipping_label') {
-        setClickedAddressTab(visibleDisplayTabs[0]);
-      }
+    const selectableTabs = [domesticAddressTab, internationalEnglishTab];
+    if (!selectableTabs.includes(clickedAddressTab)) {
+      setClickedAddressTab(domesticAddressTab);
     }
-  }, [clickedAgid, clickedAddressTab, setClickedAddressTab, visibleDisplayTabs]);
+  }, [clickedAgid, clickedAddressTab, domesticAddressTab, internationalEnglishTab, setClickedAddressTab]);
 
   if (!clickedAgid) return null;
 
@@ -426,27 +462,15 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
       return rawAddressDisplay || getFallbackAddressDisplay();
     }
   })();
-  const addressDisplayText = formatAddressDisplayText(resolvedAddressDisplay, { tab: clickedAddressTab, countryCode });
+  const addressDisplayText = feedbackCorrection?.agid === clickedAgid.id && feedbackCorrection.tab === clickedAddressTab
+    ? feedbackCorrection.text
+    : formatAddressDisplayText(resolvedAddressDisplay, { tab: clickedAddressTab, countryCode });
   const preserveAddressDisplayLines = shouldPreserveAddressDisplayLines(clickedAddressTab, countryCode);
   const activeAddressTabQuality = addressTabQualities[clickedAddressTab];
   const addressFeedbackQualityScore = addressTabQualities[clickedAddressTab]?.score;
-  const addressQualityDecision = decideAddressQuality({
-    tabQuality: activeAddressTabQuality,
-    validation: addressValidation,
-    displayQuality: addressQuality,
-  });
-  const qualityCopy = getAddressQualityPublicCopy(
-    addressQualityDecision,
-    typeof document !== 'undefined' ? document.documentElement.lang : 'en',
-  );
-  const qualityTone = addressQualityDecision.state === 'address-ok'
-    ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-100'
-    : addressQualityDecision.state === 'restricted'
-      ? 'border-red-400/25 bg-red-400/10 text-red-100'
-      : 'border-amber-300/25 bg-amber-300/10 text-amber-100';
-  const missingRequiredFields = addressValidation?.missingRequiredFields || [];
   const selectedTerritoryClaim: TerritoryClaimOption | null =
     territoryClaimOptions.find(option => option.id === selectedTerritoryClaimId) || territoryClaimOptions[0] || null;
+  const isRegularCountryTerritory = selectedTerritoryClaim?.status === 'country';
 
   return (
     <>
@@ -456,39 +480,17 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
       animate={{ scale: 1, opacity: 1, y: 0 }}
       exit={{ scale: 0.8, opacity: 0, y: 20 }}
       className={cn(
-        "bg-slate-900/90 backdrop-blur-xl shadow-2xl border pointer-events-auto text-white transition-all duration-500 overflow-hidden mx-auto",
-        clickedAgid.id.startsWith('IN') ? "border-orange-500/30" : clickedAgid.id.startsWith('ZA') ? "border-green-500/30" : "border-slate-800",
-        isAgidPanelCollapsed
-           ? "w-14 h-14 rounded-xl flex items-center justify-center p-0 cursor-pointer hover:bg-slate-800 hover:scale-110 active:scale-95 shadow-red-500/20 shadow-lg"
-           : "w-full rounded-2xl p-4"
+        "bg-white shadow-2xl border pointer-events-auto text-slate-900 transition-all duration-500 overflow-hidden mx-auto",
+        clickedAgid.id.startsWith('IN') ? "border-orange-500/30" : clickedAgid.id.startsWith('ZA') ? "border-green-500/30" : "border-slate-200",
+        "w-full rounded-2xl p-4"
       )}
-      onClick={isAgidPanelCollapsed ? () => setIsAgidPanelCollapsed(false) : undefined}
     >
-      <div className={cn("flex flex-col gap-2 w-full h-full", isAgidPanelCollapsed && "items-center justify-center")}>
-        {isAgidPanelCollapsed ? (
-           <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center justify-center"
-           >
-               <div className="relative">
-                <div className="w-4 h-4 bg-red-500 rounded-sm shadow-[0_0_12px_rgba(239,68,68,0.7)]" />
-                <div className={cn(
-                  "absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full animate-pulse",
-                  isAgidPinnedToGps ? "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]" : "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"
-                )} />
-               </div>
-           </motion.div>
-        ) : (
-          <>
+      <div className="flex h-full w-full flex-col gap-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-slate-400">
-                <div className="p-1.5 bg-red-500/10 rounded-lg">
+                <div className="p-1.5">
                   <MapPin className="w-3.5 h-3.5 text-red-500" />
                 </div>
-                <span className="text-[9px] font-black uppercase tracking-[0.1em] text-red-400/90 truncate max-w-[150px]">
-                  {clickedAgid.isSea ? t('agid_code') : t('country_code')}
-                </span>
                 {isAgidPinnedToGps && (
                   <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded-full animate-pulse">
                     <Target className="w-2 h-2 text-amber-500" />
@@ -498,13 +500,6 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
               </div>
               <div className="flex items-center gap-1">
                 <button
-                  onClick={(e) => { e.stopPropagation(); setIsAgidPanelCollapsed(true); }}
-                  className="p-1 hover:bg-white/10 rounded-lg transition-colors text-slate-500 hover:text-white"
-                  title="Collapse"
-                >
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </button>
-                <button
                   onClick={(e) => {
                      e.stopPropagation();
                      setIsManualSelection(false);
@@ -513,9 +508,8 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                        setClickedAddress("");
                      }
                      setIsQrVisible(false);
-                     setIsAgidPanelCollapsed(false);
                   }}
-                  className="p-1 hover:bg-white/10 rounded-lg transition-colors text-slate-500 hover:text-white"
+                  className="p-1 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-slate-900"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -524,26 +518,33 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
 
             <div className="flex flex-col gap-2">
                <div className="flex items-center justify-between gap-3 px-0.5">
-                <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                  <motion.div
+                <div className="relative flex items-center gap-1.5 flex-1 min-w-0">
+                  <motion.button
+                    type="button"
                     layoutId="agid-text"
-                    className="font-black text-white tracking-widest font-mono truncate text-lg"
-                  >
-                    {clickedAgid.id}
-                  </motion.div>
-                  <button
-                    onClick={() => {
-                       const addr = clickedAddressTab === 'translated' ? clickedAddressTranslated : clickedAddressMap[clickedAddressTab] || clickedAddress;
-                       const fullText = `${clickedAgid.id}${addr ? ` (${addr})` : ''}`;
-                       navigator.clipboard.writeText(fullText);
-                       setCopied('agid');
-                       setTimeout(() => setCopied(null), 2000);
+                    onClick={async () => {
+                       if (copyAnnouncementTimer.current) clearTimeout(copyAnnouncementTimer.current);
+                       try {
+                         await navigator.clipboard.writeText(clickedAgid.id);
+                         setCopied('agid');
+                       } catch {
+                         setCopied('agid-error');
+                       }
+                       copyAnnouncementTimer.current = setTimeout(() => setCopied(null), 2000);
                     }}
-                    className="p-1 hover:bg-white/10 text-slate-400 rounded-lg transition-all active:scale-95"
-                    title="Copy ID & Address"
+                    className="min-w-0 truncate rounded-lg px-1 py-0.5 text-left font-mono text-lg font-black tracking-widest text-slate-900 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 active:scale-[0.99]"
+                    title="クリックしてAGIDをコピー"
+                    aria-label={'AGID ' + clickedAgid.id + ' をコピー'}
                   >
-                    {copied === 'agid' ? <Check className="w-2.5 h-2.5 text-emerald-500" /> : <Copy className="w-2.5 h-2.5" />}
-                  </button>
+                    <span>{clickedAgid.id}</span>
+                  </motion.button>
+                  <div role="status" aria-live="polite" aria-atomic="true" className="pointer-events-none absolute left-0 top-full z-20 mt-1">
+                    {(copied === 'agid' || copied === 'agid-error') && (
+                      <span className="block whitespace-nowrap rounded-lg border border-white/20 bg-slate-950 px-3 py-2 text-xs font-medium text-white shadow-lg">
+                        {copied === 'agid' ? 'コピーされました' : 'コピーできませんでした'}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-1 font-mono">
@@ -558,30 +559,10 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                          });
                        }
                     }}
-                    className="p-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all"
+                    className="p-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-700 rounded-lg transition-all"
                     title="Zoom to location"
                   >
                     <Maximize2 className="w-2.5 h-2.5" />
-                  </button>
-                  <button
-                    onClick={() => {
-                       const lat = (clickedAgid.bounds.minLat + clickedAgid.bounds.maxLat) / 2;
-                       const lng = (clickedAgid.bounds.minLon + clickedAgid.bounds.maxLon) / 2;
-                       const name = clickedAddress || clickedAgid.id;
-                       setDestination({ lat, lng, name });
-                       setDestinationQuery(name);
-                       setIsRoutePlanning(true);
-                       setIsNavigating(true);
-                       if (userLocation) {
-                         setOrigin({ ...userLocation, name: "My Location" });
-                         setOriginQuery("My Location");
-                       }
-                    }}
-                    className="p-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all flex items-center gap-1.5 shadow-lg shadow-blue-500/30 active:scale-95"
-                    title="Get Directions"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-black uppercase tracking-tight">{t('get_directions')}</span>
                   </button>
                 </div>
                </div>
@@ -596,24 +577,31 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                  {/* Territory Info */}
                  {clickedAgid.isSea && clickedAgid.regionName && (
                     <div className="flex items-center gap-2 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full w-fit">
-                      <Waves className="w-2.5 h-2.5 text-blue-400" />
-                      <span className="text-[9px] font-black text-blue-200">{clickedAgid.regionName}</span>
+                      <Waves className="w-2.5 h-2.5 text-blue-700" />
+                      <span className="text-[9px] font-black text-blue-800">{clickedAgid.regionName}</span>
                     </div>
                  )}
 
                  {/* Address Area */}
-                 <div className="group relative rounded-2xl border border-white/10 bg-slate-800/80 p-3 transition-colors">
+                 <div className="group relative py-1">
                   <div className="flex flex-col gap-2">
-                      <div className="flex items-center justify-between">
-                        <AddressLanguageTabs
-                          tabs={visibleDisplayTabs}
-                          activeTab={clickedAddressTab}
-                          countryCode={countryCode}
-                          qualityByTab={addressTabQualities}
-                          onSelect={setClickedAddressTab}
-                        />
+                      <div className="relative max-w-full self-end">
+                        <label htmlFor="agid-address-language" className="sr-only">住所の表示言語</label>
+                        <select
+                          id="agid-address-language"
+                          value={clickedAddressTab}
+                          onChange={(event) => handleAddressLanguageChange(event.target.value)}
+                          className="w-auto max-w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 pr-9 text-[10px] font-black text-slate-900 outline-none transition-colors hover:bg-slate-100 focus:border-red-400/60 focus:ring-2 focus:ring-red-400/20"
+                        >
+                          {addressLanguageOptions.map(option => (
+                            <option key={option.label} value={option.value} className="bg-white text-slate-900">
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
                       </div>
-                      {territoryClaimOptions.length > 0 && (
+                      {territoryClaimOptions.length > 0 && !isRegularCountryTerritory && (
                         <div className="space-y-1.5">
                           <div className="flex flex-wrap items-center gap-1.5">
                             {TERRITORY_CLAIM_DISPLAY_POLICIES.map(policy => {
@@ -625,8 +613,8 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                                   className={cn(
                                     "px-2 py-1 rounded-lg text-[8px] font-black transition-all border",
                                     isActive
-                                      ? "bg-white text-slate-900 border-white"
-                                      : "bg-white/5 text-slate-400 border-white/10 hover:bg-white/10"
+                                      ? "bg-blue-50 text-blue-800 border-blue-300"
+                                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
                                   )}
                                   title={policy.description}
                                 >
@@ -646,7 +634,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                                     "px-2 py-1 rounded-lg text-[8px] font-black transition-all flex items-center gap-1.5 border",
                                     isActive
                                       ? "bg-amber-400 text-slate-950 border-amber-300"
-                                      : "bg-white/5 text-slate-400 border-white/10 hover:bg-white/10"
+                                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
                                   )}
                                   title={option.label}
                                 >
@@ -659,40 +647,61 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                         </div>
                       )}
 
-                      <div className="text-[11px] font-medium text-slate-200 leading-snug min-h-[2.5em] space-y-2">
+                      <div className="text-[11px] font-medium text-slate-700 leading-snug min-h-[2.5em] space-y-2">
                          <div className={cn(
-                           "rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-[12px] font-semibold leading-relaxed text-slate-900 shadow-inner",
+                           "py-2 text-[12px] font-semibold leading-relaxed text-slate-900",
                            preserveAddressDisplayLines ? "whitespace-pre-line" : "whitespace-normal",
                          )}>
                            {addressDisplayText}
                          </div>
-                         <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold leading-snug text-slate-300">
-                           <span className={cn('rounded-full border px-2.5 py-1 text-[9px] font-black', qualityTone)}>
-                             {qualityCopy.shortLabel}
-                           </span>
-                           {missingRequiredFields.length > 0 ? (
-                             <span className="text-amber-100/90">
-                               Missing: {missingRequiredFields.slice(0, 3).join(', ')}
-                             </span>
-                           ) : (
-                             <span className="text-slate-400">{qualityCopy.description}</span>
-                           )}
-                         </div>
-                         {selectedTerritoryClaim && (
-                           <div className="rounded-lg border border-amber-400/15 bg-amber-400/10 px-2 py-1.5 text-[9px] font-bold leading-snug text-amber-100">
-                             <div className="mb-0.5 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-wider text-amber-300">
+                         {selectedTerritoryClaim && !isRegularCountryTerritory && (
+                           <div className="rounded-lg border border-amber-400/15 bg-amber-400/10 px-2 py-1.5 text-[9px] font-bold leading-snug text-amber-900">
+                             <div className="mb-0.5 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-wider text-amber-800">
                                <Flag className="w-2.5 h-2.5" />
                                <span>{selectedTerritoryClaim.label}</span>
                              </div>
                              <div>{formatTerritoryClaimSummary(selectedTerritoryClaim)}</div>
+                             {selectedTerritoryClaim.sourceUrl && (
+                               <a
+                                 href={selectedTerritoryClaim.sourceUrl}
+                                 target="_blank"
+                                 rel="noreferrer"
+                                 className="mt-1.5 inline-flex items-center gap-1 text-[9px] font-black text-blue-700 underline decoration-blue-300 underline-offset-2 hover:text-blue-900"
+                               >
+                                 <span>{selectedTerritoryClaim.sourceLabel || '公式資料'}</span>
+                                 <ArrowUpRight className="h-2.5 w-2.5" />
+                               </a>
+                             )}
                            </div>
                          )}
                       </div>
 
-                     <div className="grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-white/5">
-                        <button onClick={() => saveAgid(clickedAgid)} className="flex items-center justify-center gap-1.5 rounded-lg bg-white/[0.08] px-2 py-2 text-[9px] font-black text-slate-200 hover:bg-white/[0.12]" title="Save AGID"><Bookmark className="w-3 h-3" />Save</button>
-                        <button onClick={() => setIsQrVisible(!isQrVisible)} className="flex items-center justify-center gap-1.5 rounded-lg bg-white/[0.08] px-2 py-2 text-[9px] font-black text-slate-200 hover:bg-white/[0.12]" title="QR Code"><QrCode className="w-3 h-3" />QR</button>
-                        <button onClick={openAddressFeedbackPanel} className="flex items-center justify-center gap-1.5 rounded-lg bg-white/[0.08] px-2 py-2 text-[9px] font-black text-slate-200 hover:bg-white/[0.12]" title="Address feedback"><MessageSquareWarning className="w-3 h-3" />Report</button>
+                     <button onClick={openAddressFeedbackPanel} className="flex items-center gap-1.5 px-0.5 py-1 text-[9px] font-black text-slate-500 transition-colors hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-600" title="Address feedback">
+                       <MessageSquareWarning className="w-3 h-3" />Report
+                     </button>
+
+                     <div className="mt-2 grid grid-cols-3 gap-2 pt-2">
+                        <button
+                          onClick={() => {
+                            const lat = (clickedAgid.bounds.minLat + clickedAgid.bounds.maxLat) / 2;
+                            const lng = (clickedAgid.bounds.minLon + clickedAgid.bounds.maxLon) / 2;
+                            const name = clickedAddress || clickedAgid.id;
+                            setDestination({ lat, lng, name });
+                            setDestinationQuery(name);
+                            setIsRoutePlanning(true);
+                            setIsNavigating(true);
+                            if (userLocation) {
+                              setOrigin({ ...userLocation, name: "My Location" });
+                              setOriginQuery("My Location");
+                            }
+                          }}
+                          className="flex items-center justify-center gap-1.5 bg-transparent px-2 py-2 text-[9px] font-black text-slate-700 transition-colors hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-600"
+                          title="Get Directions"
+                        >
+                          <ArrowUpRight className="w-3 h-3" />{t('get_directions')}
+                        </button>
+                        <button onClick={() => saveAgid(clickedAgid)} className="flex items-center justify-center gap-1.5 bg-transparent px-2 py-2 text-[9px] font-black text-slate-700 transition-colors hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-600" title="Save AGID"><Bookmark className="w-3 h-3" />Save</button>
+                        <button type="button" onClick={() => setIsQrVisible(!isQrVisible)} aria-expanded={isQrVisible} aria-controls="agid-qr-panel" className={cn("flex items-center justify-center gap-1.5 bg-transparent px-2 py-2 text-[9px] font-black transition-colors hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-600", isQrVisible ? "text-blue-700" : "text-slate-700")} title="QR Code"><QrCode className="w-3 h-3" />QR</button>
                      </div>
                   </div>
                  </div>
@@ -700,31 +709,35 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                  <AnimatePresence>
                   {isQrVisible && (
                      <motion.div
+                      id="agid-qr-panel"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="bg-white rounded-[2rem] p-5 flex flex-col items-center gap-3 mt-3"
+                      className="flex items-center gap-3 py-2"
                      >
-                        <div className="p-3 bg-slate-50 rounded-2xl shadow-inner">
-                         <QRCodeCanvas value={clickedAgid.id} size={120} level="H" includeMargin={false} id="agid-qr-canvas" />
+                        <div className="shrink-0 bg-white">
+                         <QRCodeCanvas value={clickedAgid.id} size={120} level="H" includeMargin={true} id="agid-qr-canvas" />
                         </div>
-                        <button onClick={saveQrCode} className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[9px] font-black uppercase flex items-center gap-1.5 border border-slate-200">
-                         <Download className="w-2.5 h-2.5" /> Save QR
-                        </button>
+                        <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+                          <span className="text-xs font-semibold text-slate-700">AGID QR</span>
+                          <button type="button" onClick={saveQrCode} className="flex min-h-9 items-center gap-1.5 px-2.5 py-2 text-[10px] font-bold text-slate-700 hover:text-blue-700">
+                            <Download className="h-3.5 w-3.5 shrink-0" /> Save QR
+                          </button>
+                          <button type="button" onClick={() => setIsQrVisible(false)} className="min-h-8 rounded-lg px-2 text-xs text-slate-600 hover:bg-slate-100" aria-label="QRを閉じる">
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
                      </motion.div>
                   )}
                  </AnimatePresence>
                </motion.div>
             </div>
-          </>
-        )}
       </div>
     </motion.div>
     <AddressFeedbackPanel
       isOpen={isAddressFeedbackOpen}
       onClose={() => setIsAddressFeedbackOpen(false)}
       presentation="map-left"
-      closeOnSaved
       agid={clickedAgid.id}
       countryCode={countryCode}
       languageTab={clickedAddressTab}
@@ -734,17 +747,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
       qualityDecision={activeAddressTabQuality?.decision}
       qualityScore={addressFeedbackQualityScore}
       sourceIds={addressFeedbackSourceIds}
-      onLearningSaved={(summary) => showAlert(
-        "Address feedback saved",
-        `Closed local learning updated with ${summary.samples} samples.`,
-      )}
-      onFieldFeedbackSubmitted={(result) => showAlert(
-        result.status === 'sent' ? "Field feedback sent" : "Field feedback queued",
-        result.status === 'sent'
-          ? "Redacted address-quality feedback was accepted."
-          : "Network unavailable or server rejected the request. Redacted feedback remains in the local outbox.",
-      )}
-      onApplyCorrection={(correctedDisplay) => setClickedAddress(correctedDisplay)}
+      onApplyCorrection={(text) => setFeedbackCorrection({ agid: clickedAgid.id, tab: clickedAddressTab, text })}
     />
     </>
   );

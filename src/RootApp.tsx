@@ -61,16 +61,31 @@ const DroneLockerOpsScreen = React.lazy(() => import('./components/DroneLockerOp
 const OpenSourceHomeScreen = React.lazy(() => import('./components/OpenSourceHomeScreen').then(module => ({
   default: module.OpenSourceHomeScreen,
 })));
+const LicensesScreen = React.lazy(() => import('./components/LicensesScreen').then(module => ({
+  default: module.LicensesScreen,
+})));
 const TopographicExportStudioScreen = React.lazy(() => import('./components/TopographicExportStudioScreen').then(module => ({
   default: module.TopographicExportStudioScreen,
 })));
 
 function RouteLoadingShell() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-      <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-2xl">
-        <p className="text-[11px] font-black uppercase tracking-[0.28em] text-blue-200">AGID</p>
-        <p className="mt-1 text-sm font-bold text-white/80">Loading workspace...</p>
+    <div className="flex min-h-screen items-center justify-center bg-white text-slate-950">
+      <div className="flex flex-col items-center gap-6 text-center">
+        <img
+          src="/agid-logo.png"
+          alt="AGID"
+          width="476"
+          height="305"
+          fetchPriority="high"
+          className="h-20 w-auto max-w-[280px] object-contain"
+        />
+        <div>
+          <p className="text-xl font-black tracking-tight">AGID</p>
+          <p className="mt-2 text-xs font-bold uppercase tracking-[0.3em] text-slate-400">
+            Connecting the Global Grid...
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -148,6 +163,10 @@ function isOpenSourceRoute() {
   return window.location.pathname === '/open-source' || window.location.hash === '#/open-source';
 }
 
+function isLicensesRoute() {
+  return window.location.pathname === '/licenses' || window.location.hash === '#/licenses';
+}
+
 function isTopographicExportRoute() {
   return window.location.pathname === '/topographic-export' || window.location.hash === '#/topographic-export';
 }
@@ -179,6 +198,7 @@ type RouteSnapshot = {
   locker: boolean;
   ops: boolean;
   openSource: boolean;
+  licenses: boolean;
   topographicExport: boolean;
 };
 
@@ -202,6 +222,7 @@ function readRouteSnapshot(): RouteSnapshot {
     locker: isOpenLockerPudoRoute(),
     ops: isDroneLockerOpsRoute(),
     openSource: isOpenSourceRoute(),
+    licenses: isLicensesRoute(),
     topographicExport: isTopographicExportRoute(),
   };
 }
@@ -238,7 +259,7 @@ function routeSurface(route: RouteSnapshot): FieldActionSurface {
 }
 
 function shouldShowFieldActionBar(route: RouteSnapshot) {
-  if (route.topographicExport) return false;
+  if (route.topographicExport || route.licenses) return false;
   return shouldShowAgidFieldActionBar(routeDesignKey(route));
 }
 
@@ -273,6 +294,8 @@ export default function RootApp() {
       <React.Suspense fallback={<RouteLoadingShell />}>
         {route.openSource
           ? <OpenSourceHomeScreen />
+          : route.licenses
+            ? <LicensesScreen />
           : route.topographicExport
             ? <TopographicExportStudioScreen />
           : route.pos

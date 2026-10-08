@@ -1,6 +1,7 @@
 import { gridCellsCoverBounds } from './gridGeometry';
 import {
 GRID_VIEWPORT_RENDER_PADDING_RATIO,
+GRID_VIEWPORT_PREFETCH_PADDING_RATIO,
 getViewportGridBounds,
 getViewportSamplePixelCoordinates,
 } from './gridViewport';
@@ -23,7 +24,11 @@ export function getMapViewportPoints(map: MapViewportLike | null | undefined): M
 }
 
 export function getGridRenderPaddingRatio(mapPitch: number) {
-  return mapPitch > 30 ? 1.5 : GRID_VIEWPORT_RENDER_PADDING_RATIO;
+  return mapPitch > 30 ? 1 : GRID_VIEWPORT_RENDER_PADDING_RATIO;
+}
+
+export function getGridPrefetchPaddingRatio(mapPitch: number) {
+  return mapPitch > 30 ? 0.35 : GRID_VIEWPORT_PREFETCH_PADDING_RATIO;
 }
 
 export function getVisibleGridBounds(points: MapViewportPoint[]) {
@@ -32,6 +37,10 @@ export function getVisibleGridBounds(points: MapViewportPoint[]) {
 
 export function getPaddedGridBounds(points: MapViewportPoint[], mapPitch: number) {
   return getViewportGridBounds(points, getGridRenderPaddingRatio(mapPitch));
+}
+
+export function getGridPrefetchBounds(points: MapViewportPoint[], mapPitch: number) {
+  return getViewportGridBounds(points, getGridPrefetchPaddingRatio(mapPitch));
 }
 
 export function shouldHidePartialGridForViewport(

@@ -166,18 +166,23 @@ function makeSafeCheckInRef(input: unknown) {
 }
 
 export function buildAddressInputPatchFromRegisteredQr(record: RegisteredAddressRecord): RegisteredAddressFormData {
+  const walletFields = record.veygritAddressForm?.fields;
+  const houseNumber = cleanText(walletFields?.houseNumber || record.houseNumber);
+  const unit = cleanText(walletFields?.unit || record.unit || record.room);
   return {
-    country: cleanText(record.country).toUpperCase(),
-    recipient: cleanText(record.recipient),
-    organization: cleanText(record.organization),
-    street: cleanText(record.street),
-    suburb: cleanText(record.suburb),
-    city: cleanText(record.city),
-    state: cleanText(record.state),
-    postcode: cleanText(record.postcode),
-    phone: cleanText(record.phone),
-    building: cleanText(record.building),
-    room: cleanText(record.room),
+    country: cleanText(walletFields?.countryCode || record.country).toUpperCase(),
+    recipient: cleanText(walletFields?.recipient || record.recipient),
+    organization: cleanText(walletFields?.organization || record.organization),
+    street: cleanText(walletFields?.street || record.street),
+    suburb: cleanText(walletFields?.district || record.suburb),
+    city: cleanText(walletFields?.city || record.city),
+    state: cleanText(walletFields?.state || record.state),
+    postcode: cleanText(walletFields?.postcode || record.postcode),
+    phone: cleanText(walletFields?.phone || record.phone),
+    building: cleanText(walletFields?.building || record.building),
+    ...(houseNumber ? { houseNumber } : {}),
+    ...(unit ? { unit } : {}),
+    room: unit,
   };
 }
 

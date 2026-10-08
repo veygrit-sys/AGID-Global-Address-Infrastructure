@@ -5,7 +5,11 @@ type ViewportPoint = {
 } | [number, number];
 
 export const GRID_VIEWPORT_MAX_METERS = Number.POSITIVE_INFINITY;
-export const GRID_VIEWPORT_RENDER_PADDING_RATIO = 1.25;
+// Render 0.75 viewport beyond every edge: 2.5 x 2.5 = 6.25 visible areas.
+// This leaves enough off-screen grid for normal pans without calculating the
+// 12.25 visible areas produced by the previous 1.25 padding.
+export const GRID_VIEWPORT_RENDER_PADDING_RATIO = 0.75;
+export const GRID_VIEWPORT_PREFETCH_PADDING_RATIO = 0.25;
 
 function getLon(point: ViewportPoint) {
   return Array.isArray(point) ? point[0] : point.lng ?? point.lon ?? 0;

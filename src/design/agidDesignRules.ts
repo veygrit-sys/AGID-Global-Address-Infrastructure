@@ -92,7 +92,7 @@ export const AGID_WORKFLOW_ACTION_VISIBILITY_CONTRACT = {
 } as const;
 
 export const AGID_ROUTE_ACTION_BAR_POLICY: Record<AgidDesignRouteKey, AgidActionBarPolicy> = {
-  map: 'compact-current-location',
+  map: 'hidden',
   dashboard: 'field-workflow',
   pos: 'compact-current-location',
   field: 'field-workflow',

@@ -41,6 +41,13 @@ export type PostalAreaLookupCandidate = {
   postalCode: string;
 };
 
+export function normalizePostalAreaQuery(country: string, input: string): PostalAreaLookupCandidate | null {
+  const countryCode = country.trim().toUpperCase();
+  const postalCode = input.normalize('NFKC').trim().replace(/^〒\s*/, '').replace(/[‐‑–−]/g, '-').toUpperCase();
+  if (!/^[A-Z]{2}$/.test(countryCode) || !/^[A-Z0-9][A-Z0-9 -]{0,63}$/.test(postalCode)) return null;
+  return { countryCode, postalCode };
+}
+
 export type PostalAreaIdentitySummary = {
   agidObjectChains: string[];
   linkedContextObjects: string[];

@@ -123,9 +123,9 @@ function normalizeLng(lng: number) {
 }
 
 function responsiveWorldZoom(width: number) {
-  if (width < 640) return 1.45;
-  if (width < 1024) return 1.85;
-  return 2.15;
+  if (width < 640) return 0;
+  if (width < 1024) return 0.5;
+  return 1;
 }
 
 function responsiveRegionalZoom(baseZoom: number, width: number) {
@@ -145,6 +145,12 @@ function regionFromLanguages(languages: readonly string[] = []) {
     const match = String(language).match(/[-_]([A-Za-z]{2})\b/);
     const region = match?.[1]?.toUpperCase();
     if (region && REGIONAL_OVERVIEWS[region]) return region;
+  }
+  // Bare language tags carry no region; use only unambiguous defaults.
+  const languageRegions: Record<string, string> = { ja: 'JP', ko: 'KR' };
+  for (const language of languages) {
+    const region = languageRegions[String(language).toLowerCase()];
+    if (region) return region;
   }
   return null;
 }
@@ -178,7 +184,7 @@ export function resolveInitialMapView(input: ResolveInitialMapViewInput): Initia
   }
 
   return {
-    lat: 20,
+    lat: 0,
     lng: 0,
     zoom: responsiveWorldZoom(input.width),
     source: 'world',

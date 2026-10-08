@@ -15,6 +15,8 @@ test('app database persistence is isolated in a dedicated hook', () => {
   assert.match(hookSource, /persistSavedQrs/);
   assert.match(hookSource, /persistRegisteredAddresses/);
   assert.match(hookSource, /persistAoids/);
+  assert.match(hookSource, /const loadAppDatabase = \(\) => import\('\.\.\/lib\/appDatabase'\)/);
+  assert.doesNotMatch(hookSource, /^import \{[\s\S]*\} from '\.\.\/lib\/appDatabase';/m);
 });
 
 test('App delegates durable database synchronization to the persistence hook', () => {

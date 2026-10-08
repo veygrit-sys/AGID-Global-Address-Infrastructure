@@ -22,6 +22,7 @@ import {
   sanitizeRegisteredAddressQualitySnapshot,
   type RegisteredAddressQualitySnapshot,
 } from './registeredAddressQuality';
+import type { VeygritAddressFormEnvelope } from './veygritAddressForm';
 
 export type RegisteredAddressMode = 'ADDRESS' | 'AOID';
 
@@ -37,6 +38,9 @@ export type RegisteredAddressFormData = {
   phone?: string;
   building?: string;
   room?: string;
+  houseNumber?: string;
+  unit?: string;
+  veygritAddressForm?: VeygritAddressFormEnvelope;
   [key: string]: unknown;
 };
 
@@ -109,6 +113,7 @@ function withSanitizedQuality(record: RegisteredAddressRecord): RegisteredAddres
 export function formatRegisteredAddress(formData: RegisteredAddressFormData) {
   const organization = clean(formData.organization);
   const street = clean(formData.street);
+  const houseNumber = clean(formData.houseNumber);
   const suburb = clean(formData.suburb);
   const city = clean(formData.city);
   const state = clean(formData.state);
@@ -117,7 +122,7 @@ export function formatRegisteredAddress(formData: RegisteredAddressFormData) {
 
   const parts: string[] = [];
   if (organization) parts.push(organization);
-  if (street) parts.push(street);
+  if (street || houseNumber) parts.push(compact([houseNumber, street]).join(' '));
   if (suburb) parts.push(suburb);
 
   if (city && state) {
@@ -149,7 +154,8 @@ export function formatRegisteredAddressLocationDisplay(
     ...formData,
     country_code: countryCode,
     building: clean(formData.building) || clean(formData.organization),
-    unit: clean(formData.room),
+    house_number: clean(formData.houseNumber),
+    unit: clean(formData.unit) || clean(formData.room),
   });
   const rendered = AddressRenderer.render(tab, canonical, options.format);
   const fallback = formatRegisteredAddress(formData);

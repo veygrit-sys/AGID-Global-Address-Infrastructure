@@ -46,29 +46,29 @@ test('map move handlers read the latest manual selection state through refs', ()
   assert.match(source, /updateGridRef\.current\?\.\(/);
 });
 
-test('refreshes grid geometry after panning so black lines keep covering the viewport', () => {
+test('refreshes grid geometry after panning so neutral lines keep covering the viewport', () => {
   const moveEndBlock = source.match(/map\.current\.on\('moveend', \(\) => \{[\s\S]*?\n    \}\);/);
 
   assert.ok(moveEndBlock, 'moveend handler should exist');
   assert.match(moveEndBlock[0], /updateGridRef\.current\?\.\(result, selectedResult, 4, true\)/);
 });
 
-test('updates red highlights from the same frame as the refreshed black grid', () => {
+test('updates selected-cell outlines from the same frame as the refreshed grid', () => {
   assert.match(source, /const syncHighlightLayers = \(frame: GridRenderFrame, showHighlight: boolean = shouldShowHighlight\)/);
   assert.match(source, /renderedGridFrameRef\.current = requestedGridFrame;[\s\S]*?syncHighlightLayers\(requestedGridFrame\);/);
 });
 
-test('draws red cell fills from rendered black grid cells below the black line layer', () => {
+test('derives the selected-cell outline from rendered grid cells', () => {
   assert.match(source, /findContainingGridCellPolygon/);
   assert.match(source, /renderedGridCellsRef\.current = gridCells;/);
   assert.match(source, /ensureSourceAndLayer\(selectedSourceId, 'fill', selectedData, getAgidSelectionFillPaint\(\), \{\}, undefined, `\$\{sourceId\}-layer`\)/);
 });
 
-test('keeps the black grid line layer above red cell fills after style refreshes', () => {
+test('keeps selected-cell layers ordered around the grid line after style refreshes', () => {
   const refreshGridOrderBlock = source.match(/const refreshGridOrder = \(\) => \{[\s\S]*?\n    \};/);
 
   assert.ok(refreshGridOrderBlock, 'refreshGridOrder should exist');
-  assert.match(refreshGridOrderBlock[0], /'selected-cell-layer',\s*'agid-grid-layer',\s*'active-cell-outline-layer'/);
+  assert.match(refreshGridOrderBlock[0], /'selected-cell-layer',\s*'agid-grid-layer',\s*'active-cell-outline-layer',\s*'selected-cell-halo-layer'/);
 });
 
 test('uses full viewport bounds and clears old partial grids before showing a refreshed grid', () => {
@@ -80,10 +80,12 @@ test('uses full viewport bounds and clears old partial grids before showing a re
 
 test('checks coverage against visible bounds while prefetching a larger grid for fast panning', () => {
   assert.match(source, /getPaddedGridBounds/);
+  assert.match(source, /getGridPrefetchBounds/);
   assert.match(source, /const visibleBounds = getVisibleGridBounds\(viewportPoints\)/);
+  assert.match(source, /const prefetchBounds = getGridPrefetchBounds\(viewportPoints, mapPitch\)/);
   assert.match(source, /const renderBounds = getPaddedGridBounds\(viewportPoints, mapPitch\)/);
   assert.match(source, /shouldHidePartialGridForViewport\(renderedGridCellsRef\.current, visibleBounds\)/);
-  assert.match(source, /shouldRefreshGridForViewport\(refreshGrid, renderedGridCellsRef\.current, visibleBounds, pendingGridBoundsRef\.current\)/);
+  assert.match(source, /shouldRefreshGridForViewport\(refreshGrid, renderedGridCellsRef\.current, prefetchBounds, pendingGridBoundsRef\.current\)/);
   assert.match(source, /bounds: renderBounds/);
 });
 
@@ -112,6 +114,27 @@ test('uses what3words-style zoom gating instead of a hard 200m viewport gate', (
   assert.match(source, /shouldHidePartialGridForViewport\(renderedGridCellsRef\.current, visibleBounds\)/);
 });
 
+test('uses one MapLibre grid renderer instead of stacking the canvas overlay', () => {
+  assert.doesNotMatch(appSource, /GridCanvasOverlay/);
+  assert.match(gridHookSource, /getAgidGridLineStyle/);
+  assert.match(gridHookSource, /'line-join': 'round'/);
+  assert.match(gridHookSource, /'line-cap': 'round'/);
+});
+
+test('places the AGID panel at the mobile bottom and desktop right edge', () => {
+  assert.match(appSource, /bottom-4 left-1\/2/);
+  assert.match(appSource, /md:right-5 md:top-\[84px\]/);
+  assert.match(appSource, /md:left-auto/);
+  assert.match(appSource, /md:translate-x-0/);
+  assert.doesNotMatch(appSource, /isAgidPanelCollapsed/);
+});
+
+test('identifies the selected AGID with a dedicated outline and labelled map marker', () => {
+  assert.match(gridHookSource, /getAgidSelectionHaloPaint/);
+  assert.match(gridHookSource, /getAgidSelectionOutlinePaint/);
+  assert.match(gridHookSource, /AGID \$\{selectedResult\.id\}/);
+});
+
 test('keeps checking grid coverage inside throttled pan updates', () => {
   const throttledMoveBranch = source.match(/if \(now - lastMoveUpdate < 100\) \{[\s\S]*?return;\s*\}/);
 
@@ -134,7 +157,7 @@ test('keeps AGID display click-committed while hover and pan only update the pre
   assert.match(clickBlock[0], /setClickedAgid\(result\)/);
 });
 
-test('draws hover target as a pale pink outline layer without binding it to the AGID label', () => {
+test('draws hover target as a subtle outline layer without binding it to the AGID label', () => {
   assert.match(source, /getAgidHoverCellFillPaint/);
   assert.match(source, /getAgidHoverCellOutlinePaint/);
   assert.match(source, /ensureSourceAndLayer\(`\$\{activeSourceId\}-outline`, 'line'/);

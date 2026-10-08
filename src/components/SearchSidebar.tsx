@@ -27,6 +27,8 @@ Zap
 import type maplibregl from 'maplibre-gl';
 import { AnimatePresence,motion } from 'motion/react';
 import React,{ useState } from 'react';
+import { PostalCodeSearch } from './PostalCodeSearch';
+import type { PostalAreaLookupCandidate } from '../lib/postalSearchArea';
 import { AdvancedSearchCategory,AdvancedSearchOptions } from '../lib/advancedSearch';
 import { formatPublicConfidenceBand } from '../lib/publicDecisionDisplay';
 import { cn } from '../lib/utils';
@@ -57,6 +59,8 @@ interface SearchSidebarProps {
   clearHistory: () => void;
   removeFromHistory: (q: string) => void;
   performSearch: (q: string) => void;
+  searchPostalArea?: (candidate: PostalAreaLookupCandidate) => void;
+  isPostalSearching?: boolean;
   handleSearch: (e: React.FormEvent) => void;
   selectSearchResult: (r: SearchResultFeature) => void;
   getCurrentMapCenter: () => { lat: number, lng: number } | null;
@@ -145,6 +149,8 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
   clearHistory,
   removeFromHistory,
   performSearch,
+  searchPostalArea,
+  isPostalSearching,
   handleSearch,
   selectSearchResult,
   getCurrentMapCenter,
@@ -256,6 +262,8 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
 
               <form onSubmit={handleSearch} className="flex-1 flex items-center pr-1">
                 <input
+                  id="agid-map-search"
+                  name="query"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -309,15 +317,14 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
                   <button
                     type="submit"
                     disabled={isSearching}
-                    className="ml-1 px-2.5 md:px-3 py-1.5 md:py-2 bg-blue-600 text-white rounded-xl font-black text-[9px] md:text-[10px] uppercase tracking-widest hover:bg-blue-700 disabled:opacity-50 transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5 min-w-[36px] md:min-w-[80px]"
+                    className="ml-1 flex h-9 w-9 items-center justify-center text-slate-400 transition-colors hover:text-blue-600 disabled:opacity-50 active:scale-95"
+                    aria-label={t('search_button')}
+                    title={t('search_button')}
                   >
                     {isSearching ? (
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" />
                     ) : (
-                      <>
-                        <Search className="w-3.5 h-3.5" />
-                        <span className="hidden md:inline">{t('search_button')}</span>
-                      </>
+                      <Search className="h-5 w-5" />
                     )}
                   </button>
                 </div>
@@ -334,6 +341,7 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
                   className="flex flex-col flex-1 overflow-hidden"
                 >
                   <div className="flex-1 overflow-y-auto no-scrollbar divide-y divide-slate-50">
+                    {searchPostalArea && <PostalCodeSearch onSearch={searchPostalArea} busy={isPostalSearching} initialCountry={advancedSearchOptions.countryCodes} />}
                     {/* Detailed Search */}
                     {(searchResults.length === 0 || showCoordinateSearch) && (
                       <div className={cn(
@@ -688,19 +696,6 @@ export const SearchSidebar: React.FC<SearchSidebarProps> = ({
                   <ArrowUpRight className="w-5 h-5" />
                 </button>
 
-                <div className="w-[1px] h-6 bg-slate-200 mx-1" />
-
-                <button
-                  type="button"
-                  onClick={toggleTracking}
-                  className={cn(
-                    "p-2.5 transition-all rounded-xl active:scale-95 relative group",
-                    isTracking ? "text-blue-600 bg-blue-50" : "text-slate-400 hover:bg-slate-50 hover:text-blue-600"
-                  )}
-                  title={isTracking ? t('stop_tracking') : t('use_my_location')}
-                >
-                  <Navigation className={cn("w-5 h-5", (isLocating || isTracking) && "animate-pulse text-blue-600")} />
-                </button>
               </div>
             )}
           </motion.div>
