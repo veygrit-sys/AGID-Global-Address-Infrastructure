@@ -1,4 +1,5 @@
 import { decodeAGID, encodeAGID, encodeAGID16, getCellPolygon, normalizeAGIDCode, type AGIDResult } from './agid';
+import { assessAgidGeography, type AgidGeographyInput } from './geographicAssessment';
 import { resolveAgidLocal } from './agidLocalResolver';
 import {
   buildAgidResolverConformanceSuite,
@@ -43,6 +44,7 @@ const HELP_TEXT = `AGID CLI ${AGID_CLI_VERSION}
 Usage:
   agid encode --lat <lat> --lon <lon> [--id-length 12|16] [--json]
   agid decode <AGID> [--json]
+  agid geography (--lat <lat> --lon <lon> [--accuracy-meters <m>] | <AGID>) [--json]
   agid validate <AGID> [--json]
   agid resolve <AGID|AGID-S|lat,lon|address text> [--country <code>] [--language <tab>] [--json]
   agid polygon <AGID> [--geojson|--json]
@@ -52,6 +54,7 @@ Usage:
 Commands:
   encode      Encode latitude/longitude into a public AGID.
   decode      Decode a public AGID into its cell center, face, and bounds.
+  geography   Assess the original pin, accuracy radius, or decoded cell against local map evidence.
   validate    Validate AGID format and packed cell range.
   resolve     Local-only resolver summary without raw address disclosure.
   polygon     Output the AGID cell polygon.
@@ -142,7 +145,7 @@ function getFlagString(flags: Record<string, string | boolean>, ...names: string
 function getFlagNumber(flags: Record<string, string | boolean>, ...names: string[]) {
   const raw = getFlagString(flags, ...names);
   if (raw === undefined) return undefined;
-  const value = Number(raw);
+  const value = raw.trim() ? Number(raw) : Number.NaN;
   return Number.isFinite(value) ? value : Number.NaN;
 }
 
@@ -186,7 +189,7 @@ function selectEncoder(flags: ParsedArgs['flags']) {
 function coordinateFromFlags(flags: Record<string, string | boolean>) {
   const lat = getFlagNumber(flags, 'lat', 'latitude');
   const lon = getFlagNumber(flags, 'lon', 'lng', 'longitude');
-  if (lat === undefined && lon === undefined) return null;
+  if (getFlag(flags, 'lat', 'latitude', 'lon', 'lng', 'longitude') === undefined) return null;
   if (lat === undefined || lon === undefined || Number.isNaN(lat) || Number.isNaN(lon)) {
     throw new Error('Both --lat and --lon must be finite numbers.');
   }
@@ -213,6 +216,8 @@ function agidSummary(result: AGIDResult) {
     regionCode: result.regionCode,
     regionName: result.regionName,
     ...(result.mapUnitMatch && { mapUnitMatch: result.mapUnitMatch }),
+    ...(result.waterMatch && { waterMatch: result.waterMatch }),
+    ...(result.administrativeMatch && { administrativeMatch: result.administrativeMatch }),
     type: result.isSea ? 'water' : 'land',
     gridSizeMetersApprox: result.gridSize,
     center: {
@@ -708,6 +713,38 @@ async function handleEncode(parsed: ParsedArgs): Promise<AgidCliRunResult> {
   return ok(encodeHuman(result));
 }
 
+function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
+  try {
+    const coord = coordinateFromFlags(parsed.flags);
+    const id = getInput(parsed, stdin);
+    if ((!coord && !id) || (coord && id)) return fail('Supply either --lat and --lon or a single AGID.');
+    const accuracy = getFlag(parsed.flags, 'accuracy-meters');
+    let input: AgidGeographyInput;
+    if (accuracy !== undefined) {
+      const meters = getFlagNumber(parsed.flags, 'accuracy-meters');
+      if (!coord || meters === undefined || !Number.isFinite(meters) || meters < 0) {
+        return fail('--accuracy-meters requires a pin and a finite, non-negative radius.');
+      }
+      input = { kind: 'pin', ...coord, method: 'device', accuracyMeters: meters };
+    } else {
+      input = coord ? { kind: 'pin', ...coord, method: 'manual' } : { kind: 'cell', id };
+    }
+    const assessment = assessAgidGeography(input);
+    if (outputFormat(parsed.flags) === 'json') {
+      return ok(json(withCliSchema('geography', { ...assessment }), Boolean(parsed.flags.pretty)));
+    }
+    return ok([
+      `Footprint: ${assessment.footprint.kind}`,
+      `Status: ${assessment.status}`,
+      `Surface: ${assessment.surface}`,
+      `Map regions: ${assessment.regionCandidates.join(', ') || 'none'}`,
+      '',
+    ].join('\n'));
+  } catch (error) {
+    return fail(error instanceof Error ? error.message : 'Invalid geographic input.');
+  }
+}
+
 async function handleDecode(parsed: ParsedArgs, stdin?: string): Promise<AgidCliRunResult> {
   const input = getInput(parsed, stdin);
   if (!input) return fail('decode requires an AGID input.');
@@ -799,6 +836,8 @@ export async function runAgidCli(argv: readonly string[], options: AgidCliRunOpt
   switch (command) {
     case 'encode':
       return handleEncode(parsed);
+    case 'geography':
+      return handleGeography(parsed, options.stdin);
     case 'decode':
       return handleDecode(parsed, options.stdin);
     case 'validate':

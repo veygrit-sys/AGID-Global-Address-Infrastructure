@@ -322,11 +322,14 @@ npm run generate:address-hierarchy
 npm run generate:agid-sdks
 ```
 
-Optional Rust WASM build:
+The checked-in browser module at `public/wasm/agid_core.wasm` exposes the nine coordinate and Hilbert functions. To reproduce that release with Rust 1.85.1, run the following commands from the repository root.
 
 ```bash
-npm run build:rust-wasm
+rustup toolchain install 1.85.1 --target wasm32-unknown-unknown
+rustup run 1.85.1 npm run build:rust-wasm -- --coordinate-wasm
 ```
+
+`npm run build:rust-wasm` without the flag builds the full module for local grid and predicate development and writes it to the same path.
 
 ## Current Engineering Strategy
 

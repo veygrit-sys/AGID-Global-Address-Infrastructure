@@ -10,6 +10,19 @@ AGID source code and AGID-owned documentation are governed by the licenses
 declared in `LICENSE`, `LICENSE_POLICY.md`, package manifests, or document
 front matter. Third-party data is not automatically covered by those licenses.
 
+## Büsingen administrative boundary
+
+The Büsingen subset uses **Federal Office of Topography swisstopo**, swissBOUNDARIES3D
+2026-01. The official CH and DE administrative areas were transformed to WGS84
+and checked for complete, non-overlapping coverage of the local window.
+Display the source credit with this boundary in maps and published or redistributed
+data. The source archive, SHA-256 and attribution are recorded in the
+[subset](src/data/buesingenBoundary.json). [Official terms of use](https://www.swisstopo.admin.ch/en/terms-of-use-free-geodata-and-geoservices)
+
+## Regional coasts and islands
+
+The Natural Earth Map Units and Ocean extracts use the public-domain 1:10m layers from natural-earth-vector v5.1.2. The Pearl River Delta land polygons use the public-domain USGS coastline edition of FieldMaps International ADM0 dated 2025-07-29. The manifests in both extracts record checksums and coverage. [Natural Earth terms](https://www.naturalearthdata.com/about/terms-of-use/) · [FieldMaps distributions](https://fieldmaps.io/data/adm0/)
+
 ## Canonical Policy
 
 - Detailed policy: `docs/data-licenses.md`

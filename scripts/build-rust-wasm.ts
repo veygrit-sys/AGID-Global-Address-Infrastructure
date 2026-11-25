@@ -14,6 +14,7 @@ function run(command: string, args: string[]) {
 }
 
 async function main() {
+  // Pass --coordinate-wasm to rebuild the checked-in coordinate-only browser module.
   await run('rustup', ['target', 'add', 'wasm32-unknown-unknown']);
   await run('cargo', [
     'build',
@@ -22,6 +23,7 @@ async function main() {
     '--target',
     'wasm32-unknown-unknown',
     '--release',
+    ...(process.argv.includes('--coordinate-wasm') ? ['--features', 'coordinate-wasm'] : []),
   ]);
 
   const outputDir = path.join('public', 'wasm');

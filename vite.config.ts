@@ -7,6 +7,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 function manualVendorChunk(id: string) {
   const normalizedId = id.replace(/\\/g, '/');
 
+  // Keep independently versioned boundary extracts cacheable across app-only changes.
+  if (normalizedId.endsWith('/src/data/pearlRiverDelta.json')) return 'geography-pearl-delta';
+  if (normalizedId.endsWith('/src/data/countryMapUnits.json')) return 'geography-map-units';
+
   if (!normalizedId.includes('/node_modules/')) return undefined;
 
   if (

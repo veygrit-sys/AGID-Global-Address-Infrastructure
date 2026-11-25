@@ -6,11 +6,15 @@
 import namedSeaPrefixes from '../data/namedSeaPrefixes.json';
 import { COUNTRIES } from '../constants/countries';
 import { combineWasmU32Pair, getAgidWasmCore } from './agidWasm';
+import { issuanceLongitude, quantizeAgidCell } from './agidProjection';
 import { AGID_HASH_ALPHABET } from './agidSecurity';
 import { parseAGIDCode, wrapCanonicalAGID } from './agid16';
 export { normalizeAGIDCode, toAGID16, toLegacyAGID } from './agid16';
 import { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS } from './regions';
-import { hasCountryMapUnit, matchCountryMapUnits, type CountryMapUnitMatch } from './countryMapUnits';
+import { hasCountryMapUnit, matchCountryMapUnits, matchReviewedCoastalWater, type CountryMapUnitMatch } from './countryMapUnits';
+import { matchPearlRiverDelta } from './pearlRiverDelta';
+import { matchBuesingenBoundary } from './buesingenBoundary';
+import { mayHaveReviewedGeography } from './reviewedGeographyCoverage';
 export { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS };
 
 const BASE32_ALPHABET = AGID_HASH_ALPHABET;
@@ -31,62 +35,14 @@ function applyEqualArea(val: number): number {
   return Math.tan(val * Math.PI / 4);
 }
 
-function invertEqualArea(val: number): number {
-  return Math.atan(val) * 4 / Math.PI;
-}
-
-/**
- * Cubed Sphere Projection
- * Maps Lat/Lon to (face, qx, qy)
- */
 function getQuantized(lat: number, lon: number) {
   const wasmCore = getAgidWasmCore();
-  if (wasmCore) {
-    return {
-      face: wasmCore.agid_get_quantized_face(lat, lon),
-      qx: wasmCore.agid_get_quantized_qx(lat, lon),
-      qy: wasmCore.agid_get_quantized_qy(lat, lon),
-    };
-  }
-
-  const phi = (lat * Math.PI) / 180;
-  const theta = (lon * Math.PI) / 180;
-
-  const x = Math.cos(phi) * Math.cos(theta);
-  const y = Math.cos(phi) * Math.sin(theta);
-  const z = Math.sin(phi);
-
-  const absX = Math.abs(x);
-  const absY = Math.abs(y);
-  const absZ = Math.abs(z);
-
-  let face = 0;
-  let uc = 0;
-  let vc = 0;
-
-  if (absX >= absY && absX >= absZ) {
-    if (x > 0) { face = 0; uc = y; vc = z; }
-    else { face = 1; uc = -y; vc = z; }
-  } else if (absY >= absX && absY >= absZ) {
-    if (y > 0) { face = 2; uc = -x; vc = z; }
-    else { face = 3; uc = x; vc = z; }
-  } else {
-    if (z > 0) { face = 4; uc = -x; vc = -y; }
-    else { face = 5; uc = -x; vc = y; }
-  }
-
-  const maxVal = Math.max(absX, absY, absZ);
-  const xi = uc / maxVal;
-  const eta = vc / maxVal;
-
-  // Apply Equal-Area correction (inverse of the tangent map used in getFromQuantized)
-  const u = 0.5 * (invertEqualArea(xi) + 1.0);
-  const v = 0.5 * (invertEqualArea(eta) + 1.0);
-
+  // Exact seams also run correctly if a browser still has a previous WASM binary cached.
+  if (!wasmCore || lon === -180 || Math.abs(lat) === 90) return quantizeAgidCell(lat, lon);
   return {
-    face,
-    qx: Math.max(0, Math.min(M, Math.floor(u * K))),
-    qy: Math.max(0, Math.min(M, Math.floor(v * K)))
+    face: wasmCore.agid_get_quantized_face(lat, lon),
+    qx: wasmCore.agid_get_quantized_qx(lat, lon),
+    qy: wasmCore.agid_get_quantized_qy(lat, lon),
   };
 }
 
@@ -279,6 +235,8 @@ function encodeBase32(value: bigint, length: number): string {
 
 export interface AGIDResult {
   id: string; // Prefix + hash, optionally followed by version + checksum
+  coordinateSource?: 'pin' | 'device' | 'cell';
+  accuracyMeters?: number;
   prefix: string; // The 2-char alphanumeric prefix
   regionCode: string; // Internal country/territory code, including non-ISO disputed regions.
   hash: string; // 10-char hash
@@ -287,6 +245,8 @@ export interface AGIDResult {
   regionName: string;
   regionPolygon?: number[][];
   mapUnitMatch?: CountryMapUnitMatch;
+  waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version'>;
+  administrativeMatch?: CountryMapUnitMatch;
   face: number;
   quantX: number;
   quantY: number;
@@ -308,14 +268,6 @@ const CLAIM_AWARE_REGION_CODES = [
   "BT_T", "EH", "CRIM", "DONB", "KASH", "SCSD", "EEBD", "TRNC", "SLND", "PMR", "CYGL",
   "JP_NT", "JP_TK", "JP_SK",
 ];
-
-function normalizeLongitude(lon: number): number {
-  if (lon >= -180 && lon <= 180) return lon;
-  const remainder = lon % 360;
-  if (remainder > 180) return remainder - 360;
-  if (remainder < -180) return remainder + 360;
-  return remainder;
-}
 
 function getClaimAwareRegionCode(lat: number, lon: number, fallbackCode: string) {
   const normalizedFallback = fallbackCode.toUpperCase();
@@ -367,7 +319,7 @@ export type AGIDGridNeighborhoodMatch = {
  */
 export function encodeAGID(lat: number, lon: number): AGIDResult {
   const region = getRegionInfo(lat, lon);
-  const normLon = normalizeLongitude(lon);
+  const normLon = issuanceLongitude(lat, lon);
   const regionCode = getClaimAwareRegionCode(lat, normLon, region.prefix);
   const prefixCode = regionCode.startsWith("JP_") ? "JP" : region.prefix;
   const prefix = generatePrefix(prefixCode, region.isSea, region.name);
@@ -392,6 +344,8 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
     regionName: region.name,
     regionPolygon: region.polygon,
     ...(region.mapUnitMatch && { mapUnitMatch: region.mapUnitMatch }),
+    ...(region.waterMatch && { waterMatch: region.waterMatch }),
+    ...(region.administrativeMatch && { administrativeMatch: region.administrativeMatch }),
     face,
     quantX: qx,
     quantY: qy,
@@ -635,15 +589,19 @@ interface RegionInfo {
   name: string;
   polygon?: number[][];
   mapUnitMatch?: CountryMapUnitMatch;
+  waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version'>;
+  administrativeMatch?: CountryMapUnitMatch;
 }
 
 let LAST_RESULT: RegionInfo | null = null;
-const mapUnitNames = new Map(COUNTRY_REGIONS.filter(c => hasCountryMapUnit(c.code)).map(c => [c.code, c.name]));
+const mapUnitNames = new Map(COUNTRIES.map(c => [c.code, c.name]));
 
 function copyRegionInfo(result: RegionInfo): RegionInfo {
   const copy = { ...result };
   if (copy.polygon) copy.polygon = copy.polygon.map(point => [...point]);
   if (copy.mapUnitMatch) copy.mapUnitMatch = { ...copy.mapUnitMatch, codes: [...copy.mapUnitMatch.codes] };
+  if (copy.waterMatch) copy.waterMatch = { ...copy.waterMatch };
+  if (copy.administrativeMatch) copy.administrativeMatch = { ...copy.administrativeMatch, codes: [...copy.administrativeMatch.codes] };
   return copy;
 }
 
@@ -1075,18 +1033,12 @@ function isUnanchoredCoarsePolarCountry(lat: number, lon: number, country: any) 
   );
 }
 
-/**
- * Optimized Country/Ocean detection using the "World - Land = Sea" principle.
- * Logic:
- * 1. Check Land (Countries): If in land, it's definitely land. Smallest polygon wins.
- * 2. Check Major Seas: If not land, check named sea polygons.
- * 3. Fallback: Remaining areas are "Grid Sea" (part of an ocean).
- */
+/** Return a deterministic issuance hint plus any independently sourced map evidence. */
 export function getRegionInfo(lat: number, lon: number): RegionInfo {
   if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lon)) {
     throw new RangeError('Latitude must be within [-90, 90] and longitude must be finite.');
   }
-  const normLon = normalizeLongitude(lon);
+  const normLon = issuanceLongitude(lat, lon);
 
   // 1. POLAR SPECIAL RULE (Fast exit)
   if (lat > 89.95) return { prefix: "ARCT", isSea: true, gridSize: 4.4, name: "North Pole", polygon: [[-180, 89.9],[-180, 90],[180, 90],[180, 89.9],[-180, 89.9]] };
@@ -1103,10 +1055,17 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
 
   if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
 
+  if (!mayHaveReviewedGeography(lat, normLon)) {
+    return rememberRegion(lat, normLon, lookupRegionalHint(lat, normLon, false));
+  }
+
   // Positive polygon evidence takes precedence over rectangular land and sea
   // hints. An exact shared edge retains all matching units and uses the first
   // ISO code for the deterministic prefix required by the legacy wire format.
-  const mapUnitMatch = matchCountryMapUnits(lat, normLon);
+  const delta = matchPearlRiverDelta(lat, normLon);
+  const mapUnitMatch = delta?.surface === 'land' && delta.codes.length > 0
+    ? { source: delta.source, version: delta.version, codes: delta.codes, relation: delta.relation }
+    : matchCountryMapUnits(lat, normLon);
   if (mapUnitMatch) {
     const prefix = mapUnitMatch.codes[0];
     return rememberRegion(lat, normLon, {
@@ -1114,7 +1073,28 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
     });
   }
 
+  const waterMatch = delta?.surface === 'water'
+    ? { source: delta.source, version: delta.version }
+    : matchReviewedCoastalWater(lat, normLon);
+  const result = lookupRegionalHint(lat, normLon, Boolean(waterMatch));
+  if (waterMatch) result.waterMatch = waterMatch;
+
+  // An administrative outline may include rivers. Preserve independent surface evidence.
+  const administration = matchBuesingenBoundary(lat, normLon);
+  if (administration) {
+    result.administrativeMatch = administration;
+    if (!result.isSea && result.prefix !== administration.codes[0]) {
+      result.prefix = administration.codes[0];
+      result.name = mapUnitNames.get(result.prefix) ?? result.prefix;
+      delete result.polygon;
+    }
+  }
+  return rememberRegion(lat, normLon, result);
+}
+
+function lookupRegionalHint(lat: number, normLon: number, skipLand: boolean): RegionInfo {
   const cell = getSpatialCell(lat, normLon);
+  const landCandidates = skipLand ? [] : cell.countries;
 
   // Helper for smallest polygon logic
   const getArea = (n: number, s: number, w: number, e: number) => (n - s) * (w > e ? (180 - w + e + 180) : (e - w));
@@ -1134,7 +1114,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
     };
   };
 
-  if (!isProtectedCoastalLandAnchor(lat, normLon, cell.countries)) {
+  if (!isProtectedCoastalLandAnchor(lat, normLon, landCandidates)) {
     let prioritySeaMatch: any = null;
     let prioritySeaMinArea = Infinity;
 
@@ -1151,8 +1131,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
     }
 
     if (prioritySeaMatch) {
-      const res = seaResult(prioritySeaMatch);
-      return rememberRegion(lat, normLon, res);
+      return seaResult(prioritySeaMatch);
     }
   }
 
@@ -1161,10 +1140,10 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
 
   // 4. LAND CHECK (Countries) - Strict Polygon Check
   // [PRIORITIZE JAPAN, DISPUTED AREAS, OVERSEAS TERRITORIES & AUTONOMOUS REGIONS]
-  const prioritized = cell.countries
+  const prioritized = landCandidates
     .filter(c => highPriorityRank.has(c.code))
     .sort((a, b) => (highPriorityRank.get(a.code) ?? Infinity) - (highPriorityRank.get(b.code) ?? Infinity));
-  const others = cell.countries.filter(c => !highPriorityRank.has(c.code));
+  const others = landCandidates.filter(c => !highPriorityRank.has(c.code));
   const countryCandidates: any[] = [];
 
   for (const c of prioritized) {
@@ -1189,7 +1168,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
         name: c.name,
         polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
       };
-      return rememberRegion(lat, normLon, res);
+      return res;
     }
   }
 
@@ -1229,7 +1208,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
       name: countryMatch.name,
       polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
     };
-    return rememberRegion(lat, normLon, res);
+    return res;
   }
 
   // 5. SEA CHECK (Specific Major Seas)
@@ -1249,7 +1228,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
 
   if (seaMatch) {
     const res = seaResult(seaMatch);
-    return rememberRegion(lat, normLon, res);
+    return res;
   }
 
   // 6. FALLBACK (Open Ocean / Ocean Grid with 1000km Subdivision)
@@ -1292,7 +1271,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
       [lonBand, latBand]
     ]
   };
-  return rememberRegion(lat, normLon, res);
+  return res;
 }
 
 /**

@@ -54,6 +54,18 @@ the same cell, and the final four carry a version and typing-error check.
 npm run agid -- decode <AGID> --json
 ```
 
+### Geography
+
+Assess a manually placed pin, a device fix with a reported accuracy in metres, or the complete cell of an issued ID.
+
+```bash
+npm run agid -- geography --lat -16.85 --lon 179.98 --json
+npm run agid -- geography --lat 22.533333 --lon 114.0 --accuracy-meters 25 --json
+npm run agid -- geography P304K5APK9JT124R --json
+```
+
+The result includes the footprint, map sources, surface and candidate administrative codes. `needs-confirmation` indicates that the footprint or evidence leaves a choice unresolved. `unassessed` means that the bundled detailed sources do not establish a result for that input. `deliveryRegion` is always null. Retain the recipient’s postal destination independently.
+
 ### Validate
 
 ```bash

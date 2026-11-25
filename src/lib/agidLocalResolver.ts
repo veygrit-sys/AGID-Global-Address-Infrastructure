@@ -395,10 +395,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   }
 
   if (!coordinates && inputCoordinates) coordinates = inputCoordinates;
-  if (coordinates) {
-    agid = encodeAGID(coordinates.lat, coordinates.lon);
-    agidId = agid.id;
-  } else if (agidId) {
+  if (agidId) {
     agid = decodeAgidToResult(agidId) || undefined;
     if (!agid) {
       return {
@@ -415,7 +412,17 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
         ],
       };
     }
-    coordinates = { lat: agid.lat, lon: agid.lon };
+    if (coordinates) {
+      const pin = encodeAGID(coordinates.lat, coordinates.lon);
+      if (pin.face !== agid.face || pin.qx !== agid.qx || pin.qy !== agid.qy) {
+        warnings.push('pin-outside-issued-cell');
+        coordinates = undefined;
+      }
+    }
+    coordinates ??= { lat: agid.lat, lon: agid.lon };
+  } else if (coordinates) {
+    agid = encodeAGID(coordinates.lat, coordinates.lon);
+    agidId = agid.id;
   }
 
   if (agid) {

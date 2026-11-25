@@ -24,11 +24,20 @@ fn invert_equal_area(val: f64) -> f64 {
 }
 
 fn get_quantized(lat: f64, lon: f64) -> (u32, u32, u32) {
+    if lat.abs() == 90.0 {
+        return (if lat > 0.0 { 4 } else { 5 }, K / 2, K / 2);
+    }
+    let mut lon = lon % 360.0;
+    if lon >= 180.0 {
+        lon -= 360.0;
+    } else if lon < -180.0 {
+        lon += 360.0;
+    }
     let phi = lat * std::f64::consts::PI / 180.0;
     let theta = lon * std::f64::consts::PI / 180.0;
 
     let x = phi.cos() * theta.cos();
-    let y = phi.cos() * theta.sin();
+    let y = if lon == -180.0 { 0.0 } else { phi.cos() * theta.sin() };
     let z = phi.sin();
 
     let abs_x = x.abs();
@@ -225,7 +234,7 @@ fn haversine_distance_meters(lat_a: f64, lon_a: f64, lat_b: f64, lon_b: f64) -> 
     2.0 * 6_371_008.8 * h.sqrt().min(1.0).asin()
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_zkp_quality_threshold_satisfied(score_percent: u32, threshold_percent: u32) -> u32 {
     if score_percent > 100 || threshold_percent > 100 {
         return 0;
@@ -233,7 +242,7 @@ pub extern "C" fn agid_zkp_quality_threshold_satisfied(score_percent: u32, thres
     (score_percent >= threshold_percent) as u32
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_zkp_point_in_bbox(
     lat: f64,
     lon: f64,
@@ -268,7 +277,7 @@ pub extern "C" fn agid_zkp_point_in_bbox(
     inside_lon as u32
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_zkp_point_in_circle(
     lat: f64,
     lon: f64,
@@ -310,7 +319,7 @@ fn write_cell_to_grid_buffer(index: usize, face: u32, x: u32, y: u32, step: u32)
     }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_generate_grid_cells(lat: f64, lon: f64, zoom: f64, range_cells: u32) -> u32 {
     let (face, qx, qy) = get_quantized(lat, lon);
     let step = grid_step_for_zoom(zoom);
@@ -346,42 +355,42 @@ pub extern "C" fn agid_generate_grid_cells(lat: f64, lon: f64, zoom: f64, range_
     count
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_buffer_ptr() -> *const f64 {
     unsafe { GRID_BUFFER.as_ptr() }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_buffer_len() -> u32 {
     unsafe { GRID_COUNT * GRID_VALUES_PER_CELL as u32 }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_face() -> u32 {
     unsafe { GRID_FACE }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_start_qx() -> u32 {
     unsafe { GRID_START_QX }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_start_qy() -> u32 {
     unsafe { GRID_START_QY }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_end_qx() -> u32 {
     unsafe { GRID_END_QX }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_end_qy() -> u32 {
     unsafe { GRID_END_QY }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(not(feature = "coordinate-wasm"), unsafe(no_mangle))]
 pub extern "C" fn agid_grid_step() -> u32 {
     unsafe { GRID_STEP }
 }

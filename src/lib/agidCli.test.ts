@@ -342,3 +342,34 @@ test('reports both country codes at the shared Lesotho–South Africa boundary',
   assert.equal(match.relation, 'boundary');
   assert.deepEqual(match.codes, ['LS', 'ZA']);
 });
+
+test('geography distinguishes the original pin, device accuracy and an issued cell', async () => {
+  const run = async (args: string[]) => {
+    const result = await runAgidCli(['geography', ...args, '--json']);
+    assert.equal(result.exitCode, 0, result.stderr);
+    return JSON.parse(result.stdout);
+  };
+  const pin = await run(['--lat', '-16.85', '--lon', '179.98']);
+  assert.equal(pin.command, 'geography');
+  assert.equal(pin.status, 'mapped');
+  assert.equal(pin.surface, 'land');
+  assert.deepEqual(pin.regionCandidates, ['FJ']);
+  assert.deepEqual(pin.footprint, { kind: 'manual-pin', radiusMeters: 0 });
+  assert.equal(pin.deliveryRegion, null);
+  const measured = await run(['--lat', '-16.85', '--lon', '179.98', '--accuracy-meters', '10']);
+  assert.deepEqual(measured.footprint, { kind: 'device-pin', radiusMeters: 10 });
+  const cell = await run(['P304K5APK9JT124R']);
+  assert.equal(cell.footprint.kind, 'cell');
+  assert.ok(cell.footprint.radiusMeters > 0);
+  assert.equal(cell.deliveryRegion, null);
+});
+
+test('geography rejects mixed, incomplete, invalid or ambiguous inputs', async () => {
+  for (const args of [
+    [], ['garbage'], ['--lon', '0'], ['--lon', '--lat'], ['--lat=', '--lon=0'],
+    ['--lat', '0', '--lon', '0', 'P304K5APK9JT124R'],
+    ['P304K5APK9JT124R', '--accuracy-meters', '1'],
+    ['--lat', '0', '--lon', '0', '--accuracy-meters=-1'],
+    ['--lat', '0', '--lon', '0', '--accuracy-meters='],
+  ]) assert.equal((await runAgidCli(['geography', ...args])).exitCode, 1, args.join(' '));
+});

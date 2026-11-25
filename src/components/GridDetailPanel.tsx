@@ -45,9 +45,13 @@ import { cn } from '../lib/utils';
 import { executeVerifiedAddressTranslationSync } from '../lib/verifiedAddressTranslation';
 import type { AddressDetails } from '../types/address';
 import type { RouteStop } from '../types/navigation';
+import { selectedGeographyInput } from '../lib/agidSelection';
+import { assessAgidGeography } from '../lib/geographicAssessment';
+import { AgidGeographySummary } from './AgidGeographySummary';
 import { AddressFeedbackPanel } from './AddressFeedbackPanel';
 
 interface GridDetailPanelProps {
+  appLanguage: string;
   clickedAgid: AGIDResult | null;
   isAgidPinnedToGps: boolean;
   setIsAgidPinnedToGps: (p: boolean) => void;
@@ -93,6 +97,7 @@ interface GridDetailPanelProps {
 }
 
 export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
+  appLanguage,
   clickedAgid,
   isAgidPinnedToGps,
   setIsManualSelection,
@@ -394,11 +399,11 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
     ];
   }, [domesticAddressTab, internationalEnglishTab]);
 
+  const geography = React.useMemo(() => clickedAgid ? assessAgidGeography(selectedGeographyInput(clickedAgid)) : null, [clickedAgid]);
   const handleAddressLanguageChange = React.useCallback((tab: string) => {
     setClickedAddressTab(tab);
     if (!clickedAgid) return;
-    const lat = (clickedAgid.bounds.minLat + clickedAgid.bounds.maxLat) / 2;
-    const lon = (clickedAgid.bounds.minLon + clickedAgid.bounds.maxLon) / 2;
+    const { lat, lon } = clickedAgid;
     void fetchAddressForLang(lat, lon, tab, true, countryCode, true);
   }, [clickedAgid, countryCode, fetchAddressForLang, setClickedAddressTab]);
 
@@ -552,7 +557,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                     onClick={() => {
                        if (mapRef.current && clickedAgid) {
                          mapRef.current.flyTo({
-                           center: [(clickedAgid.bounds.minLon + clickedAgid.bounds.maxLon) / 2, (clickedAgid.bounds.minLat + clickedAgid.bounds.maxLat) / 2],
+                           center: [clickedAgid.lon, clickedAgid.lat],
                            zoom: getDeviceZoom(),
                            pitch: mapPitch,
                            essential: true
@@ -567,6 +572,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                 </div>
                </div>
 
+               {geography && <AgidGeographySummary assessment={geography} locale={appLanguage} />}
                <motion.div
                 key="expanded-content"
                 initial={{ opacity: 0, height: 0 }}
@@ -683,8 +689,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                      <div className="mt-2 grid grid-cols-3 gap-2 pt-2">
                         <button
                           onClick={() => {
-                            const lat = (clickedAgid.bounds.minLat + clickedAgid.bounds.maxLat) / 2;
-                            const lng = (clickedAgid.bounds.minLon + clickedAgid.bounds.maxLon) / 2;
+                            const { lat, lon: lng } = clickedAgid;
                             const name = clickedAddress || clickedAgid.id;
                             setDestination({ lat, lng, name });
                             setDestinationQuery(name);

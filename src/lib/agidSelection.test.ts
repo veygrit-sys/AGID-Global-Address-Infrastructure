@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe,it } from 'node:test';
 import { encodeAGID } from './agid';
-import { decodeAgidToResult, getAgidCoordinates, looksLikeAGID16 } from './agidSelection';
+import { decodeAgidToResult, deviceAgidSelection, getAgidCoordinates, looksLikeAGID16, restoreAgidSelection, selectedGeographyInput } from './agidSelection';
 
 describe('getAgidCoordinates', () => {
   it('decodes canonical AGID ids', () => {
@@ -40,5 +40,42 @@ describe('map AGID input', () => {
       assert.equal(decodeAgidToResult(input), null);
     }
     assert.equal(looksLikeAGID16('FrankfurtAirport'), false);
+  });
+});
+
+it('decoding a historic cell does not attach modern point evidence to the original pin', () => {
+  const result = decodeAgidToResult('P304K5APK9JT124R');
+  assert.ok(result);
+  assert.equal(result.prefix, 'P3');
+  assert.equal(result.mapUnitMatch, undefined);
+  assert.equal(result.waterMatch, undefined);
+  assert.equal(result.administrativeMatch, undefined);
+});
+
+it('uses the original coordinates when looking up a pin inside a border cell', () => {
+  const lat = -28.9086745, lon = 28.988132;
+  const pin = encodeAGID(lat, lon);
+  const cell = decodeAgidToResult(pin.id)!;
+  assert.notDeepEqual(getAgidCoordinates(cell), { lat, lon });
+  assert.deepEqual(getAgidCoordinates(pin), { lat, lon });
+  assert.deepEqual(selectedGeographyInput(cell), { kind: 'cell', id: pin.id });
+});
+
+it('restores typed IDs and both current and older saved pins without reissuing their prefixes', () => {
+  const lat = -28.9086745, lon = 28.988132;
+  const id = 'LS03VSRC3KE51N0V';
+  const cell = decodeAgidToResult(id)!;
+  const storedCell = { id, lat: cell.lat, lon: cell.lon };
+  assert.equal(restoreAgidSelection(storedCell)?.coordinateSource, 'cell');
+  assert.equal(restoreAgidSelection({ id, lat, lon })?.coordinateSource, 'pin');
+  assert.equal(restoreAgidSelection({ id })?.id, id);
+  const legacyId = 'ZA' + cell.hash;
+  const legacy = restoreAgidSelection({ id: legacyId, lat, lon });
+  assert.equal(legacy?.id, legacyId);
+  assert.equal(legacy?.prefix, 'ZA');
+  assert.equal(restoreAgidSelection({ id, lat: 48, lon: 2 })?.coordinateSource, 'cell');
+  const device = deviceAgidSelection({ latitude: lat, longitude: lon, accuracy: 12 });
+  assert.deepEqual(selectedGeographyInput(restoreAgidSelection(device)!), {
+    kind: 'pin', lat, lon, method: 'device', accuracyMeters: 12,
   });
 });

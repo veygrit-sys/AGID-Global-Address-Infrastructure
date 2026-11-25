@@ -1,87 +1,56 @@
 import data from '../data/countryMapUnits.json';
+import { classifyMapPolygon, indexMapPolygon } from './indexedMapPolygon';
 
-// Bounds and rings in this versioned subset use GeoJSON [longitude, latitude].
-// The builder rejects polygons that would need antimeridian unwrapping.
-const coveredCodes = new Set(data.units.map(unit => unit.code));
+export interface CountryMapUnitMatch {
+  source: string;
+  version: string;
+  attribution?: string;
+  relation: 'inside' | 'boundary';
+  // Only units represented by the data at the query coordinate.
+  codes: string[];
+}
+
+// Country rings are never artificially clipped to regional windows. Water
+// rings extend past each window. The Fiji geometry is continuous across 180°.
+export const countryMapUnitGeometry = data.units;
+export const reviewedCoastalWaterGeometry = data.water;
+export const reviewedCoastalWindows = data.water.map(({ code, name, bbox }) => ({ code, name, bbox }));
+const coveredCodes = new Set(data.manifest.complete_units);
 
 export function hasCountryMapUnit(code?: string): boolean {
   return code !== undefined && coveredCodes.has(code);
 }
 
-type RingRelation = 'outside' | 'inside' | 'boundary';
-export interface CountryMapUnitMatch {
-  source: string;
-  version: string;
-  relation: 'inside' | 'boundary';
-  // Limited to units present in the pinned subset. Sorted by ISO alpha-2.
-  codes: string[];
+function inWindow([west, south, east, north]: number[], lat: number, lon: number): boolean {
+  if (lat < south || lat > north) return false;
+  return west <= east ? lon >= west && lon <= east : lon >= west || lon <= east;
 }
 
-// Tolerance for floating point arithmetic only, in degrees. Meter-scale
-// uncertainty of a user pin or a source boundary is a separate concern.
-const EPSILON = 1e-12;
-
-// A horizontal ray only crosses edges spanning its latitude. Index the original
-// edges in quarter-degree bands without simplifying any coordinates.
-function indexRing(points: number[][]) {
-  const edges = new Map<number, number[]>();
-  for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1][1], b = points[i][1];
-    const last = Math.floor((Math.max(a, b) + EPSILON) * 4);
-    for (let band = Math.floor((Math.min(a, b) - EPSILON) * 4); band <= last; band++) {
-      const indices = edges.get(band);
-      if (indices) indices.push(i);
-      else edges.set(band, [i]);
-    }
-  }
-  return { points, edges };
+export function hasReviewedCoastalCoverage(code: string | undefined, lat: number, lon: number): boolean {
+  return reviewedCoastalWindows.some(window => window.code === code && inWindow(window.bbox, lat, lon));
 }
 
-const units = data.units.map(unit => ({
-  code: unit.code,
-  polygons: unit.polygons.map(p => ({ bbox: p.bbox, rings: p.rings.map(indexRing) })),
-}));
-const boxes = units.flatMap(unit => unit.polygons.map(p => p.bbox));
-const west = Math.min(...boxes.map(b => b[0])), east = Math.max(...boxes.map(b => b[2]));
-const south = Math.min(...boxes.map(b => b[1])), north = Math.max(...boxes.map(b => b[3]));
-
-function classifyRing(x: number, y: number, ring: ReturnType<typeof indexRing>): RingRelation {
-  let inside = false;
-  // The pinned source uses closed rings, so the last edge ends at ring[0].
-  for (const i of ring.edges.get(Math.floor(y * 4)) ?? []) {
-    const [ax, ay] = ring.points[i - 1];
-    const [bx, by] = ring.points[i];
-    if (y < Math.min(ay, by) - EPSILON || y > Math.max(ay, by) + EPSILON) continue;
-    if (x >= Math.min(ax, bx) - EPSILON && x <= Math.max(ax, bx) + EPSILON) {
-      const cross = (bx - ax) * (y - ay) - (by - ay) * (x - ax);
-      if (Math.abs(cross) <= EPSILON * (Math.abs(bx - ax) + Math.abs(by - ay))) return 'boundary';
-    }
-    if ((ay > y) !== (by > y) && x < ax + (bx - ax) * (y - ay) / (by - ay)) inside = !inside;
-  }
-  return inside ? 'inside' : 'outside';
+function longitudeInSourceDomain(lon: number, code: string): number {
+  return code === 'FJ' && lon < 0 ? lon + 360 : lon;
 }
 
-function classifyPolygon(x: number, y: number, polygon: typeof units[number]['polygons'][number]): RingRelation {
-  const [w, s, e, n] = polygon.bbox;
-  if (x < w - EPSILON || x > e + EPSILON || y < s - EPSILON || y > n + EPSILON) return 'outside';
-
-  const exterior = classifyRing(x, y, polygon.rings[0]);
-  if (exterior !== 'inside') return exterior;
-  for (let i = 1; i < polygon.rings.length; i++) {
-    const hole = classifyRing(x, y, polygon.rings[i]);
-    if (hole === 'boundary') return 'boundary';
-    if (hole === 'inside') return 'outside';
-  }
-  return 'inside';
-}
+const units = data.units.map(unit => {
+  const polygons = unit.polygons.map(indexMapPolygon);
+  const bbox = [Math.min(...polygons.map(p => p.bbox[0])), Math.min(...polygons.map(p => p.bbox[1])),
+    Math.max(...polygons.map(p => p.bbox[2])), Math.max(...polygons.map(p => p.bbox[3]))];
+  return { code: unit.code, polygons, bbox };
+});
+const waterWindows = data.water.map(window => ({ ...window, polygons: window.polygons.map(indexMapPolygon) }));
 
 export function matchCountryMapUnits(lat: number, lon: number): CountryMapUnitMatch | undefined {
-  if (lon < west - EPSILON || lon > east + EPSILON || lat < south - EPSILON || lat > north + EPSILON) return undefined;
   const codes: string[] = [];
   let relation: CountryMapUnitMatch['relation'] = 'inside';
   for (const unit of units) {
+    const x = longitudeInSourceDomain(lon, unit.code);
+    if (!inWindow(unit.bbox, lat, x)) continue;
+    if (!coveredCodes.has(unit.code) && !hasReviewedCoastalCoverage(unit.code, lat, lon)) continue;
     for (const polygon of unit.polygons) {
-      const result = classifyPolygon(lon, lat, polygon);
+      const result = classifyMapPolygon(x, lat, polygon);
       if (result === 'outside') continue;
       codes.push(unit.code);
       if (result === 'boundary') relation = 'boundary';
@@ -90,4 +59,16 @@ export function matchCountryMapUnits(lat: number, lon: number): CountryMapUnitMa
   }
   if (codes.length === 0) return undefined;
   return { source: data.manifest.source_id, version: data.manifest.source_version, relation, codes: codes.sort() };
+}
+
+/** A strict positive ocean hit; points exactly on the shore do not count. */
+export function matchReviewedCoastalWater(lat: number, lon: number): { source: string; version: string } | undefined {
+  for (const window of waterWindows) {
+    if (!inWindow(window.bbox, lat, lon)) continue;
+    const x = longitudeInSourceDomain(lon, window.code);
+    if (window.polygons.some(p => classifyMapPolygon(x, lat, p) === 'inside')) {
+      return { source: data.manifest.ocean.source_id, version: data.manifest.ocean.source_version };
+    }
+  }
+  return undefined;
 }
