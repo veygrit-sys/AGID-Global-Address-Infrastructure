@@ -126,7 +126,8 @@ test('AddressQL DuckDB docs and smoke test keep local-first non-claims visible',
   assert.match(cliRunner, /addressql_duckdb_smoke\.sql/);
   assert.match(workflow, /AddressQL DuckDB CLI Smoke/);
   assert.match(workflow, /workflow_dispatch/);
-  assert.match(workflow, /duckdb_cli-linux-amd64\.zip/);
+  assert.match(workflow, /duckdb\/duckdb\/releases\/download\/v\d+\.\d+\.\d+\/duckdb-cli-linux-amd64\.tar\.gz/);
+  assert.match(workflow, /[a-f0-9]{64} .*\| sha256sum --check/);
   assert.match(workflow, /verify:addressql-duckdb:cli -- --require-cli/);
   assert.match(workflow, /verify:addressql-duckdb/);
 });
