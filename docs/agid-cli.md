@@ -36,6 +36,18 @@ JSON output:
 npm run agid -- encode --lat <latitude> --lon <longitude> --json --pretty
 ```
 
+The default output is the 12-character ID. Select the 16-character
+checksummed form with `--id-length 16` on `encode` or `batch encode`.
+
+```bash
+npm run agid -- encode --lat 35.681236 --lon 139.767125 --id-length 16 --json
+```
+
+The CLI accepts either width for decoding, validation, polygon output, and
+local resolution. The 16-character form also accepts four groups of four
+characters, such as `JP05-AV8T-JGHD-1MEQ`. The first 12 characters address
+the same cell, and the final four carry a version and typing-error check.
+
 ### Decode
 
 ```bash

@@ -1,4 +1,4 @@
-import { decodeAGID, encodeAGID, getCellPolygon, type AGIDResult } from './agid';
+import { decodeAGID, encodeAGID, encodeAGID16, getCellPolygon, normalizeAGIDCode, type AGIDResult } from './agid';
 import { resolveAgidLocal } from './agidLocalResolver';
 import {
   buildAgidResolverConformanceSuite,
@@ -41,7 +41,7 @@ type AgidCliRunOptions = {
 const HELP_TEXT = `AGID CLI ${AGID_CLI_VERSION}
 
 Usage:
-  agid encode --lat <lat> --lon <lon> [--json]
+  agid encode --lat <lat> --lon <lon> [--id-length 12|16] [--json]
   agid decode <AGID> [--json]
   agid validate <AGID> [--json]
   agid resolve <AGID|AGID-S|lat,lon|address text> [--country <code>] [--language <tab>] [--json]
@@ -68,7 +68,7 @@ Examples:
   agid encode --lat 35.681236 --lon 139.767125
   agid decode JP01R1A0ZTR4 --json
   agid resolve "35.681236,139.767125" --country JP --json
-  agid batch encode --file sample.jsonl --input-format jsonl --json
+  agid batch encode --file sample.jsonl --input-format jsonl --id-length 16 --json
   agid conformance --suite resolver --case resolver-local-agid-to-cell-v1 --json
 `;
 
@@ -92,11 +92,16 @@ function parseArgs(argv: readonly string[]): ParsedArgs {
       if (!key) continue;
       if (inlineValue !== undefined) {
         flags[key] = inlineValue;
-      } else if (argv[index + 1] && !argv[index + 1].startsWith('-')) {
-        flags[key] = argv[index + 1];
-        index += 1;
       } else {
-        flags[key] = true;
+        const next = argv[index + 1];
+        const signedCoordinate = ['lat', 'latitude', 'lon', 'lng', 'longitude'].includes(key)
+          && next?.startsWith('-') && Number.isFinite(Number(next));
+        if (next && (!next.startsWith('-') || signedCoordinate)) {
+          flags[key] = next;
+          index += 1;
+        } else {
+          flags[key] = true;
+        }
       }
       continue;
     }
@@ -171,6 +176,13 @@ function fail(message: string, exitCode = 1): AgidCliRunResult {
   return { exitCode, stdout: '', stderr: `${message}\n` };
 }
 
+function selectEncoder(flags: ParsedArgs['flags']) {
+  const length = flags['id-length'];
+  if (length === undefined || length === '12') return encodeAGID;
+  if (length === '16') return encodeAGID16;
+  throw new Error('--id-length must be 12 or 16.');
+}
+
 function coordinateFromFlags(flags: Record<string, string | boolean>) {
   const lat = getFlagNumber(flags, 'lat', 'latitude');
   const lon = getFlagNumber(flags, 'lon', 'lng', 'longitude');
@@ -200,6 +212,7 @@ function agidSummary(result: AGIDResult) {
     prefix: result.prefix,
     regionCode: result.regionCode,
     regionName: result.regionName,
+    ...(result.mapUnitMatch && { mapUnitMatch: result.mapUnitMatch }),
     type: result.isSea ? 'water' : 'land',
     gridSizeMetersApprox: result.gridSize,
     center: {
@@ -216,8 +229,8 @@ function agidSummary(result: AGIDResult) {
 }
 
 function decodeSummary(input: string) {
-  const normalized = normalizeAGIDInput(input);
-  if (!normalized || !isValidAGIDFormat(normalized)) return null;
+  const normalized = normalizeAGIDCode(input);
+  if (!normalized) return null;
   const decoded = decodeAGID(normalized);
   if (!decoded) return null;
   const region = encodeAGID(decoded.lat, decoded.lon);
@@ -290,9 +303,10 @@ function decodeHuman(summary: NonNullable<ReturnType<typeof decodeSummary>>) {
 }
 
 function validationSummary(input: string) {
-  const normalized = normalizeAGIDInput(input);
-  const formatValid = Boolean(normalized && isValidAGIDFormat(normalized));
-  const decoded = formatValid && normalized ? decodeAGID(normalized) : null;
+  const canonical = normalizeAGIDCode(input);
+  const normalized = canonical ?? normalizeAGIDInput(input);
+  const formatValid = Boolean(canonical || isValidAGIDFormat(input));
+  const decoded = canonical ? decodeAGID(canonical) : null;
   return {
     schemaVersion: AGID_CLI_SCHEMA_VERSION,
     cliVersion: AGID_CLI_VERSION,
@@ -494,7 +508,7 @@ function batchInputRef(record: Record<string, unknown>, index: number) {
   return firstString(record, ['id', 'ref', 'rowId', 'name']) || `row-${index + 1}`;
 }
 
-function batchOne(operation: string, record: Record<string, unknown>, index: number) {
+function batchOne(operation: string, record: Record<string, unknown>, index: number, encode: typeof encodeAGID) {
   const inputRef = batchInputRef(record, index);
 
   try {
@@ -512,7 +526,7 @@ function batchOne(operation: string, record: Record<string, unknown>, index: num
         index,
         inputRef,
         ok: true,
-        result: agidSummary(encodeAGID(lat, lon)),
+        result: agidSummary(encode(lat, lon)),
       };
     }
 
@@ -569,7 +583,9 @@ async function handleBatch(parsed: ParsedArgs, options: AgidCliRunOptions): Prom
   }
 
   let text: string;
+  let encode = encodeAGID;
   try {
+    if (operation === 'encode') encode = selectEncoder(parsed.flags);
     text = readBatchInput(parsed, options);
   } catch (error) {
     return fail(error instanceof Error ? error.message : 'Could not read batch input.');
@@ -583,7 +599,7 @@ async function handleBatch(parsed: ParsedArgs, options: AgidCliRunOptions): Prom
     return fail(error instanceof Error ? error.message : 'Could not parse batch input.');
   }
 
-  const results = records.map((record, index) => batchOne(operation, record, index));
+  const results = records.map((record, index) => batchOne(operation, record, index, encode));
   const failed = results.filter(result => !result.ok).length;
   const summary = {
     schemaVersion: AGID_CLI_SCHEMA_VERSION,
@@ -676,14 +692,16 @@ async function handleConformance(parsed: ParsedArgs): Promise<AgidCliRunResult> 
 
 async function handleEncode(parsed: ParsedArgs): Promise<AgidCliRunResult> {
   let coordinate;
+  let encode: typeof encodeAGID;
   try {
+    encode = selectEncoder(parsed.flags);
     coordinate = coordinateFromFlags(parsed.flags);
   } catch (error) {
     return fail(error instanceof Error ? error.message : 'Invalid coordinates.');
   }
   if (!coordinate) return fail('encode requires --lat and --lon.');
 
-  const result = agidSummary(encodeAGID(coordinate.lat, coordinate.lon));
+  const result = agidSummary(encode(coordinate.lat, coordinate.lon));
   const format = outputFormat(parsed.flags);
   if (format === 'json') return ok(json(withCliSchema('encode', result), Boolean(parsed.flags.pretty)));
   if (format === 'geojson') return ok(json(geoJsonFeature(result), Boolean(parsed.flags.pretty)));

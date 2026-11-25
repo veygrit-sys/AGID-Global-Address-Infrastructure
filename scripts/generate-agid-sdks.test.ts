@@ -32,6 +32,9 @@ test('writes shared spec, manifests, and API files for publishable SDKs', async 
     assert.match(spec, /"base32Alphabet": "0123456789ABCDEFGHJKMNPQRSTVWXYZ"/);
     assert.match(spec, /"hashLength": 10/);
     assert.match(spec, /"totalLength": 12/);
+    const publishedSpec = JSON.parse(await readFile(new URL('../sdk/agid-spec/agid-spec.json', import.meta.url), 'utf8'));
+    assert.equal(publishedSpec.checksummedExtension.totalLength, 16);
+    assert.deepEqual(JSON.parse(spec).checksummedExtension, publishedSpec.checksummedExtension);
     assert.match(spec, /"profile": "agid-public-security-v1"/);
     assert.match(spec, /"sdkValidationApi"/);
     assert.match(spec, /"validateAgid\(agid\) -> AgidValidationResult"/);

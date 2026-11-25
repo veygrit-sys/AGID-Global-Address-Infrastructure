@@ -63,13 +63,14 @@ default.
 ```bash
 npm run agid -- help
 npm run agid -- encode --lat <latitude> --lon <longitude> --json
+npm run agid -- encode --lat 35.681236 --lon 139.767125 --id-length 16 --json
 npm run agid -- validate <AGID> --json
 npm run agid -- batch encode --file sample.jsonl --input-format jsonl --json
 npm run agid -- conformance --json
 ```
 
 All JSON/GeoJSON CLI outputs include `schemaVersion` and `cliVersion` for stable
-external integration. See [AGID CLI](docs/agid-cli.md).
+external integration. See [AGID CLI](docs/agid-cli.md) and the [AGID16 rollout and country-boundary pilot](docs/agid16-rollout.md).
 
 ## Funding and Release Readiness
 

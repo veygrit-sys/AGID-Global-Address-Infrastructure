@@ -4,7 +4,8 @@ import type maplibregl from 'maplibre-gl';
 
 import { useAgidGridLayer } from '../hooks/useAgidGridLayer';
 import { useMapLibreLayerSync } from '../hooks/useMapLibreLayerSync';
-import { decodeAGID, encodeAGID, type AGIDResult } from '../lib/agid';
+import { encodeAGID, type AGIDResult } from '../lib/agid';
+import { decodeAgidToResult, looksLikeAGID16 } from '../lib/agidSelection';
 import { OPENFREEMAP_STYLES, registerPmtilesProtocol } from '../lib/mapEngine';
 import type { PhotonFeature } from '../types/navigation';
 
@@ -39,6 +40,7 @@ const mapCopy = {
     searchAction: 'Search',
     noResults: 'No matching places were found.',
     searchError: 'Search is temporarily unavailable.',
+    invalidAgid: 'Check the characters and enter the complete AGID again.',
     selectedId: 'Selected AGID',
     copyId: 'Copy selected AGID',
     copied: 'Copied',
@@ -62,6 +64,7 @@ const mapCopy = {
     searchAction: '検索',
     noResults: '一致する場所が見つかりませんでした。',
     searchError: '現在検索を利用できません。',
+    invalidAgid: 'AGIDの文字を確認して、もう一度入力してください。',
     selectedId: '選択中のAGID',
     copyId: '選択中のAGIDをコピー',
     copied: 'コピーされました',
@@ -226,8 +229,8 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     searchRequestRef.current += 1;
   }, []);
 
-  const selectCoordinates = React.useCallback((lat: number, lng: number, label?: string) => {
-    const result = encodeAGID(lat, lng);
+  const selectCoordinates = React.useCallback((lat: number, lng: number, label?: string, selection?: AGIDResult) => {
+    const result = selection ?? encodeAGID(lat, lng);
     setSelectedResult(result);
     if (label) setSearchQuery(label);
     setSearchResults([]);
@@ -245,14 +248,20 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     const query = searchQuery.trim();
     if (!query) return;
 
-    const decoded = decodeAGID(query);
+    const requestId = ++searchRequestRef.current;
+    const decoded = decodeAgidToResult(query);
     if (decoded) {
-      selectCoordinates(decoded.lat, decoded.lon, encodeAGID(decoded.lat, decoded.lon).id);
+      setIsSearching(false);
+      selectCoordinates(decoded.lat, decoded.lon, decoded.id, decoded);
+      return;
+    }
+    if (looksLikeAGID16(query)) {
+      setIsSearching(false);
+      setSearchResults([]);
+      setSearchMessage(copy.invalidAgid);
       return;
     }
 
-    const requestId = searchRequestRef.current + 1;
-    searchRequestRef.current = requestId;
     setIsSearching(true);
     setSearchMessage('');
     try {
@@ -269,7 +278,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     } finally {
       if (requestId === searchRequestRef.current) setIsSearching(false);
     }
-  }, [copy.noResults, copy.searchError, isMapReady, searchQuery, selectCoordinates]);
+  }, [copy.invalidAgid, copy.noResults, copy.searchError, isMapReady, searchQuery, selectCoordinates]);
 
   const retryMapLoad = React.useCallback(() => {
     setIsLoaded(false);

@@ -3,30 +3,25 @@
  * Global, CORDIC-rotated, Polar-ready, 12-character format.
  */
 
+import namedSeaPrefixes from '../data/namedSeaPrefixes.json';
 import { COUNTRIES } from '../constants/countries';
 import { combineWasmU32Pair, getAgidWasmCore } from './agidWasm';
-import {
-  AGID_HASH_ALPHABET,
-  isAgidPackedValueInRange,
-  isValidAGIDFormat,
-  normalizeAGIDInput,
-} from './agidSecurity';
+import { AGID_HASH_ALPHABET } from './agidSecurity';
+import { parseAGIDCode, wrapCanonicalAGID } from './agid16';
+export { normalizeAGIDCode, toAGID16, toLegacyAGID } from './agid16';
 import { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS } from './regions';
+import { hasCountryMapUnit, matchCountryMapUnits, type CountryMapUnitMatch } from './countryMapUnits';
 export { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS };
 
 const BASE32_ALPHABET = AGID_HASH_ALPHABET;
-const NUMBERS = "0123456789";
-const LETTERS = "ABCDEFGHJKMNPQRSTVWXYZ"; // 22 letters
-
-const OPEN_OCEAN_CODES = 220; // 22 Letters * 10 Numbers
-const COASTAL_SEA_CODES = 220; // 10 Numbers * 22 Letters
-const OTHER_CODES = 100; // 10 Numbers * 10 Numbers
+const SEA_PREFIX_BY_ID = new Map(Object.entries(namedSeaPrefixes));
+const OCEAN_IDS = ['NPAC', 'NEPC', 'SPAC', 'SEPC', 'NATL', 'SATL', 'NIND', 'SIND', 'SOUT', 'ARCT'] as const;
+const PREFIX_LETTERS = 'ABCDEFGHJKMNPQRSTVWXYZ';
 
 export const AGID_GRID_AXIS_BITS = 21;
 export const AGID_GRID_AXIS_CELLS = 2 ** AGID_GRID_AXIS_BITS;
 const K = AGID_GRID_AXIS_CELLS;
 const M = AGID_GRID_AXIS_CELLS - 1;
-const REGION_CACHE_EPSILON_DEGREES = 1e-9;
 
 /**
  * Equal-Area Transformation (E)
@@ -100,7 +95,10 @@ function getQuantized(lat: number, lon: number) {
  */
 function getFromQuantized(face: number, qx: number, qy: number) {
   const wasmCore = getAgidWasmCore();
-  if (wasmCore && Number.isInteger(qx) && Number.isInteger(qy)) {
+  // The WASM ABI clamps to valid cell origins. Edge vertices and neighbor probes
+  // can lie outside that domain and need the unclamped inverse projection.
+  if (wasmCore && Number.isInteger(qx) && Number.isInteger(qy)
+    && qx >= 0 && qx <= M && qy >= 0 && qy <= M) {
     return {
       lat: wasmCore.agid_get_lat(face, qx, qy),
       lon: wasmCore.agid_get_lon(face, qx, qy),
@@ -133,129 +131,30 @@ function getFromQuantized(face: number, qx: number, qy: number) {
   return { lat, lon };
 }
 
-/**
- * Prefix Generation Logic (2-character Alphanumeric)
- * Rules:
- * - Open Ocean (5 Big Oceans): Alpha + Number (e.g., A1)
- * - Coastal Seas (Marginal Seas): Number + Alpha (e.g., 1A)
- * - Other/Land: Number + Number (e.g., 11)
- * - Alpha + Alpha is forbidden.
- */
-function get2CharPrefix(val: number, category: 'OPEN' | 'COASTAL' | 'OTHER'): string {
-  if (category === 'OPEN') {
-    const v = val % OPEN_OCEAN_CODES;
-    const lIdx = Math.floor(v / 10);
-    const nIdx = v % 10;
-    return LETTERS[lIdx] + NUMBERS[nIdx];
-  } else if (category === 'COASTAL') {
-    const v = val % COASTAL_SEA_CODES;
-    const nIdx = Math.floor(v / 22);
-    const lIdx = v % 22;
-    return NUMBERS[nIdx] + LETTERS[lIdx];
-  } else {
-    const v = val % OTHER_CODES;
-    const n1 = Math.floor(v / 10);
-    const n2 = v % 10;
-    return NUMBERS[n1] + NUMBERS[n2];
-  }
-}
-
-const PREFIX_CACHE: { [key: string]: string } = {};
-
+/** Geographic prefixes are routing hints. Existing IDs keep their original prefix. */
 export function generatePrefix(code: string, isSea: boolean, name: string): string {
-  const cacheKey = `${code}_${isSea}`;
-  if (PREFIX_CACHE[cacheKey]) return PREFIX_CACHE[cacheKey];
-
-  // Categorization
-  let category: 'OPEN' | 'COASTAL' | 'OTHER' = 'OTHER';
-
-  if (isSea) {
-    // [SPECIFIC 2-CHAR SEA CODES]
-    const seaCodeMap: { [key: string]: string } = {
-      'NPAC': 'P1', 'NEPC': 'P0', 'SPAC': 'P3', 'SEPC': 'P2',
-      'NATL': 'A1', 'SATL': 'A2', 'NIND': 'I1', 'SIND': 'I2',
-      'SOUT': 'S0', 'ARCT': 'R0'
-    };
-
-    // Check if it's a major ocean segment
-    for (const [longCode, shortCode] of Object.entries(seaCodeMap)) {
-      if (code.includes(longCode)) {
-        PREFIX_CACHE[cacheKey] = shortCode;
-        return shortCode;
-      }
-    }
-
-    const isOpen = code.startsWith("O_") || Object.keys(seaCodeMap).some(k => code.includes(k));
-    if (isOpen) {
-      category = 'OPEN'; // Alpha + Number
-    } else {
-      // [REFINE SEA CATEGORY]
-      // Big 5 Coastal: Marginal seas associated with the major oceans.
-      // Other Sea: Inland or completely isolated seas.
-      const isCoastalType = name.includes("Sea") || name.includes("Coast") || name.includes("Strait") || name.includes("Bay") || name.includes("Gulf") || name.includes("Inlet") || name.includes("Channel");
-      const isBig5Coastal = name.includes("Pacific") || name.includes("Atlantic") || name.includes("Indian") || name.includes("Arctic") || name.includes("Southern") || isCoastalType;
-
-      if (isBig5Coastal) {
-        category = 'COASTAL'; // Number + Alpha
-      } else {
-        // Fallback for smaller bays/straits/channels that the user wants to treat as open sea grid
-        category = 'OPEN';
-      }
-    }
-  } else {
-    // [STRICT 2-LETTER COUNTRY CODES]
-    // If it's land, ensure we always use a 2-letter code from ISO 3166-1 if detected.
+  if (!isSea) {
     const upperCode = code.toUpperCase();
-    const isIsoCountry = COUNTRIES.some(c => c.code === upperCode) || code.length === 2;
-
-    if (isIsoCountry && /^[A-Z]{2}$/.test(upperCode)) {
-      PREFIX_CACHE[cacheKey] = upperCode;
-      return upperCode;
-    }
-
-    // For non-ISO codes (disputed/territories), use Number-Number format to avoid collisions
-    const hashData = (name + code).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const n1 = NUMBERS[hashData % 10];
-    const n2 = NUMBERS[(hashData / 10 | 0) % 10];
-    const finalCode = n1 + n2;
-
-    PREFIX_CACHE[cacheKey] = finalCode;
-    return finalCode;
+    if (/^[A-Z]{2}$/.test(upperCode)) return upperCode;
+    const sum = (name + code).split('').reduce((total, char) => total + char.charCodeAt(0), 0);
+    return `${sum % 10}${Math.floor(sum / 10) % 10}`;
   }
 
-  // Consistent Hash for prefix assignment
+  const registered = SEA_PREFIX_BY_ID.get(code);
+  if (registered) return registered;
+  // Registered ocean subdivisions share the prefix of their parent ocean.
+  for (const id of OCEAN_IDS) {
+    if (code.includes(id)) return namedSeaPrefixes[id];
+  }
+
+  // Unregistered extensions get a deterministic hint without reserving a registered prefix.
   let hash = 0;
-  for (let i = 0; i < code.length; i++) {
-    hash = ((hash << 5) - hash) + code.charCodeAt(i);
-    hash |= 0;
-  }
-  hash = Math.abs(hash);
-
-  let prefix = get2CharPrefix(hash, category);
-
-  // Collision Resolution within cache
-  let attempts = 0;
-  while (Object.values(PREFIX_CACHE).includes(prefix) && attempts < 50) {
-    prefix = get2CharPrefix(hash + attempts + 1, category);
-    attempts++;
-  }
-
-  // [STRICT ALPHA-ALPHA BAN FOR SEA]
-  // Fallback guard to ensure NO Sea Code is ever Alpha-Alpha.
-  // 1. Sea codes MUST have at least one numeric character (from sub-category logic)
-  // 2. Country codes (Alpha-Alpha) are strictly reserved for land entities.
-  if (isSea && /^[A-Z]{2}$/.test(prefix)) {
-    // Forced fallback to Number-Alpha (Coastal format) if categorization somehow produced Alpha-Alpha
-    prefix = NUMBERS[hash % 10] + LETTERS[hash % 22];
-  }
-
-  // 3. land codes (without ISO) MUST be Number-Number
-  if (!isSea && !/^[A-Z]{2}$/.test(prefix) && !/^[0-9]{2}$/.test(prefix)) {
-    prefix = NUMBERS[hash % 10] + NUMBERS[(hash / 10 | 0) % 10];
-  }
-
-  PREFIX_CACHE[cacheKey] = prefix;
-  return prefix;
+  for (let i = 0; i < code.length; i++) hash = (Math.imul(hash, 31) + code.charCodeAt(i)) | 0;
+  const value = Math.abs(hash) % (10 * PREFIX_LETTERS.length);
+  const coastal = !code.startsWith('O_') && /Sea|Coast|Strait|Bay|Gulf|Inlet|Channel|Pacific|Atlantic|Indian|Arctic|Southern/.test(name);
+  return coastal
+    ? `${Math.floor(value / PREFIX_LETTERS.length)}${PREFIX_LETTERS[value % PREFIX_LETTERS.length]}`
+    : `${PREFIX_LETTERS[Math.floor(value / 10)]}${value % 10}`;
 }
 
 /**
@@ -378,18 +277,8 @@ function encodeBase32(value: bigint, length: number): string {
   return result;
 }
 
-function decodeBase32(hash: string): bigint {
-  let result = 0n;
-  for (let i = 0; i < hash.length; i++) {
-    const index = BASE32_ALPHABET.indexOf(hash[i]);
-    if (index === -1) throw new Error(`Invalid character in AGID: ${hash[i]}`);
-    result = result * 32n + BigInt(index);
-  }
-  return result;
-}
-
 export interface AGIDResult {
-  id: string; // The prefix + hash
+  id: string; // Prefix + hash, optionally followed by version + checksum
   prefix: string; // The 2-char alphanumeric prefix
   regionCode: string; // Internal country/territory code, including non-ISO disputed regions.
   hash: string; // 10-char hash
@@ -397,6 +286,7 @@ export interface AGIDResult {
   gridSize: number;
   regionName: string;
   regionPolygon?: number[][];
+  mapUnitMatch?: CountryMapUnitMatch;
   face: number;
   quantX: number;
   quantY: number;
@@ -419,21 +309,25 @@ const CLAIM_AWARE_REGION_CODES = [
   "JP_NT", "JP_TK", "JP_SK",
 ];
 
+function normalizeLongitude(lon: number): number {
+  if (lon >= -180 && lon <= 180) return lon;
+  const remainder = lon % 360;
+  if (remainder > 180) return remainder - 360;
+  if (remainder < -180) return remainder + 360;
+  return remainder;
+}
+
 function getClaimAwareRegionCode(lat: number, lon: number, fallbackCode: string) {
   const normalizedFallback = fallbackCode.toUpperCase();
   if (CLAIM_AWARE_REGION_CODES.includes(normalizedFallback)) return normalizedFallback;
   if (normalizedFallback !== "JP") return normalizedFallback;
 
-  let normLon = lon;
-  while (normLon > 180) normLon -= 360;
-  while (normLon < -180) normLon += 360;
-
-  const cell = getSpatialCell(lat, normLon);
+  const cell = getSpatialCell(lat, lon);
   for (const code of ["JP_TK", "JP_SK", "JP_NT"]) {
     const region = cell.countries.find(c => c.code === code);
     if (!region) continue;
     const polyRaw = (region as any).polygons || region.polygon;
-    if (isPointInPolygon(lat, normLon, polyRaw, region)) return code;
+    if (isPointInPolygon(lat, lon, polyRaw, region)) return code;
   }
 
   return normalizedFallback;
@@ -473,12 +367,13 @@ export type AGIDGridNeighborhoodMatch = {
  */
 export function encodeAGID(lat: number, lon: number): AGIDResult {
   const region = getRegionInfo(lat, lon);
-  const regionCode = getClaimAwareRegionCode(lat, lon, region.prefix);
+  const normLon = normalizeLongitude(lon);
+  const regionCode = getClaimAwareRegionCode(lat, normLon, region.prefix);
   const prefixCode = regionCode.startsWith("JP_") ? "JP" : region.prefix;
   const prefix = generatePrefix(prefixCode, region.isSea, region.name);
 
   // 1. Quantization: Cubed Sphere mapping with Equal-Area correction
-  const { face, qx, qy } = getQuantized(lat, lon);
+  const { face, qx, qy } = getQuantized(lat, normLon);
 
   // 2. Hilbert & Base32
   // 10 characters Base32 = 50 bits.
@@ -496,6 +391,7 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
     gridSize: 4.4, // ~4.4m average resolution (2^21 divisions per face)
     regionName: region.name,
     regionPolygon: region.polygon,
+    ...(region.mapUnitMatch && { mapUnitMatch: region.mapUnitMatch }),
     face,
     quantX: qx,
     quantY: qy,
@@ -506,6 +402,13 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
     bounds: getCellBounds(face, qx, qy),
     polygon: getCellPolygon(face, qx, qy)
   };
+}
+
+/** Issue the opt-in checksummed form using the same grid, coordinates and prefix. */
+export function encodeAGID16(lat: number, lon: number): AGIDResult {
+  const result = encodeAGID(lat, lon);
+  result.id = wrapCanonicalAGID(result.id);
+  return result;
 }
 
 /**
@@ -568,15 +471,12 @@ export function decodeAGID(id: string): {
   qy: number;
   bounds: AGIDResult['bounds'];
 } | null {
-  const normalizedId = normalizeAGIDInput(id);
-  if (!normalizedId || !isValidAGIDFormat(normalizedId)) return null;
-  const prefix = normalizedId.substring(0, 2);
-  const hash = normalizedId.substring(2);
+  const code = parseAGIDCode(id);
+  if (!code) return null;
+  const prefix = code.legacyId.slice(0, 2);
 
   try {
-    const packedValue = decodeBase32(hash);
-    if (!isAgidPackedValueInRange(packedValue)) return null;
-    const { face, h } = unpackAGID(packedValue);
+    const { face, h } = unpackAGID(code.packed);
     const { x: quantX, y: quantY } = decodeHilbert(K, h);
 
     const { lat, lon } = getFromQuantized(face, quantX, quantY);
@@ -716,10 +616,43 @@ export function matchAGIDGridNeighborhood(
 const GRID_INDEX: { [key: string]: { seas: any[], countries: any[], continents: any[] } } = {};
 const GRID_SIZE = 2; // 2 degree cells as requested
 
+// Rank is invariant across queries and spatial cells.
+const HIGH_PRIORITY_CODES = [
+  "EH", "BT_T", "CRIM", "DONB", "KASH", "SCSD", "EEBD", "TRNC", "SLND", "PMR",
+  "PHIS", "BAAR", "CYGL", "XU", "XD", "EA", "JP_NT", "JP_TK", "JP_SK",
+  "IS", "AX", "GL", "FO", "SJ_SVA", "SJ_JAN", "BQ", "GG", "JE", "IM", "GI", "XK",
+  "SH", "AC", "TA", "PM",
+];
+const highPriorityRank = new Map(HIGH_PRIORITY_CODES.map((code, index) => [code, index]));
+
 // Last Result Cache (L0)
 let LAST_LAT = -999;
 let LAST_LON = -999;
-let LAST_RESULT: { prefix: string, isSea: boolean, gridSize: number, name: string } | null = null;
+interface RegionInfo {
+  prefix: string;
+  isSea: boolean;
+  gridSize: number;
+  name: string;
+  polygon?: number[][];
+  mapUnitMatch?: CountryMapUnitMatch;
+}
+
+let LAST_RESULT: RegionInfo | null = null;
+const mapUnitNames = new Map(COUNTRY_REGIONS.filter(c => hasCountryMapUnit(c.code)).map(c => [c.code, c.name]));
+
+function copyRegionInfo(result: RegionInfo): RegionInfo {
+  const copy = { ...result };
+  if (copy.polygon) copy.polygon = copy.polygon.map(point => [...point]);
+  if (copy.mapUnitMatch) copy.mapUnitMatch = { ...copy.mapUnitMatch, codes: [...copy.mapUnitMatch.codes] };
+  return copy;
+}
+
+function rememberRegion(lat: number, lon: number, result: RegionInfo): RegionInfo {
+  LAST_LAT = lat;
+  LAST_LON = lon;
+  LAST_RESULT = result;
+  return copyRegionInfo(result);
+}
 
 function getSpatialKey(lat: number, lon: number) {
   const latIdx = Math.floor(lat / GRID_SIZE);
@@ -750,6 +683,10 @@ function getSpatialCell(lat: number, lon: number) {
       return latOverlap && lonOverlap;
     }),
     countries: COUNTRY_REGIONS.filter(reg => {
+      // Map units replace these coarse rectangles, including on polygon misses.
+      if (hasCountryMapUnit(reg.code)) return false;
+      // Oceania's repository-placement alias duplicates the CL-EA address-format region.
+      if (reg.code === 'CL-EI') return false;
       const latOverlap = Math.max(s, reg.s) <= Math.min(n, reg.n);
       let lonOverlap = false;
       if (reg.w > reg.e) { // Wrap
@@ -1145,11 +1082,11 @@ function isUnanchoredCoarsePolarCountry(lat: number, lon: number, country: any) 
  * 2. Check Major Seas: If not land, check named sea polygons.
  * 3. Fallback: Remaining areas are "Grid Sea" (part of an ocean).
  */
-export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea: boolean, gridSize: number, name: string, polygon?: number[][] } {
-  // Normalize lon to -180 to 180
-  let normLon = lon;
-  while (normLon > 180) normLon -= 360;
-  while (normLon < -180) normLon += 360;
+export function getRegionInfo(lat: number, lon: number): RegionInfo {
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lon)) {
+    throw new RangeError('Latitude must be within [-90, 90] and longitude must be finite.');
+  }
+  const normLon = normalizeLongitude(lon);
 
   // 1. POLAR SPECIAL RULE (Fast exit)
   if (lat > 89.95) return { prefix: "ARCT", isSea: true, gridSize: 4.4, name: "North Pole", polygon: [[-180, 89.9],[-180, 90],[180, 90],[180, 89.9],[-180, 89.9]] };
@@ -1164,13 +1101,20 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
     return { prefix: "AQ", isSea: false, gridSize: 4.4, name: "Antarctica" };
   }
 
-  // 2. GRID LOOKUP (Narrow down to 1-3 candidates)
-  const cell = getSpatialCell(lat, normLon);
+  if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
 
-  // 3. SPATIAL CACHE (Last Result Check)
-  if (LAST_RESULT && Math.abs(lat - LAST_LAT) < REGION_CACHE_EPSILON_DEGREES && Math.abs(normLon - LAST_LON) < REGION_CACHE_EPSILON_DEGREES) {
-    return LAST_RESULT as any;
+  // Positive polygon evidence takes precedence over rectangular land and sea
+  // hints. An exact shared edge retains all matching units and uses the first
+  // ISO code for the deterministic prefix required by the legacy wire format.
+  const mapUnitMatch = matchCountryMapUnits(lat, normLon);
+  if (mapUnitMatch) {
+    const prefix = mapUnitMatch.codes[0];
+    return rememberRegion(lat, normLon, {
+      prefix, isSea: false, gridSize: 4.4, name: mapUnitNames.get(prefix) ?? prefix, mapUnitMatch
+    });
   }
+
+  const cell = getSpatialCell(lat, normLon);
 
   // Helper for smallest polygon logic
   const getArea = (n: number, s: number, w: number, e: number) => (n - s) * (w > e ? (180 - w + e + 180) : (e - w));
@@ -1208,8 +1152,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
 
     if (prioritySeaMatch) {
       const res = seaResult(prioritySeaMatch);
-      LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
-      return res;
+      return rememberRegion(lat, normLon, res);
     }
   }
 
@@ -1218,17 +1161,10 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
 
   // 4. LAND CHECK (Countries) - Strict Polygon Check
   // [PRIORITIZE JAPAN, DISPUTED AREAS, OVERSEAS TERRITORIES & AUTONOMOUS REGIONS]
-  const HIGH_PRIORITY_CODES = [
-    "EH", "BT_T", "CRIM", "DONB", "KASH", "SCSD", "EEBD", "TRNC", "SLND", "PMR",
-    "PHIS", "BAAR", "CYGL", "XU", "XD", "EA", "JP_NT", "JP_TK", "JP_SK",
-    "IS", "AX", "GL", "FO", "SJ_SVA", "SJ_JAN", "BQ", "GG", "JE", "IM", "GI", "XK",
-    "SH", "AC", "TA", "PM",
-  ];
-  const highPriorityRank = new Map(HIGH_PRIORITY_CODES.map((code, index) => [code, index]));
   const prioritized = cell.countries
-    .filter(c => HIGH_PRIORITY_CODES.includes(c.code))
+    .filter(c => highPriorityRank.has(c.code))
     .sort((a, b) => (highPriorityRank.get(a.code) ?? Infinity) - (highPriorityRank.get(b.code) ?? Infinity));
-  const others = cell.countries.filter(c => !HIGH_PRIORITY_CODES.includes(c.code));
+  const others = cell.countries.filter(c => !highPriorityRank.has(c.code));
   const countryCandidates: any[] = [];
 
   for (const c of prioritized) {
@@ -1253,8 +1189,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
         name: c.name,
         polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
       };
-      LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
-      return res;
+      return rememberRegion(lat, normLon, res);
     }
   }
 
@@ -1294,8 +1229,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
       name: countryMatch.name,
       polygon: polySet ? (polySet as [number, number][]).map(p => [p[1], p[0]]) : undefined
     };
-    LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
-    return res;
+    return rememberRegion(lat, normLon, res);
   }
 
   // 5. SEA CHECK (Specific Major Seas)
@@ -1315,8 +1249,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
 
   if (seaMatch) {
     const res = seaResult(seaMatch);
-    LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
-    return res;
+    return rememberRegion(lat, normLon, res);
   }
 
   // 6. FALLBACK (Open Ocean / Ocean Grid with 1000km Subdivision)
@@ -1359,8 +1292,7 @@ export function getRegionInfo(lat: number, lon: number): { prefix: string, isSea
       [lonBand, latBand]
     ]
   };
-  LAST_LAT = lat; LAST_LON = normLon; LAST_RESULT = res as any;
-  return res;
+  return rememberRegion(lat, normLon, res);
 }
 
 /**
@@ -1478,7 +1410,7 @@ const gridCache = new Map<string, { gridLines: any[][], gridCells: any[] }>();
  */
 export function getGridFeatures(lat: number, lon: number, range: number) {
   const centerResult = encodeAGID(lat, lon);
-  const { face, qx: quantX, qy: quantY } = getQuantized(lat, lon);
+  const { face, qx: quantX, qy: quantY } = centerResult;
 
   // Cache key
   const cacheKey = `${centerResult.id}_${range}`;

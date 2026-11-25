@@ -1,7 +1,7 @@
 import {
   AGID_BASE32_ALPHABET,
   AGID_FACE_COUNT,
-  AGID_FORMAT_PATTERN_SOURCE,
+  AGID_FORMAT_PATTERN,
   AGID_HASH_LENGTH,
   AGID_MAX_PACKED_VALUE,
   AGID_OPEN_SOURCE_RELEASE_CONTROLS,
@@ -14,6 +14,7 @@ import {
 export {
   AGID_BASE32_ALPHABET as AGID_HASH_ALPHABET,
   AGID_FACE_COUNT,
+  AGID_FORMAT_PATTERN,
   AGID_HASH_LENGTH,
   AGID_MAX_PACKED_VALUE,
   AGID_PACKED_BITS_USED,
@@ -21,7 +22,7 @@ export {
   AGID_TOTAL_LENGTH,
 };
 
-export const AGID_FORMAT_PATTERN = new RegExp(AGID_FORMAT_PATTERN_SOURCE);
+export { isAgidPackedValueInRange } from './agidContract';
 
 const PUBLIC_AGID_FORBIDDEN_FIELD_KEYS = new Set([
   'recipient',
@@ -90,12 +91,6 @@ export function normalizeAGIDInput(value: unknown): string | null {
 export function isValidAGIDFormat(value: unknown): value is string {
   const normalized = normalizeAGIDInput(value);
   return Boolean(normalized && AGID_FORMAT_PATTERN.test(normalized));
-}
-
-export function isAgidPackedValueInRange(packedValue: bigint) {
-  if (packedValue < 0n || packedValue > AGID_MAX_PACKED_VALUE) return false;
-  const face = Number(packedValue >> 42n);
-  return face >= 0 && face < AGID_FACE_COUNT;
 }
 
 export function findForbiddenPublicAgidFields(value: unknown, path = 'record'): string[] {

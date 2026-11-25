@@ -1,5 +1,6 @@
 import { getAddressFormat, type AddressFormat } from '../data/address_formats';
-import { decodeAGID, encodeAGID, getCellPolygon, type AGIDResult } from './agid';
+import { encodeAGID, normalizeAGIDCode, type AGIDResult } from './agid';
+import { decodeAgidToResult, looksLikeAGID16 } from './agidSelection';
 import {
   AGID_ADDRESS_INTELLIGENCE_ENGINE_VERSION,
   evaluateAgidAddressIntelligence,
@@ -17,10 +18,7 @@ import {
   isAgidSecureToken,
   type AgidSecurePurpose,
 } from './agidSecureShare';
-import {
-  isValidAGIDFormat,
-  normalizeAGIDInput,
-} from './agidSecurity';
+import { isValidAGIDFormat } from './agidSecurity';
 import {
   buildAOIDPublicDescriptor,
   isAOIDRecord,
@@ -232,31 +230,6 @@ function normalizeRecord(value: unknown) {
   return null;
 }
 
-function decodeAgidToResult(agidId: string): AGIDResult | null {
-  const decoded = decodeAGID(agidId);
-  if (!decoded) return null;
-  const normalizedId = normalizeAGIDInput(agidId);
-  if (!normalizedId) return null;
-  const approximate = encodeAGID(decoded.lat, decoded.lon);
-  const prefix = normalizedId.slice(0, 2);
-  const hash = normalizedId.slice(2);
-  return {
-    ...approximate,
-    id: normalizedId,
-    prefix,
-    hash,
-    face: decoded.face,
-    quantX: decoded.qx,
-    quantY: decoded.qy,
-    qx: decoded.qx,
-    qy: decoded.qy,
-    lat: decoded.lat,
-    lon: decoded.lon,
-    bounds: decoded.bounds,
-    polygon: getCellPolygon(decoded.face, decoded.qx, decoded.qy),
-  };
-}
-
 async function resolveAddressFormat(
   countryCode: string,
   input: Pick<AgidLocalResolverInput, 'addressFormat' | 'addressFormatResolver'>,
@@ -378,10 +351,13 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     agidId = secureOpened.payload.agid;
     audit.push({ step: 'open-agid-s', status: 'ok', message: 'Opened AGID-S locally with POS key ring.' });
   } else {
-    const normalizedAgid = normalizeAGIDInput(query);
-    if (normalizedAgid && isValidAGIDFormat(normalizedAgid)) {
+    const rawAgid = typeof input.query === 'string' ? input.query.trim() : '';
+    // Preserve the resolver's existing NFKC normalization for 12-character inputs.
+    const idInput = rawAgid.length === 12 && query.length === 12 ? query : rawAgid;
+    const normalizedAgid = normalizeAGIDCode(idInput);
+    if (normalizedAgid || isValidAGIDFormat(idInput) || looksLikeAGID16(query)) {
       inputKind = 'agid';
-      agidId = normalizedAgid;
+      agidId = normalizedAgid || idInput;
       audit.push({ step: 'detect-input', status: 'ok', message: 'Detected AGID code.' });
     } else if (inputCoordinates || textCoordinates) {
       inputKind = 'coordinates';
@@ -414,7 +390,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
       ...apiAddress,
     };
     details = details || normalizedRecord;
-    if (normalizedRecord.agid) agidId = normalizeAGIDInput(normalizedRecord.agid) || agidId;
+    if (normalizedRecord.agid) agidId = normalizedRecord.agid;
     audit.push({ step: 'normalize-record', status: 'ok', message: `Normalized ${inputKind} record for local resolution.` });
   }
 

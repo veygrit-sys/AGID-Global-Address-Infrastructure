@@ -289,3 +289,56 @@ test('returns non-zero exit code for invalid inputs', async () => {
   assert.equal(unknown.exitCode, 2);
   assert.match(unknown.stderr, /Unknown command/i);
 });
+
+test('opts in to 16-character issuance and rejects unsupported lengths', async () => {
+  const args = ['encode', '--lat', '35.681236', '--lon', '139.767125', '--json'];
+  const legacy = JSON.parse((await runAgidCli(args)).stdout);
+  const checked = JSON.parse((await runAgidCli([...args, '--id-length', '16'])).stdout);
+  assert.equal(legacy.id.length, 12);
+  assert.equal(checked.id.length, 16);
+  assert.equal(checked.id.slice(0, 12), legacy.id);
+  assert.deepEqual(checked.cell, legacy.cell);
+  assert.equal((await runAgidCli([...args, '--id-length', '17'])).exitCode, 1);
+  const western = await runAgidCli(['encode', '--lat', '-33', '--lon', '-71', '--id-length', '16', '--json']);
+  assert.equal(western.exitCode, 0);
+  assert.equal(JSON.parse(western.stdout).id.length, 16);
+  const batch = await runAgidCli(['batch', 'encode', '--stdin', '--id-length', '16', '--json'], {
+    stdin: '{"lat":35.681236,"lon":139.767125}',
+  });
+  assert.equal(JSON.parse(batch.stdout).results[0].result.id, checked.id);
+});
+
+test('checked map IDs retain their width and legacy geometry across CLI readers', async () => {
+  const grouped = 'jp05-av8t-jghd-1meq';
+  const id = 'JP05AV8TJGHD1MEQ';
+  const legacy = id.slice(0, 12);
+  const decode = async (input: string) => JSON.parse((await runAgidCli(['decode', input, '--json'])).stdout);
+  const decoded = await decode(grouped);
+  assert.equal(decoded.id, id);
+  assert.deepEqual(decoded.cell, (await decode(legacy)).cell);
+  const validation = await runAgidCli(['validate', grouped, '--json']);
+  assert.equal(JSON.parse(validation.stdout).normalized, id);
+  const polygon = await runAgidCli(['polygon', grouped, '--geojson']);
+  assert.equal(JSON.parse(polygon.stdout).properties.agid, id);
+  const resolved = JSON.parse((await runAgidCli(['resolve', grouped, '--json'])).stdout);
+  assert.equal(resolved.inputKind, 'agid');
+  assert.equal(resolved.agid.id, id);
+  const oldFullWidth = JSON.parse((await runAgidCli(['resolve', 'ＪＰ０５ＡＶ８ＴＪＧＨＤ', '--json'])).stdout);
+  assert.equal(oldFullWidth.agid.id, legacy);
+
+  for (const bad of ['JP05AV8TJGHD1MER', 'ＪP05AV8TJGHD1MEQ']) {
+    assert.equal((await runAgidCli(['decode', bad])).exitCode, 1);
+    assert.equal(JSON.parse((await runAgidCli(['validate', bad, '--json'])).stdout).valid, false);
+    assert.equal(JSON.parse((await runAgidCli(['resolve', bad, '--json'])).stdout).status, 'invalid');
+  }
+});
+
+test('reports both country codes at the shared Lesotho–South Africa boundary', async () => {
+  const result = await runAgidCli([
+    'encode', '--lat', '-28.909035', '--lon', '28.980846', '--id-length', '16', '--json',
+  ]);
+  assert.equal(result.exitCode, 0);
+  const match = JSON.parse(result.stdout).mapUnitMatch;
+  assert.equal(match.relation, 'boundary');
+  assert.deepEqual(match.codes, ['LS', 'ZA']);
+});

@@ -15,6 +15,14 @@ export const AGID_MAX_PACKED_VALUE = (1n << AGID_PACKED_BITS_USED) - 1n;
 export const AGID_FORMAT_PATTERN_SOURCE =
   `^[A-Z0-9]{${AGID_PREFIX_LENGTH}}[${AGID_BASE32_ALPHABET}]{${AGID_HASH_LENGTH}}$`;
 
+export const AGID_FORMAT_PATTERN = new RegExp(AGID_FORMAT_PATTERN_SOURCE);
+
+export function isAgidPackedValueInRange(packedValue: bigint) {
+  if (packedValue < 0n || packedValue > AGID_MAX_PACKED_VALUE) return false;
+  const face = Number(packedValue >> 42n);
+  return face >= 0 && face < AGID_FACE_COUNT;
+}
+
 export const AGID_PUBLIC_CONFIDENTIALITY_BOUNDARY =
   'AGID is public and must not contain recipient, phone, unit, room, private delivery instruction, ownership proof, owner key, device key, or encrypted AOID payload fields.';
 

@@ -10,8 +10,8 @@ import { AdvancedSearchOptions,DEFAULT_ADVANCED_SEARCH_OPTIONS } from './lib/adv
 import {
 AGIDResult,
 COUNTRY_REGIONS,
-decodeAGID,
 encodeAGID,
+toLegacyAGID,
 generateFullCountryRegistry,
 generateFullSeaRegistry,
 LAND_REGIONS,
@@ -38,7 +38,7 @@ LANGUAGES,
 normalizeAddressText,
 translateAddressOpenSource
 } from './lib/addressUtils';
-import { getAgidCoordinates } from './lib/agidSelection';
+import { decodeAgidToResult, getAgidCoordinates, looksLikeAGID16 } from './lib/agidSelection';
 import type { BuildingNameCandidate } from './lib/buildingName';
 import type { MapAddressFeatureCandidate } from './lib/mapFeatureAddress';
 import type { DroneLandingAssessment } from './lib/droneAssessment';
@@ -1152,7 +1152,8 @@ export default function App() {
   const jumpToAgid = React.useCallback((agidStr: string) => {
     try {
       setIsAgidPinnedToGps(false);
-      const decoded = decodeAGID(agidStr);
+      const decoded = decodeAgidToResult(agidStr);
+      if (!decoded) return;
       setLat(prev => prev !== decoded.lat ? decoded.lat : prev);
       setLng(prev => prev !== decoded.lon ? decoded.lon : prev);
       if (map.current) {
@@ -1164,9 +1165,8 @@ export default function App() {
         });
       }
       setClickedAgid(prev => {
-        const result = encodeAGID(decoded.lat, decoded.lon);
-        if (prev && prev.id === result.id) return prev;
-        return result;
+        if (prev && prev.id === decoded.id) return prev;
+        return decoded;
       });
     } catch (e) {
       console.error("Invalid AGID JUMP:", e);
@@ -2368,7 +2368,7 @@ export default function App() {
     }
 
     // Skip if it looks like a lat/lng or AGID
-    if (searchQuery.match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/) || searchQuery.match(/^[A-Z]{2,4}[A-Z2-9]{8,10}$/)) {
+    if (searchQuery.match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/) || toLegacyAGID(searchQuery) || looksLikeAGID16(searchQuery) || searchQuery.match(/^[A-Z]{2,4}[A-Z2-9]{8,10}$/)) {
       setSearchResults([]);
       return;
     }
@@ -2656,26 +2656,31 @@ export default function App() {
         }
       }
 
-      // 2. Check if input is standard 12-char AGID (2 prefix + 10 hash)
-      const cleanAgid = query.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-      if (cleanAgid.length === 12) {
-        const decoded = decodeAGID(cleanAgid);
-        if (decoded) {
-          const result = encodeAGID(decoded.lat, decoded.lon);
-          setIsManualSelection(true);
-          setClickedAgid(result);
-          setClickedAddress("Loading address...");
+      // Keep legacy storage keys intact when a checked ID is entered on the map.
+      const legacyId = toLegacyAGID(query);
+      if (!legacyId && looksLikeAGID16(query)) {
+        showAlert("Invalid AGID", "Check the characters and enter the complete ID again.");
+        return;
+      }
+      // Retain the existing map search convenience for punctuated legacy IDs.
+      const compactLegacy = /^[A-Za-z0-9]+(?:[- ][A-Za-z0-9]+)+$/.test(query.trim())
+        ? query.trim().replace(/[- ]/g, '')
+        : '';
+      const mapId = legacyId || (compactLegacy.length === 12 ? compactLegacy : null);
+      const decoded = mapId ? decodeAgidToResult(mapId) : null;
+      if (decoded) {
+        setIsManualSelection(true);
+        setClickedAgid(decoded);
+        setClickedAddress("Loading address...");
 
-          map.current.flyTo({
-            center: [decoded.lon, decoded.lat],
-            zoom: 19,
-            essential: true
-          });
-          setIsSearching(false);
-          setIsSearchFocused(false);
-          setSearchResults([]);
-          return;
-        }
+        map.current.flyTo({
+          center: [decoded.lon, decoded.lat],
+          zoom: 19,
+          essential: true
+        });
+        setIsSearchFocused(false);
+        setSearchResults([]);
+        return;
       }
 
       // 3. Check if input is "lat, lng"
@@ -2885,21 +2890,21 @@ export default function App() {
       result = result.split(':').pop() || result;
     }
 
-    const agidMatch = result.trim().toUpperCase().match(/^[A-Z]{2,4}[A-Z2-9]{8,10}$/);
-    if (agidMatch) {
+    const scannedAgid = toLegacyAGID(result);
+    if (scannedAgid) {
       if (latHint !== null && lonHint !== null) {
         map.current?.flyTo({ center: [lonHint, latHint], zoom: 19 });
 
         // Auto-save if it has a lat/lon hint (meaning it's likely a generated card)
         const newQr = {
-          id: agidMatch[0],
+          id: scannedAgid,
           lat: latHint,
           lon: lonHint,
           address: "Imported from QR",
           regionName: "Scanned",
           savedAt: new Date().toISOString()
         };
-        const newSaved = [newQr, ...savedQrs.filter(q => q.id !== agidMatch[0])];
+        const newSaved = [newQr, ...savedQrs.filter(q => q.id !== scannedAgid)];
         setSavedQrs(newSaved);
         localStorage.setItem('saved_qrs', JSON.stringify(newSaved));
         enqueueSyncQueueRecord('savedQr', newQr.id, 'create', {
@@ -2909,7 +2914,7 @@ export default function App() {
           savedAt: newQr.savedAt,
         });
       }
-      jumpToAgid(agidMatch[0]);
+      jumpToAgid(scannedAgid);
     } else {
       // General search
       setSearchQuery(result);
