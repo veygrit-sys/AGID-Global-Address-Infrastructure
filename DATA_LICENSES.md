@@ -96,6 +96,19 @@ Each window records the source surveys used to identify the island interior, its
 
 The detailed North American and Caribbean polygon extracts adapt the TIGER/Line 2025 area hydrography and roads, the U.S. Fish and Wildlife Service National Wetlands Inventory (marine and estuarine intertidal polygons), Ontario Great Lakes Islands and Ontario Hydro Network, and both ESA WorldCover editions credited above. The Mexican extracts adapt INEGI's December 2025 Marco Geoestadístico and use GeoNames locality records to identify two named lagoons. Each window lists the actual inputs and attribution. [U.S. Fish and Wildlife Service wetlands data](https://www.fws.gov/program/national-wetlands-inventory/download-state-wetlands-data) · [INEGI terms](https://www.inegi.org.mx/inegi/terminos.html) · [GeoNames licence](https://www.geonames.org/export/) · [Extracts and reproduction instructions](docs/north-america-caribbean-polygon-quality.md)
 
+## Oceania island, lagoon and inland-water polygons
+
+AGID derives local geometries from the following inputs. Each window records its editions, adaptations, evidence and attribution. The WorldCover, EC JRC, FieldMaps and Copernicus WorldDEM-30 notices above apply to the extracts using those sources. [Oceania coverage and reproduction guide](docs/oceania-polygon-quality.md)
+
+| Data | Source and reuse information |
+| --- | --- |
+| Australian coastal islands and inland waters | © Commonwealth of Australia (Geoscience Australia) 2016. Adapted under CC BY 4.0. The two high-tide shoreline editions used near Dyer and Wallace islands are credited to the Western Australian Department of Primary Industries and Regional Development and Landgate (DPIRD-094, CC BY 4.0). [Geoscience Australia](https://services.ga.gov.au/gis/rest/services/) · [WA data catalogue](https://catalogue.data.wa.gov.au/dataset/high-resolution-national-high-tide-coastline-history-dpird-094) |
+| New Zealand Topo50 | Source: LINZ Data Service, licensed for reuse under CC BY 4.0. The coastline and island polygon extracts are modified from data distributed by the Department of Conservation. [LINZ Topo50 coastlines and islands](https://data.linz.govt.nz/layer/51153-nz-coastlines-and-islands-polygons-topo-150k/) |
+| Hansen Global Forest Change 2024 v1.12 | Hansen/UMD/Google/USGS/NASA. Hansen et al. (2013), “High-Resolution Global Maps of 21st-Century Forest Cover Change,” Science 342, 850–853, doi:10.1126/science.1244693. Native land/water mask and tree-cover subsets are intersected with WorldCover. [Data and CC BY 4.0 terms](https://storage.googleapis.com/earthenginepartners-hansen/GFC-2024-v1.12/download.html) |
+| NOAA ETOPO 2022 | NOAA National Centers for Environmental Information, 2022. ETOPO 2022 15 Arc-Second Global Relief Model. Modified local bathymetric subsets corroborate deep offshore water. [Dataset](https://doi.org/10.25921/fd45-gt74) |
+| Micronesian coastal and reef surveys distributed by PacIOOS | USAID 2017 Marshall Islands conservation targets, SPC/GEM and USGS 2016 FSM shoreline, and Conservation Society of Pohnpei 2016 reef targets. PacIOOS metadata allows use and redistribution, disclaims warranties and advises against legal use. The derived polygons preserve source attribution. [Marshall Islands reef targets](https://www.pacioos.hawaii.edu/metadata/mh_mgd_all_conservtarg_reefs.html) · [FSM shoreline](https://www.pacioos.hawaii.edu/metadata/fm_spcusgs_all_shoreline.html) · [FSM reef targets](https://www.pacioos.hawaii.edu/metadata/fm_ej_all_conservtarg_reefveg.html) |
+| Palau shallow-water habitat and shoreline | NOAA National Centers for Coastal Ocean Science. Source metadata lists no access constraints and specifies “Not for navigation”. [Shoreline](https://www.fisheries.noaa.gov/inport/item/39063) · [Benthic habitats](https://www.fisheries.noaa.gov/inport/item/39425) |
+
 ## Canonical Policy
 
 - Detailed policy: `docs/data-licenses.md`

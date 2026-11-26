@@ -180,6 +180,27 @@ assert.equal(lookup(45.78, -81.97).territorialTopology, null); // Lake Manitou w
 // The raw global pack can cover ponds with a surrounding island or miss a small
 // island inside a lake. Check the public result against the regional shorelines.
 const reviewedShorelines = [
+  // Oceania controls include a lake in an island and both encodings of the date line.
+  [-16.805, 180, 'island', 'FJ', 'Taveuni'],
+  [-16.805, -180, 'island', 'FJ', 'Taveuni'],
+  [-16.7905, 180, 'water'], // The former coarse Fiji land record reaches the strait.
+  [-17.74805, 168.29543, 'island', 'VU', 'Ifira'],
+  [-14.264, 167.521, 'water'], // Lake Letas
+  [-31.99631, 115.518484, 'water'], // Salt lake on Wadjemup
+  [-44.346133, -176.176697, 'island', 'NZ', 'Rangatira (South East Island)'],
+  [7.124162, 171.350434, 'island', 'MH', 'Ejit'],
+  [7.125775, 171.346069, 'unknown'], // Majuro reef flat
+  [5.330939, 163.029175, 'island', 'FM', 'Lelu'],
+  [7.160866, 134.376131, 'water'], // Eil Malk's enclosed marine lake
+  [-0.53525, 166.922625, 'water'], // Buada Lagoon
+  [-13.910377, -171.8279551, 'water'], // Lake Lanotoʻo
+  [-13.3031254, -176.236127, 'island', 'WF', 'Uvea', 'FR'],
+  [-8.62834, 179.10186, 'island', 'TV', 'Funafala'],
+  [1.983625, -157.476375, 'island', 'KI', 'Kiritimati'],
+  [-18.9376, -159.7346, 'island', 'CK', 'Tapuaetai (One Foot Island)'],
+  [-16.78895, 180, 'water'], // Open water at the old north edge of the survey
+  [-8.6282, 179.0975, 'unknown'], // Funafala reef flat
+  [-18.9299846, -159.7296667, 'island', 'CK', 'Tekopua'],
   [48.0098831, -88.7709104, 'island', 'US', 'Ryan Island'],
   [48.006, -88.768, 'water'],
   [41.82519335, -82.635375, 'island', 'CA', 'Pelee Island'],
