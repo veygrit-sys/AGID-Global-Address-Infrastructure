@@ -27,6 +27,16 @@ const controls = [
   [17.55545726, -88.07182279, 'BZ'], // St George’s Caye
   [13.222, -87.672, null],       // Open water between the islands in the Gulf of Fonseca
   [16.932, -89.897, null],       // Lake Petén Itzá near Flores
+  [52.107074, -79.24281, 'CA'],    // Wolf Islet, James Bay
+  [56.514832, -78.783753, null],    // Hudson Bay off Twin Cairns Island
+  [75.8412, -78.827, 'CA'],        // Princess Charlotte Monument, Nunavut
+  [76.321, -97.522, null],          // Open channel between the Cheyne Islands
+  [52.576811, -131.440682, 'CA'],  // Hotspring Island, Haida Gwaii
+  [50.22057, -64.20602, 'CA'],     // Québec gazetteer point on Île aux Perroquets
+  [46.784444, -56.149444, 'PM'],   // Île aux Marins, Saint-Pierre-et-Miquelon
+  [44.45852, -75.83502, 'CA'], [44.4521, -75.8127, 'US'], // Ice and Dark islands
+  [48.726194, -123.358875, null],  // Channel inside an earlier, less detailed survey
+  [44.87665, -79.8374, null],      // Lake nested inside Little Beausoleil
   [-4.2226, -69.95922, 'unresolved'], // Santa Rosa settlement on the Amazon
   [5.2877, -52.590, 'GF'],             // Île Royale, French Guiana
   [-15.767, -69.6885, 'PE'],           // Taquile in Lake Titicaca
@@ -53,6 +63,7 @@ for (const [lat, lon, expected, id, shared] of controls) {
     assert.equal(result.territorialTopology.landform, expected === 'MX' ? 'island' : 'unknown');
     assert.equal(result.territorialTopology.status, expected === 'MX' ? 'inside' : 'uncertain');
   }
+  if (expected === 'PM') assert.deepEqual(result.island.sovereignCodes, ['FR']);
   if (expected === 'GF') assert.deepEqual(result.island.sovereignCodes, ['FR']);
   if (expected === 'GL') assert.deepEqual(result.island.sovereignCodes, ['DK']);
   if (expected === 'CL') {

@@ -43,7 +43,7 @@ function matchWindow(window: IndexedWindow, lat: number, x: number): ReviewedGeo
   // Preserve the individual island decisions, including disagreements between national shorelines.
   if (matchIslandBorderReview(lat, x) || matchDisputedIsland(lat, x) || matchRevisedIslandRegion(lat, x)) return;
   const { source, version, attribution, evidenceUrls } = window;
-  const common = { source, version, attribution, evidenceUrls: [...evidenceUrls], surveyedIslandOwnership: true };
+  const common = { source, version, attribution, surveyWindowId: window.id, evidenceUrls: [...evidenceUrls], surveyedIslandOwnership: true };
   const land = hits(window.land, x, lat);
   const water = hits(window.water, x, lat);
   const wetInterior = water.some(hit => hit.relation === 'inside');
@@ -95,12 +95,12 @@ function* queryPolygons(surveys: IndexedWindow[], bounds: number[]) {
     const { source, version, attribution } = window;
     for (const polygon of [...window.land, ...window.water]) {
       if (overlaps(polygon.bbox, bounds)) yield {
-        source, version, attribution, bbox: polygon.bbox, rings: polygon.rings, kind: 'physical' as const, codes: [] as string[],
+        source, version, attribution, surveyWindowId: window.id, bbox: polygon.bbox, rings: polygon.rings, kind: 'physical' as const, codes: [] as string[],
       };
     }
     for (const polygon of window.owners) {
       if (overlaps(polygon.bbox, bounds)) yield {
-        source, version, attribution, bbox: polygon.bbox, rings: polygon.rings, kind: 'admin' as const, codes: [polygon.code],
+        source, version, attribution, surveyWindowId: window.id, bbox: polygon.bbox, rings: polygon.rings, kind: 'admin' as const, codes: [polygon.code],
       };
     }
   }

@@ -156,7 +156,8 @@ function assessReviewedFootprint(location: GeographicFootprint, radius: number |
   const windows = reviewedWindows.filter(w => boxRelation(w.bbox, disk) !== 'outside'
     && haversineDistanceMeters(center, nearestInWindow(w.bbox, center)) <= (radius ?? 0) + 1e-6);
   if (!point && !windows.length) return;
-  const covered = windows.some(w => boxRelation(w.bbox, disk) === 'inside');
+  const priority = Math.max(0, ...windows.map(w => w.priority));
+  const covered = windows.some(w => w.priority === priority && boxRelation(w.bbox, disk) === 'inside');
   const candidates = new Set(point?.codes);
   const sources = new Map<string, Source>();
   function addSource(s: Source | undefined) {
@@ -181,7 +182,10 @@ function assessReviewedFootprint(location: GeographicFootprint, radius: number |
       if (foundAll() && (shape.kind === 'physical' ? touchesShore : touchesAdmin)) continue;
       contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
         const at = matchReviewedGeography(y, issuanceLongitude(y, x));
-        if (!at || at.surface === 'water') return;
+        // Count an edge only in the survey actually used at the contact point. A coarser
+        // coastline may pass straight through the interior of a newly mapped island.
+        const edgeWindowId = 'surveyWindowId' in shape ? shape.surveyWindowId : undefined;
+        if (!at || at.surface === 'water' || at.surveyWindowId !== edgeWindowId) return;
         addSource(at);
         if (shape.kind === 'physical') touchesShore = true;
         else touchesAdmin = true;

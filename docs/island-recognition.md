@@ -65,3 +65,5 @@ npm run verify:agid-islands
 `island.countryCodes` は所属候補、`sovereignCodes` は根拠がある場合の主権国コード。係争地では `claimantCodes`、`administeringCode`、`claimScope` と出典を使う。`regionCandidates` は入力したピンや測位範囲に対する候補であり、`deliveryRegion` は常にnullを返す。AGIDだけの入力では元のピンを復元できないため、セル全体を覆う範囲を照合する。発行済みのIDは従来と同じセルに戻り、先頭の発行時コードは本人の住所国や領有権の証明には使わない。
 
 米国とカナダの国境付近では、五大湖の湖内島、セントローレンス川の島、太平洋岸と大西洋岸の一部に詳細地形を使用する。国境の両側の島・本土、水面、測位誤差が岸をまたぐ場合の扱いは[米国・カナダの収録範囲と出典](us-canada-shorelines.md)を参照。
+
+カナダの小島、島内の池、島間の水路では州・連邦の資料を使ってピンと測位範囲を判定する。対象の島、確認座標と再生成手順は[カナダの小島と水路](canadian-small-islands.md)に記載している。
