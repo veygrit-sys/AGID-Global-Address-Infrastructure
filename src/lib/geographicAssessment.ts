@@ -1,3 +1,7 @@
+import { europeanFrontierSides } from './europeFrontierSides';
+import { frontierAreaAt } from './europeFrontierAreas';
+import frontierSources from '../data/europe-frontiers/sources.json';
+import { europeanFrontiersTouching, type FrontierFeature } from './europeFrontierAtlas';
 import {
   europeLandSource, europeLandWindows, europeOceanSource, inEuropeLandWindow, isEuropeanOpenWater, matchEuropeLandUnits, queryEuropeLandUnits,
 } from './europeOverview';
@@ -38,6 +42,10 @@ export interface AgidGeographicAssessment {
   footprint: { kind: 'manual-pin' | 'device-pin' | 'cell'; radiusMeters: number | null };
   boundaryAllowanceMeters: number;
   administrativeSourceDisagreement?: true;
+  frontiers?: FrontierFeature[];
+  administrativeCandidates?: string[];
+  administrativeArea?: NonNullable<ReturnType<typeof frontierAreaAt>> & { appliesTo: 'point' | 'center' };
+  frontierSearch?: 'unknown-accuracy' | 'large-footprint';
   island?: AgidIslandAssessment;
   territorialTopology?: TerritorialTopology;
   deliveryRegion: null;
@@ -67,6 +75,7 @@ function footprint(input: AgidGeographyInput) {
     }
     return {
       center: [issuanceLongitude(lat, lon), lat] as PostalContextPosition,
+      corners: undefined,
       kind: method === 'device' ? 'device-pin' as const : 'manual-pin' as const,
       radiusMeters: accuracyMeters ?? (method === 'device' ? null : 0),
     };
@@ -83,7 +92,8 @@ function footprint(input: AgidGeographyInput) {
   }
   const center: PostalContextPosition = [Math.atan2(y, x) / DEG, Math.atan2(z, Math.hypot(x, y)) / DEG];
   const radiusMeters = Math.max(...corners.map(c => haversineDistanceMeters(center, [c.lon, c.lat])));
-  return { center, kind: 'cell' as const, radiusMeters };
+  const vertices = corners.map(({lat,lon}) => [lon + 360 * Math.round((center[0]-lon)/360), lat] as PostalContextPosition);
+  return { center, corners: vertices, kind: 'cell' as const, radiusMeters };
 }
 
 // Bounds are longitude intervals in an unwrapped chart, aligned to the query meridian.
@@ -135,14 +145,14 @@ function contactOnEdge(center: PostalContextPosition, radius: number, ax: number
 }
 
 function contactEdges(rings: number[][][], disk: number[], center: PostalContextPosition, radius: number,
-  onTouch: (a: number[], b: number[], witness: PostalContextPosition) => void | boolean) {
+  corners: PostalContextPosition[] | undefined, onTouch: (a: number[], b: number[], witness: PostalContextPosition) => void | boolean) {
   for (const ring of rings) {
     for (let i = 1; i < ring.length; i++) {
       const a = ring[i - 1], b = ring[i];
       if (Math.min(a[1], b[1]) > disk[3] || Math.max(a[1], b[1]) < disk[1]) continue;
       const box = [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[0], b[0]), Math.max(a[1], b[1])];
       if (boxRelation(box, disk) === 'outside') continue;
-      const witness = contactOnEdge(center, radius, a[0], a[1], b[0], b[1]);
+      const witness = corners ? contactWithCell(corners, a[0], a[1], b[0], b[1], 1e-12) : contactOnEdge(center, radius, a[0], a[1], b[0], b[1]);
       if (witness && onTouch(a, b, witness) === true) return;
     }
   }
@@ -184,7 +194,7 @@ function assessReviewedShorelineFootprint(location: GeographicFootprint, radius:
     const foundAll = () => [...possible].every(code => candidates.has(code));
     for (const shape of shapes) {
       if (foundAll() && (shape.kind === 'physical' ? touchesShore : touchesAdmin)) continue;
-      contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
+      contactEdges(shape.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, (_a, _b, [x, y]) => {
         const at = matchReviewedShoreline(y, issuanceLongitude(y, x));
         if (!at || at.surface === 'water') return;
         // An older shoreline or political line can run through the interior of
@@ -202,7 +212,7 @@ function assessReviewedShorelineFootprint(location: GeographicFootprint, radius:
       });
     }
     for (const shape of queryDisputedIslandPolygons(disk)) {
-      contactEdges(shape.rings, disk, center, radius, () => {
+      contactEdges(shape.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, () => {
         addSource(shape);
         touchesDispute = true;
       });
@@ -328,7 +338,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
   let reachesReviewEdge = false;
   if (radius <= 500_000) {
     for (const shape of queryIslandBorderReviewPolygons(disk)) {
-      contactEdges(shape.rings, disk, center, radius, () => {
+      contactEdges(shape.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, () => {
         reachesReviewEdge = true;
         addSource(shape);
         if (shape.source === chelemSurveySource) candidates.add('MX');
@@ -386,7 +396,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     if (boxRelation(window.bbox, disk) === 'crosses') partialWindow(window.bbox, europeLandSource);
   }
   for (const unit of queryEuropeLandUnits(disk)) {
-    contactEdges(unit.feature.rings, disk, center, radius, (a, b, [x, y]) => {
+    contactEdges(unit.feature.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, (a, b, [x, y]) => {
       if (!inEuropeLandWindow(unit.coverage, x, y)) return;
       // Preserve finer enclave and host polygons (e.g. Baarle) within their reviewed extent.
       const local = matchTerritorialAdministration(y, x);
@@ -399,7 +409,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     if (code === 'JP' && !reviewedCoastalWindows.some(w => w.code === code && boxRelation(w.bbox, disk) === 'inside')) continue;
     for (const polygon of polygons) {
       if (boxRelation(polygon.bbox, disk) !== 'outside') {
-        contactEdges(polygon.rings, disk, center, radius, (a, b, [x, y]) => {
+        contactEdges(polygon.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, (a, b, [x, y]) => {
           // A previously bundled line can lie well inside a newer continental polygon.
           if (matchEuropeLandUnits(y, issuanceLongitude(y, x))) return;
           recordLand(code, mapSource, a, b);
@@ -421,7 +431,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     if (relation !== 'inside') continue;
     for (const polygon of window.polygons) {
       if (boxRelation(polygon.bbox, disk) !== 'outside') {
-        contactEdges(polygon.rings, disk, center, radius, () => {
+        contactEdges(polygon.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, () => {
           touchesWater = true;
           addSource(oceanSource);
         });
@@ -451,7 +461,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     // precedence over the less detailed ocean layer even where the layers overlap.
     for (const polygon of window.polygons) {
       if (polygon.code === 'water' || boxRelation(polygon.bbox, disk) === 'outside') continue;
-      contactEdges(polygon.geometry().rings.map(r => r.points), disk, center, radius,
+      contactEdges(polygon.geometry().rings.map(r => r.points), disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined,
         (a, b) => recordLand(polygon.code, deltaLand, a, b));
     }
     const continuousLand = crossedEdges.size
@@ -465,7 +475,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
         addSource(deltaWater);
         touchesWater = true;
       }
-      contactEdges(geometry.rings.map(r => r.points), disk, center, radius, () => {
+      contactEdges(geometry.rings.map(r => r.points), disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, () => {
         addSource(deltaWater);
         touchesWater = true;
       });
@@ -484,7 +494,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     }
     const contacted = new Map<string, TerritorialExclaveMatch>();
     for (const shape of queryTerritorialExclavePolygons(disk)) {
-      contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
+      contactEdges(shape.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, (_a, _b, [x, y]) => {
         touchesTerritory = true;
         touchesAdmin = true;
         const { feature } = shape;
@@ -513,7 +523,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     ) {
       for (const feature of features) {
         if (reachesReviewEdge && defaultSource === globalIslandSource && isReviewedNaturalEarthIsland(feature.bbox, feature.codes)) continue;
-        contactEdges(feature.rings, disk, center, radius, (a, b) => {
+        contactEdges(feature.rings, disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, (a, b) => {
           const x = issuanceLongitude((a[1] + b[1]) / 2, (a[0] + b[0]) / 2);
           const y = (a[1] + b[1]) / 2;
           if (tier === 'ordinary' && isJapaneseIslandReviewArea(y, x)) return;
@@ -556,7 +566,7 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
     partialWindow(buesingen.bounds, enclaveSource);
   }
   if (enclaveCoverage !== 'outside') {
-    contactEdges([buesingen.ring], disk, center, radius, () => {
+    contactEdges([buesingen.ring], disk, center, radius, boundaryAllowanceMeters === 0 ? location.corners : undefined, () => {
       candidates.add('DE');
       candidates.add('CH');
       addSource(enclaveSource);
@@ -576,4 +586,86 @@ function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMet
   }
   if (partialCoverage) surface = 'unknown';
   return finish(surface, partialCoverage || touchesLand || touchesWater || touchesAdmin || candidates.size > 1);
+}
+
+const frontierEpsilon = 1e-7;
+function onFrontier(x: number, y: number, ax: number, ay: number, bx: number, by: number) {
+  const dx = bx-ax, dy = by-ay;
+  return x >= Math.min(ax,bx)-frontierEpsilon && x <= Math.max(ax,bx)+frontierEpsilon
+    && y >= Math.min(ay,by)-frontierEpsilon && y <= Math.max(ay,by)+frontierEpsilon
+    && Math.abs(dx*(y-ay)-dy*(x-ax)) <= frontierEpsilon*(Math.abs(dx)+Math.abs(dy));
+}
+
+/** Clip against all four real cell edges, including a corner-only contact. */
+function contactWithCell(corners: PostalContextPosition[], ax: number, ay: number, bx: number, by: number,
+  epsilon = frontierEpsilon): PostalContextPosition | undefined {
+  const shift = 360 * Math.round((corners[0][0] - (ax+bx)/2) / 360);
+  ax += shift;
+  bx += shift;
+  let low = 0, high = 1;
+  const [p,q,r] = corners;
+  const winding = Math.sign((q[0]-p[0])*(r[1]-q[1])-(q[1]-p[1])*(r[0]-q[0]));
+  for (let i = 0; i < corners.length; i++) {
+    const [x,y] = corners[i], [u,v] = corners[(i+1)%corners.length];
+    const dx = u-x, dy = v-y;
+    const start = winding*(dx*(ay-y)-dy*(ax-x)) + epsilon*(Math.abs(dx)+Math.abs(dy));
+    const change = winding*(dx*(by-ay)-dy*(bx-ax));
+    if (change === 0) {
+      if (start < 0) return;
+    } else if (change > 0) {
+      low = Math.max(low,-start/change);
+    } else {
+      high = Math.min(high,-start/change);
+    }
+    if (low > high) return;
+  }
+  const t = (low+high)/2;
+  return [ax+t*(bx-ax),ay+t*(by-ay)];
+}
+
+export async function assessAgidGeographyWithFrontiers(input: AgidGeographyInput, base = assessAgidGeography(input)): Promise<AgidGeographicAssessment> {
+  const { center, corners, radiusMeters } = footprint(input);
+  const box = diskBounds(center,radiusMeters ?? 0);
+  const area = frontierAreaAt(center[0],center[1],box);
+  let assessment: AgidGeographicAssessment = area ? {...base, administrativeArea: {...area, appliesTo: radiusMeters === 0 ? 'point' : 'center'}} : base;
+  if (radiusMeters === null) return {...assessment, frontierSearch: 'unknown-accuracy'};
+  if (radiusMeters > 500000) return {...assessment, frontierSearch: 'large-footprint'};
+  const touches = (ax: number, ay: number, bx: number, by: number) => {
+    if (corners) return Boolean(contactWithCell(corners,ax,ay,bx,by));
+    if (!radiusMeters) return onFrontier(center[0],center[1],ax,ay,bx,by);
+    return Boolean(contactOnEdge(center,radiusMeters,ax,ay,bx,by));
+  };
+  const [hits,sides] = await Promise.all([europeanFrontiersTouching(box,touches), europeanFrontierSides(box,center,radiusMeters===0,touches)]);
+  if (!hits.length && !area && !sides?.codes.length) return assessment;
+  const candidates = new Set(base.regionCandidates);
+  const fine = base.territorialTopology?.administration || base.administrativeSourceDisagreement
+    || base.island?.status === 'disputed' || base.island?.status === 'japan-position'
+    || base.sources.some(s => ['osm-monaco-shoreline','vennbahn-cadgis-nrw','jungholz-bev-bavaria','medjurecje-geoboundaries','market-2006-demarcation','swisstopo-swissboundaries3d-buesingen'].includes(s.source));
+  const credits = new Map(base.sources.map(s => [s.source,s]));
+  if (sides && sides.codes.length && !sides.masked && !fine && !area) {
+    assessment = {...assessment, administrativeCandidates: sides.codes};
+    credits.set(frontierSources.fieldmaps.source,frontierSources.fieldmaps);
+    if (base.surface === 'land') {
+      candidates.clear();
+      sides.codes.forEach(code => candidates.add(code));
+    }
+  }
+  if (area) {
+    credits.set(area.source,{source:area.source,version:area.version,attribution:area.attribution});
+    if (base.surface === 'land') {
+      if (radiusMeters === 0 || (!area.joint && area.coversFootprint)) candidates.clear();
+      area.codes.forEach(code => candidates.add(code));
+    }
+  }
+  for (const hit of hits) {
+    const source = frontierSources[hit.source as keyof typeof frontierSources];
+    if (source) credits.set(source.source,source);
+    if (area && !area.joint && area.coversFootprint && area.source !== source?.source) continue;
+    if (sides?.masked && hit.kind === 'international') continue;
+    if (base.surface === 'land' && !fine && ['international','demarcation','signed-agreement','survey','joint-limit'].includes(hit.kind)) {
+      hit.codes.forEach(code => candidates.add(code));
+    }
+  }
+  return {...assessment, ...(hits.length && {frontiers: hits}), sources: [...credits.values()], regionCandidates: [...candidates].sort(),
+    status: candidates.size > 1 || ((area || hits.length > 0) && base.status === 'unassessed') ? 'needs-confirmation' : base.status};
 }

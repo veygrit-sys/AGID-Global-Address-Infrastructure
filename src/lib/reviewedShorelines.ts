@@ -1,3 +1,4 @@
+import monaco from '../data/monaco-osm-shoreline.json';
 import { europeanBorderWindows, isEuropeanBorderSource, matchEuropeanBorderShoreline, queryEuropeanBorderPolygons } from './europeBorderSurveys';
 import { marketSourceId, matchMarketSurvey, queryMarketSurvey } from './marketShoreline';
 import dividedLakeData from '../data/usCanadaDividedLakeIslands.json';
@@ -12,6 +13,7 @@ import { unpackMapRing } from './packedMapRing';
 import { matchNorthRockShoreline, northRockSource, northRockWindow, queryNorthRockShorelinePolygons } from './northRockShoreline';
 
 interface PackedPolygon {
+  coordinateScale?: number;
   bbox: number[];
   rings: string[];
 }
@@ -64,7 +66,17 @@ for (const page of parts as unknown as Row[][]) {
     else european[index].owners.push(polygon);
   }
 }
-const regions = [...northAmerican, ...european];
+const monacoSource = {
+  source: 'osm-monaco-shoreline', version: 'Geofabrik 2026-11-24',
+  attribution: '© OpenStreetMap contributors, ODbL 1.0',
+  evidenceUrls: ['https://download.geofabrik.de/europe/monaco.html','https://www.openstreetmap.org/copyright'],
+};
+const monacoWindow = monaco as ShoreWindow;
+const regions = [{
+  ...monacoWindow,
+  physical: monacoWindow.physical.map(shape => ({...shape, coordinateScale: 1e7})),
+  owners: monacoWindow.owners.map(shape => ({...shape, coordinateScale: 1e7})),
+}, ...northAmerican, ...european];
 
 interface LakePolygon {
   bbox: number[];
@@ -89,7 +101,7 @@ const baseUrls = [
   'https://fieldmaps.io/data/adm0/',
   'https://www150.statcan.gc.ca/n1/pub/92-160-g/92-160-g2021002-eng.htm',
 ];
-export const reviewedShorelineWindows = [...usCanadaShorelineWindows, ...europeWindows, ...europeanBorderWindows];
+export const reviewedShorelineWindows = [...usCanadaShorelineWindows, ...europeWindows, ...europeanBorderWindows, {id:monaco.id, bbox:monaco.bbox}];
 const europeSource = {
   source: 'europe-mediterranean-overseas-shorelines',
   version: 'GSHHG 2.3.7 + FieldMaps USGS/LSIB 2025-07-29',
@@ -131,7 +143,7 @@ export function isUsCanadaShorelineSource(source: string) {
     || source === northRockSource.source;
 }
 export function isReviewedShorelineSource(source: string) {
-  return isUsCanadaShorelineSource(source) || source === europeSource.source || source === ignSource.source || source === salutSource.source || source === marketSourceId || isEuropeanBorderSource(source);
+  return source === monacoSource.source || isUsCanadaShorelineSource(source) || source === europeSource.source || source === ignSource.source || source === salutSource.source || source === marketSourceId || isEuropeanBorderSource(source);
 }
 // Physical IDs refer to individual GSHHG 2.3.7 islands. Opposite-side control pins
 // in the regional integration tests verify both the component and its address regions.
@@ -144,6 +156,7 @@ function surveyRank(shore?: Shore) {
 function evidence(window: ShoreWindow, shore?: Shore) {
   if (shore?.source === 'ign-bidasoa') return { ...ignSource, evidenceUrls: [...ignSource.evidenceUrls] };
   if (shore?.source === 'ign-salut') return { ...salutSource, evidenceUrls: [...salutSource.evidenceUrls] };
+  if (window.id === monaco.id) return monacoSource;
   if (window.european) return { ...europeSource, evidenceUrls: baseUrls.slice(0, 2) };
   const survey = shore?.source && lakeSurveys[shore.source];
   if (!survey) return { ...usCanadaShorelineSource, evidenceUrls: [...baseUrls] };
@@ -158,7 +171,7 @@ const cache = new Map<PackedPolygon, { indexed: IndexedMapPolygon; rings: number
 function geometry(polygon: PackedPolygon) {
   let entry = cache.get(polygon);
   if (!entry) {
-    const rings = polygon.rings.map(text => unpackMapRing(text, scale));
+    const rings = polygon.rings.map(text => unpackMapRing(text, polygon.coordinateScale ?? scale));
     entry = { rings, indexed: indexMapPolygon({ bbox: polygon.bbox, rings }) };
     if (cache.size >= 128) cache.delete(cache.keys().next().value!);
     cache.set(polygon, entry);

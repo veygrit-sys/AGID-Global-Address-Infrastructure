@@ -1,8 +1,9 @@
+import { frontiersForRegion } from './europeFrontierAtlas';
 import { selectedGeographyInput } from './agidSelection';
 import { decodeAGID, encodeAGID, encodeAGID16, getCellPolygon, normalizeAGIDCode, type AGIDResult } from './agid';
 import { territorialTopologyRows } from './territorialTopologyDisplay';
 import { islandDisplayRows } from './islandDisplay';
-import { assessAgidGeography, type AgidGeographicAssessment, type AgidGeographyInput } from './geographicAssessment';
+import { assessAgidGeography, assessAgidGeographyWithFrontiers, type AgidGeographicAssessment, type AgidGeographyInput } from './geographicAssessment';
 import { resolveAgidLocal } from './agidLocalResolver';
 import {
   buildAgidResolverConformanceSuite,
@@ -47,7 +48,7 @@ const HELP_TEXT = `AGID CLI ${AGID_CLI_VERSION}
 Usage:
   agid encode --lat <lat> --lon <lon> [--id-length 12|16] [--json]
   agid decode <AGID> [--json]
-  agid geography (--lat <lat> --lon <lon> [--accuracy-meters <m>] | <AGID>) [--json]
+  agid geography (--lat <lat> --lon <lon> [--accuracy-meters <m>] | <AGID> | --borders-of <code>) [--json]
   agid validate <AGID> [--json]
   agid resolve <AGID|AGID-S|lat,lon|address text> [--country <code>] [--language <tab>] [--json]
   agid polygon <AGID> [--geojson|--json]
@@ -734,10 +735,17 @@ async function handleEncode(parsed: ParsedArgs): Promise<AgidCliRunResult> {
   return ok(encodeHuman(result));
 }
 
-function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
+async function handleGeography(parsed: ParsedArgs, stdin?: string): Promise<AgidCliRunResult> {
   try {
     const coord = coordinateFromFlags(parsed.flags);
     const id = getInput(parsed, stdin);
+    const region = getFlagString(parsed.flags, 'borders-of');
+    if (region) {
+      if (coord || id || parsed.flags['accuracy-meters'] !== undefined) return fail('Supply only a country or territory with --borders-of.');
+      const frontiers = await frontiersForRegion(region);
+      return outputFormat(parsed.flags) === 'json' ? ok(json(withCliSchema('geography', { region: region.toUpperCase(), frontiers }), Boolean(parsed.flags.pretty)))
+        : ok(frontiers.map(f => [f.id,f.name,f.classification].join('  ')).join('\n')+'\n');
+    }
     if ((!coord && !id) || (coord && id)) return fail('Supply either --lat and --lon or a single AGID.');
     const accuracy = getFlag(parsed.flags, 'accuracy-meters');
     let input: AgidGeographyInput;
@@ -750,7 +758,7 @@ function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
     } else {
       input = coord ? { kind: 'pin', ...coord, method: 'manual' } : { kind: 'cell', id };
     }
-    const assessment = assessAgidGeography(input);
+    const assessment = await assessAgidGeographyWithFrontiers(input);
     if (outputFormat(parsed.flags) === 'json') {
       return ok(json(withCliSchema('geography', { ...assessment }), Boolean(parsed.flags.pretty)));
     }
@@ -759,6 +767,7 @@ function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
       `Status: ${assessment.status}`,
       `Surface: ${assessment.surface}`,
       ...topologyHuman(assessment.territorialTopology, assessment.island),
+      ...(assessment.frontiers ?? []).map(f => [f.name,f.classification].join(" · ")),
       ...(assessment.administrativeSourceDisagreement ? ['Boundary sources differ at this location.'] : []),
       ...(assessment.island
         ? islandDisplayRows(assessment.island, false, codes => codes.join(', '),
