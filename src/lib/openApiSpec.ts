@@ -1161,6 +1161,7 @@ export const AGID_OPENAPI_SPEC = {
         tags: ['Address'],
         summary: 'Verify an address candidate for selected target countries',
         operationId: 'postAddressVerify',
+        description: 'The optional server-authenticated world-localities integration returns address1_decision for the submitted delivery line. The legacy status and score do not attest individual fields. Postal and public calls never invoke the private integration.',
         requestBody: {
           required: true,
           content: {
@@ -2251,6 +2252,7 @@ export const AGID_OPENAPI_SPEC = {
         required: ['countryCode', 'latitude', 'longitude', 'purpose', 'validAt'],
         properties: {
           countryCode: { type: 'string', pattern: '^[A-Z]{2}$' },
+          accuracyMeters: { type: 'number', minimum: 0, description: 'Radius of position uncertainty in metres.' },
           latitude: { type: 'number', minimum: -90, maximum: 90 },
           longitude: { type: 'number', minimum: -180, maximum: 180 },
           purpose: {
@@ -2982,6 +2984,22 @@ export const AGID_OPENAPI_SPEC = {
             type: 'array',
             maxItems: 8,
             items: { $ref: '#/components/schemas/PostalContextPublicResolutionCandidate' },
+          },
+          requestedCountryCode: { type: 'string', pattern: '^[A-Z]{2}$' },
+          regionLookups: {
+            type: 'array', items: { type: 'object', required: ['countryCode', 'status'],
+              properties: { countryCode: { type: 'string' }, status: { type: 'string' },
+                releaseId: { type: 'string' }, addressPointCount: { type: 'integer', minimum: 0 },
+                alternatives: { type: 'array', maxItems: 8, items: { $ref: '#/components/schemas/PostalContextPublicResolutionCandidate' } } },
+              additionalProperties: false },
+          },
+          pinGeography: {
+            type: 'object', additionalProperties: false, required: ['status', 'surface', 'regionCandidates'],
+            properties: {
+              status: { type: 'string', enum: ['mapped', 'needs-confirmation', 'unassessed'] },
+              surface: { type: 'string', enum: ['land', 'water', 'boundary', 'unknown'] },
+              regionCandidates: { type: 'array', items: { type: 'string' } },
+            },
           },
           postalEvidence: {
             type: 'array',
@@ -5859,6 +5877,24 @@ export const AGID_OPENAPI_SPEC = {
                 required: ['engineVersion', 'status', 'scope', 'score', 'country', 'postal', 'canonicalAddress'],
                 properties: {
                   engineVersion: { type: 'string' },
+                  address1_source: { type: 'string', enum: ['world-localities', 'not-configured', 'unavailable', 'not-applicable'] },
+                  address1_matched_scope: { type: 'string' },
+                  address1_issues: { type: 'array', items: { type: 'string' } },
+                  address1_evidence: {
+                    type: 'array', maxItems: 8, items: { type: 'object', required: ['source_id'], properties: {
+                      source_id: { type: 'string' }, snapshot: { type: 'string' }, use: { const: 'physical_context_only' },
+                    } },
+                  },
+                  address1_decision: {
+                    type: 'object', required: ['status', 'level', 'candidate_count', 'verified_fields', 'unverified_fields'],
+                    properties: {
+                      status: { type: 'string', enum: ['verified', 'partial', 'ambiguous', 'conflict', 'unverified'] },
+                      level: { type: 'string', enum: ['none', 'postcode', 'locality', 'street', 'premise', 'unit'] },
+                      candidate_count: { oneOf: [{ type: 'integer', minimum: 0 }, { type: 'null' }] },
+                      verified_fields: { type: 'array', items: { type: 'string' } },
+                      unverified_fields: { type: 'array', items: { type: 'string' } },
+                    },
+                  },
                   status: {
                     type: 'string',
                     enum: ['verified', 'partial', 'unresolved', 'unsupported_country', 'country_mismatch'],

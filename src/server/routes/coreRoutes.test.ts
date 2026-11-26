@@ -309,6 +309,8 @@ test('address verification API uses bundled global country formats without paid 
   assert.equal(verification.body.data.country.supported, true);
   assert.equal(verification.body.data.country.policy.countryCode, 'PT');
   assert.equal(verification.body.data.quality.freeOnly, true);
+  assert.equal(verification.body.data.address1_source, 'not-applicable');
+  assert.equal(verification.body.data.address1_decision.status, 'unverified');
   assert.equal(verification.body.data.quality.paidApiParityClaimed, false);
   assert.ok(verification.body.data.standardLibrary.primary.some((entry: { id: string }) => entry.id === 'local-address-parser'));
   assert.ok(verification.body.data.audit.some((step: { step: string }) => step.step === 'standard-library-resolution'));

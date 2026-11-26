@@ -117,6 +117,7 @@ registeredQualitySnapshotToDecision,
 import {
 buildVeygritAddressForm,
 getVeygritAddressFieldBinding,
+readCountryFormComponents,
 VEYGRIT_ADDRESS_FORM_VERSION,
 } from '../lib/veygritAddressForm';
 import {
@@ -1491,6 +1492,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     setFormData(prev => {
       const next = {
         ...prev,
+        ...patch,
         country: patch.country || prev.country,
         recipient: patch.recipient || prev.recipient,
         organization: patch.organization || prev.organization,
@@ -1915,17 +1917,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     countryCode: formData.country,
     selectedLanguage: activeTab,
     fields: {
-      countryCode: formData.country,
-      postcode: formData.postcode,
-      state: formData.state,
-      city: formData.city,
-      district: formData.suburb,
-      street: formData.street,
-      houseNumber: formData.houseNumber,
+      ...readCountryFormComponents(formData),
+      ...buildVeygritAddressForm(formData).fields,
       building: formData.building || formData.organization,
-      unit: formData.unit || formData.room,
-      recipient: formData.recipient,
-      phone: formData.phone,
     },
     fieldPresence: {
       countryCode: Boolean(formData.country),
@@ -3810,7 +3804,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                         const fields = currentFormat?.fields || localFormat.fields || [];
 
                         return fields.map(field => {
-                          const binding = getVeygritAddressFieldBinding(field.key);
+                          const binding = getVeygritAddressFieldBinding(field.key, formData.country);
                           const fieldValue = (formData as Record<string, string>)[binding.stateKey] || '';
                           return (
                           <div

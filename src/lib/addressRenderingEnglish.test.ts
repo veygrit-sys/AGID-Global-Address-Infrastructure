@@ -148,7 +148,7 @@ test('renders domestic English without adding the destination country line', () 
     postcode: '95014',
   });
 
-  assert.equal(rendered, '1 Infinite Loop\nCupertino\nCA 95014');
+  assert.equal(rendered, '1 Infinite Loop\nCUPERTINO CA 95014');
 });
 
 test('renders Outer Circle domestic English with the same domestic layout', () => {

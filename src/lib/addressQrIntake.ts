@@ -1,3 +1,5 @@
+import { readDeliveryLines } from './addressDeliveryLines';
+import { readCountryFormComponents } from './veygritAddressForm';
 import {
   parseRegisteredAddressQrPayload,
   type RegisteredAddressFormData,
@@ -168,9 +170,18 @@ function makeSafeCheckInRef(input: unknown) {
 export function buildAddressInputPatchFromRegisteredQr(record: RegisteredAddressRecord): RegisteredAddressFormData {
   const walletFields = record.veygritAddressForm?.fields;
   const houseNumber = cleanText(walletFields?.houseNumber || record.houseNumber);
-  const unit = cleanText(walletFields?.unit || record.unit || record.room);
+  const country = cleanText(walletFields?.countryCode || record.country).toUpperCase();
+  const lineFields = { ...readDeliveryLines(record), ...readDeliveryLines(walletFields ?? {}) };
+  const subdistrict = cleanText(walletFields?.subdistrict || record.subdistrict);
+  const floor = cleanText(walletFields?.floor || record.floor);
+  const unit = cleanText(walletFields?.unit || record.unit || (country === 'CN' ? '' : record.room));
   return {
-    country: cleanText(walletFields?.countryCode || record.country).toUpperCase(),
+    ...readCountryFormComponents(record),
+    ...readCountryFormComponents(record.veygritAddressForm?.countryFields ?? {}),
+    ...lineFields,
+    ...(subdistrict ? { subdistrict } : {}),
+    ...(floor ? { floor } : {}),
+    country,
     recipient: cleanText(walletFields?.recipient || record.recipient),
     organization: cleanText(walletFields?.organization || record.organization),
     street: cleanText(walletFields?.street || record.street),
@@ -182,7 +193,7 @@ export function buildAddressInputPatchFromRegisteredQr(record: RegisteredAddress
     building: cleanText(walletFields?.building || record.building),
     ...(houseNumber ? { houseNumber } : {}),
     ...(unit ? { unit } : {}),
-    room: unit,
+    room: country === 'CN' ? cleanText(walletFields?.room || record.room) : unit,
   };
 }
 

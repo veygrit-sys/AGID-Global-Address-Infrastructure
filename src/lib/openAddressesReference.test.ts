@@ -64,3 +64,14 @@ test('raises validation evidence when an OpenAddresses reference matches', () =>
   assert.ok(result.checkedWith.includes('openaddresses-us-ca'));
   assert.ok(result.score >= 0.95);
 });
+
+test('rejects conflicting locality or country, duplicate premises and missing number', () => {
+  const address = { country_code: 'US', city: 'Sample', road: 'Main St', house_number: '12B', postcode: '00001' };
+  const record = { source: 'fixture', countryCode: 'US', city: 'Sample', street: 'Main St', houseNumber: '12B', postcode: '00001' };
+  for (const fields of [{ countryCode: 'CA' }, { city: 'Other' }, { postcode: '00002' }, { houseNumber: '12' }]) {
+    assert.equal(matchOpenAddressesReference(address, [{ ...record, ...fields }]), null);
+  }
+  assert.equal(matchOpenAddressesReference(address, [record, { ...record, lon: 1 }]), null);
+  assert.equal(matchOpenAddressesReference({ ...address, house_number: '' }, [record]), null);
+  assert.equal(matchOpenAddressesReference({ ...address, district: 'First' }, [record]), null);
+});

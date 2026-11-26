@@ -723,7 +723,7 @@ test('caller supplied country formats enable safe global postal verification wit
   assert.equal(result.quality.paidApiParityClaimed, false);
 });
 
-test('authoritative delivery point evidence can be labeled paid-grade for the supplied evidence set', () => {
+test('a delivery-point-capable source returning only ZIP and locality verifies only those levels', () => {
   const result = verifyAddressCandidate({
     targetCountries: ['US'],
     countryCode: 'US',
@@ -749,8 +749,8 @@ test('authoritative delivery point evidence can be labeled paid-grade for the su
   });
 
   assert.equal(result.status, 'verified');
-  assert.equal(result.quality.depth, 'delivery-point');
+  assert.equal(result.quality.depth, 'locality');
   assert.equal(result.quality.evidenceGrade, 'authoritative');
-  assert.equal(result.quality.readiness, 'paid-grade-for-supplied-evidence');
-  assert.equal(result.quality.paidApiParityClaimed, true);
+  assert.equal(result.quality.readiness, 'strong-open-verification');
+  assert.equal(result.quality.paidApiParityClaimed, false);
 });

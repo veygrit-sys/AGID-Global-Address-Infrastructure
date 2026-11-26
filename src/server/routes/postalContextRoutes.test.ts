@@ -13,7 +13,9 @@ import {
   createInMemoryPostalContextPackStore,
   type PostalContextPackStore,
 } from '../postalContextPackStore';
-import { registerPostalContextRoutes } from './postalContextRoutes';
+import { createCanadaPostalContextRuntimeTestPack } from '../../testFixtures/postalContextCanadaRuntimeFixture';
+import { createUnitedStatesPostalContextRuntimeTestPack } from '../../testFixtures/postalContextUnitedStatesRuntimeFixture';
+import { registerPostalContextRoutes, type PostalContextRouteOptions } from './postalContextRoutes';
 
 type RunningServer = {
   server: Server;
@@ -22,10 +24,10 @@ type RunningServer = {
 
 let running: RunningServer;
 
-async function startServer(store: PostalContextPackStore): Promise<RunningServer> {
+async function startServer(store: PostalContextPackStore, options: PostalContextRouteOptions = {}): Promise<RunningServer> {
   const app = express();
   app.use(express.json());
-  registerPostalContextRoutes(app, { store });
+  registerPostalContextRoutes(app, { ...options, store });
   const server = app.listen(0);
   await new Promise<void>(resolve => server.once('listening', resolve));
   const address = server.address();
@@ -399,4 +401,65 @@ test('postal bbox intersection returns the intersecting public polygon', async (
   assert.equal(overLimit.response.status, 400);
   assert.equal(overLimit.body.ok, false);
   assert.ok(overLimit.body.warnings.includes('invalid-limit'));
+});
+
+test('published address links remain alternatives when a pin is on mapped water or another country', async () => {
+  const pack = structuredClone(createPostalContextRuntimeTestPack());
+  const point = pack.geometry.features.find(feature => feature.role === 'address_point')!;
+  point.geometry = { type: 'Point', coordinates: [-179.7, -16.85] };
+  const local = await startServer(createInMemoryPostalContextPackStore(new PostalContextPackRuntime(pack)));
+  try {
+    const { body } = await postResolve(local.baseUrl, resolveBody({ latitude: -16.85, longitude: -179.7 }));
+    assert.equal(body.data.pinGeography.surface, 'water');
+    assert.equal(body.data.addressPointEvidence.matched, true);
+    assert.equal(body.data.status, 'conflict');
+    assert.equal(body.data.selected, undefined);
+    assert.equal(body.data.capabilities.premise, false);
+  } finally {
+    await stopServer(local.server);
+  }
+});
+
+test('shared pin searches both jurisdiction packs, handles missing packs, and honors a pinned release', async () => {
+  const latitude = 49, longitude = -103;
+  const [ca, us] = [createCanadaPostalContextRuntimeTestPack(), createUnitedStatesPostalContextRuntimeTestPack()]
+    .map(pack => {
+      const point = pack.geometry.features.find(feature => feature.role === 'address_point')!;
+      point.geometry = { type: 'Point', coordinates: [longitude, latitude] };
+      return new PostalContextPackRuntime(pack);
+    });
+  const assessPin: PostalContextRouteOptions['assessPin'] = () => ({
+    surface: 'land', status: 'needs-confirmation', regionCandidates: ['CA', 'US'], sources: [],
+    footprint: { kind: 'manual-pin', radiusMeters: 0 }, boundaryAllowanceMeters: 0, deliveryRegion: null,
+  });
+  const body = resolveBody({ countryCode: 'CA', latitude, longitude, validAt: '2026-08-26T00:00:00.000Z' });
+  for (const installed of [[ca, us], [us]]) {
+    const local = await startServer(createInMemoryPostalContextPackStore(installed), { assessPin });
+    try {
+      const result = (await postResolve(local.baseUrl, body)).body.data;
+      assert.equal(result.status, 'ambiguous');
+      assert.equal(result.selected, undefined);
+      assert.equal(result.resolvedLevel, 'none');
+      assert.equal(result.requestedCountryCode, 'CA');
+      assert.equal(result.countryCode, installed[0].countryCode);
+      const [canada, usa] = result.regionLookups;
+      assert.equal(usa.addressPointCount, 1);
+      assert.ok(usa.alternatives.length);
+      if (installed.length === 2) {
+        assert.equal(canada.addressPointCount, 1);
+        assert.ok(canada.alternatives.length);
+        const { releaseId, manifestDigest, policyVersion } = ca.release();
+        const pinned = (await postResolve(local.baseUrl, { ...body, release: {
+          mode: 'pinned', releaseId, manifestDigest, policyVersion,
+        } })).body.data;
+        assert.equal(pinned.regionLookups[1].status, 'not-pinned');
+        assert.equal(pinned.selected, undefined);
+      } else {
+        assert.equal(canada.status, 'unavailable');
+      }
+      assert.doesNotMatch(JSON.stringify(result.regionLookups), /distanceMeters|matchRadiusMeters|"latitude"|"longitude"/);
+    } finally {
+      await stopServer(local.server);
+    }
+  }
 });

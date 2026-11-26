@@ -86,3 +86,13 @@ test('ignores null or malformed API evidence instead of crashing AGID display', 
   assert.equal(address.city, 'Bamako');
   assert.deepEqual(sources, []);
 });
+
+test('Japanese postcode provider numbered fields identify places, not house numbers or rooms', () => {
+  const { address } = mergeOpenSourceAddressEvidence({ country_code: 'JP', state: '', city: '', subdistrict: '', road: '', house_number: '' }, {
+    asia_oceania_data: { japanDetails: { address1: '東京都', address2: '千代田区', address3: '永田町' } },
+  });
+  assert.equal(address.state, '東京都');
+  assert.equal(address.city, '千代田区');
+  assert.equal(address.subdistrict, '永田町');
+  assert.ok(!address.road && !address.house_number);
+});

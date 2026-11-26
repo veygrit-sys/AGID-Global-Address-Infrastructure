@@ -2,7 +2,8 @@ import {
   POSTAL_CONTEXT_GRAPH_SCHEMA_VERSION,
   POSTAL_CONTEXT_PURPOSES,
   isPostalContextAssertionEffectiveAt,
-  postalContextResolutionLevelRank,
+  postalContextResolutionLevelForNodes,
+  postalContextCapabilitiesForNodes,
   validatePostalContextGraph,
   type PostalContextAssertion,
   type PostalContextCapabilities,
@@ -37,6 +38,7 @@ import {
   POSTAL_CONTEXT_GEOMETRY_SCHEMA_VERSION,
   geometryIsPoint,
   haversineDistanceMeters,
+  postalContextRadiusBounds,
   isPostalContextGeometryEffectiveAt,
   locatePointInGeometry,
   validatePostalContextGeometryCollection,
@@ -138,12 +140,14 @@ type PostalContextCoordinateResolution = {
   selectedResolutionIndex?: number;
   postalMatches: PostalContextSpatialPostalMatch[];
   addressPointMatches: PostalContextAddressPointMatch[];
+  addressPointCount: number;
   resolutions: PostalContextResolutionResult[];
   errors: string[];
   warnings: string[];
 };
 
 export type PostalContextCoordinateRequest = {
+  accuracyMeters?: number;
   latitude: number;
   longitude: number;
   purpose: PostalContextPurpose;
@@ -278,46 +282,8 @@ export const POSTAL_CONTEXT_RUNTIME_INDEX_LIMITS = {
   globalFeatures: 512,
 } as const;
 
-const EMPTY_CAPABILITIES: PostalContextCapabilities = {
-  country: false,
-  administrative: false,
-  locality: false,
-  postalArea: false,
-  streetOrBlock: false,
-  premise: false,
-  building: false,
-  entrance: false,
-  unit: false,
-  organization: false,
-  deliveryEndpoint: false,
-  publicSafe: true,
-};
-
 function unique<T>(values: readonly T[]) {
   return [...new Set(values)];
-}
-
-const CAPABILITY_KEYS = Object.keys(EMPTY_CAPABILITIES) as Array<keyof PostalContextCapabilities>;
-
-function commonCapabilities(
-  candidates: readonly PostalContextResolutionCandidate[],
-): PostalContextCapabilities {
-  if (!candidates.length) return { ...EMPTY_CAPABILITIES };
-  const common = { ...EMPTY_CAPABILITIES };
-  for (const key of CAPABILITY_KEYS) {
-    common[key] = candidates.every(candidate => candidate.capabilities[key]);
-  }
-  return common;
-}
-
-function commonResolutionLevel(
-  candidates: readonly PostalContextResolutionCandidate[],
-): PostalContextResolutionLevel {
-  return candidates.reduce<PostalContextResolutionLevel>(
-    (lowest, candidate) => postalContextResolutionLevelRank(candidate.resolvedLevel)
-      < postalContextResolutionLevelRank(lowest) ? candidate.resolvedLevel : lowest,
-    candidates[0]?.resolvedLevel ?? 'none',
-  );
 }
 
 function releaseSummary(graph: PostalContextGraph): PostalContextRuntimeRelease {
@@ -749,6 +715,12 @@ class GeometryBucketIndex {
     ], maximumCandidates);
   }
 
+  queryDisk(point: PostalContextPosition, radiusMeters: number) {
+    const matches = postalContextRadiusBounds(point, radiusMeters).map(bbox => this.queryBbox(bbox));
+    if (matches.some(match => match.overflow)) return { entries: [] as IndexedFeature[], overflow: true };
+    return this.deduplicateBuckets(matches.map(match => match.entries), POSTAL_CONTEXT_RUNTIME_QUERY_LIMITS.spatialCandidateFeatures);
+  }
+
   queryBbox(
     bbox: PostalContextBbox,
     maximumCandidates = POSTAL_CONTEXT_RUNTIME_QUERY_LIMITS.spatialCandidateFeatures,
@@ -765,11 +737,11 @@ class GeometryBucketIndex {
 function overallResolutionStatus(
   resolutions: readonly PostalContextResolutionResult[],
   postalMatches: readonly PostalContextSpatialPostalMatch[],
-  addressPointMatches: readonly PostalContextAddressPointMatch[],
+  addressPointCount: number,
 ): PostalContextResolutionStatus {
   if (resolutions.some(resolution => resolution.status === 'invalid')) return 'invalid';
   if (resolutions.some(resolution => resolution.status === 'conflict')) return 'conflict';
-  if (addressPointMatches.length > 1
+  if (addressPointCount > 1
     || postalMatches.some(match => match.relation === 'boundary')
     || resolutions.some(resolution => resolution.status === 'ambiguous')) return 'ambiguous';
   if (!resolutions.length || resolutions.every(resolution => resolution.status === 'no_match')) return 'no_match';
@@ -806,6 +778,7 @@ export class PostalContextPackRuntime {
   private readonly addressPointIndex: GeometryBucketIndex;
   private readonly maxAddressPointCandidates: number;
   private readonly excludedGeometryCount: number;
+  private readonly maxMatchRadiusMeters: number;
 
   constructor(pack: PostalContextRuntimePack, options: PostalContextRuntimeOptions = {}) {
     const expectedCountryCode = (options.countryCode ?? pack.graph.release.countryCode).toUpperCase();
@@ -853,6 +826,7 @@ export class PostalContextPackRuntime {
 
     const postalGeometry = pack.geometry.features.filter(eligiblePostalGeometry);
     const addressPoints = pack.geometry.features.filter(eligibleAddressPointGeometry);
+    this.maxMatchRadiusMeters = addressPoints.reduce((radius, feature) => Math.max(radius, feature.matchRadiusMeters), 0);
     this.excludedGeometryCount = pack.geometry.features.length
       - postalGeometry.length
       - addressPoints.length
@@ -1468,6 +1442,7 @@ export class PostalContextPackRuntime {
       release: this.release(),
       postalMatches: [] as PostalContextSpatialPostalMatch[],
       addressPointMatches: [] as PostalContextAddressPointMatch[],
+      addressPointCount: 0,
       resolutions: [] as PostalContextResolutionResult[],
       errors: [] as string[],
       warnings: [] as string[],
@@ -1487,7 +1462,11 @@ export class PostalContextPackRuntime {
 
     const point: PostalContextPosition = [request.longitude, request.latitude];
     const postalCandidates = this.postalGeometryIndex.queryPoint(point);
-    const addressCandidates = this.addressPointIndex.queryPoint(point);
+    const accuracyMeters = request.accuracyMeters ?? 0;
+    if (!Number.isFinite(accuracyMeters) || accuracyMeters < 0) {
+      return { ...base, status: 'invalid', errors: ['invalid-coordinate-accuracy'] };
+    }
+    const addressCandidates = this.addressPointIndex.queryDisk(point, this.maxMatchRadiusMeters + accuracyMeters);
     if (postalCandidates.overflow || addressCandidates.overflow) {
       return { ...base, status: 'invalid', errors: ['spatial-candidate-limit-exceeded'] };
     }
@@ -1526,7 +1505,7 @@ export class PostalContextPackRuntime {
         matchRadiusMeters: feature.matchRadiusMeters,
         distanceMeters: haversineDistanceMeters(point, feature.geometry.coordinates),
       }))
-      .filter(match => match.distanceMeters <= match.matchRadiusMeters)
+      .filter(match => match.distanceMeters <= match.matchRadiusMeters + accuracyMeters)
       .sort((left, right) =>
         left.distanceMeters - right.distanceMeters || left.feature.id.localeCompare(right.feature.id));
     const clippedAddressPoints = addressPointMatches.slice(0, this.maxAddressPointCandidates);
@@ -1573,8 +1552,13 @@ export class PostalContextPackRuntime {
       visibility: 'public',
     }));
 
-    const status = overallResolutionStatus(resolutions, postalMatches, internalAddressPointMatches);
+    const exceedsMatchRadius = addressPointMatches.some(match =>
+      match.distanceMeters + accuracyMeters > match.matchRadiusMeters);
+    const centerStatus = overallResolutionStatus(resolutions, postalMatches, addressPointMatches.length);
+    const status = exceedsMatchRadius && (centerStatus === 'unique' || centerStatus === 'partial')
+      ? 'ambiguous' : centerStatus;
     const warnings = [
+      ...(exceedsMatchRadius ? ['coordinate-uncertainty-exceeds-address-match-radius'] : []),
       ...(addressPointMatches.length > this.maxAddressPointCandidates
         ? ['address-point-candidates-truncated']
         : []),
@@ -1594,6 +1578,7 @@ export class PostalContextPackRuntime {
         && (status === 'unique' || status === 'partial') ? 0 : undefined,
       postalMatches,
       addressPointMatches: internalAddressPointMatches,
+      addressPointCount: addressPointMatches.length,
       resolutions,
       errors: unique(resolutions.flatMap(resolution => resolution.errors)),
       warnings: unique(warnings),
@@ -1610,6 +1595,15 @@ export class PostalContextPackRuntime {
         ? primary.candidates[0]
         : undefined;
     const allCandidates = internal.resolutions.flatMap(resolution => resolution.candidates);
+    // The deepest level reached by every alternative need not identify the same
+    // address. Expose only the public context shared by identity on every path.
+    const unresolvedFootprint = internal.warnings.includes('address-point-candidates-truncated')
+      || internal.warnings.includes('coordinate-uncertainty-exceeds-address-match-radius');
+    const commonComponents = !selectedCandidate && !unresolvedFootprint
+      ? (allCandidates[0]?.components ?? []).filter(component =>
+        ['administrative_area', 'locality', 'postal_feature', 'thoroughfare'].includes(component.kind)
+        && allCandidates.every(candidate => candidate.components.some(other => other.nodeId === component.nodeId)))
+      : [];
     const alternativeCandidates = allCandidates
       .filter(candidate => candidate !== selectedCandidate)
       .slice(0, 8)
@@ -1629,14 +1623,14 @@ export class PostalContextPackRuntime {
       purpose: internal.purpose,
       countryCode: this.countryCode,
       release: internal.release,
-      resolvedLevel: selectedCandidate?.resolvedLevel ?? commonResolutionLevel(allCandidates),
-      capabilities: selectedCandidate?.capabilities ?? commonCapabilities(allCandidates),
+      resolvedLevel: selectedCandidate?.resolvedLevel ?? postalContextResolutionLevelForNodes(commonComponents),
+      capabilities: selectedCandidate?.capabilities ?? postalContextCapabilitiesForNodes(commonComponents),
       selected: selectedCandidate ? publicCandidate(selectedCandidate) : undefined,
       alternatives: alternativeCandidates,
       postalEvidence,
       addressPointEvidence: {
         matched: internal.addressPointMatches.length > 0,
-        candidateCount: internal.addressPointMatches.length,
+        candidateCount: internal.addressPointCount,
       },
       ambiguities: unique(internal.resolutions.flatMap(resolution => resolution.ambiguities)),
       errors: internal.errors,

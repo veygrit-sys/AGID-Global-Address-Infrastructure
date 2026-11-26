@@ -312,3 +312,18 @@ export function haversineDistanceMeters(
     + Math.cos(latitudeA) * Math.cos(latitudeB) * Math.sin(longitudeDelta / 2) ** 2;
   return 2 * EARTH_RADIUS_METERS * Math.asin(Math.min(1, Math.sqrt(haversine)));
 }
+
+/** Conservative bounding boxes for a spherical uncertainty disk, split at the antimeridian. */
+export function postalContextRadiusBounds([lon, lat]: PostalContextPosition, radiusMeters: number) {
+  const radiansToDegrees = 180 / Math.PI;
+  const angularRadius = Math.min(Math.PI, radiusMeters / EARTH_RADIUS_METERS);
+  const dy = angularRadius * radiansToDegrees;
+  const south = Math.max(-90, lat - dy), north = Math.min(90, lat + dy);
+  const box = (west: number, east: number) => [west, south, east, north] as const;
+  if (south === -90 || north === 90) return [box(-180, 180)];
+  const dx = Math.asin(Math.min(1, Math.sin(angularRadius) / Math.cos(lat / radiansToDegrees))) * radiansToDegrees;
+  const west = lon - dx, east = lon + dx;
+  if (west <= -180) return [box(-180, east), box(west + 360, 180)];
+  if (east >= 180) return [box(west, 180), box(-180, east - 360)];
+  return [box(west, east)];
+}

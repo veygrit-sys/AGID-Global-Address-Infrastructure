@@ -145,7 +145,10 @@ export function addressTemplateValues(
   countryCodeOverride?: string,
 ) {
   const countryCode = (countryCodeOverride || text(data.country_code) || text(data.countryCode)).slice(0, 2).toUpperCase();
+  // Only explicit format fields are eligible for rendering. Private saved-record
+  // callers pass location components only (never the recipient or telephone).
   const raw: Record<string, string> = {
+    ...Object.fromEntries((selected.spec.fields ?? []).map(({ key }) => [key, text(data[key])])),
     recipient: readValue(data, ['recipient', 'name', 'contactName', 'recipient_name']),
     organization: readValue(data, ['organization', 'company', 'building', 'building_name', 'poi', 'amenity', 'shop', 'tourism']),
     building: readValue(data, ['building', 'building_name', 'organization', 'company']),
@@ -153,6 +156,12 @@ export function addressTemplateValues(
     postcode: readValue(data, ['postcode', 'postal_code', 'zip']),
     state: readValue(data, ['state', 'province', 'region', 'department', 'governorate', 'emirate']),
     province: readValue(data, ['province', 'state', 'region']),
+    provinceTerritory: readValue(data, ['provinceTerritory', 'state', 'province', 'region']),
+    prefectureCity: readValue(data, ['prefectureCity', 'city']),
+    districtOrCounty: readValue(data, ['districtOrCounty', 'district', 'city_district']),
+    municipality: readValue(data, ['municipality', 'city']),
+    civicNumber: readValue(data, ['civicNumber', 'houseNumber', 'house_number']),
+    streetName: readValue(data, ['streetName', 'street', 'road']),
     city: readValue(data, ['city', 'town', 'village', 'municipality']),
     district: readValue(data, ['district', 'city_district', 'county', 'subdivision']),
     subdistrict: readValue(data, ['subdistrict', 'suburb', 'neighbourhood', 'quarter', 'colonia', 'bairro', 'hamlet']),
@@ -161,7 +170,7 @@ export function addressTemplateValues(
     road: readValue(data, ['road', 'street', 'avenue', 'square', 'place']),
     houseNumber: readValue(data, ['house_number', 'houseNumber', 'house_no', 'number']),
     house_number: readValue(data, ['house_number', 'houseNumber', 'house_no', 'number']),
-    unit: readValue(data, ['unit', 'suite', 'apartment', 'flat', 'room']),
+    unit: readValue(data, countryCode === 'CN' ? ['unit'] : ['unit', 'suite', 'apartment', 'flat', 'room']),
     floor: readValue(data, ['floor']),
     country: readValue(data, ['country']) || countryName(countryCode, countryCode),
     countryCode,
@@ -172,7 +181,9 @@ export function addressTemplateValues(
   return Object.fromEntries(
     Object.entries(raw).map(([key, value]) => [
       key,
-      normalizeTemplateValue(value, selected, countryCode, key),
+      ((countryCode === 'PR' || (countryCode === 'US' && text(data.state).toUpperCase() === 'PR'))
+        && ['street', 'road', 'urbanization', 'streetName'].includes(key))
+        ? value : normalizeTemplateValue(value, selected, countryCode, key),
     ]),
   ) as Record<string, string>;
 }
@@ -203,11 +214,22 @@ export function renderAddressFormatTemplate(
   format: AddressFormat | null | undefined,
   tab: string,
   data: Record<string, unknown>,
+  extra: { lines?: readonly string[]; usDeliveryUnit?: string } = {},
 ) {
   const selected = selectAddressLanguageFormat(format, tab);
   if (!selected?.spec?.addressFormat) return '';
   const countryCode = (format?.countryCode || text(data.country_code) || text(data.countryCode)).slice(0, 2).toUpperCase();
   const values = addressTemplateValues(data, selected, countryCode);
-  const rendered = selected.spec.addressFormat.replace(TOKEN_PATTERN, (_match, token: string) => values[token] || '');
-  return cleanRenderedAddressTemplate(rendered);
+  const lines = selected.spec.addressFormat.split('\n');
+  const rendered = lines.map(line => line.replace(TOKEN_PATTERN, (_match, token: string) => {
+    if (extra.usDeliveryUnit && (token === 'unit' || token === 'secondaryUnitDesignator')) return '';
+    return values[token] || '';
+  }));
+  if (extra.lines?.length || extra.usDeliveryUnit) {
+    const streetLine = lines.findIndex(line => /\{\{\s*(?:street|road|houseNumber|streetName|civicNumber|addressLine1)\s*\}\}/.test(line));
+    if (extra.usDeliveryUnit && streetLine >= 0) rendered[streetLine] += ' ' + extra.usDeliveryUnit;
+    const notesBeforeStreet = countryCode === 'US' || countryCode === 'PR';
+    rendered.splice(Math.max(0, streetLine + (notesBeforeStreet ? 0 : 1)), 0, ...(extra.lines ?? []));
+  }
+  return cleanRenderedAddressTemplate(rendered.join('\n'));
 }

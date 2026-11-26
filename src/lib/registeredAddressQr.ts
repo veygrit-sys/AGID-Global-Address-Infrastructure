@@ -5,6 +5,11 @@ import {
 import { formatAddressDisplayText } from './addressDisplay';
 import { AddressRenderer, createCanonicalAddress } from './addressRendering';
 import type { AddressFormat } from '../data/address_formats';
+import chinaFormat from '../data/address_formats/asia/east_asia/CN.json';
+import usFormat from '../data/address_formats/americas/north_america/US.json';
+import puertoRicoFormat from '../data/address_formats/americas/caribbean/PR.json';
+import { renderAddressFormatTemplate, selectAddressLanguageFormat } from './addressFormatRenderer';
+import { DELIVERY_LINE_KEYS, parseDeliveryLines, readDeliveryLines } from './addressDeliveryLines';
 import { normalizeAOIDRecord, redactAOIDForPublicUse } from './aoid';
 import {
   AGID_SECURITY_POLICY,
@@ -22,7 +27,7 @@ import {
   sanitizeRegisteredAddressQualitySnapshot,
   type RegisteredAddressQualitySnapshot,
 } from './registeredAddressQuality';
-import type { VeygritAddressFormEnvelope } from './veygritAddressForm';
+import { buildVeygritAddressForm, type VeygritAddressFormEnvelope } from './veygritAddressForm';
 
 export type RegisteredAddressMode = 'ADDRESS' | 'AOID';
 
@@ -148,22 +153,67 @@ export function formatRegisteredAddressLocationDisplay(
   formData: RegisteredAddressFormData,
   options: { tab?: string; format?: AddressFormat | null } = {},
 ) {
-  const countryCode = clean(formData.country).toUpperCase();
+  const prior = formData.veygritAddressForm;
+  const { fields, countryFields } = buildVeygritAddressForm({ ...prior?.countryFields, ...prior?.fields, ...formData });
+  const countryCode = fields.countryCode;
   const tab = options.tab || 'local';
   const canonical = createCanonicalAddress({
     ...formData,
     country_code: countryCode,
-    building: clean(formData.building) || clean(formData.organization),
-    house_number: clean(formData.houseNumber),
-    unit: clean(formData.unit) || clean(formData.room),
+    country: countryCode,
+    postcode: fields.postcode,
+    city: fields.city,
+    state: fields.state,
+    district: fields.district,
+    subdistrict: fields.subdistrict || fields.district,
+    street: fields.street,
+    building: fields.building || fields.organization,
+    house_number: fields.houseNumber,
+    unit: fields.unit,
   });
-  const rendered = AddressRenderer.render(tab, canonical, options.format);
-  const fallback = formatRegisteredAddress(formData);
-
-  return formatAddressDisplayText(rendered || fallback, {
-    tab,
-    countryCode,
-  });
+  // Saved locations can be opened before the asynchronous country format loader runs.
+  const territory = countryCode === 'US' && fields.state.toUpperCase() === 'PR' ? 'PR' : countryCode;
+  const fallbackFormats: Partial<Record<string, AddressFormat>> = { PR: puertoRicoFormat as AddressFormat, CN: chinaFormat as AddressFormat };
+  if (fields.addressLine1 || fields.unit || countryFields) fallbackFormats.US = usFormat as AddressFormat;
+  const format = fallbackFormats[territory];
+  const selectedFormat = options.format?.countryCode === territory ? options.format : format || options.format;
+  const template = selectAddressLanguageFormat(selectedFormat, tab)?.spec.addressFormat || '';
+  const tokens = new Set([...template.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map(match => match[1]));
+  const location = { ...canonical, ...readDeliveryLines(fields), ...countryFields, floor: fields.floor, room: fields.room };
+  const parsed = parseDeliveryLines(countryCode, fields.state, fields, {});
+  const additions: string[] = [];
+  const usLayout = (territory === 'US' || territory === 'PR') && Boolean(fields.street);
+  let usDeliveryUnit = usLayout && fields.unit
+    ? [countryFields?.secondaryUnitDesignator || 'Unit', fields.unit].join(' ')
+    : undefined;
+  for (const key of DELIVERY_LINE_KEYS) {
+    const line = fields[key];
+    if (!line || tokens.has(key)) continue;
+    if (key === 'addressLine1' && (fields.houseNumber || fields.street || fields.subdistrict)) continue;
+    if (parsed.parsedLineKeys.includes(key) && parsed.unit) {
+      // Discard an old parsed unit if the record was edited; the original is still stored.
+      if (fields.unit !== parsed.unit) continue;
+      if (usDeliveryUnit) {
+        usDeliveryUnit = line.trim();
+        continue;
+      }
+      if (tokens.has('unit')) continue;
+    }
+    additions.push(line);
+  }
+  // Some national templates omit a secondary line even for occupied premises.
+  if (template && !usDeliveryUnit && !tokens.has('unit') && fields.unit
+      && !(parsed.unit === fields.unit && parsed.parsedLineKeys.some(key => key !== 'addressLine1'))) {
+    const unitLabel = countryFields?.secondaryUnitDesignator || (territory === 'PR' ? 'Unit' : '');
+    additions.push([unitLabel, fields.unit].filter(Boolean).join(' '));
+  }
+  const formatted = renderAddressFormatTemplate(selectedFormat, tab, location, { lines: additions, usDeliveryUnit });
+  if (formatted) return formatAddressDisplayText(formatted, { tab, countryCode });
+  if (countryFields) additions.push(...Object.values(countryFields));
+  const fallback = AddressRenderer.render(tab, canonical) || formatRegisteredAddress(formData);
+  const allLines = [...additions, ...fallback.split('\n')];
+  const unique = [...new Set(allLines.map(line => line.trim()).filter(Boolean))];
+  return formatAddressDisplayText(unique.join('\n'), { tab, countryCode });
 }
 
 export function buildRegisteredAddressRecord(

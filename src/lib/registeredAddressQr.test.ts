@@ -334,3 +334,42 @@ test('registered address QR carries public-safe quality metadata without adding 
   assert.equal(parsed?.phone, undefined);
   assert.equal(parsed?.room, undefined);
 });
+
+test('registered PR and US-PR domestic and international location lines retain URB, CALLE and supplementary lines', () => {
+  for (const country of ['PR', 'US']) {
+    const form = buildVeygritAddressForm({ country, state: 'PR', recipient: 'Private Recipient', line1: 'A17 CALLE 1', urbanization: 'URB NORTE', line2: 'Apt 4B', line3: 'Rear entry', city: 'Ponce', postcode: '00731' });
+    const saved = buildRegisteredAddressRecord({ country, veygritAddressForm: form });
+    for (const tab of ['local', 'en']) {
+      const text = formatRegisteredAddressLocationDisplay(saved, { tab });
+      for (const part of ['URB NORTE', 'A17 CALLE 1', 'Ponce PR 00731', 'Apt 4B', 'Rear entry']) assert.ok(text.includes(part), text);
+      assert.doesNotMatch(text, /Private Recipient|Street 1/);
+      assert.ok(text.indexOf('Rear entry') < text.indexOf('A17 CALLE 1 Apt 4B'), text);
+    }
+    const publicQr = decodeQrPayload(buildRegisteredAddressQrPayload(saved, { privacy: 'public' }));
+    assert.doesNotMatch(JSON.stringify(publicQr.record), /Apt 4B|Rear entry|Private Recipient/);
+  }
+});
+
+test('registered Chinese location retains township, compound, floor, room and separate unit', () => {
+  const form = buildVeygritAddressForm({ country: 'CN', line1: '中山路123号', city: '上海市', township: '东街道', compound: '示例园区', unit: '2单元', floor: '5层', room: '501室' });
+  const saved = buildRegisteredAddressRecord({ country: 'CN', veygritAddressForm: form });
+  const local = formatRegisteredAddressLocationDisplay(saved);
+  for (const part of ['上海市', '东街道', '中山路123号', '示例园区', '2单元', '5层', '501室']) assert.ok(local.includes(part), local);
+  const en = formatRegisteredAddressLocationDisplay(saved, { tab: 'en' });
+  for (const number of ['123', '2', '5', '501']) assert.ok(en.includes(number), en);
+});
+
+test('keeps unresolved island location lines available in private display', () => {
+  const form = buildVeygritAddressForm({ country: 'VU', line1: 'East landing', line2: 'Opposite school', city: 'Test village' });
+  const saved = buildRegisteredAddressRecord({ country: 'VU', veygritAddressForm: form });
+  assert.match(formatRegisteredAddressLocationDisplay(saved), /East landing, Opposite school/);
+});
+
+test('US private copy keeps the unit on the street line and the ZIP on the locality line', () => {
+  const text = formatRegisteredAddressLocationDisplay({
+    country: 'US', line1: '123 Main St', line2: 'Apt 4B', city: 'Boston', state: 'MA', postcode: '02108',
+  }, { tab: 'intl_en' });
+  assert.match(text, /123 Main St Apt 4B/i);
+  assert.match(text, /Boston,? MA 02108/i);
+  assert.equal(text.match(/4B/g)?.length, 1);
+});

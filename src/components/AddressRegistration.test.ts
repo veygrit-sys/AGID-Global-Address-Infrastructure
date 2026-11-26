@@ -234,7 +234,7 @@ test('Address Registration can prefill building names from reverse geocode detai
 test('Address Registration saves a Veygrit Address Wallet compatible form', () => {
   assert.match(source, /buildVeygritAddressForm\(formData/);
   assert.match(source, /data-veygrit-address-form=\{VEYGRIT_ADDRESS_FORM_VERSION\}/);
-  assert.match(source, /getVeygritAddressFieldBinding\(field\.key\)/);
+  assert.match(source, /getVeygritAddressFieldBinding\(field\.key, formData\.country\)/);
   assert.match(source, /data-veygrit-field=\{binding\.fieldKey\}/);
   assert.match(source, /autoComplete=\{binding\.autoComplete\}/);
 });

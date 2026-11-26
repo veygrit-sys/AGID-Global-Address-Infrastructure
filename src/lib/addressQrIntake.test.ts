@@ -1,3 +1,4 @@
+import { buildVeygritAddressForm } from './veygritAddressForm';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
@@ -139,4 +140,16 @@ test('registered address patch helper keeps editable fields separate from QR par
     building: '',
     room: '',
   });
+});
+
+test('private QR import keeps raw delivery lines, the parsed unit and local district for editing', () => {
+  const wallet = buildVeygritAddressForm({
+    country: 'PR', line1: 'A17 CALLE 1', line2: 'Apt 4B', line3: 'Rear door', urbanization: 'URB NORTE',
+  });
+  const record = buildRegisteredAddressRecord({ country: 'PR', veygritAddressForm: wallet });
+  const patch = buildAddressInputPatchFromRegisteredQr(record);
+  assert.equal(patch.houseNumber, 'A17');
+  assert.equal(patch.unit, '4B');
+  assert.equal(patch.addressLine3, 'Rear door');
+  assert.deepEqual(buildVeygritAddressForm(patch), wallet);
 });

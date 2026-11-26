@@ -1,8 +1,10 @@
 import type { Express, Request, Response } from 'express';
 
+import { assessAgidGeography } from '../../lib/geographicAssessment';
 import { AGID_GRID_AXIS_BITS, encodeAGID } from '../../lib/agid';
 import {
   POSTAL_CONTEXT_PURPOSES,
+  postalContextCapabilitiesForNodes,
   type PostalContextPurpose,
 } from '../../lib/postalContextGraph';
 import {
@@ -23,6 +25,7 @@ import {
 
 export type PostalContextRouteOptions = {
   store?: PostalContextPackStore;
+  assessPin?: typeof assessAgidGeography;
   researchCatalog?: PostalContextResearchCatalog | null;
 };
 
@@ -33,6 +36,7 @@ const SHA256 = /^sha256:[a-f0-9]{64}$/;
 const RESOLVE_KEYS = new Set([
   'countryCode',
   'latitude',
+  'accuracyMeters',
   'longitude',
   'purpose',
   'validAt',
@@ -284,8 +288,7 @@ export function registerPostalContextRoutes(
     const countryCode = typeof req.body.countryCode === 'string'
       ? req.body.countryCode.toUpperCase()
       : '';
-    const runtime = runtimeFor(req, res, store, countryCode);
-    if (!runtime) return;
+    if (!/^[A-Z]{2}$/.test(countryCode)) return routeError(req, res, 400, 'Invalid country code');
     if (typeof req.body.latitude !== 'number'
       || !Number.isFinite(req.body.latitude)
       || req.body.latitude < -90
@@ -294,30 +297,73 @@ export function registerPostalContextRoutes(
       || !Number.isFinite(req.body.longitude)
       || req.body.longitude < -180
       || req.body.longitude > 180
+      || (req.body.accuracyMeters !== undefined && (typeof req.body.accuracyMeters !== 'number'
+        || !Number.isFinite(req.body.accuracyMeters) || req.body.accuracyMeters < 0))
       || !isPurpose(req.body.purpose)
       || !isUtcInstant(req.body.validAt)
       || (req.body.knownAt !== undefined && !isUtcInstant(req.body.knownAt))) {
       return routeError(req, res, 400, 'Invalid Postal Context resolve input');
     }
+    const query = {
+      latitude: req.body.latitude, longitude: req.body.longitude, purpose: req.body.purpose,
+      accuracyMeters: typeof req.body.accuracyMeters === 'number' ? req.body.accuracyMeters : undefined,
+      validAt: req.body.validAt, knownAt: typeof req.body.knownAt === 'string' ? req.body.knownAt : undefined,
+    };
+    const geography = (options.assessPin ?? assessAgidGeography)({
+      kind: 'pin', lat: query.latitude, lon: query.longitude, accuracyMeters: query.accuracyMeters,
+    });
+    const shared = geography.surface !== 'water' && geography.regionCandidates.length > 1
+      && geography.regionCandidates.includes(countryCode);
+    const activeRelease = req.body.release === undefined
+      || (isRecord(req.body.release) && req.body.release.mode === 'active');
+    let runtime = store.getRuntime(countryCode);
+    // In active mode the first installed neighbour can supply the alternatives when
+    // the requested jurisdiction has no pack. Its own release identity stays intact.
+    if (!runtime && shared && activeRelease && geography.regionCandidates.length <= 8) {
+      runtime = geography.regionCandidates.map(code => store.getRuntime(code)).find(pack => pack !== undefined);
+    }
+    if (!runtime) { runtimeFor(req, res, store, countryCode); return; }
     const release = releaseMatches(req.body.release, runtime);
     if (!release.valid) return routeError(req, res, 400, 'Invalid Postal Context release selector');
     if (!release.match) return routeError(req, res, 409, 'Pinned Postal Context release is not active');
-
-    const resolution = runtime.resolvePublicCoordinate({
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
-      purpose: req.body.purpose,
-      validAt: req.body.validAt,
-      knownAt: typeof req.body.knownAt === 'string' ? req.body.knownAt : undefined,
-    });
+    const resolution = runtime.resolvePublicCoordinate(query);
     if (resolution.status === 'invalid') {
       return routeError(req, res, 503, 'Postal Context runtime rejected a valid request', resolution.errors);
     }
-    const agid = encodeAGID(req.body.latitude, req.body.longitude);
+    const lookupSources = [sourceFor(runtime)];
+    const regionLookups = shared ? geography.regionCandidates.map(code => {
+      if (code !== runtime.countryCode && (!activeRelease || geography.regionCandidates.length > 8)) {
+        return { countryCode: code, status: activeRelease ? 'query-limit' : 'not-pinned' };
+      }
+      const pack = code === runtime.countryCode ? runtime : store.getRuntime(code);
+      if (!pack) return { countryCode: code, status: 'unavailable' };
+      const regional = code === runtime.countryCode ? resolution : pack.resolvePublicCoordinate(query);
+      if (code !== runtime.countryCode) lookupSources.push(sourceFor(pack));
+      if (regional.status === 'invalid') return { countryCode: code, status: 'unavailable' };
+      const alternatives = regional.selected ? [regional.selected, ...regional.alternatives] : regional.alternatives;
+      return {
+        countryCode: code, status: regional.status, releaseId: regional.release.releaseId,
+        addressPointCount: regional.addressPointEvidence.candidateCount, alternatives: alternatives.slice(0, 8),
+      };
+    }) : undefined;
+    const agid = encodeAGID(query.latitude, query.longitude);
+    const otherCountry = geography.regionCandidates.length > 0 && !geography.regionCandidates.includes(countryCode);
+    const conflict = geography.surface === 'water' || otherCountry;
+    const mustReview = geography.status === 'needs-confirmation' || geography.regionCandidates.length > 1;
+    if (shared || ((conflict || mustReview) && resolution.addressPointEvidence.matched)) {
+      if (resolution.selected) resolution.alternatives = [resolution.selected, ...resolution.alternatives].slice(0, 8);
+      resolution.selected = undefined;
+      resolution.status = conflict ? 'conflict' : 'ambiguous';
+      resolution.resolvedLevel = 'none';
+      resolution.capabilities = postalContextCapabilitiesForNodes([]);
+      resolution.warnings.push(conflict ? 'address-point-conflicts-with-pin-geography' : 'pin-geography-requires-disambiguation');
+    }
     return sendAgidResult(req, res, {
       ok: true,
       data: {
         ...resolution,
+        ...(regionLookups && { requestedCountryCode: countryCode, regionLookups }),
+        pinGeography: { status: geography.status, surface: geography.surface, regionCandidates: geography.regionCandidates },
         validAt: req.body.validAt,
         knownAt: req.body.knownAt ?? req.body.validAt,
         agid: {
@@ -327,7 +373,7 @@ export function registerPostalContextRoutes(
           canonicalPostalGeometry: false,
         },
       },
-      sources: [sourceFor(runtime)],
+      sources: lookupSources,
       warnings: resolution.warnings,
       cache: 'none',
     });

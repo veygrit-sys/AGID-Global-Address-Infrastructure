@@ -7,6 +7,7 @@ import {
 } from './addressRegistrationState';
 import {
   getAddressElementPostalCodePolicy,
+  LOCAL_ADDRESS_COMPONENTS,
   mapAddressElementFormatFieldKey,
   type AddressElementPostalCodePolicy,
 } from './addressElementInputPolicy';
@@ -36,10 +37,10 @@ export const ADDRESS_ELEMENT_FALLBACK_FIELDS: AddressElementFieldDescriptor[] = 
   { key: 'state', label: 'State / region', autocomplete: 'address-level1' },
   { key: 'city', label: 'City', autocomplete: 'address-level2' },
   { key: 'district', label: 'District', autocomplete: 'address-level3' },
-  { key: 'street', label: 'Street', autocomplete: 'address-line1' },
-  { key: 'houseNumber', label: 'House no.', autocomplete: 'address-line2' },
+  { key: 'street', label: 'Street', autocomplete: 'off' },
+  { key: 'houseNumber', label: 'House no.', autocomplete: 'off' },
   { key: 'building', label: 'Building / POI', autocomplete: 'organization' },
-  { key: 'unit', label: 'Unit', autocomplete: 'address-line3', private: true },
+  { key: 'unit', label: 'Unit', autocomplete: 'off', private: true },
   { key: 'phone', label: 'Phone', autocomplete: 'tel', private: true },
 ];
 
@@ -47,7 +48,11 @@ const FALLBACK_FIELD_BY_KEY = Object.fromEntries(
   ADDRESS_ELEMENT_FALLBACK_FIELDS.map(field => [field.key, field]),
 ) as Partial<Record<AddressElementFieldKey, AddressElementFieldDescriptor>>;
 
-const PRIVATE_FIELD_KEYS = new Set<AddressElementFieldKey>(['recipient', 'phone', 'unit', 'aoid']);
+const RAW_LINE_AUTOCOMPLETE: Partial<Record<AddressElementFieldKey, string>> = {
+  addressLine1: 'address-line1', addressLine2: 'address-line2', addressLine3: 'address-line3',
+};
+
+const PRIVATE_FIELD_KEYS = new Set<AddressElementFieldKey>(['recipient', 'phone', 'unit', 'aoid', 'room', 'floor', 'addressLine1', 'addressLine2', 'addressLine3', ...LOCAL_ADDRESS_COMPONENTS]);
 
 export function normalizeAddressElementCountryCode(countryCode?: string | null) {
   const code = String(countryCode ?? '').trim().toUpperCase();
@@ -58,15 +63,15 @@ export function mapAddressFormatFieldKey(key: string): AddressElementFieldKey | 
   return mapAddressElementFormatFieldKey(key);
 }
 
-function descriptorFromFormatField(field: AddressField): AddressElementFieldDescriptor | null {
-  const key = mapAddressFormatFieldKey(field.key);
+function descriptorFromFormatField(field: AddressField, countryCode?: string): AddressElementFieldDescriptor | null {
+  const key = field.key === 'room' && countryCode === 'CN' ? 'room' : mapAddressFormatFieldKey(field.key);
   if (!key) return null;
   const fallback = FALLBACK_FIELD_BY_KEY[key];
   return {
     key,
     label: field.label || fallback?.label || key,
     placeholder: field.placeholder || fallback?.placeholder,
-    autocomplete: fallback?.autocomplete,
+    autocomplete: RAW_LINE_AUTOCOMPLETE[key] || fallback?.autocomplete,
     private: fallback?.private || PRIVATE_FIELD_KEYS.has(key),
     required: Boolean(field.required),
     sourceKey: field.key,
@@ -183,7 +188,7 @@ export function buildAddressElementFormFields(
   const postalPolicy = getAddressElementPostalCodePolicy(format);
   const selectedFormat = selectAddressElementFormat(format, language);
   const mapped = selectedFormat?.fields
-    ?.map(descriptorFromFormatField)
+    ?.map(field => descriptorFromFormatField(field, format?.countryCode))
     .filter((field): field is AddressElementFieldDescriptor => Boolean(field)) ?? [];
   const deduped: AddressElementFieldDescriptor[] = [];
   const seen = new Set<AddressElementFieldKey>();

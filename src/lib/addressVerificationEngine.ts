@@ -1107,17 +1107,6 @@ function strongerDepth(
   return DEPTH_ORDER[right] > DEPTH_ORDER[left] ? right : left;
 }
 
-function depthFromPostalCatalogDepth(depth: string | undefined): AddressVerificationDepth {
-  if (depth === 'delivery-point') return 'delivery-point';
-  if (depth === 'building') return 'building';
-  if (depth === 'address') return 'house';
-  if (depth === 'street') return 'street';
-  if (depth === 'locality') return 'locality';
-  if (depth === 'postcode') return 'postal-code';
-  if (depth === 'geo-only') return 'geo-only';
-  return 'postal-code';
-}
-
 function evidenceGradeFromTrust(tier: PostalSourceTrustTier, referenceMatch: AddressReferenceMatch | null): AddressVerificationEvidenceGrade {
   if (tier === 'authoritative') return 'authoritative';
   if (tier === 'official') return 'official';
@@ -1132,7 +1121,8 @@ function buildQualitySummary(options: {
   status: AddressVerificationStatus;
   policy: AddressVerificationTargetCountryPolicy | null;
   postalSourceTrust: PostalSourceTrustTier;
-  postalSourceMatches: ReturnType<typeof classifyPostalSourceTrust>['matches'];
+  matchedPostalEvidence: PostalEvidenceCandidate | null;
+  address: CanonicalAddressParts;
   postalStrength: PostalEvidenceStrength;
   sourceValidationReadiness: PostalEvidenceSourceReadiness;
   referenceMatch: AddressReferenceMatch | null;
@@ -1143,47 +1133,34 @@ function buildQualitySummary(options: {
   validation: AddressValidationResult;
 }): AddressVerificationQualitySummary {
   let depth: AddressVerificationDepth = options.mode === 'geo-only' ? 'geo-only' : 'format';
-  if (options.sourceValidationReadiness !== 'blocked') {
-    for (const match of options.postalSourceMatches.filter(isPostalReferenceDataSource)) {
-      depth = strongerDepth(depth, depthFromPostalCatalogDepth(match.depth));
-    }
-    if (options.postalStrength !== 'none') {
+  if (options.sourceValidationReadiness !== 'blocked' && options.postalStrength !== 'none') {
+    const evidence = options.matchedPostalEvidence;
+    const observedPostcode = postcodeKey(evidence?.postalCode || evidence?.postcode);
+    if (observedPostcode && observedPostcode === postcodeKey(options.address.postcode)) {
       depth = strongerDepth(depth, 'postal-code');
     }
+    const localityFields = ['city', 'district', 'subdistrict', 'suburb'] as const;
+    if (localityFields.some(key => evidence?.[key] && options.address[key]
+      && clean(evidence[key]).toLowerCase() === clean(options.address[key]).toLowerCase())) {
+      depth = strongerDepth(depth, 'locality');
+    }
   }
-  if (options.referenceMatch) {
-    const record = options.referenceMatch.record;
-    if (record.houseNumber) depth = strongerDepth(depth, 'house');
-    else if (record.street) depth = strongerDepth(depth, 'street');
-    else if (record.city || record.postcode) depth = strongerDepth(depth, 'locality');
-  }
+  if (options.referenceMatch) depth = strongerDepth(depth, 'house');
   const evidenceGrade = options.sourceValidationReadiness === 'blocked' && !options.referenceMatch
     ? options.formatValid === true ? 'format-only' : 'none'
     : options.postalStrength === 'none' && !options.referenceMatch
       ? options.formatValid === true ? 'format-only' : 'none'
       : evidenceGradeFromTrust(options.postalSourceTrust, options.referenceMatch);
-  const paidApiParityClaimed = (
-    options.status === 'verified' &&
-    evidenceGrade === 'authoritative' &&
-    DEPTH_ORDER[depth] >= DEPTH_ORDER.house
-  );
-  const readiness: AddressVerificationReadiness =
-    paidApiParityClaimed
-      ? 'paid-grade-for-supplied-evidence'
-      : options.status === 'verified'
-        ? 'strong-open-verification'
-        : options.status === 'partial'
-          ? options.formatValid === true
-            && (options.postalStrength === 'none' || options.sourceValidationReadiness === 'blocked')
-            && !options.referenceMatch
-            ? 'format-only'
-            : 'partial-open-verification'
-          : 'manual-review-required';
-
+  // A civic address reference and a postal lookup do not establish delivery-point equivalence.
+  const readiness: AddressVerificationReadiness = options.status === 'verified'
+    ? 'strong-open-verification'
+    : options.status === 'partial'
+      ? options.formatValid === true && !options.referenceMatch
+        && (options.postalStrength === 'none' || options.sourceValidationReadiness === 'blocked')
+        ? 'format-only' : 'partial-open-verification'
+      : 'manual-review-required';
   const limitations = unique([
-    paidApiParityClaimed
-      ? null
-      : 'No proprietary delivery-point parity is claimed unless authoritative house/building/delivery-point evidence is supplied.',
+    'Civic references and postal lookups do not verify carrier delivery.',
     options.lookupRequired && !options.lookupSatisfied
       ? 'Postal-code lookup or address-reference evidence is still required for strong verification.'
       : null,
@@ -1215,12 +1192,10 @@ function buildQualitySummary(options: {
     evidenceGrade,
     depth,
     readiness,
-    paidApiParityClaimed,
-    comparableFor: paidApiParityClaimed
-      ? ['country formatting', 'postal evidence', 'house/building-level evidence for this supplied source set']
-      : readiness === 'strong-open-verification'
-        ? ['country formatting', 'open-source verification', 'postal/geographic candidate confidence']
-        : ['country formatting', 'candidate generation', 'manual review workflow'],
+    paidApiParityClaimed: false,
+    comparableFor: readiness === 'strong-open-verification'
+      ? ['country formatting', 'open-source verification', 'postal/geographic candidate confidence']
+      : ['country formatting', 'candidate generation', 'manual review workflow'],
     limitations,
     upgradeActions,
   };
@@ -1453,7 +1428,8 @@ export function verifyAddressCandidate(input: AddressVerificationEngineInput): A
     status,
     policy,
     postalSourceTrust: postalSourceClassification.tier,
-    postalSourceMatches: postalSourceClassification.matches,
+    matchedPostalEvidence: matchedEvidence,
+    address: canonicalAddress,
     postalStrength,
     sourceValidationReadiness,
     referenceMatch,

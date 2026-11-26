@@ -1,4 +1,5 @@
 import type { Express } from 'express';
+import { verifyWorldLocalitiesAddress1 } from '../worldLocalitiesAddress1';
 import { parseAddressText } from '../../lib/addressIntelligence';
 import { assessLocalLibpostalEndpoint } from '../../lib/libpostalGateway';
 import { verifyAddressCandidate } from '../../lib/addressVerificationEngine';
@@ -97,6 +98,7 @@ type ContinentQuality = Record<string, { score: number; lastChecked: number; iss
 export type CoreRouteDependencies = {
   publicCachedGetFetch: SafeFetch;
   connectorFetchNoCache: SafeFetch;
+  worldLocalitiesFetch?: typeof fetch;
   qualityStats: QualityStats;
   continentQuality: ContinentQuality;
 };
@@ -259,7 +261,7 @@ function polkadotAdapterOptionsFrom(value: unknown): CreateInMemoryPolkadotAdapt
 
 export function registerCoreApiRoutes(
   app: Express,
-  { publicCachedGetFetch, connectorFetchNoCache, qualityStats, continentQuality }: CoreRouteDependencies,
+  { publicCachedGetFetch, connectorFetchNoCache, worldLocalitiesFetch, qualityStats, continentQuality }: CoreRouteDependencies,
 ) {
   const zkProofBundleRegistry = createInMemoryZkProofBundleRegistry();
   const ethereumRegistryStore = createInMemoryEthereumRegistryOnlyStore();
@@ -875,7 +877,7 @@ export function registerCoreApiRoutes(
     }, result.status === 'country_mismatch' ? 409 : 200);
   });
 
-  app.post('/api/address/verify', (req, res) => {
+  app.post('/api/address/verify', async (req, res) => {
     const body = (req.body ?? {}) as JsonRecord;
     const suppliedFormat = objectOrUndefined(body.format);
     const serverFormat = suppliedFormat ? null : getServerAddressFormat(normalizeVerifyCountryCandidate(body));
@@ -903,9 +905,13 @@ export function registerCoreApiRoutes(
       } as any,
     });
 
+    const address1 = await verifyWorldLocalitiesAddress1(
+      body, result.country.resolved || '', result.country.targetAllowed, req.header('Authorization'), worldLocalitiesFetch,
+    );
+    res.setHeader('Cache-Control', 'private, no-store');
     sendAgidResult(req, res, {
       ok: result.status === 'verified' || result.status === 'partial',
-      data: result,
+      data: { ...result, ...address1 },
       confidence: result.score,
       sources: result.sources,
       warnings: result.warnings,

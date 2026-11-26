@@ -1,3 +1,4 @@
+import { parseDeliveryLines, readDeliveryLines } from './addressDeliveryLines';
 import { buildAddressIntent, type AddressIntent, type AddressIntentEvidenceInput, type AddressIntentMode, type AddressIntentPurpose } from './addressIntent';
 import {
   createAddressFeedbackContext,
@@ -14,6 +15,7 @@ import {
 } from './addressVerificationEngine';
 import {
   getAddressElementPostalCodePolicy,
+  LOCAL_ADDRESS_COMPONENTS,
   mapAddressElementFormatFieldKey,
   type AddressElementPostalCodePolicy,
 } from './addressElementInputPolicy';
@@ -30,10 +32,17 @@ export const ADDRESS_ELEMENT_FIELD_KEYS = [
   'state',
   'city',
   'district',
+  'subdistrict',
   'street',
+  'addressLine1',
+  'addressLine2',
+  'addressLine3',
+  ...LOCAL_ADDRESS_COMPONENTS,
   'houseNumber',
   'building',
   'unit',
+  'floor',
+  'room',
   'phone',
   'agid',
   'aoid',
@@ -190,7 +199,7 @@ export type AddressElementSession = {
   };
 };
 
-const PRIVATE_FIELDS = new Set<AddressElementFieldKey>(['recipient', 'phone', 'unit', 'aoid']);
+const PRIVATE_FIELDS = new Set<AddressElementFieldKey>(['recipient', 'phone', 'unit', 'aoid', 'room', 'floor', 'addressLine1', 'addressLine2', 'addressLine3', ...LOCAL_ADDRESS_COMPONENTS]);
 
 function normalizeCountryCode(value: unknown) {
   const text = String(value ?? '').trim().toUpperCase();
@@ -245,7 +254,7 @@ function requiredFieldsFor(input: AddressElementInput, purpose: AddressIntentPur
 
   for (const field of formatFields) {
     if (!field.required) continue;
-    const key = mapAddressElementFormatFieldKey(field.key);
+    const key = field.key === 'room' && country === 'CN' ? 'room' : mapAddressElementFormatFieldKey(field.key);
     if (key === 'postcode' && !postalPolicy.available) continue;
     if (key) required.add(key);
   }
@@ -253,7 +262,7 @@ function requiredFieldsFor(input: AddressElementInput, purpose: AddressIntentPur
   if (purpose === 'delivery' || purpose === 'return' || purpose === 'customs') {
     if (postalPolicy.required) required.add('postcode');
     required.add('city');
-    required.add('street');
+    if (!required.has('addressLine1')) required.add('street');
   }
   if (purpose === 'identity') {
     if (postalPolicy.required) required.add('postcode');
@@ -271,14 +280,22 @@ function requiredFieldsFor(input: AddressElementInput, purpose: AddressIntentPur
 
 function buildCanonicalAddress(input: AddressElementInput, countryCode: string) {
   const fields = input.fields ?? {};
+  const lines = readDeliveryLines(fields);
+  const parsed = parseDeliveryLines(countryCode, fields.state ?? '', lines, fields);
   return {
+    ...lines,
+    ...Object.fromEntries(LOCAL_ADDRESS_COMPONENTS.filter(key => fields[key]).map(key => [key, fields[key]])),
     country_code: countryCode,
     postcode: fields.postcode,
     state: fields.state,
     city: fields.city,
     district: fields.district,
-    road: fields.street,
-    house_number: fields.houseNumber,
+    subdistrict: fields.subdistrict || parsed.subdistrict,
+    road: fields.street || parsed.street,
+    house_number: fields.houseNumber || parsed.houseNumber,
+    unit: fields.unit || parsed.unit,
+    floor: fields.floor,
+    room: fields.room,
     building: fields.building,
   };
 }

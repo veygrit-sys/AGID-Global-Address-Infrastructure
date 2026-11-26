@@ -686,3 +686,35 @@ test('total pack parser returns errors for malformed and self-intersecting exter
   assert.ok(unknownParsed.errors.some(error =>
     error.includes('privateResidentialUnit:unknown-field')));
 });
+
+test('address point matching searches across bucket edges and retains alternatives at the candidate cap', () => {
+  const pack = structuredClone(createPostalContextRuntimeTestPack());
+  const feature = pack.geometry.features.find(item => item.role === 'address_point')!;
+  assert.equal(feature.geometry.type, 'Point');
+  feature.geometry = { type: 'Point', coordinates: [139.74999, 35.68] };
+  const query = { latitude: 35.68, longitude: 139.750005, purpose: 'display' as const, validAt: POSTAL_CONTEXT_TEST_INSTANT };
+  assert.equal(new PostalContextPackRuntime(pack).resolvePublicCoordinate(query).status, 'unique');
+  const second = { ...structuredClone(feature), id: 'second-address-geometry', nodeId: 'second-address-point',
+    geometry: { type: 'Point' as const, coordinates: [139.75002, 35.68] as const } };
+  (pack.graph.nodes as PostalContextNode[]).push({
+    ...pack.graph.nodes.find(item => item.id === feature.nodeId)!, id: second.nodeId,
+  });
+  (pack.geometry.features as PostalContextGeometryFeature[]).push(second);
+  const result = new PostalContextPackRuntime(pack, { maxAddressPointCandidates: 1 }).resolvePublicCoordinate(query);
+  assert.equal(result.status, 'ambiguous');
+  assert.equal(result.selected, undefined);
+  assert.equal(result.addressPointEvidence.candidateCount, 2);
+  assert.equal(result.resolvedLevel, 'none');
+  assert.equal(result.capabilities.building, false);
+});
+
+test('reported pin error intersecting a match circle is candidate-only', () => {
+  const runtime = new PostalContextPackRuntime(createPostalContextRuntimeTestPack());
+  const query = { ...POSTAL_CONTEXT_TEST_POINT, purpose: 'display' as const, validAt: POSTAL_CONTEXT_TEST_INSTANT };
+  assert.equal(runtime.resolvePublicCoordinate({ ...query, accuracyMeters: 0.5 }).status, 'unique');
+  const outside = runtime.resolvePublicCoordinate({ ...query, latitude: query.latitude + 0.00003, accuracyMeters: 4 });
+  assert.equal(outside.status, 'ambiguous');
+  assert.equal(outside.selected, undefined);
+  assert.equal(outside.addressPointEvidence.candidateCount, 1);
+  assert.equal(outside.capabilities.premise, false);
+});
