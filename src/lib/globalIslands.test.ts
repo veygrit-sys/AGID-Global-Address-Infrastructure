@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { globalIslandCoverage, isGlobalInlandWater, matchGlobalIsland, matchGlobalLandform, mayTouchGlobalInlandWater, queryGlobalIslandPolygons } from './globalIslands';
+import { globalIslandCoverage, isGlobalInlandWater, legacyIslandAtInlandWater, matchGlobalIsland, matchGlobalLandform, mayTouchGlobalInlandWater, queryGlobalIslandPolygons } from './globalIslands';
 
 test('a shared island uses the map unit containing the point on each side', () => {
   for (const [lat, lon, territory, sovereign] of [
@@ -84,4 +84,17 @@ test('strict inland water veto applies to global island country geometry and pre
   assert.equal(isGlobalInlandWater(45.9678,8.9638,5000),false);
   // Raw Maldives map-unit polygon protrudes beyond the independently surveyed physical shape.
   assert.equal(matchGlobalIsland(0.238857,73.21316970456542),undefined);
+});
+
+test('historic routing lookup retains a source-covered lake only for the same pin', () => {
+  assert.equal(matchGlobalIsland(2.7,98.86),undefined);
+  const old = legacyIslandAtInlandWater(2.7,98.86);
+  assert.ok(old);
+  assert.deepEqual(old.codes,['ID']);
+  old.codes.push('XX');
+  assert.deepEqual(legacyIslandAtInlandWater(2.7,98.86)?.codes,['ID']);
+  assert.equal(legacyIslandAtInlandWater(2.7,98.861),undefined);
+  assert.equal(legacyIslandAtInlandWater(2.701,98.86),undefined);
+  assert.equal(matchGlobalIsland(52.52,13.4),undefined);
+  assert.equal(legacyIslandAtInlandWater(2.7,98.86),undefined);
 });

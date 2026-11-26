@@ -1,3 +1,4 @@
+import { chelemReviewSource, chelemSurveySource, isReviewedNaturalEarthIsland, queryIslandBorderReviewPolygons } from './islandBorderDisagreement';
 import { pointTerritorialTopology, type TerritorialTopology } from './territorialTopology';
 import { matchTerritorialAdministration, queryTerritorialExclavePolygons, type TerritorialExclaveMatch } from './territorialExclaves';
 import { type AgidIslandAssessment, applyIslandPolicyToEvidence } from './islandPolicy';
@@ -170,6 +171,8 @@ export function assessAgidGeography(
   const radius = radiusMeters === null ? null : Math.min(Math.PI * EARTH_RADIUS, radiusMeters + boundaryAllowanceMeters);
   const fullInlandWater = inlandWater && radius !== null && (radius === 0 || isGlobalInlandWater(lat, lon, radius));
   let topology = water && !land ? undefined : pointTerritorialTopology(lat, lon, island);
+  const conflictingShore = island?.source === chelemReviewSource;
+  if (conflictingShore) topology = { landform: 'unknown', status: 'uncertain' };
   const centerTopology = topology;
   let touchesTerritory = false;
   // A confirmed landform supplies physical evidence independently of ownership.
@@ -200,7 +203,7 @@ export function assessAgidGeography(
       footprint: { kind, radiusMeters }, boundaryAllowanceMeters, deliveryRegion: null,
     };
   };
-  const pointSurface = land && water ? 'boundary' : land ? 'land' : water ? 'water' : 'unknown';
+  const pointSurface = conflictingShore ? 'unknown' : land && water ? 'boundary' : land ? 'land' : water ? 'water' : 'unknown';
   if (radius === null) return finish('unknown', true);
   if (fullInlandWater && !admin) return finish('water', false);
   // The default assesses the map as drawn. A separately calibrated source allowance
@@ -213,6 +216,24 @@ export function assessAgidGeography(
   let partialCoverage = inlandWater && !fullInlandWater;
   let touchesWater = false;
   let touchesAdmin = admin?.relation === 'boundary';
+  let reachesReviewEdge = false;
+  if (radius <= 500_000) {
+    for (const shape of queryIslandBorderReviewPolygons(disk)) {
+      contactEdges(shape.rings, disk, center, radius, () => {
+        reachesReviewEdge = true;
+        addSource(shape);
+        if (shape.source === chelemSurveySource) candidates.add('MX');
+      });
+    }
+    if (reachesReviewEdge) {
+      partialCoverage = true;
+      fullLandform = undefined;
+    } else if (island?.source === chelemSurveySource && island.relation === 'inside') {
+      return finish('land', false);
+    } else if (conflictingShore) {
+      return finish('unknown', true);
+    }
+  }
   const crossedEdges = new Map<string, Set<string>>();
   function recordLand(code: string, source: Source, a: number[], b: number[]) {
     candidates.add(code);
@@ -361,6 +382,7 @@ export function assessAgidGeography(
       tier: 'ordinary' | 'policy', defaultSource?: Source,
     ) {
       for (const feature of features) {
+        if (reachesReviewEdge && defaultSource === globalIslandSource && isReviewedNaturalEarthIsland(feature.bbox, feature.codes)) continue;
         contactEdges(feature.rings, disk, center, radius, (a, b) => {
           const x = issuanceLongitude((a[1] + b[1]) / 2, (a[0] + b[0]) / 2);
           const y = (a[1] + b[1]) / 2;

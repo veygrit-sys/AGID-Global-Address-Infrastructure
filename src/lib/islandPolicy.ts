@@ -1,3 +1,4 @@
+import { matchIslandBorderReview } from './islandBorderDisagreement';
 import { matchTerritorialExclave } from './territorialExclaves';
 import { issuanceLongitude } from './agidProjection';
 import { matchGlobalIsland } from './globalIslands';
@@ -66,6 +67,8 @@ export function applyIslandPolicyToEvidence(lat: number, lon: number, evidence?:
     territory: dispute.territory, territoryJa: dispute.territoryJa, claimScope: dispute.claimScope,
     evidenceUrls: dispute.evidenceUrls, relation: dispute.relation, source: dispute.source, version: dispute.version,
   };
+  const borderReview = matchIslandBorderReview(lat, lon);
+  if (borderReview) return borderReview;
   // These reviewed features intersect an administrative territory with a physical
   // lake-island shoreline. A detached administrative polygon alone is insufficient.
   const territory = matchTerritorialExclave(lat, lon);

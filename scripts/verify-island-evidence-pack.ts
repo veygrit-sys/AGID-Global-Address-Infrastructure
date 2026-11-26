@@ -19,6 +19,8 @@ const controls = [
   [82.7517558, -67.24109433333334, 'unresolved', 'gshhg:18608'],
   [39.245389, 141.9685004390244, 'JP', 'gshhg:92768'],
   [39.2447332, 141.96655346666665, 'unresolved', 'gshhg:92768'],
+  [18.19299444, -87.88635972, 'MX', 'gshhg:6815'],
+  [18.188, -87.88240989966037, 'unresolved', 'gshhg:6815'],
   [25.7445, 123.4745, 'JP'], [-51.794, -58.61, 'disputed'], [0, -140, null], [48.85, 2.35, null],
 ] as const;
 for (const [lat, lon, expected, id] of controls) {

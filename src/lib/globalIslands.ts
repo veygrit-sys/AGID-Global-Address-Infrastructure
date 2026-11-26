@@ -116,13 +116,23 @@ function* positiveIslandExtents(lat: number, longitude: number) {
   }
 }
 
+let rejectedIsland: { lat: number; longitude: number; match: GlobalIslandMatch } | undefined;
+
+/** Recover the original routing prefix at a pin already rejected as lake water. */
+export function legacyIslandAtInlandWater(lat: number, lon: number): GlobalIslandMatch | undefined {
+  if (!rejectedIsland || rejectedIsland.lat !== lat || rejectedIsland.longitude !== canonical(lon)) return undefined;
+  const { match } = rejectedIsland;
+  return { ...match, unitIds: [...match.unitIds], codes: [...match.codes], sovereignCodes: [...match.sovereignCodes] };
+}
+
 /** Source-view attribution at the original point. Missing shapes yield no country. */
 export function matchGlobalIsland(lat: number, lon: number): GlobalIslandMatch | undefined {
+  rejectedIsland = undefined;
   if (!Number.isFinite(lat) || Math.abs(lat) > 90 || !Number.isFinite(lon)) return undefined;
+  const longitude = canonical(lon);
   const ids = new Set<string>(), codes = new Set<string>(), sovereigns = new Set<string>();
   let boundary = false, disputed = false;
-  for (const { i, relation } of positiveIslandExtents(lat, canonical(lon))) {
-    if (!ids.size && isGlobalInlandWater(lat,lon)) return undefined;
+  for (const { i, relation } of positiveIslandExtents(lat, longitude)) {
     const unit = globalIslandUnits[extents[i].row[0]];
     ids.add(unit.id);
     if (unit.code) codes.add(unit.code);
@@ -131,8 +141,13 @@ export function matchGlobalIsland(lat: number, lon: number): GlobalIslandMatch |
     disputed ||= unit.disputed;
   }
   if (!ids.size) return undefined;
-  return { ...globalIslandSource, relation: boundary ? 'boundary' : 'inside',
+  const match: GlobalIslandMatch = { ...globalIslandSource, relation: boundary ? 'boundary' : 'inside',
     unitIds: [...ids].sort(), codes: [...codes].sort(), sovereignCodes: [...sovereigns].sort(), disputed };
+  if (isGlobalInlandWater(lat,longitude)) {
+    rejectedIsland = { lat, longitude, match };
+    return undefined;
+  }
+  return match;
 }
 
 export interface GlobalLandformMatch {

@@ -1,3 +1,4 @@
+import { chelemReviewSource, chelemSurveySource } from './islandBorderDisagreement';
 import type { AgidGeographicAssessment } from './geographicAssessment';
 
 type Island = NonNullable<AgidGeographicAssessment['island']>;
@@ -52,6 +53,16 @@ export function islandDisplayRows(
       rows.push([japanese ? '地図資料上の主権国' : 'Sovereign state in map source', formatRegions(sovereign)]);
     }
   } else {
+    if (island.source === chelemReviewSource) {
+      rows.push([japanese ? '海岸線・国境資料' : 'Shoreline and border sources',
+        japanese ? '資料が一致しないため要確認' : 'Sources disagree at this location']);
+      return rows;
+    }
+    if (island.source === chelemSurveySource) {
+      rows.push([japanese ? '中心点の島の地図上の国・地域' : 'Mapped country of the island at the center', formatRegions(['MX'])]);
+      rows.push([japanese ? '位置の誤差範囲' : 'Location footprint', japanese ? '要確認' : 'Confirm the location']);
+      return rows;
+    }
     if (isNamedJapaneseRemoteIsland(island) && island.status === 'unresolved') {
       rows.push([japanese ? '中心点の島の地図上の国・地域' : 'Mapped country of the island at the center', formatRegions(['JP'])]);
       rows.push([japanese ? '位置の誤差範囲' : 'Location footprint', japanese ? '要確認' : 'Confirm the location']);

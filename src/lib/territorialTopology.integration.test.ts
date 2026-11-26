@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { getAGIDCellKey, toAGID16 } from './agid';
+import { encodeAGID16, getAGIDCellKey, getRegionInfo, toAGID16 } from './agid';
 import { runAgidCli } from './agidCli';
 import { resolveAgidLocal } from './agidLocalResolver';
 import { assessAgidGeography } from './geographicAssessment';
@@ -111,4 +111,28 @@ test('the CLI evaluates an existing Llívia cell without rewriting the ID or a r
   await resolveAgidLocal({ query: checked, countryCode: 'FR',
     addressFormatResolver: async code => { addressFormatFor = code; return null; } });
   assert.equal(addressFormatFor, 'FR');
+});
+
+test('lake water keeps its previously issued ID while island and administrative evidence stay independent', () => {
+  // Recorded with the issuer at 0593432e. Its coarse land layer filled both lakes.
+  for (const [lat, lon, id] of [
+    [2.425, 98.975, 'ID0A1XEFYGVE1GAA'], [-38.82, 175.93, 'NZ04B3K0QTEX1T9T'],
+  ] as const) {
+    const record = encodeAGID16(lat, lon);
+    assert.equal(record.id, id);
+    assert.equal(record.waterMatch?.source, 'gshhg-inland-water');
+    assert.equal(record.island, undefined);
+    assert.equal(record.mapUnitMatch, undefined);
+    assert.equal(record.administrativeMatch, undefined);
+    assert.deepEqual(pin(lat, lon).regionCandidates, []);
+  }
+
+  const kodiak = getRegionInfo(57.7, -152.5);
+  assert.deepEqual(kodiak.island?.countryCodes, ['US']);
+  assert.deepEqual(kodiak.mapUnitMatch?.codes, ['US']);
+  assert.equal(kodiak.administrativeMatch, undefined);
+  const rhine = getRegionInfo(47.6905, 8.682);
+  assert.deepEqual(rhine.administrativeMatch?.codes, ['DE']);
+  assert.equal(rhine.island, undefined);
+  assert.equal(rhine.mapUnitMatch, undefined);
 });

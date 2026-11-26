@@ -49,6 +49,8 @@ AGIDはピンが実際に重なる陸地を調べ、その座標の国・地域�
 
 標準版ではNatural EarthとGSHHGを照合し、個別に検証した地域ではESA WorldCover 2021 v200の10 m土地被覆も使用する。国境と海岸線を別々に扱うため、行政界が川や湖面に及ぶ場所では、その境界だけを根拠に陸地と表示しない。[地形判定の出典・収録範囲・再生成手順](landform-source-evidence.md) · [ESA WorldCover](https://esa-worldcover.org/en/data-access) · [GSHHG](https://github.com/GenericMappingTools/gshhg-gmt/releases/tag/2.3.7)
 
+メキシコとベリーズの境界付近にあるチェレム島では、メキシコ統計地理院（INEGI）の島別調査（要素848）とGSHHGの島の輪郭が重なる陸地をメキシコ（MX）とする。周辺でNatural EarthとFieldMapsの国コードが食い違い、調査済みの陸地から外れる地点は所属未確定とし、出典を表示する。両国の領有権争いとしては計上しない。[INEGI Territorio Insular Mexicano v2.1](https://www.inegi.org.mx/app/biblioteca/ficha.html?upc=889463039839) · [現地資料・判定範囲・再生成方法](cayo-chelem-sources.md)
+
 ## 実行例
 
 ```sh

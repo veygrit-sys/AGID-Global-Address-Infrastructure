@@ -1,7 +1,7 @@
-import { matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
+import { applyIslandPolicyToEvidence, matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
 import { matchTerritorialAdministration, matchTerritorialExclave } from './territorialExclaves';
-import { globalInlandWaterSource, globalIslandSource, isGlobalInlandWater, matchGlobalLandform } from './globalIslands';
+import { globalInlandWaterSource, globalIslandSource, isGlobalInlandWater, legacyIslandAtInlandWater, matchGlobalLandform } from './globalIslands';
 /**
  * AGID (Address Grid ID) Complete Mathematical Definition Implementation
  * Global, CORDIC-rotated, Polar-ready, 12-character format.
@@ -1035,10 +1035,22 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const region = baseRegion(lat, normLon);
   const swiss = matchBuesingenBoundary(lat, normLon);
   let administration = swiss ?? matchTerritorialAdministration(lat, normLon);
+  const formerIsland = legacyIslandAtInlandWater(lat, normLon);
   // The Swiss register includes parts of the Rhine. Its administrative evidence
   // is compatible with water, while a generalized land polygon is not.
   if (island?.status !== 'japan-position' && island?.source !== 'mlit-n03-tokyo-remote-islands'
-      && island?.source !== 'gshhg-full-lake-islands' && isGlobalInlandWater(lat, normLon)) {
+      && island?.source !== 'gshhg-full-lake-islands'
+      && (formerIsland || ((island || region.mapUnitMatch || administration) && isGlobalInlandWater(lat, normLon)))) {
+    // The old issuer filled lakes on large islands. Keep only its wire hint;
+    // the water surface and lack of a land jurisdiction are reported independently.
+    const prior = formerIsland && applyIslandPolicyToEvidence(lat, normLon, formerIsland);
+    if (prior) {
+      const hint = islandRegion(region, prior);
+      region.prefix = hint.prefix;
+      region.name = hint.name;
+      region.isSea = hint.isSea;
+      delete region.polygon;
+    }
     delete region.mapUnitMatch;
     region.waterMatch ??= globalInlandWaterSource;
     island = undefined;
