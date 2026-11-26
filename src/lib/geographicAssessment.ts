@@ -1,4 +1,4 @@
-import { matchUsCanadaShoreline, queryUsCanadaShorelinePolygons, usCanadaShorelineWindows } from './usCanadaShorelines';
+import { matchReviewedGeography, queryReviewedPolygons, reviewedWindows } from './reviewedGeography';
 import { chelemReviewSource, chelemSurveySource, isReviewedNaturalEarthIsland, queryIslandBorderReviewPolygons } from './islandBorderDisagreement';
 import { pointTerritorialTopology, type TerritorialTopology } from './territorialTopology';
 import { matchTerritorialAdministration, queryTerritorialExclavePolygons, type TerritorialExclaveMatch } from './territorialExclaves';
@@ -146,14 +146,14 @@ function contactEdges(rings: number[][][], disk: number[], center: PostalContext
 
 type GeographicFootprint = ReturnType<typeof footprint>;
 
-function assessUsCanadaFootprint(location: GeographicFootprint, radius: number | null,
+function assessReviewedFootprint(location: GeographicFootprint, radius: number | null,
   boundaryAllowanceMeters: number): AgidGeographicAssessment | undefined {
   const { center, kind, radiusMeters } = location;
   const [lon, lat] = center;
-  const point = matchUsCanadaShoreline(lat, lon);
+  const point = matchReviewedGeography(lat, lon);
   if (!point && (radius === null || radius === 0 || radius > 500_000)) return;
   const disk = diskBounds(center, radius ?? 0);
-  const windows = usCanadaShorelineWindows.filter(w => boxRelation(w.bbox, disk) !== 'outside'
+  const windows = reviewedWindows.filter(w => boxRelation(w.bbox, disk) !== 'outside'
     && haversineDistanceMeters(center, nearestInWindow(w.bbox, center)) <= (radius ?? 0) + 1e-6);
   if (!point && !windows.length) return;
   const covered = windows.some(w => boxRelation(w.bbox, disk) === 'inside');
@@ -174,13 +174,13 @@ function assessUsCanadaFootprint(location: GeographicFootprint, radius: number |
     // edge may be outside both the accuracy disk and the reviewed window.
     // A bounding box only rules out an owner. Add a candidate exclusively
     // after contacting its mapped land within the disk.
-    const shapes = [...queryUsCanadaShorelinePolygons(disk)];
+    const shapes = [...queryReviewedPolygons(disk)];
     const possible = new Set(shapes.flatMap(s => s.codes));
     const foundAll = () => [...possible].every(code => candidates.has(code));
     for (const shape of shapes) {
       if (foundAll() && (shape.kind === 'physical' ? touchesShore : touchesAdmin)) continue;
       contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
-        const at = matchUsCanadaShoreline(y, issuanceLongitude(y, x));
+        const at = matchReviewedGeography(y, issuanceLongitude(y, x));
         if (!at || at.surface === 'water') return;
         addSource(at);
         if (shape.kind === 'physical') touchesShore = true;
@@ -201,7 +201,7 @@ function assessUsCanadaFootprint(location: GeographicFootprint, radius: number |
   if (!covered && radius !== null && radius > 0) {
     for (const w of windows) {
       const [x, y] = nearestInWindow(w.bbox, center);
-      const near = matchUsCanadaShoreline(y, issuanceLongitude(y, x));
+      const near = matchReviewedGeography(y, issuanceLongitude(y, x));
       addSource(near);
       near?.codes.forEach(code => candidates.add(code));
     }
@@ -230,12 +230,12 @@ export function assessAgidGeography(
   if (!Number.isFinite(boundaryAllowanceMeters) || boundaryAllowanceMeters < 0) throw new RangeError('Invalid boundary allowance');
   const location = footprint(input);
   const radius = location.radiusMeters === null ? null : Math.min(Math.PI * EARTH_RADIUS, location.radiusMeters + boundaryAllowanceMeters);
-  const reviewed = assessUsCanadaFootprint(location, radius, boundaryAllowanceMeters);
+  const reviewed = assessReviewedFootprint(location, radius, boundaryAllowanceMeters);
   if (!reviewed) return assessBaseGeography(location, boundaryAllowanceMeters);
   // A disk that extends outside the review can also reach independently mapped
   // territory on the other side. Only retain those extra candidates as possibilities.
   if (radius !== null && radius > 0 && reviewed.surface === 'unknown'
-      && !usCanadaShorelineWindows.some(w => boxRelation(w.bbox, diskBounds(location.center, radius)) === 'inside')) {
+      && !reviewedWindows.some(w => boxRelation(w.bbox, diskBounds(location.center, radius)) === 'inside')) {
     const outside = assessBaseGeography(location, boundaryAllowanceMeters);
     reviewed.regionCandidates = [...new Set([...reviewed.regionCandidates, ...outside.regionCandidates])].sort();
     for (const source of outside.sources) {

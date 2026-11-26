@@ -21,6 +21,12 @@ const controls = [
   [39.2447332, 141.96655346666665, 'unresolved', 'gshhg:92768'],
   [18.19299444, -87.88635972, 'MX', 'gshhg:6815'],
   [18.188, -87.88240989966037, 'unresolved', 'gshhg:6815'],
+  [13.172639, -87.685348, 'SV'], // Meanguerita
+  [13.274, -87.633, 'HN'],       // El Tigre
+  [16.93, -89.8913, 'GT'],       // Flores
+  [17.55545726, -88.07182279, 'BZ'], // St George’s Caye
+  [13.222, -87.672, null],       // Open water between the islands in the Gulf of Fonseca
+  [16.932, -89.897, null],       // Lake Petén Itzá near Flores
   [25.7445, 123.4745, 'JP'], [-51.794, -58.61, 'disputed'], [0, -140, null], [48.85, 2.35, null],
 ] as const;
 for (const [lat, lon, expected, id] of controls) {
