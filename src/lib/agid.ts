@@ -27,7 +27,19 @@ const BASE32_ALPHABET = AGID_HASH_ALPHABET;
 const SEA_PREFIX_BY_ID = new Map(Object.entries(namedSeaPrefixes));
 const reviewedWaterNames = {
   INLAND_WATER: 'Inland water',
+  ARCT: 'Arctic Ocean',
+  HUDB: 'Hudson Bay',
+  LABR: 'Labrador Sea',
+  STLA: 'Gulf of St. Lawrence',
   NEPC: 'North Pacific',
+  NPAC: 'North Pacific',
+  BERI: 'Bering Sea',
+  ALSK: 'Gulf of Alaska',
+  GMXC: 'Gulf of Mexico',
+  PHLS: 'Philippine Sea',
+  SEPC: 'South Pacific',
+  NATL: 'North Atlantic',
+  SATL: 'South Atlantic',
   CARB: 'Caribbean Sea',
 } as const;
 const OCEAN_IDS = ['NPAC', 'NEPC', 'SPAC', 'SEPC', 'NATL', 'SATL', 'NIND', 'SIND', 'SOUT', 'ARCT'] as const;
