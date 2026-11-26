@@ -5,7 +5,7 @@ Ruler,
 Trash2} from 'lucide-react';
 import maplibregl from 'maplibre-gl';
 import { installJapaneseIslandMapStyle } from './lib/japaneseIslandMapStyle';
-import { mapSearchDisplayResults, selectedIslandReference } from './lib/islandSearchDisplay';
+import { mapSearchDisplayResults, selectedMapReferences } from './lib/islandSearchDisplay';
 import React,{ useEffect,useMemo,useRef,useState } from 'react';
 import { TranslationKey,TRANSLATIONS } from './constants/translations';
 import { AdvancedSearchOptions,DEFAULT_ADVANCED_SEARCH_OPTIONS } from './lib/advancedSearch';
@@ -1214,8 +1214,7 @@ export default function App() {
     // Region Name
     ctx.fillStyle = '#64748b'; // slate-500
     ctx.font = 'bold 24px sans-serif';
-    const islandReference = selectedIslandReference(clickedAgid, appLanguage);
-    const regionLabel = islandReference ?? clickedAgid.regionName;
+    const { islandReference, regionLabel } = selectedMapReferences(clickedAgid, appLanguage);
     ctx.fillText(regionLabel, padding, qrCanvas.height + padding + 70, qrCanvas.width + padding);
 
     // Coordinates
@@ -1303,6 +1302,7 @@ export default function App() {
     if (!agidData?.id) return;
 
     const savedAt = new Date().toISOString();
+    const { islandReference, regionLabel } = selectedMapReferences(agidData, appLanguage);
     const newEntry = {
       id: agidData.id,
       coordinateSource: agidData.coordinateSource ?? 'pin',
@@ -1311,7 +1311,7 @@ export default function App() {
       lon: agidData.lon,
       prefix: agidData.prefix,
       isSea: agidData.isSea,
-      address: addressOverride ?? selectedIslandReference(agidData, appLanguage) ?? clickedAddress,
+      address: addressOverride ?? (islandReference || clickedAddress || regionLabel),
       savedAt,
     };
 

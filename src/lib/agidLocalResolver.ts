@@ -427,13 +427,17 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     agidId = agid.id;
   }
 
-  const islandPolicy = agid?.coordinateSource === 'cell'
-    ? assessAgidGeography({kind: 'cell', id: agid.id}).island : agid?.island;
+  const cellAssessment = agid?.coordinateSource === 'cell' ? assessAgidGeography({ kind: 'cell', id: agid.id }) : undefined;
+  const islandPolicy = cellAssessment?.island ?? agid?.island;
   const uncertainIsland = islandPolicy && (islandPolicy.countryCodes.length !== 1
     || islandPolicy.relation === 'boundary' || islandPolicy.status === 'unresolved' || islandPolicy.status === 'disputed');
+  const territory = cellAssessment?.territorialTopology;
+  const uncertainCountry = uncertainIsland || agid?.administrativeMatch?.relation === 'boundary'
+    || (cellAssessment && (cellAssessment.regionCandidates.length > 1
+      || (territory?.administration && territory.status !== 'inside')));
   if (agid) {
     apiAddress = {
-      ...(!uncertainIsland && agidApiAddress(agid, input.countryCode)),
+      ...(!uncertainCountry && agidApiAddress(agid, input.countryCode)),
       ...apiAddress,
     };
     addressText = addressText || agid.regionName;
@@ -441,7 +445,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   }
 
   const countryCode = normalizeCountryCode(
-    input.countryCode || apiAddress.country_code || normalizedRecord?.country || (uncertainIsland ? undefined : agid?.regionCode || agid?.prefix),
+    input.countryCode || apiAddress.country_code || normalizedRecord?.country || (uncertainCountry ? undefined : agid?.regionCode || agid?.prefix),
   );
   let addressFormat: AddressFormat | null = input.addressFormat ?? null;
   try {

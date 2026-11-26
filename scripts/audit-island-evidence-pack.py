@@ -5,6 +5,8 @@ Output counts report source evidence at an interior sample. They do not assign
 one country to a whole island. Run against a pack built by island-evidence-pack.py.
 """
 import argparse
+import base64
+import hashlib
 import csv
 import io
 import os
@@ -143,15 +145,69 @@ def audit(path, gap_register=None):
     return {'totalDistinctIslandIds': len(samples), 'sampleClassification': dict(sorted(counts.items()))}
 
 
-def independent_components(path):
+PADDING = 0.001
+ARCHIVE_SHA = '8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41'
+ADMIN_SHA = '516b48a7c522de4ef8a65007971b417b27b1179264e5372889d4103f1645b9a9'
+
+
+def padded_extent(record):
+    west, east, south, north = record[:4]
+    west -= PADDING
+    east += PADDING
+    south -= PADDING
+    north += PADDING
+    ring = ogr.Geometry(ogr.wkbLinearRing)
+    for x, y in ((west,south),(west,north),(east,north),(east,south),(west,south)):
+        ring.AddPoint_2D(x,y)
+    box = ogr.Geometry(ogr.wkbPolygon)
+    box.AddGeometry(ring)
+    return box
+
+
+def retain_offshore_components(db, candidates, archive):
+    """Require the complete padded rectangle to avoid every independent GSHHG landmass."""
+    with archive.open('rb') as stream:
+        if hashlib.file_digest(stream, 'sha256').hexdigest() != ARCHIVE_SHA:
+            raise ValueError('Unexpected GSHHG archive')
+    with tempfile.TemporaryDirectory() as tmp, zipfile.ZipFile(archive) as files:
+        for level in (1, 6):
+            stem = f'GSHHS_shp/f/GSHHS_f_L{level}'
+            for ext in ('shp', 'shx', 'dbf'):
+                files.extract(f'{stem}.{ext}', tmp)
+            ds = ogr.Open(str(Path(tmp) / (stem + '.shp')))
+            for feature in ds.GetLayer():
+                land = feature.geometry()
+                w, e, s, n = land.GetEnvelope()
+                neighbors = db.execute(
+                    'SELECT id FROM temp.extent WHERE west<=? AND east>=? AND south<=? AND north>=?',
+                    (e,w,n,s))
+                prepared = None
+                invalid = False
+                for (key,) in neighbors:
+                    if key not in candidates:
+                        continue
+                    if prepared is None and not invalid:
+                        invalid = not land.IsValid()
+                        if not invalid:
+                            prepared = land.CreatePreparedGeometry()
+                    # Negative evidence cannot be certified against an invalid
+                    # coast: conservatively exclude its entire candidate extent.
+                    if invalid or prepared.Intersects(padded_extent(candidates[key])):
+                        del candidates[key]
+
+
+def independent_components(path, shoreline_index=None, archive=None):
     """Conservative lower bound for isolated small source components.
 
-    Each complete expanded rectangular extent must be disjoint from every
-    other source polygon. A positive result implies the less restrictive
-    whole-polygon separation test used by the point-query fallback.
+    First test each complete expanded extent against other administrative
+    polygons. The optional shoreline index also excludes conflicting or
+    invalid physical geometry in the full GSHHG coastline edition.
     """
+    if shoreline_index and (shoreline_index.suffix.lower() != '.json'
+                            or shoreline_index.resolve() in {path.resolve(), archive.resolve()}):
+        raise ValueError('Choose a separate JSON file for the shoreline proof')
     db = sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)
-    gap = 0.001
+    gap = PADDING
     items = db.execute(
         'SELECT b.id,b.west,b.east,b.south,b.north,r.code,r.disputed FROM administrative_box b '
         'JOIN administrative a ON a.id=b.id JOIN region r ON r.id=a.region_id '
@@ -161,36 +217,60 @@ def independent_components(path):
     db.executemany('INSERT INTO temp.extent VALUES(?,?,?,?,?)',
                    ((key, w-gap, e+gap, s-gap, n+gap) for key,w,e,s,n,_,_ in items))
     nearby_count = Counter()
+    uncertified = set()
     for key,w,e,s,n in db.execute('SELECT id,west,east,south,north FROM administrative_box'):
         neighbors = db.execute(
             'SELECT id FROM temp.extent WHERE west<=? AND east>=? AND south<=? AND north>=? AND id<>?',
             (e,w,n,s,key)).fetchall()
         # Defer geometry decode until at least one candidate still needs it.
         neighbors = [other for (other,) in neighbors if other in candidates]
-        if not neighbors:
+        if not neighbors and not (shoreline_index and key in candidates):
             continue
         polygon = shape(db.execute('SELECT wkb FROM administrative WHERE id=?', (key,)).fetchone()[0])
+        if shoreline_index and not polygon.IsValid():
+            uncertified.add(key)
+            uncertified.update(neighbors)
+        if not neighbors:
+            continue
         prepared = polygon.CreatePreparedGeometry()
         for other in neighbors:
             nearby_count[other] += 1
             if nearby_count[other] > 64:
                 del candidates[other]
                 continue
-            west,east,south,north,_,_ = candidates[other]
-            west -= gap; east += gap; south -= gap; north += gap
-            ring = ogr.Geometry(ogr.wkbLinearRing)
-            for x,y in ((west,south),(west,north),(east,north),(east,south),(west,south)):
-                ring.AddPoint_2D(x,y)
-            box = ogr.Geometry(ogr.wkbPolygon)
-            box.AddGeometry(ring)
-            if prepared.Intersects(box):
+            if prepared.Intersects(padded_extent(candidates[other])):
                 del candidates[other]
     flags = Counter('flagged' if row[-1] else 'coded' if row[-2] else 'noCode' for row in candidates.values())
     regions = {row[-2] for row in candidates.values() if row[-2] and not row[-1]}
+    report = {'eligibleSmallAdministrativeComponents':len(items),
+              'isolatedWholeExtents':len(candidates), 'rawRegionalEvidence':dict(sorted(flags.items())),
+              'distinctUnflaggedRegionalCodes':len(regions)}
+    if shoreline_index:
+        manifest = json.loads(db.execute("SELECT value FROM metadata WHERE key='manifest'").fetchone()[0])
+        if (manifest['gshhgArchive']['sha256'] != ARCHIVE_SHA
+                or manifest['fieldmapsArchive']['gpkgSha256'] != ADMIN_SHA):
+            raise ValueError('Pack inputs differ from the pinned geographic sources')
+        for key in uncertified:
+            candidates.pop(key, None)
+        retain_offshore_components(db, candidates, archive)
+        max_id = db.execute('SELECT max(id) FROM administrative').fetchone()[0]
+        bits = bytearray(max_id // 8 + 1)
+        for key in candidates:
+            bits[key // 8] |= 1 << (key % 8)
+        report['independentlyOffshoreComponents'] = len(candidates)
+        index = dict(format='agid-fieldmaps-open-ocean-proof-v1',
+                     encoding='zlib+base64, least-significant bit first by administrative component ID',
+                     gshhgSource='https://www.soest.hawaii.edu/pwessel/gshhg/',
+                     fieldmapsSource='https://fieldmaps.io/data/adm0/',
+                     gshhgSha256=ARCHIVE_SHA, fieldmapsGpkgSha256=ADMIN_SHA,
+                     paddingDegrees=PADDING, maxComponentId=max_id, counts=report,
+                     bits=base64.b64encode(zlib.compress(bits, 9)).decode('ascii'))
+        with tempfile.TemporaryDirectory(dir=shoreline_index.parent) as tmp:
+            target = Path(tmp) / 'proof.json'
+            target.write_text(json.dumps(index, indent=2) + '\n')
+            os.replace(target, shoreline_index)
     db.close()
-    return {'eligibleSmallAdministrativeComponents':len(items),
-            'isolatedWholeExtents':len(candidates), 'rawRegionalEvidence':dict(sorted(flags.items())),
-            'distinctUnflaggedRegionalCodes':len(regions)}
+    return report
 
 
 if __name__ == '__main__':
@@ -200,6 +280,15 @@ if __name__ == '__main__':
     choice.add_argument('--fieldmaps-components', action='store_true')
     choice.add_argument('--gap-register', type=Path, metavar='OUTPUT.zip',
                         help='Also write the codeless CSV of unmatched and flagged representative points.')
+    choice.add_argument('--shoreline-index', type=Path, metavar='OUTPUT.json',
+                        help='Build the independent ocean-isolation proof for FieldMaps components.')
+    parser.add_argument('--gshhg-archive', type=Path, help='Original full-resolution GSHHG 2.3.7 ZIP.')
     args = parser.parse_args()
+    if bool(args.gshhg_archive) != bool(args.shoreline_index):
+        parser.error('--shoreline-index and --gshhg-archive must be used together')
     ogr.UseExceptions()
-    print(json.dumps(independent_components(args.pack) if args.fieldmaps_components else audit(args.pack, args.gap_register), indent=2))
+    if args.fieldmaps_components or args.shoreline_index:
+        result = independent_components(args.pack, args.shoreline_index, args.gshhg_archive)
+    else:
+        result = audit(args.pack, args.gap_register)
+    print(json.dumps(result, indent=2))

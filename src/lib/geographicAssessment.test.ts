@@ -61,13 +61,76 @@ test('Fiji interior across the cartographic seam and positive offshore water rem
   assert.deepEqual(water.regionCandidates, []);
 });
 
-test('an administrative shape can establish DE in Büsingen without claiming land or the postal route', () => {
+test('independent evidence identifies dry mainland and German administration in Büsingen', () => {
   const admin = assess({kind:'pin', lat:47.7, lon:8.68333, accuracyMeters:10});
   assert.deepEqual(admin.regionCandidates, ['DE']);
-  assert.equal(admin.surface, 'unknown');
+  assert.equal(admin.surface, 'land');
+  assert.equal(admin.territorialTopology?.landform, 'mainland');
+  assert.equal(admin.territorialTopology?.administration?.kind, 'enclave');
   assert.equal(admin.status, 'mapped');
   assert.equal(admin.deliveryRegion, null);
   assert.ok(admin.sources.some(s => s.attribution?.includes('swisstopo')));
+  assert.ok(admin.sources.some(s => s.attribution?.includes('ESA WorldCover')));
+});
+
+test('German administration over the Rhine does not establish a terrestrial surface or postal route', () => {
+  const river = assess({kind:'pin', lat:47.6905, lon:8.682, accuracyMeters:3});
+  assert.deepEqual(river.regionCandidates, ['DE']);
+  assert.equal(river.surface, 'unknown');
+  assert.equal(river.territorialTopology?.landform, 'unknown');
+  assert.equal(river.territorialTopology?.administration?.id, 'buesingen');
+  assert.equal(river.island, undefined);
+  assert.equal(river.deliveryRegion, null);
+  assert.deepEqual(river.sources.map(s => s.source), ['swisstopo-swissboundaries3d-buesingen']);
+});
+
+test('Lake Toba and Lake Taupō require water throughout a pin, device footprint or cell', () => {
+  for (const [lat, lon] of [[2.425,98.975], [-38.82,175.93]]) {
+    const pin = {kind:'pin' as const, lat, lon};
+    const cell = {kind:'cell' as const, id:encodeAGID16(lat, lon).id};
+    for (const input of [pin, {...pin, accuracyMeters:30}, cell]) {
+      const lake = assess(input);
+      assert.equal(lake.surface, 'water');
+      assert.equal(lake.status, 'mapped');
+      assert.deepEqual(lake.regionCandidates, []);
+      assert.equal(lake.territorialTopology, undefined);
+      assert.equal(lake.island, undefined);
+      assert.equal(lake.deliveryRegion, null);
+      assert.ok(lake.sources.some(source => source.source === 'gshhg-inland-water'));
+    }
+    for (const wide of [
+      assess({...pin, accuracyMeters:20_000}), assess({...pin, accuracyMeters:30}, {boundaryAllowanceMeters:20_000}),
+      assess({...pin, method:'device'}),
+    ]) {
+      assert.equal(wide.surface, 'unknown');
+      assert.equal(wide.status, 'needs-confirmation');
+      assert.equal(wide.deliveryRegion, null);
+    }
+  }
+  const bank = {kind:'pin' as const, lat:-38.686, lon:176.076};
+  assert.equal(assess(bank).surface, 'land');
+  const shore = assess({...bank, accuracyMeters:20_000});
+  assert.equal(shore.status, 'needs-confirmation');
+  assert.equal(shore.surface, 'unknown');
+  assert.equal(shore.island?.status, 'unresolved');
+});
+
+test('a reviewed lake island and an official Japanese island retain their own shorelines', () => {
+  const pin = {kind:'pin' as const, lat:-12.065, lon:34.731};
+  const island = assess({...pin, accuracyMeters:30});
+  assert.equal(island.surface, 'land');
+  assert.equal(island.territorialTopology?.landform, 'island');
+  assert.equal(island.territorialTopology?.administration?.id, 'likoma');
+  assert.deepEqual(island.island?.countryCodes, ['MW']);
+  const lakeShore = assess({...pin, accuracyMeters:20_000});
+  assert.equal(lakeShore.surface, 'unknown');
+  assert.equal(lakeShore.island?.status, 'unresolved');
+  assert.equal(lakeShore.territorialTopology?.status, 'uncertain');
+  const takeshima = assess({kind:'pin', lat:37.24002, lon:131.87016, accuracyMeters:1});
+  assert.deepEqual(takeshima.regionCandidates, ['JP']);
+  assert.deepEqual(takeshima.island?.countryCodes, ['JP']);
+  assert.equal(takeshima.island?.status, 'japan-position');
+  assert.equal(takeshima.surface, 'land');
 });
 
 test('invalid coordinates, reported accuracy and malformed IDs are rejected', () => {
@@ -99,11 +162,12 @@ test('a window-edge footprint retains provenance even with its centre outside re
   assert.ok(edge.sources.some(s => s.source === 'natural-earth-10m-ocean'));
 });
 
-test('the far side of an exposed land edge needs independent evidence', () => {
+test('physical mainland evidence covers both sides of a partially mapped Eswatini border', () => {
   const r = assess({kind:'pin', lat:-26.582252, lon:32.117398, accuracyMeters:10});
   assert.equal(r.status, 'needs-confirmation');
-  assert.equal(r.surface, 'unknown');
+  assert.equal(r.surface, 'land');
   assert.deepEqual(r.regionCandidates, ['SZ']);
+  assert.ok(r.sources.some(s => s.source === 'natural-earth-physical-land+hydrography'));
 });
 
 test('Hong Kong and Shenzhen share a sourced land edge and keep both candidates within device accuracy', () => {
@@ -122,12 +186,13 @@ test('Hong Kong and Shenzhen share a sourced land edge and keep both candidates 
   assert.equal(gap.status, 'unassessed');
 });
 
-test('Swiss administrative border has multiple candidates while surface remains unknown', () => {
+test('Swiss administrative border keeps both candidates on independently surveyed dry land', () => {
   const r = assess({kind:'pin', lat:47.69133884, lon:8.658607827, accuracyMeters:8});
-  assert.equal(r.surface, 'unknown');
+  assert.equal(r.surface, 'land');
   assert.equal(r.status, 'needs-confirmation');
   assert.deepEqual(r.regionCandidates, ['CH','DE']);
   assert.ok(r.sources.some(s => s.attribution?.includes('swisstopo')));
+  assert.ok(r.sources.some(s => s.attribution?.includes('ESA WorldCover')));
 });
 
 test('a partial Macao window retains observed regions while a disk outside the Tokyo window stays unassessed', () => {

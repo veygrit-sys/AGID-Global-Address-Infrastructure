@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { globalIslandCoverage, matchGlobalIsland, queryGlobalIslandPolygons } from './globalIslands';
+import { globalIslandCoverage, isGlobalInlandWater, matchGlobalIsland, matchGlobalLandform, mayTouchGlobalInlandWater, queryGlobalIslandPolygons } from './globalIslands';
 
 test('a shared island uses the map unit containing the point on each side', () => {
   for (const [lat, lon, territory, sovereign] of [
@@ -43,4 +43,45 @@ test('uses the continuous island at the antimeridian for both point and disk loo
   }
   assert.equal(matchGlobalIsland(-16.85, -179.7), undefined);
   assert.ok([...queryGlobalIslandPolygons([179.98,-16.86,-179.98,-16.84])].some(p => p.codes.includes('FJ')));
+});
+
+test('separately mapped island components identify Borneo without giving its satellites the same countries', () => {
+  const brunei = matchGlobalLandform(4.89,114.94,10);
+  const malaysia = matchGlobalLandform(5.25,116.4);
+  assert.equal(brunei?.kind,'island');
+  assert.deepEqual(brunei.sharedIslandCountryCodes,['BN','ID','MY']);
+  assert.equal(malaysia?.physicalId,brunei.physicalId);
+  for (const [lat,lon] of [[2.1137085,117.8612687425],[-2.0020975,137.21],[54.418694,-8.50174082]]) {
+    assert.equal(matchGlobalLandform(lat,lon)?.sharedIslandCountryCodes,undefined);
+  }
+  assert.equal(matchGlobalLandform(-16.85,180)?.physicalId, matchGlobalLandform(-16.85,-180)?.physicalId);
+});
+
+test('continental positives need physical land and respect the extent of a pin', () => {
+  for (const [lat,lon] of [[47.7,8.68333],[45.968,8.972],[42.465,1.980],[51.439542,4.9229224],
+    [41.90216,12.45736],[-29.31,27.49],[-5.56,12.19]]) {
+    const form = matchGlobalLandform(lat,lon,3);
+    assert.equal(form?.kind,'mainland');
+    assert.match(form.attribution ?? '', /ESA WorldCover/);
+  }
+  assert.equal(matchGlobalLandform(47.7,8.68333,5000),undefined);
+  assert.equal(matchGlobalLandform(-25,135)?.kind, 'mainland');
+  assert.equal(matchGlobalLandform(45.9678,8.9638),undefined); // Lake Lugano
+  assert.equal(matchGlobalLandform(39.17616667,45.3605),undefined); // Reservoir island
+  for (const [lat,lon] of [[24.937875,-108.0787825823],[53.9641665,14.7340555072]]) {
+    assert.notEqual(matchGlobalLandform(lat,lon)?.kind,'mainland');
+  }
+});
+
+test('strict inland water veto applies to global island country geometry and preserves uncertain coasts', () => {
+  for (const [lat,lon] of [[2.7,98.86],[-38.82,175.93],[-5.3245975,147.09981925],
+    [22.106597,113.2949307296],[32.563514,130.47343925409487],[45.9678,8.9638]]) {
+    assert.equal(isGlobalInlandWater(lat,lon),true);
+    assert.equal(matchGlobalIsland(lat,lon),undefined);
+  }
+  assert.equal(isGlobalInlandWater(45.85,-82.18),false); // Land on Manitoulin Island
+  assert.equal(mayTouchGlobalInlandWater(47.7,8.68333,10),false);
+  assert.equal(isGlobalInlandWater(45.9678,8.9638,5000),false);
+  // Raw Maldives map-unit polygon protrudes beyond the independently surveyed physical shape.
+  assert.equal(matchGlobalIsland(0.238857,73.21316970456542),undefined);
 });

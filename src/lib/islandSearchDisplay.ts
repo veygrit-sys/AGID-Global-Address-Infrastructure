@@ -24,13 +24,28 @@ function islandAffiliationLabel(island: AgidIslandAssessment | undefined, locale
 }
 
 /** A saved map label uses the selected cell or device footprint, just like the map panel. */
-export function selectedIslandReference(result: AGIDResult, locale: string) {
-  const { island, status } = assessAgidGeography(selectedGeographyInput(result));
-  const label = islandAffiliationLabel(island, locale);
+export function selectedMapReferences(result: AGIDResult, locale: string) {
+  const { island, status, territorialTopology } = assessAgidGeography(selectedGeographyInput(result));
+  const japanese = locale.startsWith('ja');
+  let label = islandAffiliationLabel(island, locale);
   if (label && status === 'needs-confirmation' && (island?.status === 'japan-position' || isNamedJapaneseRemoteIsland(island))) {
-    return `${label} · ${locale.startsWith('ja') ? '位置を要確認' : 'Confirm the location'}`;
+    label += japanese ? ' · 位置を要確認' : ' · Confirm the location';
   }
-  return label;
+  let regionLabel = label ?? result.regionName;
+  const area = territorialTopology?.administration;
+  if (!label && area) {
+    if (territorialTopology.status === 'inside') {
+      const names = new Intl.DisplayNames([locale.replaceAll('_', '-')], { type: 'region' });
+      regionLabel = [japanese ? area.nameJa : area.name, names.of(area.code) || area.code].join(' · ');
+    } else {
+      regionLabel = japanese ? '位置を要確認' : 'Confirm the location';
+    }
+  }
+  return { islandReference: label, regionLabel };
+}
+
+export function selectedIslandReference(result: AGIDResult, locale: string) {
+  return selectedMapReferences(result, locale).islandReference;
 }
 
 /** Replace an external map's country line at a reviewed territorial exception. */

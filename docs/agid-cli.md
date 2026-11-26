@@ -162,6 +162,16 @@ The schema version is intentionally independent from app or API versions. New
 fields may be added, but existing public fields should remain stable within the
 same schema version.
 
+The `geography`, `encode`, `decode` and `polygon` commands can include `territorialTopology`.
+Its `landform` describes the physical surface as mainland, island, or unknown. Its optional
+`administration` describes the mapped enclave, counter-enclave, coastal exclave,
+exclave, or enclaved state. A pin on Likoma Island can carry both an island landform
+and a Malawian enclave. `sharedIslandCountryCodes` describes the whole island;
+`regionCandidates` in a geography assessment describes the queried footprint.
+Encoding uses the supplied pin. Decoding or inspecting a polygon assesses the whole
+cell, which can cross a border even if the original pin was on one side.
+[Coverage, uncertainty and sources](island-recognition.md)
+
 ## CI
 
 ```bash

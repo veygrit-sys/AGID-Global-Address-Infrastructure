@@ -1,10 +1,13 @@
 import React from 'react';
 import type { AgidIslandAssessment } from '../lib/islandPolicy';
+import type { AgidGeographicAssessment } from '../lib/geographicAssessment';
+import { territorialTopologyRows } from '../lib/territorialTopologyDisplay';
 import { islandDisplayRows } from '../lib/islandDisplay';
 import { IslandEvidenceLinks } from './IslandEvidenceLinks';
 
 type LocalResult = {
   island: AgidIslandAssessment | null;
+  territorialTopology?: AgidGeographicAssessment['territorialTopology'] | null;
   physicalIslandId?: number | string;
   physicalSource?: string;
   physicalVersion?: string;
@@ -52,6 +55,9 @@ export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, expec
       if (expectedJapanStatus && data.island && (data.island.status !== expectedJapanStatus
         || data.island.countryCodes.length !== 1 || data.island.countryCodes[0] !== 'JP'
         || data.island.sovereignCodes?.some(code => code !== 'JP'))) throw new Error('Incompatible island geography');
+      if (expectedJapanStatus && data.territorialTopology &&
+        (data.territorialTopology.landform !== 'island' || data.territorialTopology.administration
+        || data.territorialTopology.sharedIslandCountryCodes?.some(code => code !== 'JP'))) throw new Error('Incompatible island geography');
       if (!controller.signal.aborted) { setResult(data); setState('idle'); }
     } catch {
       if (!controller.signal.aborted) setState('error');
@@ -61,24 +67,30 @@ export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, expec
   }
 
   if (!enabled) return null;
+  const topology = result?.territorialTopology;
+  const credits = [...new Set([result?.island?.attribution, topology?.administration?.attribution, topology?.physicalSource?.attribution].filter(Boolean))];
+  const evidenceRows = [
+    ...(topology ? territorialTopologyRows(topology, japanese, formatRegions, result?.island ?? undefined) : []),
+    ...(result?.island ? islandDisplayRows(result.island, japanese, formatRegions) : []),
+  ];
   return (
     <div className="mt-1 border-t border-slate-200 pt-1">
       {result ? (
         <div aria-live="polite">
           <p className="font-semibold">{japanese ? 'ローカル高精細版の照合結果' : 'Local detailed island lookup'}</p>
-          {result.island ? (
+          {evidenceRows.length > 0 ? (
             <dl>
-              {islandDisplayRows(result.island, japanese, formatRegions).map(([label, value]) => (
+              {evidenceRows.map(([label, value]) => (
                 <div key={label} className="flex flex-wrap gap-x-1.5"><dt>{label}</dt><dd>{value}</dd></div>
               ))}
             </dl>
           ) : <p>{japanese ? 'この地点では島の所属を確認できません。' : 'Island affiliation could not be established here.'}</p>}
           {result.physicalSource ? (
             <p>{japanese ? '島の形状資料' : 'Physical island layer'} · {[result.physicalSource, result.physicalVersion, result.physicalIslandId].filter(v => v !== undefined && v !== null).join(' · ')}</p>
-          ) : <p>{japanese ? '高精細版の島形状に一致する地物はありません。' : 'No physical island feature matched in the detailed layer.'}</p>}
+          ) : !topology && <p>{japanese ? '高精細版の島形状に一致する地物はありません。' : 'No physical island feature matched in the detailed layer.'}</p>}
           {result.island && <p>{[result.island.source, result.island.version].filter(Boolean).join(' · ')}</p>}
-          {result.island?.attribution && <p className="text-slate-600">{result.island.attribution}</p>}
-          <IslandEvidenceLinks urls={result.island?.evidenceUrls} japanese={japanese} />
+          {credits.map(credit => <p key={credit} className="text-slate-600">{credit}</p>)}
+          <IslandEvidenceLinks urls={[...(result.island?.evidenceUrls ?? []), ...(topology?.administration?.evidenceUrls ?? [])]} japanese={japanese} />
         </div>
       ) : (
         <>

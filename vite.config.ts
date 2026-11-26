@@ -10,7 +10,7 @@ function manualVendorChunk(id: string) {
 
   // Keep independently versioned boundary extracts cacheable across app-only changes.
   if (normalizedId.endsWith('/src/data/pearlRiverDelta.json')) return 'geography-pearl-delta';
-  const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands)\/([a-zA-Z0-9-]+)\.json$/);
+  const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands|territorial-exclaves)\/([a-zA-Z0-9-]+)\.json$/);
   if (islandPart) return `geography-${islandPart[1]}-${islandPart[2]}`;
   if (normalizedId.endsWith('/src/data/japaneseRemoteIslands.json')) return 'geography-japanese-remote-islands';
   if (normalizedId.endsWith('/src/data/japaneseIslandView.json')) return 'geography-japanese-islands';

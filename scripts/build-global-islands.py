@@ -101,11 +101,11 @@ def varint(value, output):
     output.append(unsigned)
 
 
-def pack(rings, unit_index):
+def pack(rings, unit_index, scale=SCALE):
     encoded = []
     bbox = None
     for ring in rings:
-        coords = [(round(x * SCALE), round(y * SCALE)) for x, y in ring]
+        coords = [(round(x * scale), round(y * scale)) for x, y in ring]
         if coords[-1] != coords[0] or len(set(coords)) < 3:
             raise ValueError('Degenerate ring')
         if bbox is None:

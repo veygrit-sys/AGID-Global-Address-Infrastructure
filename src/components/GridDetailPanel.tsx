@@ -590,7 +590,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                 className="space-y-2"
                >
                  {/* Territory Info */}
-                 {!island && clickedAgid.isSea && clickedAgid.regionName && (
+                 {!island && !geography?.territorialTopology?.administration && clickedAgid.isSea && clickedAgid.regionName && (
                     <div className="flex items-center gap-2 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full w-fit">
                       <Waves className="w-2.5 h-2.5 text-blue-700" />
                       <span className="text-[9px] font-black text-blue-800">{clickedAgid.regionName}</span>

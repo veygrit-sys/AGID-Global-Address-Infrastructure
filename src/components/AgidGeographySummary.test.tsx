@@ -14,7 +14,7 @@ test('the map distinguishes a selected point from a border-straddling ID cell an
   const point = render({ kind: 'pin', lat, lon });
   assert.match(point, /Selected point/);
   assert.match(point, /Lesotho/);
-  assert.doesNotMatch(point, /South Africa/);
+  assert.doesNotMatch(point, /(?:Possible countries or regions|Country or territory at this location)<\/dt><dd[^>]*>[^<]*South Africa/);
   const cell = render({ kind: 'cell', id: encodeAGID16(lat, lon).id });
   assert.match(cell, /AGID cell/);
   assert.match(cell, /Lesotho \/ South Africa/);
@@ -28,7 +28,7 @@ test('unassessed points have no regional claim and missing device accuracy is ex
   const result = render({ kind: 'pin', lat: 48.85, lon: 2.35, method: 'device' }, 'ja');
   assert.match(result, /測位精度は不明/);
   assert.match(result, /詳細な境界データがありません/);
-  assert.doesNotMatch(result, /国・地域の候補|フランス|陸地|水域/);
+  assert.doesNotMatch(result, /国・地域の候補|フランス|地図上の陸地|地図上の水域/);
 });
 
 test('the map credits the boundary provider at an administrative enclave', () => {
@@ -128,4 +128,42 @@ test('ordinary Japanese offshore islands use the national names in search, cards
   const water = { lat:'20.4252', lon:'136.075', display_name:'Marine feature' };
   const unrelated = { lat:'64.1466', lon:'-21.9426', display_name:'Reykjavík' };
   assert.deepEqual(mapSearchDisplayResults([water,unrelated], 'ja'), [water,unrelated]);
+});
+
+test('map labels separate landform, administrative affiliation and neighbouring countries', () => {
+  const pin = { kind: 'pin', lat: 47.7, lon: 8.68333 } as const;
+  const point = render(pin);
+  assert.match(point, /Landform<\/dt><dd[^>]*>Continental land/);
+  assert.match(point, /Territorial classification<\/dt><dd[^>]*>[^<]*Büsingen[^<]*Enclave/i);
+  assert.match(point, /Country or territory at this location<\/dt><dd[^>]*>Germany/);
+  assert.match(point, /Surrounding or neighbouring countries and territories<\/dt><dd[^>]*>Switzerland/);
+
+  const uncertain = render({ ...pin, method: 'device', accuracyMeters: 6000 }, 'ja');
+  assert.match(uncertain, /行政上の区分の候補/);
+  assert.match(uncertain, /この候補地の所属国・地域/);
+  assert.doesNotMatch(uncertain, /この地点の所属国・地域/);
+});
+
+test('map labels distinguish the location from all countries sharing its island', () => {
+  const point = render({ kind: 'pin', lat: 4.88, lon: 114.93 });
+  assert.match(point, /Landform<\/dt><dd[^>]*>Island/);
+  assert.match(point, /Countries or territories sharing this island<\/dt><dd[^>]*>(?=[^<]*Brunei)(?=[^<]*Indonesia)(?=[^<]*Malaysia)/);
+  assert.match(point, /Mapped country or territory<\/dt><dd[^>]*>Brunei<\/dd>/);
+  assert.doesNotMatch(point, /Territorial classification/);
+});
+
+test('saved region labels keep the footprint owner separate from the address and the old prefix', async () => {
+  const { selectedMapReferences } = await import('../lib/islandSearchDisplay');
+  const ref = selectedMapReferences({ ...encodeAGID16(47.7, 8.68333), regionName: 'Switzerland', prefix: 'CH' }, 'en');
+  assert.match(ref.regionLabel, /Büsingen[^·]* · Germany/);
+  assert.equal(ref.islandReference, undefined);
+});
+
+test('an island exclave displays both meanings and keeps its neighbour outside the postal decision', () => {
+  const point = render({ kind: 'pin', lat: -12.066111111, lon: 34.730555556 }, 'ja');
+  assert.match(point, /地形<\/dt><dd[^>]*>島</);
+  assert.match(point, /行政上の区分<\/dt><dd[^>]*>[^<]*飛び地/);
+  assert.match(point, /周囲・隣接する国・地域<\/dt><dd[^>]*>モザンビーク/);
+  assert.match(point, /(?:地図上の国・地域|この地点の所属国・地域)<\/dt><dd[^>]*>マラウイ/);
+  assert.doesNotMatch(point, /配送先.*モザンビーク/);
 });
