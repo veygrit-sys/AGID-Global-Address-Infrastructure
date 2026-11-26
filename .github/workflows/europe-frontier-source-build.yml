@@ -1,5 +1,7 @@
 name: Build pinned European frontier sources
 on:
+  pull_request:
+    branches: [codex/europe-complete-frontiers]
   push:
     branches: [codex/europe-frontier-source-build]
     paths:
@@ -11,11 +13,13 @@ permissions:
   contents: write
 jobs:
   build:
-    if: github.repository == 'veygrit-sys/AGID-Global-Address-Infrastructure'
+    if: github.repository == 'veygrit-sys/AGID-Global-Address-Infrastructure' && (github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/europe-frontier-source-build'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: codex/europe-frontier-source-build
       - name: Compile and publish the land pages to this source-build branch
         run: |
           python3 scripts/fetch-europe-frontier-sources.py --cache "$RUNNER_TEMP/eu-cache" --land-only --output "$RUNNER_TEMP/eu-land.json"
