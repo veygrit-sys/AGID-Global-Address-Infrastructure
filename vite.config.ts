@@ -9,6 +9,7 @@ function manualVendorChunk(id: string) {
   const normalizedId = id.replace(/\\/g, '/');
 
   // Keep independently versioned boundary extracts cacheable across app-only changes.
+  if (normalizedId.endsWith('/src/data/usCanadaDividedLakeIslands.json')) return 'geography-us-canada-divided-lake-islands';
   if (normalizedId.endsWith('/src/data/pearlRiverDelta.json')) return 'geography-pearl-delta';
   const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands|territorial-exclaves|us-canada-shorelines)\/([a-zA-Z0-9-]+)\.json$/);
   if (islandPart) return `geography-${islandPart[1]}-${islandPart[2]}`;

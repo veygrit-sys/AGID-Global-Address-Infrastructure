@@ -19,8 +19,9 @@ export function assessPackPoint(lat: number, lon: number, raw: PackHit | null,
   const primary = applyIslandPolicyToEvidence(lat, lon, raw ?? undefined);
   const shore = matchUsCanadaShoreline(lat, lon);
   if (shore) {
-    // Named territorial policies continue to apply to their surveyed island.
-    if (primary?.claimantCodes) return primary;
+    // A measured border across a surveyed island resolves each side separately.
+    // A single old pack feature can cover both, or omit the island altogether.
+    if (primary?.claimantCodes || shore.surveyedIslandOwnership) return primary;
     // An independently surveyed lake island can fill a GSHHG omission. The
     // quantized copy of GSHHG alone cannot overrule that pack's exact lake.
     if (mappedInlandWater && !shore.surveyedLakeIsland) return undefined;
@@ -79,10 +80,14 @@ const sharedOceanIslands = new Map<string, string[]>([
   ['gshhg:1592', ['MF', 'SX']],     // Saint Martin
 ]);
 
-export function packPointResult(lat: number, lon: number, raw: PackHit | null,
+export function packPointResult(lat: number, lon: number, packHit: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean) {
-  const island = assessPackPoint(lat, lon, raw, mappedInlandWater, pinnedSourceEdition);
-  const topology = island || !mappedInlandWater ? pointTerritorialTopology(lat, lon, island, island && raw ? raw.islandId : undefined) : undefined;
+  const island = assessPackPoint(lat, lon, packHit, mappedInlandWater, pinnedSourceEdition);
+  const surveyed = matchUsCanadaShoreline(lat, lon)?.surveyedIslandOwnership;
+  // The independent lake survey supplies its own physical geometry, including water.
+  const raw = surveyed ? null : packHit;
+  const topology = island || surveyed || !mappedInlandWater
+    ? pointTerritorialTopology(lat, lon, island, island && raw ? raw.islandId : undefined) : undefined;
   const physical = island && raw ? {
     physicalIslandId: raw.islandId,
     physicalKind: raw.kind,

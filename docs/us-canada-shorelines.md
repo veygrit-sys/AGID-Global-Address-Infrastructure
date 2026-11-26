@@ -13,8 +13,12 @@
 | メイン湾のノースロック周辺 | 露出岩、潮間帯、海面。陸地では米国・カナダ双方の領有主張を表示する |
 | ユーコン準州の北岸 | ハーシェル島と周辺の水域 |
 | アリューシャン列島の一部 | 東経側のシェミャ島、西経側のアダック島 |
+| メンフレマゴグ湖 | ケベック州とバーモント州にまたがるプロヴィンス島、その南端を横切る国境と周辺の湖面 |
+| メティゴシー湖 | マニトバ州とノースダコタ州の境にカナダの水系図が描く島、その北端の浅瀬と周辺の湖面 |
 
-緯度経度は[主要10範囲](../scripts/data/us-canada-windows.json)と[ノースロックの調査範囲](../src/data/northRockShoreline.json)に記録している。ピンに測位誤差が指定されている場合や、発行済みのAGIDから復号した場合は、範囲内で到達し得る陸水境界と行政境界も調べる。異なる国にまたがる場合や、詳細データが測位範囲の一部しか覆わない場合は確認を求める。本人が指定した配送国を保持する。地図の更新後も、発行済みの12文字・16文字IDは元のセルに復号できる。
+検索窓の緯度経度は各データに記録している。[主要10範囲](../scripts/data/us-canada-windows.json) · [ノースロック](../src/data/northRockShoreline.json) · [国境にかかる2島](../src/data/usCanadaDividedLakeIslands.json)
+
+ピンに測位誤差が指定されている場合や、発行済みのAGIDから復号した場合は、範囲内で到達し得る陸水境界と行政境界も調べる。異なる国にまたがる場合や、詳細データが測位範囲の一部しか覆わない場合は確認を求める。本人が指定した配送国を保持する。地図の更新後も、発行済みの12文字・16文字IDは元のセルに復号できる。
 
 ## データと再生成
 
@@ -36,6 +40,39 @@ python3 scripts/build-us-canada-shorelines.py \
   --census-directory tiger-2025
 npm run verify:agid-islands
 ```
+
+国境にかかる2島は専用のビルダーで再生成する。Python 3.11以上とGDAL、Shapely 2、pyprojを使用する。次のコマンドは指定したディレクトリに米国NHDの湖2件、カナダNHNの水系区画05NFC00 v2.0、IBC国境線 v1.3の4ファイルを取得し、SHA-256を検証してから処理する。入力がすべてある場合は `--download` を省略できる。[再生成スクリプトと原典のURL・ハッシュ](../scripts/build-us-canada-divided-lake-islands.py)
+
+```sh
+python3 scripts/build-us-canada-divided-lake-islands.py divided-island-inputs --download
+npm run verify:agid-islands
+```
+
+## 国境をまたぐ島
+
+島全体が地図上で米加にまたがる場合、確認できた陸地では `sharedIslandCountryCodes` に `CA` と `US` を記録する。ピンの国候補（`regionCandidates`）は、資料で陸地を確認できる範囲と、国際境界委員会（IBC）の地図用国境線から求める。この国境線は両区間の国境標・折点の座標に基づく。[IBCデジタル国境線 v1.3](https://www.internationalboundarycommission.org/en/maps-coordinates/coordinates.php)
+
+| 検索窓 | 緯度（南端～北端） | 経度（西端～東端） |
+| --- | --- | --- |
+| プロヴィンス島 | 45.0028 ～ 45.0144 | −72.2410 ～ −72.2270 |
+| メティゴシー湖の島 | 48.9969 ～ 48.9998 | −100.3553 ～ −100.3532 |
+
+**プロヴィンス島（Île de la Province）** は大部分がケベック州にあり、南端がバーモント州に入る。米国NHDのメンフレマゴグ湖水域に囲まれた島の輪郭にIBC第11区間を重ねると、北緯45度より北でも米国になる地点がある。陸上の国境標571では両国を候補として確認を求め、国境線の延長上でも湖面にある点では国候補を返さない。[ケベック州地名委員会の地名録](https://toponymie.gouv.qc.ca/ct/ToposWeb/Fiche.aspx?no_seq=141213) · [米国NHDの湖水域2771880](https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/12/2771880) · [IBC国境標座標表、4ページ](https://www.internationalboundarycommission.org/uploads/maps/11-west_line_qc-vt/west%20line%20qc-vt%20%28french%29.pdf#page=4)
+
+**メティゴシー湖の島** は、カナダ天然資源省の水系図（NHN）では国境をまたいでつながる。米国地質調査所の水系図（NHD）は、IBC第20区間の両側に離れた陸地を描いている。米国農務省の2019年・2022年・2023年の航空写真でも、北側の小区画には安定した陸地を確認できない。国境付近のつなぎ目と北側の小区画は陸水・国とも要確認とする。双方の水系図で陸地と確認できる南側では米国を、双方が湖面を示す周辺では水面を返す。[カナダNHN](https://open.canada.ca/data/dataset/a4b190fe-e090-4e6d-881e-b87956c07977) · [米国NHDの湖水域2166435](https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/12/2166435) · [2023年8月6日のNAIP航空写真](https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/117792)
+
+| 島・検証点 | 緯度、経度 | 陸水とピンの国候補 |
+| --- | --- | --- |
+| プロヴィンス島・ケベック州側 | 45.008670, −72.232350 | 陸地、CA |
+| プロヴィンス島・バーモント州側 | 45.004310, −72.231000 | 陸地、US |
+| プロヴィンス島・国境標571 | 45.004891944, −72.231484167 | 陸地、CA・US。配送国は要確認 |
+| プロヴィンス島沖・湖上の国境 | 45.004833584, −72.234500 | 湖面、国候補なし |
+| メティゴシー湖・島の南側 | 48.998450, −100.354330 | 陸地、US |
+| メティゴシー湖・国境付近のつなぎ目 | 48.9993282, −100.354000 | 陸水は要確認、国候補なし |
+| メティゴシー湖・北側の浅瀬 | 48.999400, −100.353920 | 陸水は要確認、国候補なし |
+| メティゴシー湖・島の西方 | 48.999050, −100.355000 | 湖面、国候補なし |
+
+プロヴィンス島の米国側（45.004796456, −72.231250）では、測位半径3 mなら米国に収まり、18 mなら島内の国境を越えて両国が候補に入る。[座標別の回帰テスト](../src/lib/usCanadaDividedIslands.integration.test.ts)
 
 ## ノースロック
 

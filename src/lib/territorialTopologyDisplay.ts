@@ -39,8 +39,11 @@ export function territorialTopologyRows(
     }
   }
   if (topology.sharedIslandCountryCodes && topology.sharedIslandCountryCodes.length > 1) {
-    const label = japanese ? (candidate ? '候補となる島に領域を持つ国・地域' : 'この島に領域を持つ国・地域')
+    let label = japanese ? (candidate ? '候補となる島に領域を持つ国・地域' : 'この島に領域を持つ国・地域')
       : (candidate ? 'Countries or territories sharing the candidate island' : 'Countries or territories sharing this island');
+    if (topology.sharedIslandBasis === 'hydrographic-record') {
+      label = japanese ? '水系図に記録された島全体の国・地域' : 'Countries or territories on the island recorded in hydrographic maps';
+    }
     rows.push([label, formatRegions(topology.sharedIslandCountryCodes)]);
   }
   return rows;

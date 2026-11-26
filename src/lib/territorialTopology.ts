@@ -10,6 +10,7 @@ export interface TerritorialTopology {
   status: 'inside' | 'boundary' | 'uncertain';
   administration?: TerritorialExclaveMatch;
   sharedIslandCountryCodes?: string[];
+  sharedIslandBasis?: 'hydrographic-record';
   physicalSource?: { source: string; version: string; attribution?: string };
 }
 
@@ -37,6 +38,10 @@ export function pointTerritorialTopology(
     return {
       landform, physicalSource, status: boundary ? 'boundary' : landform === 'unknown' ? 'uncertain' : 'inside',
       ...(administration && { administration }),
+      ...(landform === 'island' && shore.sharedIslandCountryCodes && {
+        sharedIslandCountryCodes: [...shore.sharedIslandCountryCodes],
+        ...(shore.sharedIslandBasis && { sharedIslandBasis: shore.sharedIslandBasis }),
+      }),
     };
   }
   let administration = matchTerritorialExclave(lat, lon);

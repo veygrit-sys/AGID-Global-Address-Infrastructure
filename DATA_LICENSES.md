@@ -1,6 +1,6 @@
 # AGID Data License Index
 
-Last updated: 2026-09-24
+Last updated: 2026-11-26
 
 This file is the top-level entry point for AGID data-license handling. It
 separates software licensing from geographic, postal, map, trade, carrier,
@@ -29,7 +29,7 @@ The browser's island extracts use Natural Earth v5.1.2 and the FieldMaps USGS/LS
 
 ## United States and Canada shoreline extracts
 
-The regional shoreline data and the North Rock survey extract use the following sources. The regional guide describes their coverage and the reproducible build. [US and Canadian shorelines](docs/us-canada-shorelines.md)
+The regional shoreline, North Rock and cross-border lake island extracts use the following sources. The regional guide describes their coverage, survey control points and reproducible builds. [US and Canadian shorelines](docs/us-canada-shorelines.md)
 
 | Source | Credit and terms |
 | --- | --- |
@@ -40,6 +40,11 @@ The regional shoreline data and the North Rock survey extract use the following 
 | Great Lakes Islands (International) | Ontario Ministry of Natural Resources © King’s Printer for Ontario, 2023. Contains information licensed under the Open Government Licence – Ontario. [Dataset](https://geohub.lio.gov.on.ca/datasets/lio::great-lakes-islands-international) · [Licence](https://www.ontario.ca/page/open-government-licence-ontario) |
 | TIGER/Line 2025 Area Hydrography | Source: U.S. Census Bureau, 2025 TIGER/Line Shapefiles. The extracts have been modified by AGID. [Area Hydrography](https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/) · [Documentation](https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/tiger-geo-line.html) |
 | CanVec 1:50,000 New Brunswick Land and Hydro (2019 release) | Natural Resources Canada. Contains information licensed under the Open Government Licence – Canada. [Land archive](https://ftp.maps.canada.ca/pub/nrcan_rncan/vector/canvec/shp/Land/canvec_50K_NB_Land_shp.zip) · [Hydro archive](https://ftp.maps.canada.ca/pub/nrcan_rncan/vector/canvec/shp/Hydro/canvec_50K_NB_Hydro_shp.zip) · [Licence](https://open.canada.ca/en/open-government-licence-canada/) |
+| US–Canada digital boundary v1.3, sections 11 and 20 | © International Boundary Commission. Contains information licensed under the Open Government Licence – Canada. AGID extracts these two sections and uses the cartographic line to divide mapped island land. [Dataset](https://www.internationalboundarycommission.org/en/maps-coordinates/coordinates.php) · [Archive with Canadian and US metadata](https://www.internationalboundarycommission.org/uploads/shapefile/us-canada-boundary-v1-3.zip) · [Licence](https://open.canada.ca/en/open-government-licence-canada) |
+| National Hydro Network (NHN), work unit 05NFC00 v2.0 | Natural Resources Canada. Contains information licensed under the Open Government Licence – Canada. AGID joins the Metigoshe island pieces along their shared administrative edge and intersects the resulting island and lake polygons with US hydrography. [Dataset](https://open.canada.ca/data/dataset/a4b190fe-e090-4e6d-881e-b87956c07977) · [Work unit archive](https://ftp.maps.canada.ca/pub/nrcan_rncan/vector/geobase_nhn_rhn/shp_en/05/nhn_rhn_05nfc00_shp_en.zip) · [Licence](https://open.canada.ca/en/open-government-licence-canada) |
+| National Hydrography Dataset (NHD), Lake Memphremagog and Lake Metigoshe waterbodies | U.S. Geological Survey, U.S. public domain. AGID extracts lake surfaces and island rings from the high-resolution waterbody layer (object IDs 2771880 and 2166435). [Dataset](https://www.usgs.gov/national-hydrography/national-hydrography-dataset) · [Source layer](https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/12) · [USGS terms](https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits) |
+
+The Québec Commission de toponymie entry verifies the name and transboundary extent of Île de la Province. The USDA Farm Service Agency’s public-domain National Agriculture Imagery Program imagery from 2019, 2022 and 2023 was consulted to evaluate the northern shallows of Lake Metigoshe. The extract links these verification records and derives its geometry from the three datasets listed above. [Québec gazetteer](https://toponymie.gouv.qc.ca/ct/ToposWeb/Fiche.aspx?no_seq=141213) · [NAIP imagery service and credits](https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer) · [2023 acquisition](https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/117792)
 
 ## Canonical Policy
 

@@ -1,3 +1,4 @@
+import dividedLakeData from '../data/usCanadaDividedLakeIslands.json';
 import { scale, windows } from '../data/us-canada-shorelines/index';
 import { normalizeLongitude } from './agidProjection';
 import { needsIslandPolicyReview } from './disputedIslands';
@@ -34,6 +35,9 @@ export interface UsCanadaShorelineMatch {
   codes: string[];
   ownershipReview: boolean;
   surveyedLakeIsland?: boolean;
+  surveyedIslandOwnership?: boolean;
+  sharedIslandCountryCodes?: string[];
+  sharedIslandBasis?: 'hydrographic-record';
   relation: 'inside' | 'boundary';
   source: string;
   version: string;
@@ -43,7 +47,17 @@ export interface UsCanadaShorelineMatch {
 }
 
 const regions = windows as ShoreWindow[];
-export const usCanadaShorelineWindows = [...regions.map(({ id, bbox }) => ({ id, bbox })), northRockWindow];
+interface LakePolygon {
+  bbox: number[];
+  rings: number[][][];
+}
+function indexLakePolygons<T extends LakePolygon>(polygons: T[]) {
+  return polygons.map(polygon => ({ ...polygon, indexed: indexMapPolygon(polygon) }));
+}
+const dividedLakes = dividedLakeData.windows.map(w => ({
+  ...w, land: indexLakePolygons(w.land), water: indexLakePolygons(w.water), owners: indexLakePolygons(w.owners),
+}));
+export const usCanadaShorelineWindows = [...regions, ...dividedLakes, northRockWindow].map(({ id, bbox }) => ({ id, bbox }));
 export const usCanadaShorelineSource = {
   source: 'us-ca-reviewed-shorelines',
   version: 'GSHHG 2.3.7; FieldMaps USGS/LSIB 2025-07-29; Statistics Canada 2021',
@@ -116,9 +130,53 @@ function* hits<T extends PackedPolygon>(polygons: T[], x: number, y: number) {
   }
 }
 
+function lakeRelation(shapes: Array<{ indexed: IndexedMapPolygon }>, x: number, y: number) {
+  let boundary = false;
+  for (const shape of shapes) {
+    const relation = classifyMapPolygon(x, y, shape.indexed);
+    if (relation === 'inside') return relation;
+    boundary ||= relation === 'boundary';
+  }
+  return boundary ? 'boundary' : 'outside';
+}
+
+function matchDividedLake(window: typeof dividedLakes[number], lat: number, x: number): UsCanadaShorelineMatch {
+  const { source, version, attribution } = window;
+  const common = { source, version, attribution, evidenceUrls: [...window.evidenceUrls], surveyedIslandOwnership: true };
+  const land = lakeRelation(window.land, x, lat);
+  const water = lakeRelation(window.water, x, lat);
+  if (land === 'outside' && water === 'inside') {
+    return { ...common, surface: 'water', waterKind: 'inland', codes: [], ownershipReview: false, relation: 'inside' };
+  }
+  // Gaps in the surveyed land and water layers include disagreements between shoreline editions.
+  if (land === 'outside' || water === 'inside') {
+    return { ...common, surface: 'unknown', codes: [], ownershipReview: true, relation: 'inside' };
+  }
+  const owners = window.owners.filter(p => classifyMapPolygon(x, lat, p.indexed) !== 'outside');
+  const codes = [...new Set(owners.map(p => p.code))].sort();
+  const shore = land === 'boundary' || water === 'boundary';
+  const ownershipReview = shore || codes.length !== 1;
+  const relation = shore || codes.length > 1 ? 'boundary' : 'inside';
+  const island: AgidIslandAssessment = {
+    source, version, attribution, evidenceUrls: [...window.evidenceUrls], territory: window.name, relation,
+    status: ownershipReview ? 'unresolved' : 'mapped', countryCodes: ownershipReview ? [] : [...codes],
+    ...(!ownershipReview && { sovereignCodes: [...codes] }),
+  };
+  return {
+    ...common, surface: shore ? 'boundary' : 'land', landform: 'island', surveyedLakeIsland: !shore,
+    codes, relation, ownershipReview, island,
+    ...(window.crossesBorder && {
+      sharedIslandCountryCodes: ['CA', 'US'],
+      ...(window.sharedIslandBasis === 'hydrographic-record' && { sharedIslandBasis: window.sharedIslandBasis }),
+    }),
+  };
+}
+
 /** The highest shoreline level wins: ocean land, lakes, lake islands, then ponds on lake islands. */
 export function matchUsCanadaShoreline(lat: number, lon: number): UsCanadaShorelineMatch | undefined {
   const x = normalizeLongitude(lon);
+  const lake = dividedLakes.find(w => inBox(x, lat, w.bbox));
+  if (lake) return matchDividedLake(lake, lat, x);
   const northRock = matchNorthRockShoreline(lat, x);
   if (northRock) return {
     ...northRockSource, ...northRock, evidenceUrls: [...northRockSource.evidenceUrls], codes: [], ownershipReview: northRock.surface !== 'water',
@@ -184,6 +242,20 @@ function overlaps([west, south, east, north]: number[], [w, s, e, n]: number[]) 
 
 /** Return edges for the existing geodesic disk/edge check. A political edge alone supplies no dry land. */
 export function* queryUsCanadaShorelinePolygons(bounds: number[]) {
+  for (const window of dividedLakes) {
+    if (!overlaps(window.bbox, bounds)) continue;
+    const { source, version, attribution } = window;
+    for (const polygon of [...window.land, ...window.water]) {
+      if (overlaps(polygon.bbox, bounds)) yield {
+        source, version, attribution, bbox: polygon.bbox, rings: polygon.rings, kind: 'physical' as const, codes: [] as string[],
+      };
+    }
+    for (const polygon of window.owners) {
+      if (overlaps(polygon.bbox, bounds)) yield {
+        source, version, attribution, bbox: polygon.bbox, rings: polygon.rings, kind: 'admin' as const, codes: [polygon.code],
+      };
+    }
+  }
   if (overlaps(northRockWindow.bbox, bounds)) {
     for (const polygon of queryNorthRockShorelinePolygons(bounds)) {
       yield { ...northRockSource, ...polygon, kind: 'physical' as const, codes: [] as string[] };
