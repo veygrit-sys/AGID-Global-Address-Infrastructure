@@ -1,3 +1,8 @@
+import { type AgidIslandAssessment, applyIslandPolicyToEvidence } from './islandPolicy';
+import { queryGlobalIslandPolygons, globalIslandSource } from './globalIslands';
+import { queryMinorIslandPolygons, minorIslandSource } from './minorIslands';
+import { queryJapaneseIslandPolygons, isJapaneseIslandReviewArea } from './japaneseIslandView';
+import { queryDisputedIslandPolygons, queryRevisedIslandPolygons } from './disputedIslands';
 import { decodeAGID, getCellCorners, getRegionInfo } from './agid';
 import { issuanceLongitude } from './agidProjection';
 import {
@@ -22,6 +27,7 @@ export interface AgidGeographicAssessment {
   sources: Source[];
   footprint: { kind: 'manual-pin' | 'device-pin' | 'cell'; radiusMeters: number | null };
   boundaryAllowanceMeters: number;
+  island?: AgidIslandAssessment;
   deliveryRegion: null;
 }
 
@@ -145,9 +151,12 @@ export function assessAgidGeography(
     if (!s) return;
     sources.set(s.source, { source: s.source, version: s.version, ...(s.attribution && { attribution: s.attribution }) });
   };
-  addSource(land); addSource(water); addSource(admin);
+  const island = point.island;
+  addSource(land); addSource(water); addSource(admin); addSource(island);
   const finish = (surface: AgidGeographicAssessment['surface'], review: boolean): AgidGeographicAssessment => ({
-    status: !sources.size ? 'unassessed' : review ? 'needs-confirmation' : 'mapped',
+    status: !sources.size ? 'unassessed' : review || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
+    ...(island && { island: review && island.status === 'mapped' && (candidates.size !== 1 || surface !== 'land')
+      ? { ...island, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : island }),
     surface, regionCandidates: [...candidates].sort(), sources: [...sources.values()],
     footprint: { kind, radiusMeters }, boundaryAllowanceMeters, deliveryRegion: null,
   });
@@ -270,6 +279,49 @@ export function assessAgidGeography(
         touchesWater = true;
       });
     }
+  }
+
+  // A disk that covers large regions is necessarily unsuitable for choosing an
+  // island address. Avoid materializing a world atlas for a single uncertain fix.
+  if (radius > 500_000) {
+    partialCoverage = true;
+  } else {
+    function inspectIslandEdges(
+      features: Iterable<{bbox: number[]; rings: number[][][]; codes?: string[]; source?: string; version?: string; disputed?: boolean}>,
+      tier: 'ordinary' | 'policy', defaultSource?: Source,
+    ) {
+      for (const feature of features) {
+        contactEdges(feature.rings, disk, center, radius, (a, b) => {
+          const x = issuanceLongitude((a[1] + b[1]) / 2, (a[0] + b[0]) / 2);
+          const y = (a[1] + b[1]) / 2;
+          if (tier === 'ordinary' && isJapaneseIslandReviewArea(y, x)) return;
+          const rawSource = feature.source && feature.version ? {source: feature.source, version: feature.version} : defaultSource;
+          const match = applyIslandPolicyToEvidence(y, x, rawSource ? {
+            codes: feature.codes ?? [], ...rawSource,
+            disputed: feature.disputed, relation: 'boundary',
+          } : undefined);
+          const codes = match?.countryCodes ?? feature.codes ?? [];
+          if (match) addSource(match);
+          if (codes.length) {
+            const source = match ?? rawSource;
+            if (!source) { partialCoverage = true; return; }
+            for (const code of codes) recordLand(code, source, a, b);
+          } else {
+            partialCoverage = true;
+          }
+        });
+      }
+    }
+    inspectIslandEdges(queryJapaneseIslandPolygons(disk), 'policy');
+    inspectIslandEdges(queryDisputedIslandPolygons(disk), 'policy');
+    inspectIslandEdges(queryRevisedIslandPolygons(disk), 'policy');
+    // Regional data already inspected above has the more detailed shore and border here.
+    const regional = pearlRiverDeltaWindows.some(w => boxRelation(w.bbox, disk) === 'inside') ||
+      reviewedCoastalWindows.some(w => boxRelation(w.bbox, disk) === 'inside');
+    if (!regional && island?.status !== 'japan-position') {
+      inspectIslandEdges(queryGlobalIslandPolygons(disk), 'ordinary', globalIslandSource);
+    }
+    if (island?.status !== 'japan-position') inspectIslandEdges(queryMinorIslandPolygons(disk), 'ordinary', minorIslandSource);
   }
 
   const enclaveCoverage = boxRelation(buesingen.bounds, disk);

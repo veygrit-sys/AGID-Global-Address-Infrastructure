@@ -1,3 +1,5 @@
+import { matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
+import { isJapaneseIslandReviewArea } from './japaneseIslandView';
 /**
  * AGID (Address Grid ID) Complete Mathematical Definition Implementation
  * Global, CORDIC-rotated, Polar-ready, 12-character format.
@@ -244,6 +246,7 @@ export interface AGIDResult {
   gridSize: number;
   regionName: string;
   regionPolygon?: number[][];
+  island?: AgidIslandAssessment;
   mapUnitMatch?: CountryMapUnitMatch;
   waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version'>;
   administrativeMatch?: CountryMapUnitMatch;
@@ -263,27 +266,6 @@ export interface AGIDResult {
   polygon: number[][];
 }
 
-
-const CLAIM_AWARE_REGION_CODES = [
-  "BT_T", "EH", "CRIM", "DONB", "KASH", "SCSD", "EEBD", "TRNC", "SLND", "PMR", "CYGL",
-  "JP_NT", "JP_TK", "JP_SK",
-];
-
-function getClaimAwareRegionCode(lat: number, lon: number, fallbackCode: string) {
-  const normalizedFallback = fallbackCode.toUpperCase();
-  if (CLAIM_AWARE_REGION_CODES.includes(normalizedFallback)) return normalizedFallback;
-  if (normalizedFallback !== "JP") return normalizedFallback;
-
-  const cell = getSpatialCell(lat, lon);
-  for (const code of ["JP_TK", "JP_SK", "JP_NT"]) {
-    const region = cell.countries.find(c => c.code === code);
-    if (!region) continue;
-    const polyRaw = (region as any).polygons || region.polygon;
-    if (isPointInPolygon(lat, lon, polyRaw, region)) return code;
-  }
-
-  return normalizedFallback;
-}
 
 export type AGIDCellInput = string | Pick<AGIDResult, 'id' | 'face' | 'qx' | 'qy'>;
 
@@ -320,7 +302,7 @@ export type AGIDGridNeighborhoodMatch = {
 export function encodeAGID(lat: number, lon: number): AGIDResult {
   const region = getRegionInfo(lat, lon);
   const normLon = issuanceLongitude(lat, lon);
-  const regionCode = getClaimAwareRegionCode(lat, normLon, region.prefix);
+  const regionCode = region.prefix.toUpperCase();
   const prefixCode = regionCode.startsWith("JP_") ? "JP" : region.prefix;
   const prefix = generatePrefix(prefixCode, region.isSea, region.name);
 
@@ -343,6 +325,7 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
     gridSize: 4.4, // ~4.4m average resolution (2^21 divisions per face)
     regionName: region.name,
     regionPolygon: region.polygon,
+    ...(region.island && { island: region.island }),
     ...(region.mapUnitMatch && { mapUnitMatch: region.mapUnitMatch }),
     ...(region.waterMatch && { waterMatch: region.waterMatch }),
     ...(region.administrativeMatch && { administrativeMatch: region.administrativeMatch }),
@@ -588,6 +571,7 @@ interface RegionInfo {
   gridSize: number;
   name: string;
   polygon?: number[][];
+  island?: AgidIslandAssessment;
   mapUnitMatch?: CountryMapUnitMatch;
   waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version'>;
   administrativeMatch?: CountryMapUnitMatch;
@@ -599,6 +583,7 @@ const mapUnitNames = new Map(COUNTRIES.map(c => [c.code, c.name]));
 function copyRegionInfo(result: RegionInfo): RegionInfo {
   const copy = { ...result };
   if (copy.polygon) copy.polygon = copy.polygon.map(point => [...point]);
+  if (copy.island) copy.island = copyIslandAssessment(copy.island);
   if (copy.mapUnitMatch) copy.mapUnitMatch = { ...copy.mapUnitMatch, codes: [...copy.mapUnitMatch.codes] };
   if (copy.waterMatch) copy.waterMatch = { ...copy.waterMatch };
   if (copy.administrativeMatch) copy.administrativeMatch = { ...copy.administrativeMatch, codes: [...copy.administrativeMatch.codes] };
@@ -642,7 +627,7 @@ function getSpatialCell(lat: number, lon: number) {
     }),
     countries: COUNTRY_REGIONS.filter(reg => {
       // Map units replace these coarse rectangles, including on polygon misses.
-      if (hasCountryMapUnit(reg.code)) return false;
+      if (hasCountryMapUnit(reg.code) || ['JP_NT', 'JP_TK', 'JP_SK'].includes(reg.code ?? '')) return false;
       // Oceania's repository-placement alias duplicates the CL-EA address-format region.
       if (reg.code === 'CL-EI') return false;
       const latOverlap = Math.max(s, reg.s) <= Math.min(n, reg.n);
@@ -1040,6 +1025,55 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   }
   const normLon = issuanceLongitude(lat, lon);
 
+  if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
+  const island = matchBundledIsland(lat, normLon);
+  if (!island && isJapaneseIslandReviewArea(lat, normLon)) {
+    return rememberRegion(lat, normLon, lookupRegionalHint(lat, normLon, true));
+  }
+  const region = baseRegion(lat, normLon);
+  // The detailed Pearl Delta and Japanese coastal surveys take priority over a generalized shoreline.
+  const delta = island && matchPearlRiverDelta(lat, normLon);
+  if (!island || (delta && delta.surface !== 'land') ||
+      (region.waterMatch && island.source.startsWith('natural-earth-global-island'))) {
+    return rememberRegion(lat, normLon, region);
+  }
+  if (island.status === 'mapped' && region.mapUnitMatch && region.mapUnitMatch.codes.length === 1
+      && !island.countryCodes.includes(region.mapUnitMatch.codes[0])) {
+    island.countryCodes = [...region.mapUnitMatch.codes];
+    delete island.sovereignCodes;
+    island.source = region.mapUnitMatch.source;
+    island.version = region.mapUnitMatch.version;
+    island.relation = region.mapUnitMatch.relation;
+  }
+  return rememberRegion(lat, normLon, islandRegion(region, island));
+}
+
+// Existing address-format/QR hints for territories with their own postal conventions.
+const parentOfIslandAddressRegion: Record<string,string> = { CP: 'FR', SJ_JAN: 'NO', SJ_SVA: 'NO', AC: 'SH', TA: 'SH' };
+const islandTerritoryHints = new Set(['IO','FK','GS','UM','YT','AQ','TRNC','XU','XD','CYGL','TW','SCSD','EH']);
+
+function islandRegion(region: RegionInfo, island: AgidIslandAssessment): RegionInfo {
+  const groupCodes: Record<string,string> = { 'northern-territories': 'JP_NT', takeshima: 'JP_TK', senkaku: 'JP_SK' };
+  const codes = island.countryCodes;
+  const known = codes[0];
+  const hint = region.prefix;
+  const sameAddressRegion = !region.isSea && (codes.includes(hint)
+    || codes.includes(hint.split(/[-_]/)[0]) || codes.includes(parentOfIslandAddressRegion[hint]));
+  let prefix: string;
+  if (island.status === 'japan-position') prefix = groupCodes[island.territory!];
+  else if (known) prefix = sameAddressRegion ? hint : known;
+  else prefix = !region.isSea && islandTerritoryHints.has(hint) ? hint : 'ISLAND_UNRESOLVED';
+  const mapUnitMatch = region.mapUnitMatch && island.status === 'mapped' ? region.mapUnitMatch
+    : { codes: [...codes], source: island.source, version: island.version, relation: island.relation };
+  return {
+    isSea: false, gridSize: region.gridSize, prefix, island, mapUnitMatch,
+    name: island.territoryJa && island.status === 'japan-position' ? island.territoryJa
+      : sameAddressRegion ? region.name : island.territory ?? mapUnitNames.get(prefix) ?? (known || 'Island'),
+    ...(region.administrativeMatch && { administrativeMatch: region.administrativeMatch }),
+  };
+}
+
+function baseRegion(lat: number, normLon: number): RegionInfo {
   // 1. POLAR SPECIAL RULE (Fast exit)
   if (lat > 89.95) return { prefix: "ARCT", isSea: true, gridSize: 4.4, name: "North Pole", polygon: [[-180, 89.9],[-180, 90],[180, 90],[180, 89.9],[-180, 89.9]] };
   if (lat < -85.0) return { prefix: "AQ", isSea: false, gridSize: 4.4, name: "Antarctica" };
@@ -1053,10 +1087,10 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
     return { prefix: "AQ", isSea: false, gridSize: 4.4, name: "Antarctica" };
   }
 
-  if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
+
 
   if (!mayHaveReviewedGeography(lat, normLon)) {
-    return rememberRegion(lat, normLon, lookupRegionalHint(lat, normLon, false));
+    return lookupRegionalHint(lat, normLon, false);
   }
 
   // Positive polygon evidence takes precedence over rectangular land and sea
@@ -1068,9 +1102,9 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
     : matchCountryMapUnits(lat, normLon);
   if (mapUnitMatch) {
     const prefix = mapUnitMatch.codes[0];
-    return rememberRegion(lat, normLon, {
+    return {
       prefix, isSea: false, gridSize: 4.4, name: mapUnitNames.get(prefix) ?? prefix, mapUnitMatch
-    });
+    };
   }
 
   const waterMatch = delta?.surface === 'water'
@@ -1089,7 +1123,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
       delete result.polygon;
     }
   }
-  return rememberRegion(lat, normLon, result);
+  return result;
 }
 
 function lookupRegionalHint(lat: number, normLon: number, skipLand: boolean): RegionInfo {

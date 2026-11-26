@@ -4,6 +4,7 @@ Globe,
 Ruler,
 Trash2} from 'lucide-react';
 import maplibregl from 'maplibre-gl';
+import { installJapaneseIslandMapStyle } from './lib/japaneseIslandMapStyle';
 import React,{ useEffect,useMemo,useRef,useState } from 'react';
 import { TranslationKey,TRANSLATIONS } from './constants/translations';
 import { AdvancedSearchOptions,DEFAULT_ADVANCED_SEARCH_OPTIONS } from './lib/advancedSearch';
@@ -2380,7 +2381,8 @@ export default function App() {
     const timer = setTimeout(async () => {
       try {
         const { smartSearch } = await loadGeocodingService();
-        const results = await smartSearch(searchQuery, lat, lng, advancedSearchOptions);
+        const { mapSearchDisplayResults } = await import('./lib/islandSearchDisplay');
+        const results = mapSearchDisplayResults(await smartSearch(searchQuery, lat, lng, advancedSearchOptions), appLanguage);
         setSearchResults(results);
       } catch (error) {
         console.error("Smart search error:", error);
@@ -2388,7 +2390,7 @@ export default function App() {
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, lat, lng, advancedSearchOptions]);
+  }, [searchQuery, lat, lng, advancedSearchOptions, appLanguage]);
   const clearPostalArea = React.useCallback(() => {
     postalAreaRequestRef.current += 1;
     setPostalAreaFeatureCollection(null);
@@ -2758,7 +2760,8 @@ export default function App() {
       } else {
         // Use Smart Search (Local DB + Nominatim)
         const { smartSearch } = await loadGeocodingService();
-        const results = await smartSearch(query, lat, lng, advancedSearchOptions);
+        const { mapSearchDisplayResults } = await import('./lib/islandSearchDisplay');
+        const results = mapSearchDisplayResults(await smartSearch(query, lat, lng, advancedSearchOptions), appLanguage);
         setSearchResults(results);
 
         if (results.length > 0) {
@@ -3162,6 +3165,8 @@ export default function App() {
       projection: lowBandwidthMapModeRef.current ? 'mercator' : projection,
       lowBandwidth: lowBandwidthMapModeRef.current,
     }) as any);
+
+    installJapaneseIslandMapStyle(map.current, maplibregl.Marker);
 
     // Add ResizeObserver to handle map resizing properly
     const resizeObserver = new ResizeObserver(() => {

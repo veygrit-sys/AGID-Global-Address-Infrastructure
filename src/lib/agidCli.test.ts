@@ -373,3 +373,20 @@ test('geography rejects mixed, incomplete, invalid or ambiguous inputs', async (
     ['--lat', '0', '--lon', '0', '--accuracy-meters='],
   ]) assert.equal((await runAgidCli(['geography', ...args])).exitCode, 1, args.join(' '));
 });
+
+test('island geography distinguishes a Japanese policy result from competing claims and a separate postal destination', async () => {
+  const jp = await runAgidCli(['geography', '--lat', '25.74416667', '--lon', '123.46805556']);
+  assert.equal(jp.exitCode, 0, jp.stderr);
+  assert.match(jp.stdout, /Senkaku Islands/);
+  assert.match(jp.stdout, /Japanese government’s territorial position: JP/);
+  assert.doesNotMatch(jp.stdout, /Claimants|CN|TW/);
+  const disputed = await runAgidCli(['geography', '--lat', '-51.7', '--lon', '-57.85']);
+  assert.equal(disputed.exitCode, 0, disputed.stderr);
+  assert.match(disputed.stdout, /Competing claims/);
+  assert.match(disputed.stdout, /Claimants to all or part of the island group: AR, GB/);
+  assert.match(disputed.stdout, /Administration in source: GB/);
+  const api = await runAgidCli(['geography', '--lat', '-51.7', '--lon', '-57.85', '--json']);
+  const result = JSON.parse(api.stdout);
+  assert.deepEqual(result.island.countryCodes, []);
+  assert.equal(result.deliveryRegion, null);
+});

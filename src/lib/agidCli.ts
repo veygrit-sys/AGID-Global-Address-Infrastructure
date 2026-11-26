@@ -1,4 +1,5 @@
 import { decodeAGID, encodeAGID, encodeAGID16, getCellPolygon, normalizeAGIDCode, type AGIDResult } from './agid';
+import { islandDisplayRows } from './islandDisplay';
 import { assessAgidGeography, type AgidGeographyInput } from './geographicAssessment';
 import { resolveAgidLocal } from './agidLocalResolver';
 import {
@@ -215,6 +216,7 @@ function agidSummary(result: AGIDResult) {
     prefix: result.prefix,
     regionCode: result.regionCode,
     regionName: result.regionName,
+    ...(result.island && { island: result.island }),
     ...(result.mapUnitMatch && { mapUnitMatch: result.mapUnitMatch }),
     ...(result.waterMatch && { waterMatch: result.waterMatch }),
     ...(result.administrativeMatch && { administrativeMatch: result.administrativeMatch }),
@@ -285,7 +287,9 @@ function geoJsonFeature(summary: ReturnType<typeof decodeSummary> | ReturnType<t
 function encodeHuman(summary: ReturnType<typeof agidSummary>) {
   return [
     `AGID: ${summary.id}`,
-    `Region: ${summary.regionName} (${summary.regionCode})`,
+    `Issued ID prefix: ${summary.prefix}`,
+    `Regional lookup hint: ${summary.regionName} (${summary.regionCode})`,
+    ...(summary.island ? islandDisplayRows(summary.island, false, codes => codes.join(', ')).map(([label, value]) => `${label}: ${value}`) : []),
     `Type: ${summary.type}`,
     `Center: ${summary.center.lat.toFixed(6)}, ${summary.center.lon.toFixed(6)}`,
     `Cell: face=${summary.cell.face} qx=${summary.cell.qx} qy=${summary.cell.qy}`,
@@ -298,7 +302,8 @@ function decodeHuman(summary: NonNullable<ReturnType<typeof decodeSummary>>) {
   return [
     `AGID: ${summary.id}`,
     `Valid: yes`,
-    `Region: ${summary.regionName} (${summary.regionCode})`,
+    `Issued ID prefix: ${summary.prefix}`,
+    `Regional lookup hint: ${summary.regionName} (${summary.regionCode})`,
     `Type: ${summary.type}`,
     `Center: ${summary.center.lat.toFixed(6)}, ${summary.center.lon.toFixed(6)}`,
     `Cell: face=${summary.cell.face} qx=${summary.cell.qx} qy=${summary.cell.qy}`,
@@ -737,7 +742,11 @@ function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
       `Footprint: ${assessment.footprint.kind}`,
       `Status: ${assessment.status}`,
       `Surface: ${assessment.surface}`,
-      `Map regions: ${assessment.regionCandidates.join(', ') || 'none'}`,
+      ...(assessment.island
+        ? islandDisplayRows(assessment.island, false, codes => codes.join(', '),
+          assessment.status === 'needs-confirmation' ? assessment.regionCandidates : []).map(([label, value]) => `${label}: ${value}`)
+        : [`Map regions: ${assessment.regionCandidates.join(', ') || 'none'}`]),
+      ...(assessment.island?.evidenceUrls ?? []),
       '',
     ].join('\n'));
   } catch (error) {

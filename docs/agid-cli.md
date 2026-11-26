@@ -66,6 +66,8 @@ npm run agid -- geography P304K5APK9JT124R --json
 
 The result includes the footprint, map sources, surface and candidate administrative codes. `needs-confirmation` indicates that the footprint or evidence leaves a choice unresolved. `unassessed` means that the bundled detailed sources do not establish a result for that input. `deliveryRegion` is always null. Retain the recipient’s postal destination independently.
 
+The optional `island` field reports a mapped address territory and, when known, its sovereign. Shared islands are evaluated at the pin. A Japanese-territorial-view result lists only JP, with the geographic group and official source. Other reviewed disputes use distinct claimant and administration fields. If the island is mapped but attribution is missing, `island.status` is `unresolved`; the result keeps the country list empty. See the [global island coverage](island-recognition.md) and [full-resolution lookup](high-resolution-island-pack.md).
+
 ### Validate
 
 ```bash

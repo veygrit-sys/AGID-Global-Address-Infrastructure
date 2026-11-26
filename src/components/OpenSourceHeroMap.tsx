@@ -7,6 +7,8 @@ import { useAgidGridLayer } from '../hooks/useAgidGridLayer';
 import { useMapLibreLayerSync } from '../hooks/useMapLibreLayerSync';
 import { encodeAGID, type AGIDResult } from '../lib/agid';
 import { decodeAgidToResult, looksLikeAGID16 } from '../lib/agidSelection';
+import { installJapaneseIslandMapStyle } from '../lib/japaneseIslandMapStyle';
+import { islandSearchLabel } from '../lib/islandSearchDisplay';
 import { assessAgidGeography } from '../lib/geographicAssessment';
 import { OPENFREEMAP_STYLES, registerPmtilesProtocol } from '../lib/mapEngine';
 import type { PhotonFeature } from '../types/navigation';
@@ -111,6 +113,10 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     selectMapPin(INITIAL_VIEW.lat, INITIAL_VIEW.lng));
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<PhotonFeature[]>([]);
+  const resultLabels = React.useMemo(() => searchResults.map(feature => {
+    const [lon, lat] = feature.geometry.coordinates;
+    return islandSearchLabel(lat, lon, locale) || getPhotonFeatureLabel(feature);
+  }), [searchResults, locale]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [searchMessage, setSearchMessage] = React.useState('');
   const [copyMessage, setCopyMessage] = React.useState('');
@@ -172,6 +178,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         pitchWithRotate: false,
       });
       mapRef.current = map;
+      installJapaneseIslandMapStyle(map, maplibre.Marker);
 
       map.addControl(new maplibre.ScaleControl({ maxWidth: 110, unit: 'metric' }), 'bottom-right');
       map.on('load', () => {
@@ -398,7 +405,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         {searchResults.length > 0 ? (
           <ul className="max-h-60 overflow-y-auto border-x border-b border-slate-200 bg-white shadow-xl shadow-slate-900/10">
             {searchResults.map((feature, index) => {
-              const label = getPhotonFeatureLabel(feature);
+              const label = resultLabels[index];
               return (
                 <li key={`${feature.geometry.coordinates.join(',')}-${index}`} className="border-b border-slate-100 last:border-b-0">
                   <button
@@ -480,7 +487,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         >
           {selectedResult.id}
         </button>
-        <AgidGeographySummary assessment={assessment} locale={locale} />
+        <AgidGeographySummary assessment={assessment} locale={locale} manualPin={selectedResult} />
         <p role="status" aria-live="polite" aria-atomic="true" className="pointer-events-none absolute left-0 top-full mt-1 whitespace-nowrap bg-slate-950 px-3 py-2 text-[11px] font-bold text-white empty:hidden">
           {copyMessage}
         </p>

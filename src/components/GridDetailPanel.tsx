@@ -148,16 +148,19 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   }, [setIsGridVisible]);
 
   // Move derived constants and hooks to the top to satisfy Rules of Hooks
+  const geography = React.useMemo(() => clickedAgid ? assessAgidGeography(selectedGeographyInput(clickedAgid)) : null, [clickedAgid]);
+  const island = geography?.island;
   const regionCodeFromAgid = (!clickedAgid?.isSea && clickedAgid?.regionCode ? clickedAgid.regionCode : "").toLowerCase();
   const countryCodeFromPrefix = (clickedAgid?.prefix || "").toLowerCase();
   const countryCodeFromId = (clickedAgid?.id?.slice(0, 2) || "").toLowerCase();
   const countryCodeFromDetails = (clickedAddressDetails?.country_code || "").toLowerCase();
-  const countryCode = regionCodeFromAgid || countryCodeFromDetails || countryCodeFromPrefix || countryCodeFromId || "";
-  const territoryClaimOptions = React.useMemo(() => getTerritoryClaimOptions({
+  const countryCode = island?.status === 'japan-position' ? 'jp' : regionCodeFromAgid || countryCodeFromDetails || countryCodeFromPrefix || countryCodeFromId || "";
+  const territoryClaimOptions = React.useMemo(() => island ? [] : getTerritoryClaimOptions({
     regionCode: clickedAgid?.regionCode,
     countryCode,
     regionName: clickedAgid?.regionName || clickedAddressDetails?.country,
   }, territoryClaimDisplayPolicy), [
+    island,
     clickedAgid?.regionCode,
     clickedAgid?.regionName,
     clickedAddressDetails?.country,
@@ -399,7 +402,6 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
     ];
   }, [domesticAddressTab, internationalEnglishTab]);
 
-  const geography = React.useMemo(() => clickedAgid ? assessAgidGeography(selectedGeographyInput(clickedAgid)) : null, [clickedAgid]);
   const handleAddressLanguageChange = React.useCallback((tab: string) => {
     setClickedAddressTab(tab);
     if (!clickedAgid) return;
@@ -467,9 +469,14 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
       return rawAddressDisplay || getFallbackAddressDisplay();
     }
   })();
+  const holdMapAddress = island?.status === 'disputed' || island?.status === 'unresolved'
+    || (island?.status === 'japan-position' && countryCodeFromDetails !== 'jp');
+  const automaticAddressText = holdMapAddress
+    ? (appLanguage.startsWith('ja') ? '配送先住所は受取人の指定を確認してください。' : 'Confirm the postal address with the recipient.')
+    : formatAddressDisplayText(resolvedAddressDisplay, { tab: clickedAddressTab, countryCode });
   const addressDisplayText = feedbackCorrection?.agid === clickedAgid.id && feedbackCorrection.tab === clickedAddressTab
     ? feedbackCorrection.text
-    : formatAddressDisplayText(resolvedAddressDisplay, { tab: clickedAddressTab, countryCode });
+    : automaticAddressText;
   const preserveAddressDisplayLines = shouldPreserveAddressDisplayLines(clickedAddressTab, countryCode);
   const activeAddressTabQuality = addressTabQualities[clickedAddressTab];
   const addressFeedbackQualityScore = addressTabQualities[clickedAddressTab]?.score;
@@ -572,7 +579,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                 </div>
                </div>
 
-               {geography && <AgidGeographySummary assessment={geography} locale={appLanguage} />}
+               {geography && <AgidGeographySummary assessment={geography} locale={appLanguage} manualPin={clickedAgid} />}
                <motion.div
                 key="expanded-content"
                 initial={{ opacity: 0, height: 0 }}
@@ -581,7 +588,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                 className="space-y-2"
                >
                  {/* Territory Info */}
-                 {clickedAgid.isSea && clickedAgid.regionName && (
+                 {!island && clickedAgid.isSea && clickedAgid.regionName && (
                     <div className="flex items-center gap-2 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full w-fit">
                       <Waves className="w-2.5 h-2.5 text-blue-700" />
                       <span className="text-[9px] font-black text-blue-800">{clickedAgid.regionName}</span>
@@ -690,7 +697,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                         <button
                           onClick={() => {
                             const { lat, lon: lng } = clickedAgid;
-                            const name = clickedAddress || clickedAgid.id;
+                            const name = (!holdMapAddress && clickedAddress) || clickedAgid.id;
                             setDestination({ lat, lng, name });
                             setDestinationQuery(name);
                             setIsRoutePlanning(true);

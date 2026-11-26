@@ -75,7 +75,8 @@ export function decodeAgidToResult(agidId: string): AGIDResult | null {
   const normalizedId = normalizeAGIDCode(agidId);
   if (!normalizedId) return null;
   const approximate = encodeAGID(decoded.lat, decoded.lon);
-  // These three properties describe an observed point. An issued cell does not preserve that pin.
+  // These properties describe an observed point. An issued cell does not preserve that pin.
+  delete approximate.island;
   delete approximate.mapUnitMatch;
   delete approximate.waterMatch;
   delete approximate.administrativeMatch;

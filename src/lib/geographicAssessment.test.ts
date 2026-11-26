@@ -85,7 +85,9 @@ test('an explicit Japanese shoreline separates a surface boundary from a shared 
     assert.equal(r.surface, 'boundary');
     assert.equal(r.status, 'needs-confirmation');
     assert.deepEqual(r.regionCandidates, ['JP']);
-    assert.equal(r.sources.length, 2);
+    for (const source of ['natural-earth-10m-ocean','natural-earth-10m-admin-0-map-units']) {
+      assert.ok(r.sources.some(s => s.source === source));
+    }
     assert.equal(r.deliveryRegion, null);
   }
 });

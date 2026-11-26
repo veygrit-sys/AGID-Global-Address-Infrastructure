@@ -1,4 +1,6 @@
 import React from 'react';
+import { LocalIslandPackLookup } from './LocalIslandPackLookup';
+import { islandDisplayRows } from '../lib/islandDisplay';
 import type { AgidGeographicAssessment } from '../lib/geographicAssessment';
 
 const geographyCopy = {
@@ -22,14 +24,20 @@ const geographyCopy = {
   },
 } as const;
 
-export function AgidGeographySummary({ assessment, locale }: {
+export function AgidGeographySummary({ assessment, locale, manualPin }: {
   assessment: AgidGeographicAssessment;
   locale: string;
+  manualPin?: { lat: number; lon: number };
 }) {
-  const copy = geographyCopy[locale.startsWith('ja') ? 'ja' : 'en'];
+  const japanese = locale.startsWith('ja');
+  const copy = geographyCopy[japanese ? 'ja' : 'en'];
   const displayLocale = Intl.DisplayNames.supportedLocalesOf([locale.replaceAll('_', '-')])[0] || 'en';
-  const { footprint, surface, regionCandidates, sources, status } = assessment;
+  const { footprint, surface, regionCandidates, sources, status, island } = assessment;
   const names = React.useMemo(() => new Intl.DisplayNames([displayLocale], { type: 'region' }), [displayLocale]);
+  const formatRegions = (codes: string[]) => codes.map(code =>
+    /^[A-Z]{2}$/.test(code) ? names.of(code) || code : code).join(' / ');
+  const islandRows = island ? islandDisplayRows(island, japanese, formatRegions, status === 'needs-confirmation' ? regionCandidates : []) : [];
+  const evidenceUrls = [...new Set(island?.evidenceUrls)].filter(url => url.startsWith('https://'));
   const credits = [...new Set(sources.map(item => item.attribution).filter(Boolean))];
   return (
     <div aria-live="polite" aria-atomic="true" className="mt-1 border-t border-slate-200 pt-1 text-[11px] leading-4 text-slate-700">
@@ -40,14 +48,36 @@ export function AgidGeographySummary({ assessment, locale }: {
         )}
         {status !== 'unassessed' && <> · {copy.surface[surface]}</>}
       </p>
-      {regionCandidates.length > 0 && (
+      {!island && regionCandidates.length > 0 && (
         <dl className="flex flex-wrap gap-x-1.5">
           <dt>{copy.candidates}</dt>
-          <dd className="font-semibold">{regionCandidates.map(code => /^[A-Z]{2}$/.test(code) ? names.of(code) || code : code).join(' / ')}</dd>
+          <dd className="font-semibold">{formatRegions(regionCandidates)}</dd>
         </dl>
       )}
+      {islandRows.length > 0 && (
+        <dl>
+          {islandRows.map(([label, value]) => (
+            <div key={label} className="flex flex-wrap gap-x-1.5">
+              <dt>{label}</dt><dd className="font-semibold">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {island && evidenceUrls.length > 0 && (
+        <details className="mt-1">
+          <summary className="cursor-pointer">{japanese ? '表示の根拠' : 'Sources for this display'}</summary>
+          {evidenceUrls.map(url => (
+            <a key={url} className="block break-all underline" href={url} target="_blank" rel="noreferrer">{url}</a>
+          ))}
+        </details>
+      )}
       {status === 'unassessed' && <p>{copy.unassessed}</p>}
-      {status === 'needs-confirmation' && <p>{copy.confirm}</p>}
+      {status === 'needs-confirmation' && <p>{island?.status === 'disputed' || island?.status === 'unresolved'
+        ? (japanese ? '配送先は受取人の指定を確認してください。' : 'Confirm the postal destination with the recipient.') : copy.confirm}</p>}
+      {manualPin && footprint.kind === 'manual-pin' && footprint.radiusMeters === 0 && (
+        <LocalIslandPackLookup key={`${manualPin.lat},${manualPin.lon}`}
+          lat={manualPin.lat} lon={manualPin.lon} japanese={japanese} formatRegions={formatRegions} japanPolicy={island?.status === 'japan-position'} />
+      )}
       {credits.length > 0 && <p className="text-[10px] text-slate-500">{credits.join(' · ')}</p>}
     </div>
   );
