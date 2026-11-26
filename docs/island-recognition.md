@@ -51,6 +51,8 @@ AGIDはピンが実際に重なる陸地を調べ、その座標の国・地域�
 
 メキシコとベリーズの境界付近にあるチェレム島では、メキシコ統計地理院（INEGI）の島別調査（要素848）とGSHHGの島の輪郭が重なる陸地をメキシコ（MX）とする。周辺でNatural EarthとFieldMapsの国コードが食い違い、調査済みの陸地から外れる地点は所属未確定とし、出典を表示する。両国の領有権争いとしては計上しない。[INEGI Territorio Insular Mexicano v2.1](https://www.inegi.org.mx/app/biblioteca/ficha.html?upc=889463039839) · [現地資料・判定範囲・再生成方法](cayo-chelem-sources.md)
 
+[北米・カリブ海の詳細ポリゴン](north-america-caribbean-polygon-quality.md)では、島の中の湖や沿岸の潟湖を区別する方法と検証手順を掲載している。
+
 ## 実行例
 
 ```sh

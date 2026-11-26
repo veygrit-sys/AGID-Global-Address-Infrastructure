@@ -176,5 +176,40 @@ for (const [lat, lon] of conflictingShorelines) {
   assert.equal(result.island, null);
 }
 assert.equal(lookup(45.78, -81.97).territorialTopology, null); // Lake Manitou water
-const count = controls.length + sharing.reduce((n, group) => n + group.pins.length, 0) + territories.length + offshore.length + conflictingShorelines.length + 1;
+
+// The raw global pack can cover ponds with a surrounding island or miss a small
+// island inside a lake. Check the public result against the regional shorelines.
+const reviewedShorelines = [
+  [48.0098831, -88.7709104, 'island', 'US', 'Ryan Island'],
+  [48.006, -88.768, 'water'],
+  [41.82519335, -82.635375, 'island', 'CA', 'Pelee Island'],
+  [41.8251845, -82.6387186, 'unknown'],
+  [24.48328, -110.40348, 'island', 'MX', 'Isla Ballena'],
+  [21.22866, -86.72972, 'water'], // Salina Grande on Isla Mujeres
+  [31.77, -116.624, 'mainland'],
+  [37.8267, -122.423, 'island', 'US', 'Alcatraz Island'],
+  [36.809938, -121.784722, 'unknown'], // State Route 1 bridge deck
+  [37.8295, -75.987279, 'water'], // Mailboat Harbor
+  [18.318471, -65.232749, 'island', 'PR', 'Culebrita', 'US'],
+  [18.320461, -65.236151, 'water'], // Laguna de Molino
+  [18.307698, -64.703533, 'water'], // Salt Pond, St. John
+  [16.1700962, -61.1159541, 'island', 'GP', 'Terre de Bas', 'FR'],
+  [16.1716198, -61.1193224, 'water'], // Terre de Bas western saline
+  [17.724379, -64.656069, 'unknown'], // Great Pond seasonal marsh
+] as const;
+for (const [lat, lon, landform, code, name, sovereign = code] of reviewedShorelines) {
+  const result = lookup(lat, lon);
+  const place = `${lat},${lon}`;
+  assert.equal(result.deliveryRegion, null, place);
+  assert.equal(result.physicalIslandId, undefined, place);
+  if (landform === 'island') {
+    assert.deepEqual(result.island?.countryCodes, [code], place);
+    assert.deepEqual(result.island?.sovereignCodes, [sovereign], place);
+    assert.equal(result.island?.territory, name, place);
+  } else {
+    assert.equal(result.island, null, place);
+  }
+  assert.equal(result.territorialTopology?.landform, landform === 'water' ? undefined : landform, place);
+}
+const count = controls.length + reviewedShorelines.length + sharing.reduce((n, group) => n + group.pins.length, 0) + territories.length + offshore.length + conflictingShorelines.length + 1;
 console.log(`Matched all ${count} complete-pack controls.`);
