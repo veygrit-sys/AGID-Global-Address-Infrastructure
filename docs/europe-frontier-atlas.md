@@ -55,9 +55,10 @@ node scripts/build-europe-frontiers.mjs /tmp/agid-frontiers.json src/data/europe
 python scripts/build-europe-frontier-sides.py --cache /tmp/agid-frontier-inputs
 python scripts/build-monaco-shoreline.py /tmp/agid-frontier-inputs/monaco-261124.osm.pbf
 python scripts/verify-europe-frontiers.py --lsib /tmp/agid-frontier-inputs/lsib.gpkg --marine /tmp/agid-frontier-inputs/vliz.json
+python scripts/verify-europe-frontier-sides.py --cache /tmp/agid-frontier-inputs
 npm run verify:agid-geography
 npm run verify:agid-islands
 npm run verify:agid16
 ```
 
-全線の検査は、配布する各区間を読み戻し、原本の座標・順番・区間数・分割点の連続性・タイル索引を照合する。ピン・セル・水域の回帰試験には別の固定地点を使う。[検証コード](../scripts/verify-europe-frontiers.py) · [地点別テスト](../src/lib/europeFrontierAtlas.integration.test.ts) · [地理データの利用条件](../DATA_LICENSES.md)
+全線の検査は、配布する各区間を読み戻し、原本の座標・順番・区間数・分割点の連続性・タイル索引を照合する。左右の検査では原線から20 m離れた座標を原本の行政ポリゴンと配布データで独立に照合する。GeoNamesとの再照合には検証コマンドに `--geonames countryInfo.txt` を追加する。ピン・セル・水域の回帰試験には別の固定地点を使う。[検証コード](../scripts/verify-europe-frontiers.py) · [地点別テスト](../src/lib/europeFrontierAtlas.integration.test.ts) · [地理データの利用条件](../DATA_LICENSES.md)

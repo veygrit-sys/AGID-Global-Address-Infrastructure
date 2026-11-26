@@ -34,7 +34,29 @@ def digest(points):
     return hashlib.sha256(b"".join(struct.pack("<qq",*p) for p in points)).digest()
 
 
+def audit_neighbours(path):
+    scope = json.loads((ROOT/"scripts/data/europe-frontiers/scope.json").read_text())
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == scope["neighbourInputSha256"]
+    europe = set(scope["countries"] + scope["territories"])
+    mediterranean = set(scope["mediterraneanNeighbours"])
+    pairs = set()
+    for row in path.read_text().splitlines():
+        if not row or row.startswith("#"):
+            continue
+        fields = row.split("\t")
+        for other in fields[17].split(","):
+            codes = {fields[0],other}
+            if other and not codes.intersection({"CS","AN"}) and (codes.intersection(europe) or codes <= mediterranean):
+                pairs.add("-".join(sorted(codes)))
+    pairs.remove("AL-RS")  # Duplicate physical frontier in the Kosovo representation.
+    pairs.update(("AX-SE","CA-GL","CY-XD","CY-XU"))
+    assert pairs == set(scope["expectedLandPairs"])
+    print(len(pairs), "bilateral pairs independently reproduced")
+
+
 def audit(args):
+    if args.geonames:
+        audit_neighbours(args.geonames)
     import shapely
     catalog = json.loads((args.atlas/"catalog.json").read_text())
     index = json.loads((args.atlas/"index.json").read_text())
@@ -100,6 +122,7 @@ def audit(args):
 
 if __name__=="__main__":
     ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--geonames",type=Path)
     ap.add_argument("--lsib",type=Path,required=True)
     ap.add_argument("--marine",type=Path,required=True)
     ap.add_argument("--atlas",type=Path,default=ROOT/"src/data/europe-frontiers")

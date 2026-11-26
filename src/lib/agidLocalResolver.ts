@@ -201,10 +201,10 @@ function recordApiAddress(record: RegisteredAddressRecord | AOIDRecord | null) {
   };
 }
 
-function agidApiAddress(agid: AGIDResult | undefined, fallbackCountryCode?: string | null) {
+function agidApiAddress(agid: AGIDResult | undefined, fallbackCountryCode?: string | null, surveyedCountry?: string) {
   if (!agid) return {};
   if (agid.island && (agid.island.countryCodes.length !== 1 || agid.island.relation === 'boundary')) return {};
-  const countryCode = normalizeCountryCode(agid.isSea ? '' : agid.regionCode || fallbackCountryCode || agid.prefix);
+  const countryCode = normalizeCountryCode(agid.isSea ? '' : surveyedCountry || agid.regionCode || fallbackCountryCode || agid.prefix);
   if (agid.isSea) {
     return {
       country_code: countryCode.toLowerCase(),
@@ -214,7 +214,8 @@ function agidApiAddress(agid: AGIDResult | undefined, fallbackCountryCode?: stri
   }
   return {
     country_code: countryCode.toLowerCase(),
-    country: agid.regionName,
+    country: surveyedCountry && surveyedCountry !== agid.regionCode
+      ? new Intl.DisplayNames(['en'],{type:'region'}).of(surveyedCountry) ?? surveyedCountry : agid.regionName,
   };
 }
 
@@ -453,7 +454,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
       || (territory?.administration && territory.status !== 'inside')));
   if (agid) {
     apiAddress = {
-      ...(!uncertainCountry && agidApiAddress(agid, input.countryCode || frontierCountry)),
+      ...(!uncertainCountry && agidApiAddress(agid, input.countryCode, input.countryCode ? undefined : frontierCountry)),
       ...apiAddress,
     };
     addressText = addressText || agid.regionName;

@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 import shapefile
-from pyproj import Transformer
+from pyproj import Geod, Transformer
 import shapely
 from shapely.ops import transform
 
@@ -169,6 +169,16 @@ if __name__=="__main__":
     args=parser.parse_args()
     rows=read(args.source)
     areas=extra_features(args.cache,rows)
+    treaty_file=ROOT/"scripts/data/europe-frontiers/treaty-coordinates.json"
+    treaty=read(treaty_file)
+    stations=treaty["tartupaluk"]
+    geod=Geod(ellps="GRS80")
+    trace=[stations[0]]
+    for a,b in zip(stations,stations[1:]):
+        trace.extend(geod.npts(*a,*b,100))
+        trace.append(b)
+    treaty["tartupalukGeodesic"]=trace
+    treaty_file.write_text(json.dumps(treaty,ensure_ascii=False,separators=(",",":"))+"\n")
     args.source.write_text(json.dumps(rows,ensure_ascii=False,separators=(",",":"))+"\n")
     args.areas.parent.mkdir(exist_ok=True,parents=True)
     args.areas.write_text(json.dumps(areas,ensure_ascii=False,separators=(",",":"))+"\n")
