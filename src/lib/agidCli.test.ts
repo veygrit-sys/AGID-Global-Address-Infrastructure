@@ -289,3 +289,104 @@ test('returns non-zero exit code for invalid inputs', async () => {
   assert.equal(unknown.exitCode, 2);
   assert.match(unknown.stderr, /Unknown command/i);
 });
+
+test('opts in to 16-character issuance and rejects unsupported lengths', async () => {
+  const args = ['encode', '--lat', '35.681236', '--lon', '139.767125', '--json'];
+  const legacy = JSON.parse((await runAgidCli(args)).stdout);
+  const checked = JSON.parse((await runAgidCli([...args, '--id-length', '16'])).stdout);
+  assert.equal(legacy.id.length, 12);
+  assert.equal(checked.id.length, 16);
+  assert.equal(checked.id.slice(0, 12), legacy.id);
+  assert.deepEqual(checked.cell, legacy.cell);
+  assert.equal((await runAgidCli([...args, '--id-length', '17'])).exitCode, 1);
+  const western = await runAgidCli(['encode', '--lat', '-33', '--lon', '-71', '--id-length', '16', '--json']);
+  assert.equal(western.exitCode, 0);
+  assert.equal(JSON.parse(western.stdout).id.length, 16);
+  const batch = await runAgidCli(['batch', 'encode', '--stdin', '--id-length', '16', '--json'], {
+    stdin: '{"lat":35.681236,"lon":139.767125}',
+  });
+  assert.equal(JSON.parse(batch.stdout).results[0].result.id, checked.id);
+});
+
+test('checked map IDs retain their width and legacy geometry across CLI readers', async () => {
+  const grouped = 'jp05-av8t-jghd-1meq';
+  const id = 'JP05AV8TJGHD1MEQ';
+  const legacy = id.slice(0, 12);
+  const decode = async (input: string) => JSON.parse((await runAgidCli(['decode', input, '--json'])).stdout);
+  const decoded = await decode(grouped);
+  assert.equal(decoded.id, id);
+  assert.deepEqual(decoded.cell, (await decode(legacy)).cell);
+  const validation = await runAgidCli(['validate', grouped, '--json']);
+  assert.equal(JSON.parse(validation.stdout).normalized, id);
+  const polygon = await runAgidCli(['polygon', grouped, '--geojson']);
+  assert.equal(JSON.parse(polygon.stdout).properties.agid, id);
+  const resolved = JSON.parse((await runAgidCli(['resolve', grouped, '--json'])).stdout);
+  assert.equal(resolved.inputKind, 'agid');
+  assert.equal(resolved.agid.id, id);
+  const oldFullWidth = JSON.parse((await runAgidCli(['resolve', 'ＪＰ０５ＡＶ８ＴＪＧＨＤ', '--json'])).stdout);
+  assert.equal(oldFullWidth.agid.id, legacy);
+
+  for (const bad of ['JP05AV8TJGHD1MER', 'ＪP05AV8TJGHD1MEQ']) {
+    assert.equal((await runAgidCli(['decode', bad])).exitCode, 1);
+    assert.equal(JSON.parse((await runAgidCli(['validate', bad, '--json'])).stdout).valid, false);
+    assert.equal(JSON.parse((await runAgidCli(['resolve', bad, '--json'])).stdout).status, 'invalid');
+  }
+});
+
+test('reports both country codes at the shared Lesotho–South Africa boundary', async () => {
+  const result = await runAgidCli([
+    'encode', '--lat', '-28.909035', '--lon', '28.980846', '--id-length', '16', '--json',
+  ]);
+  assert.equal(result.exitCode, 0);
+  const match = JSON.parse(result.stdout).mapUnitMatch;
+  assert.equal(match.relation, 'boundary');
+  assert.deepEqual(match.codes, ['LS', 'ZA']);
+});
+
+test('geography distinguishes the original pin, device accuracy and an issued cell', async () => {
+  const run = async (args: string[]) => {
+    const result = await runAgidCli(['geography', ...args, '--json']);
+    assert.equal(result.exitCode, 0, result.stderr);
+    return JSON.parse(result.stdout);
+  };
+  const pin = await run(['--lat', '-16.85', '--lon', '179.98']);
+  assert.equal(pin.command, 'geography');
+  assert.equal(pin.status, 'mapped');
+  assert.equal(pin.surface, 'land');
+  assert.deepEqual(pin.regionCandidates, ['FJ']);
+  assert.deepEqual(pin.footprint, { kind: 'manual-pin', radiusMeters: 0 });
+  assert.equal(pin.deliveryRegion, null);
+  const measured = await run(['--lat', '-16.85', '--lon', '179.98', '--accuracy-meters', '10']);
+  assert.deepEqual(measured.footprint, { kind: 'device-pin', radiusMeters: 10 });
+  const cell = await run(['P304K5APK9JT124R']);
+  assert.equal(cell.footprint.kind, 'cell');
+  assert.ok(cell.footprint.radiusMeters > 0);
+  assert.equal(cell.deliveryRegion, null);
+});
+
+test('geography rejects mixed, incomplete, invalid or ambiguous inputs', async () => {
+  for (const args of [
+    [], ['garbage'], ['--lon', '0'], ['--lon', '--lat'], ['--lat=', '--lon=0'],
+    ['--lat', '0', '--lon', '0', 'P304K5APK9JT124R'],
+    ['P304K5APK9JT124R', '--accuracy-meters', '1'],
+    ['--lat', '0', '--lon', '0', '--accuracy-meters=-1'],
+    ['--lat', '0', '--lon', '0', '--accuracy-meters='],
+  ]) assert.equal((await runAgidCli(['geography', ...args])).exitCode, 1, args.join(' '));
+});
+
+test('island geography distinguishes a Japanese policy result from competing claims and a separate postal destination', async () => {
+  const jp = await runAgidCli(['geography', '--lat', '25.74416667', '--lon', '123.46805556']);
+  assert.equal(jp.exitCode, 0, jp.stderr);
+  assert.match(jp.stdout, /Senkaku Islands/);
+  assert.match(jp.stdout, /Japanese government’s territorial position: JP/);
+  assert.doesNotMatch(jp.stdout, /Claimants|CN|TW/);
+  const disputed = await runAgidCli(['geography', '--lat', '-51.7', '--lon', '-57.85']);
+  assert.equal(disputed.exitCode, 0, disputed.stderr);
+  assert.match(disputed.stdout, /Competing claims/);
+  assert.match(disputed.stdout, /Claimants to all or part of the island group: AR, GB/);
+  assert.match(disputed.stdout, /Administration in source: GB/);
+  const api = await runAgidCli(['geography', '--lat', '-51.7', '--lon', '-57.85', '--json']);
+  const result = JSON.parse(api.stdout);
+  assert.deepEqual(result.island.countryCodes, []);
+  assert.equal(result.deliveryRegion, null);
+});

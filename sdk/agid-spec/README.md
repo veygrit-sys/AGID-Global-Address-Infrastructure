@@ -53,7 +53,7 @@ a measured real-world delivery success rate.
 AGID is public by design, so SDK security focuses on integrity and strict parsing:
 
 - trim and uppercase before validation,
-- accept only the 12-character AGID format,
+- validate the 12-character base format; readers opting into the checksummed extension must also verify its version, checksum and original packed cell,
 - reject hashes outside the AGID Base32 alphabet,
 - reject packed values outside the 45-bit AGID range,
 - reject face values outside `0..5`,

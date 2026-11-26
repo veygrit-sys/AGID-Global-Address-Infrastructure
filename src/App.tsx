@@ -4,14 +4,16 @@ Globe,
 Ruler,
 Trash2} from 'lucide-react';
 import maplibregl from 'maplibre-gl';
+import { installJapaneseIslandMapStyle } from './lib/japaneseIslandMapStyle';
+import { mapSearchDisplayResults, selectedIslandReference } from './lib/islandSearchDisplay';
 import React,{ useEffect,useMemo,useRef,useState } from 'react';
 import { TranslationKey,TRANSLATIONS } from './constants/translations';
 import { AdvancedSearchOptions,DEFAULT_ADVANCED_SEARCH_OPTIONS } from './lib/advancedSearch';
 import {
 AGIDResult,
 COUNTRY_REGIONS,
-decodeAGID,
 encodeAGID,
+toLegacyAGID,
 generateFullCountryRegistry,
 generateFullSeaRegistry,
 LAND_REGIONS,
@@ -38,7 +40,7 @@ LANGUAGES,
 normalizeAddressText,
 translateAddressOpenSource
 } from './lib/addressUtils';
-import { getAgidCoordinates } from './lib/agidSelection';
+import { decodeAgidToResult, deviceAgidSelection, getAgidCoordinates, looksLikeAGID16, restoreAgidSelection } from './lib/agidSelection';
 import type { BuildingNameCandidate } from './lib/buildingName';
 import type { MapAddressFeatureCandidate } from './lib/mapFeatureAddress';
 import type { DroneLandingAssessment } from './lib/droneAssessment';
@@ -294,6 +296,10 @@ export default function App() {
   ));
   const isManualSelectionRef = useRef(isManualSelection);
   const clickedAgidRef = useRef<AGIDResult | null>(clickedAgid);
+  const isSelectedPoint = React.useCallback((lat: number, lon: number) => {
+    const selected = clickedAgidRef.current;
+    return selected?.lat === lat && selected.lon === lon;
+  }, []);
   const isGuidanceActiveRef = useRef(isGuidanceActive);
   const isTrackingRef = useRef(isTracking);
 
@@ -1152,7 +1158,8 @@ export default function App() {
   const jumpToAgid = React.useCallback((agidStr: string) => {
     try {
       setIsAgidPinnedToGps(false);
-      const decoded = decodeAGID(agidStr);
+      const decoded = decodeAgidToResult(agidStr);
+      if (!decoded) return;
       setLat(prev => prev !== decoded.lat ? decoded.lat : prev);
       setLng(prev => prev !== decoded.lon ? decoded.lon : prev);
       if (map.current) {
@@ -1164,9 +1171,8 @@ export default function App() {
         });
       }
       setClickedAgid(prev => {
-        const result = encodeAGID(decoded.lat, decoded.lon);
-        if (prev && prev.id === result.id) return prev;
-        return result;
+        if (prev?.id === decoded.id && prev.coordinateSource === 'cell') return prev;
+        return decoded;
       });
     } catch (e) {
       console.error("Invalid AGID JUMP:", e);
@@ -1208,7 +1214,9 @@ export default function App() {
     // Region Name
     ctx.fillStyle = '#64748b'; // slate-500
     ctx.font = 'bold 24px sans-serif';
-    ctx.fillText(clickedAgid.regionName, padding, qrCanvas.height + padding + 70);
+    const islandReference = selectedIslandReference(clickedAgid, appLanguage);
+    const regionLabel = islandReference ?? clickedAgid.regionName;
+    ctx.fillText(regionLabel, padding, qrCanvas.height + padding + 70, qrCanvas.width + padding);
 
     // Coordinates
     ctx.fillStyle = '#94a3b8'; // slate-400
@@ -1232,8 +1240,8 @@ export default function App() {
     const newQr = {
       id: clickedAgid.id,
       ...(includePreciseQrLocation ? { lat: clickedAgid.lat, lon: clickedAgid.lon } : {}),
-      address: includePreciseQrLocation ? clickedAddress : `${clickedAgid.id} public address reference`,
-      regionName: clickedAgid.regionName,
+      address: includePreciseQrLocation ? (islandReference ?? clickedAddress) : `${clickedAgid.id} public address reference`,
+      regionName: regionLabel,
       savedAt: new Date().toISOString(),
       imageData: url // Store the preview or just the ID reference? Keeping reference is lighter, but image is what was requested?
     };
@@ -1291,17 +1299,19 @@ export default function App() {
     setShowStyleMenu(false);
   };
 
-  const saveAgid = (agidData: any, addressOverride = clickedAddress) => {
+  const saveAgid = (agidData: AGIDResult, addressOverride?: string) => {
     if (!agidData?.id) return;
 
     const savedAt = new Date().toISOString();
     const newEntry = {
       id: agidData.id,
+      coordinateSource: agidData.coordinateSource ?? 'pin',
+      accuracyMeters: agidData.accuracyMeters,
       lat: agidData.lat,
       lon: agidData.lon,
       prefix: agidData.prefix,
       isSea: agidData.isSea,
-      address: addressOverride,
+      address: addressOverride ?? selectedIslandReference(agidData, appLanguage) ?? clickedAddress,
       savedAt,
     };
 
@@ -1444,7 +1454,7 @@ export default function App() {
           setLat(latitude);
           setLng(longitude);
 
-          const result = encodeAGID(latitude, longitude);
+          const result = deviceAgidSelection(position.coords);
           setClickedAgid(result);
 
           map.current?.flyTo({
@@ -1572,18 +1582,14 @@ export default function App() {
               // Once locked, we keep the SAME ID display as requested.
               // We only set it if it's currently null.
               if (!clickedAgid) {
-                const result = encodeAGID(latitude, longitude);
+                const result = deviceAgidSelection(position.coords);
                 setClickedAgid(result);
                 reverseGeocode(latitude, longitude, result.prefix, result.isSea, true);
               } else {
                 // Periodically retry with high precision for the LOCKED spot if address is still vague
                 // This satisfies "Attempt to get accurate address in the meantime"
                 if (!clickedAddress || clickedAddress.includes("Unnamed") || clickedAddress.includes("Unknown") || clickedAddress.includes("Loading")) {
-                  // Use a slightly offset lat/lng from the current actual GPS if we want the "current" address,
-                  // but "locked ID" suggests we want the address of the grid cell's center or the user's specific spot at lock time.
-                  // Let's use the current user position to get the best address of the current exact spot,
-                  // while keeping the AGID label of the grid.
-                  reverseGeocode(latitude, longitude, clickedAgid.prefix, clickedAgid.isSea, true);
+                  reverseGeocode(clickedAgid.lat, clickedAgid.lon, clickedAgid.prefix, clickedAgid.isSea, true);
                 }
               }
             }
@@ -1949,16 +1955,17 @@ export default function App() {
 
   const jumpToSaved = (saved: any) => {
     if (!map.current) return;
+    const result = restoreAgidSelection(saved);
+    if (!result) return;
     map.current.flyTo({
-      center: [saved.lon, saved.lat],
+      center: [result.lon, result.lat],
       zoom: getDeviceZoom(),
       pitch: mapPitch,
       essential: true,
       duration: 2000
     });
-    setLat(prev => prev !== saved.lat ? saved.lat : prev);
-    setLng(prev => prev !== saved.lon ? saved.lon : prev);
-    const result = encodeAGID(saved.lat, saved.lon);
+    setLat(prev => prev !== result.lat ? result.lat : prev);
+    setLng(prev => prev !== result.lon ? result.lon : prev);
     setClickedAgid(result);
     setClickedAddress(saved.address || "Loading address...");
     setShowSaved(false);
@@ -2067,12 +2074,12 @@ export default function App() {
             forceDomestic: true
           });
 
-          if (isClicked && domesticVersion !== formatted) {
+          if (isClicked && isSelectedPoint(l, n) && domesticVersion !== formatted) {
             setClickedAddressMap(prev => ({ ...prev, [`${langCode}_domestic`]: domesticVersion }));
           }
         }
 
-        if (isClicked) {
+        if (isClicked && isSelectedPoint(l, n)) {
           setClickedAddressMap(prev => {
             if (prev[langCode] === formatted) return prev;
             return { ...prev, [langCode]: formatted };
@@ -2087,7 +2094,7 @@ export default function App() {
   const lastGeocodeRequestRef = useRef<string | null>(null);
 
   const reverseGeocode = React.useCallback(async (l: number, n: number, prefix: string, isSeaLoc: boolean, isClicked: boolean = false) => {
-    if (!l || !n) return;
+    if (!Number.isFinite(l) || !Number.isFinite(n)) return;
 
     if (!externalAddressDataEnabled) {
       const localOnly = `${prefix || 'AGID'} ${encodeAGID(l, n).id}`;
@@ -2111,8 +2118,7 @@ export default function App() {
       return;
     }
 
-    // Prevent redundant calls for the same location within 400ms grid-level debounce
-    const currentKey = `${l.toFixed(6)},${n.toFixed(6)}`;
+    const currentKey = JSON.stringify([l, n, prefix, isSeaLoc, isClicked, addressLanguage, isShippingMode]);
     if (lastGeocodeRequestRef.current === currentKey) return;
     lastGeocodeRequestRef.current = currentKey;
 
@@ -2155,6 +2161,7 @@ export default function App() {
         console.error("Reverse geocoding fetch error:", e);
       }
 
+      if (isClicked && !isSelectedPoint(l, n)) return;
       let langName = LANGUAGES.find(lang => lang.code === primaryLang)?.name || "Local";
 
       if (data && data.address) {
@@ -2172,6 +2179,7 @@ export default function App() {
         // Fetch nearest road connection
         if (isClicked) {
           nearestRoadLoader?.(l, n, 400).then((road: any) => {
+            if (!isSelectedPoint(l, n)) return;
             setNearestRoad(prev => {
               if (JSON.stringify(prev) === JSON.stringify(road)) return prev;
               return road;
@@ -2222,7 +2230,7 @@ export default function App() {
         const formatted = await formatAddress(enrichedAddressDetails, primaryLang, { shipping: isShippingMode });
         const initialMap = { [primaryLang]: formatted };
 
-        if (isClicked) {
+        if (isClicked && isSelectedPoint(l, n)) {
           setClickedAddress(prev => prev !== formatted ? formatted : prev);
           setClickedAddressLang(prev => prev !== langName ? langName : prev);
           setClickedAddressDetails(prev => {
@@ -2289,7 +2297,7 @@ export default function App() {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [clickedAgid?.id, defaultAddrTab, reverseGeocode]);
+  }, [clickedAgid, defaultAddrTab, reverseGeocode]);
 
   const jumpToMyLocation = React.useCallback(() => {
     if (!map.current || isLocating) return;
@@ -2320,7 +2328,7 @@ export default function App() {
         }
 
         // Select the cell immediately
-        const result = encodeAGID(latitude, longitude);
+        const result = deviceAgidSelection(position.coords);
         setClickedAgid(result);
         setClickedAddress("Loading address...");
         reverseGeocode(latitude, longitude, result.prefix, result.isSea, true);
@@ -2329,7 +2337,7 @@ export default function App() {
         fetch(`/api/nominatim/reverse?lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`)
           .then(res => res.json())
           .then(data => {
-            if (data && data.display_name) {
+            if (data?.display_name && isSelectedPoint(latitude, longitude)) {
               setClickedAddress(prev => prev !== data.display_name ? data.display_name : prev);
             }
           });
@@ -2368,7 +2376,7 @@ export default function App() {
     }
 
     // Skip if it looks like a lat/lng or AGID
-    if (searchQuery.match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/) || searchQuery.match(/^[A-Z]{2,4}[A-Z2-9]{8,10}$/)) {
+    if (searchQuery.match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/) || toLegacyAGID(searchQuery) || looksLikeAGID16(searchQuery) || searchQuery.match(/^[A-Z]{2,4}[A-Z2-9]{8,10}$/)) {
       setSearchResults([]);
       return;
     }
@@ -2376,7 +2384,7 @@ export default function App() {
     const timer = setTimeout(async () => {
       try {
         const { smartSearch } = await loadGeocodingService();
-        const results = await smartSearch(searchQuery, lat, lng, advancedSearchOptions);
+        const results = mapSearchDisplayResults(await smartSearch(searchQuery, lat, lng, advancedSearchOptions), appLanguage);
         setSearchResults(results);
       } catch (error) {
         console.error("Smart search error:", error);
@@ -2384,7 +2392,7 @@ export default function App() {
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, lat, lng, advancedSearchOptions]);
+  }, [searchQuery, lat, lng, advancedSearchOptions, appLanguage]);
   const clearPostalArea = React.useCallback(() => {
     postalAreaRequestRef.current += 1;
     setPostalAreaFeatureCollection(null);
@@ -2656,26 +2664,31 @@ export default function App() {
         }
       }
 
-      // 2. Check if input is standard 12-char AGID (2 prefix + 10 hash)
-      const cleanAgid = query.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-      if (cleanAgid.length === 12) {
-        const decoded = decodeAGID(cleanAgid);
-        if (decoded) {
-          const result = encodeAGID(decoded.lat, decoded.lon);
-          setIsManualSelection(true);
-          setClickedAgid(result);
-          setClickedAddress("Loading address...");
+      // Keep legacy storage keys intact when a checked ID is entered on the map.
+      const legacyId = toLegacyAGID(query);
+      if (!legacyId && looksLikeAGID16(query)) {
+        showAlert("Invalid AGID", "Check the characters and enter the complete ID again.");
+        return;
+      }
+      // Retain the existing map search convenience for punctuated legacy IDs.
+      const compactLegacy = /^[A-Za-z0-9]+(?:[- ][A-Za-z0-9]+)+$/.test(query.trim())
+        ? query.trim().replace(/[- ]/g, '')
+        : '';
+      const mapId = legacyId || (compactLegacy.length === 12 ? compactLegacy : null);
+      const decoded = mapId ? decodeAgidToResult(mapId) : null;
+      if (decoded) {
+        setIsManualSelection(true);
+        setClickedAgid(decoded);
+        setClickedAddress("Loading address...");
 
-          map.current.flyTo({
-            center: [decoded.lon, decoded.lat],
-            zoom: 19,
-            essential: true
-          });
-          setIsSearching(false);
-          setIsSearchFocused(false);
-          setSearchResults([]);
-          return;
-        }
+        map.current.flyTo({
+          center: [decoded.lon, decoded.lat],
+          zoom: 19,
+          essential: true
+        });
+        setIsSearchFocused(false);
+        setSearchResults([]);
+        return;
       }
 
       // 3. Check if input is "lat, lng"
@@ -2713,13 +2726,15 @@ export default function App() {
               lat: newLat,
               lon: newLng,
             };
-            setClickedAddress(await formatAddress(addressDetails, preferredAddressLanguage));
+            const formatted = await formatAddress(addressDetails, preferredAddressLanguage);
+            if (!isSelectedPoint(newLat, newLng)) return;
+            setClickedAddress(formatted);
             setClickedAddressDetails(addressDetails);
           }
         });
         loadGeocodingService().then(({ regionalReverseGeocode }) => regionalReverseGeocode(newLat, newLng, 'en', result.prefix)).then(async data => {
           if (data && data.address) {
-            setClickedAddressEn(await formatAddress({
+            const formatted = await formatAddress({
               ...data.address,
               elevation: data.elevation,
               delivery_difficulty: data.delivery_difficulty,
@@ -2730,7 +2745,8 @@ export default function App() {
               sea_context: data.sea_context,
               lat: newLat,
               lon: newLng,
-            }, 'en'));
+            }, 'en');
+            if (isSelectedPoint(newLat, newLng)) setClickedAddressEn(formatted);
           }
         });
 
@@ -2746,7 +2762,7 @@ export default function App() {
       } else {
         // Use Smart Search (Local DB + Nominatim)
         const { smartSearch } = await loadGeocodingService();
-        const results = await smartSearch(query, lat, lng, advancedSearchOptions);
+        const results = mapSearchDisplayResults(await smartSearch(query, lat, lng, advancedSearchOptions), appLanguage);
         setSearchResults(results);
 
         if (results.length > 0) {
@@ -2885,21 +2901,21 @@ export default function App() {
       result = result.split(':').pop() || result;
     }
 
-    const agidMatch = result.trim().toUpperCase().match(/^[A-Z]{2,4}[A-Z2-9]{8,10}$/);
-    if (agidMatch) {
+    const scannedAgid = toLegacyAGID(result);
+    if (scannedAgid) {
       if (latHint !== null && lonHint !== null) {
         map.current?.flyTo({ center: [lonHint, latHint], zoom: 19 });
 
         // Auto-save if it has a lat/lon hint (meaning it's likely a generated card)
         const newQr = {
-          id: agidMatch[0],
+          id: scannedAgid,
           lat: latHint,
           lon: lonHint,
           address: "Imported from QR",
           regionName: "Scanned",
           savedAt: new Date().toISOString()
         };
-        const newSaved = [newQr, ...savedQrs.filter(q => q.id !== agidMatch[0])];
+        const newSaved = [newQr, ...savedQrs.filter(q => q.id !== scannedAgid)];
         setSavedQrs(newSaved);
         localStorage.setItem('saved_qrs', JSON.stringify(newSaved));
         enqueueSyncQueueRecord('savedQr', newQr.id, 'create', {
@@ -2909,7 +2925,7 @@ export default function App() {
           savedAt: newQr.savedAt,
         });
       }
-      jumpToAgid(agidMatch[0]);
+      jumpToAgid(scannedAgid);
     } else {
       // General search
       setSearchQuery(result);
@@ -3150,6 +3166,8 @@ export default function App() {
       projection: lowBandwidthMapModeRef.current ? 'mercator' : projection,
       lowBandwidth: lowBandwidthMapModeRef.current,
     }) as any);
+
+    installJapaneseIslandMapStyle(map.current, maplibregl.Marker);
 
     // Add ResizeObserver to handle map resizing properly
     const resizeObserver = new ResizeObserver(() => {
@@ -5018,6 +5036,7 @@ export default function App() {
         {clickedAgid && (
           <React.Suspense fallback={null}>
             <GridDetailPanel
+              appLanguage={appLanguage}
               clickedAgid={clickedAgid}
               setClickedAgid={setClickedAgid}
               isManualSelection={isManualSelection}
@@ -5224,6 +5243,8 @@ export default function App() {
                 const registeredAgid = encodeAGID(registrationLat, registrationLon);
                 saveAgid({
                   ...registeredAgid,
+                  ...(clickedAgid && clickedAgid.id === data.agid && clickedAgid.lat === registrationLat && clickedAgid.lon === registrationLon
+                    && { coordinateSource: clickedAgid.coordinateSource, accuracyMeters: clickedAgid.accuracyMeters }),
                   id: data.agid || registeredAgid.id,
                 }, data.address);
                 showAlert("Address Saved", `Address for ${data.name || data.recipient || data.agid} was saved on this device. Nothing was publicly registered.`);

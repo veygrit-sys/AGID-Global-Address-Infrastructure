@@ -3,9 +3,19 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { localIslandPackPlugin } from './scripts/local-island-pack-plugin';
 
 function manualVendorChunk(id: string) {
   const normalizedId = id.replace(/\\/g, '/');
+
+  // Keep independently versioned boundary extracts cacheable across app-only changes.
+  if (normalizedId.endsWith('/src/data/pearlRiverDelta.json')) return 'geography-pearl-delta';
+  const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands)\/([a-zA-Z0-9-]+)\.json$/);
+  if (islandPart) return `geography-${islandPart[1]}-${islandPart[2]}`;
+  if (normalizedId.endsWith('/src/data/japaneseRemoteIslands.json')) return 'geography-japanese-remote-islands';
+  if (normalizedId.endsWith('/src/data/japaneseIslandView.json')) return 'geography-japanese-islands';
+  if (normalizedId.endsWith('/src/data/disputedIslandGeometry.json')) return 'geography-island-disputes';
+  if (normalizedId.endsWith('/src/data/countryMapUnits.json')) return 'geography-map-units';
 
   if (!normalizedId.includes('/node_modules/')) return undefined;
 
@@ -62,6 +72,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [
+      localIslandPackPlugin(process.env.AGID_ISLAND_PACK_PATH || env.AGID_ISLAND_PACK_PATH,
+        process.env.AGID_ISLAND_PACK_PYTHON || env.AGID_ISLAND_PACK_PYTHON),
       react(),
       tailwindcss(),
       VitePWA({

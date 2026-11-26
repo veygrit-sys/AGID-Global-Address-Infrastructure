@@ -1,5 +1,7 @@
+import { assessAgidGeography } from './geographicAssessment';
 import { getAddressFormat, type AddressFormat } from '../data/address_formats';
-import { decodeAGID, encodeAGID, getCellPolygon, type AGIDResult } from './agid';
+import { encodeAGID, normalizeAGIDCode, type AGIDResult } from './agid';
+import { decodeAgidToResult, looksLikeAGID16 } from './agidSelection';
 import {
   AGID_ADDRESS_INTELLIGENCE_ENGINE_VERSION,
   evaluateAgidAddressIntelligence,
@@ -17,10 +19,7 @@ import {
   isAgidSecureToken,
   type AgidSecurePurpose,
 } from './agidSecureShare';
-import {
-  isValidAGIDFormat,
-  normalizeAGIDInput,
-} from './agidSecurity';
+import { isValidAGIDFormat } from './agidSecurity';
 import {
   buildAOIDPublicDescriptor,
   isAOIDRecord,
@@ -202,6 +201,7 @@ function recordApiAddress(record: RegisteredAddressRecord | AOIDRecord | null) {
 
 function agidApiAddress(agid: AGIDResult | undefined, fallbackCountryCode?: string | null) {
   if (!agid) return {};
+  if (agid.island && (agid.island.countryCodes.length !== 1 || agid.island.relation === 'boundary')) return {};
   const countryCode = normalizeCountryCode(agid.isSea ? '' : agid.regionCode || fallbackCountryCode || agid.prefix);
   if (agid.isSea) {
     return {
@@ -230,31 +230,6 @@ function normalizeRecord(value: unknown) {
     return { kind: 'registered-address' as const, record: value };
   }
   return null;
-}
-
-function decodeAgidToResult(agidId: string): AGIDResult | null {
-  const decoded = decodeAGID(agidId);
-  if (!decoded) return null;
-  const normalizedId = normalizeAGIDInput(agidId);
-  if (!normalizedId) return null;
-  const approximate = encodeAGID(decoded.lat, decoded.lon);
-  const prefix = normalizedId.slice(0, 2);
-  const hash = normalizedId.slice(2);
-  return {
-    ...approximate,
-    id: normalizedId,
-    prefix,
-    hash,
-    face: decoded.face,
-    quantX: decoded.qx,
-    quantY: decoded.qy,
-    qx: decoded.qx,
-    qy: decoded.qy,
-    lat: decoded.lat,
-    lon: decoded.lon,
-    bounds: decoded.bounds,
-    polygon: getCellPolygon(decoded.face, decoded.qx, decoded.qy),
-  };
 }
 
 async function resolveAddressFormat(
@@ -378,10 +353,13 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     agidId = secureOpened.payload.agid;
     audit.push({ step: 'open-agid-s', status: 'ok', message: 'Opened AGID-S locally with POS key ring.' });
   } else {
-    const normalizedAgid = normalizeAGIDInput(query);
-    if (normalizedAgid && isValidAGIDFormat(normalizedAgid)) {
+    const rawAgid = typeof input.query === 'string' ? input.query.trim() : '';
+    // Preserve the resolver's existing NFKC normalization for 12-character inputs.
+    const idInput = rawAgid.length === 12 && query.length === 12 ? query : rawAgid;
+    const normalizedAgid = normalizeAGIDCode(idInput);
+    if (normalizedAgid || isValidAGIDFormat(idInput) || looksLikeAGID16(query)) {
       inputKind = 'agid';
-      agidId = normalizedAgid;
+      agidId = normalizedAgid || idInput;
       audit.push({ step: 'detect-input', status: 'ok', message: 'Detected AGID code.' });
     } else if (inputCoordinates || textCoordinates) {
       inputKind = 'coordinates';
@@ -414,15 +392,12 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
       ...apiAddress,
     };
     details = details || normalizedRecord;
-    if (normalizedRecord.agid) agidId = normalizeAGIDInput(normalizedRecord.agid) || agidId;
+    if (normalizedRecord.agid) agidId = normalizedRecord.agid;
     audit.push({ step: 'normalize-record', status: 'ok', message: `Normalized ${inputKind} record for local resolution.` });
   }
 
   if (!coordinates && inputCoordinates) coordinates = inputCoordinates;
-  if (coordinates) {
-    agid = encodeAGID(coordinates.lat, coordinates.lon);
-    agidId = agid.id;
-  } else if (agidId) {
+  if (agidId) {
     agid = decodeAgidToResult(agidId) || undefined;
     if (!agid) {
       return {
@@ -439,12 +414,26 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
         ],
       };
     }
-    coordinates = { lat: agid.lat, lon: agid.lon };
+    if (coordinates) {
+      const pin = encodeAGID(coordinates.lat, coordinates.lon);
+      if (pin.face !== agid.face || pin.qx !== agid.qx || pin.qy !== agid.qy) {
+        warnings.push('pin-outside-issued-cell');
+        coordinates = undefined;
+      }
+    }
+    coordinates ??= { lat: agid.lat, lon: agid.lon };
+  } else if (coordinates) {
+    agid = encodeAGID(coordinates.lat, coordinates.lon);
+    agidId = agid.id;
   }
 
+  const islandPolicy = agid?.coordinateSource === 'cell'
+    ? assessAgidGeography({kind: 'cell', id: agid.id}).island : agid?.island;
+  const uncertainIsland = islandPolicy && (islandPolicy.countryCodes.length !== 1
+    || islandPolicy.relation === 'boundary' || islandPolicy.status === 'unresolved' || islandPolicy.status === 'disputed');
   if (agid) {
     apiAddress = {
-      ...agidApiAddress(agid, input.countryCode),
+      ...(!uncertainIsland && agidApiAddress(agid, input.countryCode)),
       ...apiAddress,
     };
     addressText = addressText || agid.regionName;
@@ -452,7 +441,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   }
 
   const countryCode = normalizeCountryCode(
-    input.countryCode || apiAddress.country_code || normalizedRecord?.country || agid?.regionCode || agid?.prefix,
+    input.countryCode || apiAddress.country_code || normalizedRecord?.country || (uncertainIsland ? undefined : agid?.regionCode || agid?.prefix),
   );
   let addressFormat: AddressFormat | null = input.addressFormat ?? null;
   try {

@@ -30,7 +30,7 @@ test('Open Source hero keeps first-use navigation and uses the live vector grid 
   assert.match(mapSource, /useAgidGridLayer/);
   assert.match(mapSource, /new Worker\(new URL\('\.\.\/lib\/gridWorker\.ts'/);
   assert.match(mapSource, /fetchPhotonFeatures/);
-  assert.match(mapSource, /decodeAGID\(query\)/);
+  assert.match(mapSource, /decodeAgidToResult\(query\)/);
   assert.match(mapSource, /Address, postal code, or AGID/);
   assert.match(mapSource, /住所・郵便番号・AGIDを検索/);
   assert.match(mapSource, /selectedResult\.id/);

@@ -1330,6 +1330,9 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
   const languageDraftsRef = React.useRef<Record<string, typeof formData>>({});
   const lastPostcodeLookupRef = React.useRef('');
   const previousCountryRef = React.useRef(formData.country);
+  const chosenCountryRef = React.useRef('');
+  const initialQrPatch = useMemo(() =>
+    initialQrRecord ? buildAddressInputPatchFromRegisteredQr(initialQrRecord) : null, [initialQrRecord]);
   const appliedInitialAddressDetailsRef = React.useRef('');
   const appliedInitialQrRecordRef = React.useRef('');
   const assistedDraftRef = React.useRef<typeof formData | null>(null);
@@ -1399,6 +1402,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
   useEffect(() => {
     if (!isOpen) {
       appliedInitialAddressDetailsRef.current = '';
+      chosenCountryRef.current = '';
       appliedInitialQrRecordRef.current = '';
       assistedDraftRef.current = null;
       correctionBaselineRef.current = null;
@@ -1417,10 +1421,17 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
       return;
     }
 
+    if (initialAddressDetails?.privacy_mode === 'local-only') return;
+    if (currentCoords && Number.isFinite(initialAddressDetails?.lat) && Number.isFinite(initialAddressDetails?.lon)
+      && (initialAddressDetails.lat !== currentCoords.lat || initialAddressDetails.lon !== currentCoords.lon)) return;
     const details = initialAddressDetails?.address_analysis?.canonical
       ? { ...initialAddressDetails, ...initialAddressDetails.address_analysis.canonical }
       : initialAddressDetails;
     if (!details) return;
+
+    const destinationCountry = chosenCountryRef.current || initialQrPatch?.country;
+    const mappedCountry = String(details.country_code || '').trim().toUpperCase();
+    if (destinationCountry && destinationCountry !== mappedCountry) return;
 
     const key = [
       initialAgid,
@@ -1437,7 +1448,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     setFormData(prev => {
       const next = {
         ...prev,
-        country: String(details.country_code || prev.country).toUpperCase(),
+        country: destinationCountry || mappedCountry || prev.country,
         organization: details.organization || prev.organization,
         street: details.road || details.street || prev.street,
         houseNumber: details.house_number || details.houseNumber || prev.houseNumber,
@@ -1457,14 +1468,14 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
       ]));
       return next;
     });
-  }, [initialAddressDetails, initialAgid, isOpen]);
+  }, [initialAddressDetails, currentCoords?.lat, currentCoords?.lon, initialAgid, initialQrPatch, isOpen]);
 
   useEffect(() => {
     if (!isOpen) {
       appliedInitialQrRecordRef.current = '';
       return;
     }
-    if (!initialQrRecord) return;
+    if (!initialQrRecord || !initialQrPatch) return;
 
     const key = [
       initialQrRecord.id,
@@ -1475,7 +1486,8 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     if (!key || key === appliedInitialQrRecordRef.current) return;
     appliedInitialQrRecordRef.current = key;
 
-    const patch = buildAddressInputPatchFromRegisteredQr(initialQrRecord);
+    const patch = initialQrPatch;
+    if (patch.country) chosenCountryRef.current = patch.country;
     setFormData(prev => {
       const next = {
         ...prev,
@@ -1508,7 +1520,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     ) {
       setIsAoidMode(true);
     }
-  }, [initialQrRecord, isOpen]);
+  }, [initialQrRecord, initialQrPatch, isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -1639,6 +1651,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
   }, []);
 
   const applyRegistrationAssistance = React.useCallback((candidate: RegistrationAssistanceCandidate<typeof formData>) => {
+    if (candidate.patch.country) chosenCountryRef.current = candidate.patch.country;
     languageDraftsRef.current = {};
     setAddressTranslationStatus('idle');
     translationFeedbackRef.current = null;
@@ -1654,6 +1667,10 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
     candidate: RegistrationAssistanceCandidate<typeof formData>,
     overwrite = false,
   ) => {
+    if (candidate.patch.country) {
+      if (!overwrite && chosenCountryRef.current && chosenCountryRef.current !== candidate.patch.country) return;
+      if (overwrite) chosenCountryRef.current = candidate.patch.country;
+    }
     languageDraftsRef.current = {};
     setAddressTranslationStatus('idle');
     translationFeedbackRef.current = null;
@@ -1668,6 +1685,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
   const applyPostcodeAutofillCandidate = React.useCallback((
     candidate: RegistrationAssistanceCandidate<typeof formData>,
   ) => {
+    if (candidate.patch.country) chosenCountryRef.current = candidate.patch.country;
     languageDraftsRef.current = {};
     setAddressTranslationStatus('idle');
     translationFeedbackRef.current = null;
@@ -1748,6 +1766,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
   }, [applyDocumentReadCandidate, formData.country, supportedCountryCodes]);
 
   const handleFieldChange = React.useCallback((fieldKey: string, value: string) => {
+    if (fieldKey === 'country') chosenCountryRef.current = value;
     const canKeepTranslationFeedback = translationFeedbackRef.current?.targetLanguage === activeTab
       && !['recipient', 'phone'].includes(fieldKey);
     languageDraftsRef.current = {};
@@ -4053,6 +4072,7 @@ export const AddressRegistration: React.FC<AddressRegistrationProps> = ({
                             <button
                               key={c.code}
                               onClick={() => {
+                                chosenCountryRef.current = c.code;
                                 setFormData(selectRegistrationCountry(formData, c, { storeRegionName: false }));
                                 setViewMode('form');
                               }}

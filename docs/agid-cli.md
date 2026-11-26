@@ -36,11 +36,37 @@ JSON output:
 npm run agid -- encode --lat <latitude> --lon <longitude> --json --pretty
 ```
 
+The default output is the 12-character ID. Select the 16-character
+checksummed form with `--id-length 16` on `encode` or `batch encode`.
+
+```bash
+npm run agid -- encode --lat 35.681236 --lon 139.767125 --id-length 16 --json
+```
+
+The CLI accepts either width for decoding, validation, polygon output, and
+local resolution. The 16-character form also accepts four groups of four
+characters, such as `JP05-AV8T-JGHD-1MEQ`. The first 12 characters address
+the same cell, and the final four carry a version and typing-error check.
+
 ### Decode
 
 ```bash
 npm run agid -- decode <AGID> --json
 ```
+
+### Geography
+
+Assess a manually placed pin, a device fix with a reported accuracy in metres, or the complete cell of an issued ID.
+
+```bash
+npm run agid -- geography --lat -16.85 --lon 179.98 --json
+npm run agid -- geography --lat 22.533333 --lon 114.0 --accuracy-meters 25 --json
+npm run agid -- geography P304K5APK9JT124R --json
+```
+
+The result includes the footprint, map sources, surface and candidate administrative codes. `needs-confirmation` indicates that the footprint or evidence leaves a choice unresolved. `unassessed` means that the bundled detailed sources do not establish a result for that input. `deliveryRegion` is always null. Retain the recipient’s postal destination independently.
+
+The optional `island` field reports a mapped address territory and, when known, its sovereign. Shared islands are evaluated at the pin. A Japanese-territorial-view result lists only JP, with the geographic group and official source. Other reviewed disputes use distinct claimant and administration fields. If the island is mapped but attribution is missing, `island.status` is `unresolved`; the result keeps the country list empty. See the [global island coverage](island-recognition.md) and [full-resolution lookup](high-resolution-island-pack.md).
 
 ### Validate
 

@@ -1,0 +1,46 @@
+name: AGID geography
+on:
+  pull_request:
+    paths:
+      - 'src/lib/**'
+      - 'src/data/**'
+      - 'src/embed/**'
+      - 'src/components/AgidGeographySummary*'
+      - 'src/components/LocalIslandPackLookup*'
+      - 'scripts/local-island-pack-plugin*.ts'
+      - 'scripts/query-island-pack.ts'
+      - 'scripts/*national-island*'
+      - 'scripts/data/national-island-points/**'
+      - 'src/components/OpenSourceHeroMap.tsx'
+      - 'src/components/AddressRegistration.tsx'
+      - 'src/components/GridDetailPanel.tsx'
+      - 'src/App.tsx'
+      - 'src/constants/countries*'
+      - 'packages/core/**'
+      - 'vite.config.ts'
+      - 'public/wasm/agid_core.wasm'
+      - 'native/agid-core/**'
+      - 'scripts/build-*'
+      - 'sdk/agid-*/**'
+      - 'package*.json'
+      - '.github/workflows/agid-geography.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  geographic-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run verify:agid16
+      - run: npm run verify:agid-geography
+      - run: npm run verify:agid-islands
+      - run: npm run typecheck
+        env:
+          NODE_OPTIONS: --max-old-space-size=5120
+      - run: npm run build

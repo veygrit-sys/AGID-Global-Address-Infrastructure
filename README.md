@@ -63,13 +63,14 @@ default.
 ```bash
 npm run agid -- help
 npm run agid -- encode --lat <latitude> --lon <longitude> --json
+npm run agid -- encode --lat 35.681236 --lon 139.767125 --id-length 16 --json
 npm run agid -- validate <AGID> --json
 npm run agid -- batch encode --file sample.jsonl --input-format jsonl --json
 npm run agid -- conformance --json
 ```
 
 All JSON/GeoJSON CLI outputs include `schemaVersion` and `cliVersion` for stable
-external integration. See [AGID CLI](docs/agid-cli.md).
+external integration. See the [AGID CLI](docs/agid-cli.md), [AGID16 rollout and country-boundary pilot](docs/agid16-rollout.md), and [worldwide island recognition](docs/island-recognition.md).
 
 ## Funding and Release Readiness
 
@@ -321,11 +322,14 @@ npm run generate:address-hierarchy
 npm run generate:agid-sdks
 ```
 
-Optional Rust WASM build:
+The checked-in browser module at `public/wasm/agid_core.wasm` exposes the nine coordinate and Hilbert functions. To reproduce that release with Rust 1.85.1, run the following commands from the repository root.
 
 ```bash
-npm run build:rust-wasm
+rustup toolchain install 1.85.1 --target wasm32-unknown-unknown
+rustup run 1.85.1 npm run build:rust-wasm -- --coordinate-wasm
 ```
+
+`npm run build:rust-wasm` without the flag builds the full module for local grid and predicate development and writes it to the same path.
 
 ## Current Engineering Strategy
 

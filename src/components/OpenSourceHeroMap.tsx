@@ -2,9 +2,14 @@ import { Grid3X3, Loader2, LocateFixed, Minus, Plus, RefreshCw, Search } from 'l
 import React from 'react';
 import type maplibregl from 'maplibre-gl';
 
+import { AgidGeographySummary } from './AgidGeographySummary';
 import { useAgidGridLayer } from '../hooks/useAgidGridLayer';
 import { useMapLibreLayerSync } from '../hooks/useMapLibreLayerSync';
-import { decodeAGID, encodeAGID, type AGIDResult } from '../lib/agid';
+import { encodeAGID, type AGIDResult } from '../lib/agid';
+import { decodeAgidToResult, looksLikeAGID16 } from '../lib/agidSelection';
+import { installJapaneseIslandMapStyle } from '../lib/japaneseIslandMapStyle';
+import { islandSearchLabel } from '../lib/islandSearchDisplay';
+import { assessAgidGeography } from '../lib/geographicAssessment';
 import { OPENFREEMAP_STYLES, registerPmtilesProtocol } from '../lib/mapEngine';
 import type { PhotonFeature } from '../types/navigation';
 
@@ -39,6 +44,7 @@ const mapCopy = {
     searchAction: 'Search',
     noResults: 'No matching places were found.',
     searchError: 'Search is temporarily unavailable.',
+    invalidAgid: 'Check the characters and enter the complete AGID again.',
     selectedId: 'Selected AGID',
     copyId: 'Copy selected AGID',
     copied: 'Copied',
@@ -62,12 +68,20 @@ const mapCopy = {
     searchAction: '検索',
     noResults: '一致する場所が見つかりませんでした。',
     searchError: '現在検索を利用できません。',
+    invalidAgid: 'AGIDの文字を確認して、もう一度入力してください。',
     selectedId: '選択中のAGID',
     copyId: '選択中のAGIDをコピー',
     copied: 'コピーされました',
     copyFailed: 'コピーできませんでした',
   },
 } as const;
+
+function selectMapPin(lat: number, lon: number, method: 'manual' | 'device' = 'manual', accuracyMeters?: number) {
+  return {
+    result: encodeAGID(lat, lon),
+    assessment: assessAgidGeography({ kind: 'pin', lat, lon, method, accuracyMeters }),
+  };
+}
 
 function getPhotonFeatureLabel(feature: PhotonFeature) {
   const values = [
@@ -88,17 +102,21 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
   const gridUpdateRef = React.useRef<ReturnType<typeof useAgidGridLayer> | null>(null);
   const copyAnnouncementTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchRequestRef = React.useRef(0);
+  const locateRequestRef = React.useRef(0);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [loadFailed, setLoadFailed] = React.useState(false);
   const [loadAttempt, setLoadAttempt] = React.useState(0);
   const [isGridVisible, setIsGridVisible] = React.useState(true);
   const [isGridRegenerating, setIsGridRegenerating] = React.useState(false);
   const [viewport, setViewport] = React.useState(INITIAL_VIEW);
-  const [selectedResult, setSelectedResult] = React.useState<AGIDResult>(() =>
-    encodeAGID(INITIAL_VIEW.lat, INITIAL_VIEW.lng),
-  );
+  const [{ result: selectedResult, assessment }, setSelection] = React.useState(() =>
+    selectMapPin(INITIAL_VIEW.lat, INITIAL_VIEW.lng));
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<PhotonFeature[]>([]);
+  const resultLabels = React.useMemo(() => searchResults.map(feature => {
+    const [lon, lat] = feature.geometry.coordinates;
+    return islandSearchLabel(lat, lon, locale) || getPhotonFeatureLabel(feature);
+  }), [searchResults, locale]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [searchMessage, setSearchMessage] = React.useState('');
   const [copyMessage, setCopyMessage] = React.useState('');
@@ -160,6 +178,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         pitchWithRotate: false,
       });
       mapRef.current = map;
+      installJapaneseIslandMapStyle(map, maplibre.Marker);
 
       map.addControl(new maplibre.ScaleControl({ maxWidth: 110, unit: 'metric' }), 'bottom-right');
       map.on('load', () => {
@@ -194,7 +213,9 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
       });
       map.on('click', event => {
         if (!disposed) {
-          setSelectedResult(encodeAGID(event.lngLat.lat, event.lngLat.lng));
+          const { lat, lng } = event.lngLat.wrap();
+          locateRequestRef.current += 1;
+          setSelection(selectMapPin(lat, lng));
         }
       });
 
@@ -224,16 +245,17 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
   React.useEffect(() => () => {
     if (copyAnnouncementTimerRef.current) clearTimeout(copyAnnouncementTimerRef.current);
     searchRequestRef.current += 1;
+    locateRequestRef.current += 1;
   }, []);
 
-  const selectCoordinates = React.useCallback((lat: number, lng: number, label?: string) => {
-    const result = encodeAGID(lat, lng);
-    setSelectedResult(result);
+  const selectLocation = React.useCallback((selection: ReturnType<typeof selectMapPin>, label?: string) => {
+    locateRequestRef.current += 1;
+    setSelection(selection);
     if (label) setSearchQuery(label);
     setSearchResults([]);
     setSearchMessage('');
     mapRef.current?.flyTo({
-      center: [lng, lat],
+      center: [selection.result.lon, selection.result.lat],
       zoom: Math.max(mapRef.current.getZoom(), 18.7),
       essential: true,
     });
@@ -245,14 +267,21 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     const query = searchQuery.trim();
     if (!query) return;
 
-    const decoded = decodeAGID(query);
+    const requestId = ++searchRequestRef.current;
+    locateRequestRef.current += 1;
+    const decoded = decodeAgidToResult(query);
     if (decoded) {
-      selectCoordinates(decoded.lat, decoded.lon, encodeAGID(decoded.lat, decoded.lon).id);
+      setIsSearching(false);
+      selectLocation({ result: decoded, assessment: assessAgidGeography({ kind: 'cell', id: decoded.id }) }, decoded.id);
+      return;
+    }
+    if (looksLikeAGID16(query)) {
+      setIsSearching(false);
+      setSearchResults([]);
+      setSearchMessage(copy.invalidAgid);
       return;
     }
 
-    const requestId = searchRequestRef.current + 1;
-    searchRequestRef.current = requestId;
     setIsSearching(true);
     setSearchMessage('');
     try {
@@ -269,7 +298,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     } finally {
       if (requestId === searchRequestRef.current) setIsSearching(false);
     }
-  }, [copy.noResults, copy.searchError, isMapReady, searchQuery, selectCoordinates]);
+  }, [copy.invalidAgid, copy.noResults, copy.searchError, isMapReady, searchQuery, selectLocation]);
 
   const retryMapLoad = React.useCallback(() => {
     setIsLoaded(false);
@@ -291,14 +320,13 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
 
   const moveToCurrentLocation = React.useCallback(() => {
     if (!mapRef.current || !navigator.geolocation) return;
+    const requestId = ++locateRequestRef.current;
     navigator.geolocation.getCurrentPosition(position => {
-      mapRef.current?.flyTo({
-        center: [position.coords.longitude, position.coords.latitude],
-        zoom: Math.max(mapRef.current.getZoom(), 18.7),
-        essential: true,
-      });
+      if (requestId !== locateRequestRef.current || !mapRef.current) return;
+      const { latitude, longitude, accuracy } = position.coords;
+      selectLocation(selectMapPin(latitude, longitude, 'device', Number.isFinite(accuracy) && accuracy >= 0 ? accuracy : undefined));
     });
-  }, []);
+  }, [selectLocation]);
 
   return (
     <section
@@ -377,12 +405,12 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         {searchResults.length > 0 ? (
           <ul className="max-h-60 overflow-y-auto border-x border-b border-slate-200 bg-white shadow-xl shadow-slate-900/10">
             {searchResults.map((feature, index) => {
-              const label = getPhotonFeatureLabel(feature);
+              const label = resultLabels[index];
               return (
                 <li key={`${feature.geometry.coordinates.join(',')}-${index}`} className="border-b border-slate-100 last:border-b-0">
                   <button
                     type="button"
-                    onClick={() => selectCoordinates(feature.geometry.coordinates[1], feature.geometry.coordinates[0], label)}
+                    onClick={() => selectLocation(selectMapPin(feature.geometry.coordinates[1], feature.geometry.coordinates[0]), label)}
                     className="block min-h-12 w-full px-4 py-3 text-left text-[12px] font-bold leading-5 text-slate-800 transition hover:bg-blue-50 focus-visible:bg-blue-50"
                   >
                     {label}
@@ -459,6 +487,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         >
           {selectedResult.id}
         </button>
+        <AgidGeographySummary assessment={assessment} locale={locale} manualPin={selectedResult} />
         <p role="status" aria-live="polite" aria-atomic="true" className="pointer-events-none absolute left-0 top-full mt-1 whitespace-nowrap bg-slate-950 px-3 py-2 text-[11px] font-bold text-white empty:hidden">
           {copyMessage}
         </p>

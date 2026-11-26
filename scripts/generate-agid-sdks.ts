@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -216,6 +217,24 @@ const spec = {
     coastalSeaPrefix: 'number + letter',
     otherPrefix: 'number + number',
   },
+  checksummedExtension: {
+    issuance: 'opt-in',
+    totalLength: 16,
+    versionCharacter: '1',
+    layout: 'canonical legacy ID (12) + version (1) + checksum (3)',
+    checksum: {
+      model: 'CRC-15/CAN', polynomial: '0x4599', init: 0, reflectInput: false,
+      reflectOutput: false, xorOut: 0, input: 'ASCII of the first 13 uppercase characters',
+      output: 'three fixed-width AGID Base32 digits, most significant first',
+    },
+    display: 'four groups of four separated by ASCII hyphens, or 16 ungrouped characters',
+    decoding: 'Validate ASCII, format, version, checksum, packed range and face. Preserve the original prefix and cell.',
+    vectors: [
+      { legacy: 'JP05AV8TJGHD', checked: 'JP05AV8TJGHD1MEQ' },
+      { legacy: '3B0200000000', checked: '3B02000000001AW4' },
+      { legacy: 'US0ECWVG02V9', checked: 'US0ECWVG02V91PK2' },
+    ],
+  },
   neighborhood: {
     version: 'agid-grid-neighborhood-v0.1',
     topology: 'eight-neighbor',
@@ -312,7 +331,13 @@ The machine-readable target manifest is \`agid-sdk.json\`. The complete language
 - \`isValidAgid(agid)\`
 - \`validateAgid(agid)\`
 
-## Security Boundary
+${target.id === 'agid-js-ts' ? `## Optional 16-character wire format
+
+For an issued 12-character ID, use \`toAGID16(id)\` to retain its prefix and exact cell and append a version and typo check. For example, \`JP05AV8TJGHD\` becomes \`JP05AV8TJGHD1MEQ\`. Use \`toLegacyAGID(value)\` to recover the original ID or \`normalizeAGIDCode(value)\` to preserve its format. Both readers accept canonical 12-character, raw 16-character and grouped 4-4-4-4 input, and return null for invalid input.
+
+Run \`npm run test:wire\` to build and test the standalone wire-format API. Coordinate encoding and decoding in this SDK are still scaffolds.
+
+` : ''}## Security Boundary
 
 AGID is a public location/address/building-map-feature identifier. SDKs must keep recipient names, phone numbers, room or unit numbers, private delivery instructions, owner keys, device keys, AOID private payloads, and encrypted AOID payloads outside the public AGID contract. Validation helpers are generated so clients can reject malformed or unsafe public AGID strings before decode, QR, NFC, POS, registry, or resolver use.
 
@@ -374,7 +399,7 @@ A generated SDK is not ready for formal distribution until it passes parity test
 AGID is public by design, so SDK security focuses on integrity and strict parsing:
 
 - trim and uppercase before validation,
-- accept only the ${AGID_TOTAL_LENGTH}-character AGID format,
+- validate the ${AGID_TOTAL_LENGTH}-character base format; readers opting into the checksummed extension must also verify its version, checksum and original packed cell,
 - reject hashes outside the AGID Base32 alphabet,
 - reject packed values outside the ${AGID_PACKED_BITS_USED_NUMBER}-bit AGID range,
 - reject face values outside \`0..${AGID_FACE_COUNT - 1}\`,
@@ -621,6 +646,8 @@ export function cellBounds(_id: string): AgidBounds {
 function jsTsFiles(): FileMap {
   return {
     ...commonFiles(AGID_SDK_TARGETS[5]),
+    'src/agid16.ts': readFileSync(new URL('../src/lib/agid16.ts', import.meta.url), 'utf8'),
+    'src/agidContract.ts': readFileSync(new URL('../src/lib/agidContract.ts', import.meta.url), 'utf8'),
     'package.json': json({
       name: '@agid/agid',
       version: AGID_SDK_VERSION,
@@ -628,7 +655,7 @@ function jsTsFiles(): FileMap {
       main: './dist/index.js',
       types: './dist/index.d.ts',
       files: ['dist'],
-      scripts: { build: 'tsc -p tsconfig.json' },
+      scripts: { build: 'tsc -p tsconfig.json', 'test:wire': 'npm run build && node --test test/wire.test.mjs' },
     }),
     'tsconfig.json': json({
       compilerOptions: {
@@ -641,13 +668,17 @@ function jsTsFiles(): FileMap {
       },
       include: ['src'],
     }),
-    'src/index.ts': `export const BASE32_ALPHABET = "${AGID_BASE32_ALPHABET}";
-export const AGID_PREFIX_LENGTH = ${AGID_PREFIX_LENGTH};
-export const AGID_HASH_LENGTH = ${AGID_HASH_LENGTH};
-export const AGID_TOTAL_LENGTH = ${AGID_TOTAL_LENGTH};
-export const AGID_SECURITY_PROFILE = ${JSON.stringify(AGID_SPEC_SECURITY_PROFILE, null, 2)} as const;
+    'src/index.ts': `import { normalizeAGIDCode } from './agid16.js';
+import { AGID_FORMAT_PATTERN, AGID_TOTAL_LENGTH } from './agidContract.js';
 
-const AGID_FORMAT_PATTERN = /^[A-Z0-9]{${AGID_PREFIX_LENGTH}}[${AGID_BASE32_ALPHABET}]{${AGID_HASH_LENGTH}}$/;
+export { normalizeAGIDCode, toAGID16, toLegacyAGID } from './agid16.js';
+export {
+  AGID_BASE32_ALPHABET as BASE32_ALPHABET,
+  AGID_PREFIX_LENGTH,
+  AGID_HASH_LENGTH,
+  AGID_TOTAL_LENGTH,
+  AGID_SPEC_SECURITY_PROFILE as AGID_SECURITY_PROFILE,
+} from './agidContract.js';
 
 export type AgidValidationResult = {
   ok: boolean;
@@ -671,24 +702,32 @@ export type AgidBounds = {
 
 export function normalizeAgid(value: unknown): string | null {
   if (typeof value !== "string") return null;
-  const normalized = value.trim().toUpperCase();
-  return normalized.length > 0 ? normalized : null;
+  const trimmed = value.trim();
+  if (trimmed.length === 16 || trimmed.length === 19) return normalizeAGIDCode(trimmed);
+  return trimmed.toUpperCase() || null;
 }
 
 export function isValidAgid(value: unknown): value is string {
-  const normalized = normalizeAgid(value);
-  return Boolean(normalized && AGID_FORMAT_PATTERN.test(normalized));
+  return normalizeAGIDCode(value) !== null;
 }
 
 export function validateAgid(value: unknown): AgidValidationResult {
-  const normalized = normalizeAgid(value);
+  const canonical = normalizeAGIDCode(value);
+  if (canonical !== null) return { ok: true, normalized: canonical, issues: [] };
+
+  const normalized = typeof value === "string" ? value.trim().toUpperCase() || null : null;
   const issues: string[] = [];
   if (!normalized) {
     return { ok: false, normalized, issues: ["not-a-non-empty-string"] };
   }
-  if (normalized.length !== AGID_TOTAL_LENGTH) issues.push("invalid-length");
-  if (!AGID_FORMAT_PATTERN.test(normalized)) issues.push("invalid-format-or-alphabet");
-  return { ok: issues.length === 0, normalized, issues };
+  if (normalized.length === AGID_TOTAL_LENGTH) {
+    issues.push(AGID_FORMAT_PATTERN.test(normalized) ? "invalid-packed-value-or-input" : "invalid-format-or-alphabet");
+  } else if (normalized.length === 16 || normalized.length === 19) {
+    issues.push("invalid-agid16-format-version-or-checksum");
+  } else {
+    issues.push("invalid-length", "invalid-format-or-alphabet");
+  }
+  return { ok: false, normalized, issues };
 }
 
 export function encode(_lat: number, _lon: number): AgidResult {
@@ -1493,6 +1532,30 @@ test('encode/decode/cellBounds match the AGID spec vectors', () => {
 `,
     },
     'agid-js-ts': {
+      'test/wire.test.mjs': `import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { isValidAgid, normalizeAgid, normalizeAGIDCode, toAGID16, toLegacyAGID, validateAgid } from '../dist/index.js';
+
+test('reads both formats through the built SDK package', () => {
+  const legacy = 'JP05AV8TJGHD';
+  const wire = 'JP05AV8TJGHD1MEQ';
+  const grouped = 'jp05-av8t-jghd-1meq';
+  assert.equal(toAGID16(legacy), wire);
+  for (const input of [legacy, wire, grouped]) {
+    assert.equal(toLegacyAGID(input), legacy);
+    assert.equal(isValidAgid(input), true);
+  }
+  assert.equal(normalizeAGIDCode(grouped), wire);
+  assert.equal(normalizeAgid(grouped), wire);
+  assert.deepEqual(validateAgid(grouped), { ok: true, normalized: wire, issues: [] });
+  for (const invalid of ['JP05AV8TJGHD1MER', 'JP05AV8TJGHD2MEQ', 'JP0R00000000', 'JP０5AV8TJGHD']) {
+    assert.equal(normalizeAGIDCode(invalid), null);
+    assert.equal(toLegacyAGID(invalid), null);
+    assert.equal(isValidAgid(invalid), false);
+    assert.equal(validateAgid(invalid).ok, false);
+  }
+});
+`,
       'test/parity.test.ts': `// ${commonNote}
 import assert from 'node:assert/strict';
 import { test } from 'node:test';

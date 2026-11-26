@@ -18,7 +18,11 @@
   },
   "scripts": {
     "dev": "tsx server.ts",
-    "agid": "node node_modules/tsx/dist/cli.mjs scripts/agid-cli.ts",
+    "agid": "node bin/agid.mjs",
+    "verify:agid16": "node --import tsx --test src/lib/agid16.test.ts src/lib/agid16Wasm.test.ts src/lib/namedSeaPrefixes.test.ts src/lib/countryMapUnits.test.ts src/lib/agidCli.test.ts src/lib/agidLocalResolver.test.ts src/lib/agidSelection.test.ts && npm --prefix sdk/agid-js-ts run test:wire",
+    "verify:agid-geography": "node --import tsx --test --test-concurrency=1 src/lib/agidCoordinateSeams.test.ts src/lib/agidIslandCoast.test.ts src/lib/buesingenBoundary.test.ts src/lib/pearlRiverDelta.test.ts src/lib/geographicAssessment.test.ts src/components/AgidGeographySummary.test.tsx",
+    "verify:agid-islands": "node --import tsx --test --test-concurrency=1 src/lib/globalIslands.test.ts src/lib/minorIslands.test.ts src/lib/japaneseIslandView.test.ts src/lib/disputedIslands.test.ts src/lib/agidIslandCountryIntegration.test.ts src/lib/islandPolicy.test.ts src/lib/japaneseIslandMapStyle.test.ts scripts/local-island-pack-plugin.test.ts scripts/national-island-supplement.test.ts scripts/national-island-point-evidence.test.ts",
+    "benchmark:agid16": "node --import tsx scripts/benchmark-agid16.ts",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "sync:address-metadata": "tsx scripts/sync-address-metadata.ts",
@@ -512,7 +516,7 @@
     "loadtest:prod": "node node_modules/tsx/dist/cli.mjs scripts/load-test-production.ts --execute",
     "improve:loop": "node node_modules/tsx/dist/cli.mjs scripts/continuous-improvement-loop.ts",
     "improve:loop:gates": "node node_modules/tsx/dist/cli.mjs scripts/continuous-improvement-loop.ts --execute-gates",
-    "build:rust-wasm": "tsx scripts/build-rust-wasm.ts",
+    "build:rust-wasm": "node --import tsx scripts/build-rust-wasm.ts",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
     "clean": "tsx scripts/clean-dist.ts",
@@ -606,6 +610,7 @@
     "verify:postal-context-turks-caicos": "node --test scripts/postal-context-m2-tc-ledger.test.mjs && node node_modules/tsx/dist/cli.mjs --test src/lib/postalContextCountryPolicy.test.ts src/lib/postalContextTurksCaicosRepository.test.ts src/lib/postalContextTurksCaicosM2Topology.test.ts src/lib/postalSearchArea.test.ts src/lib/postalSearchAreaGeometryValidation.test.ts src/server/routes/postalContextTurksCaicosM2Routes.test.ts"
   },
   "dependencies": {
+    "@maplibre/maplibre-gl-style-spec": "^24.8.1",
     "@aws-sdk/client-s3": "3.1090.0",
     "@aws-sdk/client-secrets-manager": "3.1090.0",
     "@aws-sdk/s3-request-presigner": "3.1090.0",

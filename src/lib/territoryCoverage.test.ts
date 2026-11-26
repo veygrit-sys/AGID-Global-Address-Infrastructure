@@ -105,7 +105,18 @@ test('AGID results keep disputed region codes for claim-aware address display', 
   assert.equal(birTawil.regionCode, 'BT_T');
   assert.equal(birTawil.regionName, 'Bir Tawil (Terra Nullius)');
 
-  const takeshima = encodeAGID(37.24, 131.86);
+  assert.notEqual(encodeAGID(37.24, 131.86).regionCode, 'JP_TK');
+  const takeshima = encodeAGID(37.24002, 131.87016);
   assert.equal(takeshima.prefix, 'JP');
   assert.equal(takeshima.regionCode, 'JP_TK');
+});
+
+
+test('historic offshore fixtures do not acquire a Japanese island address', () => {
+  for (const [lat, lon] of [[44.5, 146.8], [25.75, 123.55], [37.24, 131.86]]) {
+    const offshore = encodeAGID(lat, lon);
+    assert.equal(offshore.isSea, true);
+    assert.notEqual(offshore.prefix, 'JP');
+    assert.equal(offshore.island, undefined);
+  }
 });

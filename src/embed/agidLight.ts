@@ -1,12 +1,13 @@
 import {
   AGID_BASE32_ALPHABET,
   AGID_FACE_AXIS_DIVISIONS,
-  AGID_FACE_AXIS_MAX,
 } from '../lib/agidContract';
+import { issuanceLongitude, quantizeAgidCell } from '../lib/agidProjection';
+
+export { normalizeLongitude as normalizeLon } from '../lib/agidProjection';
 
 const BASE32_ALPHABET = AGID_BASE32_ALPHABET;
 const K = AGID_FACE_AXIS_DIVISIONS;
-const M = AGID_FACE_AXIS_MAX;
 
 export type AgidLightPoint = {
   lat: number;
@@ -37,21 +38,6 @@ function applyEqualArea(value: number): number {
   return Math.tan((value * Math.PI) / 4);
 }
 
-function invertEqualArea(value: number): number {
-  return (Math.atan(value) * 4) / Math.PI;
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
-}
-
-export function normalizeLon(lon: number): number {
-  let normalized = lon;
-  while (normalized > 180) normalized -= 360;
-  while (normalized < -180) normalized += 360;
-  return normalized;
-}
-
 export function isValidCoordinate(lat: number, lon: number): boolean {
   return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90;
 }
@@ -59,65 +45,6 @@ export function isValidCoordinate(lat: number, lon: number): boolean {
 function sanitizePrefix(prefix: string | undefined): string {
   const normalized = (prefix || 'AG').toUpperCase().replace(/[^A-Z0-9]/g, '');
   return `${normalized}AG`.slice(0, 2);
-}
-
-function getQuantized(lat: number, lon: number) {
-  const phi = (lat * Math.PI) / 180;
-  const theta = (normalizeLon(lon) * Math.PI) / 180;
-
-  const x = Math.cos(phi) * Math.cos(theta);
-  const y = Math.cos(phi) * Math.sin(theta);
-  const z = Math.sin(phi);
-
-  const absX = Math.abs(x);
-  const absY = Math.abs(y);
-  const absZ = Math.abs(z);
-
-  let face = 0;
-  let uc = 0;
-  let vc = 0;
-
-  if (absX >= absY && absX >= absZ) {
-    if (x > 0) {
-      face = 0;
-      uc = y;
-      vc = z;
-    } else {
-      face = 1;
-      uc = -y;
-      vc = z;
-    }
-  } else if (absY >= absX && absY >= absZ) {
-    if (y > 0) {
-      face = 2;
-      uc = -x;
-      vc = z;
-    } else {
-      face = 3;
-      uc = x;
-      vc = z;
-    }
-  } else if (z > 0) {
-    face = 4;
-    uc = -x;
-    vc = -y;
-  } else {
-    face = 5;
-    uc = -x;
-    vc = y;
-  }
-
-  const maxValue = Math.max(absX, absY, absZ);
-  const xi = uc / maxValue;
-  const eta = vc / maxValue;
-  const u = 0.5 * (invertEqualArea(xi) + 1);
-  const v = 0.5 * (invertEqualArea(eta) + 1);
-
-  return {
-    face,
-    qx: clamp(Math.floor(u * K), 0, M),
-    qy: clamp(Math.floor(v * K), 0, M),
-  };
 }
 
 function getFromQuantized(face: number, qx: number, qy: number): AgidLightPoint {
@@ -172,7 +99,7 @@ function getFromQuantized(face: number, qx: number, qy: number): AgidLightPoint 
 
   return {
     lat: (Math.asin(z) * 180) / Math.PI,
-    lon: normalizeLon((Math.atan2(y, x) * 180) / Math.PI),
+    lon: (Math.atan2(y, x) * 180) / Math.PI,
   };
 }
 
@@ -290,8 +217,8 @@ export function encodeAgidLight(lat: number, lon: number, prefix?: string): Agid
     throw new Error('Invalid coordinates for AGID embed');
   }
 
-  const normalizedLon = normalizeLon(lon);
-  const { face, qx, qy } = getQuantized(lat, normalizedLon);
+  const normalizedLon = issuanceLongitude(lat, lon);
+  const { face, qx, qy } = quantizeAgidCell(lat, normalizedLon);
   const hilbert = encodeHilbert(K, qx, qy);
   const hash = encodeBase32(packAgid(face, hilbert), 10);
   const cleanPrefix = sanitizePrefix(prefix);

@@ -148,3 +148,16 @@ test('opens AGID-S locally when the POS key ring contains the matching key', asy
   assert.equal(result.agid?.id, agid.id);
   assert.ok(result.actions.includes('queue-server-registry-check'));
 });
+
+test('a registered legacy ID remains the lookup key when the pin now has a new prefix', async () => {
+  const pin = { lat: 35.35, lon: 139.76 };
+  const issued = 'JP' + encodeAGID(pin.lat, pin.lon).hash;
+  const record = buildRegisteredAddressRecord({ country: 'JP' }, { agid: issued, coords: pin });
+  const resolved = await resolveAgidLocal({ record, coordinates: pin, addressFormat: null });
+  assert.notEqual(encodeAGID(pin.lat, pin.lon).id, issued);
+  assert.equal(resolved.agid?.id, issued);
+  assert.deepEqual(resolved.coordinates, pin);
+  const conflicting = await resolveAgidLocal({ record, coordinates: { lat: 0, lon: 0 }, addressFormat: null });
+  assert.equal(conflicting.agid?.id, issued);
+  assert.ok(conflicting.warnings.includes('pin-outside-issued-cell'));
+});
