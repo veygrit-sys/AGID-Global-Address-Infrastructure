@@ -1,5 +1,5 @@
-import { matchReviewedGeography, isReviewedGeographySource } from './reviewedGeography';
-import { assessAgidGeography } from './geographicAssessment';
+import { matchReviewedGeography } from './reviewedGeography';
+import { assessAgidGeography, reviewedAddressNeedsConfirmation } from './geographicAssessment';
 import { getAddressFormat, type AddressFormat } from '../data/address_formats';
 import { encodeAGID, normalizeAGIDCode, type AGIDResult } from './agid';
 import { decodeAgidToResult, looksLikeAGID16 } from './agidSelection';
@@ -437,9 +437,8 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   // using a geographic hint for the address form, including cells beside water.
   const shorePin = agid && !cellAssessment && matchReviewedGeography(agid.lat, agid.lon);
   const uncertainShoreline = shorePin
-    ? shorePin.surface !== 'land' || shorePin.relation !== 'inside' || shorePin.codes.length !== 1
-    : cellAssessment?.sources.some(s => isReviewedGeographySource(s.source))
-      && (cellAssessment.surface !== 'land' || cellAssessment.status !== 'mapped' || cellAssessment.regionCandidates.length !== 1);
+    ? shorePin.ownershipReview || shorePin.surface !== 'land' || shorePin.relation !== 'inside' || shorePin.codes.length !== 1
+    : reviewedAddressNeedsConfirmation(cellAssessment);
   const uncertainCountry = uncertainShoreline || uncertainIsland || agid?.administrativeMatch?.relation === 'boundary'
     || (cellAssessment && (cellAssessment.regionCandidates.length > 1
       || (territory?.administration && territory.status !== 'inside')));

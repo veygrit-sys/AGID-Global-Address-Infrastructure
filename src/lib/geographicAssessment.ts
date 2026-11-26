@@ -1,4 +1,5 @@
-import { matchReviewedGeography, queryReviewedPolygons, reviewedWindows } from './reviewedGeography';
+import { africanMainlandSource, africanWindowsInBounds, insideAfricanCoverage, type BorderNotice } from './africanMainland';
+import { isReviewedGeographySource, matchReviewedGeography, queryReviewedPolygons, reviewedWindows } from './reviewedGeography';
 import { chelemReviewSource, chelemSurveySource, isReviewedNaturalEarthIsland, queryIslandBorderReviewPolygons } from './islandBorderDisagreement';
 import { pointTerritorialTopology, type TerritorialTopology } from './territorialTopology';
 import { matchTerritorialAdministration, queryTerritorialExclavePolygons, type TerritorialExclaveMatch } from './territorialExclaves';
@@ -36,7 +37,16 @@ export interface AgidGeographicAssessment {
   boundaryAllowanceMeters: number;
   island?: AgidIslandAssessment;
   territorialTopology?: TerritorialTopology;
+  borderNotices?: BorderNotice[];
+  /** Administrative neighbours where physical land or water could not be resolved. */
+  adjacentRegions?: string[];
+  mapDisagreement?: boolean;
   deliveryRegion: null;
+}
+
+export function reviewedAddressNeedsConfirmation(assessment?: AgidGeographicAssessment | null): boolean {
+  return Boolean(assessment?.sources.some(s => isReviewedGeographySource(s.source))
+    && (assessment.surface !== 'land' || assessment.status !== 'mapped' || assessment.regionCandidates.length !== 1));
 }
 
 const mapSource = { source: mapUnits.manifest.source_id, version: mapUnits.manifest.source_version };
@@ -153,23 +163,31 @@ function assessReviewedFootprint(location: GeographicFootprint, radius: number |
   const point = matchReviewedGeography(lat, lon);
   if (!point && (radius === null || radius === 0 || radius > 500_000)) return;
   const disk = diskBounds(center, radius ?? 0);
-  const windows = reviewedWindows.filter(w => boxRelation(w.bbox, disk) !== 'outside'
+  const africanWindows = radius !== null && radius <= 500_000 ? africanWindowsInBounds(disk) : [];
+  const windows = [...reviewedWindows, ...africanWindows].filter(w => boxRelation(w.bbox, disk) !== 'outside'
     && haversineDistanceMeters(center, nearestInWindow(w.bbox, center)) <= (radius ?? 0) + 1e-6);
   if (!point && !windows.length) return;
-  const priority = Math.max(0, ...windows.map(w => w.priority));
-  const covered = windows.some(w => w.priority === priority && boxRelation(w.bbox, disk) === 'inside');
-  const candidates = new Set(point?.codes);
+  const localWindows = windows.filter(w => w.source !== africanMainlandSource);
+  const priority = Math.max(0, ...localWindows.map(w => w.priority));
+  const localCoverage = localWindows.some(w => w.priority === priority && boxRelation(w.bbox, disk) === 'inside');
+  const covered = localCoverage || (!localWindows.length && insideAfricanCoverage(disk));
+  // Preserve the centre island when only the rim of its footprint reaches continental evidence.
+  const baseIsland = !point && africanWindows.length ? getRegionInfo(lat, lon).island : undefined;
+  const candidates = new Set(point?.codes ?? baseIsland?.countryCodes);
   const sources = new Map<string, Source>();
   function addSource(s: Source | undefined) {
     if (s) sources.set(s.source, { source: s.source, version: s.version, attribution: s.attribution });
   }
   addSource(point);
-  const policyIsland = point && getRegionInfo(lat, lon).island;
+  const policyIsland = point ? getRegionInfo(lat, lon).island : baseIsland;
   const disputed = policyIsland?.status === 'disputed';
   if (disputed) { candidates.clear(); addSource(policyIsland); }
   let touchesShore = point?.surface === 'boundary';
   let touchesAdmin = point?.relation === 'boundary';
   let touchesDispute = Boolean(disputed);
+  const notices = new Map(point?.borderNotices?.map(n => [n.id, n]));
+  const adjacent = new Set(point?.adjacentRegions);
+  let mapDisagreement = point?.mapDisagreement === true;
   if (radius !== null && radius > 0 && radius <= 500_000) {
     // Keep the observed point on the intersecting edge. The midpoint of a long
     // edge may be outside both the accuracy disk and the reviewed window.
@@ -179,13 +197,16 @@ function assessReviewedFootprint(location: GeographicFootprint, radius: number |
     const possible = new Set(shapes.flatMap(s => s.codes));
     const foundAll = () => [...possible].every(code => candidates.has(code));
     for (const shape of shapes) {
-      if (foundAll() && (shape.kind === 'physical' ? touchesShore : touchesAdmin)) continue;
+      if (shape.kind !== 'policy' && foundAll() && (shape.kind === 'physical' ? touchesShore : touchesAdmin)) continue;
       contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
         const at = matchReviewedGeography(y, issuanceLongitude(y, x));
-        // Count an edge only in the survey actually used at the contact point. A coarser
-        // coastline may pass straight through the interior of a newly mapped island.
-        const edgeWindowId = 'surveyWindowId' in shape ? shape.surveyWindowId : undefined;
-        if (!at || at.surface === 'water' || at.surveyWindowId !== edgeWindowId) return;
+        // Use the survey active at this contact. A coarser shoreline can cross a smaller island.
+        const windowId = 'surveyWindowId' in shape ? shape.surveyWindowId : undefined;
+        if (!at || at.surface === 'water' || at.surveyWindowId !== windowId) return;
+        if ((shape.source === africanMainlandSource || shape.source.startsWith('africa-')) && at.source !== shape.source) return;
+        for (const n of at.borderNotices ?? []) notices.set(n.id, n);
+        at.adjacentRegions?.forEach(code => adjacent.add(code));
+        mapDisagreement ||= at.mapDisagreement === true;
         addSource(at);
         if (shape.kind === 'physical') touchesShore = true;
         else touchesAdmin = true;
@@ -196,7 +217,9 @@ function assessReviewedFootprint(location: GeographicFootprint, radius: number |
       });
     }
     for (const shape of queryDisputedIslandPolygons(disk)) {
-      contactEdges(shape.rings, disk, center, radius, () => {
+      contactEdges(shape.rings, disk, center, radius, (_a, _b, [x,y]) => {
+        const surveyed = matchReviewedGeography(y, issuanceLongitude(y,x));
+        if (surveyed?.policySurvey && surveyed.island?.status !== 'disputed') return;
         addSource(shape);
         touchesDispute = true;
       });
@@ -208,20 +231,28 @@ function assessReviewedFootprint(location: GeographicFootprint, radius: number |
       const near = matchReviewedGeography(y, issuanceLongitude(y, x));
       addSource(near);
       near?.codes.forEach(code => candidates.add(code));
+      near?.adjacentRegions?.forEach(code => adjacent.add(code));
+      for (const n of near?.borderNotices ?? []) notices.set(n.id, n);
     }
   }
   if (!point && !sources.size) return;
   let surface: AgidGeographicAssessment['surface'] = point?.surface ?? 'unknown';
   if (radius === null || !covered || radius > 500_000) surface = 'unknown';
   else if (touchesShore && radius > 0) surface = 'unknown';
-  const review = surface === 'unknown' || surface === 'boundary' || touchesAdmin || touchesDispute
+  if (point?.source === africanMainlandSource && radius !== null && radius > 0 && (
+    (surface === 'land' && !matchGlobalLandform(lat, lon, radius)) ||
+    (surface === 'water' && !isGlobalInlandWater(lat, lon, radius)))) surface = 'unknown';
+  const review = point?.ownershipReview || mapDisagreement || notices.size > 0 || surface === 'unknown' || surface === 'boundary' || touchesAdmin || touchesDispute
     || (surface === 'land' && candidates.size !== 1);
-  const topology = point && pointTerritorialTopology(lat, lon, policyIsland);
+  const topology = (point || baseIsland) && pointTerritorialTopology(lat, lon, policyIsland);
   const island = policyIsland?.status === 'mapped' && review
     ? { ...policyIsland, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : policyIsland;
   return {
     status: review ? 'needs-confirmation' : 'mapped', surface, regionCandidates: [...candidates].sort(),
     sources: [...sources.values()], footprint: { kind, radiusMeters }, boundaryAllowanceMeters,
+    ...(notices.size && { borderNotices: [...notices.values()].sort((a,b) => a.id.localeCompare(b.id)) }),
+    ...(adjacent.size && surface === 'unknown' && { adjacentRegions: [...adjacent].sort() }),
+    ...(mapDisagreement && { mapDisagreement }),
     ...(island && { island }), ...(topology && { territorialTopology: review && radius !== 0
       ? { ...topology, status: 'uncertain' } : topology }), deliveryRegion: null,
   };
@@ -239,6 +270,7 @@ export function assessAgidGeography(
   // A disk that extends outside the review can also reach independently mapped
   // territory on the other side. Only retain those extra candidates as possibilities.
   if (radius !== null && radius > 0 && reviewed.surface === 'unknown'
+      && !insideAfricanCoverage(diskBounds(location.center, radius))
       && !reviewedWindows.some(w => boxRelation(w.bbox, diskBounds(location.center, radius)) === 'inside')) {
     const outside = assessBaseGeography(location, boundaryAllowanceMeters);
     reviewed.regionCandidates = [...new Set([...reviewed.regionCandidates, ...outside.regionCandidates])].sort();

@@ -1,13 +1,12 @@
+import { unpackMapRing } from './packedMapRing';
+import policies from '../data/islandDisputePolicies.json';
 import { normalizeLongitude } from './agidProjection';
 import { matchDisputedIsland, matchRevisedIslandRegion, needsIslandPolicyReview } from './disputedIslands';
 import { classifyMapPolygon, indexMapPolygon, type IndexedMapPolygon } from './indexedMapPolygon';
 import { matchIslandBorderReview } from './islandBorderDisagreement';
 import type { ReviewedGeographyMatch, ReviewedOceanRegion } from './reviewedGeography';
 
-interface Polygon {
-  bbox: number[];
-  rings: number[][][];
-}
+type Polygon = {bbox: number[]} & ({rings: number[][][]} | {packedRings: string[]});
 export interface SurveyWindow {
   id: string;
   name: string;
@@ -18,12 +17,20 @@ export interface SurveyWindow {
   evidenceUrls: string[];
   land: (Polygon & { kind: 'mainland' | 'island'; name?: string; sharedIslandCountryCodes?: string[] })[];
   oceanRegion?: ReviewedOceanRegion;
+  addressPrefix?: string;
+  /** The YT administrative unit and its physical island must both contain the pin. */
+  islandPolicy?: 'B22';
   water: (Polygon & { kind: 'inland' | 'ocean' })[];
   owners: (Polygon & { code: string; sovereignCode?: string })[];
 }
 
 function index<T extends Polygon>(polygons: T[]) {
-  return polygons.map(polygon => ({ ...polygon, indexed: indexMapPolygon(polygon) }));
+  return polygons.map(polygon => ({ ...polygon, indexed: indexMapPolygon({
+    bbox: polygon.bbox,
+    get rings() {
+      return 'rings' in polygon ? polygon.rings : polygon.packedRings.map(r => unpackMapRing(r, 1_000_000));
+    },
+  }) }));
 }
 
 function hits<T extends { indexed: IndexedMapPolygon }>(polygons: T[], x: number, y: number) {
@@ -41,9 +48,9 @@ type IndexedWindow = ReturnType<typeof indexWindow>;
 
 function matchWindow(window: IndexedWindow, lat: number, x: number): ReviewedGeographyMatch | undefined {
   // Preserve the individual island decisions, including disagreements between national shorelines.
-  if (matchIslandBorderReview(lat, x) || matchDisputedIsland(lat, x) || matchRevisedIslandRegion(lat, x)) return;
+  if (!window.islandPolicy && (matchIslandBorderReview(lat, x) || matchDisputedIsland(lat, x) || matchRevisedIslandRegion(lat, x))) return;
   const { source, version, attribution, evidenceUrls } = window;
-  const common = { source, version, attribution, surveyWindowId: window.id, evidenceUrls: [...evidenceUrls], surveyedIslandOwnership: true };
+  const common = { source, version, attribution, surveyWindowId: window.id, evidenceUrls: [...evidenceUrls], surveyedIslandOwnership: true, ...(window.islandPolicy && { policySurvey: true }) };
   const land = hits(window.land, x, lat);
   const water = hits(window.water, x, lat);
   const wetInterior = water.some(hit => hit.relation === 'inside');
@@ -64,7 +71,14 @@ function matchWindow(window: IndexedWindow, lat: number, x: number): ReviewedGeo
   const landform = landforms.size === 1 ? land[0].polygon.kind : undefined;
   const protectedIsland = landform === 'island' && needsIslandPolicyReview(lat, x);
   const owners = hits(window.owners, x, lat);
-  const codes = protectedIsland ? [] : [...new Set(owners.map(hit => hit.polygon.code))].sort();
+  if (window.islandPolicy && landform === 'island' && !shore && owners.some(o => o.polygon.code === 'YT')) {
+    const policy = policies[window.islandPolicy];
+    return { ...common, surface: 'land', relation: 'inside', landform, codes: [], ownershipReview: true,
+      territoryPrefix: 'YT', island: { ...policy, status: 'disputed', relation: 'inside', countryCodes: [],
+        claimScope: 'island-group', claimantCodes: [...policy.claimantCodes], source, version, attribution,
+        evidenceUrls: [...new Set([...policy.evidenceUrls, ...evidenceUrls])] } };
+  }
+  const codes = protectedIsland || window.islandPolicy ? [] : [...new Set(owners.map(hit => hit.polygon.code))].sort();
   const adminEdge = owners.length > 0 && !owners.some(hit => hit.relation === 'inside');
   const relation = shore || adminEdge || codes.length > 1 ? 'boundary' : 'inside';
   const ownershipReview = relation === 'boundary' || codes.length !== 1;
@@ -73,6 +87,7 @@ function matchWindow(window: IndexedWindow, lat: number, x: number): ReviewedGeo
   const shared = landform === 'island' && !shore && land.length === 1
     ? land[0].polygon.sharedIslandCountryCodes : undefined;
   return {
+    ...(!ownershipReview && window.addressPrefix && { territoryPrefix: window.addressPrefix }),
     ...(shared && { sharedIslandCountryCodes: [...shared] }),
     ...common, surface: shore ? 'boundary' : 'land', landform, codes, ownershipReview, relation,
     ...(landform === 'island' && { island: {
@@ -95,12 +110,12 @@ function* queryPolygons(surveys: IndexedWindow[], bounds: number[]) {
     const { source, version, attribution } = window;
     for (const polygon of [...window.land, ...window.water]) {
       if (overlaps(polygon.bbox, bounds)) yield {
-        source, version, attribution, surveyWindowId: window.id, bbox: polygon.bbox, rings: polygon.rings, kind: 'physical' as const, codes: [] as string[],
+        source, version, attribution, surveyWindowId: window.id, bbox: polygon.bbox, rings: polygon.indexed.rings.map(r => r.points), kind: 'physical' as const, codes: [] as string[],
       };
     }
     for (const polygon of window.owners) {
       if (overlaps(polygon.bbox, bounds)) yield {
-        source, version, attribution, surveyWindowId: window.id, bbox: polygon.bbox, rings: polygon.rings, kind: 'admin' as const, codes: [polygon.code],
+        source, version, attribution, surveyWindowId: window.id, bbox: polygon.bbox, rings: polygon.indexed.rings.map(r => r.points), kind: 'admin' as const, codes: [polygon.code],
       };
     }
   }

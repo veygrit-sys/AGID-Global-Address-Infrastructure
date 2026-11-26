@@ -56,6 +56,8 @@ export function applyIslandPolicyToEvidence(lat: number, lon: number, evidence?:
   // Around these reviewed islands Japan's shoreline outranks generalized
   // depictions from other editions. A gap or open water carries no island assignment.
   if (isJapaneseIslandReviewArea(lat, lon)) return undefined;
+  const shoreline = matchReviewedGeography(lat, lon);
+  if (shoreline?.policySurvey) return shoreline.island;
   const revised = matchRevisedIslandRegion(lat, lon);
   if (revised) return {
     status: 'mapped', countryCodes: [revised.code], sovereignCodes: [revised.code], relation: revised.relation,
@@ -68,7 +70,6 @@ export function applyIslandPolicyToEvidence(lat: number, lon: number, evidence?:
     territory: dispute.territory, territoryJa: dispute.territoryJa, claimScope: dispute.claimScope,
     evidenceUrls: dispute.evidenceUrls, relation: dispute.relation, source: dispute.source, version: dispute.version,
   };
-  const shoreline = matchReviewedGeography(lat, lon);
   if (shoreline) return shoreline.island;
   const borderReview = matchIslandBorderReview(lat, lon);
   if (borderReview) return borderReview;
