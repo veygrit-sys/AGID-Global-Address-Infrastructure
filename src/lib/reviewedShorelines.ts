@@ -13,6 +13,7 @@ import { unpackMapRing } from './packedMapRing';
 import { matchNorthRockShoreline, northRockSource, northRockWindow, queryNorthRockShorelinePolygons } from './northRockShoreline';
 
 interface PackedPolygon {
+  coordinateScale?: number;
   bbox: number[];
   rings: string[];
 }
@@ -70,7 +71,12 @@ const monacoSource = {
   attribution: '© OpenStreetMap contributors, ODbL 1.0',
   evidenceUrls: ['https://download.geofabrik.de/europe/monaco.html','https://www.openstreetmap.org/copyright'],
 };
-const regions = [monaco as ShoreWindow, ...northAmerican, ...european];
+const monacoWindow = monaco as ShoreWindow;
+const regions = [{
+  ...monacoWindow,
+  physical: monacoWindow.physical.map(shape => ({...shape, coordinateScale: 1e7})),
+  owners: monacoWindow.owners.map(shape => ({...shape, coordinateScale: 1e7})),
+}, ...northAmerican, ...european];
 
 interface LakePolygon {
   bbox: number[];
@@ -165,7 +171,7 @@ const cache = new Map<PackedPolygon, { indexed: IndexedMapPolygon; rings: number
 function geometry(polygon: PackedPolygon) {
   let entry = cache.get(polygon);
   if (!entry) {
-    const rings = polygon.rings.map(text => unpackMapRing(text, scale));
+    const rings = polygon.rings.map(text => unpackMapRing(text, polygon.coordinateScale ?? scale));
     entry = { rings, indexed: indexMapPolygon({ bbox: polygon.bbox, rings }) };
     if (cache.size >= 128) cache.delete(cache.keys().next().value!);
     cache.set(polygon, entry);
