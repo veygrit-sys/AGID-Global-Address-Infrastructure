@@ -1,3 +1,4 @@
+import { copyLandBorder, matchLandBorderPoint, needsBorderConfirmation, type LandBorderMatch } from './indiaChinaLandBorders';
 import { matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
 /**
@@ -251,6 +252,7 @@ export interface AGIDResult {
   waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
   coastalUncertainty?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
   administrativeMatch?: CountryMapUnitMatch;
+  landBorder?: LandBorderMatch;
   face: number;
   quantX: number;
   quantY: number;
@@ -329,6 +331,7 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
     ...(region.island && { island: region.island }),
     ...(region.mapUnitMatch && { mapUnitMatch: region.mapUnitMatch }),
     ...(region.waterMatch && { waterMatch: region.waterMatch }),
+    ...(region.landBorder && { landBorder: region.landBorder }),
     ...(region.coastalUncertainty && { coastalUncertainty: region.coastalUncertainty }),
     ...(region.administrativeMatch && { administrativeMatch: region.administrativeMatch }),
     face,
@@ -578,6 +581,7 @@ interface RegionInfo {
   waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
   coastalUncertainty?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
   administrativeMatch?: CountryMapUnitMatch;
+  landBorder?: LandBorderMatch;
 }
 
 let LAST_RESULT: RegionInfo | null = null;
@@ -586,6 +590,7 @@ const mapUnitNames = new Map(COUNTRIES.map(c => [c.code, c.name]));
 function copyRegionInfo(result: RegionInfo): RegionInfo {
   const copy = { ...result };
   if (copy.polygon) copy.polygon = copy.polygon.map(point => [...point]);
+  if (copy.landBorder) copy.landBorder = copyLandBorder(copy.landBorder);
   if (copy.island) copy.island = copyIslandAssessment(copy.island);
   if (copy.mapUnitMatch) copy.mapUnitMatch = { ...copy.mapUnitMatch, codes: [...copy.mapUnitMatch.codes] };
   if (copy.coastalUncertainty) copy.coastalUncertainty = { ...copy.coastalUncertainty };
@@ -595,6 +600,17 @@ function copyRegionInfo(result: RegionInfo): RegionInfo {
 }
 
 function rememberRegion(lat: number, lon: number, result: RegionInfo): RegionInfo {
+  const border = matchLandBorderPoint(lat, lon);
+  if (border) {
+    result.landBorder = border;
+    if (!result.waterMatch) {
+      const prefix = needsBorderConfirmation(border) ? 'BORDER_UNRESOLVED' : border.codes[0];
+      result.prefix = prefix;
+      result.name = prefix === 'BORDER_UNRESOLVED' ? 'Border area requiring confirmation' : (mapUnitNames.get(prefix) ?? prefix);
+      result.isSea = false;
+      delete result.polygon;
+    }
+  }
   LAST_LAT = lat;
   LAST_LON = lon;
   LAST_RESULT = result;

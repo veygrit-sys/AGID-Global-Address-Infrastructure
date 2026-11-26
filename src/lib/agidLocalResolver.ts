@@ -1,4 +1,5 @@
-import { assessAgidGeography } from './geographicAssessment';
+import { needsBorderConfirmation } from './indiaChinaLandBorders';
+import { assessAgidGeography, type AgidGeographicAssessment } from './geographicAssessment';
 import { getAddressFormat, type AddressFormat } from '../data/address_formats';
 import { encodeAGID, normalizeAGIDCode, type AGIDResult } from './agid';
 import { decodeAgidToResult, looksLikeAGID16 } from './agidSelection';
@@ -64,6 +65,7 @@ export type AgidLocalResolverInput = {
     lat: number;
     lon?: number;
     lng?: number;
+    accuracyMeters?: number;
   };
   record?: RegisteredAddressRecord | AOIDRecord | Record<string, unknown> | null;
   addressText?: string;
@@ -95,6 +97,7 @@ export type AgidLocalResolverResult = {
     lat: number;
     lon: number;
   };
+  geography?: AgidGeographicAssessment;
   registeredAddress?: RegisteredAddressRecord;
   aoid?: {
     record: AOIDRecord;
@@ -397,6 +400,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   }
 
   if (!coordinates && inputCoordinates) coordinates = inputCoordinates;
+  let originalPin = coordinates;
   if (agidId) {
     agid = decodeAgidToResult(agidId) || undefined;
     if (!agid) {
@@ -419,6 +423,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
       if (pin.face !== agid.face || pin.qx !== agid.qx || pin.qy !== agid.qy) {
         warnings.push('pin-outside-issued-cell');
         coordinates = undefined;
+        originalPin = undefined;
       }
     }
     coordinates ??= { lat: agid.lat, lon: agid.lon };
@@ -427,22 +432,52 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     agidId = agid.id;
   }
 
-  const islandPolicy = agid?.coordinateSource === 'cell'
-    ? assessAgidGeography({kind: 'cell', id: agid.id}).island : agid?.island;
+  const cellGeography = agid?.coordinateSource === 'cell'
+    ? assessAgidGeography({ kind: 'cell', id: agid.id }) : undefined;
+  const accuracyMeters = input.coordinates?.accuracyMeters;
+  const pinGeography = originalPin && (agid?.landBorder || cellGeography?.landBorder
+    || accuracyMeters !== undefined || (inputCoordinates && cellGeography))
+    ? assessAgidGeography({ kind: 'pin', ...originalPin, method: accuracyMeters === undefined ? 'manual' : 'device', accuracyMeters }) : undefined;
+  const geography = pinGeography ?? cellGeography;
+  const landBorder = geography?.landBorder;
+  const uncertainBorder = Boolean(landBorder && (geography?.status !== 'mapped' || geography.regionCandidates.length !== 1
+    || landBorder.relation === 'boundary' || needsBorderConfirmation(landBorder)));
+  const islandPolicy = cellGeography ? cellGeography.island : agid?.island;
   const uncertainIsland = islandPolicy && (islandPolicy.countryCodes.length !== 1
     || islandPolicy.relation === 'boundary' || islandPolicy.status === 'unresolved' || islandPolicy.status === 'disputed');
+  const inferredBorderCountry = uncertainBorder ? undefined : landBorder?.codes[0];
   if (agid) {
-    apiAddress = {
-      ...(!uncertainIsland && agidApiAddress(agid, input.countryCode)),
-      ...apiAddress,
-    };
-    addressText = addressText || agid.regionName;
+    if (uncertainBorder) {
+      agid = { ...agid, regionCode: 'BORDER_UNRESOLVED', regionName: 'Border area requiring confirmation' };
+    }
+    if (!uncertainIsland && !uncertainBorder) {
+      // A retained ID may have an older prefix or a different region at its cell centre.
+      // In the border layer the polygon hit supplies the inferred country.
+      const derived = landBorder
+        ? { country_code: normalizeCountryCode(input.countryCode || inferredBorderCountry).toLowerCase() }
+        : agidApiAddress(agid, input.countryCode);
+      apiAddress = { ...derived, ...apiAddress };
+    }
+    if (!landBorder) addressText = addressText || agid.regionName;
     audit.push({ step: 'decode-agid', status: 'ok', message: `Resolved AGID ${agid.id} locally.` });
   }
 
+  if (uncertainBorder) {
+    // A reverse-geocoder can choose a side even when the device or AGID cell
+    // straddles the line. Only an explicit or saved postal choice survives.
+    const postalChoice = {
+      country_code: normalizeCountryCode(input.countryCode || normalizedRecord?.country).toLowerCase(),
+      country: '', countryCode: '', countrycode: '', cc: '',
+    };
+    apiAddress = { ...apiAddress, ...postalChoice };
+    if (details) details = { ...details, ...postalChoice };
+  }
   const countryCode = normalizeCountryCode(
-    input.countryCode || apiAddress.country_code || normalizedRecord?.country || (uncertainIsland ? undefined : agid?.regionCode || agid?.prefix),
+    input.countryCode || apiAddress.country_code || normalizedRecord?.country
+      || (uncertainIsland || uncertainBorder ? undefined : inferredBorderCountry || agid?.regionCode || agid?.prefix),
   );
+  const needsBorderChoice = uncertainBorder && !countryCode;
+  if (needsBorderChoice) warnings.push('border-country-needs-confirmation');
   let addressFormat: AddressFormat | null = input.addressFormat ?? null;
   try {
     addressFormat = await resolveAddressFormat(countryCode, input);
@@ -495,7 +530,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     message: `${AGID_ADDRESS_INTELLIGENCE_ENGINE_VERSION} returned ${intelligence.decision}.`,
   });
 
-  const status = statusFromIntelligence(intelligence);
+  const status = needsBorderChoice ? 'partial' : statusFromIntelligence(intelligence);
   const result: AgidLocalResolverResult = {
     resolverVersion: AGID_LOCAL_RESOLVER_VERSION,
     mode: 'local-only',
@@ -503,6 +538,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     inputKind,
     ...(agid ? { agid, agidId: agid.id } : agidId ? { agidId } : {}),
     ...(coordinates ? { coordinates } : {}),
+    ...(landBorder && { geography }),
     ...(registeredAddress ? { registeredAddress } : {}),
     ...(aoidRecord ? {
       aoid: {

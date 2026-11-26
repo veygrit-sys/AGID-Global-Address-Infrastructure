@@ -401,3 +401,30 @@ test('CLI identifies coastal source disagreements on encode and decode', async (
   assert.equal(cell.exitCode, 0);
   assert.equal(JSON.parse(cell.stdout).type, 'unknown');
 });
+
+
+test('CLI preserves the issued prefix and exposes both land-border candidates for pins and cells', async () => {
+  const coordinates = ['--lat', '31.6039325', '--lon', '74.5733387'];
+  for (const length of ['12', '16']) {
+    const pin = await runAgidCli(['encode', ...coordinates, '--id-length', length, '--json']);
+    assert.equal(pin.exitCode, 0);
+    const body = JSON.parse(pin.stdout);
+    assert.deepEqual(body.landBorder.codes, ['IN', 'PK']);
+    assert.equal(body.type, 'unknown');
+    assert.equal(body.prefix, body.id.slice(0, 2));
+    const output = await runAgidCli(['decode', body.id, '--json']);
+    assert.equal(output.exitCode, 0);
+    const cell = JSON.parse(output.stdout);
+    assert.equal(cell.id, body.id);
+    assert.equal(cell.prefix, body.prefix);
+    assert.deepEqual(cell.landBorder.codes, ['IN', 'PK']);
+    assert.equal(cell.regionCode, 'BORDER_UNRESOLVED');
+    assert.equal(cell.type, 'unknown');
+    const geojson = await runAgidCli(['polygon', body.id, '--geojson']);
+    assert.deepEqual(JSON.parse(geojson.stdout).properties.landBorder.codes, ['IN', 'PK']);
+  }
+  const oldId = 'LA' + encodeAGID(31.6039325, 74.5733387).hash;
+  const retained = JSON.parse((await runAgidCli(['decode', oldId, '--json'])).stdout);
+  assert.equal(retained.prefix, 'LA');
+  assert.deepEqual(retained.landBorder.codes, ['IN', 'PK']);
+});

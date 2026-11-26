@@ -80,6 +80,7 @@ export function decodeAgidToResult(agidId: string): AGIDResult | null {
   delete approximate.mapUnitMatch;
   delete approximate.waterMatch;
   delete approximate.administrativeMatch;
+  delete approximate.landBorder;
   const prefix = normalizedId.slice(0, 2);
   const hash = normalizedId.slice(2, AGID_TOTAL_LENGTH);
   return {

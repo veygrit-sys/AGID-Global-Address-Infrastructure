@@ -1,3 +1,4 @@
+import { unpackRing } from './packedMapRing';
 import data from '../data/pearlRiverDelta.json';
 import asianCoasts from '../data/asianIslandCoasts.json';
 import { classifyMapPolygon, indexMapPolygon, type IndexedMapPolygon } from './indexedMapPolygon';
@@ -32,36 +33,10 @@ const waterSources = {
   version: `${landSource.version}+${data.manifest.ocean.source_version}`,
 };
 
-// Base-32 signed deltas, [longitude, latitude], seven decimal places. Keep
-// arithmetic outside JS signed bitwise overflow for the first longitude.
-function unpackRing(text: string): number[][] {
-  const ring: number[][] = [];
-  let offset = 0;
-  let x = 0;
-  let y = 0;
-  function nextDelta() {
-    let packed = 0;
-    let multiplier = 1;
-    let digit: number;
-    do {
-      digit = text.charCodeAt(offset++) - 63;
-      packed += (digit & 31) * multiplier;
-      multiplier *= 32;
-    } while (digit >= 32);
-    return packed % 2 === 1 ? -(packed + 1) / 2 : packed / 2;
-  }
-  while (offset < text.length) {
-    x += nextDelta();
-    y += nextDelta();
-    ring.push([x / data.scale, y / data.scale]);
-  }
-  return ring;
-}
-
 function lazyPolygon(code: string, packed: PackedPolygon) {
   let indexed: IndexedMapPolygon | undefined;
   function geometry() {
-    indexed ??= indexMapPolygon({ bbox: packed.bbox, rings: packed.rings.map(unpackRing) });
+    indexed ??= indexMapPolygon({ bbox: packed.bbox, rings: packed.rings.map(ring => unpackRing(ring, data.scale)) });
     return indexed;
   }
   return { code, bbox: packed.bbox, geometry, isolatedIsland: packed.isolatedIsland };

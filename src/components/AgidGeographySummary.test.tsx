@@ -37,6 +37,35 @@ test('the map credits the boundary provider at an administrative enclave', () =>
   assert.match(result, /Federal Office of Topography swisstopo/);
 });
 
+test('an Attari–Wagah cell displays both countries without asserting land cover', () => {
+  const id = encodeAGID16(31.6039325, 74.5733387).id;
+  const result = render({ kind: 'cell', id });
+  assert.match(result, /AGID cell · Surface undetermined/);
+  assert.match(result, /Possible countries or regions.*India \/ Pakistan/);
+  assert.match(result, /Confirm the region locally/);
+  assert.doesNotMatch(result, /Parties in the mapped dispute/);
+});
+
+test('the map distinguishes a sourced dispute from an area with insufficient boundary evidence', () => {
+  const dispute = render({ kind: 'pin', lat: 35.1, lon: 79.9 }, 'ja');
+  assert.match(dispute, /係争区間に関係する国・地域.*中国 \/ インド/);
+  assert.match(dispute, /表示の根拠/);
+  assert.match(dispute, /href="https:\/\/www\.mea\.gov\.in\//);
+  assert.match(dispute, /href="https:\/\/www\.mfa\.gov\.cn\//);
+  assert.match(dispute, /現地の国・地域を確認してください/);
+
+  const review = render({ kind: 'pin', lat: 27.357, lon: 83.875 }, 'ja');
+  assert.match(review, /境界資料を要確認 · Susta village and adjacent river/);
+  assert.match(review, /href="https:\/\/www\.mofa\.gov\.np\//);
+  assert.doesNotMatch(review, /係争区間に関係する国・地域|国・地域の候補/);
+});
+
+test('a country reached by a device footprint is shown separately from the parties to a nearby dispute', () => {
+  const result = render({ kind: 'pin', method: 'device', lat: 30.2, lon: 80.94, accuracyMeters: 10000 });
+  assert.match(result, /Possible countries or regions<\/dt><dd[^>]*>[^<]*China/);
+  assert.match(result, /Parties in the mapped dispute<\/dt><dd[^>]*>India \/ Nepal<\/dd>/);
+});
+
 function renderIsland(island: NonNullable<AgidGeographicAssessment['island']>, locale = 'en') {
   const assessment: AgidGeographicAssessment = {
     status: 'mapped', surface: 'land', regionCandidates: ['RU'], sources: [],

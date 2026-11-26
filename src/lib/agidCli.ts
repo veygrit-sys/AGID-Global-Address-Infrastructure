@@ -1,6 +1,7 @@
 import { decodeAGID, encodeAGID, encodeAGID16, getCellPolygon, normalizeAGIDCode, type AGIDResult } from './agid';
+import { needsBorderConfirmation } from './indiaChinaLandBorders';
 import { islandDisplayRows } from './islandDisplay';
-import { assessAgidGeography, type AgidGeographyInput } from './geographicAssessment';
+import { assessAgidGeography, type AgidGeographyInput, type AgidGeographicAssessment } from './geographicAssessment';
 import { resolveAgidLocal } from './agidLocalResolver';
 import {
   buildAgidResolverConformanceSuite,
@@ -210,18 +211,32 @@ function coordinateFromText(value: string) {
   return { lat, lon };
 }
 
-function agidSummary(result: AGIDResult) {
+function borderSummary(geography?: AgidGeographicAssessment): Partial<Pick<AGIDResult, 'landBorder' | 'regionCode' | 'regionName'>> {
+  if (!geography?.landBorder) return {};
+  const border = geography.landBorder;
+  const uncertain = geography.status !== 'mapped' || geography.regionCandidates.length !== 1
+    || border.relation === 'boundary' || needsBorderConfirmation(border);
+  return {
+    landBorder: border,
+    ...(uncertain && { regionCode: 'BORDER_UNRESOLVED', regionName: 'Border area requiring confirmation' }),
+  };
+}
+
+function agidSummary(result: AGIDResult, footprint?: AgidGeographicAssessment) {
+  const geography = footprint ?? (result.landBorder
+    ? assessAgidGeography({ kind: 'pin', lat: result.lat, lon: result.lon }) : undefined);
   return {
     id: result.id,
     prefix: result.prefix,
     regionCode: result.regionCode,
     regionName: result.regionName,
+    ...borderSummary(geography),
     ...(result.island && { island: result.island }),
     ...(result.mapUnitMatch && { mapUnitMatch: result.mapUnitMatch }),
     ...(result.waterMatch && { waterMatch: result.waterMatch }),
     ...(result.administrativeMatch && { administrativeMatch: result.administrativeMatch }),
     ...(result.coastalUncertainty && { coastalUncertainty: result.coastalUncertainty }),
-    type: result.coastalUncertainty ? 'unknown' : result.isSea ? 'water' : 'land',
+    type: geography?.landBorder ? geography.surface : result.coastalUncertainty ? 'unknown' : result.isSea ? 'water' : 'land',
     gridSizeMetersApprox: result.gridSize,
     center: {
       lat: result.lat,
@@ -242,13 +257,15 @@ function decodeSummary(input: string) {
   const decoded = decodeAGID(normalized);
   if (!decoded) return null;
   const region = encodeAGID(decoded.lat, decoded.lon);
+  const geography = assessAgidGeography({ kind: 'cell', id: normalized });
   return {
     id: normalized,
     prefix: decoded.prefix,
     regionCode: region.regionCode,
     regionName: region.regionName,
+    ...borderSummary(geography),
     ...(region.coastalUncertainty && { coastalUncertainty: region.coastalUncertainty }),
-    type: region.coastalUncertainty ? 'unknown' : region.isSea ? 'water' : 'land',
+    type: geography.landBorder ? geography.surface : region.coastalUncertainty ? 'unknown' : region.isSea ? 'water' : 'land',
     center: {
       lat: decoded.lat,
       lon: decoded.lon,
@@ -278,6 +295,7 @@ function geoJsonFeature(summary: ReturnType<typeof decodeSummary> | ReturnType<t
       regionCode: summary.regionCode,
       regionName: summary.regionName,
       type: summary.type,
+      ...(summary.landBorder && { landBorder: summary.landBorder }),
     },
     geometry: {
       type: 'Polygon',
@@ -291,6 +309,7 @@ function encodeHuman(summary: ReturnType<typeof agidSummary>) {
     `AGID: ${summary.id}`,
     `Issued ID prefix: ${summary.prefix}`,
     `Regional lookup hint: ${summary.regionName} (${summary.regionCode})`,
+    ...(summary.landBorder ? [`Administrative candidates for pin: ${summary.landBorder.codes.join(', ')}`] : []),
     ...(summary.island ? islandDisplayRows(summary.island, false, codes => codes.join(', ')).map(([label, value]) => `${label}: ${value}`) : []),
     `Type: ${summary.type}`,
     `Center: ${summary.center.lat.toFixed(6)}, ${summary.center.lon.toFixed(6)}`,
@@ -305,7 +324,8 @@ function decodeHuman(summary: NonNullable<ReturnType<typeof decodeSummary>>) {
     `AGID: ${summary.id}`,
     `Valid: yes`,
     `Issued ID prefix: ${summary.prefix}`,
-    `Regional lookup hint: ${summary.regionName} (${summary.regionCode})`,
+    `${summary.landBorder ? 'Cell-centre lookup hint' : 'Regional lookup hint'}: ${summary.regionName} (${summary.regionCode})`,
+    ...(summary.landBorder ? [`Administrative candidates for cell: ${summary.landBorder.codes.join(', ')}`] : []),
     `Type: ${summary.type}`,
     `Center: ${summary.center.lat.toFixed(6)}, ${summary.center.lon.toFixed(6)}`,
     `Cell: face=${summary.cell.face} qx=${summary.cell.qx} qy=${summary.cell.qy}`,
@@ -357,7 +377,8 @@ function resolveSafeSummary(result: Awaited<ReturnType<typeof resolveAgidLocal>>
     mode: result.mode,
     status: result.status,
     inputKind: result.inputKind,
-    agid: result.agid ? agidSummary(result.agid) : result.agidId ? { id: result.agidId } : undefined,
+    ...(result.geography && { geography: result.geography }),
+    agid: result.agid ? agidSummary(result.agid, result.geography) : result.agidId ? { id: result.agidId } : undefined,
     coordinates: result.coordinates,
     secure: result.secure && secureOpened
       ? secureOpenSummary(result.secure.modelVersion, secureOpened)

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import type { AddressFormat } from '../data/address_formats';
-import { encodeAGID } from './agid';
+import { encodeAGID, encodeAGID16 } from './agid';
 import { createAgidSecureToken } from './agidSecureShare';
 import { generatePosSecureKeyEntry } from './agidSecurePos';
 import {
@@ -160,4 +160,62 @@ test('a registered legacy ID remains the lookup key when the pin now has a new p
   const conflicting = await resolveAgidLocal({ record, coordinates: { lat: 0, lon: 0 }, addressFormat: null });
   assert.equal(conflicting.agid?.id, issued);
   assert.ok(conflicting.warnings.includes('pin-outside-issued-cell'));
+});
+
+
+test('border candidates do not select a postal country, and an explicit destination survives', async () => {
+  // Midpoint on the surveyed India–Pakistan boundary at Attari–Wagah.
+  const boundary = { lat: 31.6039325, lon: 74.5733387 };
+  const requests: string[] = [];
+  const addressFormatResolver = async (code: string) => { requests.push(code); return null; };
+  for (const input of [
+    { coordinates: boundary },
+    { query: encodeAGID(boundary.lat, boundary.lon).id },
+    { query: encodeAGID16(boundary.lat, boundary.lon).id },
+    { coordinates: { lat: 31.60403, lon: 74.57333, accuracyMeters: 40 } },
+  ]) {
+    const result = await resolveAgidLocal({ ...input, addressFormatResolver, apiAddress: { country_code: 'in' }, details: { cc: 'PK' } });
+    assert.deepEqual(result.geography?.landBorder?.codes, ['IN', 'PK']);
+    assert.ok(result.warnings.includes('border-country-needs-confirmation'));
+    assert.equal(result.agid?.regionCode, 'BORDER_UNRESOLVED');
+    assert.ok(result.actions.includes('ask-user-to-confirm'));
+    assert.equal(result.intelligence?.canonicalAddress.country_code, undefined);
+    assert.equal(result.geography?.deliveryRegion, null);
+  }
+  assert.deepEqual(requests, []);
+  const selected = await resolveAgidLocal({ coordinates: boundary, countryCode: 'PK', addressFormatResolver });
+  assert.deepEqual(requests, ['PK']);
+  assert.equal(selected.intelligence?.canonicalAddress.country_code, 'pk');
+  assert.deepEqual(selected.geography?.regionCandidates, ['IN', 'PK']);
+});
+
+test('an exclusive border interior can drive the format; a disputed interior cannot', async () => {
+  const requests: string[] = [];
+  const addressFormatResolver = async (code: string) => { requests.push(code); return null; };
+  await resolveAgidLocal({ coordinates: { lat: 31.6049325, lon: 74.57333 }, addressFormatResolver });
+  assert.deepEqual(requests, ['IN']);
+  const disputed = { lat: 35.1, lon: 79.9 };
+  for (const input of [
+    { coordinates: disputed },
+    { query: encodeAGID16(disputed.lat, disputed.lon).id },
+  ]) {
+    const result = await resolveAgidLocal({ ...input, addressFormatResolver });
+    assert.ok(result.geography?.landBorder?.disputedAreas?.length);
+    assert.deepEqual(result.geography?.regionCandidates, ['CN', 'IN']);
+    assert.equal(result.intelligence?.canonicalAddress.country_code, undefined);
+  }
+  assert.deepEqual(requests, ['IN']);
+});
+
+
+test('a disk extending into the surveyed area cannot select its sole observed candidate', async () => {
+  const coordinates = { lat: 42.0001, lon: 104.5001, accuracyMeters: 35 };
+  const requests: string[] = [];
+  const result = await resolveAgidLocal({ coordinates, addressFormatResolver: async code => { requests.push(code); return null; } });
+  assert.equal(result.geography?.footprint.kind, 'device-pin');
+  assert.deepEqual(result.geography?.regionCandidates, ['MN']);
+  assert.equal(result.geography?.landBorder?.partialCoverage, true);
+  assert.equal(result.geography.status, 'needs-confirmation');
+  assert.deepEqual(requests, []);
+  assert.equal(result.intelligence?.canonicalAddress.country_code, undefined);
 });
