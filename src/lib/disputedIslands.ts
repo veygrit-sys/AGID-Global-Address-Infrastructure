@@ -1,5 +1,6 @@
 import geometry from '../data/disputedIslandGeometry.json';
 import records from '../data/islandDisputePolicies.json';
+import { northRockDryPolygon, northRockSource, northRockWindow } from './northRockShoreline';
 import { normalizeLongitude } from './agidProjection';
 import { classifyMapPolygon, indexMapPolygon } from './indexedMapPolygon';
 
@@ -93,6 +94,13 @@ for (const group of geometry.groups) {
   }
 }
 
+// CanVec identifies a much smaller exposed rock inside the intertidal reef.
+disputed.push({
+  ...records.MACHIAS, ...northRockDryPolygon,
+  source: northRockSource.source, version: northRockSource.version,
+  territory: 'North Rock', territoryJa: 'ノースロック', status: 'disputed', claimScope: 'feature',
+  evidenceUrls: [...new Set([...records.MACHIAS.evidenceUrls, ...northRockSource.evidenceUrls])],
+});
 const disputes = buildIndex(disputed);
 const revisions = buildIndex(revised);
 
@@ -147,5 +155,8 @@ for (const group of geometry.groups) {
 /** Call only after establishing island land; a true result alone establishes no claim or surface. */
 export function needsIslandPolicyReview(lat: number, lon: number): boolean {
   const x = normalizeLongitude(lon);
+  // Even optional island packs cannot assign Canadian or US ownership to this rock or reef.
+  const [w, s, e, n] = northRockWindow.bbox;
+  if (x >= w && x <= e && lat >= s && lat <= n) return true;
   return reviewBins.get(bin(lat, x))?.some(([w, s, e, n]) => x >= w && x <= e && lat >= s && lat <= n) ?? false;
 }

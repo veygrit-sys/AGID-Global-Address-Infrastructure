@@ -3,6 +3,7 @@ import sourceData from '../src/data/nationalIslandSupplement.json';
 import { needsIslandPolicyReview } from '../src/lib/disputedIslands';
 import { isJapaneseIslandReviewArea } from '../src/lib/japaneseIslandView';
 import { pointTerritorialTopology } from '../src/lib/territorialTopology';
+import { matchUsCanadaShoreline } from '../src/lib/usCanadaShorelines';
 import { applyIslandPolicyToEvidence, matchBundledIsland, type AgidIslandAssessment, type IslandEvidence } from '../src/lib/islandPolicy';
 
 export type PackHit = IslandEvidence & {
@@ -16,6 +17,32 @@ const byPhysicalId = new Map<string, (typeof sourceData.sources)[number]>(source
 export function assessPackPoint(lat: number, lon: number, raw: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean): AgidIslandAssessment | undefined {
   const primary = applyIslandPolicyToEvidence(lat, lon, raw ?? undefined);
+  const shore = matchUsCanadaShoreline(lat, lon);
+  if (shore) {
+    // Named territorial policies continue to apply to their surveyed island.
+    if (primary?.claimantCodes) return primary;
+    // An independently surveyed lake island can fill a GSHHG omission. The
+    // quantized copy of GSHHG alone cannot overrule that pack's exact lake.
+    if (mappedInlandWater && !shore.surveyedLakeIsland) return undefined;
+    if (shore.surface === 'water' || shore.surface === 'unknown' || shore.landform === 'mainland') return undefined;
+    const reviewed = shore.island;
+    if (!reviewed && shore.surface === 'boundary') return undefined;
+    if (raw && (raw.disputed || raw.relation === 'boundary' || raw.codes.length > 1
+      || (shore.codes.length > 0 && raw.codes.some(code => !shore.codes.includes(code))))) {
+      const evidence = reviewed ?? raw;
+      return { status: 'unresolved', countryCodes: [], source: evidence.source, version: evidence.version,
+        attribution: reviewed?.attribution, evidenceUrls: reviewed?.evidenceUrls,
+        relation: raw.relation === 'boundary' ? 'boundary' : shore.relation };
+    }
+    if (shore.surface === 'boundary' || shore.ownershipReview || shore.codes.length > 0) return reviewed;
+    // With no jurisdiction in the bundled extract, the exact, pinned pack may
+    // supply it for this physical island at this point only.
+    if (pinnedSourceEdition && raw?.codes.length === 1 && ['CA', 'US'].includes(raw.codes[0])) {
+      return { status: 'mapped', countryCodes: [...raw.codes], sovereignCodes: [...(raw.sovereignCodes ?? [])],
+        relation: 'inside', source: raw.source, version: raw.version };
+    }
+    return reviewed;
+  }
   if (mappedInlandWater && primary?.status !== 'japan-position'
     && primary?.source !== 'mlit-n03-tokyo-remote-islands') return undefined;
   if (!raw) return primary ?? matchBundledIsland(lat, lon);

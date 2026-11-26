@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import data from '../data/disputedIslandGeometry.json';
+import { matchNorthRockShoreline, northRockDryPolygon } from './northRockShoreline';
 import {
   matchDisputedIsland, matchRevisedIslandRegion, needsIslandPolicyReview,
   queryDisputedIslandPolygons, queryRevisedIslandPolygons,
@@ -75,4 +76,26 @@ test('exact shores are boundaries and disk queries include a real intersecting p
     assert.equal(matchDisputedIsland(lat, lon), undefined);
     assert.equal(needsIslandPolicyReview(lat, lon), false);
   }
+});
+
+test('North Rock is disputed on mapped dry rock and uncertain on the intertidal survey footprint', () => {
+  const dry = matchDisputedIsland(44.53777, -67.0867);
+  assert.deepEqual(dry?.claimantCodes, ['CA', 'US']);
+  assert.equal(dry?.territory, 'North Rock');
+  assert.equal(dry?.claimScope, 'feature');
+  assert.equal(dry?.administeringCode, null);
+  assert.equal(matchDisputedIsland(44.53777, 360 - 67.0867)?.territory, 'North Rock');
+  assert.deepEqual(matchDisputedIsland(44.50183333, -67.10113889)?.claimantCodes, ['CA', 'US']);
+  // The official light is on a charted reef. Neither this coordinate nor the
+  // larger generalized shoreline supplies evidence of a permanently dry polygon.
+  for (const [lat, lon] of [[44.53772222, -67.08716667], [44.5356, -67.0867]]) {
+    assert.equal(matchNorthRockShoreline(lat, lon)?.surface, 'unknown');
+    assert.equal(matchDisputedIsland(lat, lon), undefined);
+    assert.equal(needsIslandPolicyReview(lat, lon), true);
+  }
+  assert.equal(matchNorthRockShoreline(44.539, -67.089)?.surface, 'water');
+  assert.equal(matchNorthRockShoreline(44.546, -67.087), undefined);
+  const [x, y] = northRockDryPolygon.rings[0][0];
+  assert.equal(matchDisputedIsland(y, x)?.relation, 'boundary');
+  assert.equal(matchNorthRockShoreline(y, x)?.surface, 'boundary');
 });
