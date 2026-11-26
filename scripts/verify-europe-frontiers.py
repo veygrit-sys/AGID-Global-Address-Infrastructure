@@ -5,6 +5,7 @@ import base64
 from collections import Counter, defaultdict
 import hashlib
 import json
+import math
 from pathlib import Path
 import sqlite3
 import struct
@@ -73,8 +74,8 @@ def audit(args):
             coords=[]
             for x,y,*_ in path:
                 if coords:
-                    x+=360*round((coords[-1][0]/SCALE-x)/360)
-                coords.append((round(x*SCALE),round(y*SCALE)))
+                    x+=360*math.floor((coords[-1][0]/SCALE-x)/360+0.5)
+                coords.append((math.floor(x*SCALE+0.5),math.floor(y*SCALE+0.5)))
             for start,(size,wanted,*_) in blocks[fid,k].items():
                 assert digest(coords[start:start+size])==wanted, (fid,k,start)
             assert len(coords)==sum(p[0]-int(start!=0) for start,p in blocks[fid,k].items())
