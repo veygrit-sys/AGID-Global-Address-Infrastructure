@@ -4,7 +4,6 @@ import argparse
 import concurrent.futures
 import hashlib
 import json
-import math
 from pathlib import Path
 import sqlite3
 import struct
@@ -79,8 +78,7 @@ def land_source(path):
     db = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
     table, column = db.execute("SELECT table_name,column_name FROM gpkg_geometry_columns WHERE geometry_type_name='MULTILINESTRING'").fetchone()
-    if not all(s.replace("_","").isalnum() for s in (table,column)):
-        raise ValueError("Unexpected layer identifier")
+    table = table.replace('"', '""')
     result = []
     for r in db.execute(f'SELECT * FROM "{table}" ORDER BY fid'):
         names = [r["COUNTRY1"], r["COUNTRY2"]]
