@@ -4,17 +4,21 @@ const EPSILON = 1e-12;
 export type MapPolygonRelation = 'outside' | 'inside' | 'boundary';
 
 function indexRing(points: number[][]) {
-  const edges = new Map<number, number[]>();
-  for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1][1], b = points[i][1];
-    const last = Math.floor((Math.max(a, b) + EPSILON) * 4);
-    for (let band = Math.floor((Math.min(a, b) - EPSILON) * 4); band <= last; band++) {
-      const indices = edges.get(band);
-      if (indices) indices.push(i);
-      else edges.set(band, [i]);
-    }
+  let south = Infinity, north = -Infinity;
+  for (const [, lat] of points) {
+    south = Math.min(south,lat);
+    north = Math.max(north,lat);
   }
-  return { points, edges };
+  const count = Math.min(256, Math.max(1, Math.ceil((points.length-1)/16)));
+  const scale = north > south ? count/(north-south) : 0;
+  const band = (lat: number) => Math.max(0,Math.min(count-1,Math.floor((lat-south)*scale)));
+  const edges: number[][] = Array.from({length:count}, () => []);
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i-1][1], b = points[i][1];
+    const last = band(Math.max(a,b)+EPSILON);
+    for (let j=band(Math.min(a,b)-EPSILON); j<=last; j++) edges[j].push(i);
+  }
+  return {points,edges,band};
 }
 
 export function indexMapPolygon(polygon: { bbox: number[]; rings: number[][][] }) {
@@ -28,7 +32,7 @@ export type IndexedMapPolygon = ReturnType<typeof indexMapPolygon>;
 
 function classifyRing(x: number, y: number, ring: ReturnType<typeof indexRing>): MapPolygonRelation {
   let inside = false;
-  for (const i of ring.edges.get(Math.floor(y * 4)) ?? []) {
+  for (const i of ring.edges[ring.band(y)]) {
     const [ax, ay] = ring.points[i - 1];
     const [bx, by] = ring.points[i];
     if (y < Math.min(ay, by) - EPSILON || y > Math.max(ay, by) + EPSILON) continue;

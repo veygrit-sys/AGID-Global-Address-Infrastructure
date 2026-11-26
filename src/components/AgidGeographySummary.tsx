@@ -73,6 +73,7 @@ export function AgidGeographySummary({ assessment: base, input, locale, manualPi
         </dl>
       )}
       {detail?.base === base && detail.failed && <p>{japanese ? '詳細な国境線を読み込めませんでした。' : 'Detailed frontier data could not be loaded.'}</p>}
+      {assessment.administrativeArea?.joint && <p>{japanese ? '共同管轄区域' : 'Joint administrative area'} · {formatRegions(assessment.administrativeArea.codes)}</p>}
       {assessment.frontiers?.map(f => <p key={f.id}>{f.name} · {f.classification}</p>)}
       {assessment.administrativeSourceDisagreement && <p>{japanese ? 'この地点では国境資料の判定が分かれます。' : 'Boundary sources differ at this location.'}</p>}
       {evidenceRows.length > 0 && (

@@ -421,3 +421,12 @@ test('encode classifies its original Büsingen pin while decode and GeoJSON clas
     assert.deepEqual(feature.properties.territorialTopology, decoded.territorialTopology);
   }
 });
+
+test('geography lists all frontier records for an overseas territory through the standard CLI', async () => {
+  const query = await runAgidCli(['geography','--borders-of','GF','--json']);
+  assert.equal(query.exitCode,0);
+  const result = JSON.parse(query.stdout);
+  assert.equal(result.region,'GF');
+  assert.ok(result.frontiers.some((f: { codes: string[] }) => f.codes.join('-')==='GF-SR'));
+  assert.notEqual((await runAgidCli(['geography','--borders-of','GF','--lat=2','--lon=-53'])).exitCode,0);
+});

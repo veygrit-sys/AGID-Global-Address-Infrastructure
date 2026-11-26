@@ -35,6 +35,18 @@ The Bidasoa and Îles du Salut extracts adapt IGN BD TOPO® hydrography, coastal
 
 The Märket subdivision uses coordinates published in the Finland–Sweden boundary demarcation and a derived dry-ground mask. © ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium (CC BY 4.0). The mask selects and erodes the connected land component, then clips it to the administrative outline. [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en/stateboundaries) · [ESA WorldCover data terms](https://esa-worldcover.org/en/data-access)
 
+## Europe-wide frontier atlas
+
+| Dataset | Attribution and reuse |
+| --- | --- |
+| Boundary lines and country sides | U.S. Department of State LSIB v11.4 of 24 February 2025, FieldMaps USGS/LSIB International of 29 July 2025, Natural Earth v5.1.2. Public-domain editions. Original lines have been quantized and indexed. Original administrative faces were clipped to local tiles. [LSIB](https://geodata.state.gov/geonetwork/srv/api/records/3bdb81a0-c1b9-439a-a0b1-85dac30c59b2) · [FieldMaps](https://fieldmaps.io/data/adm0/) · [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/) |
+| Neighbour inventory | GeoNames, CC BY 4.0. AGID cross-referenced neighbouring codes and applied the documented territory exceptions. [GeoNames](https://www.geonames.org/export/) · [Code inventory](scripts/data/europe-frontiers/scope.json) |
+| Maritime lines | Flanders Marine Institute (2023). Maritime Boundaries Geodatabase, version 12. Selected bilateral lines are indexed with original IDs, designations and cited evidence. [Boundary polylines](https://doi.org/10.14284/632) · [Geodatabase](https://doi.org/10.14284/628) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| Treaty coordinates and joint administrative areas | Published coordinates from Canada, the Kingdom of Denmark and Greenland, Article 4 (2022), the French Republic and the Kingdom of the Netherlands, Annex A (2023), and the 2006 Finland–Sweden demarcation. Luxembourg ACT INSPIRE joint territory polygons, CC0. [Tartupaluk](https://www.retsinformation.dk/api/pdf/239124) · [Saint-Martin](https://zoek.officielebekendmakingen.nl/trb-2023-66.html) · [ACT](https://data.public.lu/en/datasets/inspire-annex-i-theme-administrative-units-condominium-2/) |
+| Monaco coastline and administrative area | © OpenStreetMap contributors, via Geofabrik, 24 November 2026. The complete adapted Monaco database is separately available under ODbL 1.0. Coastline ways were polygonized and intersected with relation 1124039. [Adapted database](src/data/monaco-osm-shoreline.json) · [Original snapshot](https://download.geofabrik.de/europe/monaco-261124.osm.pbf) · [Attribution](https://www.openstreetmap.org/copyright) · [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) |
+
+The atlas also indexes the national and cadastral extracts credited below, including an indexed copy of the separately downloadable Serbian ODbL line. [Feature provenance](src/data/europe-frontiers/sources.json) · [Scope, transformations and validation](docs/europe-frontier-atlas.md)
+
 ## European inland borders and exclaves
 
 The administrative outlines are clipped, reprojected where necessary, rounded to seven decimal places and delta-encoded in distinct JSON files. The runtime compares the two editions at query time. Exact input datasets, retrieval URLs and transformation scripts are listed in the [inland border guide](docs/europe-complex-borders.md).

@@ -13,7 +13,7 @@ export function supplementTreaties(input) {
 }
 
 // Spherical interpolation of short surveyed geodesics; original GRS80/ITRF2014 endpoints are preserved.
-// Over a sub-kilometre segment the difference from ellipsoidal interpolation is below the coordinate storage precision.
+// Preserve the three treaty stations as anchors while sampling the short segments for map intersections.
 function densifyGeodesics(points) {
   const radians = Math.PI / 180;
   const vector = ([lon,lat]) => [Math.cos(lat*radians)*Math.cos(lon*radians),Math.cos(lat*radians)*Math.sin(lon*radians),Math.sin(lat*radians)];

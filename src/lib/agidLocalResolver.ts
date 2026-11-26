@@ -432,7 +432,9 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   const geographic = agid ? await assessAgidGeographyWithFrontiers(agid.coordinateSource === 'cell'
     ? {kind: 'cell', id: agid.id} : {kind: 'pin', lat: agid.lat, lon: agid.lon}) : undefined;
   const cellAssessment = agid?.coordinateSource === 'cell' ? geographic : undefined;
-  const frontierContact = geographic?.frontiers?.some(f => f.codes.length > 0 && !['reference','water-line'].includes(f.kind));
+  const frontierContact = geographic?.administrativeCandidates?.length || geographic?.administrativeArea || geographic?.frontiers?.some(f => f.codes.length > 0 && !['reference','water-line'].includes(f.kind));
+  const frontierCountry = frontierContact && geographic?.status === 'mapped' && geographic.surface === 'land' &&
+    geographic.regionCandidates.length === 1 ? geographic.regionCandidates[0] : undefined;
   const islandPolicy = cellAssessment?.island ?? agid?.island;
   const uncertainIsland = islandPolicy && (islandPolicy.countryCodes.length !== 1
     || islandPolicy.relation === 'boundary' || islandPolicy.status === 'unresolved' || islandPolicy.status === 'disputed');
@@ -451,7 +453,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
       || (territory?.administration && territory.status !== 'inside')));
   if (agid) {
     apiAddress = {
-      ...(!uncertainCountry && agidApiAddress(agid, input.countryCode)),
+      ...(!uncertainCountry && agidApiAddress(agid, input.countryCode || frontierCountry)),
       ...apiAddress,
     };
     addressText = addressText || agid.regionName;
@@ -459,7 +461,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   }
 
   const countryCode = normalizeCountryCode(
-    input.countryCode || apiAddress.country_code || normalizedRecord?.country || (uncertainCountry ? undefined : agid?.regionCode || agid?.prefix),
+    input.countryCode || apiAddress.country_code || normalizedRecord?.country || frontierCountry || (uncertainCountry ? undefined : agid?.regionCode || agid?.prefix),
   );
   let addressFormat: AddressFormat | null = input.addressFormat ?? null;
   try {

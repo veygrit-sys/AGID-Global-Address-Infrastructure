@@ -1,3 +1,5 @@
+import { europeanFrontierSides } from './europeFrontierSides';
+import { frontierAreaAt } from './europeFrontierAreas';
 import frontierSources from '../data/europe-frontiers/sources.json';
 import { europeanFrontiersTouching, type FrontierFeature } from './europeFrontierAtlas';
 import {
@@ -41,6 +43,8 @@ export interface AgidGeographicAssessment {
   boundaryAllowanceMeters: number;
   administrativeSourceDisagreement?: true;
   frontiers?: FrontierFeature[];
+  administrativeCandidates?: string[];
+  administrativeArea?: NonNullable<ReturnType<typeof frontierAreaAt>> & { appliesTo: 'point' | 'center' };
   frontierSearch?: 'unknown-accuracy' | 'large-footprint';
   island?: AgidIslandAssessment;
   territorialTopology?: TerritorialTopology;
@@ -621,27 +625,47 @@ function contactWithCell(corners: PostalContextPosition[], ax: number, ay: numbe
 
 export async function assessAgidGeographyWithFrontiers(input: AgidGeographyInput, base = assessAgidGeography(input)): Promise<AgidGeographicAssessment> {
   const { center, corners, radiusMeters } = footprint(input);
-  if (radiusMeters === null) return {...base, frontierSearch: 'unknown-accuracy'};
-  if (radiusMeters > 500000) return {...base, frontierSearch: 'large-footprint'};
-  const box = diskBounds(center,radiusMeters);
-  const hits = await europeanFrontiersTouching(box, (ax,ay,bx,by) => {
+  const box = diskBounds(center,radiusMeters ?? 0);
+  const area = frontierAreaAt(center[0],center[1],box);
+  let assessment: AgidGeographicAssessment = area ? {...base, administrativeArea: {...area, appliesTo: radiusMeters === 0 ? 'point' : 'center'}} : base;
+  if (radiusMeters === null) return {...assessment, frontierSearch: 'unknown-accuracy'};
+  if (radiusMeters > 500000) return {...assessment, frontierSearch: 'large-footprint'};
+  const touches = (ax: number, ay: number, bx: number, by: number) => {
     if (corners) return Boolean(contactWithCell(corners,ax,ay,bx,by));
     if (!radiusMeters) return onFrontier(center[0],center[1],ax,ay,bx,by);
     return Boolean(contactOnEdge(center,radiusMeters,ax,ay,bx,by));
-  });
-  if (!hits.length) return base;
+  };
+  const [hits,sides] = await Promise.all([europeanFrontiersTouching(box,touches), europeanFrontierSides(box,center,radiusMeters===0,touches)]);
+  if (!hits.length && !area && !sides?.codes.length) return assessment;
   const candidates = new Set(base.regionCandidates);
   const fine = base.territorialTopology?.administration || base.administrativeSourceDisagreement
     || base.island?.status === 'disputed' || base.island?.status === 'japan-position'
-    || base.sources.some(s => ['vennbahn-cadgis-nrw','jungholz-bev-bavaria','medjurecje-geoboundaries','market-2006-demarcation','swisstopo-swissboundaries3d-buesingen'].includes(s.source));
+    || base.sources.some(s => ['osm-monaco-shoreline','vennbahn-cadgis-nrw','jungholz-bev-bavaria','medjurecje-geoboundaries','market-2006-demarcation','swisstopo-swissboundaries3d-buesingen'].includes(s.source));
   const credits = new Map(base.sources.map(s => [s.source,s]));
+  if (sides && sides.codes.length && !sides.masked && !fine && !area) {
+    assessment = {...assessment, administrativeCandidates: sides.codes};
+    credits.set(frontierSources.fieldmaps.source,frontierSources.fieldmaps);
+    if (base.surface === 'land') {
+      candidates.clear();
+      sides.codes.forEach(code => candidates.add(code));
+    }
+  }
+  if (area) {
+    credits.set(area.source,{source:area.source,version:area.version,attribution:area.attribution});
+    if (base.surface === 'land') {
+      if (radiusMeters === 0 || (!area.joint && area.coversFootprint)) candidates.clear();
+      area.codes.forEach(code => candidates.add(code));
+    }
+  }
   for (const hit of hits) {
     const source = frontierSources[hit.source as keyof typeof frontierSources];
     if (source) credits.set(source.source,source);
+    if (area && !area.joint && area.coversFootprint && area.source !== source?.source) continue;
+    if (sides?.masked && hit.kind === 'international') continue;
     if (base.surface === 'land' && !fine && ['international','demarcation','signed-agreement','survey','joint-limit'].includes(hit.kind)) {
       hit.codes.forEach(code => candidates.add(code));
     }
   }
-  return {...base, frontiers: hits, sources: [...credits.values()], regionCandidates: [...candidates].sort(),
-    status: candidates.size > 1 || base.status === 'unassessed' ? 'needs-confirmation' : base.status};
+  return {...assessment, ...(hits.length && {frontiers: hits}), sources: [...credits.values()], regionCandidates: [...candidates].sort(),
+    status: candidates.size > 1 || ((area || hits.length > 0) && base.status === 'unassessed') ? 'needs-confirmation' : base.status};
 }

@@ -201,3 +201,5 @@ Forbidden CLI outputs include:
 - private key or device secret
 - recipient identity fields
 - room or access details
+
+[European and overseas frontier queries](europe-frontier-atlas.md)
