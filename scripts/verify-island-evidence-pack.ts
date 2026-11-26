@@ -27,6 +27,32 @@ const controls = [
   [17.55545726, -88.07182279, 'BZ'], // St George’s Caye
   [13.222, -87.672, null],       // Open water between the islands in the Gulf of Fonseca
   [16.932, -89.897, null],       // Lake Petén Itzá near Flores
+  [17.8823114, -66.5328699, 'PR'], // Morrillito satellite of Caja de Muertos
+  [18.378, -64.741, null],          // The Narrows remains open water
+  [19.6641069, -80.0628931, 'KY'], // Owen Island, Cayman Islands
+  [21.3293932, -71.2001844, 'TC'], // Salt Cay
+  [17.918875, -76.8201212, 'JM'],   // Lime Cay
+  [19.666952, -80.065412, null],   // Little Cayman channel
+  [13.238083, 144.651734, 'GU'],    // Cocos Island, Guam
+  [15.241543, 145.712561, 'MP'],   // Mañagaha, Northern Mariana Islands
+  [-14.283748, -170.553323, 'AS'], // Aunuʻu, American Samoa
+  [28.207, -177.3291, 'UM'],       // Eastern Island, Midway
+  [28.22, -177.367, null],         // Midway lagoon
+  [18.37009, -64.75672, 'VI'],    // Whistling Cay, on the US side of The Narrows
+  [18.38629, -64.74039, 'VG'],    // Great Thatch, British Virgin Islands
+  [17.9588744, -62.90400726, 'BL'], // Île Fourchue, Saint-Barthélemy
+  [18.10616363, -63.0147317, 'MF'], // Îlet Pinel, Saint-Martin
+  [16.1701488, -61.109068, 'GP'],  // Terre-de-Bas, Petite Terre
+  [24.62758, -82.87316, 'US'],      // Fort Jefferson, Garden Key
+  [47.06332841, -90.72800654, 'US'], // NPS Devils Island campsite
+  [65.7522073, -168.9407223, 'US'], // Little Diomede
+  [65.7685158, -169.0380898, 'RU'], // Big Diomede
+  [65.761, -168.976, null],         // Bering Strait between the islands
+  [12.5215428, -61.3843048, 'GD'], // Petite Martinique, Grenada
+  [12.53, -61.3837, null],          // Grenada–Saint Vincent island channel
+  [21.39172, -157.69887, 'US'],     // Moku Nui, Hawaiʻi
+  [21.3896, -157.6982, null],       // Mokulua channel
+  [40.694, -74.042, null],           // Upper New York Bay
   [52.107074, -79.24281, 'CA'],    // Wolf Islet, James Bay
   [56.514832, -78.783753, null],    // Hudson Bay off Twin Cairns Island
   [75.8412, -78.827, 'CA'],        // Princess Charlotte Monument, Nunavut
@@ -63,6 +89,9 @@ for (const [lat, lon, expected, id, shared] of controls) {
     assert.equal(result.territorialTopology.landform, expected === 'MX' ? 'island' : 'unknown');
     assert.equal(result.territorialTopology.status, expected === 'MX' ? 'inside' : 'uncertain');
   }
+  if (expected && ['VI', 'PR', 'GU', 'MP', 'AS', 'UM'].includes(expected)) assert.deepEqual(result.island.sovereignCodes, ['US']);
+  if (expected === 'VG' || expected === 'KY' || expected === 'TC') assert.deepEqual(result.island.sovereignCodes, ['GB']);
+  if (expected === 'BL' || expected === 'MF' || expected === 'GP') assert.deepEqual(result.island.sovereignCodes, ['FR']);
   if (expected === 'PM') assert.deepEqual(result.island.sovereignCodes, ['FR']);
   if (expected === 'GF') assert.deepEqual(result.island.sovereignCodes, ['FR']);
   if (expected === 'GL') assert.deepEqual(result.island.sovereignCodes, ['DK']);

@@ -9,9 +9,15 @@ const countryUrl = upstream + 'ne_10m_admin_0_map_units.geojson';
 const oceanUrl = upstream + 'ne_10m_ocean.geojson';
 const countryDigest = '57da82be755f4afccd8f3b14251bb2752f5df1395f47d2d86f817470c4a48862';
 const oceanDigest = 'f9696a1337c746a0f6c8c13bc60d0f230d2ef8d105198d5657726c8f8e763fc2';
-const completeUnits = ['LS', 'SZ', 'ZA', 'FJ'];
+const completeUnits = ['LS', 'SZ', 'ZA', 'FJ', 'MF', 'SX', 'AI', 'BL', 'VG', 'VI', 'GU', 'MP', 'WS', 'AS'];
 const windows = [
   { name: 'Fiji archipelago', code: 'FJ', bbox: [175, -22, -177, -12] },
+  { name: 'Saint Martin and neighbouring channels', code: 'MF', bbox: [-63.22, 17.97, -62.93, 18.18] },
+  { name: 'Anguilla and Saint Barthelemy passage', code: 'AI', bbox: [-63.25, 17.82, -62.75, 18.32] },
+  { name: 'Virgin Islands channels', code: 'VG', bbox: [-65.12, 18.24, -64.25, 18.78] },
+  { name: 'Guam and Rota channel', code: 'GU', bbox: [144.52, 13.2, 145.36, 14.22] },
+  { name: 'Tinian and Saipan strait', code: 'MP', bbox: [145.55, 14.88, 145.91, 15.34] },
+  { name: 'Samoan islands and passages', code: 'WS', bbox: [-172.85, -14.42, -170.48, -13.4] },
   { name: 'Tokyo Bay', code: 'JP', bbox: [139.45, 35.1, 140.15, 35.75] },
   { name: 'Seto Inland Sea', code: 'JP', bbox: [132.1, 33.75, 134.8, 34.6] },
   { name: 'Chichijima and Hahajima', code: 'JP', bbox: [141.85, 26.45, 142.35, 27.25] },
