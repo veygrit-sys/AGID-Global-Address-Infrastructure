@@ -1,3 +1,4 @@
+import { frontierAreaAt } from './europeFrontierAreas';
 import { europeLandSource, europeOceanSource, isEuropeanOpenWater, matchEuropeLandUnits } from './europeOverview';
 import { matchReviewedShoreline } from './reviewedShorelines';
 import { matchDisputedIsland } from './disputedIslands';
@@ -596,6 +597,13 @@ function copyRegionInfo(result: RegionInfo): RegionInfo {
 }
 
 function rememberRegion(lat: number, lon: number, result: RegionInfo): RegionInfo {
+  const local = frontierAreaAt(lon,lat);
+  if (local && !local.joint && !result.isSea && !result.waterMatch) {
+    const prefix = local.codes.length === 1 ? local.codes[0] : 'SHORELINE_UNRESOLVED';
+    result = {...result, prefix, name: local.codes.length === 1 ? mapUnitNames.get(prefix) ?? local.name : local.name,
+      administrativeMatch: {source:local.source,version:local.version,attribution:local.attribution,
+        relation:local.relation,codes:local.codes}};
+  }
   LAST_LAT = lat;
   LAST_LON = lon;
   LAST_RESULT = result;
