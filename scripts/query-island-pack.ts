@@ -1,8 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { applyIslandPolicyToEvidence, matchBundledIsland, type IslandEvidence } from '../src/lib/islandPolicy';
-
-type PackHit = IslandEvidence & { islandId: string; kind: 'lake-island' | 'ocean-island' | 'shoreline-island' };
+import { assessPackPoint, type PackHit } from './national-island-supplement';
 
 function main(args: string[]) {
   if (args.length !== 3 && !(args.length === 5 && args[3] === '--python')) {
@@ -17,13 +15,10 @@ function main(args: string[]) {
     { encoding: 'utf8', windowsHide: true });
   if (output.error) throw output.error;
   if (output.status !== 0) throw new Error(output.stderr.trim() || 'Unable to read island evidence');
-  const { hit: raw, mappedInlandWater } = JSON.parse(output.stdout) as { hit: PackHit | null; mappedInlandWater: boolean };
-  let island = applyIslandPolicyToEvidence(lat, lon, raw ?? undefined);
-  // Some positives at 180° fall inside source cut gaps in the ADM0 layer.
-  // Keep the independently sourced bundled classification in such cases.
-  if ((!raw && !mappedInlandWater && !island) || (raw && !raw.codes.length && !raw.disputed && island?.status === 'unresolved')) {
-    island = matchBundledIsland(lat, lon) ?? island;
-  }
+  const { hit: raw, mappedInlandWater, pinnedSourceEdition } = JSON.parse(output.stdout) as {
+    hit: PackHit | null; mappedInlandWater: boolean; pinnedSourceEdition: boolean;
+  };
+  const island = assessPackPoint(lat, lon, raw, mappedInlandWater, pinnedSourceEdition);
   // Raw worldview fields stay internal. Emit the same territorial policy as the map.
   console.log(JSON.stringify({
     island: island ?? null,

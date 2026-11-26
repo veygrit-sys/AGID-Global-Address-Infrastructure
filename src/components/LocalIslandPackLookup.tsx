@@ -77,6 +77,7 @@ export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, expec
             <p>{japanese ? '島の形状資料' : 'Physical island layer'} · {[result.physicalSource, result.physicalVersion, result.physicalIslandId].filter(v => v !== undefined && v !== null).join(' · ')}</p>
           ) : <p>{japanese ? '高精細版の島形状に一致する地物はありません。' : 'No physical island feature matched in the detailed layer.'}</p>}
           {result.island && <p>{[result.island.source, result.island.version].filter(Boolean).join(' · ')}</p>}
+          {result.island?.attribution && <p className="text-slate-600">{result.island.attribution}</p>}
           <IslandEvidenceLinks urls={result.island?.evidenceUrls} japanese={japanese} />
         </div>
       ) : (

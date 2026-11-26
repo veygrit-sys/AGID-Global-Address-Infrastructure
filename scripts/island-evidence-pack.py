@@ -289,7 +289,12 @@ def main():
             if args.with_coverage:
                 water = result is None and any(level in (2, 4) and not edge
                     for _, level, _, edge in exact_hits(db, 'coast', args.lat, args.lon))
-                result = {'hit': result, 'mappedInlandWater': water}
+                manifest = json.loads(row[0])
+                pinned = (manifest.get('source') == SOURCE and manifest.get('version') == VERSION
+                          and manifest.get('gshhgArchive', {}).get('sha256') == GSHHG[1]
+                          and manifest.get('fieldmapsArchive', {}).get('sha256') == FIELDMAPS[1]
+                          and manifest.get('fieldmapsArchive', {}).get('gpkgSha256') == GPKG_SHA)
+                result = {'hit': result, 'mappedInlandWater': water, 'pinnedSourceEdition': pinned}
     print(json.dumps(result, sort_keys=True))
 
 

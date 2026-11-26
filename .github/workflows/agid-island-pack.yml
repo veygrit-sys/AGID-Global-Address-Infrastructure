@@ -6,6 +6,9 @@ on:
       - 'scripts/island-evidence-pack.py'
       - 'scripts/audit-island-evidence-pack.py'
       - 'scripts/query-island-pack.ts'
+      - 'scripts/*national-island*'
+      - 'scripts/data/national-island-points/**'
+      - 'src/data/nationalIslandSupplement.json'
       - 'scripts/verify-island-evidence-pack.ts'
       - '.github/workflows/agid-island-pack.yml'
 permissions:
@@ -35,6 +38,9 @@ jobs:
           node --import tsx scripts/verify-island-evidence-pack.ts island-download/world.sqlite /usr/bin/python3
           /usr/bin/python3 scripts/audit-island-evidence-pack.py island-download/world.sqlite --gap-register island-download/island-source-gaps.zip > island-download/source-audit.json
           cp docs/high-resolution-island-pack.md island-download/README.md
+          mkdir -p island-download/licenses/gshhg
+          unzip -j "$RUNNER_TEMP/gshhg-shp-2.3.7.zip" LICENSE.TXT COPYING.LESSERv3 README.TXT -d island-download/licenses/gshhg
+          cp /usr/share/common-licenses/GPL-3 island-download/licenses/gshhg/COPYING
           cd island-download
           sha256sum world.sqlite island-source-gaps.zip > SHA256SUMS
       - uses: actions/upload-artifact@v4
