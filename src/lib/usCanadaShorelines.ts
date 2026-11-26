@@ -1,3 +1,4 @@
+import type { ReviewedGeographyMatch } from './reviewedGeography';
 import dividedLakeData from '../data/usCanadaDividedLakeIslands.json';
 import { scale, windows } from '../data/us-canada-shorelines/index';
 import { normalizeLongitude } from './agidProjection';
@@ -6,6 +7,8 @@ import { classifyMapPolygon, indexMapPolygon, type IndexedMapPolygon } from './i
 import type { AgidIslandAssessment } from './islandPolicy';
 import { unpackMapRing } from './packedMapRing';
 import { matchNorthRockShoreline, northRockSource, northRockWindow, queryNorthRockShorelinePolygons } from './northRockShoreline';
+
+export type { ReviewedGeographyMatch as UsCanadaShorelineMatch } from './reviewedGeography';
 
 interface PackedPolygon {
   bbox: number[];
@@ -26,24 +29,6 @@ interface ShoreWindow {
   bbox: number[];
   physical: Shore[];
   owners: Owner[];
-}
-
-export interface UsCanadaShorelineMatch {
-  surface: 'land' | 'water' | 'boundary' | 'unknown';
-  waterKind?: 'inland' | 'ocean';
-  landform?: 'mainland' | 'island';
-  codes: string[];
-  ownershipReview: boolean;
-  surveyedLakeIsland?: boolean;
-  surveyedIslandOwnership?: boolean;
-  sharedIslandCountryCodes?: string[];
-  sharedIslandBasis?: 'hydrographic-record';
-  relation: 'inside' | 'boundary';
-  source: string;
-  version: string;
-  attribution: string;
-  evidenceUrls: string[];
-  island?: AgidIslandAssessment;
 }
 
 const regions = windows as ShoreWindow[];
@@ -140,7 +125,7 @@ function lakeRelation(shapes: Array<{ indexed: IndexedMapPolygon }>, x: number, 
   return boundary ? 'boundary' : 'outside';
 }
 
-function matchDividedLake(window: typeof dividedLakes[number], lat: number, x: number): UsCanadaShorelineMatch {
+function matchDividedLake(window: typeof dividedLakes[number], lat: number, x: number): ReviewedGeographyMatch {
   const { source, version, attribution } = window;
   const common = { source, version, attribution, evidenceUrls: [...window.evidenceUrls], surveyedIslandOwnership: true };
   const land = lakeRelation(window.land, x, lat);
@@ -173,7 +158,7 @@ function matchDividedLake(window: typeof dividedLakes[number], lat: number, x: n
 }
 
 /** The highest shoreline level wins: ocean land, lakes, lake islands, then ponds on lake islands. */
-export function matchUsCanadaShoreline(lat: number, lon: number): UsCanadaShorelineMatch | undefined {
+export function matchUsCanadaShoreline(lat: number, lon: number): ReviewedGeographyMatch | undefined {
   const x = normalizeLongitude(lon);
   const lake = dividedLakes.find(w => inBox(x, lat, w.bbox));
   if (lake) return matchDividedLake(lake, lat, x);

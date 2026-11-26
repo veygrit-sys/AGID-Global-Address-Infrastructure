@@ -3,7 +3,7 @@ import sourceData from '../src/data/nationalIslandSupplement.json';
 import { needsIslandPolicyReview } from '../src/lib/disputedIslands';
 import { isJapaneseIslandReviewArea } from '../src/lib/japaneseIslandView';
 import { pointTerritorialTopology } from '../src/lib/territorialTopology';
-import { matchUsCanadaShoreline } from '../src/lib/usCanadaShorelines';
+import { matchReviewedGeography } from '../src/lib/reviewedGeography';
 import { applyIslandPolicyToEvidence, matchBundledIsland, type AgidIslandAssessment, type IslandEvidence } from '../src/lib/islandPolicy';
 
 export type PackHit = IslandEvidence & {
@@ -17,7 +17,7 @@ const byPhysicalId = new Map<string, (typeof sourceData.sources)[number]>(source
 export function assessPackPoint(lat: number, lon: number, raw: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean): AgidIslandAssessment | undefined {
   const primary = applyIslandPolicyToEvidence(lat, lon, raw ?? undefined);
-  const shore = matchUsCanadaShoreline(lat, lon);
+  const shore = matchReviewedGeography(lat, lon);
   if (shore) {
     // A measured border across a surveyed island resolves each side separately.
     // A single old pack feature can cover both, or omit the island altogether.
@@ -83,7 +83,7 @@ const sharedOceanIslands = new Map<string, string[]>([
 export function packPointResult(lat: number, lon: number, packHit: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean) {
   const island = assessPackPoint(lat, lon, packHit, mappedInlandWater, pinnedSourceEdition);
-  const surveyed = matchUsCanadaShoreline(lat, lon)?.surveyedIslandOwnership;
+  const surveyed = matchReviewedGeography(lat, lon)?.surveyedIslandOwnership;
   // The independent lake survey supplies its own physical geometry, including water.
   const raw = surveyed ? null : packHit;
   const topology = island || surveyed || !mappedInlandWater

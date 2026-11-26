@@ -1,4 +1,4 @@
-import { matchUsCanadaShoreline } from './usCanadaShorelines';
+import { matchReviewedGeography } from './reviewedGeography';
 import { matchDisputedIsland } from './disputedIslands';
 import { applyIslandPolicyToEvidence, matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
@@ -25,6 +25,11 @@ export { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS };
 
 const BASE32_ALPHABET = AGID_HASH_ALPHABET;
 const SEA_PREFIX_BY_ID = new Map(Object.entries(namedSeaPrefixes));
+const reviewedWaterNames = {
+  INLAND_WATER: 'Inland water',
+  NEPC: 'North Pacific',
+  CARB: 'Caribbean Sea',
+} as const;
 const OCEAN_IDS = ['NPAC', 'NEPC', 'SPAC', 'SEPC', 'NATL', 'SATL', 'NIND', 'SIND', 'SOUT', 'ARCT'] as const;
 const PREFIX_LETTERS = 'ABCDEFGHJKMNPQRSTVWXYZ';
 
@@ -1030,7 +1035,7 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const normLon = issuanceLongitude(lat, lon);
 
   if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
-  const shoreline = matchUsCanadaShoreline(lat, normLon);
+  const shoreline = matchReviewedGeography(lat, normLon);
   if (shoreline) {
     // Use the policy record first if a reviewed window includes a disputed feature.
     const island = matchDisputedIsland(lat, normLon)
@@ -1041,8 +1046,9 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
       return rememberRegion(lat, normLon, islandRegion(baseRegion(lat, normLon), island));
     }
     if (shoreline.surface === 'water') {
-      const water = shoreline.waterKind === 'inland'
-        ? { prefix: 'INLAND_WATER', name: 'Inland water', isSea: true, gridSize: 4.4 }
+      const code = shoreline.waterKind === 'inland' ? 'INLAND_WATER' : shoreline.oceanRegion;
+      const water = code
+        ? { prefix: code, name: reviewedWaterNames[code], isSea: true, gridSize: 4.4 }
         : lookupRegionalHint(lat, normLon, true);
       return rememberRegion(lat, normLon, { ...water, waterMatch: evidence });
     }
