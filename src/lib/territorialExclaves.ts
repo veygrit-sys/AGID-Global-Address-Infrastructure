@@ -1,3 +1,4 @@
+import { europeanBorderTerritories, matchEuropeanBorderAdministration, matchEuropeanBorderTerritory, queryEuropeanBorderTerritories } from './europeBorderSurveys';
 import manifest from '../data/territorial-exclaves/manifest.json';
 import africa from '../data/territorial-exclaves/africa.json';
 import arctic from '../data/territorial-exclaves/arctic.json';
@@ -8,7 +9,7 @@ import swiss from '../data/buesingenBoundary.json';
 import { matchBuesingenBoundary } from './buesingenBoundary';
 import { classifyMapPolygon, indexMapPolygon, type IndexedMapPolygon } from './indexedMapPolygon';
 
-export type TerritorialExclaveKind = 'enclave' | 'counter-enclave' | 'coastal-exclave' | 'exclave' | 'enclaved-state';
+export type TerritorialExclaveKind = 'enclave' | 'counter-enclave' | 'coastal-exclave' | 'exclave' | 'enclaved-state' | 'point-connected';
 
 interface Source {
   source: string;
@@ -54,7 +55,7 @@ function source(id: string): Source {
   return { source: id, version, attribution, evidenceUrls: urls };
 }
 
-export const territorialExclaveFeatures: readonly TerritorialExclaveFeature[] = manifest.features.map(feature => {
+const atlasFeatures = manifest.features.map((feature): TerritorialExclaveFeature => {
   const meta = source(feature.source);
   return {
     ...meta, id: feature.id, kind: feature.kind as TerritorialExclaveKind, code: feature.code,
@@ -72,6 +73,8 @@ export const territorialExclaveFeatures: readonly TerritorialExclaveFeature[] = 
     }),
   };
 });
+
+export const territorialExclaveFeatures: readonly TerritorialExclaveFeature[] = [...atlasFeatures, ...europeanBorderTerritories];
 
 const groups = [europe, asia, africa, arctic];
 const polygons = groups.flatMap(g => g.polygons as unknown as PolygonRow[]).map(row => {
@@ -206,6 +209,8 @@ function matchInTile(lat: number, lon: number, tile: Tile): TerritorialExclaveMa
 export function matchTerritorialExclave(lat: number, lon: number): TerritorialExclaveMatch | undefined {
   if (!Number.isFinite(lat) || Math.abs(lat) > 90 || !Number.isFinite(lon)) return;
   lon = canonical(lon);
+  const surveyed = matchEuropeanBorderTerritory(lat, lon);
+  if (surveyed) return surveyed;
   const tile = tileAt(lat, lon);
   return tile && matchInTile(lat, lon, tile);
 }
@@ -213,6 +218,8 @@ export function matchTerritorialExclave(lat: number, lon: number): TerritorialEx
 export function matchTerritorialAdministration(lat: number, lon: number): TerritorialAdministrationMatch | undefined {
   if (!Number.isFinite(lat) || Math.abs(lat) > 90 || !Number.isFinite(lon)) return;
   lon = canonical(lon);
+  const surveyed = matchEuropeanBorderAdministration(lat, lon);
+  if (surveyed) return surveyed;
   const tile = tileAt(lat, lon);
   if (!tile) return;
   const feature = matchInTile(lat, lon, tile);
@@ -244,6 +251,7 @@ export function* queryTerritorialExclavePolygons(bounds: number[]) {
   if (bounds.length !== 4 || !bounds.every(Number.isFinite) || north < south) return;
   const east = rawEast < west ? rawEast + 360 : rawEast;
   const left = canonical(west);
+  yield* queryEuropeanBorderTerritories([left, south, left + east - west, north]);
   const singleTile = Math.floor(left) === Math.floor(left + (east - west)) && Math.floor(south) === Math.floor(north);
   const candidates = singleTile ? tileAt(south, left)?.polygons : polygons;
   if (!candidates) return;

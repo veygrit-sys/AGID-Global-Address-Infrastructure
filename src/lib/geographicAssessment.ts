@@ -37,6 +37,7 @@ export interface AgidGeographicAssessment {
   sources: Source[];
   footprint: { kind: 'manual-pin' | 'device-pin' | 'cell'; radiusMeters: number | null };
   boundaryAllowanceMeters: number;
+  administrativeSourceDisagreement?: true;
   island?: AgidIslandAssessment;
   territorialTopology?: TerritorialTopology;
   deliveryRegion: null;
@@ -166,6 +167,7 @@ function assessReviewedShorelineFootprint(location: GeographicFootprint, radius:
     if (s) sources.set(s.source, { source: s.source, version: s.version, attribution: s.attribution });
   }
   addSource(point);
+  addSource(point?.physicalSource);
   const policyIsland = point && getRegionInfo(lat, lon).island;
   const disputed = policyIsland?.status === 'disputed' || Boolean(policyIsland?.claimantCodes?.length);
   if (disputed) { candidates.clear(); addSource(policyIsland); }
@@ -190,6 +192,7 @@ function assessReviewedShorelineFootprint(location: GeographicFootprint, radius:
         if (shape.kind === 'physical' && at.surface === 'land') return;
         if (shape.kind === 'admin' && at.surface === 'land' && at.relation === 'inside') return;
         addSource(at);
+        addSource(at.physicalSource);
         if (shape.kind === 'physical') touchesShore = true;
         else touchesAdmin = true;
         if (at.surface === 'land' || at.surface === 'boundary') {
@@ -226,6 +229,7 @@ function assessReviewedShorelineFootprint(location: GeographicFootprint, radius:
   return {
     status: review ? 'needs-confirmation' : 'mapped', surface, regionCandidates: [...candidates].sort(),
     sources: [...sources.values()], footprint: { kind, radiusMeters }, boundaryAllowanceMeters,
+    ...(point?.administrativeSourceDisagreement && { administrativeSourceDisagreement: true }),
     ...(island && { island }), ...(topology && { territorialTopology: review && radius !== 0
       ? { ...topology, status: 'uncertain' } : topology }), deliveryRegion: null,
   };

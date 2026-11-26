@@ -167,3 +167,12 @@ test('an island exclave displays both meanings and keeps its neighbour outside t
   assert.match(point, /(?:地図上の国・地域|この地点の所属国・地域)<\/dt><dd[^>]*>マラウイ/);
   assert.doesNotMatch(point, /配送先.*モザンビーク/);
 });
+
+test('European border details distinguish a single-point connection from source disagreement in Japanese', () => {
+  const town = render({ kind: 'pin', lat: 47.574, lon: 10.447 }, 'ja');
+  assert.match(town, /ユングホルツ · 本土と一点で接する地域/);
+  const uncertain = render({ kind: 'pin', lat: 43.555, lon: 19.404 }, 'ja');
+  assert.match(uncertain, /この地点では国境資料の判定が分かれます/);
+  assert.match(uncertain, /ボスニア[^<]+セルビア/);
+  assert.doesNotMatch(uncertain, /共同管理国/);
+});

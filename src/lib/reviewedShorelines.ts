@@ -1,3 +1,4 @@
+import { europeanBorderWindows, isEuropeanBorderSource, matchEuropeanBorderShoreline, queryEuropeanBorderPolygons } from './europeBorderSurveys';
 import { marketSourceId, matchMarketSurvey, queryMarketSurvey } from './marketShoreline';
 import dividedLakeData from '../data/usCanadaDividedLakeIslands.json';
 import { scale, windows } from '../data/us-canada-shorelines/index';
@@ -5,7 +6,7 @@ import europeWindows from '../../scripts/data/europe-shoreline-windows.json';
 import { parts } from '../data/europe-shorelines/index';
 import { normalizeLongitude } from './agidProjection';
 import { needsIslandPolicyReview } from './disputedIslands';
-import { classifyMapPolygon, indexMapPolygon, type IndexedMapPolygon } from './indexedMapPolygon';
+import { classifyMapPolygon, indexMapPolygon, overlapsWrappedMapBounds, type IndexedMapPolygon } from './indexedMapPolygon';
 import type { AgidIslandAssessment } from './islandPolicy';
 import { unpackMapRing } from './packedMapRing';
 import { matchNorthRockShoreline, northRockSource, northRockWindow, queryNorthRockShorelinePolygons } from './northRockShoreline';
@@ -42,6 +43,8 @@ export interface ReviewedShorelineMatch {
   ownershipReview: boolean;
   surveyedLakeIsland?: boolean;
   surveyedIslandOwnership?: boolean;
+  administrativeSourceDisagreement?: true;
+  physicalSource?: { source: string; version: string; attribution: string };
   sharedIslandCountryCodes?: string[];
   sharedIslandBasis?: 'hydrographic-record';
   relation: 'inside' | 'boundary';
@@ -86,7 +89,7 @@ const baseUrls = [
   'https://fieldmaps.io/data/adm0/',
   'https://www150.statcan.gc.ca/n1/pub/92-160-g/92-160-g2021002-eng.htm',
 ];
-export const reviewedShorelineWindows = [...usCanadaShorelineWindows, ...europeWindows];
+export const reviewedShorelineWindows = [...usCanadaShorelineWindows, ...europeWindows, ...europeanBorderWindows];
 const europeSource = {
   source: 'europe-mediterranean-overseas-shorelines',
   version: 'GSHHG 2.3.7 + FieldMaps USGS/LSIB 2025-07-29',
@@ -128,7 +131,7 @@ export function isUsCanadaShorelineSource(source: string) {
     || source === northRockSource.source;
 }
 export function isReviewedShorelineSource(source: string) {
-  return isUsCanadaShorelineSource(source) || source === europeSource.source || source === ignSource.source || source === salutSource.source || source === marketSourceId;
+  return isUsCanadaShorelineSource(source) || source === europeSource.source || source === ignSource.source || source === salutSource.source || source === marketSourceId || isEuropeanBorderSource(source);
 }
 // Physical IDs refer to individual GSHHG 2.3.7 islands. Opposite-side control pins
 // in the regional integration tests verify both the component and its address regions.
@@ -309,47 +312,41 @@ function matchShoreline(lat: number, lon: number, available: ShoreWindow[]): Rev
 
 export const matchUsCanadaShoreline = (lat: number, lon: number) => matchShoreline(lat, lon, northAmerican);
 export function matchReviewedShoreline(lat: number, lon: number) {
-  return matchMarketSurvey(lat, normalizeLongitude(lon)) ?? matchShoreline(lat, lon, regions);
-}
-
-// Query longitudes are unwrapped around the disk's center. Windows themselves are split at ±180°.
-function overlaps([west, south, east, north]: number[], [w, s, e, n]: number[]) {
-  if (south > n || north < s) return false;
-  const shift = 360 * Math.round((w + e - west - east) / 720);
-  return east + shift >= w && west + shift <= e;
+  const x = normalizeLongitude(lon);
+  return matchEuropeanBorderShoreline(lat, x) ?? matchMarketSurvey(lat, x) ?? matchShoreline(lat, x, regions);
 }
 
 /** Return edges for the existing geodesic disk/edge check. A political edge alone supplies no dry land. */
 function* queryPolygons(bounds: number[], available: ShoreWindow[]) {
   for (const window of dividedLakes) {
-    if (!overlaps(window.bbox, bounds)) continue;
+    if (!overlapsWrappedMapBounds(window.bbox, bounds)) continue;
     const { source, version, attribution } = window;
     for (const polygon of [...window.land, ...window.water]) {
-      if (overlaps(polygon.bbox, bounds)) yield {
+      if (overlapsWrappedMapBounds(polygon.bbox, bounds)) yield {
         source, version, attribution, bbox: polygon.bbox, rings: polygon.rings, kind: 'physical' as const, codes: [] as string[],
       };
     }
     for (const polygon of window.owners) {
-      if (overlaps(polygon.bbox, bounds)) yield {
+      if (overlapsWrappedMapBounds(polygon.bbox, bounds)) yield {
         source, version, attribution, bbox: polygon.bbox, rings: polygon.rings, kind: 'admin' as const, codes: [polygon.code],
       };
     }
   }
-  if (overlaps(northRockWindow.bbox, bounds)) {
+  if (overlapsWrappedMapBounds(northRockWindow.bbox, bounds)) {
     for (const polygon of queryNorthRockShorelinePolygons(bounds)) {
       yield { ...northRockSource, ...polygon, kind: 'physical' as const, codes: [] as string[] };
     }
   }
   for (const window of available) {
-    if (!overlaps(window.bbox, bounds)) continue;
+    if (!overlapsWrappedMapBounds(window.bbox, bounds)) continue;
     for (const polygon of window.physical) {
-      if (overlaps(polygon.bbox, bounds)) yield {
+      if (overlapsWrappedMapBounds(polygon.bbox, bounds)) yield {
         ...evidence(window, polygon), bbox: polygon.bbox, kind: 'physical' as const, codes: polygon.source === 'ign-bidasoa' && polygon.kind === 'island' ? ['ES','FR'] : [],
         get rings() { return geometry(polygon).rings; },
       };
     }
     for (const polygon of window.owners) {
-      if (overlaps(polygon.bbox, bounds)) yield {
+      if (overlapsWrappedMapBounds(polygon.bbox, bounds)) yield {
         ...evidence(window), bbox: polygon.bbox, kind: 'admin' as const, codes: polygon.review || !polygon.code ? [] : [polygon.code],
         get rings() { return geometry(polygon).rings; },
       };
@@ -359,6 +356,7 @@ function* queryPolygons(bounds: number[], available: ShoreWindow[]) {
 
 export const queryUsCanadaShorelinePolygons = (bounds: number[]) => queryPolygons(bounds, northAmerican);
 export function* queryReviewedShorelinePolygons(bounds: number[]) {
+  yield* queryEuropeanBorderPolygons(bounds);
   yield* queryMarketSurvey(bounds);
   yield* queryPolygons(bounds, regions);
 }

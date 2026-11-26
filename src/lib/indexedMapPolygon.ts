@@ -54,3 +54,10 @@ export function classifyMapPolygon(x: number, y: number, polygon: IndexedMapPoly
   }
   return 'inside';
 }
+
+// Query longitudes are unwrapped around the disk's center. Windows themselves are split at ±180°.
+export function overlapsWrappedMapBounds([west, south, east, north]: number[], [w, s, e, n]: number[]) {
+  if (south > n || north < s) return false;
+  const shift = 360 * Math.round((w + e - west - east) / 720);
+  return east + shift >= w && west + shift <= e;
+}

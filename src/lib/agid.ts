@@ -1045,11 +1045,12 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
       const water = shoreline.waterKind === 'inland'
         ? { prefix: 'INLAND_WATER', name: 'Inland water', isSea: true, gridSize: 4.4 }
         : lookupRegionalHint(lat, normLon, true);
-      return rememberRegion(lat, normLon, { ...water, waterMatch: evidence });
+      return rememberRegion(lat, normLon, { ...water, waterMatch: shoreline.physicalSource ?? evidence });
     }
     const confirmed = shoreline.surface === 'land' && relation === 'inside' && shoreline.codes.length === 1;
     const prefix = confirmed ? shoreline.codes[0] : 'SHORELINE_UNRESOLVED';
-    const name = confirmed ? mapUnitNames.get(prefix) ?? prefix : 'Unconfirmed shoreline region';
+    const name = confirmed ? mapUnitNames.get(prefix) ?? prefix
+      : shoreline.surface === 'land' ? 'Unconfirmed boundary region' : 'Unconfirmed shoreline region';
     return rememberRegion(lat, normLon, {
       prefix, name, isSea: false, gridSize: 4.4, ...(island && { island }),
       ...(shoreline.surface === 'land' && { mapUnitMatch: { ...evidence, relation, codes: [...shoreline.codes] } }),

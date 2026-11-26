@@ -26,7 +26,7 @@ export function pointTerritorialTopology(
   const shore = matchReviewedShoreline(lat, lon);
   if (shore && !island?.claimantCodes) {
     if (shore.surface === 'water') return undefined;
-    const physicalSource = { source: shore.source, version: shore.version, attribution: shore.attribution };
+    const physicalSource = shore.physicalSource ?? { source: shore.source, version: shore.version, attribution: shore.attribution };
     if (shore.surface === 'unknown') return { landform: 'unknown', status: 'uncertain', physicalSource };
     const landform = shore.landform ?? (shore.surface === 'land' && island && physicalIslandId ? 'island' : 'unknown');
     const area = matchTerritorialExclave(lat, lon);

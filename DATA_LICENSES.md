@@ -35,6 +35,19 @@ The Bidasoa and Îles du Salut extracts adapt IGN BD TOPO® hydrography, coastal
 
 The Märket subdivision uses coordinates published in the Finland–Sweden boundary demarcation and a derived dry-ground mask. © ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium (CC BY 4.0). The mask selects and erodes the connected land component, then clips it to the administrative outline. [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en/stateboundaries) · [ESA WorldCover data terms](https://esa-worldcover.org/en/data-access)
 
+## European inland borders and exclaves
+
+The administrative outlines are clipped, reprojected where necessary, rounded to seven decimal places and delta-encoded in distinct JSON files. The runtime compares the two editions at query time. Exact input datasets, retrieval URLs and transformation scripts are listed in the [inland border guide](docs/europe-complex-borders.md).
+
+| Source | Credit and reuse terms |
+| --- | --- |
+| Vennbahn municipalities and holes | FPS Finance, General Administration of Patrimonial Documentation (GAPD), Belgian CadGIS, CC BY 4.0. The bundled snapshot retains a geometry, municipality key and revision for each of six municipalities. [Official record and terms](https://www.geo.be/catalog/details/63b98ade-71dc-11eb-8bf5-3448ed25ad7c?l=en) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| German state boundary and water surfaces | Land NRW, Geobasis NRW. DVG1 and INSPIRE ATKIS Basis-DLM physical hydrography are distributed under Datenlizenz Deutschland – Zero 2.0. [DVG1](https://www.opengeodata.nrw.de/produkte/geobasis/vkg/dvg/dvg1/) · [WFS terms](https://www.wfs.nrw.de/geobasis/wfs_nw_inspire-gewaesser-physisch_atkis-basis-dlm?SERVICE=WFS&REQUEST=GetCapabilities) · [License](https://www.govdata.de/dl-de/zero-2-0) |
+| Austrian and Bavarian cadastral boundaries | © BEV 2026, VGD 2026-04-01, CC BY 4.0, transformed with the BEV GIS-Grid 2021. Datenquelle: Bayerische Vermessungsverwaltung – www.geodaten.bayern.de, ALKIS, CC BY 4.0. [BEV](https://doi.org/10.48677/2d7b8f24-deb9-42eb-82f2-c7c1c7ff7075) · [Bayern](https://www.ldbv.bayern.de/produkte/liegenschaftsinformationen/verwalt_grenzen.html) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| Bosnian detached polygon | geoBoundaries gbOpen BIH-ADM0-45210373, Wikimedia Commons, public domain per the release. [Source and license record](https://www.geoboundaries.org/api/current/gbOpen/BIH/ADM0/) |
+| Serbian interior ring | © OpenStreetMap contributors, via Wambacher and geoBoundaries gbOpen SRB-ADM0-94879208. The complete separately distributed adapted database is available under ODbL 1.0. [Download the derivative database](src/data/europe-border-surveys/medjurecje-srb.json) · [Source and license record](https://www.geoboundaries.org/api/current/gbOpen/SRB/ADM0/) · [OSM attribution](https://www.openstreetmap.org/copyright) · [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) |
+| Water-class masks and other physical layers | © ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium, CC BY 4.0. Water pixels were extracted, eroded and vectorized. The GSHHG 2.3.7 layers are distributed under LGPL v3 or later. [ESA terms](https://esa-worldcover.org/en/data-access) · [GSHHG notice](scripts/data/national-island-points/licenses/GSHHG-LICENSE.txt) · [LGPL](scripts/data/national-island-points/licenses/COPYING.LESSERv3) |
+
 ## United States and Canada shoreline extracts
 
 The regional shoreline, North Rock and cross-border lake island extracts use the following sources. The regional guide describes their coverage, survey control points and reproducible builds. [US and Canadian shorelines](docs/us-canada-shorelines.md)

@@ -1,3 +1,4 @@
+import { isEuropeanBorderSource } from '../src/lib/europeBorderSurveys';
 import { matchNationalIslandPoint } from './national-island-point-evidence';
 import sourceData from '../src/data/nationalIslandSupplement.json';
 import { needsIslandPolicyReview } from '../src/lib/disputedIslands';
@@ -83,9 +84,11 @@ const sharedOceanIslands = new Map<string, string[]>([
 export function packPointResult(lat: number, lon: number, packHit: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean) {
   const island = assessPackPoint(lat, lon, packHit, mappedInlandWater, pinnedSourceEdition);
-  const surveyed = matchReviewedShoreline(lat, lon)?.surveyedIslandOwnership;
+  const shore = matchReviewedShoreline(lat, lon);
+  const surveyed = shore?.surveyedIslandOwnership;
   // Independent surveys supply their own physical geometry, including water.
-  const raw = surveyed ? null : packHit;
+  const surveyedMainland = shore?.landform === 'mainland' && isEuropeanBorderSource(shore.source);
+  const raw = surveyed || surveyedMainland ? null : packHit;
   const topology = island || surveyed || !mappedInlandWater
     ? pointTerritorialTopology(lat, lon, island, island && raw ? raw.islandId : undefined) : undefined;
   const physical = island && raw ? {
