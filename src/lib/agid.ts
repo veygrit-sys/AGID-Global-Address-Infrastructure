@@ -1,5 +1,7 @@
-import { matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
+import { applyIslandPolicyToEvidence, matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
+import { matchTerritorialAdministration, matchTerritorialExclave } from './territorialExclaves';
+import { globalInlandWaterSource, globalIslandSource, isGlobalInlandWater, legacyIslandAtInlandWater, matchGlobalLandform } from './globalIslands';
 /**
  * AGID (Address Grid ID) Complete Mathematical Definition Implementation
  * Global, CORDIC-rotated, Polar-ready, 12-character format.
@@ -1026,24 +1028,77 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const normLon = issuanceLongitude(lat, lon);
 
   if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
-  const island = matchBundledIsland(lat, normLon);
+  let island = matchBundledIsland(lat, normLon);
   if (!island && isJapaneseIslandReviewArea(lat, normLon)) {
     return rememberRegion(lat, normLon, lookupRegionalHint(lat, normLon, true));
   }
   const region = baseRegion(lat, normLon);
+  const swiss = matchBuesingenBoundary(lat, normLon);
+  let administration = swiss ?? matchTerritorialAdministration(lat, normLon);
+  const formerIsland = legacyIslandAtInlandWater(lat, normLon);
+  // The Swiss register includes parts of the Rhine. Its administrative evidence
+  // is compatible with water, while a generalized land polygon is not.
+  if (island?.status !== 'japan-position' && island?.source !== 'mlit-n03-tokyo-remote-islands'
+      && island?.source !== 'gshhg-full-lake-islands'
+      && (formerIsland || ((island || region.mapUnitMatch || administration) && isGlobalInlandWater(lat, normLon)))) {
+    // The old issuer filled lakes on large islands. Keep only its wire hint;
+    // the water surface and lack of a land jurisdiction are reported independently.
+    const prior = formerIsland && applyIslandPolicyToEvidence(lat, normLon, formerIsland);
+    if (prior) {
+      const hint = islandRegion(region, prior);
+      region.prefix = hint.prefix;
+      region.name = hint.name;
+      region.isSea = hint.isSea;
+      delete region.polygon;
+    }
+    delete region.mapUnitMatch;
+    region.waterMatch ??= globalInlandWaterSource;
+    island = undefined;
+    administration = swiss;
+  }
+  // Continental exclaves and their host windows cannot assign a nearby island.
+  // Consult the physical grid only when there is political evidence to reconcile.
+  if (!island && !region.waterMatch && (administration || region.mapUnitMatch?.source === 'natural-earth-10m-admin-0-map-units')) {
+    const physical = matchGlobalLandform(lat, normLon);
+    if (physical?.kind === 'island') {
+      island = { status: 'unresolved', countryCodes: [], relation: physical.relation,
+        source: physical.source, version: physical.version, attribution: physical.attribution };
+    }
+  }
+  if (administration && island && (island.status !== 'mapped'
+      || matchTerritorialExclave(lat, normLon)?.physicalDomain !== 'island')) administration = undefined;
+  if (administration && (!region.waterMatch || swiss)) {
+    region.administrativeMatch = administration;
+    // An enclave's country is independent of the coastline. The deterministic wire
+    // prefix can carry just one code; the assessment retains every exact boundary candidate.
+    const owner = administration.codes[0];
+    if (owner && region.prefix !== owner && !region.prefix.startsWith(owner + '_') && !region.prefix.startsWith(owner + '-')) {
+      region.prefix = owner;
+      region.name = mapUnitNames.get(owner) ?? owner;
+      if (!region.waterMatch) region.isSea = false;
+      delete region.polygon;
+    }
+    if (island?.status === 'mapped' && administration.codes.length === 1 && !island.countryCodes.includes(owner)) {
+      island.countryCodes = [owner];
+      delete island.sovereignCodes;
+      island.source = administration.source;
+      island.version = administration.version;
+      island.relation = administration.relation;
+    }
+  }
   // The detailed Pearl Delta and Japanese coastal surveys take priority over a generalized shoreline.
   const delta = island && matchPearlRiverDelta(lat, normLon);
   if (!island || (delta && delta.surface !== 'land') ||
       (region.waterMatch && island.source.startsWith('natural-earth-global-island'))) {
     return rememberRegion(lat, normLon, region);
   }
-  if (island.status === 'mapped' && region.mapUnitMatch && region.mapUnitMatch.codes.length === 1
-      && !island.countryCodes.includes(region.mapUnitMatch.codes[0])) {
-    island.countryCodes = [...region.mapUnitMatch.codes];
+  if (!administration && island.status === 'mapped' && island.source === globalIslandSource.source
+      && delta?.surface === 'land' && delta.codes.length && !sameMapCodes(island.countryCodes, delta.codes)) {
+    island.countryCodes = [...delta.codes];
     delete island.sovereignCodes;
-    island.source = region.mapUnitMatch.source;
-    island.version = region.mapUnitMatch.version;
-    island.relation = region.mapUnitMatch.relation;
+    island.source = delta.source;
+    island.version = delta.version;
+    island.relation = delta.relation;
   }
   return rememberRegion(lat, normLon, islandRegion(region, island));
 }
@@ -1051,6 +1106,10 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
 // Existing address-format/QR hints for territories with their own postal conventions.
 const parentOfIslandAddressRegion: Record<string,string> = { CP: 'FR', SJ_JAN: 'NO', SJ_SVA: 'NO', AC: 'SH', TA: 'SH' };
 const islandTerritoryHints = new Set(['IO','FK','GS','UM','YT','AQ','TRNC','XU','XD','CYGL','TW','SCSD','EH']);
+
+function sameMapCodes(codes: string[], other: string[]) {
+  return codes.length === other.length && codes.every(code => other.includes(code));
+}
 
 function islandRegion(region: RegionInfo, island: AgidIslandAssessment): RegionInfo {
   const groupCodes: Record<string,string> = { 'northern-territories': 'JP_NT', takeshima: 'JP_TK', senkaku: 'JP_SK' };
@@ -1063,7 +1122,8 @@ function islandRegion(region: RegionInfo, island: AgidIslandAssessment): RegionI
   if (island.status === 'japan-position') prefix = groupCodes[island.territory!];
   else if (known) prefix = sameAddressRegion ? hint : known;
   else prefix = !region.isSea && islandTerritoryHints.has(hint) ? hint : 'ISLAND_UNRESOLVED';
-  const mapUnitMatch = region.mapUnitMatch && island.status === 'mapped' ? region.mapUnitMatch
+  const mapUnitMatch = region.mapUnitMatch && island.status === 'mapped' && sameMapCodes(codes, region.mapUnitMatch.codes)
+    ? region.mapUnitMatch
     : { codes: [...codes], source: island.source, version: island.version, relation: island.relation };
   return {
     isSea: false, gridSize: region.gridSize, prefix, island, mapUnitMatch,
@@ -1113,16 +1173,6 @@ function baseRegion(lat: number, normLon: number): RegionInfo {
   const result = lookupRegionalHint(lat, normLon, Boolean(waterMatch));
   if (waterMatch) result.waterMatch = waterMatch;
 
-  // An administrative outline may include rivers. Preserve independent surface evidence.
-  const administration = matchBuesingenBoundary(lat, normLon);
-  if (administration) {
-    result.administrativeMatch = administration;
-    if (!result.isSea && result.prefix !== administration.codes[0]) {
-      result.prefix = administration.codes[0];
-      result.name = mapUnitNames.get(result.prefix) ?? result.prefix;
-      delete result.polygon;
-    }
-  }
   return result;
 }
 

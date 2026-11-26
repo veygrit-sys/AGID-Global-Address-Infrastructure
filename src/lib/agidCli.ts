@@ -1,6 +1,8 @@
+import { selectedGeographyInput } from './agidSelection';
 import { decodeAGID, encodeAGID, encodeAGID16, getCellPolygon, normalizeAGIDCode, type AGIDResult } from './agid';
+import { territorialTopologyRows } from './territorialTopologyDisplay';
 import { islandDisplayRows } from './islandDisplay';
-import { assessAgidGeography, type AgidGeographyInput } from './geographicAssessment';
+import { assessAgidGeography, type AgidGeographicAssessment, type AgidGeographyInput } from './geographicAssessment';
 import { resolveAgidLocal } from './agidLocalResolver';
 import {
   buildAgidResolverConformanceSuite,
@@ -211,7 +213,9 @@ function coordinateFromText(value: string) {
 }
 
 function agidSummary(result: AGIDResult) {
+  const { territorialTopology } = assessAgidGeography(selectedGeographyInput(result));
   return {
+    ...(territorialTopology && { territorialTopology }),
     id: result.id,
     prefix: result.prefix,
     regionCode: result.regionCode,
@@ -241,7 +245,9 @@ function decodeSummary(input: string) {
   const decoded = decodeAGID(normalized);
   if (!decoded) return null;
   const region = encodeAGID(decoded.lat, decoded.lon);
+  const { territorialTopology } = assessAgidGeography({ kind: 'cell', id: normalized });
   return {
+    ...(territorialTopology && { territorialTopology }),
     id: normalized,
     prefix: decoded.prefix,
     regionCode: region.regionCode,
@@ -263,6 +269,9 @@ function decodeSummary(input: string) {
 
 function geoJsonFeature(summary: ReturnType<typeof decodeSummary> | ReturnType<typeof agidSummary>) {
   if (!summary) return null;
+  // GeoJSON describes the cell polygon, even for an original coordinate input.
+  const territorialTopology = 'polygon' in summary
+    ? summary.territorialTopology : assessAgidGeography({ kind: 'cell', id: summary.id }).territorialTopology;
   const polygon = 'polygon' in summary && summary.polygon
     ? summary.polygon
     : getCellPolygon(summary.cell.face, summary.cell.qx, summary.cell.qy);
@@ -272,6 +281,7 @@ function geoJsonFeature(summary: ReturnType<typeof decodeSummary> | ReturnType<t
     type: 'Feature',
     properties: {
       agid: summary.id,
+      ...(territorialTopology && { territorialTopology }),
       prefix: summary.prefix,
       regionCode: summary.regionCode,
       regionName: summary.regionName,
@@ -284,11 +294,16 @@ function geoJsonFeature(summary: ReturnType<typeof decodeSummary> | ReturnType<t
   };
 }
 
+function topologyHuman(topology: AgidGeographicAssessment['territorialTopology'], island?: AgidGeographicAssessment['island']) {
+  return topology ? territorialTopologyRows(topology, false, codes => codes.join(', '), island).map(([label, value]) => `${label}: ${value}`) : [];
+}
+
 function encodeHuman(summary: ReturnType<typeof agidSummary>) {
   return [
     `AGID: ${summary.id}`,
     `Issued ID prefix: ${summary.prefix}`,
     `Regional lookup hint: ${summary.regionName} (${summary.regionCode})`,
+    ...topologyHuman(summary.territorialTopology, summary.island),
     ...(summary.island ? islandDisplayRows(summary.island, false, codes => codes.join(', ')).map(([label, value]) => `${label}: ${value}`) : []),
     `Type: ${summary.type}`,
     `Center: ${summary.center.lat.toFixed(6)}, ${summary.center.lon.toFixed(6)}`,
@@ -302,6 +317,7 @@ function decodeHuman(summary: NonNullable<ReturnType<typeof decodeSummary>>) {
   return [
     `AGID: ${summary.id}`,
     `Valid: yes`,
+    ...topologyHuman(summary.territorialTopology),
     `Issued ID prefix: ${summary.prefix}`,
     `Regional lookup hint: ${summary.regionName} (${summary.regionCode})`,
     `Type: ${summary.type}`,
@@ -742,11 +758,12 @@ function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
       `Footprint: ${assessment.footprint.kind}`,
       `Status: ${assessment.status}`,
       `Surface: ${assessment.surface}`,
+      ...topologyHuman(assessment.territorialTopology, assessment.island),
       ...(assessment.island
         ? islandDisplayRows(assessment.island, false, codes => codes.join(', '),
           assessment.status === 'needs-confirmation' ? assessment.regionCandidates : []).map(([label, value]) => `${label}: ${value}`)
         : [`Map regions: ${assessment.regionCandidates.join(', ') || 'none'}`]),
-      ...(assessment.island?.evidenceUrls ?? []),
+      ...new Set([...(assessment.island?.evidenceUrls ?? []), ...(assessment.territorialTopology?.administration?.evidenceUrls ?? [])]),
       '',
     ].join('\n'));
   } catch (error) {

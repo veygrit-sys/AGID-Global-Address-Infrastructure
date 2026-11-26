@@ -1,5 +1,11 @@
+import { chelemReviewSource, chelemSurveySource, isReviewedNaturalEarthIsland, queryIslandBorderReviewPolygons } from './islandBorderDisagreement';
+import { pointTerritorialTopology, type TerritorialTopology } from './territorialTopology';
+import { matchTerritorialAdministration, queryTerritorialExclavePolygons, type TerritorialExclaveMatch } from './territorialExclaves';
 import { type AgidIslandAssessment, applyIslandPolicyToEvidence } from './islandPolicy';
-import { queryGlobalIslandPolygons, globalIslandSource } from './globalIslands';
+import {
+  queryGlobalIslandPolygons, globalIslandSource, globalInlandWaterSource, isGlobalInlandWater,
+  matchGlobalLandform, mayTouchGlobalInlandWater,
+} from './globalIslands';
 import { queryMinorIslandPolygons, minorIslandSource } from './minorIslands';
 import { queryJapaneseIslandPolygons, isJapaneseIslandReviewArea } from './japaneseIslandView';
 import { queryDisputedIslandPolygons, queryRevisedIslandPolygons } from './disputedIslands';
@@ -28,6 +34,7 @@ export interface AgidGeographicAssessment {
   footprint: { kind: 'manual-pin' | 'device-pin' | 'cell'; radiusMeters: number | null };
   boundaryAllowanceMeters: number;
   island?: AgidIslandAssessment;
+  territorialTopology?: TerritorialTopology;
   deliveryRegion: null;
 }
 
@@ -111,25 +118,27 @@ function nearestInWindow(box: number[], [lon, lat]: PostalContextPosition): Post
 // GeoJSON edges are linear in lon/lat. A great-circle segment for the same endpoints
 // can differ, particularly near high-latitude shores. Bound distance to the true
 // interpolated segment with the spherical triangle inequality, to one centimetre.
-function touchesEdge(center: PostalContextPosition, radius: number, ax: number, ay: number, bx: number, by: number): boolean {
+function contactOnEdge(center: PostalContextPosition, radius: number, ax: number, ay: number, bx: number, by: number): PostalContextPosition | undefined {
   const midpoint: PostalContextPosition = [(ax + bx) / 2, (ay + by) / 2];
   const closestEquator = Math.max(0, Math.min(ay, by), -Math.max(ay, by));
   const halfLength = EARTH_RADIUS * DEG / 2 * Math.hypot(by - ay, (bx - ax) * Math.cos(closestEquator * DEG));
   const distance = haversineDistanceMeters(center, midpoint);
-  if (distance - halfLength > radius + 1e-6) return false;
-  if (distance <= radius || halfLength <= 0.01) return true;
-  return touchesEdge(center, radius, ax, ay, midpoint[0], midpoint[1])
-    || touchesEdge(center, radius, midpoint[0], midpoint[1], bx, by);
+  if (distance - halfLength > radius + 1e-6) return undefined;
+  if (distance <= radius || halfLength <= 0.01) return midpoint;
+  return contactOnEdge(center, radius, ax, ay, midpoint[0], midpoint[1])
+    ?? contactOnEdge(center, radius, midpoint[0], midpoint[1], bx, by);
 }
 
 function contactEdges(rings: number[][][], disk: number[], center: PostalContextPosition, radius: number,
-  onTouch: (a: number[], b: number[]) => void) {
+  onTouch: (a: number[], b: number[], witness: PostalContextPosition) => void) {
   for (const ring of rings) {
     for (let i = 1; i < ring.length; i++) {
       const a = ring[i - 1], b = ring[i];
       if (Math.min(a[1], b[1]) > disk[3] || Math.max(a[1], b[1]) < disk[1]) continue;
       const box = [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[0], b[0]), Math.max(a[1], b[1])];
-      if (boxRelation(box, disk) !== 'outside' && touchesEdge(center, radius, a[0], a[1], b[0], b[1])) onTouch(a, b);
+      if (boxRelation(box, disk) === 'outside') continue;
+      const witness = contactOnEdge(center, radius, a[0], a[1], b[0], b[1]);
+      if (witness) onTouch(a, b, witness);
     }
   }
 }
@@ -142,37 +151,88 @@ export function assessAgidGeography(
   const { center, kind, radiusMeters } = footprint(input);
   const [lon, lat] = center;
   const point = getRegionInfo(lat, lon);
-  const land = point.mapUnitMatch;
-  const water = point.waterMatch;
-  const admin = point.administrativeMatch;
-  const candidates = new Set([...(land?.codes ?? []), ...(admin?.codes ?? [])]);
+  // The reviewed Japanese shoreline and surveyed lake-island intersection are
+  // finer than the water grid. An administrative outline alone cannot override it.
+  const specificIsland = point.island?.status === 'japan-position'
+    || point.island?.source === 'mlit-n03-tokyo-remote-islands' || point.island?.source === 'gshhg-full-lake-islands';
+  const inlandWater = !specificIsland && isGlobalInlandWater(lat, lon);
+  const island = inlandWater ? undefined : point.island;
+  const land = inlandWater ? undefined : point.mapUnitMatch;
+  const water = inlandWater ? globalInlandWaterSource : point.waterMatch;
+  const admin = !inlandWater || point.administrativeMatch?.source === enclaveSource.source
+    ? point.administrativeMatch : undefined;
+  const candidates = new Set(admin?.codes ?? land?.codes ?? []);
   const sources = new Map<string, Source>();
   const addSource = (s: Source | undefined) => {
     if (!s) return;
     sources.set(s.source, { source: s.source, version: s.version, ...(s.attribution && { attribution: s.attribution }) });
   };
-  const island = point.island;
   addSource(land); addSource(water); addSource(admin); addSource(island);
-  const finish = (surface: AgidGeographicAssessment['surface'], review: boolean): AgidGeographicAssessment => ({
-    status: !sources.size ? 'unassessed' : review || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
-    ...(island && { island: review && island.status === 'mapped' && (candidates.size !== 1 || surface !== 'land')
-      ? { ...island, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : island }),
-    surface, regionCandidates: [...candidates].sort(), sources: [...sources.values()],
-    footprint: { kind, radiusMeters }, boundaryAllowanceMeters, deliveryRegion: null,
-  });
-  const pointSurface = land && water ? 'boundary' : land ? 'land' : water ? 'water' : 'unknown';
-  if (radiusMeters === null) return finish('unknown', true);
+  const radius = radiusMeters === null ? null : Math.min(Math.PI * EARTH_RADIUS, radiusMeters + boundaryAllowanceMeters);
+  const fullInlandWater = inlandWater && radius !== null && (radius === 0 || isGlobalInlandWater(lat, lon, radius));
+  let topology = water && !land ? undefined : pointTerritorialTopology(lat, lon, island);
+  const conflictingShore = island?.source === chelemReviewSource;
+  const centerTopology = topology;
+  let touchesTerritory = false;
+  // A confirmed landform supplies physical evidence independently of ownership.
+  // For a cell/device footprint require proof over the entire disk, not its center.
+  let fullLandform: Source | undefined;
+  if (!water && radius !== null && topology && topology.landform !== 'unknown') {
+    if (radius === 0 && topology.status === 'inside') fullLandform = topology.physicalSource;
+    else if (radius > 0 && radius <= 500_000) {
+      const diskLandform = matchGlobalLandform(lat, lon, radius);
+      if (diskLandform?.kind === topology.landform) fullLandform = diskLandform;
+    }
+  }
+  const finish = (surface: AgidGeographicAssessment['surface'], review: boolean): AgidGeographicAssessment => {
+    if (fullLandform) {
+      addSource(fullLandform);
+      if (surface === 'unknown') surface = 'land';
+    }
+    return {
+      status: !sources.size ? 'unassessed' : review || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
+      ...(topology && { territorialTopology: {
+        ...topology,
+        status: radius === null || (radius > 0 && (review || touchesTerritory || topology.status === 'boundary'))
+          ? 'uncertain' : topology.status,
+      } }),
+      ...(island && { island: review && island.status === 'mapped' && (candidates.size !== 1 || surface !== 'land')
+        ? { ...island, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : island }),
+      surface, regionCandidates: [...candidates].sort(), sources: [...sources.values()],
+      footprint: { kind, radiusMeters }, boundaryAllowanceMeters, deliveryRegion: null,
+    };
+  };
+  const pointSurface = conflictingShore ? 'unknown' : land && water ? 'boundary' : land ? 'land' : water ? 'water' : 'unknown';
+  if (radius === null) return finish('unknown', true);
+  if (fullInlandWater && !admin) return finish('water', false);
   // The default assesses the map as drawn. A separately calibrated source allowance
   // can widen the query without altering the device-reported precision.
-  const radius = Math.min(Math.PI * EARTH_RADIUS, radiusMeters + boundaryAllowanceMeters);
   if (radius === 0 && land?.relation !== 'boundary') {
     return finish(pointSurface, admin?.relation === 'boundary' || candidates.size > 1 || pointSurface === 'boundary');
   }
 
   const disk = diskBounds(center, radius);
-  let partialCoverage = false;
+  let partialCoverage = inlandWater && !fullInlandWater;
   let touchesWater = false;
   let touchesAdmin = admin?.relation === 'boundary';
+  let reachesReviewEdge = false;
+  if (radius <= 500_000) {
+    for (const shape of queryIslandBorderReviewPolygons(disk)) {
+      contactEdges(shape.rings, disk, center, radius, () => {
+        reachesReviewEdge = true;
+        addSource(shape);
+        if (shape.source === chelemSurveySource) candidates.add('MX');
+      });
+    }
+    if (reachesReviewEdge) {
+      partialCoverage = true;
+      fullLandform = undefined;
+    } else if (island?.source === chelemSurveySource && island.relation === 'inside') {
+      return finish('land', false);
+    } else if (conflictingShore) {
+      return finish('unknown', true);
+    }
+  }
   const crossedEdges = new Map<string, Set<string>>();
   function recordLand(code: string, source: Source, a: number[], b: number[]) {
     candidates.add(code);
@@ -286,11 +346,42 @@ export function assessAgidGeography(
   if (radius > 500_000) {
     partialCoverage = true;
   } else {
+    // Physical proof for a whole footprint is independent of an administrative edge.
+    // Global mainland coastlines deliberately omit areas with insufficient hydrography.
+    if (radius > 0 && topology?.landform === 'mainland' && !fullLandform) {
+      topology = { ...topology, status: 'uncertain' };
+    }
+    const contacted = new Map<string, TerritorialExclaveMatch>();
+    for (const shape of queryTerritorialExclavePolygons(disk)) {
+      contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
+        touchesTerritory = true;
+        touchesAdmin = true;
+        const { feature } = shape;
+        // A reviewed lake island is clipped to its physical shoreline. Crossing
+        // that outline cannot establish land over the entire accuracy circle.
+        if (radius > 0 && feature.physicalIslandSource && !fullLandform) partialCoverage = true;
+        addSource(feature);
+        candidates.add(feature.code);
+        const atEdge = matchTerritorialAdministration(y, issuanceLongitude(y, x));
+        for (const code of atEdge?.codes ?? []) candidates.add(code);
+        if (!centerTopology?.administration && !contacted.has(feature.id)) {
+          contacted.set(feature.id, { ...feature, relation: 'boundary', boundaryCodes: atEdge?.codes ?? [feature.code] });
+        }
+      });
+    }
+    if (contacted.size && !centerTopology?.administration) {
+      topology = {
+        ...(topology ?? { landform: 'unknown' as const }),
+        status: 'uncertain',
+        ...(contacted.size === 1 && { administration: [...contacted.values()][0] }),
+      };
+    }
     function inspectIslandEdges(
       features: Iterable<{bbox: number[]; rings: number[][][]; codes?: string[]; source?: string; version?: string; disputed?: boolean}>,
       tier: 'ordinary' | 'policy', defaultSource?: Source,
     ) {
       for (const feature of features) {
+        if (reachesReviewEdge && defaultSource === globalIslandSource && isReviewedNaturalEarthIsland(feature.bbox, feature.codes)) continue;
         contactEdges(feature.rings, disk, center, radius, (a, b) => {
           const x = issuanceLongitude((a[1] + b[1]) / 2, (a[0] + b[0]) / 2);
           const y = (a[1] + b[1]) / 2;
@@ -319,6 +410,11 @@ export function assessAgidGeography(
     const regional = pearlRiverDeltaWindows.some(w => boxRelation(w.bbox, disk) === 'inside') ||
       reviewedCoastalWindows.some(w => boxRelation(w.bbox, disk) === 'inside');
     if (!regional && island?.status !== 'japan-position') {
+      // These political rings can fill lakes in an otherwise continuous island.
+      // A footprint near inland water needs independent dry-land evidence.
+      if (island?.source === globalIslandSource.source && !fullLandform && mayTouchGlobalInlandWater(lat, lon, radius)) {
+        partialCoverage = true;
+      }
       inspectIslandEdges(queryGlobalIslandPolygons(disk), 'ordinary', globalIslandSource);
     }
     if (island?.status !== 'japan-position') inspectIslandEdges(queryMinorIslandPolygons(disk), 'ordinary', minorIslandSource);

@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { assessPackPoint, type PackHit } from './national-island-supplement';
+import { packPointResult, type PackHit } from './national-island-supplement';
 
 function main(args: string[]) {
   if (args.length !== 3 && !(args.length === 5 && args[3] === '--python')) {
@@ -18,18 +18,8 @@ function main(args: string[]) {
   const { hit: raw, mappedInlandWater, pinnedSourceEdition } = JSON.parse(output.stdout) as {
     hit: PackHit | null; mappedInlandWater: boolean; pinnedSourceEdition: boolean;
   };
-  const island = assessPackPoint(lat, lon, raw, mappedInlandWater, pinnedSourceEdition);
-  // Raw worldview fields stay internal. Emit the same territorial policy as the map.
-  console.log(JSON.stringify({
-    island: island ?? null,
-    ...(island && raw && {
-      physicalIslandId: raw.islandId,
-      physicalKind: raw.kind,
-      physicalSource: raw.kind === 'shoreline-island' ? 'fieldmaps-usgs-lsib' : 'gshhg-full',
-      physicalVersion: raw.kind === 'shoreline-island' ? '2025-07-29' : '2.3.7',
-    }),
-    deliveryRegion: null,
-  }));
+  // Raw worldview fields stay internal. Public island and territorial fields use the same policy as the map.
+  console.log(JSON.stringify(packPointResult(lat, lon, raw, mappedInlandWater, pinnedSourceEdition)));
 }
 
 try {

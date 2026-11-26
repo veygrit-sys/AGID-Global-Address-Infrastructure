@@ -5,6 +5,8 @@ Requires Python 3.11+ with GDAL/OGR and SQLite RTree. The query subcommand
 emits internal cartographic evidence. Use query-island-pack.ts for public policy.
 """
 import argparse
+import base64
+from functools import cache
 from collections import Counter
 import hashlib
 import json
@@ -191,35 +193,42 @@ def geometry_evidence(db, lat, lon):
     return None
 
 
-def isolated_admin_component(db, lat, lon, hits):
-    # A small source land polygon is independently identifiable as an island when
-    # every other polygon stays clear of its entire exterior. This can recover a
-    # finer USGS shoreline absent from GSHHG, without borrowing the nearest region.
+def pinned_edition(manifest):
+    return (manifest.get('source') == SOURCE and manifest.get('version') == VERSION
+            and manifest.get('gshhgArchive', {}).get('sha256') == GSHHG[1]
+            and manifest.get('fieldmapsArchive', {}).get('sha256') == FIELDMAPS[1]
+            and manifest.get('fieldmapsArchive', {}).get('gpkgSha256') == GPKG_SHA)
+
+
+@cache
+def offshore_proof():
+    path = Path(__file__).resolve().parent / 'data' / 'fieldmaps-shoreline-proof.json'
+    if not path.is_file():
+        return b''
+    index = json.loads(path.read_text())
+    if (index.get('format') != 'agid-fieldmaps-open-ocean-proof-v1'
+            or index['gshhgSha256'] != GSHHG[1] or index['fieldmapsGpkgSha256'] != GPKG_SHA):
+        raise ValueError('Incompatible independent shoreline proof')
+    bits = zlib.decompress(base64.b64decode(index['bits'], validate=True))
+    if len(bits) != index['maxComponentId'] // 8 + 1:
+        raise ValueError('Incomplete independent shoreline proof')
+    return bits
+
+
+def isolated_admin_component(db, lon, hits):
+    # The entire padded footprint must be separate from every other ADM0
+    # component AND independently surrounded by GSHHG open ocean. Mainland
+    # and administrative gaps cannot turn a detached political area into an island.
     if len(hits) != 1 or abs(lon) == 180:
         return None
-    key = hits[0][0]
-    west, east, south, north = db.execute(
-        'SELECT west,east,south,north FROM administrative_box WHERE id=?', (key,)).fetchone()
-    if east - west >= 2 or north - south >= 2 or west <= -179.999 or east >= 179.999:
+    row = db.execute("SELECT value FROM metadata WHERE key='manifest'").fetchone()
+    if not row or not pinned_edition(json.loads(row[0])):
         return None
-    gap = 0.001  # Degree-sized exclusion guard for noisy inter-country source edges.
-    neighbors = db.execute(
-        'SELECT id FROM administrative_box WHERE west<=? AND east>=? AND south<=? AND north>=? AND id<>? LIMIT 65',
-        (east + gap, west - gap, north + gap, south - gap, key)).fetchall()
-    # Large or crowded geometries defer to GSHHG. Do not assume that a truncated
-    # list proves disjointness. This cap keeps the optional disk lookup bounded.
-    if len(neighbors) > 64:
+    key, _, edge = hits[0]
+    bits = offshore_proof()
+    if key <= 0 or key // 8 >= len(bits) or not bits[key // 8] & (1 << (key % 8)):
         return None
-    def geometry(fid):
-        row = db.execute('SELECT wkb FROM administrative WHERE id=?', (fid,)).fetchone()
-        return ogr.CreateGeometryFromWkb(zlib.decompress(row[0]))
-    if neighbors:
-        component = geometry(key)
-        for (neighbor,) in neighbors:
-            if component.Distance(geometry(neighbor)) <= gap:
-                return None
-    return 'shoreline-island', [str(key)], hits[0][-1]
-
+    return 'shoreline-island', [str(key)], edge
 
 def query(db, lat, lon):
     if not math.isfinite(lat) or not -90 <= lat <= 90 or not math.isfinite(lon) or not -180 <= lon <= 180:
@@ -231,7 +240,7 @@ def query(db, lat, lon):
             return None
     admhits = exact_hits(db, 'administrative', lat, lon)
     if not physical:
-        physical = isolated_admin_component(db, lat, lon, admhits)
+        physical = isolated_admin_component(db, lon, admhits)
     if not physical:
         return None
     kind, ids, boundary = physical
@@ -290,10 +299,7 @@ def main():
                 water = result is None and any(level in (2, 4) and not edge
                     for _, level, _, edge in exact_hits(db, 'coast', args.lat, args.lon))
                 manifest = json.loads(row[0])
-                pinned = (manifest.get('source') == SOURCE and manifest.get('version') == VERSION
-                          and manifest.get('gshhgArchive', {}).get('sha256') == GSHHG[1]
-                          and manifest.get('fieldmapsArchive', {}).get('sha256') == FIELDMAPS[1]
-                          and manifest.get('fieldmapsArchive', {}).get('gpkgSha256') == GPKG_SHA)
+                pinned = pinned_edition(manifest)
                 result = {'hit': result, 'mappedInlandWater': water, 'pinnedSourceEdition': pinned}
     print(json.dumps(result, sort_keys=True))
 

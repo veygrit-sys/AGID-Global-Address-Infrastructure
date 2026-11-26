@@ -44,11 +44,11 @@ node --import tsx scripts/verify-island-evidence-pack.ts /path/to/world.sqlite /
 /usr/bin/python3 scripts/audit-island-evidence-pack.py /path/to/world.sqlite --gap-register island_source_gaps.zip
 ```
 
-The end-to-end controls cover a shared island, a lake island and its interior water body, a small island from the separate ADM0 source, both sides of the antimeridian, the Japanese and disputed display policies, an overseas territory, mainland and open water.
+The end-to-end controls check points in every mapped jurisdiction on eight shared islands, mainland enclaves, a lake island and its interior water body, a small island from the separate ADM0 source, both sides of the antimeridian, the Japanese and disputed display policies, an overseas territory, mainland and open water.
 
 The first source audit takes one point on the largest represented fragment of each of the 181,607 GSHHG islands. It intersects that point with the full ADM0 archive. At 72,657 points it finds one unflagged code, 336 meet a flagged unit, 108,585 return no administrative code, and 29 fall on a nested lake or pond. These figures precede AGID's display policy. A positive code at one point cannot label a whole shared island. Disagreement between the two source shorelines is material for small features.
 
-The separate FieldMaps audit evaluates 352,294 small administrative land components and proves spatial separation of the entire padded bounding rectangle for 137,665. Of those, 136,872 have an unflagged regional code across 191 distinct codes and 793 meet a flagged source unit. This is a conservative source-geometry lower bound for isolated components. The coordinates may also occur in GSHHG; the totals must not be added, and the point query can still abstain on independently mapped inland water.
+The separate FieldMaps audit evaluates 352,294 small administrative land components and proves spatial separation of the entire padded bounding rectangle for 137,665. Of those, 136,872 have an unflagged regional code across 191 distinct codes and 793 meet a flagged source unit. This stage measures separation within an administrative source. A separate physical shoreline test qualifies 53,780 components for supplemental island lookup. The coordinates may also occur in GSHHG; the totals must not be added, and the point query can still abstain on independently mapped inland water.
 
 ## Additional national land evidence
 
@@ -77,7 +77,14 @@ Adapted from Statistics Canada, 2021 Census Boundary Files (provinces/territorie
 
 The pack retains original double-precision source polygons as compressed WKB. Point queries use a spatial index followed by tests against the polygon interiors, holes and edges. GSHHG levels 2 and 4 preserve lakes and ponds within island groups. Antarctic island shapes use the grounding-line alternative. Each cut fragment at the antimeridian retains its original island ID; points on both planar representations are evaluated. The public query also checks bundled island evidence where the pack has no affirmative result or its administrative data has a gap. Positively mapped interior lake and pond water takes precedence over ordinary bundled land. Japanese shoreline policy still applies.
 
-A supplementary FieldMaps result can identify a small land component absent from GSHHG. It requires containment at the point and separation of the **entire component** from neighbouring source polygons. This cross-check considers components under two degrees per axis with no more than 64 nearby geometries, away from the antimeridian cut and outside a positively mapped GSHHG inland water body. Its physical kind is `shoreline-island`. Its IDs are specific to this FieldMaps edition. These supplementary results overlap the coverage of the two sources and should not be added to the GSHHG count.
+A supplementary FieldMaps result can identify a small land component in independently mapped open ocean. The full padded rectangle of the component (0.001° on every side) must be disjoint from every other administrative polygon and every full GSHHG ocean landmass, including continents, neighbouring islands and the Antarctic grounding line. Uncertain and invalid geometries, crowded neighbourhoods and the antimeridian are excluded conservatively. At lookup time the pinned editions must match, the exact point must intersect that single administrative component, and inland water takes precedence. The result uses physical kind `shoreline-island` and a FieldMaps-edition-specific ID. The original SQLite file works with the checked-in 37 KB proof index. Regenerate the index with the original GSHHG shape ZIP:
+
+```sh
+/usr/bin/python3 scripts/audit-island-evidence-pack.py /path/to/world.sqlite \
+  --gshhg-archive gshhg-shp-2.3.7.zip --shoreline-index scripts/data/fieldmaps-shoreline-proof.json
+```
+
+The public JSON includes `territorialTopology` with physical landform and any independently verified exclave or enclaved state. Coded physical islands can also be exclaves. For example, Likoma and Temburong return both pieces of evidence. For eight shared ocean islands, edition-specific GSHHG IDs have independent administrative controls in every displayed country or territory. This keeps the island's list of jurisdictions separate from the country of a selected pin and from nearby satellite islands.
 
 Survey dates, minimum feature size, inland-water completeness, shoreline differences, reclamation and political changes limit interpretation. A miss carries no country assignment. Administrative groups in the FieldMaps international edition refer to that dataset's perspective. Ambiguous or unsettled groups must pass the shared AGID display policy. No shipping destination is inferred.
 

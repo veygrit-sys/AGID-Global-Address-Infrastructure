@@ -390,3 +390,34 @@ test('island geography distinguishes a Japanese policy result from competing cla
   assert.deepEqual(result.island.countryCodes, []);
   assert.equal(result.deliveryRegion, null);
 });
+
+test('geography text reports an inland enclave and distinguishes a shared island from the pin owner', async () => {
+  const enclave = await runAgidCli(['geography', '--lat', '47.7', '--lon', '8.68333']);
+  assert.equal(enclave.exitCode, 0, enclave.stderr);
+  assert.match(enclave.stdout, /Landform: Continental land/);
+  assert.match(enclave.stdout, /Territorial classification: [^\n]*Büsingen[^\n]*Enclave/i);
+  assert.match(enclave.stdout, /Country or territory at this location: DE/);
+  assert.match(enclave.stdout, /Surrounding or neighbouring countries and territories: CH/);
+
+  const island = await runAgidCli(['geography', '--lat', '4.88', '--lon', '114.93']);
+  assert.match(island.stdout, /Landform: Island/);
+  assert.match(island.stdout, /Mapped country or territory: BN\n/);
+  assert.match(island.stdout, /Countries or territories sharing this island: (?=[^\n]*BN)(?=[^\n]*ID)(?=[^\n]*MY)/);
+});
+
+test('encode classifies its original Büsingen pin while decode and GeoJSON classify the full cell', async () => {
+  // Immediately inside the official Büsingen border; the AGID cell crosses the border.
+  const coords = ['--lat', '47.69133884', '--lon', '8.658608827'];
+  const encoded = await runAgidCli(['encode', ...coords, '--json']);
+  const pin = JSON.parse(encoded.stdout);
+  assert.equal(pin.territorialTopology.status, 'inside');
+  assert.equal(pin.territorialTopology.administration.code, 'DE');
+  const decoded = JSON.parse((await runAgidCli(['decode', pin.id, '--json'])).stdout);
+  assert.equal(decoded.id, pin.id);
+  assert.equal(decoded.territorialTopology.status, 'uncertain');
+  for (const args of [['encode', ...coords, '--geojson'], ['polygon', pin.id, '--geojson']]) {
+    const feature = JSON.parse((await runAgidCli(args)).stdout);
+    assert.equal(feature.geometry.type, 'Polygon');
+    assert.deepEqual(feature.properties.territorialTopology, decoded.territorialTopology);
+  }
+});
