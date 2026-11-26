@@ -14,7 +14,7 @@ import { parseAGIDCode, wrapCanonicalAGID } from './agid16';
 export { normalizeAGIDCode, toAGID16, toLegacyAGID } from './agid16';
 import { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS } from './regions';
 import { hasCountryMapUnit, matchCountryMapUnits, matchReviewedCoastalWater, type CountryMapUnitMatch } from './countryMapUnits';
-import { matchPearlRiverDelta } from './pearlRiverDelta';
+import { matchRegionalCoast } from './pearlRiverDelta';
 import { matchBuesingenBoundary } from './buesingenBoundary';
 import { mayHaveReviewedGeography } from './reviewedGeographyCoverage';
 export { COUNTRY_REGIONS, LAND_REGIONS, SEA_REGIONS };
@@ -248,7 +248,8 @@ export interface AGIDResult {
   regionPolygon?: number[][];
   island?: AgidIslandAssessment;
   mapUnitMatch?: CountryMapUnitMatch;
-  waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version'>;
+  waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
+  coastalUncertainty?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
   administrativeMatch?: CountryMapUnitMatch;
   face: number;
   quantX: number;
@@ -328,6 +329,7 @@ export function encodeAGID(lat: number, lon: number): AGIDResult {
     ...(region.island && { island: region.island }),
     ...(region.mapUnitMatch && { mapUnitMatch: region.mapUnitMatch }),
     ...(region.waterMatch && { waterMatch: region.waterMatch }),
+    ...(region.coastalUncertainty && { coastalUncertainty: region.coastalUncertainty }),
     ...(region.administrativeMatch && { administrativeMatch: region.administrativeMatch }),
     face,
     quantX: qx,
@@ -573,7 +575,8 @@ interface RegionInfo {
   polygon?: number[][];
   island?: AgidIslandAssessment;
   mapUnitMatch?: CountryMapUnitMatch;
-  waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version'>;
+  waterMatch?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
+  coastalUncertainty?: Pick<CountryMapUnitMatch, 'source' | 'version' | 'attribution'>;
   administrativeMatch?: CountryMapUnitMatch;
 }
 
@@ -585,6 +588,7 @@ function copyRegionInfo(result: RegionInfo): RegionInfo {
   if (copy.polygon) copy.polygon = copy.polygon.map(point => [...point]);
   if (copy.island) copy.island = copyIslandAssessment(copy.island);
   if (copy.mapUnitMatch) copy.mapUnitMatch = { ...copy.mapUnitMatch, codes: [...copy.mapUnitMatch.codes] };
+  if (copy.coastalUncertainty) copy.coastalUncertainty = { ...copy.coastalUncertainty };
   if (copy.waterMatch) copy.waterMatch = { ...copy.waterMatch };
   if (copy.administrativeMatch) copy.administrativeMatch = { ...copy.administrativeMatch, codes: [...copy.administrativeMatch.codes] };
   return copy;
@@ -1026,14 +1030,21 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const normLon = issuanceLongitude(lat, lon);
 
   if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
-  const island = matchBundledIsland(lat, normLon);
+  const coast = mayHaveReviewedGeography(lat, normLon) ? matchRegionalCoast(lat, normLon) : undefined;
+  if (coast?.requiresAgreement && coast.surface === 'unknown') {
+    const { source, version, attribution } = coast;
+    return rememberRegion(lat, normLon, {
+      prefix: 'ISLAND_UNRESOLVED', name: 'Coastal source disagreement', gridSize: 4.4, isSea: false,
+      coastalUncertainty: { source, version, attribution },
+    });
+  }
+  const island = matchBundledIsland(lat, normLon, coast ?? null);
   if (!island && isJapaneseIslandReviewArea(lat, normLon)) {
     return rememberRegion(lat, normLon, lookupRegionalHint(lat, normLon, true));
   }
-  const region = baseRegion(lat, normLon);
-  // The detailed Pearl Delta and Japanese coastal surveys take priority over a generalized shoreline.
-  const delta = island && matchPearlRiverDelta(lat, normLon);
-  if (!island || (delta && delta.surface !== 'land') ||
+  const region = baseRegion(lat, normLon, coast);
+  // The detailed regional shoreline surveys take priority over a generalized shoreline.
+  if (!island || (coast && coast.surface !== 'land') ||
       (region.waterMatch && island.source.startsWith('natural-earth-global-island'))) {
     return rememberRegion(lat, normLon, region);
   }
@@ -1073,7 +1084,7 @@ function islandRegion(region: RegionInfo, island: AgidIslandAssessment): RegionI
   };
 }
 
-function baseRegion(lat: number, normLon: number): RegionInfo {
+function baseRegion(lat: number, normLon: number, coast: ReturnType<typeof matchRegionalCoast>): RegionInfo {
   // 1. POLAR SPECIAL RULE (Fast exit)
   if (lat > 89.95) return { prefix: "ARCT", isSea: true, gridSize: 4.4, name: "North Pole", polygon: [[-180, 89.9],[-180, 90],[180, 90],[180, 89.9],[-180, 89.9]] };
   if (lat < -85.0) return { prefix: "AQ", isSea: false, gridSize: 4.4, name: "Antarctica" };
@@ -1096,9 +1107,9 @@ function baseRegion(lat: number, normLon: number): RegionInfo {
   // Positive polygon evidence takes precedence over rectangular land and sea
   // hints. An exact shared edge retains all matching units and uses the first
   // ISO code for the deterministic prefix required by the legacy wire format.
-  const delta = matchPearlRiverDelta(lat, normLon);
-  const mapUnitMatch = delta?.surface === 'land' && delta.codes.length > 0
-    ? { source: delta.source, version: delta.version, codes: delta.codes, relation: delta.relation }
+  const mapUnitMatch = coast?.surface === 'land' && coast.codes.length > 0
+    ? { source: coast.source, version: coast.version, codes: coast.codes, relation: coast.relation,
+        ...(coast.attribution && { attribution: coast.attribution }) }
     : matchCountryMapUnits(lat, normLon);
   if (mapUnitMatch) {
     const prefix = mapUnitMatch.codes[0];
@@ -1107,8 +1118,8 @@ function baseRegion(lat: number, normLon: number): RegionInfo {
     };
   }
 
-  const waterMatch = delta?.surface === 'water'
-    ? { source: delta.source, version: delta.version }
+  const waterMatch = coast?.surface === 'water'
+    ? { source: coast.source, version: coast.version, ...(coast.attribution && { attribution: coast.attribution }) }
     : matchReviewedCoastalWater(lat, normLon);
   const result = lookupRegionalHint(lat, normLon, Boolean(waterMatch));
   if (waterMatch) result.waterMatch = waterMatch;

@@ -390,3 +390,14 @@ test('island geography distinguishes a Japanese policy result from competing cla
   assert.deepEqual(result.island.countryCodes, []);
   assert.equal(result.deliveryRegion, null);
 });
+
+test('CLI identifies coastal source disagreements on encode and decode', async () => {
+  const pin = await runAgidCli(['encode', '--lat', '36.15', '--lon', '29.59', '--json']);
+  assert.equal(pin.exitCode, 0);
+  const { id, type, coastalUncertainty } = JSON.parse(pin.stdout);
+  assert.equal(type, 'unknown');
+  assert.match(coastalUncertainty.attribution, /ELSTAT/);
+  const cell = await runAgidCli(['decode', id, '--json']);
+  assert.equal(cell.exitCode, 0);
+  assert.equal(JSON.parse(cell.stdout).type, 'unknown');
+});

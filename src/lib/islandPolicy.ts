@@ -1,3 +1,4 @@
+import { matchRegionalCoast, type DeltaMapMatch } from './pearlRiverDelta';
 import { issuanceLongitude } from './agidProjection';
 import { matchGlobalIsland } from './globalIslands';
 import { matchMinorIsland } from './minorIslands';
@@ -11,6 +12,7 @@ export interface IslandEvidence {
   source: string;
   version: string;
   disputed?: boolean;
+  attribution?: string;
 }
 
 export interface AgidIslandAssessment {
@@ -73,12 +75,17 @@ export function applyIslandPolicyToEvidence(lat: number, lon: number, evidence?:
     status: 'mapped', countryCodes: [...evidence.codes],
     ...(evidence.sovereignCodes?.length && { sovereignCodes: [...evidence.sovereignCodes] }),
     source: evidence.source, version: evidence.version, relation: evidence.relation,
+    ...(evidence.attribution && { attribution: evidence.attribution }),
   };
 }
 
-export function matchBundledIsland(lat: number, lon: number): AgidIslandAssessment | undefined {
+export function matchBundledIsland(lat: number, lon: number,
+  coast: DeltaMapMatch | null = matchRegionalCoast(lat, issuanceLongitude(lat, lon)) ?? null): AgidIslandAssessment | undefined {
+  if (coast?.requiresAgreement) {
+    return coast.isolatedIsland ? applyIslandPolicyToEvidence(lat, lon, coast) : undefined;
+  }
   const evidence = matchGlobalIsland(lat, lon) ?? matchMinorIsland(lat, lon);
-  return applyIslandPolicyToEvidence(lat, lon, evidence);
+  return applyIslandPolicyToEvidence(lat, lon, evidence ?? (coast?.isolatedIsland ? coast : undefined));
 }
 
 export function copyIslandAssessment(value: AgidIslandAssessment): AgidIslandAssessment {

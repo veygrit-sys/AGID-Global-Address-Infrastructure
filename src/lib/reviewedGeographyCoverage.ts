@@ -1,6 +1,6 @@
 import enclave from '../data/buesingenBoundary.json';
 import { countryMapUnitGeometry, hasCountryMapUnit, reviewedCoastalWindows } from './countryMapUnits';
-import { pearlRiverDeltaWindows } from './pearlRiverDelta';
+import { regionalCoastWindows } from './pearlRiverDelta';
 
 // Broad phase only. Each marked tile can contain land, water, a border, or a source gap.
 const tileDegrees = 2;
@@ -25,7 +25,7 @@ for (const unit of countryMapUnitGeometry) {
   if (!hasCountryMapUnit(unit.code)) continue;
   for (const polygon of unit.polygons) include(polygon.bbox);
 }
-for (const window of [...reviewedCoastalWindows, ...pearlRiverDeltaWindows]) include(window.bbox);
+for (const window of [...reviewedCoastalWindows, ...regionalCoastWindows]) include(window.bbox);
 include(enclave.bounds);
 
 /** Validated latitude and a canonical longitude in [-180, 180). */

@@ -220,7 +220,8 @@ function agidSummary(result: AGIDResult) {
     ...(result.mapUnitMatch && { mapUnitMatch: result.mapUnitMatch }),
     ...(result.waterMatch && { waterMatch: result.waterMatch }),
     ...(result.administrativeMatch && { administrativeMatch: result.administrativeMatch }),
-    type: result.isSea ? 'water' : 'land',
+    ...(result.coastalUncertainty && { coastalUncertainty: result.coastalUncertainty }),
+    type: result.coastalUncertainty ? 'unknown' : result.isSea ? 'water' : 'land',
     gridSizeMetersApprox: result.gridSize,
     center: {
       lat: result.lat,
@@ -246,7 +247,8 @@ function decodeSummary(input: string) {
     prefix: decoded.prefix,
     regionCode: region.regionCode,
     regionName: region.regionName,
-    type: region.isSea ? 'water' : 'land',
+    ...(region.coastalUncertainty && { coastalUncertainty: region.coastalUncertainty }),
+    type: region.coastalUncertainty ? 'unknown' : region.isSea ? 'water' : 'land',
     center: {
       lat: decoded.lat,
       lon: decoded.lon,
