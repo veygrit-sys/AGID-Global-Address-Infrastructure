@@ -37,6 +37,7 @@ const reviewedWaterNames = {
   ALSK: 'Gulf of Alaska',
   GMXC: 'Gulf of Mexico',
   PHLS: 'Philippine Sea',
+  CALI: 'Gulf of California',
   SEPC: 'South Pacific',
   NATL: 'North Atlantic',
   SATL: 'South Atlantic',

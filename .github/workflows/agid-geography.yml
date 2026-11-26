@@ -21,6 +21,8 @@ on:
       - 'public/wasm/agid_core.wasm'
       - 'native/agid-core/**'
       - 'scripts/build-*'
+      - 'scripts/build_*_polygon_detail.py'
+      - 'scripts/*americas-survey-polygons.py'
       - 'scripts/data/landform-worldcover-windows.json'
       - 'scripts/verify-baarle-parcels.py'
       - 'sdk/agid-*/**'
@@ -38,6 +40,12 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'shapely==2.1.2'
+      - run: python scripts/test-americas-survey-polygons.py
+      - run: python scripts/verify-americas-survey-polygons.py
       - run: npm ci
       - run: npm run verify:agid16
       - run: npm run verify:agid-geography
