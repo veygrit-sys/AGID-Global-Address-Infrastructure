@@ -1,3 +1,5 @@
+import { europeOceanSource } from './europeOverview';
+import { matchReviewedShoreline, isReviewedShorelineSource } from './reviewedShorelines';
 import { assessAgidGeography } from './geographicAssessment';
 import { getAddressFormat, type AddressFormat } from '../data/address_formats';
 import { encodeAGID, normalizeAGIDCode, type AGIDResult } from './agid';
@@ -432,7 +434,16 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
   const uncertainIsland = islandPolicy && (islandPolicy.countryCodes.length !== 1
     || islandPolicy.relation === 'boundary' || islandPolicy.status === 'unresolved' || islandPolicy.status === 'disputed');
   const territory = cellAssessment?.territorialTopology;
-  const uncertainCountry = uncertainIsland || agid?.administrativeMatch?.relation === 'boundary'
+  // A saved ID preserves its historic prefix. Reassess the whole cell before
+  // using a geographic hint for the address form, including cells beside water.
+  const shorePin = agid && !cellAssessment && matchReviewedShoreline(agid.lat, agid.lon);
+  const uncertainShoreline = shorePin
+    ? shorePin.surface !== 'land' || shorePin.relation !== 'inside' || shorePin.codes.length !== 1
+    : cellAssessment?.sources.some(s => isReviewedShorelineSource(s.source))
+      && (cellAssessment.surface !== 'land' || cellAssessment.status !== 'mapped' || cellAssessment.regionCandidates.length !== 1);
+  const uncertainCountry = uncertainShoreline || uncertainIsland || agid?.waterMatch?.source === europeOceanSource.source
+    || agid?.mapUnitMatch?.relation === 'boundary'
+    || agid?.administrativeMatch?.relation === 'boundary'
     || (cellAssessment && (cellAssessment.regionCandidates.length > 1
       || (territory?.administration && territory.status !== 'inside')));
   if (agid) {

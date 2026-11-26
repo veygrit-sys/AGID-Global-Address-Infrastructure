@@ -1,3 +1,4 @@
+import { matchReviewedShoreline } from './reviewedShorelines';
 import { matchIslandBorderReview } from './islandBorderDisagreement';
 import { matchTerritorialExclave } from './territorialExclaves';
 import { issuanceLongitude } from './agidProjection';
@@ -19,6 +20,7 @@ export interface AgidIslandAssessment {
   status: 'mapped' | 'japan-position' | 'disputed' | 'unresolved';
   countryCodes: string[];
   sovereignCodes?: string[];
+  administrationKind?: 'condominium';
   claimantCodes?: string[];
   administeringCode?: string | null;
   territory?: string;
@@ -67,6 +69,8 @@ export function applyIslandPolicyToEvidence(lat: number, lon: number, evidence?:
     territory: dispute.territory, territoryJa: dispute.territoryJa, claimScope: dispute.claimScope,
     evidenceUrls: dispute.evidenceUrls, relation: dispute.relation, source: dispute.source, version: dispute.version,
   };
+  const shoreline = matchReviewedShoreline(lat, lon);
+  if (shoreline) return shoreline.island;
   const borderReview = matchIslandBorderReview(lat, lon);
   if (borderReview) return borderReview;
   // These reviewed features intersect an administrative territory with a physical

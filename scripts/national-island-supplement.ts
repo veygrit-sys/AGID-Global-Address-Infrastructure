@@ -1,8 +1,10 @@
+import { isEuropeanBorderSource } from '../src/lib/europeBorderSurveys';
 import { matchNationalIslandPoint } from './national-island-point-evidence';
 import sourceData from '../src/data/nationalIslandSupplement.json';
 import { needsIslandPolicyReview } from '../src/lib/disputedIslands';
 import { isJapaneseIslandReviewArea } from '../src/lib/japaneseIslandView';
 import { pointTerritorialTopology } from '../src/lib/territorialTopology';
+import { matchReviewedShoreline, sharedEuropeanIslands } from '../src/lib/reviewedShorelines';
 import { applyIslandPolicyToEvidence, matchBundledIsland, type AgidIslandAssessment, type IslandEvidence } from '../src/lib/islandPolicy';
 
 export type PackHit = IslandEvidence & {
@@ -16,6 +18,34 @@ const byPhysicalId = new Map<string, (typeof sourceData.sources)[number]>(source
 export function assessPackPoint(lat: number, lon: number, raw: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean): AgidIslandAssessment | undefined {
   const primary = applyIslandPolicyToEvidence(lat, lon, raw ?? undefined);
+  const shore = matchReviewedShoreline(lat, lon);
+  if (shore) {
+    // A national survey can resolve a joint or divided island that the older
+    // global shoreline omits or assigns to just one side.
+    if (primary?.claimantCodes || primary?.administrationKind === 'condominium' || shore.surveyedIslandOwnership) return primary;
+    // An independently surveyed lake island can fill a GSHHG omission. The
+    // quantized copy of GSHHG alone cannot overrule that pack's exact lake.
+    if (mappedInlandWater && !shore.surveyedLakeIsland) return undefined;
+    if (shore.surface === 'water' || shore.surface === 'unknown' || shore.landform === 'mainland') return undefined;
+    const reviewed = shore.island;
+    if (!reviewed && shore.surface === 'boundary') return undefined;
+    if (raw && (raw.disputed || raw.relation === 'boundary' || raw.codes.length > 1
+      || (shore.codes.length > 0 && raw.codes.some(code => !shore.codes.includes(code))))) {
+      const evidence = reviewed ?? raw;
+      return { status: 'unresolved', countryCodes: [], source: evidence.source, version: evidence.version,
+        attribution: reviewed?.attribution, evidenceUrls: reviewed?.evidenceUrls,
+        relation: raw.relation === 'boundary' ? 'boundary' : shore.relation };
+    }
+    if (shore.surface === 'boundary' || shore.ownershipReview || shore.codes.length > 0) return reviewed;
+    // With no jurisdiction in the bundled extract, the exact, pinned pack may
+    // supply it for this physical island at this point only.
+    if (pinnedSourceEdition && raw?.codes.length === 1
+        && (shore.source === 'europe-mediterranean-overseas-shorelines' || ['CA', 'US'].includes(raw.codes[0]))) {
+      return { status: 'mapped', countryCodes: [...raw.codes], sovereignCodes: [...(raw.sovereignCodes ?? [])],
+        relation: 'inside', source: raw.source, version: raw.version };
+    }
+    return reviewed;
+  }
   if (mappedInlandWater && primary?.status !== 'japan-position'
     && primary?.source !== 'mlit-n03-tokyo-remote-islands') return undefined;
   if (!raw) return primary ?? matchBundledIsland(lat, lon);
@@ -44,18 +74,23 @@ export function assessPackPoint(lat: number, lon: number, raw: PackHit | null,
 const sharedOceanIslands = new Map<string, string[]>([
   ['gshhg:8', ['ID', 'PG']],        // New Guinea
   ['gshhg:9', ['BN', 'ID', 'MY']],  // Borneo
-  ['gshhg:26', ['GB', 'IE']],       // Ireland
   ['gshhg:29', ['DO', 'HT']],       // Hispaniola
   ['gshhg:35', ['AR', 'CL']],       // Isla Grande de Tierra del Fuego
   ['gshhg:51', ['ID', 'TL']],       // Timor
   ['gshhg:564', ['ID', 'MY']],      // Sebatik
-  ['gshhg:1592', ['MF', 'SX']],     // Saint Martin
+  ...Array.from(sharedEuropeanIslands, ([id, codes]): [string, string[]] => [`gshhg:${id}`, codes]),
 ]);
 
-export function packPointResult(lat: number, lon: number, raw: PackHit | null,
+export function packPointResult(lat: number, lon: number, packHit: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean) {
-  const island = assessPackPoint(lat, lon, raw, mappedInlandWater, pinnedSourceEdition);
-  const topology = island || !mappedInlandWater ? pointTerritorialTopology(lat, lon, island, island && raw ? raw.islandId : undefined) : undefined;
+  const island = assessPackPoint(lat, lon, packHit, mappedInlandWater, pinnedSourceEdition);
+  const shore = matchReviewedShoreline(lat, lon);
+  const surveyed = shore?.surveyedIslandOwnership;
+  // Independent surveys supply their own physical geometry, including water.
+  const surveyedMainland = shore?.landform === 'mainland' && isEuropeanBorderSource(shore.source);
+  const raw = surveyed || surveyedMainland ? null : packHit;
+  const topology = island || surveyed || !mappedInlandWater
+    ? pointTerritorialTopology(lat, lon, island, island && raw ? raw.islandId : undefined) : undefined;
   const physical = island && raw ? {
     physicalIslandId: raw.islandId,
     physicalKind: raw.kind,

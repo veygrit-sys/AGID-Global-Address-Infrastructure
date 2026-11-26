@@ -1,3 +1,7 @@
+import {
+  europeLandSource, europeLandWindows, europeOceanSource, inEuropeLandWindow, isEuropeanOpenWater, matchEuropeLandUnits, queryEuropeLandUnits,
+} from './europeOverview';
+import { matchReviewedShoreline, queryReviewedShorelinePolygons, reviewedShorelineWindows } from './reviewedShorelines';
 import { chelemReviewSource, chelemSurveySource, isReviewedNaturalEarthIsland, queryIslandBorderReviewPolygons } from './islandBorderDisagreement';
 import { pointTerritorialTopology, type TerritorialTopology } from './territorialTopology';
 import { matchTerritorialAdministration, queryTerritorialExclavePolygons, type TerritorialExclaveMatch } from './territorialExclaves';
@@ -33,6 +37,7 @@ export interface AgidGeographicAssessment {
   sources: Source[];
   footprint: { kind: 'manual-pin' | 'device-pin' | 'cell'; radiusMeters: number | null };
   boundaryAllowanceMeters: number;
+  administrativeSourceDisagreement?: true;
   island?: AgidIslandAssessment;
   territorialTopology?: TerritorialTopology;
   deliveryRegion: null;
@@ -130,7 +135,7 @@ function contactOnEdge(center: PostalContextPosition, radius: number, ax: number
 }
 
 function contactEdges(rings: number[][][], disk: number[], center: PostalContextPosition, radius: number,
-  onTouch: (a: number[], b: number[], witness: PostalContextPosition) => void) {
+  onTouch: (a: number[], b: number[], witness: PostalContextPosition) => void | boolean) {
   for (const ring of rings) {
     for (let i = 1; i < ring.length; i++) {
       const a = ring[i - 1], b = ring[i];
@@ -138,9 +143,96 @@ function contactEdges(rings: number[][][], disk: number[], center: PostalContext
       const box = [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[0], b[0]), Math.max(a[1], b[1])];
       if (boxRelation(box, disk) === 'outside') continue;
       const witness = contactOnEdge(center, radius, a[0], a[1], b[0], b[1]);
-      if (witness) onTouch(a, b, witness);
+      if (witness && onTouch(a, b, witness) === true) return;
     }
   }
+}
+
+type GeographicFootprint = ReturnType<typeof footprint>;
+
+function assessReviewedShorelineFootprint(location: GeographicFootprint, radius: number | null,
+  boundaryAllowanceMeters: number): AgidGeographicAssessment | undefined {
+  const { center, kind, radiusMeters } = location;
+  const [lon, lat] = center;
+  const point = matchReviewedShoreline(lat, lon);
+  if (!point && (radius === null || radius === 0 || radius > 500_000)) return;
+  const disk = diskBounds(center, radius ?? 0);
+  const windows = reviewedShorelineWindows.filter(w => boxRelation(w.bbox, disk) !== 'outside'
+    && haversineDistanceMeters(center, nearestInWindow(w.bbox, center)) <= (radius ?? 0) + 1e-6);
+  if (!point && !windows.length) return;
+  const covered = windows.some(w => boxRelation(w.bbox, disk) === 'inside');
+  const candidates = new Set(point?.codes);
+  const sources = new Map<string, Source>();
+  function addSource(s: Source | undefined) {
+    if (s) sources.set(s.source, { source: s.source, version: s.version, attribution: s.attribution });
+  }
+  addSource(point);
+  addSource(point?.physicalSource);
+  const policyIsland = point && getRegionInfo(lat, lon).island;
+  const disputed = policyIsland?.status === 'disputed' || Boolean(policyIsland?.claimantCodes?.length);
+  if (disputed) { candidates.clear(); addSource(policyIsland); }
+  let touchesShore = point?.surface === 'boundary';
+  let touchesAdmin = point?.relation === 'boundary';
+  let touchesDispute = Boolean(disputed);
+  if (radius !== null && radius > 0 && radius <= 500_000) {
+    // Keep the observed point on the intersecting edge. The midpoint of a long
+    // edge may be outside both the accuracy disk and the reviewed window.
+    // A bounding box only rules out an owner. Add a candidate exclusively
+    // after contacting its mapped land within the disk.
+    const shapes = [...queryReviewedShorelinePolygons(disk)];
+    const possible = new Set(shapes.flatMap(s => s.codes));
+    const foundAll = () => [...possible].every(code => candidates.has(code));
+    for (const shape of shapes) {
+      if (foundAll() && (shape.kind === 'physical' ? touchesShore : touchesAdmin)) continue;
+      contactEdges(shape.rings, disk, center, radius, (_a, _b, [x, y]) => {
+        const at = matchReviewedShoreline(y, issuanceLongitude(y, x));
+        if (!at || at.surface === 'water') return;
+        // An older shoreline or political line can run through the interior of
+        // a newer survey. Only the effective boundary at the contact contributes.
+        if (shape.kind === 'physical' && at.surface === 'land') return;
+        if (shape.kind === 'admin' && at.surface === 'land' && at.relation === 'inside') return;
+        addSource(at);
+        addSource(at.physicalSource);
+        if (shape.kind === 'physical') touchesShore = true;
+        else touchesAdmin = true;
+        if (at.surface === 'land' || at.surface === 'boundary') {
+          for (const code of at.codes) candidates.add(code);
+        }
+        return foundAll() || (shape.kind === 'admin' && shape.codes.every(code => candidates.has(code)));
+      });
+    }
+    for (const shape of queryDisputedIslandPolygons(disk)) {
+      contactEdges(shape.rings, disk, center, radius, () => {
+        addSource(shape);
+        touchesDispute = true;
+      });
+    }
+  }
+  if (!covered && radius !== null && radius > 0) {
+    for (const w of windows) {
+      const [x, y] = nearestInWindow(w.bbox, center);
+      const near = matchReviewedShoreline(y, issuanceLongitude(y, x));
+      addSource(near);
+      near?.codes.forEach(code => candidates.add(code));
+    }
+  }
+  if (!point && !sources.size) return;
+  let surface: AgidGeographicAssessment['surface'] = point?.surface ?? 'unknown';
+  if (radius === null || !covered || radius > 500_000) surface = 'unknown';
+  else if (touchesShore && radius > 0) surface = 'unknown';
+  const review = surface === 'unknown' || surface === 'boundary' || touchesAdmin || touchesDispute
+    || (surface === 'land' && candidates.size !== 1);
+  const topology = point && pointTerritorialTopology(lat, lon, policyIsland);
+  const island = policyIsland?.status === 'mapped' && review
+    && !(policyIsland.administrationKind === 'condominium' && surface === 'land')
+    ? { ...policyIsland, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : policyIsland;
+  return {
+    status: review ? 'needs-confirmation' : 'mapped', surface, regionCandidates: [...candidates].sort(),
+    sources: [...sources.values()], footprint: { kind, radiusMeters }, boundaryAllowanceMeters,
+    ...(point?.administrativeSourceDisagreement && { administrativeSourceDisagreement: true }),
+    ...(island && { island }), ...(topology && { territorialTopology: review && radius !== 0
+      ? { ...topology, status: 'uncertain' } : topology }), deliveryRegion: null,
+  };
 }
 
 /** Assess only the cartographic footprint. No carrier path or postal destination is inferred. */
@@ -148,7 +240,25 @@ export function assessAgidGeography(
   input: AgidGeographyInput, { boundaryAllowanceMeters = 0 }: { boundaryAllowanceMeters?: number } = {},
 ): AgidGeographicAssessment {
   if (!Number.isFinite(boundaryAllowanceMeters) || boundaryAllowanceMeters < 0) throw new RangeError('Invalid boundary allowance');
-  const { center, kind, radiusMeters } = footprint(input);
+  const location = footprint(input);
+  const radius = location.radiusMeters === null ? null : Math.min(Math.PI * EARTH_RADIUS, location.radiusMeters + boundaryAllowanceMeters);
+  const reviewed = assessReviewedShorelineFootprint(location, radius, boundaryAllowanceMeters);
+  if (!reviewed) return assessBaseGeography(location, boundaryAllowanceMeters);
+  // A disk that extends outside the review can also reach independently mapped
+  // territory on the other side. Only retain those extra candidates as possibilities.
+  if (radius !== null && radius > 0 && reviewed.surface === 'unknown'
+      && !reviewedShorelineWindows.some(w => boxRelation(w.bbox, diskBounds(location.center, radius)) === 'inside')) {
+    const outside = assessBaseGeography(location, boundaryAllowanceMeters);
+    reviewed.regionCandidates = [...new Set([...reviewed.regionCandidates, ...outside.regionCandidates])].sort();
+    for (const source of outside.sources) {
+      if (!reviewed.sources.some(s => s.source === source.source)) reviewed.sources.push(source);
+    }
+  }
+  return reviewed;
+}
+
+function assessBaseGeography(location: GeographicFootprint, boundaryAllowanceMeters: number): AgidGeographicAssessment {
+  const { center, kind, radiusMeters } = location;
   const [lon, lat] = center;
   const point = getRegionInfo(lat, lon);
   // The reviewed Japanese shoreline and surveyed lake-island intersection are
@@ -267,12 +377,33 @@ export function assessAgidGeography(
       && haversineDistanceMeters(center, [x, y]) <= radius));
   }
 
+  if (water?.source === europeOceanSource.source) {
+    if (isEuropeanOpenWater(disk)) return finish('water', false);
+    // A certificate ending at a tile edge says nothing about the adjacent tile.
+    partialCoverage = true;
+  }
+  for (const window of europeLandWindows) {
+    if (boxRelation(window.bbox, disk) === 'crosses') partialWindow(window.bbox, europeLandSource);
+  }
+  for (const unit of queryEuropeLandUnits(disk)) {
+    contactEdges(unit.feature.rings, disk, center, radius, (a, b, [x, y]) => {
+      if (!inEuropeLandWindow(unit.coverage, x, y)) return;
+      // Preserve finer enclave and host polygons (e.g. Baarle) within their reviewed extent.
+      const local = matchTerritorialAdministration(y, x);
+      if (local && !local.codes.includes(unit.code)) return;
+      recordLand(unit.code, europeLandSource, a, b);
+    });
+  }
   for (const { code, polygons } of countryMapUnitGeometry) {
     // Japanese rings are complete but only their documented windows were reviewed.
     if (code === 'JP' && !reviewedCoastalWindows.some(w => w.code === code && boxRelation(w.bbox, disk) === 'inside')) continue;
     for (const polygon of polygons) {
       if (boxRelation(polygon.bbox, disk) !== 'outside') {
-        contactEdges(polygon.rings, disk, center, radius, (a, b) => recordLand(code, mapSource, a, b));
+        contactEdges(polygon.rings, disk, center, radius, (a, b, [x, y]) => {
+          // A previously bundled line can lie well inside a newer continental polygon.
+          if (matchEuropeLandUnits(y, issuanceLongitude(y, x))) return;
+          recordLand(code, mapSource, a, b);
+        });
       }
     }
   }

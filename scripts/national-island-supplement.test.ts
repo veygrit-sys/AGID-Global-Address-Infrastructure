@@ -54,3 +54,36 @@ test('the precise physical ID controls sharing and water does not acquire adjace
   assert.equal(packPointResult(-51.794, -58.61, null, true, true).island, null);
   assert.deepEqual(packPointResult(25.7445, 123.4745, null, true, true).island?.countryCodes, ['JP']);
 });
+
+test('reviewed Great Lakes islands and water agree across local pack and bundled evidence', () => {
+  // The published GSHHG pack reports lake water at both Middle Island and this
+  // nearby open-water control. The reviewed island shoreline separates them.
+  const middle = packPointResult(41.6828, -82.683149, null, true, true);
+  assert.deepEqual(middle.island?.countryCodes, ['CA']);
+  assert.equal(middle.territorialTopology?.landform, 'island');
+  assert.equal(middle.physicalIslandId, undefined);
+  const water = packPointResult(41.665, -82.683149, { ...hit, codes: ['US'] }, false, true);
+  assert.equal(water.island, null);
+  assert.equal(water.territorialTopology, null);
+  assert.equal(water.physicalIslandId, undefined);
+
+  // The full pack has no physical ID for Boldt Castle on Heart Island.
+  const heart = packPointResult(44.344525, -75.922575, null, false, true);
+  assert.deepEqual(heart.island?.countryCodes, ['US']);
+  assert.equal(heart.territorialTopology?.landform, 'island');
+  const mainland = packPointResult(48.984, -123.075, { ...hit, codes: ['US'] }, false, true);
+  assert.equal(mainland.island, null);
+  assert.equal(mainland.physicalIslandId, undefined);
+  assert.equal(mainland.territorialTopology?.landform, 'mainland');
+
+  const pelee = [41.77827, -82.656032] as const;
+  const physical = { ...hit, islandId: 'gshhg:187373', kind: 'lake-island' as const };
+  const confirmed = packPointResult(...pelee, physical, false, true);
+  assert.deepEqual(confirmed.island?.countryCodes, ['CA']);
+  assert.equal(confirmed.physicalIslandId, physical.islandId);
+  for (const conflicting of [{ codes: ['US'] }, { disputed: true }, { relation: 'boundary' }] satisfies Partial<PackHit>[]) {
+    const result = packPointResult(...pelee, { ...physical, ...conflicting }, false, true);
+    assert.equal(result.island?.status, 'unresolved');
+    assert.deepEqual(result.island?.countryCodes, []);
+  }
+});

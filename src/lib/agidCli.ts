@@ -759,6 +759,7 @@ function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
       `Status: ${assessment.status}`,
       `Surface: ${assessment.surface}`,
       ...topologyHuman(assessment.territorialTopology, assessment.island),
+      ...(assessment.administrativeSourceDisagreement ? ['Boundary sources differ at this location.'] : []),
       ...(assessment.island
         ? islandDisplayRows(assessment.island, false, codes => codes.join(', '),
           assessment.status === 'needs-confirmation' ? assessment.regionCandidates : []).map(([label, value]) => `${label}: ${value}`)

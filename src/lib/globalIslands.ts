@@ -1,3 +1,4 @@
+import { unpackMapRing } from './packedMapRing';
 import manifest from '../data/global-islands/manifest.json';
 import sharedInteriors from '../data/global-islands/landform-shared-interiors.json';
 import topology from '../data/global-islands/landform-components.json';
@@ -64,35 +65,13 @@ for (const shard of globalIslandParts as PackedPolygon[][]) {
   }
 }
 
-function unpackRing(encoded: string, scale: number): number[][] {
-  const bytes = atob(encoded);
-  const points: number[][] = [];
-  let offset = 0, x = 0, y = 0;
-  function next() {
-    let total = 0, factor = 1, byte: number;
-    do {
-      byte = bytes.charCodeAt(offset++);
-      total += (byte & 127) * factor;
-      factor *= 128;
-    } while (byte >= 128);
-    return total % 2 ? -(total + 1) / 2 : total / 2;
-  }
-  while (offset < bytes.length) {
-    x += next();
-    y += next();
-    points.push([x / scale, y / scale]);
-  }
-  points.push(points[0]);
-  return points;
-}
-
 // Keep a bounded number of decoded polygons while panning a mobile map.
 const geometries = new Map<number, Geometry>();
 function geometry(index: number): Geometry {
   let value = geometries.get(index);
   if (value) return value;
   const { bbox, row, scale } = extents[index];
-  const rings = (row.slice(5) as string[]).map(ring => unpackRing(ring, scale));
+  const rings = (row.slice(5) as string[]).map(ring => unpackMapRing(ring, scale));
   value = { rings, indexed: indexMapPolygon({ bbox, rings }) };
   if (geometries.size >= 128) geometries.delete(geometries.keys().next().value!);
   geometries.set(index, value);
@@ -195,7 +174,7 @@ function corroborated(component: number, relation: GlobalLandformMatch['relation
     if (lon < bbox[0] || lat < bbox[1] || lon > bbox[2] || lat > bbox[3]) continue;
     let g = sharedGeometry.get(piece);
     if (!g) {
-      const rings = (piece.slice(5) as string[]).map(r => unpackRing(r,SCALE));
+      const rings = (piece.slice(5) as string[]).map(r => unpackMapRing(r,SCALE));
       g = { rings, indexed: indexMapPolygon({bbox,rings}) };
       sharedGeometry.set(piece,g);
     }
@@ -230,7 +209,7 @@ function withinReviewedWater(lat: number, longitude: number, bounds: number[], r
     if (x < w || lat < s || x > e || lat > n) continue;
     let g = waterGeometry.get(row);
     if (!g) {
-      const rings = (row.slice(5) as string[]).map(r => unpackRing(r,WATER_SCALE));
+      const rings = (row.slice(5) as string[]).map(r => unpackMapRing(r,WATER_SCALE));
       g = { rings, indexed: indexMapPolygon({bbox:[w,s,e,n],rings}) };
       waterGeometry.set(row,g);
     }

@@ -25,10 +25,10 @@ test('the map distinguishes a selected point from a border-straddling ID cell an
 });
 
 test('unassessed points have no regional claim and missing device accuracy is explicit', () => {
-  const result = render({ kind: 'pin', lat: 48.85, lon: 2.35, method: 'device' }, 'ja');
+  const result = render({ kind: 'pin', lat: -23.55, lon: -46.63, method: 'device' }, 'ja');
   assert.match(result, /測位精度は不明/);
   assert.match(result, /詳細な境界データがありません/);
-  assert.doesNotMatch(result, /国・地域の候補|フランス|地図上の陸地|地図上の水域/);
+  assert.doesNotMatch(result, /国・地域の候補|ブラジル|地図上の陸地|地図上の水域/);
 });
 
 test('the map credits the boundary provider at an administrative enclave', () => {
@@ -166,4 +166,13 @@ test('an island exclave displays both meanings and keeps its neighbour outside t
   assert.match(point, /周囲・隣接する国・地域<\/dt><dd[^>]*>モザンビーク/);
   assert.match(point, /(?:地図上の国・地域|この地点の所属国・地域)<\/dt><dd[^>]*>マラウイ/);
   assert.doesNotMatch(point, /配送先.*モザンビーク/);
+});
+
+test('European border details distinguish a single-point connection from source disagreement in Japanese', () => {
+  const town = render({ kind: 'pin', lat: 47.574, lon: 10.447 }, 'ja');
+  assert.match(town, /ユングホルツ · 本土と一点で接する地域/);
+  const uncertain = render({ kind: 'pin', lat: 43.555, lon: 19.404 }, 'ja');
+  assert.match(uncertain, /この地点では国境資料の判定が分かれます/);
+  assert.match(uncertain, /ボスニア[^<]+セルビア/);
+  assert.doesNotMatch(uncertain, /共同管理国/);
 });
