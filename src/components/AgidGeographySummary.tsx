@@ -3,7 +3,7 @@ import { LocalIslandPackLookup } from './LocalIslandPackLookup';
 import { territorialTopologyRows } from '../lib/territorialTopologyDisplay';
 import { IslandEvidenceLinks } from './IslandEvidenceLinks';
 import { islandDisplayRows, isNamedJapaneseRemoteIsland } from '../lib/islandDisplay';
-import type { AgidGeographicAssessment } from '../lib/geographicAssessment';
+import { assessAgidGeographyWithFrontiers, type AgidGeographicAssessment, type AgidGeographyInput } from '../lib/geographicAssessment';
 
 const geographyCopy = {
   en: {
@@ -26,11 +26,23 @@ const geographyCopy = {
   },
 } as const;
 
-export function AgidGeographySummary({ assessment, locale, manualPin }: {
+export function AgidGeographySummary({ assessment: base, input, locale, manualPin }: {
   assessment: AgidGeographicAssessment;
+  input?: AgidGeographyInput;
   locale: string;
   manualPin?: { lat: number; lon: number };
 }) {
+  const [detail, setDetail] = React.useState<{base: AgidGeographicAssessment; result?: AgidGeographicAssessment; failed?: boolean}>();
+  React.useEffect(() => {
+    let active = true;
+    if (input) {
+      assessAgidGeographyWithFrontiers(input, base).then(result => {
+        if (active) setDetail({base, result});
+      }).catch(() => { if (active) setDetail({base, failed: true}); });
+    }
+    return () => { active = false; };
+  }, [input, base]);
+  const assessment = detail?.base === base && detail.result ? detail.result : base;
   const japanese = locale.startsWith('ja');
   const copy = geographyCopy[japanese ? 'ja' : 'en'];
   const displayLocale = Intl.DisplayNames.supportedLocalesOf([locale.replaceAll('_', '-')])[0] || 'en';
@@ -60,6 +72,8 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
           <dd className="font-semibold">{formatRegions(regionCandidates)}</dd>
         </dl>
       )}
+      {detail?.base === base && detail.failed && <p>{japanese ? '詳細な国境線を読み込めませんでした。' : 'Detailed frontier data could not be loaded.'}</p>}
+      {assessment.frontiers?.map(f => <p key={f.id}>{f.name} · {f.classification}</p>)}
       {assessment.administrativeSourceDisagreement && <p>{japanese ? 'この地点では国境資料の判定が分かれます。' : 'Boundary sources differ at this location.'}</p>}
       {evidenceRows.length > 0 && (
         <dl>

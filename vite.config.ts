@@ -11,6 +11,8 @@ function manualVendorChunk(id: string) {
   // Keep independently versioned boundary extracts cacheable across app-only changes.
   if (normalizedId.endsWith('/src/data/usCanadaDividedLakeIslands.json')) return 'geography-us-canada-divided-lake-islands';
   if (normalizedId.endsWith('/src/data/pearlRiverDelta.json')) return 'geography-pearl-delta';
+  const frontier = normalizedId.match(/\/src\/data\/europe-frontier(?:s|-sides)\/((?:lines|sides)-\d+)\.json$/);
+  if (frontier) return 'geography-frontier-' + frontier[1];
   const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands|territorial-exclaves|us-canada-shorelines|europe-shorelines|europe-overview|europe-border-surveys)\/([a-zA-Z0-9-]+)\.json$/);
   if (islandPart) return `geography-${islandPart[1]}-${islandPart[2]}`;
   if (normalizedId.endsWith('/src/data/japaneseRemoteIslands.json')) return 'geography-japanese-remote-islands';
@@ -146,11 +148,20 @@ export default defineConfig(({ mode }) => {
           cleanupOutdatedCaches: true,
           clientsClaim: true,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,woff2}'],
-          globIgnores: ['assets/[A-Z][A-Z]*-*.js'],
+          globIgnores: ['assets/[A-Z][A-Z]*-*.js', 'assets/geography-frontier-*.js'],
           navigateFallback: '/index.html',
           navigateFallbackDenylist: [/^\/api\//, /^\/embed(?:\/|$)/],
           maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
           runtimeCaching: [
+            {
+              urlPattern: /\/assets\/geography-frontier-(?:lines|sides)-\d+-[\w-]+\.js$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'agid-frontier-pages-v1',
+                expiration: { maxEntries: 180, maxAgeSeconds: 60 * 60 * 24 * 90 },
+                cacheableResponse: { statuses: [200] },
+              },
+            },
             {
               urlPattern: ({ request }) => request.destination === 'font',
               handler: 'CacheFirst',

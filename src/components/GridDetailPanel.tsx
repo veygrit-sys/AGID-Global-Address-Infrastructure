@@ -149,7 +149,8 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   }, [setIsGridVisible]);
 
   // Move derived constants and hooks to the top to satisfy Rules of Hooks
-  const geography = React.useMemo(() => clickedAgid ? assessAgidGeography(selectedGeographyInput(clickedAgid)) : null, [clickedAgid]);
+  const geographyInput = React.useMemo(() => clickedAgid ? selectedGeographyInput(clickedAgid) : undefined, [clickedAgid]);
+  const geography = React.useMemo(() => geographyInput ? assessAgidGeography(geographyInput) : null, [geographyInput]);
   const island = geography?.island;
   const regionCodeFromAgid = (!clickedAgid?.isSea && clickedAgid?.regionCode ? clickedAgid.regionCode : "").toLowerCase();
   const countryCodeFromPrefix = (clickedAgid?.prefix || "").toLowerCase();
@@ -581,7 +582,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
                 </div>
                </div>
 
-               {geography && <AgidGeographySummary assessment={geography} locale={appLanguage} manualPin={clickedAgid} />}
+               {geography && <AgidGeographySummary assessment={geography} input={geographyInput} locale={appLanguage} manualPin={clickedAgid} />}
                <motion.div
                 key="expanded-content"
                 initial={{ opacity: 0, height: 0 }}

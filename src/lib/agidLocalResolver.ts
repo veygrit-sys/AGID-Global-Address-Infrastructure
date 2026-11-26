@@ -1,6 +1,6 @@
 import { europeOceanSource } from './europeOverview';
 import { matchReviewedShoreline, isReviewedShorelineSource } from './reviewedShorelines';
-import { assessAgidGeography } from './geographicAssessment';
+import { assessAgidGeographyWithFrontiers } from './geographicAssessment';
 import { getAddressFormat, type AddressFormat } from '../data/address_formats';
 import { encodeAGID, normalizeAGIDCode, type AGIDResult } from './agid';
 import { decodeAgidToResult, looksLikeAGID16 } from './agidSelection';
@@ -429,7 +429,10 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     agidId = agid.id;
   }
 
-  const cellAssessment = agid?.coordinateSource === 'cell' ? assessAgidGeography({ kind: 'cell', id: agid.id }) : undefined;
+  const geographic = agid ? await assessAgidGeographyWithFrontiers(agid.coordinateSource === 'cell'
+    ? {kind: 'cell', id: agid.id} : {kind: 'pin', lat: agid.lat, lon: agid.lon}) : undefined;
+  const cellAssessment = agid?.coordinateSource === 'cell' ? geographic : undefined;
+  const frontierContact = geographic?.frontiers?.some(f => f.codes.length > 0 && !['reference','water-line'].includes(f.kind));
   const islandPolicy = cellAssessment?.island ?? agid?.island;
   const uncertainIsland = islandPolicy && (islandPolicy.countryCodes.length !== 1
     || islandPolicy.relation === 'boundary' || islandPolicy.status === 'unresolved' || islandPolicy.status === 'disputed');
@@ -441,7 +444,7 @@ export async function resolveAgidLocal(input: AgidLocalResolverInput): Promise<A
     ? shorePin.surface !== 'land' || shorePin.relation !== 'inside' || shorePin.codes.length !== 1
     : cellAssessment?.sources.some(s => isReviewedShorelineSource(s.source))
       && (cellAssessment.surface !== 'land' || cellAssessment.status !== 'mapped' || cellAssessment.regionCandidates.length !== 1);
-  const uncertainCountry = uncertainShoreline || uncertainIsland || agid?.waterMatch?.source === europeOceanSource.source
+  const uncertainCountry = (frontierContact && (geographic?.surface !== 'land' || geographic.regionCandidates.length !== 1)) || uncertainShoreline || uncertainIsland || agid?.waterMatch?.source === europeOceanSource.source
     || agid?.mapUnitMatch?.relation === 'boundary'
     || agid?.administrativeMatch?.relation === 'boundary'
     || (cellAssessment && (cellAssessment.regionCandidates.length > 1

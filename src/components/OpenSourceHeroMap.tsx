@@ -9,7 +9,7 @@ import { encodeAGID, type AGIDResult } from '../lib/agid';
 import { decodeAgidToResult, looksLikeAGID16 } from '../lib/agidSelection';
 import { installJapaneseIslandMapStyle } from '../lib/japaneseIslandMapStyle';
 import { islandSearchLabel } from '../lib/islandSearchDisplay';
-import { assessAgidGeography } from '../lib/geographicAssessment';
+import { assessAgidGeography, type AgidGeographyInput } from '../lib/geographicAssessment';
 import { OPENFREEMAP_STYLES, registerPmtilesProtocol } from '../lib/mapEngine';
 import type { PhotonFeature } from '../types/navigation';
 
@@ -77,10 +77,8 @@ const mapCopy = {
 } as const;
 
 function selectMapPin(lat: number, lon: number, method: 'manual' | 'device' = 'manual', accuracyMeters?: number) {
-  return {
-    result: encodeAGID(lat, lon),
-    assessment: assessAgidGeography({ kind: 'pin', lat, lon, method, accuracyMeters }),
-  };
+  const input: AgidGeographyInput = { kind: 'pin', lat, lon, method, accuracyMeters };
+  return { result: encodeAGID(lat, lon), input: input as AgidGeographyInput, assessment: assessAgidGeography(input) };
 }
 
 function getPhotonFeatureLabel(feature: PhotonFeature) {
@@ -109,7 +107,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
   const [isGridVisible, setIsGridVisible] = React.useState(true);
   const [isGridRegenerating, setIsGridRegenerating] = React.useState(false);
   const [viewport, setViewport] = React.useState(INITIAL_VIEW);
-  const [{ result: selectedResult, assessment }, setSelection] = React.useState(() =>
+  const [{ result: selectedResult, assessment, input }, setSelection] = React.useState(() =>
     selectMapPin(INITIAL_VIEW.lat, INITIAL_VIEW.lng));
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<PhotonFeature[]>([]);
@@ -272,7 +270,8 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
     const decoded = decodeAgidToResult(query);
     if (decoded) {
       setIsSearching(false);
-      selectLocation({ result: decoded, assessment: assessAgidGeography({ kind: 'cell', id: decoded.id }) }, decoded.id);
+      const input = { kind: 'cell', id: decoded.id } as const;
+      selectLocation({ result: decoded, input, assessment: assessAgidGeography(input) }, decoded.id);
       return;
     }
     if (looksLikeAGID16(query)) {
@@ -487,7 +486,7 @@ export function OpenSourceHeroMap({ locale }: OpenSourceHeroMapProps) {
         >
           {selectedResult.id}
         </button>
-        <AgidGeographySummary assessment={assessment} locale={locale} manualPin={selectedResult} />
+        <AgidGeographySummary assessment={assessment} input={input} locale={locale} manualPin={selectedResult} />
         <p role="status" aria-live="polite" aria-atomic="true" className="pointer-events-none absolute left-0 top-full mt-1 whitespace-nowrap bg-slate-950 px-3 py-2 text-[11px] font-bold text-white empty:hidden">
           {copyMessage}
         </p>
