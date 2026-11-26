@@ -27,6 +27,14 @@ The Natural Earth Map Units and Ocean extracts use the public-domain 1:10m layer
 
 The browser's island extracts use Natural Earth v5.1.2 and the FieldMaps USGS/LSIB public-domain edition. The Japanese shoreline extract is adapted from MLIT National Land Numerical Information, Administrative Areas N03 (2026), under CC BY 4.0. Sources, transformations, checksums and attribution are retained in each extract's manifest. The separately downloadable GSHHG full-resolution geometry is subject to LGPL and includes its license notices. [MLIT N03](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html) · [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/) · [FieldMaps](https://fieldmaps.io/data/adm0/) · [High-resolution pack](docs/high-resolution-island-pack.md)
 
+## Europe, the Mediterranean and overseas territories
+
+The European continental and offshore extracts adapt Natural Earth v5.1.2 (public domain), FieldMaps international USGS/LSIB 2025-07-29 (public domain) and GSHHG full resolution 2.3.7, © Paul Wessel and Walter H. F. Smith (LGPL v3 or later). The source geometry transformations and input versions are recorded in the [regional guide](docs/europe-mediterranean-boundaries.md). [Natural Earth terms](https://www.naturalearthdata.com/about/terms-of-use/) · [FieldMaps](https://fieldmaps.io/data/adm0/) · [GSHHG notice](scripts/data/national-island-points/licenses/GSHHG-LICENSE.txt) · [LGPL](scripts/data/national-island-points/licenses/COPYING.LESSERv3)
+
+The Bidasoa and Îles du Salut extracts adapt IGN BD TOPO® hydrography, coastal limits, place names and municipal geometry. Source feature identifiers and revision dates are included. © IGN, under Licence Ouverte 2.0. [BD TOPO](https://geoservices.ign.fr/bdtopo) · [Licence Ouverte](https://www.etalab.gouv.fr/licence-ouverte-open-licence/)
+
+The Märket subdivision uses coordinates published in the Finland–Sweden boundary demarcation and a derived dry-ground mask. © ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium (CC BY 4.0). The mask selects and erodes the connected land component, then clips it to the administrative outline. [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en/stateboundaries) · [ESA WorldCover data terms](https://esa-worldcover.org/en/data-access)
+
 ## United States and Canada shoreline extracts
 
 The regional shoreline, North Rock and cross-border lake island extracts use the following sources. The regional guide describes their coverage, survey control points and reproducible builds. [US and Canadian shorelines](docs/us-canada-shorelines.md)

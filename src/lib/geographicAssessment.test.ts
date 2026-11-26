@@ -40,7 +40,7 @@ test('device accuracy and map allowance widen the mapped border independently', 
 });
 
 test('an uncovered pin does not inherit a region from a coarse prefix or claim open water', () => {
-  const result = assess({kind: 'pin', lat: 48.85, lon: 2.35, accuracyMeters: 20});
+  const result = assess({kind: 'pin', lat: -23.55, lon: -46.63, accuracyMeters: 20});
   assert.equal(result.status, 'unassessed');
   assert.equal(result.surface, 'unknown');
   assert.deepEqual(result.regionCandidates, []);

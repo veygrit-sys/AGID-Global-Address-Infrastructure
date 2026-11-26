@@ -25,10 +25,10 @@ test('the map distinguishes a selected point from a border-straddling ID cell an
 });
 
 test('unassessed points have no regional claim and missing device accuracy is explicit', () => {
-  const result = render({ kind: 'pin', lat: 48.85, lon: 2.35, method: 'device' }, 'ja');
+  const result = render({ kind: 'pin', lat: -23.55, lon: -46.63, method: 'device' }, 'ja');
   assert.match(result, /測位精度は不明/);
   assert.match(result, /詳細な境界データがありません/);
-  assert.doesNotMatch(result, /国・地域の候補|フランス|地図上の陸地|地図上の水域/);
+  assert.doesNotMatch(result, /国・地域の候補|ブラジル|地図上の陸地|地図上の水域/);
 });
 
 test('the map credits the boundary provider at an administrative enclave', () => {
