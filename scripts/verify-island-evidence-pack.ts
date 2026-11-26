@@ -27,9 +27,16 @@ const controls = [
   [17.55545726, -88.07182279, 'BZ'], // St George’s Caye
   [13.222, -87.672, null],       // Open water between the islands in the Gulf of Fonseca
   [16.932, -89.897, null],       // Lake Petén Itzá near Flores
+  [-4.2226, -69.95922, 'unresolved'], // Santa Rosa settlement on the Amazon
+  [5.2877, -52.590, 'GF'],             // Île Royale, French Guiana
+  [-15.767, -69.6885, 'PE'],           // Taquile in Lake Titicaca
+  [-16.032, -69.153, 'BO'],            // Isla del Sol in the same lake
+  [-4.220, -69.9505, null],            // Amazon channel by Santa Rosa
+  [-53.32, -68.6040, 'AR', undefined, ['AR', 'CL']], // East side of Isla Grande
+  [-34.1796294, -58.2557995, 'UY', undefined, ['AR', 'UY']], // Timoteo Domínguez
   [25.7445, 123.4745, 'JP'], [-51.794, -58.61, 'disputed'], [0, -140, null], [48.85, 2.35, null],
 ] as const;
-for (const [lat, lon, expected, id] of controls) {
+for (const [lat, lon, expected, id, shared] of controls) {
   const result = lookup(lat, lon);
   assert.equal(result.deliveryRegion, null);
   if (expected === null) assert.equal(result.island, null);
@@ -41,10 +48,12 @@ for (const [lat, lon, expected, id] of controls) {
     assert.deepEqual(result.island.countryCodes, []);
   } else assert.deepEqual(result.island.countryCodes, [expected]);
   if (id) assert.equal(result.physicalIslandId, id);
+  if (shared) assert.deepEqual(result.territorialTopology.sharedIslandCountryCodes, shared);
   if (id === 'gshhg:6815') {
     assert.equal(result.territorialTopology.landform, expected === 'MX' ? 'island' : 'unknown');
     assert.equal(result.territorialTopology.status, expected === 'MX' ? 'inside' : 'uncertain');
   }
+  if (expected === 'GF') assert.deepEqual(result.island.sovereignCodes, ['FR']);
   if (expected === 'GL') assert.deepEqual(result.island.sovereignCodes, ['DK']);
   if (expected === 'CL') {
     assert.equal(result.island.source, 'natural-earth-global-island-map-units');

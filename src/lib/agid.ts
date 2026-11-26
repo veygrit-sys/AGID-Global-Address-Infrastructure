@@ -28,6 +28,9 @@ const SEA_PREFIX_BY_ID = new Map(Object.entries(namedSeaPrefixes));
 const reviewedWaterNames = {
   INLAND_WATER: 'Inland water',
   NEPC: 'North Pacific',
+  SEPC: 'South Pacific',
+  NATL: 'North Atlantic',
+  SATL: 'South Atlantic',
   CARB: 'Caribbean Sea',
 } as const;
 const OCEAN_IDS = ['NPAC', 'NEPC', 'SPAC', 'SEPC', 'NATL', 'SATL', 'NIND', 'SIND', 'SOUT', 'ARCT'] as const;
