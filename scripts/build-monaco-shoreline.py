@@ -35,8 +35,7 @@ def build(path,out):
                 countries.append(shapely.from_wkb(bytes.fromhex(factory.create_multipolygon(a))))
     Reader().apply_file(str(path),locations=True)
     faces=list(polygonize(shapely.union_all([frame.boundary,*coast])))
-    left=[]
-    right=[]
+    votes=[[0.0,0.0] for _ in faces]
     for line in coast:
         points=list(line.coords)
         for (x,y),(u,v) in zip(points,points[1:]):
@@ -46,15 +45,19 @@ def build(path,out):
                 continue
             offset=min(2e-7,length/8)
             mx,my=(x+u)/2,(y+v)/2
-            left.append(shapely.Point(mx-dy/length*offset,my+dx/length*offset))
-            right.append(shapely.Point(mx+dy/length*offset,my-dx/length*offset))
+            left=shapely.Point(mx-dy/length*offset,my+dx/length*offset)
+            right=shapely.Point(mx+dy/length*offset,my-dx/length*offset)
+            left_face=next((i for i,face in enumerate(faces) if face.contains(left)),None)
+            right_face=next((i for i,face in enumerate(faces) if face.contains(right)),None)
+            if left_face is None or right_face is None or left_face==right_face:
+                continue  # A dangling way or sample on the outside of the clipping frame.
+            votes[left_face][0]+=length
+            votes[right_face][1]+=length
     dry=[]
-    for face in faces:
-        onleft=any(face.contains(p) for p in left)
-        onright=any(face.contains(p) for p in right)
-        if onleft==onright:
-            raise ValueError("Ambiguous coastline face")
-        if onleft:
+    for face,(land_edge,water_edge) in zip(faces,votes):
+        if max(land_edge,water_edge) == 0 or min(land_edge,water_edge)>max(land_edge,water_edge)*0.01:
+            raise ValueError(f"Coast faces {len(faces)}, ways {len(coast)}, contradictory oriented edges {votes}, bounds {face.bounds}")
+        if land_edge>water_edge:
             dry.append(face)
     land=shapely.union_all(dry)
     if len(countries)!=1:

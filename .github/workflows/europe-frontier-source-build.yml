@@ -22,12 +22,14 @@ jobs:
       - name: Install geospatial source readers
         run: python -m pip install 'shapely>=2.1,<3' pyproj 'pyshp<3' numpy osmium
       - name: Compile surveyed land, maritime records and territorial administrative areas
+        id: surveys
         run: |
           git config user.name github-actions
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           python scripts/fetch-europe-frontier-sources.py --cache "$RUNNER_TEMP/sources" --output "$RUNNER_TEMP/europe.json"
           python scripts/supplement-europe-frontiers.py "$RUNNER_TEMP/europe.json" --cache "$RUNNER_TEMP/sources" --areas src/data/europe-frontiers/local-areas.json
           node scripts/build-europe-frontiers.mjs "$RUNNER_TEMP/europe.json" src/data/europe-frontiers
+          python scripts/verify-europe-frontiers.py --lsib "$RUNNER_TEMP/sources/lsib.gpkg" --marine "$RUNNER_TEMP/sources/vliz.json"
           git add src/data/europe-frontiers
           git diff --cached --quiet || git commit -m "Include complete local surveys, joint administration and reference lines"
           git push origin HEAD:refs/heads/codex/europe-frontier-source-build
@@ -38,6 +40,7 @@ jobs:
           git diff --cached --quiet || git commit -m "Include the separately licensed Monaco shoreline and marina"
           git push origin HEAD:refs/heads/codex/europe-frontier-source-build
       - name: Compile full-resolution country polygons surrounding the lines
+        if: always() && steps.surveys.outcome == 'success'
         run: |
           python scripts/build-europe-frontier-sides.py --cache "$RUNNER_TEMP/sources"
           git add src/data/europe-frontier-sides
