@@ -10,8 +10,7 @@ import {
 } from './countryMapUnits';
 import mapUnits from '../data/countryMapUnits.json';
 import buesingen from '../data/buesingenBoundary.json';
-import deltaData from '../data/pearlRiverDelta.json';
-import { pearlRiverDeltaWindows } from './pearlRiverDelta';
+import { regionalCoastWindows } from './pearlRiverDelta';
 import { classifyMapPolygon } from './indexedMapPolygon';
 import { haversineDistanceMeters, type PostalContextPosition } from './postalContextSpatial';
 
@@ -33,11 +32,6 @@ export interface AgidGeographicAssessment {
 
 const mapSource = { source: mapUnits.manifest.source_id, version: mapUnits.manifest.source_version };
 const oceanSource = { source: mapUnits.manifest.ocean.source_id, version: mapUnits.manifest.ocean.source_version };
-const deltaLand = { source: deltaData.manifest.source_id, version: deltaData.manifest.source_version };
-const deltaWater = {
-  source: `${deltaLand.source}+${deltaData.manifest.ocean.source_id}`,
-  version: `${deltaLand.version}+${deltaData.manifest.ocean.source_version}`,
-};
 const enclaveSource = {
   source: buesingen.manifest.source_id, version: buesingen.manifest.source_version,
   attribution: buesingen.manifest.attribution,
@@ -152,9 +146,10 @@ export function assessAgidGeography(
     sources.set(s.source, { source: s.source, version: s.version, ...(s.attribution && { attribution: s.attribution }) });
   };
   const island = point.island;
+  addSource(point.coastalUncertainty);
   addSource(land); addSource(water); addSource(admin); addSource(island);
   const finish = (surface: AgidGeographicAssessment['surface'], review: boolean): AgidGeographicAssessment => ({
-    status: !sources.size ? 'unassessed' : review || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
+    status: !sources.size ? 'unassessed' : review || point.coastalUncertainty || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
     ...(island && { island: review && island.status === 'mapped' && (candidates.size !== 1 || surface !== 'land')
       ? { ...island, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : island }),
     surface, regionCandidates: [...candidates].sort(), sources: [...sources.values()],
@@ -242,7 +237,8 @@ export function assessAgidGeography(
     }
   }
 
-  for (const window of pearlRiverDeltaWindows) {
+  for (const window of regionalCoastWindows) {
+    const { land: deltaLand, water: deltaWater } = window;
     const relation = boxRelation(window.bbox, disk);
     if (relation === 'crosses') {
       if (partialWindow(window.bbox, deltaWater)) {
@@ -295,6 +291,11 @@ export function assessAgidGeography(
           const x = issuanceLongitude((a[1] + b[1]) / 2, (a[0] + b[0]) / 2);
           const y = (a[1] + b[1]) / 2;
           if (tier === 'ordinary' && isJapaneseIslandReviewArea(y, x)) return;
+          // Coarse minor-island units in this reviewed strait attach Greek
+          // islands to the opposite coast. Use the intersected survey edges.
+          if (tier === 'ordinary' && regionalCoastWindows.some(w => w.requiresAgreement
+            && boxRelation(w.bbox, [Math.min(a[0], b[0]), Math.min(a[1], b[1]),
+              Math.max(a[0], b[0]), Math.max(a[1], b[1])]) === 'inside')) return;
           const rawSource = feature.source && feature.version ? {source: feature.source, version: feature.version} : defaultSource;
           const match = applyIslandPolicyToEvidence(y, x, rawSource ? {
             codes: feature.codes ?? [], ...rawSource,
@@ -316,7 +317,7 @@ export function assessAgidGeography(
     inspectIslandEdges(queryDisputedIslandPolygons(disk), 'policy');
     inspectIslandEdges(queryRevisedIslandPolygons(disk), 'policy');
     // Regional data already inspected above has the more detailed shore and border here.
-    const regional = pearlRiverDeltaWindows.some(w => boxRelation(w.bbox, disk) === 'inside') ||
+    const regional = regionalCoastWindows.some(w => boxRelation(w.bbox, disk) === 'inside') ||
       reviewedCoastalWindows.some(w => boxRelation(w.bbox, disk) === 'inside');
     if (!regional && island?.status !== 'japan-position') {
       inspectIslandEdges(queryGlobalIslandPolygons(disk), 'ordinary', globalIslandSource);

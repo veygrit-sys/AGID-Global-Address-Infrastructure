@@ -1,3 +1,4 @@
+import { matchRegionalCoast } from '../src/lib/pearlRiverDelta';
 import { matchNationalIslandPoint } from './national-island-point-evidence';
 import sourceData from '../src/data/nationalIslandSupplement.json';
 import { needsIslandPolicyReview } from '../src/lib/disputedIslands';
@@ -14,6 +15,8 @@ const byPhysicalId = new Map<string, (typeof sourceData.sources)[number]>(source
 
 export function assessPackPoint(lat: number, lon: number, raw: PackHit | null,
   mappedInlandWater: boolean, pinnedSourceEdition: boolean): AgidIslandAssessment | undefined {
+  const coast = matchRegionalCoast(lat, lon);
+  if (coast?.requiresAgreement) return mappedInlandWater ? undefined : matchBundledIsland(lat, lon, coast);
   const primary = applyIslandPolicyToEvidence(lat, lon, raw ?? undefined);
   if (!raw) return primary ?? (mappedInlandWater ? undefined : matchBundledIsland(lat, lon));
   if (mappedInlandWater || raw.disputed || raw.codes.length || primary?.status !== 'unresolved') return primary;

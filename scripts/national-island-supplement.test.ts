@@ -36,3 +36,13 @@ test('official supplements preserve reviewed shores, dispute controls, and posit
   assert.equal(assessPackPoint(34.535208, 133.6979022899733, { ...hit, islandId: 'gshhg:22533' },
     false, true)?.source, 'natural-earth-global-island-map-units');
 });
+
+test('the local pack respects the Megisti survey on islands, the mainland and source disagreements', () => {
+  const oldUnit = { ...hit, codes: ['TR'], sovereignCodes: ['TR'] };
+  for (const [lat, lon] of [[36.14, 29.58], [36.157, 29.504], [36.113, 29.637]]) {
+    assert.deepEqual(assessPackPoint(lat, lon, oldUnit, false, true)?.countryCodes, ['GR']);
+  }
+  for (const [lat, lon] of [[36.2, 29.64], [36.175, 29.59], [36.15, 29.59]]) {
+    assert.equal(assessPackPoint(lat, lon, oldUnit, false, true), undefined);
+  }
+});
