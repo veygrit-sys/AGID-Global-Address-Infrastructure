@@ -1,3 +1,4 @@
+import { chelemReviewSource } from './islandBorderDisagreement';
 import { matchGlobalLandform } from './globalIslands';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
 import type { AgidIslandAssessment } from './islandPolicy';
@@ -15,6 +16,9 @@ export interface TerritorialTopology {
 export function pointTerritorialTopology(
   lat: number, lon: number, island: AgidIslandAssessment | undefined, physicalIslandId?: string,
 ): TerritorialTopology | undefined {
+  // A raw island ID can still be audited when a national shoreline and the global
+  // source disagree about the ground beneath the pin. Both lookup modes abstain.
+  if (island?.source === chelemReviewSource) return { landform: 'unknown', status: 'uncertain' };
   // In reviewed Japanese waters, a coarser global shoreline cannot restore discarded land.
   if (!island && isJapaneseIslandReviewArea(lat, lon)) return undefined;
   let administration = matchTerritorialExclave(lat, lon);

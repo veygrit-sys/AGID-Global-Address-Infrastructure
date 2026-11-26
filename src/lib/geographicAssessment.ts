@@ -172,7 +172,6 @@ export function assessAgidGeography(
   const fullInlandWater = inlandWater && radius !== null && (radius === 0 || isGlobalInlandWater(lat, lon, radius));
   let topology = water && !land ? undefined : pointTerritorialTopology(lat, lon, island);
   const conflictingShore = island?.source === chelemReviewSource;
-  if (conflictingShore) topology = { landform: 'unknown', status: 'uncertain' };
   const centerTopology = topology;
   let touchesTerritory = false;
   // A confirmed landform supplies physical evidence independently of ownership.

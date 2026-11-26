@@ -35,6 +35,10 @@ for (const [lat, lon, expected, id] of controls) {
     assert.deepEqual(result.island.countryCodes, []);
   } else assert.deepEqual(result.island.countryCodes, [expected]);
   if (id) assert.equal(result.physicalIslandId, id);
+  if (id === 'gshhg:6815') {
+    assert.equal(result.territorialTopology.landform, expected === 'MX' ? 'island' : 'unknown');
+    assert.equal(result.territorialTopology.status, expected === 'MX' ? 'inside' : 'uncertain');
+  }
   if (expected === 'GL') assert.deepEqual(result.island.sovereignCodes, ['DK']);
   if (expected === 'CL') {
     assert.equal(result.island.source, 'natural-earth-global-island-map-units');
