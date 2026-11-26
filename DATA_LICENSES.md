@@ -86,6 +86,14 @@ The Oyapock bridge exclusion uses the Institut national de l’information géog
 
 Copernicus GLO-30 Public is used in the Fernando de Noronha extract to compare mapped dry land and sea with surface elevation. The resulting polygons are produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved. The organisations in charge of the Copernicus programme by law or by delegation do not incur any liability for any use of the Copernicus WorldDEM-30. Redistributions incorporating this extract must retain the notices and meet Article 6 of the GLO-30 Public licence. [Product credits](https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM) · [GLO-30-F licence, pp. 22–24](https://dataspace.copernicus.eu/sites/default/files/media/files/2025-06/copernicus_contributing_mission_data_access_v2_cop_dem_licenses.pdf)
 
+## Caribbean and United States island extracts
+
+Each window records the source surveys used to identify the island interior, its region, and the adjacent water. The guide lists the study areas and the reproducible transformations. [Caribbean and United States island survey guide](docs/caribbean-us-islands.md)
+
+- The U.S. coastal, inland and territorial extracts include adapted U.S. Census Bureau TIGER/Line 2025 hydrography. NOAA Office of Coast Survey ENC Direct to GIS, chart US5NYCDF, supplies the surveyed bridge polygon excluded from the water surface at Ellis Island. [U.S. Census Bureau](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html) · [NOAA ENC Direct to GIS](https://nauticalcharts.noaa.gov/data/gis-data-and-services.html)
+- The French Caribbean extracts use IGN France ADMIN EXPRESS COG and BD TOPO® geometries, adapted under Licence Ouverte 2.0. The source credits for Natural Earth, FieldMaps ADM0 (USGS/LSIB), ESA WorldCover, JRC Global Surface Water, and Copernicus GLO-30 above apply to the windows that use them. [IGN](https://geoservices.ign.fr/) · [Licence Ouverte 2.0](https://www.data.gouv.fr/pages/legal/licences/etalab-2-0)
+- The Midway Atoll coastline derives from GSHHG 2.3.7 by Paul Wessel and Walter H. F. Smith. AGID intersects it with historical water occurrence and elevation to retain supported land and water interiors. The GSHHG-derived data retain their LGPL terms. [GSHHG notice](scripts/data/national-island-points/licenses/GSHHG-LICENSE.txt) · [LGPL text](scripts/data/national-island-points/licenses/COPYING.LESSERv3)
+
 ## Canonical Policy
 
 - Detailed policy: `docs/data-licenses.md`

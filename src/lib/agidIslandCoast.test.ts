@@ -71,3 +71,33 @@ test('coarse geography index retains overseas islands, both antimeridian sides a
     assert.equal(mayHaveReviewedGeography(lat, lon), false, `${lat},${lon}`);
   }
 });
+
+test('Caribbean and Pacific island pins and inter-island waters through both issuers', () => {
+  const land = [
+    ['Saint Martin', 18.06, -63.075, 'MF'], ['Sint Maarten', 18.028, -63.045, 'SX'],
+    ['Anguilla', 18.215, -63.055, 'AI'], ['Saint Barthelemy', 17.905, -62.832, 'BL'],
+    ['Tortola', 18.43, -64.63, 'VG'], ['Saint Thomas', 18.35, -64.94, 'VI'],
+    ['Guam', 13.46, 144.75, 'GU'], ['Rota', 14.15, 145.21, 'MP'],
+    ['Saipan', 15.18, 145.75, 'MP'], ['Upolu', -13.92, -171.75, 'WS'],
+    ['Tutuila', -14.32, -170.73, 'AS'],
+  ] as const;
+  const water = [
+    ['Anguilla Channel', 18.15, -63.08], ['Saint Barthelemy Channel', 17.97, -62.91],
+    ['Virgin Islands channel', 18.48, -64.44], ['Guam–Rota channel', 13.91, 145.02],
+    ['Saipan Channel', 15.085, 145.65], ['Apolima Strait', -13.84, -172.14],
+    ['Upolu–Tutuila passage', -14.1, -171.2],
+  ] as const;
+  for (const issue of [encodeAGID, encodeAGID16]) {
+    for (const [name, lat, lon, code] of land) {
+      const result = issue(lat, lon);
+      assert.equal(result.regionCode, code, name);
+      assert.equal(result.isSea, false, name);
+      assert.deepEqual(result.mapUnitMatch?.codes, [code], name);
+    }
+    for (const [name, lat, lon] of water) {
+      const result = issue(lat, lon);
+      assert.equal(result.isSea, true, name);
+      assert.deepEqual(result.waterMatch, { source: ocean, version }, name);
+    }
+  }
+});
