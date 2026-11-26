@@ -56,3 +56,30 @@ test('disk queries return true outlines for canonical and world-copy longitudes'
   const [lon, lat] = shapes[0].rings[0][0];
   assert.equal(matchJapaneseIslandView(lat, lon)?.relation, 'boundary');
 });
+
+test('ordinary remote Japanese islands retain their own status and exclude the atoll, detached works and offshore water', async () => {
+  const { assessAgidGeography: assess } = await import('./geographicAssessment');
+  const { encodeAGID } = await import('./agid');
+  for (const [lat, lon, territory] of [
+    [20.425255,136.069763,'okinotorishima'], [20.425615,136.081145,'okinotorishima'],
+    [24.289194,153.980548,'minamitorishima'], [27.245431,140.880136,'nishinoshima'],
+  ] as const) {
+    assert.equal(matchJapaneseIslandView(lat, lon), undefined);
+    const result = assess({kind:'pin', lat, lon});
+    assert.deepEqual(result.island?.countryCodes, ['JP']);
+    assert.equal(result.island?.territory, territory);
+    assert.equal(result.island?.status, 'mapped');
+    assert.equal(result.deliveryRegion, null);
+    assert.equal(encodeAGID(lat,lon).regionCode, 'JP');
+  }
+  for (const [lat, lon] of [
+    [20.423011,136.073875], [20.4252,136.075], [20.42,136.085],
+    [24.279,153.98], [27.232,140.87], [27.248,140.898],
+  ]) {
+    assert.equal(assess({kind:'pin', lat, lon}).island, undefined);
+    assert.equal(encodeAGID(lat,lon).isSea, true);
+  }
+  const uncertain = assess({kind:'pin', lat:20.425255, lon:136.069763, method:'device', accuracyMeters:10});
+  assert.equal(uncertain.status,'needs-confirmation');
+  assert.equal(uncertain.deliveryRegion,null);
+});

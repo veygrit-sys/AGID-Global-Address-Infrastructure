@@ -1,6 +1,7 @@
 import { convertFilter } from '@maplibre/maplibre-gl-style-spec';
 import type { FilterSpecification, LayerSpecification, Map as MapLibreMap, Marker } from 'maplibre-gl';
 import data from '../data/japaneseIslandView.json';
+import ordinaryIslands from '../data/japaneseRemoteIslands.json';
 
 // Each label anchor is inside a reviewed land polygon. The rectangles below are
 // only cartographic decluttering windows and never produce a country assignment.
@@ -11,13 +12,20 @@ export const islandMapLabels = [
   { subgroup: 'habomai', ja: '歯舞群島', en: 'Habomai Islands', at: [146.128556, 43.501759] },
   { subgroup: 'takeshima', ja: '竹島', en: 'Takeshima', at: [131.864725, 37.242029] },
   { subgroup: 'senkaku', ja: '尖閣諸島', en: 'Senkaku Islands', at: [123.474965, 25.742862] },
+  { subgroup: 'okinotorishima', ja: '沖ノ鳥島', en: 'Okinotorishima', at: [136.069763, 20.425255] },
+  { subgroup: 'minamitorishima', ja: '南鳥島', en: 'Minamitorishima', at: [153.980548, 24.289194] },
+  { subgroup: 'nishinoshima', ja: '西之島', en: 'Nishinoshima', at: [140.880136, 27.245431] },
 ] as const;
 
-const windows = data.groups.map(({ bbox: [w, s, e, n] }) => [w - 0.025, s - 0.025, e + 0.025, n + 0.025]);
-const areas: GeoJSON.MultiPolygon = {
-  type: 'MultiPolygon',
-  coordinates: windows.map(([w, s, e, n]) => [[[w,s],[e,s],[e,n],[w,n],[w,s]]]),
-};
+const expanded = ({ bbox: [w, s, e, n] }: { bbox: number[] }) => [w - 0.025, s - 0.025, e + 0.025, n + 0.025];
+const viewpointWindows = data.groups.map(expanded);
+const windows = [...viewpointWindows, ...ordinaryIslands.groups.map(expanded)];
+const ordinaryNames = new Set(ordinaryIslands.groups.map(group => group.name));
+function featureWindows(boxes: number[][]): GeoJSON.MultiPolygon {
+  return { type: 'MultiPolygon', coordinates: boxes.map(([w,s,e,n]) => [[[w,s],[e,s],[e,n],[w,n],[w,s]]]) };
+}
+const placeWindows = featureWindows(windows);
+const politicalBoundaryWindows = featureWindows(viewpointWindows);
 
 export function viewportShowsJapanIslands(west: number, south: number, east: number, north: number) {
   if (east < west) east += 360;
@@ -33,9 +41,9 @@ export function japaneseIslandStyleFilter(layer: LayerSpecification): FilterSpec
   let mask: FilterSpecification;
   if (layer['source-layer'] === 'boundary' && layer.type === 'line') {
     // Also remove tile-clipped lines that cross the window with both endpoints outside.
-    mask = ['>', ['distance', areas], 0];
+    mask = ['>', ['distance', politicalBoundaryWindows], 0];
   } else if (layer['source-layer'] === 'place' && layer.type === 'symbol') {
-    mask = ['!', ['all', ['within', areas], ['in', ['get', 'class'],
+    mask = ['!', ['all', ['within', placeWindows], ['in', ['get', 'class'],
       ['literal', ['continent','country','state','province','region','county','island','islet','archipelago']]]]];
   } else return;
   return layer.filter ? ['all', convertFilter(layer.filter), mask] : mask;
@@ -71,7 +79,9 @@ export function installJapaneseIslandMapStyle(map: MapLibreMap, MarkerType: type
         const label = document.createElement('span');
         label.textContent = `${ja} / ${en} · JP`;
         label.className = 'pointer-events-none rounded bg-white/95 px-1 text-[11px] font-semibold text-slate-900 shadow';
-        label.title = '日本政府の領土見解に基づく表示 / Japan’s territorial position';
+        label.title = ordinaryNames.has(subgroup)
+          ? ordinaryIslands.manifest.attribution
+          : '日本政府の領土見解に基づく表示 / Japan’s territorial position';
         markers.set(subgroup, new MarkerType({ element: label, anchor: 'bottom' }).setLngLat([at[0], at[1]]).addTo(map));
       } else if (!show && marker) {
         marker.remove();

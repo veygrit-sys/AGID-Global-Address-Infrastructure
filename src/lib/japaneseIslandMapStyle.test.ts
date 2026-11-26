@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { featureFilter, type Feature, type ICanonicalTileID } from '@maplibre/maplibre-gl-style-spec';
 import type { LayerSpecification } from 'maplibre-gl';
-import { matchJapaneseIslandView } from './japaneseIslandView';
+import { matchJapaneseIslandView, matchJapaneseRemoteIsland } from './japaneseIslandView';
 import { islandMapLabels, japaneseIslandStyleFilter, viewportShowsJapanIslands } from './japaneseIslandMapStyle';
 
 type XY = readonly [number, number];
@@ -23,9 +23,9 @@ function accepts(layer: LayerSpecification, coords: XY[], properties: Record<str
   return featureFilter(mask).filter({zoom}, feature, { x, y, z: zoom } as ICanonicalTileID);
 }
 
-test('Japanese political labels are anchored on the correct official land polygons', () => {
+test('Japanese island labels are anchored on the correct official land polygons', () => {
   for (const { at: [lon, lat], subgroup } of islandMapLabels) {
-    assert.equal(matchJapaneseIslandView(lat, lon)?.subgroup, subgroup);
+    assert.equal(matchJapaneseIslandView(lat, lon)?.subgroup ?? matchJapaneseRemoteIsland(lat, lon)?.territory, subgroup);
     assert.equal(viewportShowsJapanIslands(lon - 0.01, lat - 0.01, lon + 0.01, lat + 0.01), true);
     assert.equal(viewportShowsJapanIslands(lon + 359.99, lat - 0.01, lon + 360.01, lat + 0.01), true);
   }
@@ -48,4 +48,5 @@ test('a provider border crossing a review window is suppressed even if both endp
   const border: LayerSpecification = { id: 'boundary_country', type: 'line', source: 'v', 'source-layer': 'boundary' };
   assert.equal(accepts(border, [[131.8,37.242],[131.92,37.242]], {}), false);
   assert.equal(accepts(border, [[130,38],[131,38]], {}), true);
+  assert.equal(accepts(border, [[136.0691,20.425],[136.0698,20.425]], {}), true);
 });

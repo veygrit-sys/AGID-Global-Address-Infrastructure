@@ -8,10 +8,24 @@ const japanIslandNames: Record<string, [string, string]> = {
   senkaku: ['Senkaku Islands', '尖閣諸島'],
 };
 
+const japaneseRemoteIslandNames: Record<string, string> = {
+  okinotorishima: 'Okinotorishima',
+  minamitorishima: 'Minamitorishima',
+  nishinoshima: 'Nishinoshima',
+};
+
+export function isNamedJapaneseRemoteIsland(island?: Island) {
+  return !!island?.territory && Object.hasOwn(japaneseRemoteIslandNames, island.territory)
+    && island.source === 'mlit-n03-tokyo-remote-islands';
+}
+
 export function islandDisplayName(island: Island, japanese: boolean) {
   const name = island.territory;
   if (island.status === 'japan-position' && name && japanIslandNames[name]) {
     return japanIslandNames[name][japanese ? 1 : 0];
+  }
+  if (name && isNamedJapaneseRemoteIsland(island)) {
+    return japanese ? island.territoryJa : japaneseRemoteIslandNames[name];
   }
   return (japanese && island.territoryJa) || name;
 }
@@ -38,6 +52,11 @@ export function islandDisplayRows(
       rows.push([japanese ? '地図資料上の主権国' : 'Sovereign state in map source', formatRegions(sovereign)]);
     }
   } else {
+    if (isNamedJapaneseRemoteIsland(island) && island.status === 'unresolved') {
+      rows.push([japanese ? '中心点の島の地図上の国・地域' : 'Mapped country of the island at the center', formatRegions(['JP'])]);
+      rows.push([japanese ? '位置の誤差範囲' : 'Location footprint', japanese ? '要確認' : 'Confirm the location']);
+      return rows;
+    }
     rows.push([
       japanese ? '領有権' : 'Sovereignty',
       island.status === 'disputed'

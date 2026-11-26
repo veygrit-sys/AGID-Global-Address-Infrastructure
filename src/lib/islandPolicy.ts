@@ -1,7 +1,7 @@
 import { issuanceLongitude } from './agidProjection';
 import { matchGlobalIsland } from './globalIslands';
 import { matchMinorIsland } from './minorIslands';
-import { isJapaneseIslandReviewArea, matchJapaneseIslandView } from './japaneseIslandView';
+import { isJapaneseIslandReviewArea, matchJapaneseIslandView, matchJapaneseRemoteIsland } from './japaneseIslandView';
 import { matchDisputedIsland, matchRevisedIslandRegion, needsIslandPolicyReview } from './disputedIslands';
 
 export interface IslandEvidence {
@@ -48,7 +48,9 @@ export function applyIslandPolicyToEvidence(lat: number, lon: number, evidence?:
       attribution: japan.attribution, relation: japan.relation,
     };
   }
-  // Within the three reviewed archipelagoes Japan's shoreline outranks generalized
+  const remote = matchJapaneseRemoteIsland(lat, lon);
+  if (remote) return { ...remote, status: 'mapped', countryCodes: ['JP'], sovereignCodes: ['JP'] };
+  // Around these reviewed islands Japan's shoreline outranks generalized
   // depictions from other editions. A gap or open water carries no island assignment.
   if (isJapaneseIslandReviewArea(lat, lon)) return undefined;
   const revised = matchRevisedIslandRegion(lat, lon);

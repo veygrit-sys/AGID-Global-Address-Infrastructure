@@ -17,8 +17,8 @@ export function isLoopbackMap(protocol: string, hostname: string) {
   return (protocol === 'http:' || protocol === 'https:') && ['localhost', '127.0.0.1', '[::1]'].includes(hostname);
 }
 
-export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, japanPolicy }: {
-  lat: number; lon: number; japanese: boolean; japanPolicy: boolean;
+export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, expectedJapanStatus }: {
+  lat: number; lon: number; japanese: boolean; expectedJapanStatus?: 'mapped' | 'japan-position';
   formatRegions: (codes: string[]) => string;
 }) {
   const [enabled, setEnabled] = React.useState(false);
@@ -49,7 +49,9 @@ export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, japan
       const data = await response.json() as LocalResult;
       if (!data || (data.island !== null && (!Array.isArray(data.island?.countryCodes)
         || !['mapped','japan-position','disputed','unresolved'].includes(data.island.status)))) throw new Error('Invalid island response');
-      if (japanPolicy && data.island && data.island.status !== 'japan-position') throw new Error('Incompatible territorial policy');
+      if (expectedJapanStatus && data.island && (data.island.status !== expectedJapanStatus
+        || data.island.countryCodes.length !== 1 || data.island.countryCodes[0] !== 'JP'
+        || data.island.sovereignCodes?.some(code => code !== 'JP'))) throw new Error('Incompatible island geography');
       if (!controller.signal.aborted) { setResult(data); setState('idle'); }
     } catch {
       if (!controller.signal.aborted) setState('error');

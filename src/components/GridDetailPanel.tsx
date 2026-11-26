@@ -48,6 +48,7 @@ import type { RouteStop } from '../types/navigation';
 import { selectedGeographyInput } from '../lib/agidSelection';
 import { assessAgidGeography } from '../lib/geographicAssessment';
 import { AgidGeographySummary } from './AgidGeographySummary';
+import { isNamedJapaneseRemoteIsland } from '../lib/islandDisplay';
 import { AddressFeedbackPanel } from './AddressFeedbackPanel';
 
 interface GridDetailPanelProps {
@@ -154,7 +155,8 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   const countryCodeFromPrefix = (clickedAgid?.prefix || "").toLowerCase();
   const countryCodeFromId = (clickedAgid?.id?.slice(0, 2) || "").toLowerCase();
   const countryCodeFromDetails = (clickedAddressDetails?.country_code || "").toLowerCase();
-  const countryCode = island?.status === 'japan-position' ? 'jp' : regionCodeFromAgid || countryCodeFromDetails || countryCodeFromPrefix || countryCodeFromId || "";
+  const useJapaneseAddressRegion = island?.status === 'japan-position' || (island?.status === 'mapped' && isNamedJapaneseRemoteIsland(island));
+  const countryCode = useJapaneseAddressRegion ? 'jp' : regionCodeFromAgid || countryCodeFromDetails || countryCodeFromPrefix || countryCodeFromId || "";
   const territoryClaimOptions = React.useMemo(() => island ? [] : getTerritoryClaimOptions({
     regionCode: clickedAgid?.regionCode,
     countryCode,
@@ -470,7 +472,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
     }
   })();
   const holdMapAddress = island?.status === 'disputed' || island?.status === 'unresolved'
-    || (island?.status === 'japan-position' && countryCodeFromDetails !== 'jp');
+    || (useJapaneseAddressRegion && countryCodeFromDetails !== 'jp');
   const automaticAddressText = holdMapAddress
     ? (appLanguage.startsWith('ja') ? '配送先住所は受取人の指定を確認してください。' : 'Confirm the postal address with the recipient.')
     : formatAddressDisplayText(resolvedAddressDisplay, { tab: clickedAddressTab, countryCode });

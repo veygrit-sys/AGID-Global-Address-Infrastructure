@@ -95,3 +95,37 @@ test('local-pack discovery is restricted to explicit loopback origins', async ()
   for (const host of ['map.veygrit.com','localhost.example.org','192.168.1.12']) assert.equal(isLoopbackMap('https:',host),false);
   assert.equal(isLoopbackMap('file:', 'localhost'),false);
 });
+
+test('saved map references and QR cards apply the island policy to the original geographic footprint', async () => {
+  const { decodeAgidToResult, deviceAgidSelection } = await import('../lib/agidSelection');
+  const { selectedIslandReference } = await import('../lib/islandSearchDisplay');
+  const japanCell = decodeAgidToResult('JP0AH6C6T5CM1F8J')!;
+  const falklands = decodeAgidToResult('000M601WEDQ51E6Y')!;
+  assert.equal(selectedIslandReference(japanCell, 'ja'), '尖閣諸島 · 日本');
+  assert.match(selectedIslandReference(falklands, 'en')!, /Falkland.*Competing territorial claims/);
+  const uncertain = deviceAgidSelection({ latitude: japanCell.lat, longitude: japanCell.lon, accuracy: NaN });
+  assert.equal(selectedIslandReference(uncertain, 'en'), 'Senkaku Islands · Japan · Confirm the location');
+});
+
+test('ordinary Japanese offshore islands use the national names in search, cards and saved pins', async () => {
+  const { selectedIslandReference, mapSearchDisplayResults } = await import('../lib/islandSearchDisplay');
+  const { deviceAgidSelection, decodeAgidToResult } = await import('../lib/agidSelection');
+  for (const [lat, lon, name] of [
+    [20.425255,136.069763,'沖ノ鳥島'], [24.289194,153.980548,'南鳥島'], [27.245431,140.880136,'西之島'],
+  ] as const) {
+    const pin = encodeAGID16(lat, lon);
+    assert.equal(selectedIslandReference({ ...pin, regionName:'External provider', prefix:'00' }, 'ja'), `${name} · 日本`);
+    const hit = { lat:String(lat), lon:String(lon), display_name:'External provider' };
+    const saved = { ...hit, display_name:'Recipient-specified address', source:'local_qrs' };
+    const results = mapSearchDisplayResults([hit,saved], 'ja');
+    assert.ok(results[0].display_name.startsWith(`${name} · 日本 · `));
+    assert.equal(results[1], saved);
+  }
+  const cell = decodeAgidToResult('JP05FQ810RNS1BRM')!;
+  assert.equal(selectedIslandReference(cell, 'en'), 'Minamitorishima · Japan');
+  const uncertain = deviceAgidSelection({ latitude:20.425255, longitude:136.069763, accuracy:10 });
+  assert.equal(selectedIslandReference(uncertain, 'ja'), '沖ノ鳥島 · 中心点の島は日本 · 位置を要確認');
+  const water = { lat:'20.4252', lon:'136.075', display_name:'Marine feature' };
+  const unrelated = { lat:'64.1466', lon:'-21.9426', display_name:'Reykjavík' };
+  assert.deepEqual(mapSearchDisplayResults([water,unrelated], 'ja'), [water,unrelated]);
+});

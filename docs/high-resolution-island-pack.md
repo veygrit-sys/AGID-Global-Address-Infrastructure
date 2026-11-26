@@ -31,7 +31,7 @@ Open the site via its printed localhost or 127.0.0.1 URL. Both map views can che
 /usr/bin/python3 scripts/island-evidence-pack.py build /path/to/world.sqlite
 ```
 
-The build downloads and verifies two pinned archives before producing the SQLite file. Allow approximately 4 GiB of local disk space for the pack, downloads, and temporary files. To use publicly downloaded files already on disk, add `--gshhg-archive gshhg-shp-2.3.7.zip --fieldmaps-archive adm0_polygons.gpkg.zip`. The extracted pinned FieldMaps GeoPackage is also accepted via `--fieldmaps-gpkg`. The generator completes its work in a temporary directory and atomically publishes the finished file.
+The build downloads and verifies two pinned archives before producing the SQLite file. GitHub Actions fetches the identical coastline archive from [the upstream project's release](https://github.com/GenericMappingTools/gshhg-gmt/releases/tag/2.3.7). Allow approximately 4 GiB of local disk space for the pack, downloads, and temporary files. To use publicly downloaded files already on disk, add `--gshhg-archive gshhg-shp-2.3.7.zip --fieldmaps-archive adm0_polygons.gpkg.zip`. The extracted pinned FieldMaps GeoPackage is also accepted via `--fieldmaps-gpkg`. The generator completes its work in a temporary directory and atomically publishes the finished file.
 
 The verified sample pack is 1,066,053,632 bytes with SHA-256 `ad244f5ee9831f5ad06046f716d4aa65ba4beb948b1f7a5cd4d0aedcd3c4748c`. Source archives are checked independently. SQLite, zlib and GDAL versions can change the generated container's bytes. Its `metadata` table includes source versions, digests and feature counts, and its `source_files` table includes the GSHHG distribution notices.
 

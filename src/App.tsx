@@ -5,6 +5,7 @@ Ruler,
 Trash2} from 'lucide-react';
 import maplibregl from 'maplibre-gl';
 import { installJapaneseIslandMapStyle } from './lib/japaneseIslandMapStyle';
+import { mapSearchDisplayResults, selectedIslandReference } from './lib/islandSearchDisplay';
 import React,{ useEffect,useMemo,useRef,useState } from 'react';
 import { TranslationKey,TRANSLATIONS } from './constants/translations';
 import { AdvancedSearchOptions,DEFAULT_ADVANCED_SEARCH_OPTIONS } from './lib/advancedSearch';
@@ -1213,7 +1214,9 @@ export default function App() {
     // Region Name
     ctx.fillStyle = '#64748b'; // slate-500
     ctx.font = 'bold 24px sans-serif';
-    ctx.fillText(clickedAgid.regionName, padding, qrCanvas.height + padding + 70);
+    const islandReference = selectedIslandReference(clickedAgid, appLanguage);
+    const regionLabel = islandReference ?? clickedAgid.regionName;
+    ctx.fillText(regionLabel, padding, qrCanvas.height + padding + 70, qrCanvas.width + padding);
 
     // Coordinates
     ctx.fillStyle = '#94a3b8'; // slate-400
@@ -1237,8 +1240,8 @@ export default function App() {
     const newQr = {
       id: clickedAgid.id,
       ...(includePreciseQrLocation ? { lat: clickedAgid.lat, lon: clickedAgid.lon } : {}),
-      address: includePreciseQrLocation ? clickedAddress : `${clickedAgid.id} public address reference`,
-      regionName: clickedAgid.regionName,
+      address: includePreciseQrLocation ? (islandReference ?? clickedAddress) : `${clickedAgid.id} public address reference`,
+      regionName: regionLabel,
       savedAt: new Date().toISOString(),
       imageData: url // Store the preview or just the ID reference? Keeping reference is lighter, but image is what was requested?
     };
@@ -1296,7 +1299,7 @@ export default function App() {
     setShowStyleMenu(false);
   };
 
-  const saveAgid = (agidData: any, addressOverride = clickedAddress) => {
+  const saveAgid = (agidData: AGIDResult, addressOverride?: string) => {
     if (!agidData?.id) return;
 
     const savedAt = new Date().toISOString();
@@ -1308,7 +1311,7 @@ export default function App() {
       lon: agidData.lon,
       prefix: agidData.prefix,
       isSea: agidData.isSea,
-      address: addressOverride,
+      address: addressOverride ?? selectedIslandReference(agidData, appLanguage) ?? clickedAddress,
       savedAt,
     };
 
@@ -2381,7 +2384,6 @@ export default function App() {
     const timer = setTimeout(async () => {
       try {
         const { smartSearch } = await loadGeocodingService();
-        const { mapSearchDisplayResults } = await import('./lib/islandSearchDisplay');
         const results = mapSearchDisplayResults(await smartSearch(searchQuery, lat, lng, advancedSearchOptions), appLanguage);
         setSearchResults(results);
       } catch (error) {
@@ -2760,7 +2762,6 @@ export default function App() {
       } else {
         // Use Smart Search (Local DB + Nominatim)
         const { smartSearch } = await loadGeocodingService();
-        const { mapSearchDisplayResults } = await import('./lib/islandSearchDisplay');
         const results = mapSearchDisplayResults(await smartSearch(query, lat, lng, advancedSearchOptions), appLanguage);
         setSearchResults(results);
 

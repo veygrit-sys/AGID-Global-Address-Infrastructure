@@ -10,7 +10,9 @@ AGIDはピンが実際に重なる陸地を調べ、その座標の国・地域�
 | フォークランド諸島（マルビナス諸島） | 主張国の候補はAR・GB、施政主体はGB、確定した所属国の欄は空にする |
 | 図にはあるが行政側の根拠がない岩礁 | 島の存在を返し、所属は未確定にする。周辺海域の国や一番近い国で補完しない |
 
-日本の対象は国土交通省「行政区域データ」2026年版から作成した陸地1,766形状。出典と日付の異なる全球図より優先する。外務省の見解は該当する島の公的根拠として表示する。領海や排他的経済水域から島の所属を決める処理は含まない。[国土交通省](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html) · [北方領土](https://www.mofa.go.jp/mofaj/area/hoppo/hoppo.html) · [竹島](https://www.mofa.go.jp/mofaj/area/takeshima/) · [尖閣諸島](https://www.mofa.go.jp/mofaj/area/senkaku/)
+日本の領土認識を指定する3地域には、国土交通省「行政区域データ」2026年版から作成した陸地1,766形状を使う。出典と日付の異なる全球図より優先する。外務省の見解は該当する島の公的根拠として表示する。領海や排他的経済水域から島の所属を決める処理は含まない。[国土交通省](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html) · [北方領土](https://www.mofa.go.jp/mofaj/area/hoppo/hoppo.html) · [竹島](https://www.mofa.go.jp/mofaj/area/takeshima/) · [尖閣諸島](https://www.mofa.go.jp/mofaj/area/senkaku/)
+
+沖ノ鳥島・南鳥島・西之島は、日本の通常の島として別に照合する。東京都の同じ2026年版資料から陸地18形状を収録した。沖ノ鳥島では北小島と東小島の護岸内に記録された中央の2形状だけを使用し、周囲の礁湖・護岸・独立した施設を島の陸地として扱わない。満潮時に露出する岩の寸法はこの資料からは決められない。西之島の形状は2026年1月1日時点の版に基づく。[国土交通省・沖ノ鳥島の概要](https://www.ktr.mlit.go.jp/keihin/keihin_index130.html) · [収録形状と出典](../src/data/japaneseRemoteIslands.json)
 
 日本以外で個別に確認した44地域のうち、26地域で主張国を列挙し、16地域は資料や境界の状況から確認を要する。残る2地域は後年の協定・判決を採用した。群島全体に関する主張は個々の岩礁の主張・管理と区別する。この台帳と全球データのフラグを併用する。新たな係争、解決、地形の変化には原典の更新が必要になる。[地域ごとの根拠](../src/data/islandDisputePolicies.json)
 

@@ -25,7 +25,11 @@ jobs:
       - name: Build from checksum-pinned GSHHG and FieldMaps archives
         run: |
           mkdir -p island-download
-          /usr/bin/python3 scripts/island-evidence-pack.py build island-download/world.sqlite > island-download/build-manifest.json
+          curl --fail --location --silent --show-error --retry 3 --retry-all-errors --connect-timeout 20 \
+            https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip \
+            -o "$RUNNER_TEMP/gshhg-shp-2.3.7.zip"
+          /usr/bin/python3 scripts/island-evidence-pack.py build island-download/world.sqlite \
+            --gshhg-archive "$RUNNER_TEMP/gshhg-shp-2.3.7.zip" > island-download/build-manifest.json
       - name: Verify point classification and record the artifact checksum
         run: |
           node --import tsx scripts/verify-island-evidence-pack.ts island-download/world.sqlite /usr/bin/python3

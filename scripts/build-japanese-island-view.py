@@ -5,6 +5,7 @@ Run with Python 3 and GDAL/OGR+GEOS:
   python3 scripts/build-japanese-island-view.py /path/to/zip-directory
 The directory must contain 01.zip (Hokkaido), 32.zip (Shimane) and
 47.zip (Okinawa), or the original N03-20260101_XX_GML.zip filenames.
+Use --remote with 13.zip (Tokyo) to build the separate ordinary Japanese islands extract.
 """
 import argparse
 import hashlib
@@ -21,6 +22,10 @@ HASHES = {
     "47": "7970c476e0222b5f8cb0943b067193d4456604718991151bb418c0096451e885",
 }
 SOURCE_NAME = "国土数値情報（行政区域データ・2026年）（国土交通省）を加工して作成"
+
+
+TOKYO_HASHES = {"13": "94f10b26256566db970dd74b09d614f059c1e8a432f9244ac9c4add76c32ff16"}
+TOKYO_GROUPS = ("okinotorishima", "minamitorishima", "nishinoshima")
 
 
 def group_for(code, envelope):
@@ -41,6 +46,16 @@ def group_for(code, envelope):
         return "takeshima"
     if code == "47207" and 123.40 < west <= east < 124.65 and 25.65 < south <= north < 26.00:
         return "senkaku"
+    if code == "13421":
+        if 153.96 < west <= east < 154 and 24.27 < south <= north < 24.31:
+            return "minamitorishima"
+        if 140.83 < west <= east < 140.92 and 27.20 < south <= north < 27.28:
+            return "nishinoshima"
+        # N03 contains two small central features, large concrete shoulder features
+        # and detached infrastructure. Select only the two central mapped cores.
+        if (136.06972 < west <= east < 136.06981 and 20.42520 < south <= north < 20.42529
+                or 136.08109 < west <= east < 136.08119 and 20.42555 < south <= north < 20.42565):
+            return "okinotorishima"
     return None
 
 
@@ -77,13 +92,14 @@ def encode_ring(ring, scale):
     return "".join(encoded)
 
 
-def build(directory):
+def build(directory, remote=False):
     ogr.UseExceptions()
     target = osr.SpatialReference()
     target.ImportFromEPSG(4326)
     target.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
     grouped = {}
-    for prefecture, digest in HASHES.items():
+    inputs = TOKYO_HASHES if remote else HASHES
+    for prefecture, digest in inputs.items():
         archive = directory / (prefecture + ".zip")
         if not archive.exists():
             archive = directory / f"N03-{RELEASE}_{prefecture}_GML.zip"
@@ -108,7 +124,8 @@ def build(directory):
                     piece.Transform(transform)
                     grouped.setdefault(name, ogr.Geometry(ogr.wkbMultiPolygon)).AddGeometry(piece)
     groups = []
-    for name in ("etorofu", "kunashiri", "shikotan", "habomai", "takeshima", "senkaku"):
+    names = TOKYO_GROUPS if remote else ("etorofu", "kunashiri", "shikotan", "habomai", "takeshima", "senkaku")
+    for name in names:
         # Merge internal municipal lines, which are not shorelines. GEOS repairs
         # invalid source components before union, if any, preserving polygon parts.
         valid = ogr.Geometry(ogr.wkbMultiPolygon)
@@ -117,12 +134,12 @@ def build(directory):
             for q in parts(fixed):
                 valid.AddGeometry(q)
         merged = valid.UnionCascaded()
-        precision = 8 if name in ("senkaku", "takeshima") else 6
+        precision = 8 if remote or name in ("senkaku", "takeshima") else 6
         scale = 10**precision
         rows = []
         for polygon in parts(merged):
             # Simplify the long rings only; leave even metre-scale islets in the atlas.
-            if name not in ("senkaku", "takeshima") and polygon.GetGeometryRef(0).GetPointCount() > 512:
+            if not remote and name not in ("senkaku", "takeshima") and polygon.GetGeometryRef(0).GetPointCount() > 512:
                 polygon = polygon.SimplifyPreserveTopology(0.000016)
             w,e,s,n = polygon.GetEnvelope()
             bounds = [round(v, precision) for v in (w, s, e, n)]
@@ -136,7 +153,7 @@ def build(directory):
         "source": "mlit-n03-japan-islands", "version": "N03-20260101", "attribution": SOURCE_NAME,
         "sourceUrl": SOURCE, "license": "CC BY 4.0", "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
         "originalSurveyCredit": "測量法に基づく国土地理院長承認（複製）R 7JHf 351",
-        "archives": [{"url": ARCHIVE.format(p), "sha256": h} for p,h in HASHES.items()],
+        "archives": [{"url": ARCHIVE.format(p), "sha256": h} for p,h in inputs.items()],
         "viewpoint": {
             "northern-territories":"https://www.mofa.go.jp/mofaj/area/hoppo/hoppo.html",
             "takeshima":"https://www.mofa.go.jp/mofaj/area/takeshima/",
@@ -145,14 +162,25 @@ def build(directory):
         "habomaiSource":"https://www.pref.hokkaido.lg.jp/sm/hrt/habomaigunntou.html",
         "notes":"Municipal boundaries dissolved by island group. Long northern rings simplified at 0.000016 degrees. Takeshima and Senkaku retain all source vertices. WGS84 coordinates stored with six decimal places in northern groups and eight in Takeshima/Senkaku. The source includes mapped offshore rocks; polygon parts are not a count of named islands or a maritime boundary.",
     }
+    if remote:
+        if len(next(g for g in groups if g["name"] == "okinotorishima")["polygons"]) != 2:
+            raise ValueError("Expected both protected Okinotorishima core features")
+        del manifest["viewpoint"], manifest["habomaiSource"]
+        manifest["source"] = "mlit-n03-tokyo-remote-islands"
+        manifest["notes"] = "Ordinary Japanese island geography. Source WGS84 polygons retained to eight decimal places. At Okinotorishima only the two central mapped features within the shore protection works are used. The atoll, surrounding water and detached works are excluded. N03 does not survey tide-dependent rock exposure. Nishinoshima coastline is edition-specific."
+        manifest["okinotorishimaSource"] = "https://www.ktr.mlit.go.jp/keihin/keihin_index130.html"
     return {"manifest":manifest,"groups":groups}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1]/"src/data/japaneseIslandView.json")
+    parser.add_argument("--remote", action="store_true")
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    result = build(args.directory)
+    if not args.output:
+        file = "japaneseRemoteIslands.json" if args.remote else "japaneseIslandView.json"
+        args.output = Path(__file__).resolve().parents[1]/"src/data"/file
+    result = build(args.directory, args.remote)
     args.output.write_text(json.dumps(result, ensure_ascii=False, separators=(",",":"))+"\n",encoding="utf-8")
     print({g["name"]:len(g["polygons"]) for g in result["groups"]}, args.output.stat().st_size)

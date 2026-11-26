@@ -1,7 +1,7 @@
 import React from 'react';
 import { LocalIslandPackLookup } from './LocalIslandPackLookup';
 import { IslandEvidenceLinks } from './IslandEvidenceLinks';
-import { islandDisplayRows } from '../lib/islandDisplay';
+import { islandDisplayRows, isNamedJapaneseRemoteIsland } from '../lib/islandDisplay';
 import type { AgidGeographicAssessment } from '../lib/geographicAssessment';
 
 const geographyCopy = {
@@ -69,7 +69,9 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
         ? (japanese ? '配送先は受取人の指定を確認してください。' : 'Confirm the postal destination with the recipient.') : copy.confirm}</p>}
       {manualPin && footprint.kind === 'manual-pin' && footprint.radiusMeters === 0 && (
         <LocalIslandPackLookup key={`${manualPin.lat},${manualPin.lon}`}
-          lat={manualPin.lat} lon={manualPin.lon} japanese={japanese} formatRegions={formatRegions} japanPolicy={island?.status === 'japan-position'} />
+          lat={manualPin.lat} lon={manualPin.lon} japanese={japanese} formatRegions={formatRegions}
+          expectedJapanStatus={island?.status === 'japan-position' ? 'japan-position'
+            : island?.status === 'mapped' && isNamedJapaneseRemoteIsland(island) ? 'mapped' : undefined} />
       )}
       {credits.length > 0 && <p className="text-[10px] text-slate-500">{credits.join(' · ')}</p>}
     </div>
