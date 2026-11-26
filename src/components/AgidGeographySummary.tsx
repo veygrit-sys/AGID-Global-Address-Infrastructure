@@ -1,5 +1,6 @@
 import React from 'react';
 import { LocalIslandPackLookup } from './LocalIslandPackLookup';
+import { IslandEvidenceLinks } from './IslandEvidenceLinks';
 import { islandDisplayRows } from '../lib/islandDisplay';
 import type { AgidGeographicAssessment } from '../lib/geographicAssessment';
 
@@ -37,7 +38,6 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
   const formatRegions = (codes: string[]) => codes.map(code =>
     /^[A-Z]{2}$/.test(code) ? names.of(code) || code : code).join(' / ');
   const islandRows = island ? islandDisplayRows(island, japanese, formatRegions, status === 'needs-confirmation' ? regionCandidates : []) : [];
-  const evidenceUrls = [...new Set(island?.evidenceUrls)].filter(url => url.startsWith('https://'));
   const credits = [...new Set(sources.map(item => item.attribution).filter(Boolean))];
   return (
     <div aria-live="polite" aria-atomic="true" className="mt-1 border-t border-slate-200 pt-1 text-[11px] leading-4 text-slate-700">
@@ -63,14 +63,7 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
           ))}
         </dl>
       )}
-      {island && evidenceUrls.length > 0 && (
-        <details className="mt-1">
-          <summary className="cursor-pointer">{japanese ? '表示の根拠' : 'Sources for this display'}</summary>
-          {evidenceUrls.map(url => (
-            <a key={url} className="block break-all underline" href={url} target="_blank" rel="noreferrer">{url}</a>
-          ))}
-        </details>
-      )}
+      <IslandEvidenceLinks urls={island?.evidenceUrls} japanese={japanese} />
       {status === 'unassessed' && <p>{copy.unassessed}</p>}
       {status === 'needs-confirmation' && <p>{island?.status === 'disputed' || island?.status === 'unresolved'
         ? (japanese ? '配送先は受取人の指定を確認してください。' : 'Confirm the postal destination with the recipient.') : copy.confirm}</p>}

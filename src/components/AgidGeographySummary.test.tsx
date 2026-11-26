@@ -88,3 +88,10 @@ test('map search applies the Japanese display to external hits while preserving 
   assert.doesNotMatch(mapped.display_name, /External country label/);
   assert.equal(personal, saved);
 });
+
+test('local-pack discovery is restricted to explicit loopback origins', async () => {
+  const { isLoopbackMap } = await import('./LocalIslandPackLookup');
+  for (const host of ['localhost','127.0.0.1','[::1]']) assert.ok(isLoopbackMap('http:', host));
+  for (const host of ['map.veygrit.com','localhost.example.org','192.168.1.12']) assert.equal(isLoopbackMap('https:',host),false);
+  assert.equal(isLoopbackMap('file:', 'localhost'),false);
+});

@@ -70,7 +70,7 @@ npm run agid -- conformance --json
 ```
 
 All JSON/GeoJSON CLI outputs include `schemaVersion` and `cliVersion` for stable
-external integration. See [AGID CLI](docs/agid-cli.md) and the [AGID16 rollout and country-boundary pilot](docs/agid16-rollout.md), and [worldwide island recognition](docs/island-recognition.md).
+external integration. See the [AGID CLI](docs/agid-cli.md), [AGID16 rollout and country-boundary pilot](docs/agid16-rollout.md), and [worldwide island recognition](docs/island-recognition.md).
 
 ## Funding and Release Readiness
 

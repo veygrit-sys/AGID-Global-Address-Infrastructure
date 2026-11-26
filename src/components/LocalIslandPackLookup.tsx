@@ -1,6 +1,7 @@
 import React from 'react';
 import type { AgidIslandAssessment } from '../lib/islandPolicy';
 import { islandDisplayRows } from '../lib/islandDisplay';
+import { IslandEvidenceLinks } from './IslandEvidenceLinks';
 
 type LocalResult = {
   island: AgidIslandAssessment | null;
@@ -70,8 +71,11 @@ export function LocalIslandPackLookup({ lat, lon, japanese, formatRegions, japan
               ))}
             </dl>
           ) : <p>{japanese ? 'この地点では島の所属を確認できません。' : 'Island affiliation could not be established here.'}</p>}
-          <p>{[result.physicalSource, result.physicalVersion, result.physicalIslandId].filter(v => v !== undefined && v !== null).join(' · ')}</p>
+          {result.physicalSource ? (
+            <p>{japanese ? '島の形状資料' : 'Physical island layer'} · {[result.physicalSource, result.physicalVersion, result.physicalIslandId].filter(v => v !== undefined && v !== null).join(' · ')}</p>
+          ) : <p>{japanese ? '高精細版の島形状に一致する地物はありません。' : 'No physical island feature matched in the detailed layer.'}</p>}
           {result.island && <p>{[result.island.source, result.island.version].filter(Boolean).join(' · ')}</p>}
+          <IslandEvidenceLinks urls={result.island?.evidenceUrls} japanese={japanese} />
         </div>
       ) : (
         <>

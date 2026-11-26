@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'scripts/island-evidence-pack.py'
+      - 'scripts/audit-island-evidence-pack.py'
+      - 'scripts/query-island-pack.ts'
       - 'scripts/verify-island-evidence-pack.ts'
       - '.github/workflows/agid-island-pack.yml'
 permissions:
@@ -27,9 +29,10 @@ jobs:
       - name: Verify point classification and record the artifact checksum
         run: |
           node --import tsx scripts/verify-island-evidence-pack.ts island-download/world.sqlite /usr/bin/python3
+          /usr/bin/python3 scripts/audit-island-evidence-pack.py island-download/world.sqlite --gap-register island-download/island-source-gaps.zip > island-download/source-audit.json
           cp docs/high-resolution-island-pack.md island-download/README.md
           cd island-download
-          sha256sum world.sqlite > SHA256SUMS
+          sha256sum world.sqlite island-source-gaps.zip > SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
           name: agid-world-islands

@@ -10,6 +10,7 @@ const controls = [
   [4.88, 114.93, 'BN', 'gshhg:9'], [1.55, 110.35, 'MY', 'gshhg:9'], [-0.48, 117.13, 'ID', 'gshhg:9'],
   [45.85, -82.18, 'CA', 'gshhg:187164'], [45.78, -81.97, null], [71, -40, 'GL', 'gshhg:7'],
   [-16.85, 180, 'FJ'], [-16.85, -180, 'FJ'], [-17.0593091, -179.0205836, 'FJ', 'fieldmaps-20250729:160910'],
+  [-48.945774, -75.45762053457514, 'CL'], // GSHHG/FieldMaps gap with positive bundled island evidence
   [25.7445, 123.4745, 'JP'], [-51.794, -58.61, 'disputed'], [0, -140, null], [48.85, 2.35, null],
 ] as const;
 for (const [lat, lon, expected, id] of controls) {
@@ -23,6 +24,10 @@ for (const [lat, lon, expected, id] of controls) {
   } else assert.deepEqual(result.island.countryCodes, [expected]);
   if (id) assert.equal(result.physicalIslandId, id);
   if (expected === 'GL') assert.deepEqual(result.island.sovereignCodes, ['DK']);
+  if (expected === 'CL') {
+    assert.equal(result.island.source, 'natural-earth-global-island-map-units');
+    assert.equal(result.physicalIslandId, undefined);
+  }
   if (expected === 'JP') assert.equal(result.island.status, 'japan-position');
 }
 console.log(`Matched all ${controls.length} complete-pack controls.`);

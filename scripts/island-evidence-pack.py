@@ -14,6 +14,7 @@ from pathlib import Path
 import shutil
 import sqlite3
 import tempfile
+import urllib.error
 import urllib.request
 import zipfile
 import zlib
@@ -44,8 +45,18 @@ def get_archive(provided, source, tmpdir, filename):
     url, digest = source
     path = provided or tmpdir / filename
     if not provided:
-        with urllib.request.urlopen(url, timeout=150) as response, path.open('wb') as dst:
-            shutil.copyfileobj(response, dst)
+        # FieldMaps rejects the default Python-urllib agent. Identify this
+        # public data consumer and ask for the provider's published ZIP.
+        request = urllib.request.Request(url, headers={
+            'User-Agent': 'AGID-island-evidence/1.0 (+https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure)',
+            'Accept': 'application/zip, application/octet-stream;q=0.9',
+        })
+        try:
+            with urllib.request.urlopen(request, timeout=150) as response, path.open('wb') as dst:
+                shutil.copyfileobj(response, dst)
+        except urllib.error.HTTPError as exc:
+            local_option = '--gshhg-archive' if source == GSHHG else '--fieldmaps-archive'
+            raise RuntimeError(f'{url} returned HTTP {exc.code}. Supply the pinned ZIP with {local_option}.') from exc
     checked_file(path, digest)
     return path
 
@@ -262,6 +273,7 @@ def main():
     region.add_argument('--fieldmaps-gpkg', type=Path)
     region.add_argument('--fieldmaps-archive', type=Path)
     q = sub.add_parser('query')
+    q.add_argument('--with-coverage', action='store_true')
     q.add_argument('pack', type=Path)
     q.add_argument('lat', type=float)
     q.add_argument('lon', type=float)
@@ -274,6 +286,10 @@ def main():
             if not row or json.loads(row[0])['format'] != FORMAT:
                 raise ValueError('Incompatible island pack')
             result = query(db, args.lat, args.lon)
+            if args.with_coverage:
+                water = result is None and any(level in (2, 4) and not edge
+                    for _, level, _, edge in exact_hits(db, 'coast', args.lat, args.lon))
+                result = {'hit': result, 'mappedInlandWater': water}
     print(json.dumps(result, sort_keys=True))
 
 
