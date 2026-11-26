@@ -1,3 +1,4 @@
+import { matchLandBorderDisk, needsBorderConfirmation, type LandBorderMatch } from './indiaChinaLandBorders';
 import { type AgidIslandAssessment, applyIslandPolicyToEvidence } from './islandPolicy';
 import { queryGlobalIslandPolygons, globalIslandSource } from './globalIslands';
 import { queryMinorIslandPolygons, minorIslandSource } from './minorIslands';
@@ -23,6 +24,7 @@ export interface AgidGeographicAssessment {
   status: 'mapped' | 'needs-confirmation' | 'unassessed';
   surface: 'land' | 'water' | 'boundary' | 'unknown';
   regionCandidates: string[];
+  landBorder?: LandBorderMatch;
   sources: Source[];
   footprint: { kind: 'manual-pin' | 'device-pin' | 'cell'; radiusMeters: number | null };
   boundaryAllowanceMeters: number;
@@ -117,15 +119,21 @@ function touchesEdge(center: PostalContextPosition, radius: number, ax: number, 
 }
 
 function contactEdges(rings: number[][][], disk: number[], center: PostalContextPosition, radius: number,
-  onTouch: (a: number[], b: number[]) => void) {
+  onTouch?: (a: number[], b: number[]) => void): boolean {
+  let touched = false;
   for (const ring of rings) {
     for (let i = 1; i < ring.length; i++) {
       const a = ring[i - 1], b = ring[i];
       if (Math.min(a[1], b[1]) > disk[3] || Math.max(a[1], b[1]) < disk[1]) continue;
       const box = [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[0], b[0]), Math.max(a[1], b[1])];
-      if (boxRelation(box, disk) !== 'outside' && touchesEdge(center, radius, a[0], a[1], b[0], b[1])) onTouch(a, b);
+      if (boxRelation(box, disk) !== 'outside' && touchesEdge(center, radius, a[0], a[1], b[0], b[1])) {
+        if (!onTouch) return true;
+        onTouch(a, b);
+        touched = true;
+      }
     }
   }
+  return touched;
 }
 
 /** Assess only the cartographic footprint. No carrier path or postal destination is inferred. */
@@ -145,16 +153,29 @@ export function assessAgidGeography(
     if (!s) return;
     sources.set(s.source, { source: s.source, version: s.version, ...(s.attribution && { attribution: s.attribution }) });
   };
+  let border = point.landBorder;
   const island = point.island;
+  addSource(border);
   addSource(point.coastalUncertainty);
   addSource(land); addSource(water); addSource(admin); addSource(island);
-  const finish = (surface: AgidGeographicAssessment['surface'], review: boolean): AgidGeographicAssessment => ({
-    status: !sources.size ? 'unassessed' : review || point.coastalUncertainty || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
-    ...(island && { island: review && island.status === 'mapped' && (candidates.size !== 1 || surface !== 'land')
-      ? { ...island, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : island }),
-    surface, regionCandidates: [...candidates].sort(), sources: [...sources.values()],
-    footprint: { kind, radiusMeters }, boundaryAllowanceMeters, deliveryRegion: null,
-  });
+  const finish = (surface: AgidGeographicAssessment['surface'], review: boolean): AgidGeographicAssessment => {
+    // Administrative evidence takes precedence for country candidates. Keep
+    // surface evidence independent, including where a frontier follows water.
+    if (border) {
+      if (!border.partialCoverage) candidates.clear();
+      border.codes.forEach(code => candidates.add(code));
+      addSource(border);
+      review ||= needsBorderConfirmation(border);
+    }
+    return {
+      status: !sources.size ? 'unassessed' : review || point.coastalUncertainty || island?.status === 'disputed' || island?.status === 'unresolved' ? 'needs-confirmation' : 'mapped',
+      ...(island && { island: review && island.status === 'mapped' && (candidates.size !== 1 || surface !== 'land')
+        ? { ...island, status: 'unresolved' as const, countryCodes: [], sovereignCodes: [] } : island }),
+      surface, regionCandidates: [...candidates].sort(), sources: [...sources.values()],
+      ...(border && { landBorder: border }),
+      footprint: { kind, radiusMeters }, boundaryAllowanceMeters, deliveryRegion: null,
+    };
+  };
   const pointSurface = land && water ? 'boundary' : land ? 'land' : water ? 'water' : 'unknown';
   if (radiusMeters === null) return finish('unknown', true);
   // The default assesses the map as drawn. A separately calibrated source allowance
@@ -165,6 +186,10 @@ export function assessAgidGeography(
   }
 
   const disk = diskBounds(center, radius);
+  if (radius > 0) {
+    border = matchLandBorderDisk(lat, lon, box => boxRelation(box, disk) !== 'outside',
+      ring => contactEdges([ring], disk, center, radius));
+  }
   let partialCoverage = false;
   let touchesWater = false;
   let touchesAdmin = admin?.relation === 'boundary';

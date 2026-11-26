@@ -33,10 +33,12 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
   const japanese = locale.startsWith('ja');
   const copy = geographyCopy[japanese ? 'ja' : 'en'];
   const displayLocale = Intl.DisplayNames.supportedLocalesOf([locale.replaceAll('_', '-')])[0] || 'en';
-  const { footprint, surface, regionCandidates, sources, status, island } = assessment;
+  const { footprint, surface, regionCandidates, sources, status, island, landBorder } = assessment;
   const names = React.useMemo(() => new Intl.DisplayNames([displayLocale], { type: 'region' }), [displayLocale]);
   const formatRegions = (codes: string[]) => codes.map(code =>
     /^[A-Z]{2}$/.test(code) ? names.of(code) || code : code).join(' / ');
+  const disputeCodes = landBorder?.disputeCodes ?? [];
+  const otherCandidates = regionCandidates.some(code => !disputeCodes.includes(code));
   const islandRows = island ? islandDisplayRows(island, japanese, formatRegions, status === 'needs-confirmation' ? regionCandidates : []) : [];
   const credits = [...new Set(sources.map(item => item.attribution).filter(Boolean))];
   return (
@@ -48,10 +50,16 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
         )}
         {status !== 'unassessed' && <> · {copy.surface[surface]}</>}
       </p>
-      {!island && regionCandidates.length > 0 && (
+      {(!island || landBorder) && otherCandidates && (
         <dl className="flex flex-wrap gap-x-1.5">
           <dt>{copy.candidates}</dt>
           <dd className="font-semibold">{formatRegions(regionCandidates)}</dd>
+        </dl>
+      )}
+      {disputeCodes.length > 0 && (
+        <dl className="flex flex-wrap gap-x-1.5">
+          <dt>{japanese ? '係争区間に関係する国・地域' : 'Parties in the mapped dispute'}</dt>
+          <dd className="font-semibold">{formatRegions(disputeCodes)}</dd>
         </dl>
       )}
       {islandRows.length > 0 && (
@@ -63,7 +71,8 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
           ))}
         </dl>
       )}
-      <IslandEvidenceLinks urls={island?.evidenceUrls} japanese={japanese} />
+      {landBorder?.reviewAreas?.length && <p>{japanese ? '境界資料を要確認' : 'Boundary evidence needs review'} · {landBorder.reviewAreas.join(' / ')}</p>}
+      <IslandEvidenceLinks urls={[...(island?.evidenceUrls ?? []), ...(landBorder?.evidenceUrls ?? [])]} japanese={japanese} />
       {status === 'unassessed' && <p>{copy.unassessed}</p>}
       {status === 'needs-confirmation' && <p>{island?.status === 'disputed' || island?.status === 'unresolved'
         ? (japanese ? '配送先は受取人の指定を確認してください。' : 'Confirm the postal destination with the recipient.') : copy.confirm}</p>}
