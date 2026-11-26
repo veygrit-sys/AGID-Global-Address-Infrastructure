@@ -44,7 +44,10 @@ export function islandDisplayRows(
   if (island.status === 'japan-position') {
     rows.push([japanese ? '日本政府の領土見解に基づく表示' : 'Under the Japanese government’s territorial position', formatRegions(['JP'])]);
   } else if (island.status === 'mapped') {
-    rows.push([japanese ? '地図上の国・地域' : 'Mapped country or territory', formatRegions(island.countryCodes)]);
+    const label = island.administrationKind === 'condominium'
+      ? (japanese ? '共同管理国' : 'Joint administration')
+      : (japanese ? '地図上の国・地域' : 'Mapped country or territory');
+    rows.push([label, formatRegions(island.countryCodes)]);
     if (footprintCandidates.some(code => !island.countryCodes.includes(code))) {
       rows.push([japanese ? '位置の誤差範囲にある国・地域の候補' : 'Possible regions across the location footprint', formatRegions(footprintCandidates)]);
     }
@@ -66,6 +69,10 @@ export function islandDisplayRows(
     if (isNamedJapaneseRemoteIsland(island) && island.status === 'unresolved') {
       rows.push([japanese ? '中心点の島の地図上の国・地域' : 'Mapped country of the island at the center', formatRegions(['JP'])]);
       rows.push([japanese ? '位置の誤差範囲' : 'Location footprint', japanese ? '要確認' : 'Confirm the location']);
+      return rows;
+    }
+    if (island.status === 'unresolved' && footprintCandidates.length > 1 && !island.claimantCodes?.length) {
+      rows.push([japanese ? '位置の誤差範囲にある国・地域の候補' : 'Possible regions across the location footprint', formatRegions(footprintCandidates)]);
       return rows;
     }
     rows.push([

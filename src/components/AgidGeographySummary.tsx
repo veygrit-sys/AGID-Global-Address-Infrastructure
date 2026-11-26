@@ -60,6 +60,7 @@ export function AgidGeographySummary({ assessment, locale, manualPin }: {
           <dd className="font-semibold">{formatRegions(regionCandidates)}</dd>
         </dl>
       )}
+      {assessment.administrativeSourceDisagreement && <p>{japanese ? 'この地点では国境資料の判定が分かれます。' : 'Boundary sources differ at this location.'}</p>}
       {evidenceRows.length > 0 && (
         <dl>
           {evidenceRows.map(([label, value]) => (

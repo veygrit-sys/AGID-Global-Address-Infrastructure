@@ -1,4 +1,5 @@
-import { matchUsCanadaShoreline } from './usCanadaShorelines';
+import { europeLandSource, europeOceanSource, isEuropeanOpenWater, matchEuropeLandUnits } from './europeOverview';
+import { matchReviewedShoreline } from './reviewedShorelines';
 import { matchDisputedIsland } from './disputedIslands';
 import { applyIslandPolicyToEvidence, matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
@@ -1030,25 +1031,26 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const normLon = issuanceLongitude(lat, lon);
 
   if (LAST_RESULT && lat === LAST_LAT && normLon === LAST_LON) return copyRegionInfo(LAST_RESULT);
-  const shoreline = matchUsCanadaShoreline(lat, normLon);
+  const shoreline = matchReviewedShoreline(lat, normLon);
   if (shoreline) {
     // Use the policy record first if a reviewed window includes a disputed feature.
     const island = matchDisputedIsland(lat, normLon)
       ? applyIslandPolicyToEvidence(lat, normLon) : shoreline.island;
     const { source, version, attribution, relation } = shoreline;
     const evidence = { source, version, attribution };
-    if (island?.status === 'disputed') {
+    if (island?.status === 'disputed' || island?.claimantCodes?.length) {
       return rememberRegion(lat, normLon, islandRegion(baseRegion(lat, normLon), island));
     }
     if (shoreline.surface === 'water') {
       const water = shoreline.waterKind === 'inland'
         ? { prefix: 'INLAND_WATER', name: 'Inland water', isSea: true, gridSize: 4.4 }
         : lookupRegionalHint(lat, normLon, true);
-      return rememberRegion(lat, normLon, { ...water, waterMatch: evidence });
+      return rememberRegion(lat, normLon, { ...water, waterMatch: shoreline.physicalSource ?? evidence });
     }
     const confirmed = shoreline.surface === 'land' && relation === 'inside' && shoreline.codes.length === 1;
     const prefix = confirmed ? shoreline.codes[0] : 'SHORELINE_UNRESOLVED';
-    const name = confirmed ? mapUnitNames.get(prefix) ?? prefix : 'Unconfirmed shoreline region';
+    const name = confirmed ? mapUnitNames.get(prefix) ?? prefix
+      : shoreline.surface === 'land' ? 'Unconfirmed boundary region' : 'Unconfirmed shoreline region';
     return rememberRegion(lat, normLon, {
       prefix, name, isSea: false, gridSize: 4.4, ...(island && { island }),
       ...(shoreline.surface === 'land' && { mapUnitMatch: { ...evidence, relation, codes: [...shoreline.codes] } }),
@@ -1061,6 +1063,9 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const region = baseRegion(lat, normLon);
   const swiss = matchBuesingenBoundary(lat, normLon);
   let administration = swiss ?? matchTerritorialAdministration(lat, normLon);
+  // The cadastral and enclave surveys take priority. A generalized map unit
+  // can include river channels over which the cadastral record is administrative only.
+  if (administration && region.mapUnitMatch?.source === europeLandSource.source) delete region.mapUnitMatch;
   const formerIsland = legacyIslandAtInlandWater(lat, normLon);
   // The Swiss register includes parts of the Rhine. Its administrative evidence
   // is compatible with water, while a generalized land polygon is not.
@@ -1175,6 +1180,16 @@ function baseRegion(lat: number, normLon: number): RegionInfo {
 
 
 
+  const european = matchEuropeLandUnits(lat, normLon);
+  if (european) {
+    const confirmed = european.relation === 'inside' && european.codes.length === 1;
+    const prefix = confirmed ? european.codes[0] : 'SHORELINE_UNRESOLVED';
+    const name = confirmed ? mapUnitNames.get(prefix) ?? prefix : 'Unconfirmed boundary region';
+    return { prefix, name, isSea: false, gridSize: 4.4, mapUnitMatch: european };
+  }
+  if (isEuropeanOpenWater([normLon, lat, normLon, lat])) {
+    return { ...lookupRegionalHint(lat, normLon, true), waterMatch: europeOceanSource };
+  }
   if (!mayHaveReviewedGeography(lat, normLon)) {
     return lookupRegionalHint(lat, normLon, false);
   }

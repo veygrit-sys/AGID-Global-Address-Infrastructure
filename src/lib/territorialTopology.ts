@@ -3,7 +3,7 @@ import { matchGlobalLandform } from './globalIslands';
 import { isJapaneseIslandReviewArea } from './japaneseIslandView';
 import type { AgidIslandAssessment } from './islandPolicy';
 import { matchTerritorialExclave, type TerritorialExclaveMatch } from './territorialExclaves';
-import { matchUsCanadaShoreline } from './usCanadaShorelines';
+import { matchReviewedShoreline } from './reviewedShorelines';
 
 export interface TerritorialTopology {
   landform: 'mainland' | 'island' | 'unknown';
@@ -23,10 +23,10 @@ export function pointTerritorialTopology(
   if (island?.source === chelemReviewSource) return { landform: 'unknown', status: 'uncertain' };
   // In reviewed Japanese waters, a coarser global shoreline cannot restore discarded land.
   if (!island && isJapaneseIslandReviewArea(lat, lon)) return undefined;
-  const shore = matchUsCanadaShoreline(lat, lon);
+  const shore = matchReviewedShoreline(lat, lon);
   if (shore && !island?.claimantCodes) {
     if (shore.surface === 'water') return undefined;
-    const physicalSource = { source: shore.source, version: shore.version, attribution: shore.attribution };
+    const physicalSource = shore.physicalSource ?? { source: shore.source, version: shore.version, attribution: shore.attribution };
     if (shore.surface === 'unknown') return { landform: 'unknown', status: 'uncertain', physicalSource };
     const landform = shore.landform ?? (shore.surface === 'land' && island && physicalIslandId ? 'island' : 'unknown');
     const area = matchTerritorialExclave(lat, lon);
