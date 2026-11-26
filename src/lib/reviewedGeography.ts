@@ -1,3 +1,4 @@
+import { oceaniaPolygonDetail } from './oceaniaPolygonDetail';
 import { northAmericanPolygonDetail } from './northAmericanPolygonDetail';
 import { caribbeanUsIslands } from './caribbeanUsReviewedGeography';
 import { canadianIslands } from './canadianReviewedGeography';
@@ -7,7 +8,7 @@ import { isUsCanadaShorelineSource, matchUsCanadaShoreline, queryUsCanadaShoreli
 import type { AgidIslandAssessment } from './islandPolicy';
 
 export type ReviewedOceanRegion = 'NEPC' | 'SEPC' | 'CARB' | 'NATL' | 'SATL' | 'ARCT' | 'STLA' | 'LABR' | 'HUDB'
-  | 'NPAC' | 'BERI' | 'ALSK' | 'GMXC' | 'PHLS' | 'CALI';
+  | 'NPAC' | 'BERI' | 'ALSK' | 'GMXC' | 'PHLS' | 'CALI' | 'SPAC' | 'SIND';
 
 export interface ReviewedGeographyMatch {
   surface: 'land' | 'water' | 'boundary' | 'unknown';
@@ -31,13 +32,14 @@ export interface ReviewedGeographyMatch {
 
 // Detailed regional extracts can refine part of an earlier shoreline window.
 const detailedWindows = [...canadianIslands.windows, ...caribbeanUsIslands.windows];
+const polygonDetailWindows = [...northAmericanPolygonDetail.windows, ...oceaniaPolygonDetail.windows];
 export const reviewedWindows = [
-  ...northAmericanPolygonDetail.windows.map(w => ({ ...w, priority: 2 })),
+  ...polygonDetailWindows.map(w => ({ ...w, priority: 2 })),
   ...detailedWindows.map(w => ({ ...w, priority: 1 })),
   ...[...usCanadaShorelineWindows, ...mesoamericanWindows, ...southAmerica.windows].map(w => ({ ...w, priority: 0 })),
 ];
 
-const surveySources = new Set([...northAmericanPolygonDetail.windows, ...detailedWindows, ...mesoamericanWindows, ...southAmerica.windows].map(w => w.source));
+const surveySources = new Set([...polygonDetailWindows, ...detailedWindows, ...mesoamericanWindows, ...southAmerica.windows].map(w => w.source));
 export function isReviewedGeographySource(source: string) {
   return isUsCanadaShorelineSource(source) || surveySources.has(source);
 }
@@ -45,7 +47,8 @@ export function isReviewedGeographySource(source: string) {
 // Reject distant latitudes before scanning any polygons in globally used issuance paths.
 const usCanadaSouth = Math.min(...usCanadaShorelineWindows.map(w => w.bbox[1]));
 export function matchReviewedGeography(lat: number, lon: number): ReviewedGeographyMatch | undefined {
-  return northAmericanPolygonDetail.match(lat, lon)
+  return oceaniaPolygonDetail.match(lat, lon)
+    ?? northAmericanPolygonDetail.match(lat, lon)
     ?? caribbeanUsIslands.match(lat, lon)
     ?? canadianIslands.match(lat, lon)
     ?? (lat >= usCanadaSouth ? matchUsCanadaShoreline(lat, lon) : undefined)
@@ -54,6 +57,7 @@ export function matchReviewedGeography(lat: number, lon: number): ReviewedGeogra
 }
 
 export function* queryReviewedPolygons(bounds: number[]) {
+  yield* oceaniaPolygonDetail.query(bounds);
   yield* northAmericanPolygonDetail.query(bounds);
   yield* caribbeanUsIslands.query(bounds);
   yield* canadianIslands.query(bounds);

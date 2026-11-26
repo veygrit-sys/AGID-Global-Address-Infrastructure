@@ -38,6 +38,8 @@ const reviewedWaterNames = {
   GMXC: 'Gulf of Mexico',
   PHLS: 'Philippine Sea',
   CALI: 'Gulf of California',
+  SIND: 'South Indian Ocean',
+  SPAC: 'South Pacific',
   SEPC: 'South Pacific',
   NATL: 'North Atlantic',
   SATL: 'South Atlantic',

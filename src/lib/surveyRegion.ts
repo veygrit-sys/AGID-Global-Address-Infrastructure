@@ -40,8 +40,9 @@ function indexWindow(w: SurveyWindow) {
 type IndexedWindow = ReturnType<typeof indexWindow>;
 
 function matchWindow(window: IndexedWindow, lat: number, x: number): ReviewedGeographyMatch | undefined {
+  const lon = normalizeLongitude(x);
   // Preserve the individual island decisions, including disagreements between national shorelines.
-  if (matchIslandBorderReview(lat, x) || matchDisputedIsland(lat, x) || matchRevisedIslandRegion(lat, x)) return;
+  if (matchIslandBorderReview(lat, lon) || matchDisputedIsland(lat, lon) || matchRevisedIslandRegion(lat, lon)) return;
   const { source, version, attribution, evidenceUrls } = window;
   const common = { source, version, attribution, surveyWindowId: window.id, evidenceUrls: [...evidenceUrls], surveyedIslandOwnership: true };
   const land = hits(window.land, x, lat);
@@ -62,7 +63,7 @@ function matchWindow(window: IndexedWindow, lat: number, x: number): ReviewedGeo
   const shore = water.length > 0 || !land.some(hit => hit.relation === 'inside');
   const landforms = new Set(land.map(hit => hit.polygon.kind));
   const landform = landforms.size === 1 ? land[0].polygon.kind : undefined;
-  const protectedIsland = landform === 'island' && needsIslandPolicyReview(lat, x);
+  const protectedIsland = landform === 'island' && needsIslandPolicyReview(lat, lon);
   const owners = hits(window.owners, x, lat);
   const codes = protectedIsland ? [] : [...new Set(owners.map(hit => hit.polygon.code))].sort();
   const adminEdge = owners.length > 0 && !owners.some(hit => hit.relation === 'inside');
@@ -110,16 +111,27 @@ function* queryPolygons(surveys: IndexedWindow[], bounds: number[]) {
 export function createSurveyRegion(input: SurveyWindow[]) {
   const surveys = input.map(indexWindow);
   const windows = surveys.map(({ id, bbox, source }) => ({ id, bbox, source }));
-  const west = Math.min(...windows.map(w => w.bbox[0]));
   const south = Math.min(...windows.map(w => w.bbox[1]));
-  const east = Math.max(...windows.map(w => w.bbox[2]));
   const north = Math.max(...windows.map(w => w.bbox[3]));
+  // Pacific surveys can span both ends of the longitude range while covering
+  // very little land. Index only the ten-degree bands touched by each window.
+  const band = (x: number) => Math.floor((x + 180) / 10);
+  const bands: IndexedWindow[][] = Array.from({ length: 36 }, () => []);
+  for (const window of surveys) {
+    const [w, , e] = window.bbox;
+    for (let i = band(w); i <= band(e); i++) bands[((i % 36) + 36) % 36].push(window);
+  }
   function match(lat: number, lon: number) {
-    if (lat < south || lat > north) return;
+    if (!(lat >= south && lat <= north) || !Number.isFinite(lon)) return;
     const x = normalizeLongitude(lon);
-    if (x < west || x > east) return;
-    const window = surveys.find(({ bbox: [w, s, e, n] }) => x >= w && x <= e && lat >= s && lat <= n);
-    if (window) return matchWindow(window, lat, x);
+    for (const window of bands[band(x) % 36]) {
+      const [w, s, e, n] = window.bbox;
+      if (lat < s || lat > n) continue;
+      // A seam-crossing survey keeps its geometry continuous from w to e.
+      // Move the pin into that chart so the meridian never becomes a shoreline.
+      const local = w < -180 || e >= 180 ? x + 360 * Math.round(((w + e) / 2 - x) / 360) : x;
+      if (local >= w && local <= e) return matchWindow(window, lat, local);
+    }
   }
   return { windows, match, query: (bounds: number[]) => queryPolygons(surveys, bounds) };
 }

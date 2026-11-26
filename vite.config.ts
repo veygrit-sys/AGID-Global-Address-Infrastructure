@@ -9,7 +9,7 @@ function manualVendorChunk(id: string) {
   const normalizedId = id.replace(/\\/g, '/');
 
   // Keep independently versioned boundary extracts cacheable across app-only changes.
-  const polygonDetail = normalizedId.match(/\/src\/data\/(naLakes|naMexico|naEstuary|caribbean|caribbeanAntilles)PolygonDetail\.json$/);
+  const polygonDetail = normalizedId.match(/\/src\/data\/(naLakes|naMexico|naEstuary|caribbean|caribbeanAntilles|oceania(?:Australasia|Melanesia|Micronesia|Polynesia|IslandLakes))PolygonDetail\.json$/);
   if (polygonDetail) return `geography-${polygonDetail[1]}-polygon-detail`;
   const reviewedRegion = normalizedId.match(/\/src\/data\/(usMexico|northernCentralAmerica|southernCentralAmerica|southAmerica(?:North|South|Andes|Offshore)|canada(?:Arctic|Atlantic|Freshwater|Hudson|Pacific)|us(?:AtlanticIslands|PacificIslands|PacificTerritories)|(?:caribbeanTerritorial|lesserAntilles|greaterAntilles)Islands)Reviewed\.json$/);
   if (reviewedRegion) return `geography-${reviewedRegion[1]}-reviewed`;

@@ -81,8 +81,11 @@ def marine_islands(key, frame, digest, cache):
 def pixels(key, frame, year, edition, digest, cache):
     west, south, east, north = frame.bounds
     tx, ty = 3*floor(west/3), 3*floor(south/3)
-    url = f'{WC}/{edition}/{year}/map/ESA_WorldCover_10m_{year}_{edition}_N{ty:02}W{abs(tx):03}_Map.tif'
-    # All five windows lie inside a single 3-degree source tile.
+    if not (-180 <= west < east <= 180 and -90 <= south < north <= 90
+            and east <= tx + 3 and north <= ty + 3):
+        raise ValueError(f'{key}: raster window must fit one WorldCover tile')
+    tile = f'{"N" if ty >= 0 else "S"}{abs(ty):02}{"E" if tx >= 0 else "W"}{abs(tx):03}'
+    url = f'{WC}/{edition}/{year}/map/ESA_WorldCover_10m_{year}_{edition}_{tile}_Map.tif'
     step = 1/12000
     left, right = floor((west-tx)/step), ceil((east-tx)/step)
     top, bottom = floor((ty+3-north)/step), ceil((ty+3-south)/step)
