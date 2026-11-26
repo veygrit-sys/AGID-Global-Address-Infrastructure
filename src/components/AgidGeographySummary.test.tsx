@@ -10,11 +10,11 @@ function render(input: AgidGeographyInput, locale: 'en' | 'ja' = 'en') {
 }
 
 test('the map distinguishes a selected point from a border-straddling ID cell and device fix', () => {
-  const lat = -28.9086745, lon = 28.988132;
+  const lat = -28.9086725, lon = 28.988132;
   const point = render({ kind: 'pin', lat, lon });
   assert.match(point, /Selected point/);
-  assert.match(point, /Lesotho/);
-  assert.doesNotMatch(point, /(?:Possible countries or regions|Country or territory at this location)<\/dt><dd[^>]*>[^<]*South Africa/);
+  assert.match(point, /South Africa/);
+  assert.doesNotMatch(point, /(?:Possible countries or regions|Country or territory at this location)<\/dt><dd[^>]*>[^<]*Lesotho/);
   const cell = render({ kind: 'cell', id: encodeAGID16(lat, lon).id });
   assert.match(cell, /AGID cell/);
   assert.match(cell, /Lesotho \/ South Africa/);
@@ -166,4 +166,17 @@ test('an island exclave displays both meanings and keeps its neighbour outside t
   assert.match(point, /周囲・隣接する国・地域<\/dt><dd[^>]*>モザンビーク/);
   assert.match(point, /(?:地図上の国・地域|この地点の所属国・地域)<\/dt><dd[^>]*>マラウイ/);
   assert.doesNotMatch(point, /配送先.*モザンビーク/);
+});
+
+test('African continental status, geographic neighbours and an absent address assignment remain distinct', () => {
+  const sahara = render({ kind: 'pin', lat: 21.788671, lon: -13.046214 }, 'en');
+  assert.match(sahara, /Possible countries or regions.*Mauritania/);
+  assert.match(sahara, /Countries or territories involved[^<]*Western Sahara \/ Morocco/);
+  assert.match(sahara, /Confirm the postal destination with the recipient/);
+  const birTawil = render({ kind: 'pin', lat: 21.9, lon: 33.8 }, 'ja');
+  assert.match(birTawil, /ビル・タウィール/);
+  assert.match(birTawil, /住所国の割り当てなし/);
+  const kazungula = render({ kind: 'pin', lat: -17.79111, lon: 25.2625 }, 'ja');
+  assert.match(kazungula, /境界資料に現れる隣接国・地域/);
+  assert.match(kazungula, /ボツワナ \/ ザンビア/);
 });

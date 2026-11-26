@@ -44,6 +44,9 @@ const controls = [
   [-4.220, -69.9505, null],            // Amazon channel by Santa Rosa
   [-53.32, -68.6040, 'AR', undefined, ['AR', 'CL']], // East side of Isla Grande
   [-34.1796294, -58.2557995, 'UY', undefined, ['AR', 'UY']], // Timoteo Domínguez
+  [-12.065, 34.736, 'MW'], [-12.02, 34.62, 'MW'], [-12.05, 34.685, null], // Lake Malawi
+  [-5.24, 39.78, 'TZ'], [-13.32, 48.25, 'MG'], [3.55, 8.65, 'GQ'],
+  [-12.71, 45.3, null], // Open sea off Mayotte
   [25.7445, 123.4745, 'JP'], [-51.794, -58.61, 'disputed'], [0, -140, null], [48.85, 2.35, null],
 ] as const;
 for (const [lat, lon, expected, id, shared] of controls) {
@@ -147,5 +150,10 @@ for (const [lat, lon] of conflictingShorelines) {
   assert.equal(result.island, null);
 }
 assert.equal(lookup(45.78, -81.97).territorialTopology, null); // Lake Manitou water
-const count = controls.length + sharing.reduce((n, group) => n + group.pins.length, 0) + territories.length + offshore.length + conflictingShorelines.length + 1;
+const mayotte = lookup(-12.78, 45.18);
+assert.equal(mayotte.island.status, 'disputed');
+assert.deepEqual(mayotte.island.claimantCodes, ['FR', 'KM']);
+assert.deepEqual(mayotte.island.countryCodes, []);
+assert.equal(mayotte.deliveryRegion, null);
+const count = controls.length + sharing.reduce((n, group) => n + group.pins.length, 0) + territories.length + offshore.length + conflictingShorelines.length + 2;
 console.log(`Matched all ${count} complete-pack controls.`);

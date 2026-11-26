@@ -46,7 +46,7 @@ import { executeVerifiedAddressTranslationSync } from '../lib/verifiedAddressTra
 import type { AddressDetails } from '../types/address';
 import type { RouteStop } from '../types/navigation';
 import { selectedGeographyInput } from '../lib/agidSelection';
-import { assessAgidGeography } from '../lib/geographicAssessment';
+import { assessAgidGeography, reviewedAddressNeedsConfirmation } from '../lib/geographicAssessment';
 import { AgidGeographySummary } from './AgidGeographySummary';
 import { isNamedJapaneseRemoteIsland } from '../lib/islandDisplay';
 import { AddressFeedbackPanel } from './AddressFeedbackPanel';
@@ -151,18 +151,20 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
   // Move derived constants and hooks to the top to satisfy Rules of Hooks
   const geography = React.useMemo(() => clickedAgid ? assessAgidGeography(selectedGeographyInput(clickedAgid)) : null, [clickedAgid]);
   const island = geography?.island;
+  const holdReviewedAddress = reviewedAddressNeedsConfirmation(geography);
   const regionCodeFromAgid = (!clickedAgid?.isSea && clickedAgid?.regionCode ? clickedAgid.regionCode : "").toLowerCase();
   const countryCodeFromPrefix = (clickedAgid?.prefix || "").toLowerCase();
   const countryCodeFromId = (clickedAgid?.id?.slice(0, 2) || "").toLowerCase();
   const countryCodeFromDetails = (clickedAddressDetails?.country_code || "").toLowerCase();
   const useJapaneseAddressRegion = island?.status === 'japan-position' || (island?.status === 'mapped' && isNamedJapaneseRemoteIsland(island));
-  const countryCode = useJapaneseAddressRegion ? 'jp' : regionCodeFromAgid || countryCodeFromDetails || countryCodeFromPrefix || countryCodeFromId || "";
-  const territoryClaimOptions = React.useMemo(() => island ? [] : getTerritoryClaimOptions({
+  const countryCode = holdReviewedAddress ? '' : useJapaneseAddressRegion ? 'jp' : regionCodeFromAgid || countryCodeFromDetails || countryCodeFromPrefix || countryCodeFromId || "";
+  const territoryClaimOptions = React.useMemo(() => island || holdReviewedAddress ? [] : getTerritoryClaimOptions({
     regionCode: clickedAgid?.regionCode,
     countryCode,
     regionName: clickedAgid?.regionName || clickedAddressDetails?.country,
   }, territoryClaimDisplayPolicy), [
     island,
+    holdReviewedAddress,
     clickedAgid?.regionCode,
     clickedAgid?.regionName,
     clickedAddressDetails?.country,
@@ -179,11 +181,11 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
     }
 
     return getAgidAddressTabLanguages({
-      countryCode: countryCode || countryCodeFromDetails,
+      countryCode,
       countryLanguages: COUNTRY_LANGUAGES[countryCode] || ['en'],
       knownLanguageCodes: LANGUAGES.map(lang => lang.code),
     });
-  }, [addressFormat, countryCode, countryCodeFromDetails, territoryClaimOptions.length]);
+  }, [addressFormat, countryCode, territoryClaimOptions.length]);
 
   const displayTabs = React.useMemo(() => {
     return getAgidAddressDisplayTabs(officialLangs);
@@ -471,7 +473,7 @@ export const GridDetailPanel: React.FC<GridDetailPanelProps> = ({
       return rawAddressDisplay || getFallbackAddressDisplay();
     }
   })();
-  const holdMapAddress = island?.status === 'disputed' || island?.status === 'unresolved'
+  const holdMapAddress = holdReviewedAddress || island?.status === 'disputed' || island?.status === 'unresolved'
     || (useJapaneseAddressRegion && countryCodeFromDetails !== 'jp');
   const automaticAddressText = holdMapAddress
     ? (appLanguage.startsWith('ja') ? '配送先住所は受取人の指定を確認してください。' : 'Confirm the postal address with the recipient.')

@@ -1,3 +1,4 @@
+import { africanMainlandSource } from './africanMainland';
 import { matchReviewedGeography } from './reviewedGeography';
 import { matchDisputedIsland } from './disputedIslands';
 import { applyIslandPolicyToEvidence, matchBundledIsland, copyIslandAssessment, type AgidIslandAssessment } from './islandPolicy';
@@ -35,6 +36,8 @@ const reviewedWaterNames = {
   SEPC: 'South Pacific',
   NATL: 'North Atlantic',
   SATL: 'South Atlantic',
+  NIND: 'North Indian Ocean',
+  SIND: 'South Indian Ocean',
   CARB: 'Caribbean Sea',
 } as const;
 const OCEAN_IDS = ['NPAC', 'NEPC', 'SPAC', 'SEPC', 'NATL', 'SATL', 'NIND', 'SIND', 'SOUT', 'ARCT'] as const;
@@ -1045,23 +1048,30 @@ export function getRegionInfo(lat: number, lon: number): RegionInfo {
   const shoreline = matchReviewedGeography(lat, normLon);
   if (shoreline) {
     // Use the policy record first if a reviewed window includes a disputed feature.
-    const island = matchDisputedIsland(lat, normLon)
+    const island = !shoreline.policySurvey && matchDisputedIsland(lat, normLon)
       ? applyIslandPolicyToEvidence(lat, normLon) : shoreline.island;
     const { source, version, attribution, relation } = shoreline;
     const evidence = { source, version, attribution };
     if (island?.status === 'disputed') {
-      return rememberRegion(lat, normLon, islandRegion(baseRegion(lat, normLon), island));
+      const region = baseRegion(lat, normLon);
+      const hint = shoreline.territoryPrefix
+        ? { ...region, prefix: shoreline.territoryPrefix, isSea: false } : region;
+      return rememberRegion(lat, normLon, islandRegion(hint, island));
     }
     if (shoreline.surface === 'water') {
       const code = shoreline.waterKind === 'inland' ? 'INLAND_WATER' : shoreline.oceanRegion;
-      const water = code
+      const localSea = shoreline.waterKind === 'ocean' && shoreline.source.startsWith('africa-island+')
+        ? lookupRegionalHint(lat, normLon, true) : undefined;
+      const water = localSea && SEA_PREFIX_BY_ID.has(localSea.prefix) ? localSea : code
         ? { prefix: code, name: reviewedWaterNames[code], isSea: true, gridSize: 4.4 }
-        : lookupRegionalHint(lat, normLon, true);
+        : localSea ?? lookupRegionalHint(lat, normLon, true);
       return rememberRegion(lat, normLon, { ...water, waterMatch: evidence });
     }
-    const confirmed = shoreline.surface === 'land' && relation === 'inside' && shoreline.codes.length === 1;
-    const prefix = confirmed ? shoreline.codes[0] : 'SHORELINE_UNRESOLVED';
-    const name = confirmed ? mapUnitNames.get(prefix) ?? prefix : 'Unconfirmed shoreline region';
+    const confirmed = !shoreline.ownershipReview && shoreline.surface === 'land' && relation === 'inside' && shoreline.codes.length === 1;
+    const prefix = shoreline.territoryPrefix ?? (confirmed ? shoreline.codes[0]
+      : shoreline.source === africanMainlandSource ? 'BORDER_UNRESOLVED' : 'SHORELINE_UNRESOLVED');
+    const name = confirmed || shoreline.territoryPrefix ? mapUnitNames.get(prefix) ?? prefix
+      : shoreline.source === africanMainlandSource ? 'Unconfirmed land border' : 'Unconfirmed shoreline region';
     return rememberRegion(lat, normLon, {
       prefix, name, isSea: false, gridSize: 4.4, ...(island && { island }),
       ...(shoreline.surface === 'land' && { mapUnitMatch: { ...evidence, relation, codes: [...shoreline.codes] } }),

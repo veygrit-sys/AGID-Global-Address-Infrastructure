@@ -9,11 +9,11 @@ function manualVendorChunk(id: string) {
   const normalizedId = id.replace(/\\/g, '/');
 
   // Keep independently versioned boundary extracts cacheable across app-only changes.
-  const reviewedRegion = normalizedId.match(/\/src\/data\/(usMexico|northernCentralAmerica|southernCentralAmerica|southAmerica(?:North|South|Andes|Offshore)|canada(?:Arctic|Atlantic|Freshwater|Hudson|Pacific))Reviewed\.json$/);
+  const reviewedRegion = normalizedId.match(/\/src\/data\/(africanBorderRivers|usMexico|northernCentralAmerica|southernCentralAmerica|southAmerica(?:North|South|Andes|Offshore)|canada(?:Arctic|Atlantic|Freshwater|Hudson|Pacific))Reviewed\.json$/);
   if (reviewedRegion) return `geography-${reviewedRegion[1]}-reviewed`;
   if (normalizedId.endsWith('/src/data/usCanadaDividedLakeIslands.json')) return 'geography-us-canada-divided-lake-islands';
   if (normalizedId.endsWith('/src/data/pearlRiverDelta.json')) return 'geography-pearl-delta';
-  const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands|territorial-exclaves|us-canada-shorelines)\/([a-zA-Z0-9-]+)\.json$/);
+  const islandPart = normalizedId.match(/\/src\/data\/(global-islands|minorIslands|territorial-exclaves|african-frontiers|african-islands|us-canada-shorelines)\/([a-zA-Z0-9-]+)\.json$/);
   if (islandPart) return `geography-${islandPart[1]}-${islandPart[2]}`;
   if (normalizedId.endsWith('/src/data/japaneseRemoteIslands.json')) return 'geography-japanese-remote-islands';
   if (normalizedId.endsWith('/src/data/japaneseIslandView.json')) return 'geography-japanese-islands';

@@ -763,7 +763,10 @@ function handleGeography(parsed: ParsedArgs, stdin?: string): AgidCliRunResult {
         ? islandDisplayRows(assessment.island, false, codes => codes.join(', '),
           assessment.status === 'needs-confirmation' ? assessment.regionCandidates : []).map(([label, value]) => `${label}: ${value}`)
         : [`Map regions: ${assessment.regionCandidates.join(', ') || 'none'}`]),
-      ...new Set([...(assessment.island?.evidenceUrls ?? []), ...(assessment.territorialTopology?.administration?.evidenceUrls ?? [])]),
+      ...(assessment.borderNotices ?? []).map(n => [n.name, n.kind, ...n.codes].join(' · ')),
+      ...(assessment.adjacentRegions?.length ? ['Countries along the mapped boundary: ' + assessment.adjacentRegions.join(', ')] : []),
+      ...(assessment.mapDisagreement ? ['Administrative boundary maps differ.'] : []),
+      ...new Set([...(assessment.borderNotices ?? []).map(n => n.url), ...(assessment.island?.evidenceUrls ?? []), ...(assessment.territorialTopology?.administration?.evidenceUrls ?? [])]),
       '',
     ].join('\n'));
   } catch (error) {

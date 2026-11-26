@@ -8,9 +8,10 @@ const lat = -28.9086735, lon = 28.988132;
 test('an exact pin on each side of one border cell uses the original coordinates', () => {
   const a = { kind: 'pin' as const, lat: lat - 0.000001, lon };
   const b = { ...a, lat: lat + 0.000001 };
-  assert.deepEqual(assess(a).regionCandidates, ['LS']);
+  assert.deepEqual(assess(a).regionCandidates, ['LS', 'ZA']);
+  assert.equal(assess(a).mapDisagreement, true);
   assert.deepEqual(assess(b).regionCandidates, ['ZA']);
-  assert.equal(assess(a).status, 'mapped');
+  assert.equal(assess(a).status, 'needs-confirmation');
   assert.equal(assess(a).surface, 'land');
   for (const point of [a, b]) {
     const byId = assess({kind: 'cell', id: encodeAGID16(point.lat, point.lon).id});
@@ -162,12 +163,12 @@ test('a window-edge footprint retains provenance even with its centre outside re
   assert.ok(edge.sources.some(s => s.source === 'natural-earth-10m-ocean'));
 });
 
-test('physical mainland evidence covers both sides of a partially mapped Eswatini border', () => {
+test('physical mainland evidence covers both sides of the Eswatini–Mozambique border', () => {
   const r = assess({kind:'pin', lat:-26.582252, lon:32.117398, accuracyMeters:10});
   assert.equal(r.status, 'needs-confirmation');
   assert.equal(r.surface, 'land');
-  assert.deepEqual(r.regionCandidates, ['SZ']);
-  assert.ok(r.sources.some(s => s.source === 'natural-earth-physical-land+hydrography'));
+  assert.deepEqual(r.regionCandidates, ['MZ', 'SZ']);
+  assert.ok(r.sources.some(s => s.source === 'african-mainland-frontiers'));
 });
 
 test('Hong Kong and Shenzhen share a sourced land edge and keep both candidates within device accuracy', () => {
