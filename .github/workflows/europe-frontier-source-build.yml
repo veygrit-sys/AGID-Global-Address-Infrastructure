@@ -1,0 +1,34 @@
+name: Build pinned European frontier sources
+on:
+  push:
+    branches: [codex/europe-frontier-source-build]
+    paths:
+      - '.github/workflows/europe-frontier-source-build.yml'
+      - 'scripts/fetch-europe-frontier-sources.py'
+      - 'scripts/build-europe-frontiers.mjs'
+      - 'scripts/data/europe-frontiers/**'
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.repository == 'veygrit-sys/AGID-Global-Address-Infrastructure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and publish the land pages to this source-build branch
+        run: |
+          python3 scripts/fetch-europe-frontier-sources.py --cache "$RUNNER_TEMP/eu-cache" --land-only --output "$RUNNER_TEMP/eu-land.json"
+          node scripts/build-europe-frontiers.mjs "$RUNNER_TEMP/eu-land.json" src/data/europe-frontiers
+          git config user.name github-actions
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/data/europe-frontiers
+          git diff --cached --quiet || git commit -m "Build full-resolution European land frontier pages from pinned LSIB"
+          git push origin HEAD:refs/heads/codex/europe-frontier-source-build
+      - name: Add the two-sided Marine Regions lines
+        run: |
+          python3 scripts/fetch-europe-frontier-sources.py --cache "$RUNNER_TEMP/eu-cache" --output "$RUNNER_TEMP/eu-all.json"
+          node scripts/build-europe-frontiers.mjs "$RUNNER_TEMP/eu-all.json" src/data/europe-frontiers
+          git add src/data/europe-frontiers
+          git diff --cached --quiet || git commit -m "Add bilateral maritime geometry and original designations"
+          git push origin HEAD:refs/heads/codex/europe-frontier-source-build
