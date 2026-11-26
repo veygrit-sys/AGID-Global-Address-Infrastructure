@@ -156,7 +156,10 @@ if __name__=="__main__":
     path=args.cache/"adm0_polygons.gpkg"
     if not path.exists():
         archive=args.cache/"adm0_polygons.zip"
-        with urllib.request.urlopen("https://data.fieldmaps.io/adm0/usgs/intl/adm0_polygons.gpkg.zip",timeout=120) as response, archive.open("wb") as stream:
+        request = urllib.request.Request("https://data.fieldmaps.io/adm0/usgs/intl/adm0_polygons.gpkg.zip", headers={
+            "User-Agent": "AGID-island-evidence/1.0 (+https://github.com/veygrit-sys/AGID-Global-Address-Infrastructure)"
+        })
+        with urllib.request.urlopen(request,timeout=150) as response, archive.open("wb") as stream:
             shutil.copyfileobj(response,stream)
         with zipfile.ZipFile(archive) as z:
             name=next(n for n in z.namelist() if n.endswith("adm0_polygons.gpkg"))

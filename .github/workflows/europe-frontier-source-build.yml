@@ -31,6 +31,12 @@ jobs:
           git add src/data/europe-frontiers
           git diff --cached --quiet || git commit -m "Include complete local surveys, joint administration and reference lines"
           git push origin HEAD:refs/heads/codex/europe-frontier-source-build
+      - name: Build Monaco and check dry ground at Mareterra and water at Petit Portier
+        run: |
+          python scripts/build-monaco-shoreline.py "$RUNNER_TEMP/sources/monaco-261124.osm.pbf"
+          git add src/data/monaco-osm-shoreline.json
+          git diff --cached --quiet || git commit -m "Include the separately licensed Monaco shoreline and marina"
+          git push origin HEAD:refs/heads/codex/europe-frontier-source-build
       - name: Compile full-resolution country polygons surrounding the lines
         run: |
           python scripts/build-europe-frontier-sides.py --cache "$RUNNER_TEMP/sources"
