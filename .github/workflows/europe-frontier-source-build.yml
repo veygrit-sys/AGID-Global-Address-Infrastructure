@@ -30,7 +30,7 @@ jobs:
           python scripts/supplement-europe-frontiers.py "$RUNNER_TEMP/europe.json" --cache "$RUNNER_TEMP/sources" --areas src/data/europe-frontiers/local-areas.json
           node scripts/build-europe-frontiers.mjs "$RUNNER_TEMP/europe.json" src/data/europe-frontiers
           python scripts/verify-europe-frontiers.py --lsib "$RUNNER_TEMP/sources/lsib.gpkg" --marine "$RUNNER_TEMP/sources/vliz.json"
-          git add src/data/europe-frontiers
+          git add src/data/europe-frontiers scripts/data/europe-frontiers/treaty-coordinates.json
           git diff --cached --quiet || git commit -m "Include complete local surveys, joint administration and reference lines"
           git push origin HEAD:refs/heads/codex/europe-frontier-source-build
       - name: Build Monaco and check dry ground at Mareterra and water at Petit Portier
@@ -43,6 +43,7 @@ jobs:
         if: always() && steps.surveys.outcome == 'success'
         run: |
           python scripts/build-europe-frontier-sides.py --cache "$RUNNER_TEMP/sources"
+          python scripts/verify-europe-frontier-sides.py --cache "$RUNNER_TEMP/sources"
           git add src/data/europe-frontier-sides
           git diff --cached --quiet || git commit -m "Index unsimplified country polygons on both sides of the frontier"
           git push origin HEAD:refs/heads/codex/europe-frontier-source-build
